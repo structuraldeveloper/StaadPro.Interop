@@ -1,37 +1,34 @@
 # StaadPro.Interop — Strategic Product Roadmap
 
-This document outlines the architectural roadmap and upcoming milestone releases for the **StaadPro.Interop** open-source ecosystem. 
+This document outlines the architectural roadmap and upcoming milestone releases for the **StaadPro.Interop** open-source ecosystem over the next **6 months**.
 
 Our mission is to provide the structural engineering and computational design community with a modern, high-performance, strongly-typed .NET suite covering the entire Bentley STAAD.Pro automation lifecycle.
 
 ---
 
-## Milestone Overview
+## 6-Month Milestone Overview
 
 ```mermaid
 gantt
-    title StaadPro.Interop Roadmap & Module Expansion
-    dateFormat  YYYY-Q#
+    title StaadPro.Interop 6-Month Strategic Roadmap
+    dateFormat YYYY-MM-DD
+    axisFormat %b %Y
     section Core Geometry
-    StaadPro.Interop (Geometry) (v1.0)      :done, g1, 2026-Q1, 2026-Q3
-    section Engineering Modeling
-    StaadPro.Interop.Loads (v1.1)            :active, l1, 2026-Q3, 2026-Q4
-    StaadPro.Interop.Properties (v1.2)       :p1, 2026-Q4, 2027-Q1
-    StaadPro.Interop.Supports (v1.3)         :s1, 2027-Q1, 2027-Q2
-    section Analysis & Post-Processing
-    StaadPro.Interop.Results (v1.4)          :r1, 2027-Q2, 2027-Q3
-    StaadPro.Interop.Design (v1.5)           :d1, 2027-Q3, 2027-Q4
-    StaadPro.Interop.Visualization (v1.6)    :v1, 2027-Q4, 2028-Q1
-    section Interop & Cloud
-    StaadPro.Interop.IdeaStatiCa Bridge (v2.0):i1, 2028-Q1, 2028-Q2
-    StaadPro.Interop.Core (.NET 8 Parser) (v2.5):c1, 2028-Q2, 2028-Q4
+    Geometry Foundation (v1.0)           :done, g1, 2026-08-01, 2026-09-01
+    section Modeling & Specs
+    Loads & Load Combinations (v1.1)     :active, l1, 2026-09-01, 2026-10-15
+    Properties & Materials (v1.2)        :p1, 2026-10-15, 2026-11-30
+    Supports & Boundaries (v1.3)         :s1, 2026-12-01, 2026-12-31
+    section Analysis & Design
+    Results & Internal Forces (v1.4)     :r1, 2027-01-01, 2027-01-31
+    Design & Viewport Automation (v1.5)  :d1, 2027-02-01, 2027-02-28
 ```
 
 ---
 
 ## Phase 1: StaadPro.Interop Geometry (v1.0 — Current Release)
 
-*Status: **Released & Active***
+*Status: **Released & Active (August 2026)***
 
 - **Fluent Geometry Generation**: Node, Beam, Plate, and Physical Member creation with fluent chaining.
 - **Parametric Surface & Mesh Generation**:
@@ -50,9 +47,9 @@ gantt
 
 ---
 
-## Phase 2: StaadPro.Interop.Loads & Combinations (v1.1 — Planned)
+## Phase 2: StaadPro.Interop.Loads & Combinations (v1.1 — September/October 2026)
 
-*Status: **Planned for Q4 2026***
+*Status: **Planned for Q3/Q4 2026 (Month 1–2)***
 
 Expands the suite with strongly-typed load generation, combination building, and load group management (`IOSLoad` and `OSLoadAdapter`):
 
@@ -82,9 +79,9 @@ Expands the suite with strongly-typed load generation, combination building, and
 
 ---
 
-## Phase 3: StaadPro.Interop.Properties & Materials (v1.2 — Planned)
+## Phase 3: StaadPro.Interop.Properties & Materials (v1.2 — November 2026)
 
-*Status: **Planned for Q1 2027***
+*Status: **Planned for Q4 2026 (Month 3)***
 
 Provides structural section catalogs, material models, and element specification management (`IOSProperty` and `OSPropertyAdapter`):
 
@@ -99,8 +96,7 @@ Provides structural section catalogs, material models, and element specification
   - Uniform thickness assignment and multi-layered composite shell definitions.
   - Surface thickness modifiers and orthotropic membrane definitions.
 - **Constitutive Material Models**:
-  - Isotropic and Orthotropic materials: Modulus of Elasticity ($E$), Poisson's Ratio ($
-u$), Density ($ho$), Thermal Expansion Coefficient ($lpha$), Damping Ratio ($eta$).
+  - Isotropic and Orthotropic materials: Modulus of Elasticity ($E$), Poisson's Ratio ($\nu$), Density ($\rho$), Thermal Expansion Coefficient ($\alpha$), Damping Ratio ($\beta$).
   - Standard material presets: Structural Steel (A992, A36, S355, E250), Concrete (C25/30, C30/37, 4000 psi), Aluminum, Timber.
 - **Member Specifications & Releases**:
   - Beam end releases (Start/End $F_x, F_y, F_z, M_x, M_y, M_z$ with partial moment release and elastic spring constants).
@@ -112,9 +108,9 @@ u$), Density ($ho$), Thermal Expansion Coefficient ($lpha$), Damping Ratio ($
 
 ---
 
-## Phase 4: StaadPro.Interop.Supports & Boundaries (v1.3 — Planned)
+## Phase 4: StaadPro.Interop.Supports & Boundaries (v1.3 — December 2026)
 
-*Status: **Planned for Q2 2027***
+*Status: **Planned for Q4 2026 (Month 4)***
 
 Comprehensive boundary condition, support constraint, and foundation spring management (`IOSSupport` and `OSSupportAdapter`):
 
@@ -132,9 +128,9 @@ Comprehensive boundary condition, support constraint, and foundation spring mana
 
 ---
 
-## Phase 5: StaadPro.Interop.Results & Analysis Engine (v1.4 — Planned)
+## Phase 5: StaadPro.Interop.Results & Analysis Engine (v1.4 — January 2027)
 
-*Status: **Planned for Q3 2027***
+*Status: **Planned for Q1 2027 (Month 5)***
 
 High-throughput post-processing, solver invocation, and analytical result extraction (`IOSOutput` and `OSOutputAdapter`):
 
@@ -151,17 +147,17 @@ High-throughput post-processing, solver invocation, and analytical result extrac
   - Maximum/minimum force envelopes across load combinations.
   - Beam local deflections and relative span deflection ratios ($L/\Delta$).
 - **Plate & Shell Stress Resultants**:
-  - Center and corner node stresses: Principal stresses ($\sigma_1, \sigma_2$), Von Mises equivalent stress ($\sigma_{vm}$), Maximum shear ($	au_{max}$).
+  - Center and corner node stresses: Principal stresses ($\sigma_1, \sigma_2$), Von Mises equivalent stress ($\sigma_{vm}$), Maximum shear ($\tau_{max}$).
   - Membrane forces ($N_x, N_y, N_{xy}$), Bending moments ($M_x, M_y, M_{xy}$), Out-of-plane transverse shear ($Q_x, Q_y$).
   - Top and bottom surface stress layer extraction.
 
 ---
 
-## Phase 6: StaadPro.Interop.Design & Code Checkers (v1.5 — Planned)
+## Phase 6: StaadPro.Interop.Design & Viewport Automation (v1.5 — February 2027)
 
-*Status: **Planned for Q4 2027***
+*Status: **Planned for Q1 2027 (Month 6)***
 
-Design code automation, parameter assignment, and code compliance evaluation (`IOSDesign` and `OSDesignAdapter`):
+Design code automation, parameter assignment, viewport visualization, and direct command scripting (`IOSDesign`, `IOSView`, `IOSCommands`):
 
 - **Design Code Parameter Management**:
   - Steel design parameters: Yield strength (`FYLD`), Ultimate tensile strength (`FU`), Unbraced length ratios (`UNT`, `UNB`), Effective length factors (`KY`, `KZ`), Moment amplification coefficients (`CMX`, `CMZ`).
@@ -171,68 +167,12 @@ Design code automation, parameter assignment, and code compliance evaluation (`I
   - Extraction of governing load cases, critical design clauses, and governing failure modes.
   - Maximum utilization ratio ($UR$) extraction across all structural members.
   - Automated member profile resizing and weight optimization loops.
-
----
-
-## Phase 7: StaadPro.Interop.Visualization & Viewport (v1.6 — Planned)
-
-*Status: **Planned for Q1 2028***
-
-Graphical viewport manipulation, diagnostic coloring, and automated report rendering (`IOSView` and `OSViewAdapter`):
-
-- **Viewport Camera Control**:
-  - Zoom Extents, Pan, Isometric, Plan (X-Z), Elevation (X-Y, Y-Z), and custom viewpoint angles.
-- **Diagnostic Color Shading**:
-  - Color shading by Property ID, Material Type, Group Name, or Utilization Ratio heatmaps.
-- **Diagram Overlays & Screen Captures**:
-  - Programmatic activation of Bending Moment Diagrams (BMD), Shear Force Diagrams (SFD), Axial Force Diagrams (AFD), and Deformed Shapes.
-  - High-resolution lossless screenshot captures for automated PDF calculation report generation.
-
----
-
-## Phase 8: StaadPro.Interop.Commands & Direct Scripting (v1.7 — Planned)
-
-*Status: **Planned for Q1 2028***
-
-Direct access to low-level STAAD command streams (`IOSCommands` and `OSCommandsAdapter`):
-
-- **Raw Command Stream Execution**:
-  - Dispatch raw OpenSTAAD command strings directly to the active model buffer.
-- **Batch Command Queuing**:
-  - Transaction-style command batching with rollback support on error.
-
----
-
-## Phase 9: StaadPro.Interop.IdeaStatiCa Bridge (v2.0 — Planned)
-
-*Status: **Planned for Q2 2028***
-
-Direct, automated structural steel connection design bridge to **IDEA StatiCa Connection** (`IOpenStaadIdeaStatiCaAdapter`):
-
-- **Analytical Node & Joint Topology Extraction**:
-  - Identify analytical connection nodes and all incident connected members.
-  - Determine member analytical roles: Continuous Bearing Member, Attached Beam, Web Diagonal, Flange Diagonal.
-  - Extract physical member geometric cut-planes, insertion points, and eccentricities.
-- **Cross-Section & Material Mapping**:
-  - Automatic translation of STAAD cross-sections and materials to IDEA StatiCa Open Model (IOM).
-- **Internal Force Envelope Transfer**:
-  - Direct transfer of all 6-DOF internal forces ($N, V_y, V_z, M_x, M_y, M_z$) at joint node cuts across all active load combinations.
-  - Automated generation of `.ideacon` project files for instant FEA connection verification.
-
----
-
-## Phase 10: StaadPro.Interop.Core — Cross-Platform .NET 8 Parser (v2.5 — Planned)
-
-*Status: **Planned for Q4 2028***
-
-A 100% standalone, cross-platform .NET 8 / .NET Standard parser that reads and writes STAAD.Pro input files (`.std`) without requiring a STAAD.Pro license or Windows COM:
-
-- **Cross-Platform Compatibility**: Runs seamlessly on **Linux**, **macOS**, **Windows**, and **WebAssembly (WASM)**.
-- **Full `.std` Grammar Lexer/Parser**: High-performance streaming parser for geometry, property blocks, load cases, combinations, and analysis commands.
-- **BIM & Open Formats Interoperability**:
-  - Direct export from `.std` models to **IFC4 (Structural Analysis View)**.
-  - **Speckle** cloud stream connector for web-based 3D structural collaboration.
-  - **glTF / Three.js** exporter for interactive browser-based 3D rendering.
+- **Viewport Camera & Diagnostic Rendering**:
+  - Viewport control: Zoom Extents, Pan, Isometric, Plan, Elevation views.
+  - Diagnostic color shading by Property ID, Material Type, Group Name, or Utilization Ratio heatmaps.
+  - Programmatic activation of BMD, SFD, AFD diagrams and high-resolution screenshot captures for PDF calculation reports.
+- **Direct Command Stream Scripting**:
+  - Low-level raw command dispatch and transactional batch queuing directly to the active model buffer.
 
 ---
 
@@ -240,8 +180,8 @@ A 100% standalone, cross-platform .NET 8 / .NET Standard parser that reads and w
 
 We encourage structural engineers, software developers, and research institutions to participate in shaping the future of StaadPro.Interop:
 
-1. **Vote on Features**: Check out our [GitHub Discussions](https://github.com/OpenSTAAD/StaadPro.Interop/discussions) and upvote proposals.
-2. **Submit RFCs**: Propose new design code support or BIM workflows via [Feature Requests](.github/ISSUE_TEMPLATE/feature_request.md).
+1. **Vote on Features**: Check out our [GitHub Discussions](https://github.com/structuraldeveloper/StaadPro.Interop/discussions) and upvote proposals.
+2. **Submit RFCs**: Propose new design code support or engineering workflows via [Feature Requests](.github/ISSUE_TEMPLATE/feature_request.md).
 3. **Contribute Code**: Check out good first issues in our repository and review [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
