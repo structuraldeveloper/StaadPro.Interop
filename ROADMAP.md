@@ -1,34 +1,35 @@
 # StaadPro.Interop — Strategic Product Roadmap
 
-This document outlines the architectural roadmap and upcoming milestone releases for the **StaadPro.Interop** open-source ecosystem over the next **6 months**.
+This document outlines the architectural roadmap and upcoming milestone releases for the **StaadPro.Interop** open-source ecosystem.
 
 Our mission is to provide the structural engineering and computational design community with a modern, high-performance, strongly-typed .NET suite covering the entire Bentley STAAD.Pro automation lifecycle.
 
 ---
 
-## 6-Month Milestone Overview
+## Milestone Overview
 
 ```mermaid
 gantt
-    title StaadPro.Interop 6-Month Strategic Roadmap
+    title StaadPro.Interop Strategic Product Roadmap (2026 - 2027)
     dateFormat YYYY-MM-DD
     axisFormat %b %Y
-    section Core Geometry
-    Geometry Foundation (v1.0)           :done, g1, 2026-08-01, 2026-09-01
-    section Modeling & Specs
-    Loads & Load Combinations (v1.1)     :active, l1, 2026-09-01, 2026-10-15
-    Properties & Materials (v1.2)        :p1, 2026-10-15, 2026-11-30
-    Supports & Boundaries (v1.3)         :s1, 2026-12-01, 2026-12-31
-    section Analysis & Design
-    Results & Internal Forces (v1.4)     :r1, 2027-01-01, 2027-01-31
-    Design & Viewport Automation (v1.5)  :d1, 2027-02-01, 2027-02-28
+    section Core Foundation
+    Geometry Foundation (v1.0)              :done, g1, 2026-08-01, 2026-09-15
+    section Modeling & Properties
+    Loads & Load Combinations (v1.1)        :active, l1, 2026-09-15, 2026-11-01
+    Properties & Material Models (v1.2)     :p1, 2026-11-01, 2026-12-15
+    Supports & Soil Boundaries (v1.3)       :s1, 2026-12-15, 2027-01-31
+    section Solvers & Verification
+    Results & Analysis Engine (v1.4)        :r1, 2027-02-01, 2027-03-15
+    Design & Code Optimization (v1.5)       :d1, 2027-03-15, 2027-04-30
+    Viewport & Command Automation (v1.6)    :v1, 2027-04-15, 2027-05-15
 ```
 
 ---
 
 ## Phase 1: StaadPro.Interop Geometry (v1.0 — Current Release)
 
-*Status: **Released & Active (August 2026)***
+*Status: **Released & Active (Q3 2026)***
 
 - **Fluent Geometry Generation**: Node, Beam, Plate, and Physical Member creation with fluent chaining.
 - **Parametric Surface & Mesh Generation**:
@@ -47,9 +48,9 @@ gantt
 
 ---
 
-## Phase 2: StaadPro.Interop.Loads & Combinations (v1.1 — September/October 2026)
+## Phase 2: StaadPro.Interop.Loads & Combinations (v1.1)
 
-*Status: **Planned for Q3/Q4 2026 (Month 1–2)***
+*Status: **Target: Q4 2026***
 
 Expands the suite with strongly-typed load generation, combination building, and load group management (`IOSLoad` and `OSLoadAdapter`):
 
@@ -79,9 +80,9 @@ Expands the suite with strongly-typed load generation, combination building, and
 
 ---
 
-## Phase 3: StaadPro.Interop.Properties & Materials (v1.2 — November 2026)
+## Phase 3: StaadPro.Interop.Properties & Materials (v1.2)
 
-*Status: **Planned for Q4 2026 (Month 3)***
+*Status: **Target: Q4 2026***
 
 Provides structural section catalogs, material models, and element specification management (`IOSProperty` and `OSPropertyAdapter`):
 
@@ -108,9 +109,9 @@ Provides structural section catalogs, material models, and element specification
 
 ---
 
-## Phase 4: StaadPro.Interop.Supports & Boundaries (v1.3 — December 2026)
+## Phase 4: StaadPro.Interop.Supports & Boundaries (v1.3)
 
-*Status: **Planned for Q4 2026 (Month 4)***
+*Status: **Target: Q1 2027***
 
 Comprehensive boundary condition, support constraint, and foundation spring management (`IOSSupport` and `OSSupportAdapter`):
 
@@ -128,9 +129,9 @@ Comprehensive boundary condition, support constraint, and foundation spring mana
 
 ---
 
-## Phase 5: StaadPro.Interop.Results & Analysis Engine (v1.4 — January 2027)
+## Phase 5: StaadPro.Interop.Results & Analysis Engine (v1.4)
 
-*Status: **Planned for Q1 2027 (Month 5)***
+*Status: **Target: Q1 2027***
 
 High-throughput post-processing, solver invocation, and analytical result extraction (`IOSOutput` and `OSOutputAdapter`):
 
@@ -153,11 +154,11 @@ High-throughput post-processing, solver invocation, and analytical result extrac
 
 ---
 
-## Phase 6: StaadPro.Interop.Design & Viewport Automation (v1.5 — February 2027)
+## Phase 6: StaadPro.Interop.Design & Code Optimization (v1.5)
 
-*Status: **Planned for Q1 2027 (Month 6)***
+*Status: **Target: Q2 2027***
 
-Design code automation, parameter assignment, viewport visualization, and direct command scripting (`IOSDesign`, `IOSView`, `IOSCommands`):
+Design code automation, parameter assignment, and code compliance evaluation (`IOSDesign` and `OSDesignAdapter`):
 
 - **Design Code Parameter Management**:
   - Steel design parameters: Yield strength (`FYLD`), Ultimate tensile strength (`FU`), Unbraced length ratios (`UNT`, `UNB`), Effective length factors (`KY`, `KZ`), Moment amplification coefficients (`CMX`, `CMZ`).
@@ -167,6 +168,15 @@ Design code automation, parameter assignment, viewport visualization, and direct
   - Extraction of governing load cases, critical design clauses, and governing failure modes.
   - Maximum utilization ratio ($UR$) extraction across all structural members.
   - Automated member profile resizing and weight optimization loops.
+
+---
+
+## Phase 7: StaadPro.Interop.Visualization & Scripting Automation (v1.6)
+
+*Status: **Target: Q2 2027***
+
+Viewport graphical automation, diagnostic visualizers, and direct command stream execution (`IOSView` and `IOSCommands`):
+
 - **Viewport Camera & Diagnostic Rendering**:
   - Viewport control: Zoom Extents, Pan, Isometric, Plan, Elevation views.
   - Diagnostic color shading by Property ID, Material Type, Group Name, or Utilization Ratio heatmaps.
