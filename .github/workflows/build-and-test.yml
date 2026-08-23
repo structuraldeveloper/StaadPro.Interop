@@ -1,0 +1,33 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup VSTest
+      uses: darenm/setup-vstest@v1.2
+
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+
+    - name: Restore Dependencies
+      run: nuget restore StaadPro.Interop.sln
+
+    - name: Build Solution
+      run: msbuild StaadPro.Interop.sln /p:Configuration=Release /verbosity:minimal
+
+    - name: Run Tests
+      run: vstest.console.exe tests\StaadPro.Interop.Tests\bin\Release\net481\StaadPro.Interop.Tests.dll
