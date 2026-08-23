@@ -1,6 +1,6 @@
 # StaadPro.Interop
 
-[![Build Status](https://github.com/OpenSTAAD/StaadPro.Interop/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/OpenSTAAD/StaadPro.Interop/actions)
+[![Build Status](https://github.com/structuraldeveloper/StaadPro.Interop/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/structuraldeveloper/StaadPro.Interop/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Target: .NET 4.8.1](https://img.shields.io/badge/.NET-4.8.1-blue.svg)](https://dotnet.microsoft.com/)
 

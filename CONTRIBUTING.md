@@ -11,7 +11,7 @@ Thank you for your interest in contributing to **StaadPro.Interop**! We welcome 
 
 2. **Clone and Build**:
    ```powershell
-   git clone https://github.com/OpenSTAAD/StaadPro.Interop.git
+   git clone https://github.com/structuraldeveloper/StaadPro.Interop.git
    cd StaadPro.Interop
    dotnet build StaadPro.Interop.sln -c Release
    ```
