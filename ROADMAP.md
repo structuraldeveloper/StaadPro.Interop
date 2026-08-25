@@ -1,4 +1,4 @@
-# StaadPro.Interop — Strategic Product Roadmap
+﻿# StaadPro.Interop ΓÇö Strategic Product Roadmap
 
 This document outlines the architectural roadmap and upcoming milestone releases for the **StaadPro.Interop** open-source ecosystem.
 
@@ -27,7 +27,7 @@ gantt
 
 ---
 
-## Phase 1: StaadPro.Interop Geometry (v1.0 — Current Release)
+## Phase 1: StaadPro.Interop Geometry (v1.0 ΓÇö Current Release)
 
 *Status: **Released & Active (Q3 2026)***
 

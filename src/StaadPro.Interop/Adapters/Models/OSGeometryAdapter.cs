@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using OpenSTAADUI;
 using StaadPro.Interop.Adapters.Interfaces;
 using StaadPro.Interop.Common;
 using StaadPro.Interop.Entities;
@@ -22,7 +21,7 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Properties
 
-        public OSGeometryUI ComObject { get; }
+        public dynamic ComObject { get; }
 
         #endregion
 

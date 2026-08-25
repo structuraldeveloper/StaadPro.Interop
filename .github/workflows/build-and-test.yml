@@ -14,20 +14,19 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Setup VSTest
-      uses: darenm/setup-vstest@v1.2
-
-    - name: Setup NuGet
-      uses: nuget/setup-nuget@v2
-
     - name: Restore Dependencies
-      run: nuget restore StaadPro.Interop.sln
+      run: dotnet restore StaadPro.Interop.sln
 
     - name: Build Solution
       run: msbuild StaadPro.Interop.sln /p:Configuration=Release /verbosity:minimal
 
     - name: Run Tests
-      run: vstest.console.exe tests\StaadPro.Interop.Tests\bin\Release\net481\StaadPro.Interop.Tests.dll
+      run: dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release --no-build

@@ -5,8 +5,8 @@ Thank you for your interest in contributing to **StaadPro.Interop**! We welcome 
 ## Development Setup
 
 1. **Prerequisites**:
+   - .NET SDK (8.0+ or .NET Framework 4.8.1 target support)
    - Visual Studio 2022 / JetBrains Rider / VS Code
-   - .NET SDK (supporting .NET Framework 4.8.1 target)
    - Bentley STAAD.Pro (required only for live COM integration tests, not for unit tests)
 
 2. **Clone and Build**:

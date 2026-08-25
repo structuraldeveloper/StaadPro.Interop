@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using OpenSTAADUI;
 using StaadPro.Interop.Common;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
@@ -17,7 +16,7 @@ namespace StaadPro.Interop.Adapters.Interfaces
         // Core COM binding
         // -------------------------------------------------------------------------
 
-        OSGeometryUI ComObject { get; }
+        dynamic ComObject { get; }
 
         bool IsZUp();
 
