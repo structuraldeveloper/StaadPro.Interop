@@ -12,10 +12,12 @@ A modern, strongly-typed, thread-safe .NET library providing high-level abstract
 
 - **Fluent API Design**: Chain node, beam, and plate creation operations seamlessly.
 - **Parametric Surface & Meshing Tools**: Complete support for annular surfaces, solid circular surfaces, density lines, density control points, and polygonal openings.
-- **Strongly-Typed Structural Entities**: Rich domain models for `Node`, `Beam`, `Plate`, `Member`, and generic/non-generic `EntityGroup<T>`.
+- **Load Case Management**: Clear primary and reference load cases with type-safe methods (`ClearPrimaryLoadCase`, `ClearReferenceLoadCase`).
+- **Zero Proprietary Binary Dependencies**: Completely decoupled from registered COM TypeLibs at build time. Compiles cleanly on any machine and CI environment.
+- **Strongly-Typed Structural Entities**: Rich domain models for `Node`, `Beam`, `Plate`, `Member`, `LoadCase`, and generic/non-generic `EntityGroup<T>`.
 - **Thread-Safe Multi-Threading & Async**: Parallelized entity creation, batch querying, and async Task-based geometry interrogation without COM deadlocks.
 - **Model Coordinate Conventions**: Query active model vertical-axis orientation (`Y-Up` vs `Z-Up`).
-- **Comprehensive Unit Testing**: Offline test suite covering analytical vector math, surface boundary algorithms, and orientation checks without requiring live STAAD hardware licenses.
+- **Comprehensive Unit Testing**: Offline test suite covering analytical vector math, surface boundary algorithms, load case operations, and orientation checks without requiring live STAAD hardware licenses.
 
 ---
 
@@ -31,6 +33,7 @@ using StaadPro.Interop.Adapters.Interfaces;
 using (var session = StaadGeometrySession.ConnectActiveInstance())
 {
     IOSGeometry geometry = session.Geometry;
+    IOSLoad load = session.Load;
     
     // Check coordinate system convention
     bool isZUp = geometry.IsZUp();
@@ -83,6 +86,26 @@ HashSet<Beam> allBeams = geometry.GetAllEntities<Beam>(nThreads: 4);
 IEnumerable<Plate> incidentPlates = geometry.GetPlatesConnectedAtNode(nodeId: 45);
 ```
 
+### 5. Clearing Primary & Reference Load Cases
+
+```csharp
+using StaadPro.Interop.Entities;
+using StaadPro.Interop.Enums;
+
+var deadLoad = new LoadCase(1, "DEAD_LOAD", LoadCaseType.PrimaryLoad);
+var refLoad = new LoadCase(101, "REF_EQUIPMENT", LoadCaseType.ReferenceLoad);
+
+// Clear single primary load case
+session.Load.ClearPrimaryLoadCase(deadLoad);
+
+// Clear reference load case
+session.Load.ClearReferenceLoadCase(refLoad);
+
+// Clear multiple load cases by ID
+session.Load.ClearPrimaryLoadCases(new[] { 1, 2, 3 });
+session.Load.ClearReferenceLoadCases(new[] { 101, 102 });
+```
+
 ---
 
 ## Architecture
@@ -90,11 +113,11 @@ IEnumerable<Plate> incidentPlates = geometry.GetPlatesConnectedAtNode(nodeId: 45
 ```
 StaadPro.Interop/
 ├── Adapters/
-│   ├── Interfaces/   # IOSGeometry and IOSBase contracts
-│   └── Models/       # OSGeometryAdapter implementation
+│   ├── Interfaces/   # IOSGeometry, IOSLoad, and IOSBase contracts
+│   └── Models/       # OSGeometryAdapter and OSLoadAdapter implementations
 ├── Common/           # Standalone IEntity and property store
-├── Entities/         # Node, Beam, Plate, Member, EntityGroup
-├── Enums/            # SurfaceType, RegionType, GroupType, BeamAxis, etc.
+├── Entities/         # Node, Beam, Plate, Member, LoadCase, EntityGroup
+├── Enums/            # LoadCaseType, SurfaceType, RegionType, GroupType, etc.
 ├── Extensions/       # Math, Node, Beam, Plate extension methods
 ├── Helpers/          # Angle, Entity, Group, and coordinate math helpers
 └── Models/           # StaadGeometrySession host wrapper
@@ -115,8 +138,6 @@ dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Releas
 ---
 
 ## Project Roadmap & Future Modules
-
-StaadPro.Interop begins with a high-performance Geometry foundation. Future milestones will expand the ecosystem with dedicated, decoupled modules for Loads, Properties, Supports, Analysis Results, Code Design, Viewport Visualization, and BIM Bridges.
 
 See [ROADMAP.md](ROADMAP.md) for the full architectural vision, milestone details, and planned modules.
 

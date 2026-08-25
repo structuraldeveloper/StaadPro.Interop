@@ -2,11 +2,11 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("StaadPro.Interop")]
-[assembly: AssemblyDescription("Modern strongly-typed .NET wrapper for Bentley STAAD.Pro OpenSTAAD Geometry COM API.")]
+[assembly: AssemblyDescription("Modern strongly-typed .NET wrapper for Bentley STAAD.Pro OpenSTAAD COM API.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("structs.dev")]
+[assembly: AssemblyCompany("structs-dev")]
 [assembly: AssemblyProduct("StaadPro.Interop")]
-[assembly: AssemblyCopyright("Copyright © 2026 structs.dev")]
+[assembly: AssemblyCopyright("Copyright © 2026 structs-dev")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
