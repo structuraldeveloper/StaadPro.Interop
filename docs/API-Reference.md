@@ -1,5 +1,21 @@
 # StaadPro.Interop API Reference
 
+## `OpenStaadWrapperProvider` Members
+- `Get(string fileFullPath = null)`: Acquires an `OpenStaadWrapper` by querying the Running Object Table (ROT), attaching to the active instance, opening the file, or starting STAAD.
+- `GetRunning()`: Attaches to an existing active STAAD session without launching or modifying model state.
+
+## `OpenStaadWrapper` Members
+- `Geometry`: Managed `IOSGeometry` interface.
+- `Load`: Managed `IOSLoad` interface.
+- `RawOpenStaad`: Root OpenSTAAD COM object.
+- `RawGeometry`: OpenSTAAD Geometry COM object.
+- `RawLoad`: OpenSTAAD Load COM object.
+- `IsDedicated`: Indicates if the instance is dedicated to the caller.
+- `IsConnected`: Indicates whether a valid STAAD COM instance is attached.
+- `BaseUnitSystem`: Active model base unit system (`Imperial`, `Metric`, `Unknown`).
+- `InputForceUnit`: Active force unit.
+- `InputLengthUnit`: Active length unit.
+
 ## `IOSGeometry` Members
 - `IsZUp()`: Returns whether the model uses global Z upwards.
 - `GetGlobalVerticalAxis()`: Returns `GlobalVerticalAxis.Y` or `GlobalVerticalAxis.Z`.
@@ -15,6 +31,19 @@
 - `DistributeTorque(...)`: Distributes torsional load as equivalent nodal forces.
 
 ## `IOSLoad` Members
+
+### Load Case Creation & Titles
+- `CreateNewPrimaryLoad(string lcTitle, LoadType loadType)`: Creates a new primary load case with automatic ID assignment.
+- `CreateNewPrimaryLoad(int lcId, string lcTitle, LoadType loadType)`: Creates a new primary load case with explicit ID.
+- `CreateNewPrimaryLoadEx(LoadCase lc)`: Creates a primary load case from a `LoadCase` entity.
+- `CreateNewPrimaryLoadEx2(LoadCase lc)`: Creates a primary load case with explicit ID from a `LoadCase` entity.
+- `CreateNewReferenceLoad(int lcId, string lcTitle, LoadType loadType)`: Creates a new reference load case.
+- `CreateNewReferenceLoad(LoadCase lc)`: Creates a reference load case from a `LoadCase` entity.
+- `GetLoadCaseTitle(int id)`: Retrieves the string title of any load case or combination by ID.
+- `SetLoadCaseActive(ILoadCase lc)`: Sets a primary or reference load case as active in the STAAD model.
+- `CreateNewLoadCase(ILoadCase lc)`: Creates a primary or reference load case based on `ILoadCase.CaseType`.
+
+### Load Case Clearing
 - `ClearPrimaryLoadCase(ILoadCase)`: Clears a single primary load case.
 - `ClearPrimaryLoadCase(ILoadCase, bool isReferenceLoad)`: Clears a primary load case with reference load flag.
 - `ClearPrimaryLoadCases(IEnumerable<ILoadCase>)`: Clears multiple primary load cases.

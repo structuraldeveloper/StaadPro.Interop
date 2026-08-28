@@ -11,6 +11,7 @@ namespace StaadPro.Interop.Entities
     {
         public LoadCase()
         {
+            Type = LoadType.None;
             CaseType = LoadCaseType.PrimaryLoad;
         }
 
@@ -19,10 +20,18 @@ namespace StaadPro.Interop.Entities
             Id = id;
         }
 
-        public LoadCase(int id, string title, LoadCaseType caseType = LoadCaseType.PrimaryLoad) : this(id)
+        public LoadCase(int id, string title, LoadCaseType caseType = LoadCaseType.PrimaryLoad, LoadType loadType = LoadType.None) : this(id)
         {
             Title = title;
             CaseType = caseType;
+            Type = loadType;
+        }
+
+        public LoadCase(string title, LoadType loadType = LoadType.Dead) : this()
+        {
+            Title = title;
+            Type = loadType;
+            CaseType = LoadCaseType.PrimaryLoad;
         }
 
         [JsonProperty(Order = 1)]
@@ -32,16 +41,19 @@ namespace StaadPro.Interop.Entities
         public string Title { get => Get<string>(); set => Set(value); }
 
         [JsonProperty(Order = 3)]
+        public LoadType Type { get => Get<LoadType>(); set => Set(value); }
+
+        [JsonProperty(Order = 4)]
         public LoadCaseType CaseType { get => Get<LoadCaseType>(); set => Set(value); }
 
         public override bool Equals(object obj)
         {
-            return obj is LoadCase other && Id == other.Id && CaseType == other.CaseType;
+            return obj is LoadCase other && Id == other.Id && CaseType == other.CaseType && Type == other.Type;
         }
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode() ^ CaseType.GetHashCode();
+            return Id.GetHashCode() ^ CaseType.GetHashCode() ^ Type.GetHashCode();
         }
 
         public static bool operator ==(LoadCase left, LoadCase right)

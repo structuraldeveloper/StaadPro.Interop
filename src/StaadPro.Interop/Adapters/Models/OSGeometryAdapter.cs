@@ -27,9 +27,9 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Constructor
 
-        public OSGeometryAdapter(StaadGeometrySession session) : base(session)
+        public OSGeometryAdapter(OpenStaadWrapper wrapper) : base(wrapper)
         {
-            ComObject = session.RawGeometry ?? throw new ArgumentNullException(nameof(session.RawGeometry));
+            ComObject = wrapper?.RawGeometry;
         }
 
         #endregion

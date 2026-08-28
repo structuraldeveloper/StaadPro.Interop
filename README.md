@@ -10,34 +10,36 @@ A modern, strongly-typed, thread-safe .NET library providing high-level abstract
 
 ## Highlights
 
+- **OpenStaadWrapper & Provider**: Flexible acquisition via `OpenStaadWrapperProvider.Get()` and `GetRunning()` using Windows Running Object Table (ROT) lookup, active instance attachment, or automated background launching.
 - **Fluent API Design**: Chain node, beam, and plate creation operations seamlessly.
 - **Parametric Surface & Meshing Tools**: Complete support for annular surfaces, solid circular surfaces, density lines, density control points, and polygonal openings.
-- **Load Case Management**: Clear primary and reference load cases with type-safe methods (`ClearPrimaryLoadCase`, `ClearReferenceLoadCase`).
+- **Load Case Creation & Management**: Create primary load cases (`CreateNewPrimaryLoad`), reference load cases (`CreateNewReferenceLoad`), query titles (`GetLoadCaseTitle`), and clear load cases (`ClearPrimaryLoadCase`, `ClearReferenceLoadCase`).
 - **Zero Proprietary Binary Dependencies**: Completely decoupled from registered COM TypeLibs at build time. Compiles cleanly on any machine and CI environment.
 - **Strongly-Typed Structural Entities**: Rich domain models for `Node`, `Beam`, `Plate`, `Member`, `LoadCase`, and generic/non-generic `EntityGroup<T>`.
 - **Thread-Safe Multi-Threading & Async**: Parallelized entity creation, batch querying, and async Task-based geometry interrogation without COM deadlocks.
-- **Model Coordinate Conventions**: Query active model vertical-axis orientation (`Y-Up` vs `Z-Up`).
-- **Comprehensive Unit Testing**: Offline test suite covering analytical vector math, surface boundary algorithms, load case operations, and orientation checks without requiring live STAAD hardware licenses.
+- **Model Coordinate & Unit Conventions**: Query active model vertical-axis orientation (`Y-Up` vs `Z-Up`) and base unit systems (`Imperial` vs `Metric`).
+- **Comprehensive Unit Testing**: Offline test suite covering analytical vector math, surface boundary algorithms, load case operations, and wrapper life-cycle without requiring live STAAD hardware licenses.
 
 ---
 
 ## Quick Start
 
-### 1. Connecting to an Active STAAD.Pro Instance
+### 1. Connecting to STAAD.Pro via OpenStaadWrapperProvider
 
 ```csharp
 using StaadPro.Interop.Models;
+using StaadPro.Interop.Services;
 using StaadPro.Interop.Adapters.Interfaces;
 
-// Connect to running STAAD.Pro instance via COM
-using (var session = StaadGeometrySession.ConnectActiveInstance())
+// Acquire wrapper for active session or specific model file
+using (OpenStaadWrapper wrapper = OpenStaadWrapperProvider.Get(@"C:\Projects\Structure.std"))
 {
-    IOSGeometry geometry = session.Geometry;
-    IOSLoad load = session.Load;
+    IOSGeometry geometry = wrapper.Geometry;
+    IOSLoad load = wrapper.Load;
     
-    // Check coordinate system convention
+    // Check coordinate system and base units
     bool isZUp = geometry.IsZUp();
-    Console.WriteLine($"Active vertical axis: {geometry.GetGlobalVerticalAxis()}");
+    Console.WriteLine($"Base units: {wrapper.BaseUnitSystem}, Vertical axis: {geometry.GetGlobalVerticalAxis()}");
 }
 ```
 
@@ -86,24 +88,26 @@ HashSet<Beam> allBeams = geometry.GetAllEntities<Beam>(nThreads: 4);
 IEnumerable<Plate> incidentPlates = geometry.GetPlatesConnectedAtNode(nodeId: 45);
 ```
 
-### 5. Clearing Primary & Reference Load Cases
+### 5. Creating & Managing Load Cases
 
 ```csharp
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
 
-var deadLoad = new LoadCase(1, "DEAD_LOAD", LoadCaseType.PrimaryLoad);
-var refLoad = new LoadCase(101, "REF_EQUIPMENT", LoadCaseType.ReferenceLoad);
+// Create new primary load cases
+int deadLoadId = wrapper.Load.CreateNewPrimaryLoad(1, "DEAD_LOAD", LoadType.Dead);
+int liveLoadId = wrapper.Load.CreateNewPrimaryLoad(2, "ROOF_LIVE", LoadType.RoofLive);
 
-// Clear single primary load case
-session.Load.ClearPrimaryLoadCase(deadLoad);
+// Create reference load case
+int refEquipId = wrapper.Load.CreateNewReferenceLoad(101, "EQUIPMENT_DEAD", LoadType.Dead);
 
-// Clear reference load case
-session.Load.ClearReferenceLoadCase(refLoad);
+// Query load case title
+string title = wrapper.Load.GetLoadCaseTitle(deadLoadId);
+Console.WriteLine($"Load Case {deadLoadId}: {title}");
 
-// Clear multiple load cases by ID
-session.Load.ClearPrimaryLoadCases(new[] { 1, 2, 3 });
-session.Load.ClearReferenceLoadCases(new[] { 101, 102 });
+// Clear load case
+var deadLoad = new LoadCase(deadLoadId, title, LoadCaseType.PrimaryLoad, LoadType.Dead);
+wrapper.Load.ClearPrimaryLoadCase(deadLoad);
 ```
 
 ---
@@ -117,10 +121,12 @@ StaadPro.Interop/
 │   └── Models/       # OSGeometryAdapter and OSLoadAdapter implementations
 ├── Common/           # Standalone IEntity and property store
 ├── Entities/         # Node, Beam, Plate, Member, LoadCase, EntityGroup
-├── Enums/            # LoadCaseType, SurfaceType, RegionType, GroupType, etc.
+├── Enums/            # LoadType, LoadCaseType, BaseUnitSystem, ForceInputUnit, LengthInputUnit, etc.
 ├── Extensions/       # Math, Node, Beam, Plate extension methods
-├── Helpers/          # Angle, Entity, Group, and coordinate math helpers
-└── Models/           # StaadGeometrySession host wrapper
+├── Helpers/          # Angle, Entity, Group, RotHelpers, and OpenStaadWrapperHelpers
+├── Interfaces/       # IOpenStaadWrapperResolver
+├── Models/           # OpenStaadWrapper host model
+└── Services/         # OpenStaadWrapperProvider
 ```
 
 ---

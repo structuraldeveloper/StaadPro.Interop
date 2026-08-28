@@ -7,7 +7,8 @@
 3. No COM registration or type library installation is required at build time.
 
 ## Key Namespaces
+- `StaadPro.Interop.Services`: `OpenStaadWrapperProvider` factory entry point.
+- `StaadPro.Interop.Models`: `OpenStaadWrapper` root container.
 - `StaadPro.Interop.Adapters.Interfaces`: `IOSGeometry` and `IOSLoad` interfaces.
-- `StaadPro.Interop.Models`: `StaadGeometrySession` connection entry point.
 - `StaadPro.Interop.Entities`: `Node`, `Beam`, `Plate`, `Member`, `LoadCase`, `EntityGroup`.
-- `StaadPro.Interop.Enums`: Enums for load case types, surface types, group types, coordinate axes.
+- `StaadPro.Interop.Enums`: Enums for load types (`LoadType`), load case classifications (`LoadCaseType`), unit systems (`BaseUnitSystem`), surface types, group types, coordinate axes.

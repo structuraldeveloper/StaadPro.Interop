@@ -10,22 +10,25 @@ namespace StaadPro.Interop.Tests.Entities
         [Test]
         public void LoadCase_DefaultProperties_InitializeCorrectly()
         {
-            var lc = new LoadCase(1, "DEAD_LOAD", LoadCaseType.PrimaryLoad);
+            var lc = new LoadCase(1, "DEAD_LOAD", LoadCaseType.PrimaryLoad, LoadType.Dead);
             Assert.AreEqual(1, lc.Id);
             Assert.AreEqual("DEAD_LOAD", lc.Title);
             Assert.AreEqual(LoadCaseType.PrimaryLoad, lc.CaseType);
+            Assert.AreEqual(LoadType.Dead, lc.Type);
         }
 
         [Test]
-        public void LoadCase_Equality_ComparesByIdAndCaseType()
+        public void LoadCase_Equality_ComparesByIdAndCaseTypeAndLoadType()
         {
-            var lc1 = new LoadCase(5, "WIND_X", LoadCaseType.PrimaryLoad);
-            var lc2 = new LoadCase(5, "WIND_X_MODIFIED", LoadCaseType.PrimaryLoad);
-            var lc3 = new LoadCase(5, "WIND_X", LoadCaseType.ReferenceLoad);
+            var lc1 = new LoadCase(5, "WIND_X", LoadCaseType.PrimaryLoad, LoadType.Wind);
+            var lc2 = new LoadCase(5, "WIND_X_MODIFIED", LoadCaseType.PrimaryLoad, LoadType.Wind);
+            var lc3 = new LoadCase(5, "WIND_X", LoadCaseType.ReferenceLoad, LoadType.Wind);
+            var lc4 = new LoadCase(5, "WIND_X", LoadCaseType.PrimaryLoad, LoadType.Dead);
 
             Assert.AreEqual(lc1, lc2);
             Assert.IsTrue(lc1 == lc2);
             Assert.AreNotEqual(lc1, lc3);
+            Assert.AreNotEqual(lc1, lc4);
         }
     }
 }

@@ -31,6 +31,8 @@ gantt
 
 *Status: **Released & Active (Q3 2026)***
 
+- **OpenStaadWrapper Architecture**:
+  - `OpenStaadWrapper` and `OpenStaadWrapperProvider` supporting ROT inspection, running process attachment, and automated startup.
 - **Fluent Geometry Generation**: Node, Beam, Plate, and Physical Member creation with fluent chaining.
 - **Parametric Surface & Mesh Generation**:
   - Annular surfaces with inner/outer boundary generation and polygonal openings.
@@ -48,14 +50,18 @@ gantt
 
 ---
 
-## Phase 2: StaadPro.Interop.Loads & Combinations (v1.1)
+## Phase 2: StaadPro.Interop.Loads & Combinations (v1.1 — Active Milestone)
 
 *Status: **Target: Q4 2026***
 
 Expands the suite with strongly-typed load generation, combination building, and load group management (`IOSLoad` and `OSLoadAdapter`):
 
 - **Load Case Management**:
-  - Primary load case definitions (Dead, Live, Wind, Seismic, Snow, Thermal).
+  - Primary load case definitions (`CreateNewPrimaryLoad`, `CreateNewPrimaryLoadEx`, `CreateNewPrimaryLoadEx2`).
+  - Reference load definitions (`CreateNewReferenceLoad`).
+  - Load case metadata querying (`GetLoadCaseTitle`).
+  - Active load case switching (`SetLoadCaseActive`).
+  - Primary and reference load case clearing (`ClearPrimaryLoadCase`, `ClearReferenceLoadCase`).
   - Load combinations (Linear superposition, SRSS, ABS combinations).
   - Repeat load definitions for second-order P-Delta analysis.
 - **Nodal Loading**:
@@ -97,7 +103,8 @@ Provides structural section catalogs, material models, and element specification
   - Uniform thickness assignment and multi-layered composite shell definitions.
   - Surface thickness modifiers and orthotropic membrane definitions.
 - **Constitutive Material Models**:
-  - Isotropic and Orthotropic materials: Modulus of Elasticity ($E$), Poisson's Ratio ($\nu$), Density ($\rho$), Thermal Expansion Coefficient ($\alpha$), Damping Ratio ($\beta$).
+  - Isotropic and Orthotropic materials: Modulus of Elasticity ($E$), Poisson's Ratio ($
+u$), Density ($ho$), Thermal Expansion Coefficient ($lpha$), Damping Ratio ($eta$).
   - Standard material presets: Structural Steel (A992, A36, S355, E250), Concrete (C25/30, C30/37, 4000 psi), Aluminum, Timber.
 - **Member Specifications & Releases**:
   - Beam end releases (Start/End $F_x, F_y, F_z, M_x, M_y, M_z$ with partial moment release and elastic spring constants).
@@ -148,7 +155,7 @@ High-throughput post-processing, solver invocation, and analytical result extrac
   - Maximum/minimum force envelopes across load combinations.
   - Beam local deflections and relative span deflection ratios ($L/\Delta$).
 - **Plate & Shell Stress Resultants**:
-  - Center and corner node stresses: Principal stresses ($\sigma_1, \sigma_2$), Von Mises equivalent stress ($\sigma_{vm}$), Maximum shear ($\tau_{max}$).
+  - Center and corner node stresses: Principal stresses ($\sigma_1, \sigma_2$), Von Mises equivalent stress ($\sigma_{vm}$), Maximum shear ($	au_{max}$).
   - Membrane forces ($N_x, N_y, N_{xy}$), Bending moments ($M_x, M_y, M_{xy}$), Out-of-plane transverse shear ($Q_x, Q_y$).
   - Top and bottom surface stress layer extraction.
 
