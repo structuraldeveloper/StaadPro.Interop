@@ -95,7 +95,7 @@ Open your client `.csproj` file and add the `COMFileReference` pointing to your 
 
 When building a standalone client executable (WPF, WinForms, or Console App) connecting out-of-process to STAAD.Pro without administrator elevation, Windows Side-by-Side (SxS) requires COM interface external proxy/stub declarations.
 
-1. Copy [`templates/app.manifest`](../templates/app.manifest) into your client project folder.
+1. Copy [`app.manifest`](../src/StaadPro.Interop/app.manifest) into your client project folder.
 2. Ensure the `<comInterfaceExternalProxyStub>` elements are included for OpenSTAAD interfaces (`IOpenSTAADUI`, `IOSGeometryUI`, `IOSLoadUI`, etc.).
 3. In your client project properties under **Build Events** (Post-build event), add:
    ```cmd

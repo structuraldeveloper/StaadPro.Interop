@@ -199,8 +199,6 @@ We encourage structural engineers, software developers, and research institution
 
 1. **Vote on Features**: Check out our [GitHub Discussions](https://github.com/structuraldeveloper/StaadPro.Interop/discussions) and upvote proposals.
 2. **Submit RFCs**: Propose new design code support or engineering workflows via [Feature Requests](.github/ISSUE_TEMPLATE/feature_request.md).
-3. **Contribute Code**: Check out good first issues in our repository and review [CONTRIBUTING.md](CONTRIBUTING.md).
-
 ---
 
 *StaadPro.Interop is an independent open-source project and is not officially affiliated with or endorsed by Bentley Systems, Incorporated.*
