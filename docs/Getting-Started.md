@@ -5,7 +5,11 @@
 StaadPro.Interop provides a modern, strongly-typed .NET interface for Bentley STAAD.Pro.
 
 - **Target Frameworks**: .NET Framework 4.8.1 / .NET 8.0
-- **Supported STAAD Versions**: STAAD.Pro 2025, STAAD.Pro 2024, STAAD.Pro 2023, STAAD.Pro CONNECT Edition (v22), and STAAD.Pro V8i (SS6).
+- **Supported STAAD Versions**: STAAD.Pro 2025, STAAD.Pro 2024, STAAD.Pro 2023, and STAAD.Pro CONNECT Edition.
+
+> [!IMPORTANT]
+> **STAAD.Pro Version Compatibility ($\ge 2024$ recommended)**:
+> While basic geometry querying functions are backward-compatible, several advanced functions in this library (including extended load case creation/overloads, reference load case methods, and specific parametric surface definitions) require **STAAD.Pro 2024 or higher** ($\ge 2024$). These functions may not be available or supported in STAAD.Pro 2023 or older releases. For the best compatibility and full feature support, ensure STAAD.Pro 2024 or newer (e.g., STAAD.Pro 2024 / 2025) is installed.
 
 ---
 

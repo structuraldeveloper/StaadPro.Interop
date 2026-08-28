@@ -3,8 +3,9 @@
 [![Build Status](https://github.com/structuraldeveloper/StaadPro.Interop/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/structuraldeveloper/StaadPro.Interop/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Target: .NET 4.8.1](https://img.shields.io/badge/.NET-4.8.1-blue.svg)](https://dotnet.microsoft.com/)
+[![STAAD.Pro Version: >= 2024](https://img.shields.io/badge/STAAD.Pro-%3E%3D%202024-brightgreen.svg)](https://www.bentley.com/)
 
-A modern, strongly-typed, thread-safe .NET library providing high-level abstractions over the **Bentley STAAD.Pro OpenSTAAD COM API**.
+A modern, strongly-typed, thread-safe .NET library providing high-level abstractions over the **Bentley STAAD.Pro OpenSTAAD COM API** (STAAD.Pro 2024 / 2025 or newer recommended).
 
 ---
 
@@ -14,6 +15,7 @@ A modern, strongly-typed, thread-safe .NET library providing high-level abstract
 - **Fluent API Design**: Chain node, beam, and plate creation operations seamlessly.
 - **Parametric Surface & Meshing Tools**: Complete support for annular surfaces, solid circular surfaces, density lines, density control points, and polygonal openings.
 - **Load Case Creation & Management**: Create primary load cases (`CreateNewPrimaryLoad`), reference load cases (`CreateNewReferenceLoad`), query titles (`GetLoadCaseTitle`), and clear load cases (`ClearPrimaryLoadCase`, `ClearReferenceLoadCase`).
+- **STAAD.Pro >= 2024 Compatibility**: Advanced load cases, reference load overloads, and surface methods are designed for STAAD.Pro 2024, 2025, or newer.
 - **Zero Proprietary Binary Dependencies**: Completely decoupled from registered COM TypeLibs at build time. Compiles cleanly on any machine and CI environment.
 - **Strongly-Typed Structural Entities**: Rich domain models for `Node`, `Beam`, `Plate`, `Member`, `LoadCase`, and generic/non-generic `EntityGroup<T>`.
 - **Thread-Safe Multi-Threading & Async**: Parallelized entity creation, batch querying, and async Task-based geometry interrogation without COM deadlocks.
