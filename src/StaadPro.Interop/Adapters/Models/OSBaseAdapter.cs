@@ -9,11 +9,11 @@ namespace StaadPro.Interop.Adapters.Models
     /// </summary>
     public abstract class OSBaseAdapter : IOSBase
     {
-        protected OSBaseAdapter(StaadGeometrySession session)
+        protected OSBaseAdapter(OpenStaadWrapper wrapper)
         {
-            Session = session ?? throw new ArgumentNullException(nameof(session));
+            Wrapper = wrapper ?? throw new ArgumentNullException(nameof(wrapper));
         }
 
-        public StaadGeometrySession Session { get; }
+        public OpenStaadWrapper Wrapper { get; }
     }
 }

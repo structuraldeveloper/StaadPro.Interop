@@ -13,15 +13,17 @@ namespace StaadPro.Interop.Adapters.Models
     /// </summary>
     public class OSLoadAdapter : OSBaseAdapter, IOSLoad
     {
-        public OSLoadAdapter(StaadGeometrySession session) : base(session)
+        public OSLoadAdapter(OpenStaadWrapper wrapper) : base(wrapper)
         {
-            ComObject = session?.RawLoad;
+            ComObject = wrapper?.RawLoad;
         }
 
         /// <summary>
         /// Gets the underlying COM load object.
         /// </summary>
         public dynamic ComObject { get; }
+
+        #region Load Case Clearing
 
         public bool ClearPrimaryLoadCase(ILoadCase loadCase, bool isReferenceLoad) =>
             ClearPrimaryLoadCases(new List<ILoadCase> { loadCase }, isReferenceLoad);
@@ -82,5 +84,105 @@ namespace StaadPro.Interop.Adapters.Models
             dynamic result = ComObject.ClearReferenceLoadCase(ids);
             return result != null && (int)result == 1;
         }
+
+        #endregion
+
+        #region Load Case Creation & Titles
+
+        public int CreateNewPrimaryLoad(string lcTitle, LoadType loadType)
+        {
+            if (string.IsNullOrEmpty(lcTitle)) throw new ArgumentNullException(nameof(lcTitle));
+            if (ComObject == null) throw new InvalidOperationException("STAAD Load COM object is not initialized.");
+            dynamic result = ComObject.CreateNewPrimaryLoadEx(lcTitle, (int)loadType);
+            return Convert.ToInt32(result);
+        }
+
+        public int CreateNewPrimaryLoad(int lcId, string lcTitle, LoadType loadType)
+        {
+            if (string.IsNullOrEmpty(lcTitle)) throw new ArgumentNullException(nameof(lcTitle));
+            if (ComObject == null) throw new InvalidOperationException("STAAD Load COM object is not initialized.");
+            dynamic result = ComObject.CreateNewPrimaryLoadEx2(lcTitle, (int)loadType, lcId);
+            return Convert.ToInt32(result);
+        }
+
+        public int CreateNewPrimaryLoadEx(LoadCase lc)
+        {
+            if (lc == null) throw new ArgumentNullException(nameof(lc));
+            return CreateNewPrimaryLoad(lc.Title, lc.Type);
+        }
+
+        public int CreateNewPrimaryLoadEx2(LoadCase lc)
+        {
+            if (lc == null) throw new ArgumentNullException(nameof(lc));
+            return CreateNewPrimaryLoad(lc.Id, lc.Title, lc.Type);
+        }
+
+        public int CreateNewReferenceLoad(int lcId, string lcTitle, LoadType loadType)
+        {
+            if (string.IsNullOrEmpty(lcTitle)) throw new ArgumentNullException(nameof(lcTitle));
+            if (ComObject == null) throw new InvalidOperationException("STAAD Load COM object is not initialized.");
+            dynamic result = ComObject.CreateNewReferenceLoad(lcId, lcTitle, (int)loadType);
+            return Convert.ToInt32(result);
+        }
+
+        public int CreateNewReferenceLoad(LoadCase lc)
+        {
+            if (lc == null) throw new ArgumentNullException(nameof(lc));
+            return CreateNewReferenceLoad(lc.Id, lc.Title, lc.Type);
+        }
+
+        public string GetLoadCaseTitle(int id)
+        {
+            if (ComObject == null) throw new InvalidOperationException("STAAD Load COM object is not initialized.");
+            dynamic result = ComObject.GetLoadCaseTitle(id);
+            return result != null ? result.ToString() : string.Empty;
+        }
+
+        public IOSLoad SetLoadCaseActive(ILoadCase lc)
+        {
+            if (lc == null) throw new ArgumentNullException(nameof(lc));
+            if (ComObject == null) throw new InvalidOperationException("STAAD Load COM object is not initialized.");
+
+            if (lc.CaseType == LoadCaseType.ReferenceLoad)
+            {
+                ComObject.SetReferenceLoadActive(lc.Id);
+            }
+            else if (lc.CaseType == LoadCaseType.PrimaryLoad)
+            {
+                ComObject.SetLoadActive(lc.Id);
+            }
+
+            return this;
+        }
+
+        public IOSLoad CreateNewLoadCase(ILoadCase lc)
+        {
+            if (lc == null) throw new ArgumentNullException(nameof(lc));
+            if (ComObject == null) throw new InvalidOperationException("STAAD Load COM object is not initialized.");
+
+            if (lc.CaseType == LoadCaseType.ReferenceLoad)
+            {
+                CreateNewReferenceLoad(lc.Id, lc.Title, lc.Type);
+            }
+            else if (lc.CaseType == LoadCaseType.PrimaryLoad)
+            {
+                if (lc.Id > 0)
+                {
+                    CreateNewPrimaryLoad(lc.Id, lc.Title, lc.Type);
+                }
+                else
+                {
+                    CreateNewPrimaryLoad(lc.Title, lc.Type);
+                }
+            }
+            else
+            {
+                throw new NotSupportedException($"Load case type '{lc.CaseType}' is not supported for direct creation.");
+            }
+
+            return this;
+        }
+
+        #endregion
     }
 }

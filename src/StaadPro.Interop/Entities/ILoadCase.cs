@@ -14,6 +14,11 @@ namespace StaadPro.Interop.Entities
         string Title { get; }
 
         /// <summary>
+        /// Gets or sets the engineering load type (Dead, Live, Wind, Seismic, etc.).
+        /// </summary>
+        LoadType Type { get; set; }
+
+        /// <summary>
         /// Gets or sets the classification type of the load case.
         /// </summary>
         LoadCaseType CaseType { get; set; }
