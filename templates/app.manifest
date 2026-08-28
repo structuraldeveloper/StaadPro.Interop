@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+  <assemblyIdentity version="1.0.0.0" name="StaadPro.Interop.Client"/>
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
+    <security>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 / Windows 11 -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
+      <!-- Windows 8.1 -->
+      <supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}" />
+      <!-- Windows 8 -->
+      <supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}" />
+      <!-- Windows 7 -->
+      <supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}" />
+    </application>
+  </compatibility>
+
+  <!--
+    ================================================================================
+    Bentley OpenSTAAD COM Interface External Proxy/Stub Declarations
+    Enables registration-free COM interop and 64-bit out-of-process COM marshaling.
+    ================================================================================
+  -->
+  <comInterfaceExternalProxyStub name="IOSMemberSteelDgnParams" iid="{F40BDCDA-B3DE-495C-B84F-790F4456137F}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+  <comInterfaceExternalProxyStub name="IOpenSTAADUI" iid="{3F5B8055-31C6-446E-8BED-FEE43E09D4CC}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+  <comInterfaceExternalProxyStub name="IOSGeometryUI" iid="{C052FED9-A2D6-42E3-A271-2C6FB8461711}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+  <comInterfaceExternalProxyStub name="IStaadProWindow" iid="{9EF2FF8C-E574-4A04-9462-2E4500C8EADB}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+  <comInterfaceExternalProxyStub name="IOSViewUI" iid="{87B1975B-6031-487E-A0F9-FB8F69FA24E6}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+  <comInterfaceExternalProxyStub name="IOSOutputUI" iid="{824F1FC0-DC86-4CC4-A4C6-83C77D7B0496}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+  <comInterfaceExternalProxyStub name="IOSPropertyUI" iid="{F919EF7D-E1DD-48CB-B3C3-B3CAE9E3B5AB}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+  <comInterfaceExternalProxyStub name="IOSLoadUI" iid="{DAA37D16-821F-4137-88EB-DA4EB7650E90}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+  <comInterfaceExternalProxyStub name="IOSTableUI" iid="{CF1A7B89-A007-4844-A098-CBABAEBEF304}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+  <comInterfaceExternalProxyStub name="IOSSupportUI" iid="{B076EC62-9A33-4E1C-B38C-3E45090B8531}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+  <comInterfaceExternalProxyStub name="IOSCommandsUI" iid="{6B994A7C-122C-4828-B42B-1B0CADF91F9D}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+  <comInterfaceExternalProxyStub name="IOSDesignUI" iid="{ED218322-40EE-411C-8552-209DB2C4F32B}" tlbid="{EDA9FA7F-EFC9-4264-9513-39CF6E72604D}" proxyStubClsid32="{00020420-0000-0000-C000-000000000046}" />
+</assembly>
