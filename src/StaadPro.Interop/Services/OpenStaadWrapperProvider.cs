@@ -71,7 +71,7 @@ namespace StaadPro.Interop.Services
             }
             catch
             {
-                return new OpenStaadWrapper(null, false);
+                return null;
             }
         }
 
@@ -84,13 +84,19 @@ namespace StaadPro.Interop.Services
             }
             catch
             {
-                IList<object> running = RotHelpers.GetRunningOpenStaadInstances();
-                if (running.Count > 0)
+                try
                 {
-                    return new OpenStaadWrapper(running[0], isDedicated: false);
+                    IList<object> running = RotHelpers.GetRunningOpenStaadInstances();
+                    if (running.Count > 0)
+                    {
+                        return new OpenStaadWrapper(running[0], isDedicated: false);
+                    }
+                }
+                catch
+                {
                 }
 
-                return new OpenStaadWrapper(null, false);
+                return null;
             }
         }
     }

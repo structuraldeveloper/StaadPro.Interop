@@ -1,11 +1,13 @@
+using System;
 using System.Collections.Generic;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
+using StaadPro.Interop.Models;
 
 namespace StaadPro.Interop.Adapters.Interfaces
 {
     /// <summary>
-    /// Managed contract for STAAD.Pro OpenSTAAD Load operations.
+    /// Contract for performing Load operations and load case management via OpenSTAAD.
     /// </summary>
     public interface IOSLoad : IOSBase
     {
@@ -14,47 +16,47 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// <summary>
         /// Clears a primary load case from the active model.
         /// </summary>
-        /// <param name="loadCase">The load case to clear.</param>
+        /// <param name="loadCase">The primary load case to clear.</param>
+        /// <param name="isReferenceLoad">Flag indicating if the load case is reference load.</param>
         /// <returns>True if the load case was cleared successfully; otherwise false.</returns>
-        bool ClearPrimaryLoadCase(ILoadCase loadCase);
-
-        /// <summary>
-        /// Clears a primary load case from the active model with explicit reference load flag.
-        /// </summary>
-        /// <param name="loadCase">The load case to clear.</param>
-        /// <param name="isReferenceLoad">True if the load case is a reference load.</param>
-        /// <returns>True if the load case was cleared successfully; otherwise false.</returns>
-        bool ClearPrimaryLoadCase(ILoadCase loadCase, bool isReferenceLoad);
+        bool ClearPrimaryLoadCase(ILoadCase loadCase, bool isReferenceLoad = false);
 
         /// <summary>
         /// Clears multiple primary load cases from the active model.
         /// </summary>
-        /// <param name="loadCases">Collection of load cases to clear.</param>
+        /// <param name="loadCases">Collection of primary load cases to clear.</param>
+        /// <param name="isReferenceLoad">Flag indicating if the load cases are reference loads.</param>
         /// <returns>True if the load cases were cleared successfully; otherwise false.</returns>
-        bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases);
-
-        /// <summary>
-        /// Clears multiple primary load cases from the active model with explicit reference load flag.
-        /// </summary>
-        /// <param name="loadCases">Collection of load cases to clear.</param>
-        /// <param name="isReferenceLoad">True if the load cases are reference loads.</param>
-        /// <returns>True if the load cases were cleared successfully; otherwise false.</returns>
-        bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases, bool isReferenceLoad);
+        bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases, bool isReferenceLoad = false);
 
         /// <summary>
         /// Clears primary load cases by their integer identifiers.
         /// </summary>
-        /// <param name="lcIds">Collection of load case numbers.</param>
+        /// <param name="lcIds">Collection of primary load case numbers.</param>
+        /// <param name="isReferenceLoad">Flag indicating if the load cases are reference loads.</param>
         /// <returns>True if the load cases were cleared successfully; otherwise false.</returns>
-        bool ClearPrimaryLoadCases(IEnumerable<int> lcIds);
+        bool ClearPrimaryLoadCases(IEnumerable<int> lcIds, bool isReferenceLoad = false);
 
         /// <summary>
-        /// Clears primary load cases by their integer identifiers with explicit reference load flag.
+        /// Clears a primary load case from the active model.
         /// </summary>
-        /// <param name="lcIds">Collection of load case numbers.</param>
-        /// <param name="isReferenceLoad">True if the load cases are reference loads.</param>
-        /// <returns>True if the load cases were cleared successfully; otherwise false.</returns>
-        bool ClearPrimaryLoadCases(IEnumerable<int> lcIds, bool isReferenceLoad);
+        /// <param name="loadCase">The primary load case to clear.</param>
+        /// <returns>True if the primary load case was cleared successfully; otherwise false.</returns>
+        bool ClearPrimaryLoadCase(ILoadCase loadCase);
+
+        /// <summary>
+        /// Clears multiple primary load cases from the active model.
+        /// </summary>
+        /// <param name="loadCases">Collection of primary load cases to clear.</param>
+        /// <returns>True if the primary load cases were cleared successfully; otherwise false.</returns>
+        bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases);
+
+        /// <summary>
+        /// Clears primary load cases by their integer identifiers.
+        /// </summary>
+        /// <param name="lcIds">Collection of primary load case numbers.</param>
+        /// <returns>True if the primary load cases were cleared successfully; otherwise false.</returns>
+        bool ClearPrimaryLoadCases(IEnumerable<int> lcIds);
 
         /// <summary>
         /// Clears a reference load case from the active model.
@@ -148,6 +150,82 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// <param name="lc">The load case to create.</param>
         /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
         IOSLoad CreateNewLoadCase(ILoadCase lc);
+
+        #endregion
+
+        #region Support Settlement
+
+        /// <summary>
+        /// Applies support settlement/displacement to a single node by node ID.
+        /// </summary>
+        /// <param name="lc">Target load case.</param>
+        /// <param name="nodeId">Target node ID.</param>
+        /// <param name="direction">Settlement direction (Fx, Fy, Fz, Mx, My, Mz).</param>
+        /// <param name="mmSettlement">Settlement displacement in millimeters.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad AddSupportSettlement(ILoadCase lc, int nodeId, SettlementDirection direction, double mmSettlement);
+
+        /// <summary>
+        /// Applies support settlement/displacement to a single node.
+        /// </summary>
+        /// <param name="lc">Target load case.</param>
+        /// <param name="node">Target node entity.</param>
+        /// <param name="direction">Settlement direction (Fx, Fy, Fz, Mx, My, Mz).</param>
+        /// <param name="mmSettlement">Settlement displacement in millimeters.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad AddSupportSettlement(ILoadCase lc, Node node, SettlementDirection direction, double mmSettlement);
+
+        /// <summary>
+        /// Applies support settlement/displacement to multiple nodes.
+        /// </summary>
+        /// <param name="lc">Target load case.</param>
+        /// <param name="nodes">Target node entities.</param>
+        /// <param name="direction">Settlement direction (Fx, Fy, Fz, Mx, My, Mz).</param>
+        /// <param name="mmSettlement">Settlement displacement in millimeters.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<Node> nodes, SettlementDirection direction, double mmSettlement);
+
+        /// <summary>
+        /// Applies support settlement/displacement to multiple nodes by node IDs.
+        /// </summary>
+        /// <param name="lc">Target load case.</param>
+        /// <param name="nodeIds">Target node IDs.</param>
+        /// <param name="direction">Settlement direction (Fx, Fy, Fz, Mx, My, Mz).</param>
+        /// <param name="mmSettlement">Settlement displacement in millimeters.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<int> nodeIds, SettlementDirection direction, double mmSettlement);
+
+        #endregion
+
+        #region Batch Load Creation
+
+        /// <summary>
+        /// Creates a batch of primary load cases in the active STAAD model.
+        /// </summary>
+        /// <param name="primaryLoadCases">Collection of primary load cases to create.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad CreatePrimaryLoadCases(HashSet<ILoadCase> primaryLoadCases);
+
+        /// <summary>
+        /// Creates a batch of primary load cases in the active STAAD model.
+        /// </summary>
+        /// <param name="primaryLoadCases">Sequence of primary load cases to create.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad CreatePrimaryLoadCases(IEnumerable<ILoadCase> primaryLoadCases);
+
+        /// <summary>
+        /// Creates a batch of reference load cases in the active STAAD model.
+        /// </summary>
+        /// <param name="referenceLoads">Collection of reference load cases to create.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad CreateReferenceLoadCases(HashSet<ILoadCase> referenceLoads);
+
+        /// <summary>
+        /// Creates a batch of reference load cases in the active STAAD model.
+        /// </summary>
+        /// <param name="referenceLoads">Sequence of reference load cases to create.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad CreateReferenceLoadCases(IEnumerable<ILoadCase> referenceLoads);
 
         #endregion
     }

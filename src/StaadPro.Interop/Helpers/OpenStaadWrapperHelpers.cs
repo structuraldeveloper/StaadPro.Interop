@@ -28,7 +28,7 @@ namespace StaadPro.Interop.Helpers
                 }
                 catch
                 {
-                    return new OpenStaadWrapper(null, false);
+                    return null;
                 }
             }
 
@@ -100,7 +100,7 @@ namespace StaadPro.Interop.Helpers
             }
             catch
             {
-                return new OpenStaadWrapper(null, false);
+                return null;
             }
         }
 
@@ -131,7 +131,7 @@ namespace StaadPro.Interop.Helpers
             }
             catch
             {
-                return new OpenStaadWrapper(null, false);
+                return null;
             }
         }
 
@@ -159,7 +159,7 @@ namespace StaadPro.Interop.Helpers
                 }
             }
 
-            return new OpenStaadWrapper(null, false);
+            return null;
         }
     }
 }

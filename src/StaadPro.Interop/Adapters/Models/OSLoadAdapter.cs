@@ -15,7 +15,8 @@ namespace StaadPro.Interop.Adapters.Models
     {
         public OSLoadAdapter(OpenStaadWrapper wrapper) : base(wrapper)
         {
-            ComObject = wrapper?.RawLoad;
+            if (wrapper == null) throw new ArgumentNullException(nameof(wrapper));
+            ComObject = wrapper.RawLoad ?? throw new ArgumentNullException(nameof(wrapper.RawLoad), "STAAD Load COM object is not initialized.");
         }
 
         /// <summary>
@@ -177,7 +178,93 @@ namespace StaadPro.Interop.Adapters.Models
             }
             else
             {
-                throw new NotSupportedException($"Load case type '{lc.CaseType}' is not supported for direct creation.");
+                throw new NotSupportedException($"Load case type '{lc.CaseType}' is not supported for creation via OpenSTAAD.");
+            }
+
+            return this;
+        }
+
+        #endregion
+
+        #region Support Settlement
+
+        public IOSLoad AddSupportSettlement(ILoadCase lc, int nodeId, SettlementDirection direction, double mmSettlement)
+        {
+            return AddSupportSettlement(lc, new List<int> { nodeId }, direction, mmSettlement);
+        }
+
+        public IOSLoad AddSupportSettlement(ILoadCase lc, Node node, SettlementDirection direction, double mmSettlement)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            return AddSupportSettlement(lc, new List<int> { node.Id }, direction, mmSettlement);
+        }
+
+        public IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<Node> nodes, SettlementDirection direction, double mmSettlement)
+        {
+            if (nodes == null) throw new ArgumentNullException(nameof(nodes));
+            return AddSupportSettlement(lc, nodes.Select(n => n.Id), direction, mmSettlement);
+        }
+
+        public IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<int> nodeIds, SettlementDirection direction, double mmSettlement)
+        {
+            if (lc == null) throw new ArgumentNullException(nameof(lc));
+            if (nodeIds == null) throw new ArgumentNullException(nameof(nodeIds));
+
+            SetLoadCaseActive(lc);
+            int[] ids = nodeIds.ToArray();
+            if (ids.Length > 0 && ComObject != null)
+            {
+                ComObject.AddSupportDisplacement(ids, (int)direction, mmSettlement / 1000.0);
+            }
+
+            return this;
+        }
+
+        #endregion
+
+        #region Batch Load Creation
+
+        public IOSLoad CreatePrimaryLoadCases(HashSet<ILoadCase> primaryLoadCases) =>
+            CreatePrimaryLoadCases((IEnumerable<ILoadCase>)primaryLoadCases);
+
+        public IOSLoad CreatePrimaryLoadCases(IEnumerable<ILoadCase> primaryLoadCases)
+        {
+            if (primaryLoadCases != null)
+            {
+                foreach (ILoadCase lc in primaryLoadCases)
+                {
+                    if (lc is LoadCase pl)
+                    {
+                        CreateNewPrimaryLoad(pl.Title, pl.Type);
+                    }
+                    else if (lc != null)
+                    {
+                        CreateNewPrimaryLoad(lc.Title, LoadType.Dead);
+                    }
+                }
+            }
+
+            return this;
+        }
+
+        public IOSLoad CreateReferenceLoadCases(HashSet<ILoadCase> referenceLoads) =>
+            CreateReferenceLoadCases((IEnumerable<ILoadCase>)referenceLoads);
+
+        public IOSLoad CreateReferenceLoadCases(IEnumerable<ILoadCase> referenceLoads)
+        {
+            if (referenceLoads != null)
+            {
+                foreach (ILoadCase lc in referenceLoads)
+                {
+                    if (lc is LoadCase rl)
+                    {
+                        CreateNewReferenceLoad(rl.Id, rl.Title, rl.Type);
+                    }
+                    else if (lc != null)
+                    {
+                        CreateNewReferenceLoad(lc.Id, lc.Title, LoadType.Dead);
+                    }
+                }
             }
 
             return this;

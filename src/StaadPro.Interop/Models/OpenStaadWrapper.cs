@@ -13,23 +13,25 @@ namespace StaadPro.Interop.Models
     {
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenStaadWrapper"/> class wrapping the root OpenSTAAD COM object.
+        /// </summary>
+        /// <param name="openStaad">The root OpenSTAAD COM object retrieved from STAAD.Pro.</param>
+        /// <param name="isDedicated">Indicates whether the STAAD.Pro process is dedicated to this wrapper instance.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="openStaad"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="openStaad"/> does not expose valid STAAD COM interfaces.</exception>
         public OpenStaadWrapper(object openStaad, bool isDedicated = false)
         {
-            RawOpenStaad = openStaad;
+            RawOpenStaad = openStaad ?? throw new ArgumentNullException(nameof(openStaad), "OpenSTAAD COM instance cannot be null.");
             IsDedicated = isDedicated;
 
             SetUnmanagedObjects();
             SetManagedObjects();
-        }
 
-        public OpenStaadWrapper(object geometryComObject, object loadComObject, bool isDedicated = false)
-        {
-            RawGeometry = geometryComObject;
-            RawLoad = loadComObject;
-            IsDedicated = isDedicated;
-
-            if (geometryComObject != null) Geometry = new OSGeometryAdapter(this);
-            if (loadComObject != null) Load = new OSLoadAdapter(this);
+            if (Geometry == null && Load == null)
+            {
+                throw new ArgumentException("Provided OpenSTAAD instance is invalid or does not expose required Geometry or Load interfaces.", nameof(openStaad));
+            }
         }
 
         #endregion
@@ -84,7 +86,7 @@ namespace StaadPro.Interop.Models
         /// <summary>
         /// Indicates whether this wrapper is connected to a valid STAAD COM instance.
         /// </summary>
-        public bool IsConnected => RawOpenStaad != null || RawGeometry != null || RawLoad != null;
+        public bool IsConnected => RawOpenStaad != null && (Geometry != null || Load != null);
 
         #endregion
 
@@ -95,13 +97,13 @@ namespace StaadPro.Interop.Models
             if (RawOpenStaad == null) return;
             dynamic dynStaad = RawOpenStaad;
             try { RawGeometry = dynStaad.Geometry; } catch { RawGeometry = RawOpenStaad; }
-            try { RawLoad = dynStaad.Load; } catch { RawLoad = null; }
+            try { RawLoad = dynStaad.Load; } catch { RawLoad = RawOpenStaad; }
         }
 
         private void SetManagedObjects()
         {
-            Geometry = RawGeometry != null ? new OSGeometryAdapter(this) : null;
-            Load = RawLoad != null ? new OSLoadAdapter(this) : null;
+            try { Geometry = RawGeometry != null ? new OSGeometryAdapter(this) : null; } catch { Geometry = null; }
+            try { Load = RawLoad != null ? new OSLoadAdapter(this) : null; } catch { Load = null; }
         }
 
         private BaseUnitSystem GetBaseUnitSystem()

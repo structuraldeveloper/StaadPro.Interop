@@ -37,12 +37,11 @@ namespace StaadPro.Interop.Tests.Services
         }
 
         [Test]
-        public void OpenStaadWrapperProvider_DefaultGetRunning_ReturnsDisconnectedWhenNoStaad()
+        public void OpenStaadWrapperProvider_DefaultGetRunning_ReturnsNullWhenNoStaad()
         {
             var wrapper = OpenStaadWrapperProvider.GetRunning();
-            Assert.IsNotNull(wrapper);
-            // In headless CI runner without STAAD installed, it safely returns disconnected wrapper
-            Assert.IsNotNull(wrapper);
+            // In headless CI runner without STAAD installed, it safely returns null
+            Assert.IsNull(wrapper);
         }
     }
 }
