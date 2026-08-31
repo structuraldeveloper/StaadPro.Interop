@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Models;
@@ -34,15 +35,16 @@ namespace StaadPro.Interop.Tests.Models
         }
 
         [Test]
-        public void OpenStaadWrapper_NullComObject_InitializesDisconnected()
+        public void OpenStaadWrapper_NullComObject_ThrowsArgumentNullException()
         {
-            using (var wrapper = new OpenStaadWrapper(null, isDedicated: false))
-            {
-                Assert.IsFalse(wrapper.IsConnected);
-                Assert.IsNull(wrapper.Geometry);
-                Assert.IsNull(wrapper.Load);
-                Assert.AreEqual(BaseUnitSystem.Unknown, wrapper.BaseUnitSystem);
-            }
+            Assert.Throws<ArgumentNullException>(() => new OpenStaadWrapper(null, isDedicated: false));
+        }
+
+        [Test]
+        public void OpenStaadWrapper_SingleConstructorOnly_Enforced()
+        {
+            var constructors = typeof(OpenStaadWrapper).GetConstructors();
+            Assert.AreEqual(1, constructors.Length, "OpenStaadWrapper must only expose a single constructor taking the root OpenSTAAD object.");
         }
 
         [Test]
@@ -58,20 +60,6 @@ namespace StaadPro.Interop.Tests.Models
                 Assert.AreEqual(BaseUnitSystem.Metric, wrapper.BaseUnitSystem);
                 Assert.AreEqual(ForceInputUnit.KiloNewton, wrapper.InputForceUnit);
                 Assert.AreEqual(LengthInputUnit.Meter, wrapper.InputLengthUnit);
-            }
-        }
-
-        [Test]
-        public void OpenStaadWrapper_WithSeparateComs_InitializesAdapters()
-        {
-            var geomCom = new MockGeometryCom();
-            var loadCom = new MockLoadCom();
-
-            using (var wrapper = new OpenStaadWrapper(geomCom, loadCom, isDedicated: false))
-            {
-                Assert.IsTrue(wrapper.IsConnected);
-                Assert.IsNotNull(wrapper.Geometry);
-                Assert.IsNotNull(wrapper.Load);
             }
         }
     }
