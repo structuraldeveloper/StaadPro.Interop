@@ -107,6 +107,31 @@ namespace StaadPro.Interop.Tests.Adapter
             {
                 SupportDisplacements.Add(((int[])nodeIds, Convert.ToInt32(direction), Convert.ToDouble(displacement)));
             }
+
+            public List<(int[] NodeIds, double Fx, double Fy, double Fz, double Mx, double My, double Mz)> NodalLoads { get; } = new List<(int[], double, double, double, double, double, double)>();
+            public List<(int[] BeamIds, int Direction, double Magnitude, double SPosition, double EPosition, double Eccentricity)> MemberUniformForces { get; } = new List<(int[], int, double, double, double, double)>();
+            public List<(int[] BeamIds, int Direction, double Magnitude, double Position, double Eccentricity)> MemberConcForces { get; } = new List<(int[], int, double, double, double)>();
+            public List<(int[] PlateIds, int Direction, double Pressure)> ElementPressures { get; } = new List<(int[], int, double)>();
+
+            public void AddNodalLoad(object nodeIds, object fx, object fy, object fz, object mx, object my, object mz)
+            {
+                NodalLoads.Add(((int[])nodeIds, Convert.ToDouble(fx), Convert.ToDouble(fy), Convert.ToDouble(fz), Convert.ToDouble(mx), Convert.ToDouble(my), Convert.ToDouble(mz)));
+            }
+
+            public void AddMemberUniformForce(object beamIds, object direction, object magnitude, object sPosition, object ePosition, object eccentricity)
+            {
+                MemberUniformForces.Add(((int[])beamIds, Convert.ToInt32(direction), Convert.ToDouble(magnitude), Convert.ToDouble(sPosition), Convert.ToDouble(ePosition), Convert.ToDouble(eccentricity)));
+            }
+
+            public void AddMemberConcForce(object beamIds, object direction, object magnitude, object position, object eccentricity)
+            {
+                MemberConcForces.Add(((int[])beamIds, Convert.ToInt32(direction), Convert.ToDouble(magnitude), Convert.ToDouble(position), Convert.ToDouble(eccentricity)));
+            }
+
+            public void AddElementPressure(object plateIds, object direction, object pressure)
+            {
+                ElementPressures.Add(((int[])plateIds, Convert.ToInt32(direction), Convert.ToDouble(pressure)));
+            }
         }
 
         [Test]
@@ -127,7 +152,10 @@ namespace StaadPro.Interop.Tests.Adapter
                 "CreateNewLoadCase",
                 "AddSupportSettlement",
                 "CreatePrimaryLoadCases",
-                "CreateReferenceLoadCases"
+                "CreateReferenceLoadCases",
+                "AddNodalLoad",
+                "AddMemberLoad",
+                "AddPlateUniformPressure"
             };
 
             var methods = typeof(IOSLoad).GetMethods().Select(m => m.Name).ToHashSet();
@@ -319,6 +347,97 @@ namespace StaadPro.Interop.Tests.Adapter
                 Assert.AreEqual("REF_DEAD", mockCom.CreatedReferenceLoads[0].Title);
                 Assert.AreEqual(102, mockCom.CreatedReferenceLoads[1].Id);
                 Assert.AreEqual("REF_LIVE", mockCom.CreatedReferenceLoads[1].Title);
+            }
+        }
+
+        [Test]
+        public void OSLoadAdapter_AddNodalLoad_CallsComWithForcesAndActivatesLoadCase()
+        {
+            var mockCom = new MockStaadLoadCom();
+            var mockRoot = new MockStaadRootCom(mockCom);
+            using (var wrapper = new OpenStaadWrapper(mockRoot))
+            {
+                IOSLoad loadAdapter = wrapper.Load;
+                var lc = new LoadCase(5, "LIVE", LoadCaseType.PrimaryLoad);
+                var node1 = new Node(10, 0, 0) { Id = 1 };
+                var node2 = new Node(20, 0, 0) { Id = 2 };
+                var nodalLoad = new NodalLoad(0, -50.0, 0, 0, 0, 10.5);
+
+                loadAdapter.AddNodalLoad(lc, node1, nodalLoad);
+                loadAdapter.AddNodalLoad(lc, new[] { node1, node2 }, nodalLoad);
+
+                Assert.AreEqual(5, mockCom.LastActiveLoadCaseId);
+                Assert.AreEqual(2, mockCom.NodalLoads.Count);
+                Assert.AreEqual(new[] { 1 }, mockCom.NodalLoads[0].NodeIds);
+                Assert.AreEqual(-50.0, mockCom.NodalLoads[0].Fy);
+                Assert.AreEqual(10.5, mockCom.NodalLoads[0].Mz);
+                Assert.AreEqual(new[] { 1, 2 }, mockCom.NodalLoads[1].NodeIds);
+            }
+        }
+
+        [Test]
+        public void OSLoadAdapter_AddMemberLoad_AppliesUniformAndConcentratedLoads()
+        {
+            var mockCom = new MockStaadLoadCom();
+            var mockRoot = new MockStaadRootCom(mockCom);
+            using (var wrapper = new OpenStaadWrapper(mockRoot))
+            {
+                IOSLoad loadAdapter = wrapper.Load;
+                var lc = new LoadCase(1, "DEAD", LoadCaseType.PrimaryLoad);
+                var n1 = new Node(0, 0, 0) { Id = 1 };
+                var n2 = new Node(5, 0, 0) { Id = 2 };
+                var beam1 = new Beam(101, n1, n2);
+                var beam2 = new Beam(102, n1, n2);
+
+                var udl = new MemberUniformlyDistributedLoad(LoadDirection.GlobalY, -12.5, 0, 5.0, 0);
+                loadAdapter.AddMemberLoad(lc, beam1, udl);
+
+                var conc = new MemberConcentratedLoad(LoadDirection.GlobalY, -30.0, 2.5);
+                loadAdapter.AddMemberLoad(lc, new[] { beam1, beam2 }, conc);
+
+                Assert.AreEqual(1, mockCom.MemberUniformForces.Count);
+                Assert.AreEqual(new[] { 101 }, mockCom.MemberUniformForces[0].BeamIds);
+                Assert.AreEqual((int)LoadDirection.GlobalY, mockCom.MemberUniformForces[0].Direction);
+                Assert.AreEqual(-12.5, mockCom.MemberUniformForces[0].Magnitude);
+
+                Assert.AreEqual(1, mockCom.MemberConcForces.Count);
+                Assert.AreEqual(new[] { 101, 102 }, mockCom.MemberConcForces[0].BeamIds);
+                Assert.AreEqual(-30.0, mockCom.MemberConcForces[0].Magnitude);
+                Assert.AreEqual(2.5, mockCom.MemberConcForces[0].Position);
+            }
+        }
+
+        [Test]
+        public void OSLoadAdapter_AddPlateUniformPressure_AppliesPressureToPlates()
+        {
+            var mockCom = new MockStaadLoadCom();
+            var mockRoot = new MockStaadRootCom(mockCom);
+            using (var wrapper = new OpenStaadWrapper(mockRoot))
+            {
+                IOSLoad loadAdapter = wrapper.Load;
+                var lc = new LoadCase(3, "PRESSURE", LoadCaseType.PrimaryLoad);
+
+                loadAdapter.AddPlateUniformPressure(lc, 501, -2.5, LoadDirection.LocalZ);
+                loadAdapter.AddPlateUniformPressure(lc, new[] { 502, 503 }, -3.0, LoadDirection.GlobalY);
+
+                var n1 = new Node(0, 0, 0) { Id = 1 };
+                var n2 = new Node(1, 0, 0) { Id = 2 };
+                var n3 = new Node(1, 1, 0) { Id = 3 };
+                var n4 = new Node(0, 1, 0) { Id = 4 };
+                var plate = new Plate(504, n1, n2, n3, n4);
+                loadAdapter.AddPlateUniformPressure(lc, new[] { plate }, -1.5);
+
+                Assert.AreEqual(3, mockCom.ElementPressures.Count);
+                Assert.AreEqual(new[] { 501 }, mockCom.ElementPressures[0].PlateIds);
+                Assert.AreEqual(-2.5, mockCom.ElementPressures[0].Pressure);
+                Assert.AreEqual((int)LoadDirection.LocalZ, mockCom.ElementPressures[0].Direction);
+
+                Assert.AreEqual(new[] { 502, 503 }, mockCom.ElementPressures[1].PlateIds);
+                Assert.AreEqual(-3.0, mockCom.ElementPressures[1].Pressure);
+                Assert.AreEqual((int)LoadDirection.GlobalY, mockCom.ElementPressures[1].Direction);
+
+                Assert.AreEqual(new[] { 504 }, mockCom.ElementPressures[2].PlateIds);
+                Assert.AreEqual(-1.5, mockCom.ElementPressures[2].Pressure);
             }
         }
     }
