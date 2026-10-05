@@ -271,5 +271,90 @@ namespace StaadPro.Interop.Adapters.Models
         }
 
         #endregion
+
+        #region Nodal Loading
+
+        public IOSLoad AddNodalLoad(ILoadCase lc, Node node, NodalLoad nl)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            return AddNodalLoad(lc, new[] { node }, nl);
+        }
+
+        public IOSLoad AddNodalLoad(ILoadCase lc, IEnumerable<Node> nodes, NodalLoad nl)
+        {
+            if (lc == null) throw new ArgumentNullException(nameof(lc));
+            if (nodes == null) throw new ArgumentNullException(nameof(nodes));
+            if (nl == null) throw new ArgumentNullException(nameof(nl));
+            if (ComObject == null) throw new InvalidOperationException("STAAD Load COM object is not initialized.");
+
+            SetLoadCaseActive(lc);
+            int[] nodeIds = nodes.Where(n => n != null).Select(n => n.Id).ToArray();
+            if (nodeIds.Length > 0 && nl.Forces != null)
+            {
+                ComObject.AddNodalLoad(nodeIds, nl.Forces.Fx, nl.Forces.Fy, nl.Forces.Fz, nl.Forces.Mx, nl.Forces.My, nl.Forces.Mz);
+            }
+
+            return this;
+        }
+
+        #endregion
+
+        #region Member Loading
+
+        public IOSLoad AddMemberLoad(ILoadCase lc, Beam beam, MemberLoad ml)
+        {
+            if (beam == null) throw new ArgumentNullException(nameof(beam));
+            return AddMemberLoad(lc, new[] { beam }, ml);
+        }
+
+        public IOSLoad AddMemberLoad(ILoadCase lc, IEnumerable<Beam> beams, MemberLoad ml)
+        {
+            if (lc == null) throw new ArgumentNullException(nameof(lc));
+            if (beams == null) throw new ArgumentNullException(nameof(beams));
+            if (ml == null) throw new ArgumentNullException(nameof(ml));
+            if (ComObject == null) throw new InvalidOperationException("STAAD Load COM object is not initialized.");
+
+            SetLoadCaseActive(lc);
+            int[] beamIds = beams.Where(b => b != null).Select(b => b.Id).ToArray();
+            if (beamIds.Length > 0)
+            {
+                ml.ApplyTo(ComObject, beamIds);
+            }
+
+            return this;
+        }
+
+        #endregion
+
+        #region Plate Pressure Loading
+
+        public IOSLoad AddPlateUniformPressure(ILoadCase lc, int plateId, double pressure, LoadDirection direction = LoadDirection.LocalZ)
+        {
+            return AddPlateUniformPressure(lc, new[] { plateId }, pressure, direction);
+        }
+
+        public IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<int> plateIds, double pressure, LoadDirection direction = LoadDirection.LocalZ)
+        {
+            if (lc == null) throw new ArgumentNullException(nameof(lc));
+            if (plateIds == null) throw new ArgumentNullException(nameof(plateIds));
+            if (ComObject == null) throw new InvalidOperationException("STAAD Load COM object is not initialized.");
+
+            SetLoadCaseActive(lc);
+            int[] ids = plateIds.ToArray();
+            if (ids.Length > 0)
+            {
+                ComObject.AddElementPressure(ids, (int)direction, pressure);
+            }
+
+            return this;
+        }
+
+        public IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<Plate> plates, double pressure, LoadDirection direction = LoadDirection.LocalZ)
+        {
+            if (plates == null) throw new ArgumentNullException(nameof(plates));
+            return AddPlateUniformPressure(lc, plates.Where(p => p != null).Select(p => p.Id), pressure, direction);
+        }
+
+        #endregion
     }
 }

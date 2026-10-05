@@ -19,6 +19,7 @@ namespace StaadPro.Interop.Entities
         public Node()
         {
             ConnectedBeams = new HashSet<Beam>();
+            NodalLoadItems = new List<NodalLoad>();
         }
 
         public Node(double x, double y, double z) : this()
@@ -51,6 +52,9 @@ namespace StaadPro.Interop.Entities
 
         [JsonIgnore]
         public HashSet<Beam> ConnectedBeams { get => Get<HashSet<Beam>>(); set => Set(value); }
+
+        [JsonIgnore]
+        public List<NodalLoad> NodalLoadItems { get => Get<List<NodalLoad>>(); private set => Set(value); }
 
         #endregion
 

@@ -18,6 +18,7 @@ namespace StaadPro.Interop.Entities
 
         public Beam()
         {
+            MemberLoadItems = new List<MemberLoad>();
         }
 
         public Beam(Node startNode, Node endNode) : this()
@@ -72,6 +73,9 @@ namespace StaadPro.Interop.Entities
                 GenerateLocalAxes();
             }
         }
+
+        [JsonIgnore]
+        public List<MemberLoad> MemberLoadItems { get => Get<List<MemberLoad>>(); private set => Set(value); }
 
         #endregion
 

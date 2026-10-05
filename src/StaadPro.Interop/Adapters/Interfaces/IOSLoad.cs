@@ -228,5 +228,83 @@ namespace StaadPro.Interop.Adapters.Interfaces
         IOSLoad CreateReferenceLoadCases(IEnumerable<ILoadCase> referenceLoads);
 
         #endregion
+
+        #region Nodal Loading
+
+        /// <summary>
+        /// Applies a concentrated force and/or moment to a single node.
+        /// </summary>
+        /// <param name="lc">Target load case.</param>
+        /// <param name="node">Target node entity.</param>
+        /// <param name="nl">Nodal load definition containing 6-DOF forces and moments.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad AddNodalLoad(ILoadCase lc, Node node, NodalLoad nl);
+
+        /// <summary>
+        /// Applies a concentrated force and/or moment to multiple nodes.
+        /// </summary>
+        /// <param name="lc">Target load case.</param>
+        /// <param name="nodes">Target node entities.</param>
+        /// <param name="nl">Nodal load definition containing 6-DOF forces and moments.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad AddNodalLoad(ILoadCase lc, IEnumerable<Node> nodes, NodalLoad nl);
+
+        #endregion
+
+        #region Member Loading
+
+        /// <summary>
+        /// Applies a member load (uniformly distributed load or concentrated point load) to a single beam element.
+        /// </summary>
+        /// <param name="lc">Target load case.</param>
+        /// <param name="beam">Target beam entity.</param>
+        /// <param name="ml">Member load definition.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad AddMemberLoad(ILoadCase lc, Beam beam, MemberLoad ml);
+
+        /// <summary>
+        /// Applies a member load (uniformly distributed load or concentrated point load) to multiple beam elements.
+        /// </summary>
+        /// <param name="lc">Target load case.</param>
+        /// <param name="beams">Collection of target beam entities.</param>
+        /// <param name="ml">Member load definition.</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad AddMemberLoad(ILoadCase lc, IEnumerable<Beam> beams, MemberLoad ml);
+
+        #endregion
+
+        #region Plate Pressure Loading
+
+        /// <summary>
+        /// Applies a uniform surface pressure load to a single plate element by plate ID.
+        /// </summary>
+        /// <param name="lc">Target load case.</param>
+        /// <param name="plateId">Target plate element ID.</param>
+        /// <param name="pressure">Pressure magnitude (force per unit area).</param>
+        /// <param name="direction">Direction of pressure application (LocalZ, GlobalX, GlobalY, GlobalZ).</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad AddPlateUniformPressure(ILoadCase lc, int plateId, double pressure, LoadDirection direction = LoadDirection.LocalZ);
+
+        /// <summary>
+        /// Applies a uniform surface pressure load to multiple plate elements by their integer IDs.
+        /// </summary>
+        /// <param name="lc">Target load case.</param>
+        /// <param name="plateIds">Collection of target plate IDs.</param>
+        /// <param name="pressure">Pressure magnitude (force per unit area).</param>
+        /// <param name="direction">Direction of pressure application (LocalZ, GlobalX, GlobalY, GlobalZ).</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<int> plateIds, double pressure, LoadDirection direction = LoadDirection.LocalZ);
+
+        /// <summary>
+        /// Applies a uniform surface pressure load to multiple plate entities.
+        /// </summary>
+        /// <param name="lc">Target load case.</param>
+        /// <param name="plates">Collection of target Plate entities.</param>
+        /// <param name="pressure">Pressure magnitude (force per unit area).</param>
+        /// <param name="direction">Direction of pressure application (LocalZ, GlobalX, GlobalY, GlobalZ).</param>
+        /// <returns>The current <see cref="IOSLoad"/> instance for fluent chaining.</returns>
+        IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<Plate> plates, double pressure, LoadDirection direction = LoadDirection.LocalZ);
+
+        #endregion
     }
 }
