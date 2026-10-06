@@ -10,11 +10,14 @@ A strongly typed wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load opera
 
 ## Load assignment queries
 
-The package exposes three read-back methods through `IOSLoad` and `OSLoadAdapter`:
+The package exposes six read-back methods through `IOSLoad` and `OSLoadAdapter`:
 
 - `GetNodalLoads(ILoadCase lc, int nId)` returns nodal forces and moments.
 - `GetMemberUniformlyDistributedLoads(ILoadCase lc, int mId)` returns member uniform forces.
 - `GetMemberConcentratedLoads(ILoadCase lc, int mId)` returns member point forces.
+- `GetMemberConcentratedMoments(ILoadCase lc, int mId)` returns member point moments.
+- `GetMemberLinearVaryingLoads(ILoadCase lc, int mId)` returns local full-member linear/triangular force intensities.
+- `GetMemberTrapezoidalLoads(ILoadCase lc, int mId)` returns varying endpoint intensities and loaded-span distances.
 
 ```csharp
 using System;

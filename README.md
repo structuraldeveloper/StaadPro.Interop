@@ -16,7 +16,7 @@ See [NuGet readiness](docs/NuGet-Readiness.md) for package verification results 
 - **Fluent API Design**: Chain node, beam, and plate creation operations seamlessly.
 - **Parametric Surface & Meshing Tools**: Complete support for annular surfaces, solid circular surfaces, density lines, density control points, and polygonal openings.
 - **Load Case Creation & Management**: Create primary load cases (`CreateNewPrimaryLoad`), reference load cases (`CreateNewReferenceLoad`), query titles (`GetLoadCaseTitle`), and clear load cases (`ClearPrimaryLoadCase`, `ClearReferenceLoadCase`).
-- **Load Assignment Read-Back**: Query nodal loads, uniform member forces, and concentrated member forces with complete interface/concrete IntelliSense. See [Load queries](docs/Load-Queries.md).
+- **Load Assignment Read-Back**: Query nodal loads, uniform and concentrated member forces, concentrated member moments, linearly varying forces, and trapezoidal forces with complete interface/concrete IntelliSense. See [Load queries](docs/Load-Queries.md).
 - **Zero Proprietary Binary Dependencies**: Completely decoupled from registered COM TypeLibs at build time. Compiles cleanly on any machine and CI environment.
 - **Strongly-Typed Structural Entities**: Rich domain models for `Node`, `Beam`, `Plate`, `Member`, `LoadCase`, and generic/non-generic `EntityGroup<T>`.
 - **Batch & Async Geometry APIs**: The library includes batch and asynchronous helpers. Coordinate shared STAAD session access and COM apartment requirements in the calling application; these helpers do not establish a library-wide thread-safety guarantee.
@@ -144,8 +144,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261006.load1 -o artifacts/load-port/package
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261006.load1.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261006.load2 -o artifacts/load-port/package
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261006.load2.nupkg
 ```
 
 ---

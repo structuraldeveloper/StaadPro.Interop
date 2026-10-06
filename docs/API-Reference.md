@@ -37,6 +37,9 @@
 - `GetNodalLoads(ILoadCase lc, int nId)`: Reads six-component nodal assignments into `List<NodalLoad>`.
 - `GetMemberUniformlyDistributedLoads(ILoadCase lc, int mId)`: Reads UDL direction, magnitude, start/end distances, and eccentricity into `List<MemberUniformlyDistributedLoad>`.
 - `GetMemberConcentratedLoads(ILoadCase lc, int mId)`: Reads point-force direction, magnitude, position, and eccentricity into `List<MemberConcentratedLoad>`.
+- `GetMemberConcentratedMoments(ILoadCase lc, int mId)`: Reads assigned moment axis, magnitude, position, and eccentricity into `List<MemberConcentratedMoment>`.
+- `GetMemberLinearVaryingLoads(ILoadCase lc, int mId)`: Reads local-only full-member start/end/middle intensities into `List<MemberLinearVaryingLoad>`, preserving the named fields despite the constructor's different argument order.
+- `GetMemberTrapezoidalLoads(ILoadCase lc, int mId)`: Reads local/global/projected directions, endpoint intensities, and loaded-span positions into `List<MemberTrapezoidalLoad>`.
 
 These queries activate an existing primary/reference case and leave it active. They preserve record order and raw values without unit conversion, return an empty list for a valid zero count, and throw on failure or malformed data. See [Load-Queries.md](Load-Queries.md) for all field mappings, error contracts, COM/session requirements, examples, and verification steps.
 

@@ -2,7 +2,7 @@
 
 ## Scope and provenance
 
-This increment ports exactly three methods from the main project's `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs` into the open source `IOSLoad` contract and `OSLoadAdapter`. The source signatures, result types, parameter names, array mappings, record order, and `LoadCase` reference association are preserved. Private application dependencies and Bentley binaries are not copied.
+Two increments port six methods from the main project's `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs` into the open source `IOSLoad` contract and `OSLoadAdapter`. The first added nodal, uniform member, and concentrated member force queries. The second adds concentrated member moments, linear varying forces, and trapezoidal forces, plus their three required models. The source signatures, result types, parameter names, array mappings, record order, and `LoadCase` reference association are preserved. Private application dependencies and Bentley binaries are not copied.
 
 The earlier connectivity increment has been removed: its three grouping functions, service, scope enums, tests, guide, and verification script are absent. The public geometry interface and adapter are restored to the pre-increment revision. Package and documentation verification now covers load queries.
 
@@ -11,10 +11,13 @@ The earlier connectivity increment has been removed: its three grouping function
 | `GetNodalLoads(ILoadCase lc, int nId)` | `List<NodalLoad>` | `GetNodalLoadCount` / `GetNodalLoads` |
 | `GetMemberUniformlyDistributedLoads(ILoadCase lc, int mId)` | `List<MemberUniformlyDistributedLoad>` | `GetUDLLoadCount` / `GetUDLLoads` |
 | `GetMemberConcentratedLoads(ILoadCase lc, int mId)` | `List<MemberConcentratedLoad>` | `GetConcForceCount` / `GetConcForces` |
+| `GetMemberConcentratedMoments(ILoadCase lc, int mId)` | `List<MemberConcentratedMoment>` | `GetConcMomentCount` / `GetConcMoments` |
+| `GetMemberLinearVaryingLoads(ILoadCase lc, int mId)` | `List<MemberLinearVaryingLoad>` | `GetLinearVaryingLoadCount` / `GetLinearVaryingLoads` |
+| `GetMemberTrapezoidalLoads(ILoadCase lc, int mId)` | `List<MemberTrapezoidalLoad>` | `GetTrapLoadCount` / `GetTrapLoads` |
 
-All three methods are available through `wrapper.Load` (`IOSLoad`) and the concrete `OSLoadAdapter`. They read **assigned load items**. They do not retrieve reactions, member internal forces, displacements, or other analysis results. They do not create load cases or add, remove, or alter assignments.
+All six methods are available through `wrapper.Load` (`IOSLoad`) and the concrete `OSLoadAdapter`. They read **assigned load items**. They do not retrieve reactions, member internal forces, displacements, or other analysis results. They do not create load cases or add, remove, or alter assignments.
 
-Signatures are declared in `Adapters/Interfaces/IOSLoad.cs`; all three implementations and their private helpers reside in `Adapters/Models/OSLoadAdapter.cs`. Adapters use a single, non-partial class. Separate helpers or services may be introduced when needed.
+Signatures are declared in `Adapters/Interfaces/IOSLoad.cs`; all implementations and their private helpers reside in `Adapters/Models/OSLoadAdapter.cs`. Adapters use a single, non-partial class. Separate helpers or services may be introduced when needed.
 
 ## Before calling
 
@@ -73,7 +76,58 @@ Zero start/end sentinels are preserved; the method does not replace them with th
 | `varD1` | `Position` | Distance from member start to concentrated force |
 | `varD2` | `Eccentricity` | Perpendicular distance from shear center to local loading plane |
 
-Projected directions are invalid for concentrated forces. Concentrated moments are not included. Neither member query fetches beam geometry: each returned `Members` collection is empty. Retain the queried member ID in your application's surrounding data if you need that association.
+Projected directions are invalid for concentrated forces. Concentrated moments are read through the separate method below. No member query fetches beam geometry: each returned `Members` collection is empty. Retain the queried member ID in your application's surrounding data if you need that association.
+
+### Concentrated member moments
+
+`GetMemberConcentratedMoments` returns assigned moment items, separately from force assignments and analysis results.
+
+| OpenSTAAD array | Managed property | Meaning |
+| --- | --- | --- |
+| `varDirection` | `Direction` | Codes 1–6: moment about LocalX/Y/Z or GlobalX/Y/Z |
+| `varMoment` | `Magnitude` | Signed moment, with force-times-length dimensions |
+| `varD1` | `Position` | Distance from member start to the applied moment |
+| `varD2` | `Eccentricity` | Perpendicular distance from shear center to loading plane |
+
+Both location and offset are copied without scaling. Projected directions are rejected for this family. A nodal moment and a concentrated member moment are separate assignment types.
+
+### Linearly varying member forces
+
+`GetMemberLinearVaryingLoads` preserves all three force-per-length intensities of the native full-member linear/triangular definition.
+
+| OpenSTAAD output order | Managed property | Meaning |
+| --- | --- | --- |
+| `varDirection` | `Direction` | Codes **1–3 only**: LocalX/Y/Z |
+| `varW1` | `WStart` | Intensity at member start |
+| `varW2` | `WEnd` | Intensity at member end |
+| `varW3` | `WMiddle` | Intensity at member middle, for triangular loading |
+
+**Native output is start/end/middle, but `MemberLinearVaryingLoad(direction, wStart, wMiddle, wEnd)` accepts start/middle/end.** The adapter maps each output to the named property before calling the constructor. For native values `11, 21, 31`, the properties are `WStart=11`, `WEnd=21`, `WMiddle=31`. `ApplyTo` sends them back in native start/end/middle order. A dedicated regression test uses distinct signed values to detect swapped endpoints/middle values.
+
+Global and projected directions are invalid even though the shared `LoadDirection` enum contains them. No intensity is inferred, interpolated, summed, or dropped when zero. This family has no loaded-span position or eccentricity output; use trapezoidal loads for that separate endpoint/span representation.
+
+### Trapezoidal member forces
+
+`GetMemberTrapezoidalLoads` returns distinct endpoint intensities and loaded-span distances.
+
+| OpenSTAAD array | Managed property | Meaning |
+| --- | --- | --- |
+| `varDirection` | `Direction` | Codes 1–9: local/global/projected force direction |
+| `varW1` | `WStart` | Force-per-length intensity at loading start |
+| `varW2` | `WEnd` | Force-per-length intensity at loading end |
+| `varD1` | `SPosition` | Distance from member start to loading start |
+| `varD2` | `EPosition` | Distance from member start to loading end |
+
+The method preserves partial spans, signs, projected axes, and zero endpoint sentinels without normalization. It does not fetch the member length or calculate a resultant force.
+
+### Supporting load models
+
+The three new sealed entities derive from `MemberLoad` and work with the existing `AddMemberLoad` overloads. Their typed constructors, properties, `DeepCopy`, `ConvertUsing`, and `ApplyTo` methods have XML documentation. The port replaces the main application's Bentley COM types, external converter, and cloning extension with this repository's dynamic dispatch, local `UnitsConverter`, and explicit value copies.
+
+- `DeepCopy` produces a new definition with copied numeric values/direction and the same `LoadCase` reference. Its `Members` collection is fresh and empty, matching the existing open source load-copy convention. It does not clone beam geometry or case metadata.
+- `ConvertUsing` mutates the definition in place. Moment magnitude uses `MomentConversionFactor`; moment position/eccentricity use `LengthConversionFactor`. All varying/trapezoidal intensities use `LinearLoadConversionFactor`; trapezoidal positions use `LengthConversionFactor`. A null converter is a no-op. Choose source units from the actual read-back convention before converting.
+- `ApplyTo` uses `AddMemberConcMoment`, `AddMemberLinearVari`, or `AddMemberTrapezoidal` without automatic unit conversion. A null Load object, null member array, or empty member array is a no-op. It follows the inherited assignment contract: native return statuses are not exposed, and thrown COM/binding failures propagate. The query methods' strict status checks do not change that existing assignment path.
+- A default `MemberLinearVaryingLoad` uses **LocalY**, because this family's native methods allow only local directions. The main model inherited GlobalY, which is outside that contract. Parameterized constructors preserve the supplied direction; callers must supply a supported direction when assigning a definition. The query rejects unsupported returned codes.
 
 ## Units and ownership
 
@@ -111,6 +165,18 @@ using (var wrapper = OpenStaadWrapperProvider.GetRunning())
     var concentrated = load.GetMemberConcentratedLoads(reference, mId: 201);
     foreach (var item in concentrated)
         Console.WriteLine($"{item.Direction}: {item.Magnitude}, position={item.Position}, offset={item.Eccentricity}");
+
+    var moments = load.GetMemberConcentratedMoments(reference, mId: 201);
+    foreach (var item in moments)
+        Console.WriteLine($"Moment={item.Magnitude}, position={item.Position}, offset={item.Eccentricity}");
+
+    var varying = load.GetMemberLinearVaryingLoads(reference, mId: 201);
+    foreach (var item in varying)
+        Console.WriteLine($"Start={item.WStart}, middle={item.WMiddle}, end={item.WEnd}");
+
+    var trapezoidal = load.GetMemberTrapezoidalLoads(reference, mId: 201);
+    foreach (var item in trapezoidal)
+        Console.WriteLine($"{item.WStart} to {item.WEnd}, from {item.SPosition} to {item.EPosition}");
     // Reference case 101 remains active here.
 }
 ```
@@ -130,7 +196,7 @@ Use the list's `Count` to check for absence. Do not treat an exception as an emp
 
 Primary activation must report `true` (or an integer Boolean representation, `1`/`-1`). Reference activation must return the requested positive case ID; errors such as `-1` and `-8002` are rejected. Counts must be nonnegative, representable as a CLR array length, and integral. Nulls, strings, Booleans, and floating-point status/count values are not coerced. Signed `Int16`, `Int32`, and `Int64` representations are supported.
 
-Bentley's native 2025 API reference specifies **0 = OK** for all three fetch methods. Every other fetch status is rejected, even if the arrays contain plausible values. All component arrays must be one dimensional, exactly match the count, and have `Double` elements (`Int32` for directions). Both zero and nonzero SAFEARRAY lower bounds are handled. Null, oversized, undersized, multidimensional, or incorrectly typed arrays fail the whole query. Non-finite values fail the query. Double buffers start as NaN so untouched components cannot masquerade as legitimate zero loads.
+Bentley's native 2025 API reference specifies **0 = OK** for all six fetch methods. Every other fetch status is rejected, even if the arrays contain plausible values. All component arrays must be one dimensional, exactly match the count, and have `Double` elements (`Int32` for directions). Both zero and nonzero SAFEARRAY lower bounds are handled. Null, oversized, undersized, multidimensional, or incorrectly typed arrays fail the whole query. Non-finite values fail the query. Double buffers start as NaN so untouched components cannot masquerade as legitimate zero loads.
 
 These safeguards extend the main project's implementation, which casts arrays directly and ignores activation/fetch statuses. No partially populated list is returned on failure. They cannot detect a concurrent external model change that produces a self-consistent payload; session serialization remains the caller's responsibility.
 
@@ -138,26 +204,27 @@ These safeguards extend the main project's implementation, which casts arrays di
 
 Both interface and concrete methods contain expanded XML comments: summaries, every parameter, returns, field mappings, unit behavior, ownership, active-case effects, COM threading constraints, six exception categories, and examples. The build emits `StaadPro.Interop.xml`, and NuGet places it beside `StaadPro.Interop.dll` under `lib/net481/`.
 
-`OSLoadQueryTests` verifies component mapping, record order, signs, case identity, both activation paths, fresh object ownership, replacement/in-place output buffers, zero counts, invalid arguments, count/status failures, every malformed component, unwritten buffers, all supported directions, zero sentinels, nonzero SAFEARRAY bounds, COM exception propagation, and missing signatures. `OSLoadQueryDocumentationTests` validates all six compiled documentation entries and matches interface/concrete text.
+`OSLoadQueryTests` verifies all six queries' component mapping, record order, signs, case identity, both activation paths, fresh object ownership, replacement/in-place output buffers, zero counts, invalid arguments, count/status failures, every malformed component, unwritten buffers, all supported directions, zero sentinels, nonzero SAFEARRAY bounds, COM exception propagation, and missing signatures. It includes the linear start/end/middle regression. `MemberLoadDefinitionTests` verifies constructors/copies, independent definitions, dimensional conversions, assignment dispatch under both case types, native argument order, missing-input handling, and exception propagation. `OSLoadQueryDocumentationTests` validates all twelve compiled method entries, matches interface/concrete text, and checks documentation for all three new models.
 
-`eng/Verify-LoadPackage.ps1` checks the actual NuGet archive, creates an isolated `net481` consumer with a fresh package cache and no project reference, compiles and executes all six packaged XML examples, and exercises all three installed APIs for primary/reference/empty cases. This consumer uses a managed stand-in; it is not a live COM compatibility test.
+`eng/Verify-LoadPackage.ps1` checks the actual NuGet archive, creates an isolated `net481` consumer with a fresh package cache and no project reference, verifies the restored archive hash, compiles and executes all twelve packaged XML examples, and exercises all six installed APIs for primary/reference/empty cases plus all three new models' assignment dispatch. This consumer uses a managed stand-in; it is not a live COM compatibility test.
 
 ```powershell
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261006.load1 -o artifacts/load-port/package
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261006.load1.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261006.load2 -o artifacts/load-port/package
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261006.load2.nupkg
 ```
 
-The existing `OpenStaadWrapperProvider_DefaultGetRunning_ReturnsNullWhenNoStaad` test is explicitly marked `LiveIntegration`: it asserts an environmental precondition, namely that no STAAD session is running. Ordinary offline runs leave it unexecuted. It does not verify these three queries.
+The existing `OpenStaadWrapperProvider_DefaultGetRunning_ReturnsNullWhenNoStaad` test is explicitly marked `LiveIntegration`: it asserts an environmental precondition, namely that no STAAD session is running. Ordinary offline runs leave it unexecuted. It does not verify the load queries.
 
 ## Live validation before release
 
-Use an isolated known model, rather than a user's working model. For each STAAD version advertised as supported, verify primary and reference cases, a node with distinct signed values in all six components, a member with full-span and partial UDLs, projected UDL directions, a member with concentrated forces and eccentricities, and entities with no such assignments. Compare every output against the model's definitions under both metric and imperial conventions, with at least one input-unit change. Exercise nonexistent IDs and case activation failures. Record application build, process architecture, units, COM statuses, payload element types, expected values, and observed values. Confirm that assignments are unchanged and the requested case remains active.
+Use an isolated known model, rather than a user's working model. For each STAAD version advertised as supported, verify primary and reference cases, a node with distinct signed values in all six components, a member with full-span and partial UDLs, projected UDL directions, concentrated forces and moments with eccentricities, full-member linear and triangular definitions with distinct endpoint/middle intensities, partial/full-span trapezoidal loads including projected directions, and entities with no such assignments. Compare every output against the model's definitions under both metric and imperial conventions, with at least one input-unit change. Check moment versus force-per-length conversion dimensions and native start/end/middle order. Exercise nonexistent IDs and case activation failures. Record application build, process architecture, units, COM statuses, payload element types, expected values, and observed values. Confirm that assignments are unchanged and the requested case remains active.
 
 The offline suite and package consumer do not certify native COM SAFEARRAY marshaling, live unit conventions, or all STAAD versions. These remain explicit stable-release gates in [NuGet-Readiness.md](NuGet-Readiness.md).
 
 ## Sources inspected
 
 - Main project: `src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs`, at main repository revision `41dfc15ae34b7d530a1d5a46c8ee8dad063ccd4f`.
+- Supporting models: main project's `Entities/Loads/MemberConcentratedMoment.cs`, `MemberLinearVaryingLoad.cs`, and `MemberTrapezoidalLoad.cs` at the same revision.
 - Installed Bentley STAAD.Pro 2025 native programmer reference: `OSAPP_Help/group___property_load_nodal.html`, `group___property_load_mem.html`, `group___property_load_case.html`, and `group___property_load_def_ref_load.html`. These are under the installed STAAD.Pro 2025 directory; consult your own installation for the vendor documentation.
 - Installed Bentley `openstaadpy-25.0.1.1` source was inspected as an additional reference. It conflicts with the native documentation in some places (notably UDL Boolean status handling). This port follows the native status contract and the main C# method signatures; live verification is still required.
