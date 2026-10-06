@@ -3,9 +3,10 @@
 [![Build Status](https://github.com/structuraldeveloper/StaadPro.Interop/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/structuraldeveloper/StaadPro.Interop/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Target: .NET 4.8.1](https://img.shields.io/badge/.NET-4.8.1-blue.svg)](https://dotnet.microsoft.com/)
-[![STAAD.Pro Version: >= 2024](https://img.shields.io/badge/STAAD.Pro-%3E%3D%202024-brightgreen.svg)](https://www.bentley.com/)
 
-A modern, strongly-typed, thread-safe .NET library providing high-level abstractions over the **Bentley STAAD.Pro OpenSTAAD COM API** (STAAD.Pro 2024 / 2025 or newer recommended).
+A strongly typed .NET Framework 4.8.1 library providing high-level abstractions over the **Bentley STAAD.Pro OpenSTAAD COM API**. Windows and a licensed STAAD installation are required at runtime. Version compatibility and live COM behavior must be verified for the methods your application uses.
+
+See [NuGet readiness](docs/NuGet-Readiness.md) for package verification results and remaining release gates.
 
 ---
 
@@ -15,10 +16,10 @@ A modern, strongly-typed, thread-safe .NET library providing high-level abstract
 - **Fluent API Design**: Chain node, beam, and plate creation operations seamlessly.
 - **Parametric Surface & Meshing Tools**: Complete support for annular surfaces, solid circular surfaces, density lines, density control points, and polygonal openings.
 - **Load Case Creation & Management**: Create primary load cases (`CreateNewPrimaryLoad`), reference load cases (`CreateNewReferenceLoad`), query titles (`GetLoadCaseTitle`), and clear load cases (`ClearPrimaryLoadCase`, `ClearReferenceLoadCase`).
-- **STAAD.Pro >= 2024 Compatibility**: Advanced load cases, reference load overloads, and surface methods are designed for STAAD.Pro 2024, 2025, or newer.
+- **Load Assignment Read-Back**: Query nodal loads, uniform member forces, and concentrated member forces with complete interface/concrete IntelliSense. See [Load queries](docs/Load-Queries.md).
 - **Zero Proprietary Binary Dependencies**: Completely decoupled from registered COM TypeLibs at build time. Compiles cleanly on any machine and CI environment.
 - **Strongly-Typed Structural Entities**: Rich domain models for `Node`, `Beam`, `Plate`, `Member`, `LoadCase`, and generic/non-generic `EntityGroup<T>`.
-- **Thread-Safe Multi-Threading & Async**: Parallelized entity creation, batch querying, and async Task-based geometry interrogation without COM deadlocks.
+- **Batch & Async Geometry APIs**: The library includes batch and asynchronous helpers. Coordinate shared STAAD session access and COM apartment requirements in the calling application; these helpers do not establish a library-wide thread-safety guarantee.
 - **Model Coordinate & Unit Conventions**: Query active model vertical-axis orientation (`Y-Up` vs `Z-Up`) and base unit systems (`Imperial` vs `Metric`).
 - **Comprehensive Unit Testing**: Offline test suite covering analytical vector math, surface boundary algorithms, load case operations, and wrapper life-cycle without requiring live STAAD hardware licenses.
 
@@ -80,11 +81,11 @@ geometry.AddDensityLineToSurface(surfaceId, outerNodes.First(), outerNodes.Last(
 geometry.CommitParametricSurfaceMesh(surfaceId);
 ```
 
-### 4. Parallel & Multi-Threaded Batch Queries
+### 4. Batch Geometry Queries
 
 ```csharp
-// Retrieve all beams in parallel across 4 worker threads
-HashSet<Beam> allBeams = geometry.GetAllEntities<Beam>(nThreads: 4);
+// Use one worker unless your application has verified COM threading behavior.
+HashSet<Beam> allBeams = geometry.GetAllEntities<Beam>(nThreads: 1);
 
 // Filter plates connected to a particular node
 IEnumerable<Plate> incidentPlates = geometry.GetPlatesConnectedAtNode(nodeId: 45);
@@ -141,6 +142,10 @@ dotnet build StaadPro.Interop.sln -c Release
 
 # Run Offline Unit Test Suite
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
+
+# Build and verify an installable preview, including packaged IntelliSense examples
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261006.load1 -o artifacts/load-port/package
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261006.load1.nupkg
 ```
 
 ---

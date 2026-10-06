@@ -1,0 +1,39 @@
+using System.IO;
+using System.Linq;
+using System.Xml.Linq;
+using NUnit.Framework;
+using StaadPro.Interop.Adapters.Interfaces;
+using StaadPro.Interop.Adapters.Models;
+
+namespace StaadPro.Interop.Tests.Adapter
+{
+    [TestFixture]
+    public class OSLoadQueryDocumentationTests
+    {
+        [TestCase("GetNodalLoads", "nId")]
+        [TestCase("GetMemberUniformlyDistributedLoads", "mId")]
+        [TestCase("GetMemberConcentratedLoads", "mId")]
+        public void CompiledXml_ContainsCompleteMatchingInterfaceAndConcreteIntelliSense(string method, string id)
+        {
+            string path = Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml");
+            Assert.That(File.Exists(path), Is.True, "XML documentation must accompany the library.");
+            var document = XDocument.Load(path);
+            XElement previous = null;
+            foreach (var type in new[] { typeof(IOSLoad), typeof(OSLoadAdapter) })
+            {
+                string memberName = "M:" + type.FullName + "." + method + "(StaadPro.Interop.Entities.ILoadCase,System.Int32)";
+                var member = document.Descendants("member").Single(m => (string)m.Attribute("name") == memberName);
+                foreach (string tag in new[] { "summary", "returns", "remarks", "example" })
+                    Assert.That(member.Element(tag)?.Value.Trim(), Is.Not.Null.And.Not.Empty, tag);
+                Assert.That(member.Elements("param").Select(p => (string)p.Attribute("name")), Is.EqualTo(new[] { "lc", id }));
+                Assert.That(member.Elements("param").All(p => !string.IsNullOrWhiteSpace(p.Value)), Is.True);
+                Assert.That(member.Elements("exception").Count(), Is.EqualTo(6));
+                Assert.That(member.Descendants("inheritdoc"), Is.Empty, "NuGet XML needs expanded docs on concrete calls.");
+                Assert.That(member.Descendants().Attributes("cref").Any(c => c.Value.StartsWith("!:")), Is.False);
+                Assert.That(member.Element("example").Element("code").Value, Does.Contain("load." + method + "("));
+                if (previous != null) Assert.That(member.Elements().Select(e => e.ToString()), Is.EqualTo(previous.Elements().Select(e => e.ToString())));
+                previous = member;
+            }
+        }
+    }
+}

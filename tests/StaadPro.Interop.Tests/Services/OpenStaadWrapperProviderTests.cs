@@ -37,6 +37,8 @@ namespace StaadPro.Interop.Tests.Services
         }
 
         [Test]
+        [Category("LiveIntegration")]
+        [Explicit("Run only with no active STAAD session; this test reads the real Windows ROT.")]
         public void OpenStaadWrapperProvider_DefaultGetRunning_ReturnsNullWhenNoStaad()
         {
             var wrapper = OpenStaadWrapperProvider.GetRunning();
