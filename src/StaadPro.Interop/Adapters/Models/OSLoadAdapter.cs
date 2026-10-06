@@ -24,6 +24,186 @@ namespace StaadPro.Interop.Adapters.Models
         /// </summary>
         public dynamic ComObject { get; }
 
+        #region Load Assignment Queries
+
+        /// <summary>
+        /// Reads assigned nodal forces and moments for one node in an existing primary or reference case.
+        /// </summary>
+        /// <param name="lc">The existing case to activate, with a positive ID and CaseType of
+        /// PrimaryLoad or ReferenceLoad. Title and Type are not sent to OpenSTAAD.</param>
+        /// <param name="nId">The positive STAAD node number in the currently open model.
+        /// This is an entity ID, not a zero-based index. Existence is checked by OpenSTAAD.</param>
+        /// <returns>A newly allocated, non-null list in OpenSTAAD record order, with one new
+        /// <see cref="NodalLoad"/> per assignment. Every LoadCase is the same object as
+        /// <paramref name="lc"/>. A successful zero count returns an empty list.</returns>
+        /// <remarks>
+        /// <para>Each record maps the six arrays to Forces.Fx, Fy, Fz, Mx, My and Mz. Forces act along the reported X/Y/Z axes and moments act about them. Every Forces object is newly allocated. These are JOINT LOAD assignments, not reactions or analysis results.</para>
+        /// <para>Signs and raw numeric values are preserved without summation, coordinate
+        /// transformation, unit conversion or scaling. Confirm the installed API's read-back
+        /// unit convention before combining values with input loads; input-unit metadata alone
+        /// does not guarantee the units of returned values.</para>
+        /// <para>The case is activated before counting and fetching and remains active afterward,
+        /// including when a subsequent read fails. The previous active case is not restored.
+        /// No load assignments are added, removed or changed. Use a connected, undisposed wrapper.
+        /// Serialize all operations sharing the STAAD session on its appropriate COM thread;
+        /// these calls do not provide thread safety or COM apartment marshaling.</para>
+        /// <para>Failed activation, negative counts, nonzero fetch status, unexpected array
+        /// shape/type/length, invalid directions, and non-finite or unwritten values throw
+        /// instead of returning partial data. COM and dynamic binding failures propagate.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="lc"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The case ID or <paramref name="nId"/> is not positive.</exception>
+        /// <exception cref="NotSupportedException">The case is a combination, repeat load, or unknown case type.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface does not expose a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load, and existing case/entity IDs:
+        /// <code>
+        /// var lc = new LoadCase(1, "DEAD", LoadCaseType.PrimaryLoad);
+        /// var loads = load.GetNodalLoads(lc, nId: 10);
+        /// foreach (var item in loads) Console.WriteLine(item.Forces.Fy);
+        /// </code>
+        /// </example>
+        public List<NodalLoad> GetNodalLoads(ILoadCase lc, int nId)
+        {
+            ValidateLoadQuery(lc, nId, nameof(nId));
+            ActivateQueryCase(lc);
+            int count = ReadQueryCount((object)ComObject.GetNodalLoadCount(nId), "GetNodalLoadCount");
+            var result = new List<NodalLoad>(count);
+            if (count == 0) return result;
+
+            object fx = CreateQueryBuffer(count), fy = CreateQueryBuffer(count), fz = CreateQueryBuffer(count);
+            object mx = CreateQueryBuffer(count), my = CreateQueryBuffer(count), mz = CreateQueryBuffer(count);
+            object status = ComObject.GetNodalLoads(nId, ref fx, ref fy, ref fz, ref mx, ref my, ref mz);
+            RequireQuerySuccess(status, "GetNodalLoads");
+            double[] xs = ReadQueryValues(fx, count, "Fx"), ys = ReadQueryValues(fy, count, "Fy"), zs = ReadQueryValues(fz, count, "Fz");
+            double[] xms = ReadQueryValues(mx, count, "Mx"), yms = ReadQueryValues(my, count, "My"), zms = ReadQueryValues(mz, count, "Mz");
+            for (int i = 0; i < count; i++)
+                result.Add(new NodalLoad(xs[i], ys[i], zs[i], xms[i], yms[i], zms[i]) { LoadCase = lc });
+            return result;
+        }
+
+        /// <summary>
+        /// Reads assigned uniform member forces for one member in an existing primary or reference case.
+        /// </summary>
+        /// <param name="lc">The existing case to activate, with a positive ID and CaseType of
+        /// PrimaryLoad or ReferenceLoad. Title and Type are not sent to OpenSTAAD.</param>
+        /// <param name="mId">The positive STAAD member number in the currently open model.
+        /// This is an entity ID, not a zero-based index. Existence is checked by OpenSTAAD.</param>
+        /// <returns>A newly allocated, non-null list in OpenSTAAD record order, with one new
+        /// <see cref="MemberUniformlyDistributedLoad"/> per assignment. Every LoadCase is the same object as
+        /// <paramref name="lc"/>. A successful zero count returns an empty list.</returns>
+        /// <remarks>
+        /// <para>Direction preserves codes 1 through 9 (LocalX/Y/Z, GlobalX/Y/Z, ProjectedX/Y/Z). Magnitude is force per length. SPosition and EPosition are distances from the member start to the load start and end. Eccentricity is the perpendicular offset from the member shear center to the local loading plane. Zero start/end sentinels are preserved. This reads uniform forces, not uniform moments, trapezoidal loads or analysis results. Members is empty; no Beam entities are fetched.</para>
+        /// <para>Signs and raw numeric values are preserved without summation, coordinate
+        /// transformation, unit conversion or scaling. Confirm the installed API's read-back
+        /// unit convention before combining values with input loads; input-unit metadata alone
+        /// does not guarantee the units of returned values.</para>
+        /// <para>The case is activated before counting and fetching and remains active afterward,
+        /// including when a subsequent read fails. The previous active case is not restored.
+        /// No load assignments are added, removed or changed. Use a connected, undisposed wrapper.
+        /// Serialize all operations sharing the STAAD session on its appropriate COM thread;
+        /// these calls do not provide thread safety or COM apartment marshaling.</para>
+        /// <para>Failed activation, negative counts, nonzero fetch status, unexpected array
+        /// shape/type/length, invalid directions, and non-finite or unwritten values throw
+        /// instead of returning partial data. COM and dynamic binding failures propagate.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="lc"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The case ID or <paramref name="mId"/> is not positive.</exception>
+        /// <exception cref="NotSupportedException">The case is a combination, repeat load, or unknown case type.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface does not expose a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load, and existing case/entity IDs:
+        /// <code>
+        /// var lc = new LoadCase(1, "DEAD", LoadCaseType.PrimaryLoad);
+        /// var loads = load.GetMemberUniformlyDistributedLoads(lc, mId: 101);
+        /// foreach (var item in loads) Console.WriteLine($"{item.Direction}: {item.Magnitude}, {item.SPosition}, {item.EPosition}");
+        /// </code>
+        /// </example>
+        public List<MemberUniformlyDistributedLoad> GetMemberUniformlyDistributedLoads(ILoadCase lc, int mId)
+        {
+            ValidateLoadQuery(lc, mId, nameof(mId));
+            ActivateQueryCase(lc);
+            int count = ReadQueryCount((object)ComObject.GetUDLLoadCount(mId), "GetUDLLoadCount");
+            var result = new List<MemberUniformlyDistributedLoad>(count);
+            if (count == 0) return result;
+
+            object direction = new int[count], force = CreateQueryBuffer(count), start = CreateQueryBuffer(count);
+            object end = CreateQueryBuffer(count), eccentricity = CreateQueryBuffer(count);
+            object status = ComObject.GetUDLLoads(mId, ref direction, ref force, ref start, ref end, ref eccentricity);
+            RequireQuerySuccess(status, "GetUDLLoads");
+            int[] directions = ReadQueryArray<int>(direction, count, "Direction");
+            double[] forces = ReadQueryValues(force, count, "Magnitude"), starts = ReadQueryValues(start, count, "SPosition");
+            double[] ends = ReadQueryValues(end, count, "EPosition"), offsets = ReadQueryValues(eccentricity, count, "Eccentricity");
+            for (int i = 0; i < count; i++)
+                result.Add(new MemberUniformlyDistributedLoad(ReadQueryDirection(directions[i], 9), forces[i], starts[i], ends[i], offsets[i]) { LoadCase = lc });
+            return result;
+        }
+
+        /// <summary>
+        /// Reads assigned concentrated member forces for one member in an existing primary or reference case.
+        /// </summary>
+        /// <param name="lc">The existing case to activate, with a positive ID and CaseType of
+        /// PrimaryLoad or ReferenceLoad. Title and Type are not sent to OpenSTAAD.</param>
+        /// <param name="mId">The positive STAAD member number in the currently open model.
+        /// This is an entity ID, not a zero-based index. Existence is checked by OpenSTAAD.</param>
+        /// <returns>A newly allocated, non-null list in OpenSTAAD record order, with one new
+        /// <see cref="MemberConcentratedLoad"/> per assignment. Every LoadCase is the same object as
+        /// <paramref name="lc"/>. A successful zero count returns an empty list.</returns>
+        /// <remarks>
+        /// <para>Direction preserves codes 1 through 6 (LocalX/Y/Z, GlobalX/Y/Z); projected directions are invalid. Magnitude is force. Position is the distance from the member start to the force. Eccentricity is the perpendicular offset from the member shear center to the local loading plane. This reads concentrated forces, not concentrated moments or analysis results. Members is empty; no Beam entities are fetched.</para>
+        /// <para>Signs and raw numeric values are preserved without summation, coordinate
+        /// transformation, unit conversion or scaling. Confirm the installed API's read-back
+        /// unit convention before combining values with input loads; input-unit metadata alone
+        /// does not guarantee the units of returned values.</para>
+        /// <para>The case is activated before counting and fetching and remains active afterward,
+        /// including when a subsequent read fails. The previous active case is not restored.
+        /// No load assignments are added, removed or changed. Use a connected, undisposed wrapper.
+        /// Serialize all operations sharing the STAAD session on its appropriate COM thread;
+        /// these calls do not provide thread safety or COM apartment marshaling.</para>
+        /// <para>Failed activation, negative counts, nonzero fetch status, unexpected array
+        /// shape/type/length, invalid directions, and non-finite or unwritten values throw
+        /// instead of returning partial data. COM and dynamic binding failures propagate.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="lc"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The case ID or <paramref name="mId"/> is not positive.</exception>
+        /// <exception cref="NotSupportedException">The case is a combination, repeat load, or unknown case type.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface does not expose a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load, and existing case/entity IDs:
+        /// <code>
+        /// var lc = new LoadCase(101, "REFERENCE", LoadCaseType.ReferenceLoad);
+        /// var loads = load.GetMemberConcentratedLoads(lc, mId: 101);
+        /// foreach (var item in loads) Console.WriteLine($"{item.Direction}: {item.Magnitude} at {item.Position}");
+        /// </code>
+        /// </example>
+        public List<MemberConcentratedLoad> GetMemberConcentratedLoads(ILoadCase lc, int mId)
+        {
+            ValidateLoadQuery(lc, mId, nameof(mId));
+            ActivateQueryCase(lc);
+            int count = ReadQueryCount((object)ComObject.GetConcForceCount(mId), "GetConcForceCount");
+            var result = new List<MemberConcentratedLoad>(count);
+            if (count == 0) return result;
+
+            object direction = new int[count], force = CreateQueryBuffer(count);
+            object position = CreateQueryBuffer(count), eccentricity = CreateQueryBuffer(count);
+            object status = ComObject.GetConcForces(mId, ref direction, ref force, ref position, ref eccentricity);
+            RequireQuerySuccess(status, "GetConcForces");
+            int[] directions = ReadQueryArray<int>(direction, count, "Direction");
+            double[] forces = ReadQueryValues(force, count, "Magnitude"), positions = ReadQueryValues(position, count, "Position");
+            double[] offsets = ReadQueryValues(eccentricity, count, "Eccentricity");
+            for (int i = 0; i < count; i++)
+                result.Add(new MemberConcentratedLoad(ReadQueryDirection(directions[i], 6), forces[i], positions[i], offsets[i]) { LoadCase = lc });
+            return result;
+        }
+
+        #endregion
+
         #region Load Case Clearing
 
         public bool ClearPrimaryLoadCase(ILoadCase loadCase, bool isReferenceLoad) =>
@@ -353,6 +533,98 @@ namespace StaadPro.Interop.Adapters.Models
         {
             if (plates == null) throw new ArgumentNullException(nameof(plates));
             return AddPlateUniformPressure(lc, plates.Where(p => p != null).Select(p => p.Id), pressure, direction);
+        }
+
+        #endregion
+
+        #region Load Query Helpers
+
+        private static void ValidateLoadQuery(ILoadCase lc, int entityId, string idParameter)
+        {
+            if (lc == null) throw new ArgumentNullException(nameof(lc));
+            if (lc.Id <= 0) throw new ArgumentOutOfRangeException(nameof(lc), "The load case ID must be positive.");
+            if (entityId <= 0) throw new ArgumentOutOfRangeException(idParameter, "The node or member ID must be positive.");
+            if (lc.CaseType != LoadCaseType.PrimaryLoad && lc.CaseType != LoadCaseType.ReferenceLoad)
+                throw new NotSupportedException("Load assignment queries support only primary and reference load cases.");
+        }
+
+        private void ActivateQueryCase(ILoadCase lc)
+        {
+            // Do not use SetLoadCaseActive here: its legacy implementation discards failure statuses.
+            if (lc.CaseType == LoadCaseType.ReferenceLoad)
+            {
+                object status = ComObject.SetReferenceLoadActive(lc.Id);
+                if (ReadQueryInteger(status, "SetReferenceLoadActive") != lc.Id)
+                    throw new InvalidOperationException("OpenSTAAD could not activate the requested reference load case.");
+            }
+            else
+            {
+                object status = ComObject.SetLoadActive(lc.Id);
+                bool success = status is bool flag ? flag : IsQueryTrue(status);
+                if (!success) throw new InvalidOperationException("OpenSTAAD could not activate the requested primary load case.");
+            }
+        }
+
+        private static bool IsQueryTrue(object status)
+        {
+            long value = ReadQueryInteger(status, "SetLoadActive");
+            return value == 1 || value == -1; // VARIANT_TRUE may be represented as -1.
+        }
+
+        private static long ReadQueryInteger(object value, string operation)
+        {
+            if (value is int integer) return integer;
+            if (value is short small) return small;
+            if (value is long large) return large;
+            throw new InvalidOperationException($"OpenSTAAD {operation} returned an invalid integer result.");
+        }
+
+        private static int ReadQueryCount(object value, string operation)
+        {
+            long count = ReadQueryInteger(value, operation);
+            if (count < 0 || count > int.MaxValue)
+                throw new InvalidOperationException($"OpenSTAAD {operation} returned an invalid load count ({count}).");
+            return (int)count;
+        }
+
+        private static void RequireQuerySuccess(object status, string operation)
+        {
+            long code = ReadQueryInteger(status, operation);
+            if (code != 0) throw new InvalidOperationException($"OpenSTAAD {operation} failed with status {code}.");
+        }
+
+        private static double[] CreateQueryBuffer(int count)
+        {
+            var buffer = new double[count];
+            // An unwritten component must not look like a legitimate zero load.
+            for (int i = 0; i < count; i++) buffer[i] = double.NaN;
+            return buffer;
+        }
+
+        private static T[] ReadQueryArray<T>(object value, int count, string component)
+        {
+            if (!(value is Array array) || array.Rank != 1 || array.Length != count || array.GetType().GetElementType() != typeof(T))
+                throw new InvalidOperationException($"OpenSTAAD returned an invalid {component} array; expected {count} {typeof(T).Name} values.");
+            var result = new T[count];
+            int lowerBound = array.GetLowerBound(0);
+            for (int i = 0; i < count; i++) result[i] = (T)array.GetValue(lowerBound + i);
+            return result;
+        }
+
+        private static double[] ReadQueryValues(object value, int count, string component)
+        {
+            double[] result = ReadQueryArray<double>(value, count, component);
+            foreach (double item in result)
+                if (double.IsNaN(item) || double.IsInfinity(item))
+                    throw new InvalidOperationException($"OpenSTAAD returned a non-finite or unwritten {component} value.");
+            return result;
+        }
+
+        private static LoadDirection ReadQueryDirection(int value, int maximum)
+        {
+            if (value < 1 || value > maximum)
+                throw new InvalidOperationException($"OpenSTAAD returned an invalid load direction ({value}); expected 1 through {maximum}.");
+            return (LoadDirection)value;
         }
 
         #endregion

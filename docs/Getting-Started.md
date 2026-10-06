@@ -4,12 +4,11 @@
 
 StaadPro.Interop provides a modern, strongly-typed .NET interface for Bentley STAAD.Pro.
 
-- **Target Frameworks**: .NET Framework 4.8.1 / .NET 8.0
-- **Supported STAAD Versions**: STAAD.Pro 2025, STAAD.Pro 2024, STAAD.Pro 2023, and STAAD.Pro CONNECT Edition.
+- **Target Framework**: .NET Framework 4.8.1 (`net481`) on Windows. There is currently no .NET 8 target.
+- **Runtime**: A licensed STAAD.Pro installation exposing the OpenSTAAD signatures used by your application.
 
 > [!IMPORTANT]
-> **STAAD.Pro Version Compatibility ($\ge 2024$ recommended)**:
-> While basic geometry querying functions are backward-compatible, several advanced functions in this library (including extended load case creation/overloads, reference load case methods, and specific parametric surface definitions) require **STAAD.Pro 2024 or higher** ($\ge 2024$). These functions may not be available or supported in STAAD.Pro 2023 or older releases. For the best compatibility and full feature support, ensure STAAD.Pro 2024 or newer (e.g., STAAD.Pro 2024 / 2025) is installed.
+> **STAAD.Pro version compatibility**: Runtime dynamic dispatch removes build-time Bentley references; it does not certify API compatibility across versions. Verify the methods you use on the installed version. The load query port has offline tests and package checks; live version and unit verification remains pending. See [NuGet readiness](NuGet-Readiness.md).
 
 ---
 
@@ -17,7 +16,7 @@ StaadPro.Interop provides a modern, strongly-typed .NET interface for Bentley ST
 
 By default, `StaadPro.Interop` uses runtime COM dynamic dispatch via `OpenStaadWrapperProvider`. This provides major benefits:
 - **Zero build-time dependencies**: You do not need Bentley DLLs (`StaadPro.dll`, `OpenSTAADUI.dll`) or registered TypeLibs to compile your projects or run automated CI/CD pipelines.
-- **Version agnostic**: The same compiled binary works seamlessly with STAAD.Pro 2023, 2024, 2025, or CONNECT Edition installed on the end-user machine.
+- **Runtime dispatch**: The binary resolves methods on the installed OpenSTAAD interface. Missing signatures propagate as runtime errors; test each version you intend to support.
 
 ```csharp
 using StaadPro.Interop.Services;
@@ -30,7 +29,7 @@ using (OpenStaadWrapper wrapper = OpenStaadWrapperProvider.Get(@"C:\Models\Struc
     var geometry = wrapper.Geometry;
     var load = wrapper.Load;
 
-    int nodeCount = geometry.GetNodeCount();
+    int nodeCount = geometry.GetAllNodesList().Count;
     Console.WriteLine($"Total Nodes: {nodeCount}");
 }
 ```
@@ -105,6 +104,8 @@ When building a standalone client executable (WPF, WinForms, or Console App) con
 ---
 
 ## 4. Key Namespaces & Architecture
+
+For nodal, uniform member, and concentrated member assignment read-back, see [Load-Queries.md](Load-Queries.md). The selected load case remains active after these queries; values retain OpenSTAAD's raw read-back units.
 
 - `StaadPro.Interop.Services`: `OpenStaadWrapperProvider` factory for acquiring model sessions across ROT, active instances, and file launch.
 - `StaadPro.Interop.Models`: `OpenStaadWrapper` model session container exposing `Geometry` (`IOSGeometry`), `Load` (`IOSLoad`), and unit system metadata.

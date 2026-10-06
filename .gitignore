@@ -19,6 +19,9 @@ build/
 *.userprefs
 
 ## Test Results
+artifacts/
+*.nupkg
+*.snupkg
 TestResults/
 *.trx
 *.coverage

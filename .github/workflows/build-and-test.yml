@@ -30,3 +30,10 @@ jobs:
 
     - name: Run Tests
       run: dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release --no-build
+
+    - name: Pack Preview
+      run: dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release --no-build -p:PackageVersion=1.0.0-preview.ci.${{ github.run_number }} -o artifacts/package
+
+    - name: Verify Installed Package and IntelliSense Examples
+      shell: pwsh
+      run: ./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/package/StaadPro.Interop.1.0.0-preview.ci.${{ github.run_number }}.nupkg

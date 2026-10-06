@@ -12,10 +12,13 @@
     <PackageId>StaadPro.Interop</PackageId>
     <Version>1.0.0</Version>
     <Authors>structs-dev</Authors>
-    <Description>A modern, strongly-typed, thread-safe .NET wrapper for Bentley STAAD.Pro OpenSTAAD COM API.</Description>
+    <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load operations.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
     <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/structuraldeveloper/StaadPro.Interop</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/structuraldeveloper/StaadPro.Interop</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +32,11 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\docs\NuGet-README.md" Pack="true" PackagePath="README.md" />
+    <None Include="..\..\docs\Load-Queries.md" Pack="true" PackagePath="docs\" />
   </ItemGroup>
 
 </Project>
