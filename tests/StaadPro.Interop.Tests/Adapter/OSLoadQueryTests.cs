@@ -46,6 +46,9 @@ namespace StaadPro.Interop.Tests.Adapter
             public object GetNodalLoadCount(int id) { Record("nodal-count", id); return Count; }
             public object GetUDLLoadCount(int id) { Record("udl-count", id); return Count; }
             public object GetConcForceCount(int id) { Record("concentrated-count", id); return Count; }
+            public object GetConcMomentCount(int id) { Record("moment-count", id); return Count; }
+            public object GetLinearVaryingLoadCount(int id) { Record("linear-count", id); return Count; }
+            public object GetTrapLoadCount(int id) { Record("trapezoidal-count", id); return Count; }
 
             private void Write(ref object buffer, int index)
             {
@@ -78,26 +81,52 @@ namespace StaadPro.Interop.Tests.Adapter
                 if (Columns != null) { Write(ref direction, 0); Write(ref force, 1); Write(ref position, 2); Write(ref offset, 3); }
                 return FetchStatus;
             }
+            public object GetConcMoments(int id, ref object direction, ref object moment, ref object position, ref object offset)
+            {
+                Record("moment-fetch", id);
+                if (Columns != null) { Write(ref direction, 0); Write(ref moment, 1); Write(ref position, 2); Write(ref offset, 3); }
+                return FetchStatus;
+            }
+            public object GetLinearVaryingLoads(int id, ref object direction, ref object start, ref object end, ref object middle)
+            {
+                Record("linear-fetch", id);
+                if (Columns != null) { Write(ref direction, 0); Write(ref start, 1); Write(ref end, 2); Write(ref middle, 3); }
+                return FetchStatus;
+            }
+            public object GetTrapLoads(int id, ref object direction, ref object startForce, ref object endForce, ref object startPosition, ref object endPosition)
+            {
+                Record("trapezoidal-fetch", id);
+                if (Columns != null) { Write(ref direction, 0); Write(ref startForce, 1); Write(ref endForce, 2); Write(ref startPosition, 3); Write(ref endPosition, 4); }
+                return FetchStatus;
+            }
         }
+
+        private static int MaximumDirection(string query) => query == "linear" ? 3 : query == "udl" || query == "trapezoidal" ? 9 : 6;
 
         private static QueryLoad MakeLoad(string query)
         {
             var columns = new List<object>();
-            if (query != "nodal") columns.Add(new[] { 1, query == "udl" ? 9 : 6 });
-            int numericColumns = query == "nodal" ? 6 : query == "udl" ? 4 : 3;
+            if (query != "nodal") columns.Add(new[] { 1, MaximumDirection(query) });
+            int numericColumns = query == "nodal" ? 6 : query == "udl" || query == "trapezoidal" ? 4 : 3;
             for (int i = 0; i < numericColumns; i++) columns.Add(new[] { i + 0.25, -i - 0.5 });
             return new QueryLoad { Columns = columns.ToArray() };
         }
 
-        private static IList<LoadItem> Read(IOSLoad load, string query, ILoadCase lc, int id = 42)
+        private static System.Collections.IList ReadList(IOSLoad load, string query, ILoadCase lc, int id = 42)
         {
             switch (query)
             {
-                case "nodal": return load.GetNodalLoads(lc, id).Cast<LoadItem>().ToList();
-                case "udl": return load.GetMemberUniformlyDistributedLoads(lc, id).Cast<LoadItem>().ToList();
-                default: return load.GetMemberConcentratedLoads(lc, id).Cast<LoadItem>().ToList();
+                case "nodal": return load.GetNodalLoads(lc, id);
+                case "udl": return load.GetMemberUniformlyDistributedLoads(lc, id);
+                case "concentrated": return load.GetMemberConcentratedLoads(lc, id);
+                case "moment": return load.GetMemberConcentratedMoments(lc, id);
+                case "linear": return load.GetMemberLinearVaryingLoads(lc, id);
+                case "trapezoidal": return load.GetMemberTrapezoidalLoads(lc, id);
+                default: throw new ArgumentException("Unknown query", nameof(query));
             }
         }
+
+        private static IList<LoadItem> Read(IOSLoad load, string query, ILoadCase lc, int id = 42) => ReadList(load, query, lc, id).Cast<LoadItem>().ToList();
 
         private static double[] Values(LoadItem item)
         {
@@ -105,6 +134,12 @@ namespace StaadPro.Interop.Tests.Adapter
                 return new[] { node.Forces.Fx, node.Forces.Fy, node.Forces.Fz, node.Forces.Mx, node.Forces.My, node.Forces.Mz };
             if (item is MemberUniformlyDistributedLoad udl)
                 return new[] { udl.Magnitude, udl.SPosition, udl.EPosition, udl.Eccentricity };
+            if (item is MemberConcentratedMoment moment)
+                return new[] { moment.Magnitude, moment.Position, moment.Eccentricity };
+            if (item is MemberLinearVaryingLoad linear)
+                return new[] { linear.WStart, linear.WEnd, linear.WMiddle }; // Native output order.
+            if (item is MemberTrapezoidalLoad trapezoidal)
+                return new[] { trapezoidal.WStart, trapezoidal.WEnd, trapezoidal.SPosition, trapezoidal.EPosition };
             var point = (MemberConcentratedLoad)item;
             return new[] { point.Magnitude, point.Position, point.Eccentricity };
         }
@@ -115,6 +150,12 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("udl", LoadCaseType.ReferenceLoad, false)]
         [TestCase("concentrated", LoadCaseType.PrimaryLoad, false)]
         [TestCase("concentrated", LoadCaseType.ReferenceLoad, true)]
+        [TestCase("moment", LoadCaseType.PrimaryLoad, true)]
+        [TestCase("moment", LoadCaseType.ReferenceLoad, false)]
+        [TestCase("linear", LoadCaseType.PrimaryLoad, false)]
+        [TestCase("linear", LoadCaseType.ReferenceLoad, true)]
+        [TestCase("trapezoidal", LoadCaseType.PrimaryLoad, true)]
+        [TestCase("trapezoidal", LoadCaseType.ReferenceLoad, false)]
         public void Read_MapsEveryColumnAndPreservesOrderSignsCaseAndOwnership(string query, LoadCaseType caseType, bool inPlace)
         {
             var com = MakeLoad(query);
@@ -149,6 +190,9 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("nodal")]
         [TestCase("udl")]
         [TestCase("concentrated")]
+        [TestCase("moment")]
+        [TestCase("linear")]
+        [TestCase("trapezoidal")]
         public void Read_ZeroCountSkipsFetchAndReturnsFreshEmptyList(string query)
         {
             var com = MakeLoad(query); com.Count = 0;
@@ -156,15 +200,16 @@ namespace StaadPro.Interop.Tests.Adapter
             {
                 Assert.That(Read(wrapper.Load, query, new LoadCase(1)), Is.Empty);
                 Assert.That(com.Calls, Is.EqualTo(new[] { "primary:1", query + "-count:42" }));
-                if (query == "nodal") Assert.That(wrapper.Load.GetNodalLoads(new LoadCase(1), 42), Is.Not.SameAs(wrapper.Load.GetNodalLoads(new LoadCase(1), 42)));
-                else if (query == "udl") Assert.That(wrapper.Load.GetMemberUniformlyDistributedLoads(new LoadCase(1), 42), Is.Not.SameAs(wrapper.Load.GetMemberUniformlyDistributedLoads(new LoadCase(1), 42)));
-                else Assert.That(wrapper.Load.GetMemberConcentratedLoads(new LoadCase(1), 42), Is.Not.SameAs(wrapper.Load.GetMemberConcentratedLoads(new LoadCase(1), 42)));
+                Assert.That(ReadList(wrapper.Load, query, new LoadCase(1)), Is.Not.SameAs(ReadList(wrapper.Load, query, new LoadCase(1))));
             }
         }
 
         [TestCase("nodal")]
         [TestCase("udl")]
         [TestCase("concentrated")]
+        [TestCase("moment")]
+        [TestCase("linear")]
+        [TestCase("trapezoidal")]
         public void Read_RejectsInvalidArgumentsBeforeAnyComCall(string query)
         {
             var com = MakeLoad(query);
@@ -185,6 +230,9 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("nodal")]
         [TestCase("udl")]
         [TestCase("concentrated")]
+        [TestCase("moment")]
+        [TestCase("linear")]
+        [TestCase("trapezoidal")]
         public void Read_RejectsFailedOrMalformedActivationWithoutCounting(string query)
         {
             foreach (object status in new object[] { false, 0, 2, null, "true", 1.0 })
@@ -206,6 +254,9 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("nodal")]
         [TestCase("udl")]
         [TestCase("concentrated")]
+        [TestCase("moment")]
+        [TestCase("linear")]
+        [TestCase("trapezoidal")]
         public void Read_RejectsInvalidCountsAndDoesNotFetch(string query)
         {
             foreach (object count in new object[] { -1, -8002, null, 1.5, "2", true, (long)int.MaxValue + 1 })
@@ -220,6 +271,9 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("nodal")]
         [TestCase("udl")]
         [TestCase("concentrated")]
+        [TestCase("moment")]
+        [TestCase("linear")]
+        [TestCase("trapezoidal")]
         public void Read_RejectsFailedOrMalformedFetchStatuses(string query)
         {
             foreach (object status in new object[] { -1, -8002, 1, null, true, "0", 0.0 })
@@ -233,6 +287,9 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("nodal")]
         [TestCase("udl")]
         [TestCase("concentrated")]
+        [TestCase("moment")]
+        [TestCase("linear")]
+        [TestCase("trapezoidal")]
         public void Read_RejectsEveryMalformedColumn(string query)
         {
             int columnCount = MakeLoad(query).Columns.Length;
@@ -240,7 +297,7 @@ namespace StaadPro.Interop.Tests.Adapter
             {
                 bool direction = query != "nodal" && column == 0;
                 var invalidArrays = direction
-                    ? new object[] { null, new int[0], new int[1], new int[3], new int[1, 2], new double[2], new object[] { 1, 2 }, new[] { 0, 1 }, new[] { 1, query == "udl" ? 10 : 7 }, new[] { -1, 1 } }
+                    ? new object[] { null, new int[0], new int[1], new int[3], new int[1, 2], new double[2], new object[] { 1, 2 }, new[] { 0, 1 }, new[] { 1, MaximumDirection(query) + 1 }, new[] { -1, 1 } }
                     : new object[] { null, new double[0], new double[1], new double[3], new double[1, 2], new int[2], new object[] { 1.0, 2.0 }, new[] { double.NaN, 0 }, new[] { 0, double.PositiveInfinity }, new[] { double.NegativeInfinity, 0 } };
                 foreach (object bad in invalidArrays)
                 {
@@ -254,6 +311,9 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("nodal")]
         [TestCase("udl")]
         [TestCase("concentrated")]
+        [TestCase("moment")]
+        [TestCase("linear")]
+        [TestCase("trapezoidal")]
         public void Read_DetectsUnwrittenBuffersDespiteSuccessStatus(string query)
         {
             var com = MakeLoad(query); com.Columns = null;
@@ -264,6 +324,9 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("nodal")]
         [TestCase("udl")]
         [TestCase("concentrated")]
+        [TestCase("moment")]
+        [TestCase("linear")]
+        [TestCase("trapezoidal")]
         public void Read_AcceptsNonZeroSafeArrayBoundsAndDoesNotNormalizeValues(string query)
         {
             var com = MakeLoad(query);
@@ -285,6 +348,9 @@ namespace StaadPro.Interop.Tests.Adapter
 
         [TestCase("udl", 9)]
         [TestCase("concentrated", 6)]
+        [TestCase("moment", 6)]
+        [TestCase("linear", 3)]
+        [TestCase("trapezoidal", 9)]
         public void Read_PreservesAllSupportedDirectionsAndZeroPositionSentinels(string query, int maximum)
         {
             var com = MakeLoad(query); com.Count = maximum;
@@ -298,9 +364,25 @@ namespace StaadPro.Interop.Tests.Adapter
             }
         }
 
+        [Test]
+        public void Read_LinearVaryingLoadsMapsDistinctNativeStartEndAndMiddleIntensities()
+        {
+            var com = new QueryLoad { Columns = new object[] { new[] { 1, 3 }, new[] { 11.0, -12.0 }, new[] { 21.0, -22.0 }, new[] { 31.0, -32.0 } } };
+            using (var wrapper = new OpenStaadWrapper(new QueryRoot(com)))
+            {
+                var loads = wrapper.Load.GetMemberLinearVaryingLoads(new LoadCase(1), 42);
+                Assert.That(loads.Select(x => x.WStart), Is.EqualTo(new[] { 11.0, -12.0 }));
+                Assert.That(loads.Select(x => x.WEnd), Is.EqualTo(new[] { 21.0, -22.0 }));
+                Assert.That(loads.Select(x => x.WMiddle), Is.EqualTo(new[] { 31.0, -32.0 }));
+            }
+        }
+
         [TestCase("nodal")]
         [TestCase("udl")]
         [TestCase("concentrated")]
+        [TestCase("moment")]
+        [TestCase("linear")]
+        [TestCase("trapezoidal")]
         public void Read_PropagatesComFailuresAndStopsImmediately(string query)
         {
             foreach (string stage in new[] { "primary", "reference", query + "-count", query + "-fetch" })
@@ -318,6 +400,9 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("nodal")]
         [TestCase("udl")]
         [TestCase("concentrated")]
+        [TestCase("moment")]
+        [TestCase("linear")]
+        [TestCase("trapezoidal")]
         public void Read_PropagatesMissingComSignature(string query)
         {
             using (var wrapper = new OpenStaadWrapper(new QueryRoot(new object())))

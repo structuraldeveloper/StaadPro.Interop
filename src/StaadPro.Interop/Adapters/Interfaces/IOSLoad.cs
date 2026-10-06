@@ -136,6 +136,129 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// </example>
         List<MemberConcentratedLoad> GetMemberConcentratedLoads(ILoadCase lc, int mId);
 
+        /// <summary>
+        /// Reads assigned concentrated member moments for one member in an existing primary or reference case.
+        /// </summary>
+        /// <param name="lc">The existing case to activate, with a positive ID and CaseType of
+        /// PrimaryLoad or ReferenceLoad. Title and Type are not sent to OpenSTAAD.</param>
+        /// <param name="mId">The positive STAAD member number in the currently open model.
+        /// This is an entity ID, not a zero-based index. Existence is checked by OpenSTAAD.</param>
+        /// <returns>A newly allocated, non-null list in OpenSTAAD record order, with one new
+        /// <see cref="MemberConcentratedMoment"/> per assignment. Every LoadCase is the same object as
+        /// <paramref name="lc"/>. A successful zero count returns an empty list.</returns>
+        /// <remarks>
+        /// <para>Direction preserves codes 1 through 6 (LocalX/Y/Z, GlobalX/Y/Z), identifying the moment axis. Magnitude is moment (force times length). Position is the distance from the member start to the moment. Eccentricity is the perpendicular offset from the member shear center to the local loading plane. Projected directions are invalid. These are assigned moments, not concentrated forces or internal analysis moments. Members is empty; no Beam entities are fetched.</para>
+        /// <para>Signs and raw numeric values are preserved without summation, coordinate
+        /// transformation, unit conversion or scaling. Confirm the installed API's read-back
+        /// unit convention before combining values with input loads; input-unit metadata alone
+        /// does not guarantee the units of returned values.</para>
+        /// <para>The case is activated before counting and fetching and remains active afterward,
+        /// including when a subsequent read fails. The previous active case is not restored.
+        /// No load assignments are added, removed or changed. Use a connected, undisposed wrapper.
+        /// Serialize all operations sharing the STAAD session on its appropriate COM thread;
+        /// these calls do not provide thread safety or COM apartment marshaling.</para>
+        /// <para>Failed activation, negative counts, nonzero fetch status, unexpected array
+        /// shape/type/length, invalid directions, and non-finite or unwritten values throw
+        /// instead of returning partial data. COM and dynamic binding failures propagate.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="lc"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The case ID or <paramref name="mId"/> is not positive.</exception>
+        /// <exception cref="NotSupportedException">The case is a combination, repeat load, or unknown case type.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface does not expose a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load, and existing case/entity IDs:
+        /// <code>
+        /// var lc = new LoadCase(101, "REFERENCE", LoadCaseType.ReferenceLoad);
+        /// var loads = load.GetMemberConcentratedMoments(lc, mId: 101);
+        /// foreach (var item in loads) Console.WriteLine($"{item.Direction}: moment={item.Magnitude}, position={item.Position}, offset={item.Eccentricity}");
+        /// </code>
+        /// </example>
+        List<MemberConcentratedMoment> GetMemberConcentratedMoments(ILoadCase lc, int mId);
+
+        /// <summary>
+        /// Reads assigned linearly varying member forces for one member in an existing primary or reference case.
+        /// </summary>
+        /// <param name="lc">The existing case to activate, with a positive ID and CaseType of
+        /// PrimaryLoad or ReferenceLoad. Title and Type are not sent to OpenSTAAD.</param>
+        /// <param name="mId">The positive STAAD member number in the currently open model.
+        /// This is an entity ID, not a zero-based index. Existence is checked by OpenSTAAD.</param>
+        /// <returns>A newly allocated, non-null list in OpenSTAAD record order, with one new
+        /// <see cref="MemberLinearVaryingLoad"/> per assignment. Every LoadCase is the same object as
+        /// <paramref name="lc"/>. A successful zero count returns an empty list.</returns>
+        /// <remarks>
+        /// <para>Direction permits only codes 1 through 3 (LocalX/Y/Z). WStart, WEnd and WMiddle are signed force-per-length intensities; WMiddle is the middle intensity for triangular loading. Native output arrays are start/end/middle, while the model constructor accepts start/middle/end. All three are mapped to their named properties without interpolation. These are full-member varying force assignments, not partial-span trapezoidal loads or analysis results. Members is empty; no Beam entities are fetched.</para>
+        /// <para>Signs and raw numeric values are preserved without summation, coordinate
+        /// transformation, unit conversion or scaling. Confirm the installed API's read-back
+        /// unit convention before combining values with input loads; input-unit metadata alone
+        /// does not guarantee the units of returned values.</para>
+        /// <para>The case is activated before counting and fetching and remains active afterward,
+        /// including when a subsequent read fails. The previous active case is not restored.
+        /// No load assignments are added, removed or changed. Use a connected, undisposed wrapper.
+        /// Serialize all operations sharing the STAAD session on its appropriate COM thread;
+        /// these calls do not provide thread safety or COM apartment marshaling.</para>
+        /// <para>Failed activation, negative counts, nonzero fetch status, unexpected array
+        /// shape/type/length, invalid directions, and non-finite or unwritten values throw
+        /// instead of returning partial data. COM and dynamic binding failures propagate.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="lc"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The case ID or <paramref name="mId"/> is not positive.</exception>
+        /// <exception cref="NotSupportedException">The case is a combination, repeat load, or unknown case type.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface does not expose a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load, and existing case/entity IDs:
+        /// <code>
+        /// var lc = new LoadCase(101, "REFERENCE", LoadCaseType.ReferenceLoad);
+        /// var loads = load.GetMemberLinearVaryingLoads(lc, mId: 101);
+        /// foreach (var item in loads) Console.WriteLine($"{item.Direction}: start={item.WStart}, middle={item.WMiddle}, end={item.WEnd}");
+        /// </code>
+        /// </example>
+        List<MemberLinearVaryingLoad> GetMemberLinearVaryingLoads(ILoadCase lc, int mId);
+
+        /// <summary>
+        /// Reads assigned trapezoidal member forces for one member in an existing primary or reference case.
+        /// </summary>
+        /// <param name="lc">The existing case to activate, with a positive ID and CaseType of
+        /// PrimaryLoad or ReferenceLoad. Title and Type are not sent to OpenSTAAD.</param>
+        /// <param name="mId">The positive STAAD member number in the currently open model.
+        /// This is an entity ID, not a zero-based index. Existence is checked by OpenSTAAD.</param>
+        /// <returns>A newly allocated, non-null list in OpenSTAAD record order, with one new
+        /// <see cref="MemberTrapezoidalLoad"/> per assignment. Every LoadCase is the same object as
+        /// <paramref name="lc"/>. A successful zero count returns an empty list.</returns>
+        /// <remarks>
+        /// <para>Direction preserves codes 1 through 9 (LocalX/Y/Z, GlobalX/Y/Z, ProjectedX/Y/Z). WStart and WEnd are signed force-per-length intensities at the loading endpoints. SPosition and EPosition are distances from the member start to the loading start and end. Zero endpoint sentinels are preserved; no full-span expansion or interpolation is performed. This reads trapezoidal force assignments, not uniform forces, full-member linear/triangular definitions or analysis results. Members is empty; no Beam entities are fetched.</para>
+        /// <para>Signs and raw numeric values are preserved without summation, coordinate
+        /// transformation, unit conversion or scaling. Confirm the installed API's read-back
+        /// unit convention before combining values with input loads; input-unit metadata alone
+        /// does not guarantee the units of returned values.</para>
+        /// <para>The case is activated before counting and fetching and remains active afterward,
+        /// including when a subsequent read fails. The previous active case is not restored.
+        /// No load assignments are added, removed or changed. Use a connected, undisposed wrapper.
+        /// Serialize all operations sharing the STAAD session on its appropriate COM thread;
+        /// these calls do not provide thread safety or COM apartment marshaling.</para>
+        /// <para>Failed activation, negative counts, nonzero fetch status, unexpected array
+        /// shape/type/length, invalid directions, and non-finite or unwritten values throw
+        /// instead of returning partial data. COM and dynamic binding failures propagate.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="lc"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The case ID or <paramref name="mId"/> is not positive.</exception>
+        /// <exception cref="NotSupportedException">The case is a combination, repeat load, or unknown case type.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface does not expose a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load, and existing case/entity IDs:
+        /// <code>
+        /// var lc = new LoadCase(101, "REFERENCE", LoadCaseType.ReferenceLoad);
+        /// var loads = load.GetMemberTrapezoidalLoads(lc, mId: 101);
+        /// foreach (var item in loads) Console.WriteLine($"{item.Direction}: {item.WStart} to {item.WEnd}, from {item.SPosition} to {item.EPosition}");
+        /// </code>
+        /// </example>
+        List<MemberTrapezoidalLoad> GetMemberTrapezoidalLoads(ILoadCase lc, int mId);
+
         #endregion
 
         #region Load Case Clearing

@@ -10,9 +10,30 @@ namespace StaadPro.Interop.Tests.Adapter
     [TestFixture]
     public class OSLoadQueryDocumentationTests
     {
+        [TestCase("MemberConcentratedMoment", 9)]
+        [TestCase("MemberLinearVaryingLoad", 9)]
+        [TestCase("MemberTrapezoidalLoad", 10)]
+        public void NewLoadModels_IncludeCompleteCompiledDocumentation(string typeName, int expectedCount)
+        {
+            var document = XDocument.Load(Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml"));
+            string owner = "StaadPro.Interop.Entities." + typeName;
+            var members = document.Descendants("member").Where(m => (string)m.Attribute("name") == "T:" + owner || ((string)m.Attribute("name")).StartsWith("M:" + owner + ".") || ((string)m.Attribute("name")).StartsWith("P:" + owner + ".")).ToList();
+            Assert.That(members.Count, Is.EqualTo(expectedCount));
+            foreach (var member in members)
+            {
+                Assert.That(member.Element("summary")?.Value.Trim(), Is.Not.Null.And.Not.Empty, (string)member.Attribute("name"));
+                Assert.That(member.Elements("param").All(p => !string.IsNullOrWhiteSpace(p.Value)), Is.True);
+                Assert.That(member.Descendants().Attributes("cref").Any(c => c.Value.StartsWith("!:")), Is.False);
+            }
+            Assert.That(members.Single(m => ((string)m.Attribute("name")).EndsWith(".DeepCopy")).Element("returns")?.Value.Trim(), Is.Not.Null.And.Not.Empty);
+        }
+
         [TestCase("GetNodalLoads", "nId")]
         [TestCase("GetMemberUniformlyDistributedLoads", "mId")]
         [TestCase("GetMemberConcentratedLoads", "mId")]
+        [TestCase("GetMemberConcentratedMoments", "mId")]
+        [TestCase("GetMemberLinearVaryingLoads", "mId")]
+        [TestCase("GetMemberTrapezoidalLoads", "mId")]
         public void CompiledXml_ContainsCompleteMatchingInterfaceAndConcreteIntelliSense(string method, string id)
         {
             string path = Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml");

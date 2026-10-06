@@ -105,7 +105,7 @@ When building a standalone client executable (WPF, WinForms, or Console App) con
 
 ## 4. Key Namespaces & Architecture
 
-For nodal, uniform member, and concentrated member assignment read-back, see [Load-Queries.md](Load-Queries.md). The selected load case remains active after these queries; values retain OpenSTAAD's raw read-back units.
+For all six assignment read-back methods, including concentrated moments, linearly varying forces, and trapezoidal forces, see [Load-Queries.md](Load-Queries.md). The selected load case remains active after these queries; values retain OpenSTAAD's raw read-back units.
 
 - `StaadPro.Interop.Services`: `OpenStaadWrapperProvider` factory for acquiring model sessions across ROT, active instances, and file launch.
 - `StaadPro.Interop.Models`: `OpenStaadWrapper` model session container exposing `Geometry` (`IOSGeometry`), `Load` (`IOSLoad`), and unit system metadata.
