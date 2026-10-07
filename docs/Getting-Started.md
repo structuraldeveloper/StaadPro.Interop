@@ -105,7 +105,9 @@ When building a standalone client executable (WPF, WinForms, or Console App) con
 
 ## 4. Key Namespaces & Architecture
 
-For all six assignment read-back methods, including concentrated moments, linearly varying forces, and trapezoidal forces, see [Load-Queries.md](Load-Queries.md). The selected load case remains active after these queries; values retain OpenSTAAD's raw read-back units.
+For all seven assignment read-back methods, including concentrated and uniform moments, linearly varying forces, and trapezoidal forces, see [Load-Queries.md](Load-Queries.md). The selected load case remains active after these queries; values retain OpenSTAAD's raw read-back units.
+
+Discover existing case metadata with `load.GetAllPrimaryLoadCases()` and `load.GetAllReferenceLoadCases()` before reading assignments. Discovery leaves the active case unchanged and returns independent case objects in sets with unspecified order.
 
 - `StaadPro.Interop.Services`: `OpenStaadWrapperProvider` factory for acquiring model sessions across ROT, active instances, and file launch.
 - `StaadPro.Interop.Models`: `OpenStaadWrapper` model session container exposing `Geometry` (`IOSGeometry`), `Load` (`IOSLoad`), and unit system metadata.

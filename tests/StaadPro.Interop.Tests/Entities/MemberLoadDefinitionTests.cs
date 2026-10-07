@@ -31,6 +31,7 @@ namespace StaadPro.Interop.Tests.Entities
                 Calls.Add(name); Method = name; Ids = ids; Direction = direction; Values = values;
                 return 0;
             }
+            public int AddMemberUniformMoment(int[] ids, int direction, double magnitude, double start, double end, double offset) => Record("uniformmoment", ids, direction, magnitude, start, end, offset);
             public int AddMemberConcMoment(int[] ids, int direction, double magnitude, double position, double offset)
                 => Record("moment", ids, direction, magnitude, position, offset);
             public int AddMemberLinearVari(int[] ids, int direction, double start, double end, double middle)
@@ -43,6 +44,7 @@ namespace StaadPro.Interop.Tests.Entities
         {
             switch (kind)
             {
+                case "uniformmoment": return new MemberUniformMoment(LoadDirection.ProjectedZ, -2, 1.5, 3.25, -.25);
                 case "moment": return new MemberConcentratedMoment(LoadDirection.GlobalZ, -2, 1.5, -.25);
                 case "linear": return new MemberLinearVaryingLoad(LoadDirection.LocalZ, -2, 7, 11);
                 case "trapezoidal": return new MemberTrapezoidalLoad(LoadDirection.ProjectedX, -2, 11, 1.5, 3.25);
@@ -52,17 +54,19 @@ namespace StaadPro.Interop.Tests.Entities
 
         private static double[] Values(MemberLoad item)
         {
+            if (item is MemberUniformMoment uniform) return new[] { uniform.Magnitude, uniform.SPosition, uniform.EPosition, uniform.Eccentricity };
             if (item is MemberConcentratedMoment moment) return new[] { moment.Magnitude, moment.Position, moment.Eccentricity };
             if (item is MemberLinearVaryingLoad linear) return new[] { linear.WStart, linear.WEnd, linear.WMiddle };
             var trapezoidal = (MemberTrapezoidalLoad)item;
             return new[] { trapezoidal.WStart, trapezoidal.WEnd, trapezoidal.SPosition, trapezoidal.EPosition };
         }
 
-        private static double[] Expected(string kind) => kind == "moment" ? new[] { -2, 1.5, -.25 } : kind == "linear" ? new[] { -2.0, 11, 7 } : new[] { -2, 11, 1.5, 3.25 };
+        private static double[] Expected(string kind) => kind == "uniformmoment" ? new[] { -2, 1.5, 3.25, -.25 } : kind == "moment" ? new[] { -2, 1.5, -.25 } : kind == "linear" ? new[] { -2.0, 11, 7 } : new[] { -2, 11, 1.5, 3.25 };
 
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void DefinitionCopy_IsIndependentAndPreservesValuesDirectionAndCase(string kind)
         {
             var definition = Definition(kind);
@@ -85,6 +89,7 @@ namespace StaadPro.Interop.Tests.Entities
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void ConvertUsing_UsesCorrectMomentDistributedAndLengthDimensions(string kind)
         {
             var definition = Definition(kind);
@@ -95,7 +100,7 @@ namespace StaadPro.Interop.Tests.Entities
             // kN/m -> N/cm: force factor 1000, length factor 100,
             // moment factor 100000, distributed force factor 10.
             definition.ConvertUsing(new UnitsConverter(toLength: LengthInputUnit.CentiMeter, toForce: ForceInputUnit.Newton));
-            var expected = kind == "moment" ? new[] { -200000.0, 150, -25 } : kind == "linear" ? new[] { -20.0, 110, 70 } : new[] { -20.0, 110, 150, 325 };
+            var expected = kind == "uniformmoment" ? new[] { -2000.0, 150, 325, -25 } : kind == "moment" ? new[] { -200000.0, 150, -25 } : kind == "linear" ? new[] { -20.0, 110, 70 } : new[] { -20.0, 110, 150, 325 };
             Assert.That(Values(definition), Is.EqualTo(expected));
             Assert.That(definition.Direction, Is.EqualTo(direction));
             Assert.That(definition.LoadCase, Is.SameAs(lc));
@@ -109,6 +114,8 @@ namespace StaadPro.Interop.Tests.Entities
         [TestCase("linear", LoadCaseType.ReferenceLoad)]
         [TestCase("trapezoidal", LoadCaseType.PrimaryLoad)]
         [TestCase("trapezoidal", LoadCaseType.ReferenceLoad)]
+        [TestCase("uniformmoment", LoadCaseType.PrimaryLoad)]
+        [TestCase("uniformmoment", LoadCaseType.ReferenceLoad)]
         public void AddMemberLoad_ActivatesCaseAndDispatchesEveryNativeArgument(string kind, LoadCaseType caseType)
         {
             var raw = new AssignmentLoad();
@@ -129,6 +136,7 @@ namespace StaadPro.Interop.Tests.Entities
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void ApplyTo_SkipsMissingInputsAndPassesMultipleMemberIdsUnchanged(string kind)
         {
             var raw = new AssignmentLoad();
@@ -145,6 +153,7 @@ namespace StaadPro.Interop.Tests.Entities
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void ApplyTo_PropagatesNativeFailureUnchanged(string kind)
         {
             var failure = new COMException("native assignment failure");

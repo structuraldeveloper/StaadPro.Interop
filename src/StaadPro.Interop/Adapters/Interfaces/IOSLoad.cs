@@ -556,5 +556,110 @@ namespace StaadPro.Interop.Adapters.Interfaces
         IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<Plate> plates, double pressure, LoadDirection direction = LoadDirection.LocalZ);
 
         #endregion
+        /// <summary>
+        /// Reads assigned uniform member moments for one member in an existing primary or reference case.
+        /// </summary>
+        /// <param name="lc">The existing case to activate, with a positive ID and CaseType of
+        /// PrimaryLoad or ReferenceLoad. Title and Type are not sent to OpenSTAAD.</param>
+        /// <param name="mId">The positive STAAD member number in the currently open model.
+        /// This is an entity ID, not a zero-based index. Existence is checked by OpenSTAAD.</param>
+        /// <returns>A newly allocated, non-null list in OpenSTAAD record order, with one new
+        /// <see cref="MemberUniformMoment"/> per assignment. Every LoadCase is the same object as
+        /// <paramref name="lc"/>. A successful zero count returns an empty list.</returns>
+        /// <remarks>
+        /// <para>Direction preserves codes 1 through 9 (LocalX/Y/Z, GlobalX/Y/Z, ProjectedX/Y/Z). Magnitude is distributed moment per length, for example kN-m/m. SPosition and EPosition are distances from the member start to the load start and end. Eccentricity is the perpendicular offset from the member shear center to the local loading plane. Zero start/end sentinels are preserved; zero end denotes the member end. These are UMOM assignments. Members is empty; no Beam entities are fetched.</para>
+        /// <para>Signs and raw numeric values are preserved without summation, coordinate
+        /// transformation, unit conversion or scaling. Confirm the installed API's read-back
+        /// unit convention before combining values with input loads; input-unit metadata alone
+        /// does not guarantee the units of returned values.</para>
+        /// <para>The case is activated before counting and fetching and remains active afterward,
+        /// including when a subsequent read fails. The previous active case is not restored.
+        /// No load assignments are added, removed or changed. Use a connected, undisposed wrapper.
+        /// Serialize all operations sharing the STAAD session on its appropriate COM thread;
+        /// these calls do not provide thread safety or COM apartment marshaling.</para>
+        /// <para>Failed activation, negative counts, nonzero fetch status, unexpected array
+        /// shape/type/length, invalid directions, and non-finite or unwritten values throw
+        /// instead of returning partial data. COM and dynamic binding failures propagate.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="lc"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The case ID or <paramref name="mId"/> is not positive.</exception>
+        /// <exception cref="NotSupportedException">The case is a combination, repeat load, or unknown case type.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface does not expose a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load, and existing case/entity IDs:
+        /// <code>
+        /// var lc = new LoadCase(1, "DEAD", LoadCaseType.PrimaryLoad);
+        /// var loads = load.GetMemberUniformMoments(lc, mId: 101);
+        /// foreach (var item in loads) Console.WriteLine($"{item.Direction}: {item.Magnitude}, {item.SPosition}, {item.EPosition}");
+        /// </code>
+        /// </example>
+        List<MemberUniformMoment> GetMemberUniformMoments(ILoadCase lc, int mId);
+
+        /// <summary>Reads all existing primary load cases and their titles and engineering load types.</summary>
+        /// <returns>A newly allocated, non-null set of new <see cref="LoadCase"/> objects with positive
+        /// IDs, preserved titles, CaseType of PrimaryLoad, and validated Type values.
+        /// A successful zero count returns a fresh empty set. Set iteration order is unspecified.</returns>
+        /// <remarks>
+        /// <para>Reads GetPrimaryLoadCaseCount, GetPrimaryLoadCaseNumbers, GetLoadCaseTitle
+        /// and GetLoadType on the currently open model. The case-number method returns a count,
+        /// which must match the preceding count; it does not use zero as a success status.
+        /// Titles (including empty strings, whitespace and Unicode) are preserved without trimming.
+        /// Engineering types include None (23); unknown codes are rejected.</para>
+        /// <para>No case is activated and no active-case state or assignments are changed.
+        /// Each call creates independent case objects; they contain metadata, not load assignments.
+        /// Primary and reference IDs can overlap; metadata is read from the corresponding family.</para>
+        /// <para>Negative/malformed counts, changed counts, invalid ID arrays, nonpositive or duplicate
+        /// IDs, non-string titles and invalid type results throw instead of returning a partial set.
+        /// The read is not an atomic model snapshot: serialize model edits and shared-session operations
+        /// on the appropriate COM thread. Use a connected, undisposed wrapper.</para>
+        /// <para>LoadCase equality and hashing use Id, CaseType and Type. Do not mutate those fields
+        /// while a case belongs to a HashSet; remove it first or rebuild the set afterward.</para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns inconsistent or malformed metadata.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface does not expose a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load:
+        /// <code>
+        /// var cases = load.GetAllPrimaryLoadCases();
+        /// foreach (var lc in cases) Console.WriteLine(lc.Id + ": " + lc.Title + " (" + lc.Type + ")");
+        /// </code>
+        /// </example>
+        HashSet<ILoadCase> GetAllPrimaryLoadCases();
+
+        /// <summary>Reads all existing reference load cases and their titles and engineering load types.</summary>
+        /// <returns>A newly allocated, non-null set of new <see cref="LoadCase"/> objects with positive
+        /// IDs, preserved titles, CaseType of ReferenceLoad, and validated Type values.
+        /// A successful zero count returns a fresh empty set. Set iteration order is unspecified.</returns>
+        /// <remarks>
+        /// <para>Reads GetReferenceLoadCaseCount, GetReferenceLoadCaseNumbers, GetReferenceLoadCaseTitle
+        /// and GetReferenceLoadType on the currently open model. The case-number method returns a count,
+        /// which must match the preceding count; it does not use zero as a success status.
+        /// Titles (including empty strings, whitespace and Unicode) are preserved without trimming.
+        /// Engineering types include None (23); unknown codes are rejected.</para>
+        /// <para>No case is activated and no active-case state or assignments are changed.
+        /// Each call creates independent case objects; they contain metadata, not load assignments.
+        /// Primary and reference IDs can overlap; metadata is read from the corresponding family.</para>
+        /// <para>Negative/malformed counts, changed counts, invalid ID arrays, nonpositive or duplicate
+        /// IDs, non-string titles and invalid type results throw instead of returning a partial set.
+        /// The read is not an atomic model snapshot: serialize model edits and shared-session operations
+        /// on the appropriate COM thread. Use a connected, undisposed wrapper.</para>
+        /// <para>LoadCase equality and hashing use Id, CaseType and Type. Do not mutate those fields
+        /// while a case belongs to a HashSet; remove it first or rebuild the set afterward.</para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns inconsistent or malformed metadata.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface does not expose a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load:
+        /// <code>
+        /// var cases = load.GetAllReferenceLoadCases();
+        /// foreach (var lc in cases) Console.WriteLine(lc.Id + ": " + lc.Title + " (" + lc.Type + ")");
+        /// </code>
+        /// </example>
+        HashSet<ILoadCase> GetAllReferenceLoadCases();
+
     }
 }
