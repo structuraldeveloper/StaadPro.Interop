@@ -10,7 +10,7 @@ A strongly typed wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load opera
 
 ## Load assignment queries
 
-The package exposes six read-back methods through `IOSLoad` and `OSLoadAdapter`:
+The package exposes seven assignment read-back methods through `IOSLoad` and `OSLoadAdapter`:
 
 - `GetNodalLoads(ILoadCase lc, int nId)` returns nodal forces and moments.
 - `GetMemberUniformlyDistributedLoads(ILoadCase lc, int mId)` returns member uniform forces.
@@ -18,6 +18,9 @@ The package exposes six read-back methods through `IOSLoad` and `OSLoadAdapter`:
 - `GetMemberConcentratedMoments(ILoadCase lc, int mId)` returns member point moments.
 - `GetMemberLinearVaryingLoads(ILoadCase lc, int mId)` returns local full-member linear/triangular force intensities.
 - `GetMemberTrapezoidalLoads(ILoadCase lc, int mId)` returns varying endpoint intensities and loaded-span distances.
+- `GetMemberUniformMoments(ILoadCase lc, int mId)` returns uniform moment intensity, span and offset.
+
+`GetAllPrimaryLoadCases()` and `GetAllReferenceLoadCases()` return fresh `HashSet<ILoadCase>` metadata sets without changing the active case. Both validate native counts, IDs, titles and engineering types; set ordering is unspecified.
 
 ```csharp
 using System;
@@ -36,7 +39,7 @@ using (var wrapper = OpenStaadWrapperProvider.GetRunning())
 }
 ```
 
-The selected case remains active after each query. Values preserve OpenSTAAD signs, order, and raw units without conversion. An empty list means a successful zero count; failures and malformed data throw. These methods read assignments rather than analysis results.
+The selected case remains active after each assignment query. Values preserve OpenSTAAD signs, order, and raw units without conversion. An empty list means a successful zero count; failures and malformed data throw. These methods read assignments rather than analysis results.
 
 Full XML IntelliSense accompanies the DLL for both interface and concrete methods, including parameter contracts, mapping, side effects, exceptions, and examples. The package also includes `docs/Load-Queries.md` with field mappings and verification guidance.
 

@@ -13,6 +13,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("MemberConcentratedMoment", 9)]
         [TestCase("MemberLinearVaryingLoad", 9)]
         [TestCase("MemberTrapezoidalLoad", 10)]
+        [TestCase("MemberUniformMoment", 10)]
         public void NewLoadModels_IncludeCompleteCompiledDocumentation(string typeName, int expectedCount)
         {
             var document = XDocument.Load(Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml"));
@@ -34,6 +35,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("GetMemberConcentratedMoments", "mId")]
         [TestCase("GetMemberLinearVaryingLoads", "mId")]
         [TestCase("GetMemberTrapezoidalLoads", "mId")]
+        [TestCase("GetMemberUniformMoments", "mId")]
         public void CompiledXml_ContainsCompleteMatchingInterfaceAndConcreteIntelliSense(string method, string id)
         {
             string path = Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml");
@@ -52,6 +54,26 @@ namespace StaadPro.Interop.Tests.Adapter
                 Assert.That(member.Descendants("inheritdoc"), Is.Empty, "NuGet XML needs expanded docs on concrete calls.");
                 Assert.That(member.Descendants().Attributes("cref").Any(c => c.Value.StartsWith("!:")), Is.False);
                 Assert.That(member.Element("example").Element("code").Value, Does.Contain("load." + method + "("));
+                if (previous != null) Assert.That(member.Elements().Select(e => e.ToString()), Is.EqualTo(previous.Elements().Select(e => e.ToString())));
+                previous = member;
+            }
+        }
+        [TestCase("GetAllPrimaryLoadCases")]
+        [TestCase("GetAllReferenceLoadCases")]
+        public void CaseEnumeration_ContainsCompleteMatchingIntelliSense(string method)
+        {
+            var document = XDocument.Load(Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml"));
+            XElement previous = null;
+            foreach (var type in new[] { typeof(IOSLoad), typeof(OSLoadAdapter) })
+            {
+                var member = document.Descendants("member").Single(m => (string)m.Attribute("name") == "M:" + type.FullName + "." + method);
+                foreach (string tag in new[] { "summary", "returns", "remarks", "example" })
+                    Assert.That(member.Element(tag)?.Value.Trim(), Is.Not.Null.And.Not.Empty, tag);
+                Assert.That(member.Elements("param"), Is.Empty);
+                Assert.That(member.Elements("exception").Count(), Is.EqualTo(3));
+                Assert.That(member.Descendants("inheritdoc"), Is.Empty);
+                Assert.That(member.Descendants().Attributes("cref").Any(c => c.Value.StartsWith("!:")), Is.False);
+                Assert.That(member.Element("example").Element("code").Value, Does.Contain("load." + method + "()"));
                 if (previous != null) Assert.That(member.Elements().Select(e => e.ToString()), Is.EqualTo(previous.Elements().Select(e => e.ToString())));
                 previous = member;
             }

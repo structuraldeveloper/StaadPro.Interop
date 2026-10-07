@@ -19,7 +19,7 @@ try {
     $readme = Read-PackageEntry 'README.md'
     $guide = Read-PackageEntry 'docs/Load-Queries.md'
     if ($readme -notmatch 'net481') { throw 'Incomplete packaged README.' }
-    $queryMethods = @('GetNodalLoads', 'GetMemberUniformlyDistributedLoads', 'GetMemberConcentratedLoads', 'GetMemberConcentratedMoments', 'GetMemberLinearVaryingLoads', 'GetMemberTrapezoidalLoads')
+    $queryMethods = @('GetNodalLoads', 'GetMemberUniformlyDistributedLoads', 'GetMemberConcentratedLoads', 'GetMemberConcentratedMoments', 'GetMemberLinearVaryingLoads', 'GetMemberTrapezoidalLoads', 'GetMemberUniformMoments', 'GetAllPrimaryLoadCases', 'GetAllReferenceLoadCases')
     foreach ($method in $queryMethods) {
         if ($readme -notmatch $method -or $guide -notmatch $method) { throw "Missing packaged guidance for $method" }
     }
@@ -33,7 +33,9 @@ try {
     $snippets = @()
     foreach ($owner in @('Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         foreach ($method in $queryMethods) {
-            $name = "M:StaadPro.Interop.$owner.$method(StaadPro.Interop.Entities.ILoadCase,System.Int32)"
+            $isEnumeration = $method -like 'GetAll*'
+            $suffix = if ($isEnumeration) { '' } else { '(StaadPro.Interop.Entities.ILoadCase,System.Int32)' }
+            $name = "M:StaadPro.Interop.$owner.$method$suffix"
             $members = @($xml.doc.members.member | Where-Object name -eq $name)
             if ($members.Count -ne 1) { throw "Missing or duplicate IntelliSense entry: $name" }
             $member = $members[0]
@@ -41,12 +43,14 @@ try {
                 $node = $member.SelectSingleNode($tag)
                 if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $name" }
             }
-            if (@($member.param).Count -ne 2 -or @($member.exception).Count -ne 6 -or $null -ne $member.SelectSingleNode('.//inheritdoc')) { throw "Incomplete contract for $name" }
+            $expectedParams = if ($isEnumeration) { 0 } else { 2 }
+            $expectedExceptions = if ($isEnumeration) { 3 } else { 6 }
+            if (@($member.SelectNodes('param')).Count -ne $expectedParams -or @($member.exception).Count -ne $expectedExceptions -or $null -ne $member.SelectSingleNode('.//inheritdoc')) { throw "Incomplete contract for $name" }
             if ($member.OuterXml -match 'cref="!:') { throw "Unresolved documentation reference in $name" }
             $snippets += "{`n" + $member.SelectSingleNode('example/code').InnerText + "`n}"
         }
     }
-    foreach ($typeName in @('MemberConcentratedMoment', 'MemberLinearVaryingLoad', 'MemberTrapezoidalLoad')) {
+    foreach ($typeName in @('MemberConcentratedMoment', 'MemberLinearVaryingLoad', 'MemberTrapezoidalLoad', 'MemberUniformMoment')) {
         $member = @($xml.doc.members.member | Where-Object name -eq "T:StaadPro.Interop.Entities.$typeName")
         if ($member.Count -ne 1 -or [string]::IsNullOrWhiteSpace($member[0].SelectSingleNode('summary').InnerText)) { throw "Missing model documentation: $typeName" }
     }
@@ -92,6 +96,15 @@ public static class Program
                 var moments = load.GetMemberConcentratedMoments(lc, 101);
                 var linear = load.GetMemberLinearVaryingLoads(lc, 101);
                 var trapezoidal = load.GetMemberTrapezoidalLoads(lc, 101);
+                var uniformMoments = load.GetMemberUniformMoments(lc, 101);
+                Check(uniformMoments.Count == 1 && uniformMoments[0].Direction == LoadDirection.ProjectedZ && uniformMoments[0].Magnitude == -13.5 && uniformMoments[0].SPosition == 1.25 && uniformMoments[0].EPosition == 0 && uniformMoments[0].Eccentricity == -.75, "uniform moment mapping");
+                Check(ReferenceEquals(uniformMoments[0].LoadCase, lc), "uniform moment case identity");
+                var primaryCases = load.GetAllPrimaryLoadCases();
+                var referenceCases = load.GetAllReferenceLoadCases();
+                Check(primaryCases.Count == 1 && referenceCases.Count == 1, "case enumeration count");
+                foreach (var item in primaryCases) Check(item.Id == 17 && item.Title == "PRIMARY" && item.Type == LoadType.Dead && item.CaseType == LoadCaseType.PrimaryLoad, "primary metadata");
+                foreach (var item in referenceCases) Check(item.Id == 17 && item.Title == "REFERENCE" && item.Type == LoadType.Mass && item.CaseType == LoadCaseType.ReferenceLoad, "reference metadata");
+                Check(fake.ActiveId == 17 && fake.Reference == (type == LoadCaseType.ReferenceLoad), "enumeration preserves activation");
                 Check(nodes.Count == 1 && nodes[0].Forces.Fx == 1 && nodes[0].Forces.Fy == -2 && nodes[0].Forces.Mz == -6, "nodal mapping");
                 Check(udls.Count == 1 && udls[0].Direction == LoadDirection.GlobalY && udls[0].Magnitude == -7.25 && udls[0].EPosition == 0 && udls[0].Eccentricity == -.5, "UDL mapping");
                 Check(points.Count == 1 && points[0].Direction == LoadDirection.GlobalZ && points[0].Magnitude == -8.5 && points[0].Position == 2.5 && points[0].Eccentricity == -.25, "point mapping");
@@ -108,15 +121,18 @@ public static class Program
                 Check(fake.Assignment == "moment" && fake.AssignedValues[0] == -9.75 && fake.AssignedValues[1] == 2.25 && fake.AssignedValues[2] == -.125, "moment assignment");
                 load.AddMemberLoad(lc, beam, linear[0]);
                 Check(fake.Assignment == "linear" && fake.AssignedValues[0] == -11 && fake.AssignedValues[1] == -22 && fake.AssignedValues[2] == -33, "linear native assignment order");
+                load.AddMemberLoad(lc, beam, uniformMoments[0]);
+                Check(fake.Assignment == "uniformmoment" && fake.AssignedValues[0] == -13.5 && fake.AssignedValues[1] == 1.25 && fake.AssignedValues[2] == 0 && fake.AssignedValues[3] == -.75, "uniform moment assignment");
                 load.AddMemberLoad(lc, beam, trapezoidal[0]);
                 Check(fake.Assignment == "trapezoidal" && fake.AssignedValues[0] == -4 && fake.AssignedValues[1] == -12 && fake.AssignedValues[2] == 1.5 && fake.AssignedValues[3] == 3.25, "trapezoidal assignment");
             }
             fake.Empty = true;
             Check(load.GetNodalLoads(new LoadCase(1), 10).Count == 0 && load.GetMemberUniformlyDistributedLoads(new LoadCase(1), 101).Count == 0 && load.GetMemberConcentratedLoads(new LoadCase(1), 101).Count == 0, "empty queries");
             Check(load.GetMemberConcentratedMoments(new LoadCase(1), 101).Count == 0 && load.GetMemberLinearVaryingLoads(new LoadCase(1), 101).Count == 0 && load.GetMemberTrapezoidalLoads(new LoadCase(1), 101).Count == 0, "empty new queries");
+            Check(load.GetMemberUniformMoments(new LoadCase(1), 101).Count == 0 && load.GetAllPrimaryLoadCases().Count == 0 && load.GetAllReferenceLoadCases().Count == 0, "empty third increment");
             Check(typeof(IOSLoad).Assembly.GetType("StaadPro.Interop.Services.ConnectivityService") == null, "connectivity rollback");
         }
-        Console.WriteLine("PASS: twelve packaged XML examples, all six installed-package queries, and three new load models.");
+        Console.WriteLine("PASS: eighteen packaged XML examples, all nine installed-package queries, and four new load models.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load)
@@ -144,6 +160,19 @@ __EXAMPLES__
         public int GetConcMomentCount(int id) => Empty ? 0 : 1;
         public int GetLinearVaryingLoadCount(int id) => Empty ? 0 : 1;
         public int GetTrapLoadCount(int id) => Empty ? 0 : 1;
+        public int GetUNIMomentCount(int id) => Empty ? 0 : 1;
+        public int GetPrimaryLoadCaseCount() => Empty ? 0 : 1;
+        public int GetReferenceLoadCaseCount() => Empty ? 0 : 1;
+        public int GetPrimaryLoadCaseNumbers(ref object ids) { ids = new[] { 17 }; return 1; }
+        public int GetReferenceLoadCaseNumbers(ref object ids) { ids = new[] { 17 }; return 1; }
+        public string GetLoadCaseTitle(int id) => "PRIMARY";
+        public string GetReferenceLoadCaseTitle(int id) => "REFERENCE";
+        public int GetLoadType(int id) => (int)LoadType.Dead;
+        public int GetReferenceLoadType(int id) => (int)LoadType.Mass;
+        public int GetUNIMoments(int id, ref object direction, ref object moment, ref object start, ref object end, ref object offset)
+        { direction = new[] { 9 }; moment = new[] { -13.5 }; start = new[] { 1.25 }; end = new[] { 0.0 }; offset = new[] { -.75 }; return 0; }
+        public int AddMemberUniformMoment(int[] ids, int direction, double moment, double start, double end, double offset)
+        { Assignment = "uniformmoment"; AssignedValues = new[] { moment, start, end, offset }; return 0; }
         public int GetNodalLoads(int id, ref object fx, ref object fy, ref object fz, ref object mx, ref object my, ref object mz)
         { fx = new[] { 1.0 }; fy = new[] { -2.0 }; fz = new[] { 3.0 }; mx = new[] { -4.0 }; my = new[] { 5.0 }; mz = new[] { -6.0 }; return 0; }
         public int GetUDLLoads(int id, ref object direction, ref object force, ref object start, ref object end, ref object offset)

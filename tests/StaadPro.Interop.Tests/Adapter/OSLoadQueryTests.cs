@@ -48,6 +48,7 @@ namespace StaadPro.Interop.Tests.Adapter
             public object GetConcForceCount(int id) { Record("concentrated-count", id); return Count; }
             public object GetConcMomentCount(int id) { Record("moment-count", id); return Count; }
             public object GetLinearVaryingLoadCount(int id) { Record("linear-count", id); return Count; }
+            public object GetUNIMomentCount(int id) { Record("uniformmoment-count", id); return Count; }
             public object GetTrapLoadCount(int id) { Record("trapezoidal-count", id); return Count; }
 
             private void Write(ref object buffer, int index)
@@ -93,6 +94,12 @@ namespace StaadPro.Interop.Tests.Adapter
                 if (Columns != null) { Write(ref direction, 0); Write(ref start, 1); Write(ref end, 2); Write(ref middle, 3); }
                 return FetchStatus;
             }
+            public object GetUNIMoments(int id, ref object direction, ref object moment, ref object start, ref object end, ref object offset)
+            {
+                Record("uniformmoment-fetch", id);
+                if (Columns != null) { Write(ref direction, 0); Write(ref moment, 1); Write(ref start, 2); Write(ref end, 3); Write(ref offset, 4); }
+                return FetchStatus;
+            }
             public object GetTrapLoads(int id, ref object direction, ref object startForce, ref object endForce, ref object startPosition, ref object endPosition)
             {
                 Record("trapezoidal-fetch", id);
@@ -101,13 +108,13 @@ namespace StaadPro.Interop.Tests.Adapter
             }
         }
 
-        private static int MaximumDirection(string query) => query == "linear" ? 3 : query == "udl" || query == "trapezoidal" ? 9 : 6;
+        private static int MaximumDirection(string query) => query == "linear" ? 3 : query == "udl" || query == "trapezoidal" || query == "uniformmoment" ? 9 : 6;
 
         private static QueryLoad MakeLoad(string query)
         {
             var columns = new List<object>();
             if (query != "nodal") columns.Add(new[] { 1, MaximumDirection(query) });
-            int numericColumns = query == "nodal" ? 6 : query == "udl" || query == "trapezoidal" ? 4 : 3;
+            int numericColumns = query == "nodal" ? 6 : query == "udl" || query == "trapezoidal" || query == "uniformmoment" ? 4 : 3;
             for (int i = 0; i < numericColumns; i++) columns.Add(new[] { i + 0.25, -i - 0.5 });
             return new QueryLoad { Columns = columns.ToArray() };
         }
@@ -121,6 +128,7 @@ namespace StaadPro.Interop.Tests.Adapter
                 case "concentrated": return load.GetMemberConcentratedLoads(lc, id);
                 case "moment": return load.GetMemberConcentratedMoments(lc, id);
                 case "linear": return load.GetMemberLinearVaryingLoads(lc, id);
+                case "uniformmoment": return load.GetMemberUniformMoments(lc, id);
                 case "trapezoidal": return load.GetMemberTrapezoidalLoads(lc, id);
                 default: throw new ArgumentException("Unknown query", nameof(query));
             }
@@ -138,6 +146,7 @@ namespace StaadPro.Interop.Tests.Adapter
                 return new[] { moment.Magnitude, moment.Position, moment.Eccentricity };
             if (item is MemberLinearVaryingLoad linear)
                 return new[] { linear.WStart, linear.WEnd, linear.WMiddle }; // Native output order.
+            if (item is MemberUniformMoment uniform) return new[] { uniform.Magnitude, uniform.SPosition, uniform.EPosition, uniform.Eccentricity };
             if (item is MemberTrapezoidalLoad trapezoidal)
                 return new[] { trapezoidal.WStart, trapezoidal.WEnd, trapezoidal.SPosition, trapezoidal.EPosition };
             var point = (MemberConcentratedLoad)item;
@@ -156,6 +165,8 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("linear", LoadCaseType.ReferenceLoad, true)]
         [TestCase("trapezoidal", LoadCaseType.PrimaryLoad, true)]
         [TestCase("trapezoidal", LoadCaseType.ReferenceLoad, false)]
+        [TestCase("uniformmoment", LoadCaseType.PrimaryLoad, true)]
+        [TestCase("uniformmoment", LoadCaseType.ReferenceLoad, false)]
         public void Read_MapsEveryColumnAndPreservesOrderSignsCaseAndOwnership(string query, LoadCaseType caseType, bool inPlace)
         {
             var com = MakeLoad(query);
@@ -193,6 +204,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void Read_ZeroCountSkipsFetchAndReturnsFreshEmptyList(string query)
         {
             var com = MakeLoad(query); com.Count = 0;
@@ -210,6 +222,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void Read_RejectsInvalidArgumentsBeforeAnyComCall(string query)
         {
             var com = MakeLoad(query);
@@ -233,6 +246,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void Read_RejectsFailedOrMalformedActivationWithoutCounting(string query)
         {
             foreach (object status in new object[] { false, 0, 2, null, "true", 1.0 })
@@ -257,6 +271,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void Read_RejectsInvalidCountsAndDoesNotFetch(string query)
         {
             foreach (object count in new object[] { -1, -8002, null, 1.5, "2", true, (long)int.MaxValue + 1 })
@@ -274,6 +289,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void Read_RejectsFailedOrMalformedFetchStatuses(string query)
         {
             foreach (object status in new object[] { -1, -8002, 1, null, true, "0", 0.0 })
@@ -290,6 +306,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void Read_RejectsEveryMalformedColumn(string query)
         {
             int columnCount = MakeLoad(query).Columns.Length;
@@ -314,6 +331,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void Read_DetectsUnwrittenBuffersDespiteSuccessStatus(string query)
         {
             var com = MakeLoad(query); com.Columns = null;
@@ -327,6 +345,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void Read_AcceptsNonZeroSafeArrayBoundsAndDoesNotNormalizeValues(string query)
         {
             var com = MakeLoad(query);
@@ -351,6 +370,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("moment", 6)]
         [TestCase("linear", 3)]
         [TestCase("trapezoidal", 9)]
+        [TestCase("uniformmoment", 9)]
         public void Read_PreservesAllSupportedDirectionsAndZeroPositionSentinels(string query, int maximum)
         {
             var com = MakeLoad(query); com.Count = maximum;
@@ -383,6 +403,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void Read_PropagatesComFailuresAndStopsImmediately(string query)
         {
             foreach (string stage in new[] { "primary", "reference", query + "-count", query + "-fetch" })
@@ -403,6 +424,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("moment")]
         [TestCase("linear")]
         [TestCase("trapezoidal")]
+        [TestCase("uniformmoment")]
         public void Read_PropagatesMissingComSignature(string query)
         {
             using (var wrapper = new OpenStaadWrapper(new QueryRoot(new object())))

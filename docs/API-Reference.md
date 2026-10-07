@@ -40,8 +40,16 @@
 - `GetMemberConcentratedMoments(ILoadCase lc, int mId)`: Reads assigned moment axis, magnitude, position, and eccentricity into `List<MemberConcentratedMoment>`.
 - `GetMemberLinearVaryingLoads(ILoadCase lc, int mId)`: Reads local-only full-member start/end/middle intensities into `List<MemberLinearVaryingLoad>`, preserving the named fields despite the constructor's different argument order.
 - `GetMemberTrapezoidalLoads(ILoadCase lc, int mId)`: Reads local/global/projected directions, endpoint intensities, and loaded-span positions into `List<MemberTrapezoidalLoad>`.
+- `GetMemberUniformMoments(ILoadCase lc, int mId)`: Reads uniform moment intensity, span and eccentricity into `List<MemberUniformMoment>`.
 
 These queries activate an existing primary/reference case and leave it active. They preserve record order and raw values without unit conversion, return an empty list for a valid zero count, and throw on failure or malformed data. See [Load-Queries.md](Load-Queries.md) for all field mappings, error contracts, COM/session requirements, examples, and verification steps.
+
+### Load Case Discovery
+
+- `GetAllPrimaryLoadCases()`: Returns a fresh `HashSet<ILoadCase>` with primary IDs, titles and engineering types.
+- `GetAllReferenceLoadCases()`: Returns reference metadata using the reference-specific type API.
+
+Discovery does not activate cases. Counts, ID arrays, titles and types are validated; errors throw rather than returning partial sets. HashSet ordering is unspecified. See [Load-Queries.md](Load-Queries.md#discovering-primary-and-reference-load-cases).
 
 ### Load Case Creation & Titles
 - `CreateNewPrimaryLoad(string lcTitle, LoadType loadType)`: Creates a new primary load case with automatic ID assignment.
