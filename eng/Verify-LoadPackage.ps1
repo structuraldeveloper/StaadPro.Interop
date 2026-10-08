@@ -19,7 +19,7 @@ try {
     $readme = Read-PackageEntry 'README.md'
     $guide = Read-PackageEntry 'docs/Load-Queries.md'
     if ($readme -notmatch 'net481') { throw 'Incomplete packaged README.' }
-    $queryMethods = @('GetNodalLoads', 'GetMemberUniformlyDistributedLoads', 'GetMemberConcentratedLoads', 'GetMemberConcentratedMoments', 'GetMemberLinearVaryingLoads', 'GetMemberTrapezoidalLoads', 'GetMemberUniformMoments', 'GetAllPrimaryLoadCases', 'GetAllReferenceLoadCases')
+    $queryMethods = @('GetNodalLoads', 'GetMemberUniformlyDistributedLoads', 'GetMemberConcentratedLoads', 'GetMemberConcentratedMoments', 'GetMemberLinearVaryingLoads', 'GetMemberTrapezoidalLoads', 'GetMemberUniformMoments', 'GetAllPrimaryLoadCases', 'GetAllReferenceLoadCases', 'GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId', 'GetPrimaryLoadCasesFromIds')
     foreach ($method in $queryMethods) {
         if ($readme -notmatch $method -or $guide -notmatch $method) { throw "Missing packaged guidance for $method" }
     }
@@ -34,7 +34,9 @@ try {
     foreach ($owner in @('Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         foreach ($method in $queryMethods) {
             $isEnumeration = $method -like 'GetAll*'
-            $suffix = if ($isEnumeration) { '' } else { '(StaadPro.Interop.Entities.ILoadCase,System.Int32)' }
+            $isSingleLookup = $method -in @('GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId')
+            $isBatchLookup = $method -eq 'GetPrimaryLoadCasesFromIds'
+            $suffix = if ($isEnumeration) { '' } elseif ($isSingleLookup) { '(System.Int32)' } elseif ($isBatchLookup) { '(System.Collections.Generic.IEnumerable{System.Int32})' } else { '(StaadPro.Interop.Entities.ILoadCase,System.Int32)' }
             $name = "M:StaadPro.Interop.$owner.$method$suffix"
             $members = @($xml.doc.members.member | Where-Object name -eq $name)
             if ($members.Count -ne 1) { throw "Missing or duplicate IntelliSense entry: $name" }
@@ -43,8 +45,8 @@ try {
                 $node = $member.SelectSingleNode($tag)
                 if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $name" }
             }
-            $expectedParams = if ($isEnumeration) { 0 } else { 2 }
-            $expectedExceptions = if ($isEnumeration) { 3 } else { 6 }
+            $expectedParams = if ($isEnumeration) { 0 } elseif ($isSingleLookup -or $isBatchLookup) { 1 } else { 2 }
+            $expectedExceptions = if ($isEnumeration) { 3 } elseif ($isSingleLookup) { 4 } elseif ($isBatchLookup) { 5 } else { 6 }
             if (@($member.SelectNodes('param')).Count -ne $expectedParams -or @($member.exception).Count -ne $expectedExceptions -or $null -ne $member.SelectSingleNode('.//inheritdoc')) { throw "Incomplete contract for $name" }
             if ($member.OuterXml -match 'cref="!:') { throw "Unresolved documentation reference in $name" }
             $snippets += "{`n" + $member.SelectSingleNode('example/code').InnerText + "`n}"
@@ -126,13 +128,25 @@ public static class Program
                 load.AddMemberLoad(lc, beam, trapezoidal[0]);
                 Check(fake.Assignment == "trapezoidal" && fake.AssignedValues[0] == -4 && fake.AssignedValues[1] == -12 && fake.AssignedValues[2] == 1.5 && fake.AssignedValues[3] == 3.25, "trapezoidal assignment");
             }
+            int activeBeforeLookup = fake.ActiveId;
+            bool referenceBeforeLookup = fake.Reference;
+            var primaryLookup = load.GetPrimaryLoadCaseFromId(17);
+            var referenceLookup = load.GetReferenceLoadCaseFromId(17);
+            Check(primaryLookup.Id == 17 && primaryLookup.Title == "PRIMARY" && primaryLookup.Type == LoadType.Dead && primaryLookup.CaseType == LoadCaseType.PrimaryLoad, "primary lookup");
+            Check(referenceLookup.Id == 17 && referenceLookup.Title == "REFERENCE" && referenceLookup.Type == LoadType.Mass && referenceLookup.CaseType == LoadCaseType.ReferenceLoad, "reference lookup");
+            var batchLookup = load.GetPrimaryLoadCasesFromIds(new[] { 41, 17, 41 });
+            Check(batchLookup.Count == 3 && batchLookup[0].Id == 41 && batchLookup[1].Id == 17 && batchLookup[2].Id == 41, "ordered batch lookup");
+            Check(!ReferenceEquals(batchLookup[0], batchLookup[2]) && !ReferenceEquals(batchLookup[1], primaryLookup), "independent lookup records");
+            foreach (var item in batchLookup) Check(item.Title == "PRIMARY" && item.Type == LoadType.Dead && item.CaseType == LoadCaseType.PrimaryLoad, "batch metadata");
+            Check(load.GetPrimaryLoadCasesFromIds(new int[0]).Count == 0, "empty batch lookup");
+            Check(fake.ActiveId == activeBeforeLookup && fake.Reference == referenceBeforeLookup, "lookup preserves activation");
             fake.Empty = true;
             Check(load.GetNodalLoads(new LoadCase(1), 10).Count == 0 && load.GetMemberUniformlyDistributedLoads(new LoadCase(1), 101).Count == 0 && load.GetMemberConcentratedLoads(new LoadCase(1), 101).Count == 0, "empty queries");
             Check(load.GetMemberConcentratedMoments(new LoadCase(1), 101).Count == 0 && load.GetMemberLinearVaryingLoads(new LoadCase(1), 101).Count == 0 && load.GetMemberTrapezoidalLoads(new LoadCase(1), 101).Count == 0, "empty new queries");
             Check(load.GetMemberUniformMoments(new LoadCase(1), 101).Count == 0 && load.GetAllPrimaryLoadCases().Count == 0 && load.GetAllReferenceLoadCases().Count == 0, "empty third increment");
             Check(typeof(IOSLoad).Assembly.GetType("StaadPro.Interop.Services.ConnectivityService") == null, "connectivity rollback");
         }
-        Console.WriteLine("PASS: eighteen packaged XML examples, all nine installed-package queries, and four new load models.");
+        Console.WriteLine("PASS: twenty-four packaged XML examples, all twelve installed-package queries, and four ported load models.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load)

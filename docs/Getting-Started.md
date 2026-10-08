@@ -109,6 +109,8 @@ For all seven assignment read-back methods, including concentrated and uniform m
 
 Discover existing case metadata with `load.GetAllPrimaryLoadCases()` and `load.GetAllReferenceLoadCases()` before reading assignments. Discovery leaves the active case unchanged and returns independent case objects in sets with unspecified order.
 
+For known case numbers, use `load.GetPrimaryLoadCaseFromId(17)` or `load.GetReferenceLoadCaseFromId(101)`. Read several primary cases with `load.GetPrimaryLoadCasesFromIds(new[] { 41, 17, 41 })`; input order and duplicate IDs are preserved. These metadata lookups leave the active case unchanged. All IDs must be positive and already exist; failed metadata reads throw.
+
 - `StaadPro.Interop.Services`: `OpenStaadWrapperProvider` factory for acquiring model sessions across ROT, active instances, and file launch.
 - `StaadPro.Interop.Models`: `OpenStaadWrapper` model session container exposing `Geometry` (`IOSGeometry`), `Load` (`IOSLoad`), and unit system metadata.
 - `StaadPro.Interop.Adapters.Interfaces`: `IOSGeometry`, `IOSLoad`, `IOSBase` adapter contracts.

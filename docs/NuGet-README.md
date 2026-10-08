@@ -22,6 +22,8 @@ The package exposes seven assignment read-back methods through `IOSLoad` and `OS
 
 `GetAllPrimaryLoadCases()` and `GetAllReferenceLoadCases()` return fresh `HashSet<ILoadCase>` metadata sets without changing the active case. Both validate native counts, IDs, titles and engineering types; set ordering is unspecified.
 
+`GetPrimaryLoadCaseFromId(int lcId)` and `GetReferenceLoadCaseFromId(int lcId)` read metadata for a known positive ID without activating or enumerating cases. `GetPrimaryLoadCasesFromIds(IEnumerable<int> loadCasesIds)` eagerly returns primary metadata in input order, preserving duplicates as independent objects. It validates the entire input before COM access; empty input produces a fresh empty list. Native errors and malformed metadata throw rather than returning partial results.
+
 ```csharp
 using System;
 using StaadPro.Interop.Entities;

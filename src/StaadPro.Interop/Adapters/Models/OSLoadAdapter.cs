@@ -509,6 +509,118 @@ namespace StaadPro.Interop.Adapters.Models
         /// </example>
         public HashSet<ILoadCase> GetAllReferenceLoadCases() => ReadAllLoadCases(LoadCaseType.ReferenceLoad);
 
+        /// <summary>Reads the title and engineering type of one existing primary load case by ID.</summary>
+        /// <param name="lcId">Positive STAAD primary case number in the connected model, not a
+        /// zero-based index. Zero (the native active-case shortcut) and negative numbers are rejected.</param>
+        /// <returns>A newly allocated, non-null <see cref="LoadCase"/> containing the requested Id,
+        /// preserved Title, CaseType of PrimaryLoad, and validated engineering Type.
+        /// Each call creates an independent metadata object; no assignments are loaded.</returns>
+        /// <remarks>
+        /// <para>Calls GetLoadCaseTitle(lcId), then GetLoadType(lcId), without activating a case
+        /// or enumerating case numbers. Reference and primary IDs may overlap; metadata is read
+        /// exclusively from the requested family. The active case and model assignments are unchanged.</para>
+        /// <para>Titles retain whitespace, Unicode and empty text. A literal title "NONE" is preserved;
+        /// it is not interpreted as absence. Non-string titles, native type errors and undefined
+        /// LoadType codes throw. Valid type codes are 0 through 23, including None.
+        /// A missing ID is reported through the native metadata error contract and is not returned as null.</para>
+        /// <para>This is a metadata read, not an atomic model snapshot. Use a connected, undisposed
+        /// wrapper and serialize shared-session operations/model edits on the appropriate COM thread.
+        /// Changing the returned object does not write to STAAD. Before changing Id, CaseType or Type
+        /// on an object stored in a HashSet, remove it or rebuild the set to preserve hash consistency.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="lcId"/> is not positive.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD returns malformed metadata or reports a type lookup failure.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load and an existing primary case:
+        /// <code>
+        /// var lc = load.GetPrimaryLoadCaseFromId(lcId: 17);
+        /// Console.WriteLine(lc.Id + ": " + lc.Title + " (" + lc.Type + ")");
+        /// </code>
+        /// </example>
+        public ILoadCase GetPrimaryLoadCaseFromId(int lcId)
+        {
+            if (lcId <= 0) throw new ArgumentOutOfRangeException(nameof(lcId), "The load case ID must be positive.");
+            return ReadLoadCaseMetadata(lcId, LoadCaseType.PrimaryLoad);
+        }
+        /// <summary>Reads the title and engineering type of one existing reference load case by ID.</summary>
+        /// <param name="lcId">Positive STAAD reference case number in the connected model, not a
+        /// zero-based index. Zero (the native active-case shortcut) and negative numbers are rejected.</param>
+        /// <returns>A newly allocated, non-null <see cref="LoadCase"/> containing the requested Id,
+        /// preserved Title, CaseType of ReferenceLoad, and validated engineering Type.
+        /// Each call creates an independent metadata object; no assignments are loaded.</returns>
+        /// <remarks>
+        /// <para>Calls GetReferenceLoadCaseTitle(lcId), then GetReferenceLoadType(lcId), without activating a case
+        /// or enumerating case numbers. Reference and primary IDs may overlap; metadata is read
+        /// exclusively from the requested family. The active case and model assignments are unchanged.</para>
+        /// <para>Titles retain whitespace, Unicode and empty text. A literal title "NONE" is preserved;
+        /// it is not interpreted as absence. Non-string titles, native type errors and undefined
+        /// LoadType codes throw. Valid type codes are 0 through 23, including None.
+        /// A missing ID is reported through the native metadata error contract and is not returned as null.</para>
+        /// <para>This is a metadata read, not an atomic model snapshot. Use a connected, undisposed
+        /// wrapper and serialize shared-session operations/model edits on the appropriate COM thread.
+        /// Changing the returned object does not write to STAAD. Before changing Id, CaseType or Type
+        /// on an object stored in a HashSet, remove it or rebuild the set to preserve hash consistency.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="lcId"/> is not positive.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD returns malformed metadata or reports a type lookup failure.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load and an existing reference case:
+        /// <code>
+        /// var lc = load.GetReferenceLoadCaseFromId(lcId: 17);
+        /// Console.WriteLine(lc.Id + ": " + lc.Title + " (" + lc.Type + ")");
+        /// </code>
+        /// </example>
+        public ILoadCase GetReferenceLoadCaseFromId(int lcId)
+        {
+            if (lcId <= 0) throw new ArgumentOutOfRangeException(nameof(lcId), "The load case ID must be positive.");
+            return ReadLoadCaseMetadata(lcId, LoadCaseType.ReferenceLoad);
+        }
+        /// <summary>Reads existing primary load case metadata for an ordered sequence of case IDs.</summary>
+        /// <param name="loadCasesIds">Non-null sequence of positive STAAD primary case numbers.
+        /// The sequence is enumerated once and all IDs are validated before any COM metadata access.</param>
+        /// <returns>A newly allocated, non-null list of new <see cref="LoadCase"/> objects, one per
+        /// supplied ID, in input order. Duplicate IDs are preserved as distinct objects. Every CaseType
+        /// is PrimaryLoad. An empty input returns a fresh empty list without contacting OpenSTAAD.</returns>
+        /// <remarks>
+        /// <para>The operation is eager: input enumeration, validation and all metadata reads complete
+        /// before returning. Each ID uses GetLoadCaseTitle followed by GetLoadType; no case is activated
+        /// and no case-number enumeration is performed. The active case and assignments are unchanged.</para>
+        /// <para>Titles preserve whitespace, Unicode, empty strings and literal "NONE". Types must be
+        /// defined LoadType codes (0 through 23, including None). Malformed/native-error metadata throws
+        /// and no partial list is returned. Exceptions from the input enumerator propagate unchanged;
+        /// enumeration and argument failures occur before any COM metadata call.</para>
+        /// <para>List entries are independent metadata objects, including repeated IDs. Editing them
+        /// does not write to STAAD. Input IDs are snapshotted, but metadata reads are not an atomic model
+        /// snapshot. Use a connected, undisposed wrapper and serialize shared-session operations and
+        /// model edits on the appropriate COM thread. No assignments are loaded.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="loadCasesIds"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Any element of <paramref name="loadCasesIds"/> is not positive.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD returns malformed metadata or reports a type lookup failure.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load and existing primary cases:
+        /// <code>
+        /// var cases = load.GetPrimaryLoadCasesFromIds(new[] { 17, 41, 17 });
+        /// foreach (var lc in cases) Console.WriteLine(lc.Id + ": " + lc.Title);
+        /// </code>
+        /// </example>
+        public List<ILoadCase> GetPrimaryLoadCasesFromIds(IEnumerable<int> loadCasesIds)
+        {
+            if (loadCasesIds == null) throw new ArgumentNullException(nameof(loadCasesIds));
+            var ids = loadCasesIds.ToList();
+            if (ids.Any(id => id <= 0))
+                throw new ArgumentOutOfRangeException(nameof(loadCasesIds), "Every load case ID must be positive.");
+            var result = new List<ILoadCase>(ids.Count);
+            foreach (int id in ids) result.Add(ReadLoadCaseMetadata(id, LoadCaseType.PrimaryLoad));
+            return result;
+        }
+
         #region Load Case Clearing
 
         public bool ClearPrimaryLoadCase(ILoadCase loadCase, bool isReferenceLoad) =>
@@ -865,19 +977,23 @@ namespace StaadPro.Interop.Adapters.Models
                 if (id <= 0 || !seen.Add(id))
                     throw new InvalidOperationException("OpenSTAAD returned nonpositive or duplicate " + family.ToLowerInvariant() + " load-case IDs.");
 
-            foreach (int id in ids)
-            {
-                object titleValue = primary ? ComObject.GetLoadCaseTitle(id) : ComObject.GetReferenceLoadCaseTitle(id);
-                if (!(titleValue is string title))
-                    throw new InvalidOperationException("OpenSTAAD returned a non-string load-case title for ID " + id + ".");
-                object typeValue = primary ? ComObject.GetLoadType(id) : ComObject.GetReferenceLoadType(id);
-                long typeCode = ReadQueryInteger(typeValue, primary ? "GetLoadType" : "GetReferenceLoadType");
-                if (typeCode < 0 || typeCode > int.MaxValue || !Enum.IsDefined(typeof(LoadType), (int)typeCode))
-                    throw new InvalidOperationException("OpenSTAAD returned an invalid load type for ID " + id + ".");
-                result.Add(new LoadCase(id, title, caseType, (LoadType)typeCode));
-            }
+            foreach (int id in ids) result.Add(ReadLoadCaseMetadata(id, caseType));
             return result;
         }
+
+        private LoadCase ReadLoadCaseMetadata(int id, LoadCaseType caseType)
+        {
+            bool primary = caseType == LoadCaseType.PrimaryLoad;
+            object titleValue = primary ? ComObject.GetLoadCaseTitle(id) : ComObject.GetReferenceLoadCaseTitle(id);
+            if (!(titleValue is string title))
+                throw new InvalidOperationException("OpenSTAAD returned a non-string load-case title for ID " + id + ".");
+            object typeValue = primary ? ComObject.GetLoadType(id) : ComObject.GetReferenceLoadType(id);
+            long typeCode = ReadQueryInteger(typeValue, primary ? "GetLoadType" : "GetReferenceLoadType");
+            if (typeCode < 0 || typeCode > int.MaxValue || !Enum.IsDefined(typeof(LoadType), (int)typeCode))
+                throw new InvalidOperationException("OpenSTAAD returned an invalid load type for ID " + id + ".");
+            return new LoadCase(id, title, caseType, (LoadType)typeCode);
+        }
+
         private static void ValidateLoadQuery(ILoadCase lc, int entityId, string idParameter)
         {
             if (lc == null) throw new ArgumentNullException(nameof(lc));
