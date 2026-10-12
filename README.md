@@ -8,6 +8,8 @@ A strongly typed .NET Framework 4.8.1 library providing high-level abstractions 
 
 See [NuGet readiness](docs/NuGet-Readiness.md) for package verification results and remaining release gates.
 
+Use the [installation guide](docs/Installation.md) for public/local NuGet feeds and `net481` consumer examples, and the [publishing guide](docs/Publishing.md) for verified web upload and public availability checks.
+
 ---
 
 ## Highlights
@@ -17,6 +19,8 @@ See [NuGet readiness](docs/NuGet-Readiness.md) for package verification results 
 - **Parametric Surface & Meshing Tools**: Complete support for annular surfaces, solid circular surfaces, density lines, density control points, and polygonal openings.
 - **Load Case Creation & Management**: Create primary/reference cases, discover their metadata (`GetAllPrimaryLoadCases`, `GetAllReferenceLoadCases`), look up known cases (`GetPrimaryLoadCaseFromId`, `GetReferenceLoadCaseFromId`, `GetPrimaryLoadCasesFromIds`), query titles, and clear cases.
 - **Reference Batches & Combination Metadata**: Read ordered reference batches (`GetReferenceLoadCasesFromIds`), discover combinations (`GetAllLoadCombinationCases`) and verify individual combination metadata (`GetLoadCombinationCaseFromId`) without changing the active case.
+- **Case Selection**: Read distinct combination batches (`GetLoadCombinationCasesFromIds`), select a metadata family (`GetAllLoadCasesOfType`) and find a case with nullable results (`GetLoadCase`). All preserve active-case state.
+- **Case Filters & Lists**: Filter inclusive ranges (`GetLoadCases`) or requested IDs (`GetLoadCasesFromIds`), and materialize family metadata (`GetLoadCasesOfType`) with eager validation and unchanged active-case state.
 - **Load Assignment Read-Back**: Query nodal loads, uniform and concentrated member forces, concentrated and uniform member moments, linearly varying forces, and trapezoidal forces with complete interface/concrete IntelliSense. See [Load queries](docs/Load-Queries.md).
 - **Zero Proprietary Binary Dependencies**: Completely decoupled from registered COM TypeLibs at build time. Compiles cleanly on any machine and CI environment.
 - **Strongly-Typed Structural Entities**: Rich domain models for `Node`, `Beam`, `Plate`, `Member`, `LoadCase`, and generic/non-generic `EntityGroup<T>`.
@@ -145,8 +149,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261012.load5 -o artifacts/load-port/package
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261012.load5.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261012.load7 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261012.load7.nupkg
 ```
 
 ---

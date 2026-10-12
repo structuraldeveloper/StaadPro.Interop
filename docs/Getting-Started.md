@@ -113,6 +113,10 @@ For known case numbers, use `load.GetPrimaryLoadCaseFromId(17)` or `load.GetRefe
 
 Use `load.GetReferenceLoadCasesFromIds(new[] { 101, 103, 101 })` for ordered reference metadata. Discover combinations with `load.GetAllLoadCombinationCases()` or look up a verified combination ID with `load.GetLoadCombinationCaseFromId(201)`. Combination metadata has `Type=None` and contains no factors or constituent cases; these calls leave the active case unchanged.
 
+Read distinct combinations with `load.GetLoadCombinationCasesFromIds(new[] { 201, 301, 201 })`; duplicates collapse and output order is unspecified. Select a family with `load.GetAllLoadCasesOfType(LoadCaseType.ReferenceLoad)`, or omit the argument for primary cases. `load.GetLoadCase(201, LoadCaseType.LoadCombination)` returns null when a positive ID is absent from a successful full-family read, so check for null before using the result. Repeat/undefined families are rejected, and native errors still throw.
+
+Filter an inclusive range with `load.GetLoadCases(1, 50, LoadCaseType.PrimaryLoad)`, filter requested IDs with `load.GetLoadCasesFromIds(new[] { 17, 41, 17 }, LoadCaseType.PrimaryLoad)`, or request a concrete list with `load.GetLoadCasesOfType(LoadCaseType.ReferenceLoad)`. Filters return distinct existing cases in unspecified family order and validate unmatched metadata too. See [Installation.md](Installation.md) for package installation and [Publishing.md](Publishing.md) for public release steps.
+
 - `StaadPro.Interop.Services`: `OpenStaadWrapperProvider` factory for acquiring model sessions across ROT, active instances, and file launch.
 - `StaadPro.Interop.Models`: `OpenStaadWrapper` model session container exposing `Geometry` (`IOSGeometry`), `Load` (`IOSLoad`), and unit system metadata.
 - `StaadPro.Interop.Adapters.Interfaces`: `IOSGeometry`, `IOSLoad`, `IOSBase` adapter contracts.

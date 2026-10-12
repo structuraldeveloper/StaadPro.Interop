@@ -37,6 +37,8 @@
   <ItemGroup>
     <None Include="..\..\docs\NuGet-README.md" Pack="true" PackagePath="README.md" />
     <None Include="..\..\docs\Load-Queries.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Installation.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Publishing.md" Pack="true" PackagePath="docs\" />
   </ItemGroup>
 
 </Project>

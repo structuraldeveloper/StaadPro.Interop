@@ -64,8 +64,24 @@ All IDs must be positive. Batch input is enumerated once and completely validate
 
 - `GetAllLoadCombinationCases()`: Returns a fresh `HashSet<ILoadCase>` with combination IDs/titles, `CaseType=LoadCombination` and `Type=None`.
 - `GetLoadCombinationCaseFromId(int lcId)`: Verifies membership in the combination ID list before reading the requested title; absent IDs throw.
+- `GetLoadCombinationCasesFromIds(IEnumerable<int> lcIds)`: Returns an eager distinct set exposed as `IEnumerable<ILoadCase>`, validating all input and memberships before titles; duplicates collapse and order is unspecified.
 
 These methods leave the active case unchanged and validate native count/number/title results. Combinations have no engineering type category, so no type API is called. Factors and constituent cases are not loaded. See [Load-Queries.md](Load-Queries.md#discovering-and-looking-up-load-combinations).
+
+### Family Selection and Generic Lookup
+
+- `GetAllLoadCasesOfType(LoadCaseType loadCaseType = LoadCaseType.PrimaryLoad)`: Eagerly returns the selected primary/reference/combination metadata set through `IEnumerable<ILoadCase>`.
+- `GetLoadCase(int lcId, LoadCaseType loadCaseType)`: Reads the complete selected family, then returns its matching metadata object or null if the positive ID is absent.
+
+Repeat and undefined families throw `NotSupportedException` before COM; nonpositive generic lookup IDs throw `ArgumentOutOfRangeException`. Native failures throw even when the requested ID is absent or another case fails. Both leave the active case unchanged. See [Load-Queries.md](Load-Queries.md#selecting-a-family-and-finding-a-case).
+
+### Range, ID Filters and Lists
+
+- `GetLoadCases(int fromId, int toId, LoadCaseType loadCaseType)`: Eagerly reads a family and returns cases in the inclusive positive ID range. Equal bounds are allowed; reversed/nonpositive bounds throw before COM.
+- `GetLoadCasesFromIds(IEnumerable<int> loadCasesIds, LoadCaseType loadCaseType)`: Snapshots and validates input once, filters a complete family read, collapses duplicate requests and omits missing IDs. Empty input returns a fresh empty list without COM, after family validation.
+- `GetLoadCasesOfType(LoadCaseType loadCaseType)`: Returns a concrete, fresh `List<ILoadCase>` for a supported family.
+
+All three preserve active-case state and return eager metadata lists in unspecified order. Primary/reference/combination families are supported; repeat/undefined families throw. Unmatched metadata errors still throw during full-family reads. See [Load-Queries.md](Load-Queries.md#filtering-and-materializing-case-lists).
 
 ### Load Case Creation & Titles
 - `CreateNewPrimaryLoad(string lcTitle, LoadType loadType)`: Creates a new primary load case with automatic ID assignment.

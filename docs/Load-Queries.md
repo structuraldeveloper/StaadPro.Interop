@@ -2,7 +2,7 @@
 
 ## Scope and provenance
 
-Five increments port fifteen methods from the main project's `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs` into the open source `IOSLoad` contract and `OSLoadAdapter`. The first added nodal, uniform member, and concentrated member force queries. The second added concentrated member moments, linear varying forces, and trapezoidal forces. The third added uniform member moments with their required model, and primary/reference case discovery. The fourth added direct primary/reference case lookup and ordered primary batch lookup. The fifth adds reference batch lookup, combination discovery and combination lookup. Public signatures and assignment mappings are preserved. Private application dependencies and Bentley binaries are not copied. Corrections to reference metadata lookup and uniform-moment conversion are described below.
+Seven increments port twenty-one methods from the main project's `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs` into the open source `IOSLoad` contract and `OSLoadAdapter`. The first added nodal, uniform member, and concentrated member force queries. The second added concentrated member moments, linear varying forces, and trapezoidal forces. The third added uniform member moments with their required model, and primary/reference case discovery. The fourth added direct primary/reference case lookup and ordered primary batch lookup. The fifth added reference batch lookup, combination discovery and combination lookup. The sixth added distinct combination batch lookup, family selection and generic nullable lookup. The seventh adds range filtering, requested-ID filtering and concrete family lists. Public signatures and assignment mappings are preserved. Private application dependencies and Bentley binaries are not copied. Corrections to reference metadata lookup and uniform-moment conversion are described below.
 
 The earlier connectivity increment has been removed: its three grouping functions, service, scope enums, tests, guide, and verification script are absent. The public geometry interface and adapter are restored to the pre-increment revision. Package and documentation verification now covers load queries.
 
@@ -16,7 +16,7 @@ The earlier connectivity increment has been removed: its three grouping function
 | `GetMemberTrapezoidalLoads(ILoadCase lc, int mId)` | `List<MemberTrapezoidalLoad>` | `GetTrapLoadCount` / `GetTrapLoads` |
 | `GetMemberUniformMoments(ILoadCase lc, int mId)` | `List<MemberUniformMoment>` | `GetUNIMomentCount` / `GetUNIMoments` |
 
-All seven assignment methods are available through `wrapper.Load` (`IOSLoad`) and the concrete `OSLoadAdapter`. They read **assigned load items**. They do not retrieve reactions, member internal forces, displacements, or other analysis results. They do not create load cases or add, remove, or alter assignments. The eight case discovery/lookup methods described below are also available through both types.
+All seven assignment methods are available through `wrapper.Load` (`IOSLoad`) and the concrete `OSLoadAdapter`. They read **assigned load items**. They do not retrieve reactions, member internal forces, displacements, or other analysis results. They do not create load cases or add, remove, or alter assignments. The fourteen case discovery/lookup/filter methods described below are also available through both types.
 
 Signatures are declared in `Adapters/Interfaces/IOSLoad.cs`; all implementations and their private helpers reside in `Adapters/Models/OSLoadAdapter.cs`. Adapters use a single, non-partial class. Separate helpers or services may be introduced when needed.
 
@@ -216,6 +216,7 @@ foreach (var lc in orderedPrimaryCases)
 | --- | --- | --- |
 | `GetAllLoadCombinationCases()` | `HashSet<ILoadCase>` | `GetLoadCombinationCaseCount`, `GetLoadCombinationCaseNumbers`, then `GetLoadCaseTitle` per ID |
 | `GetLoadCombinationCaseFromId(int lcId)` | `ILoadCase` (a new `LoadCase`) | Combination count/numbers for membership, then title only for the requested ID |
+| `GetLoadCombinationCasesFromIds(IEnumerable<int> lcIds)` | `IEnumerable<ILoadCase>` backed by a fresh HashSet | Combination count/numbers once for all memberships, then title per distinct requested ID |
 
 These methods read existing **combination metadata**. Every result has `CaseType=LoadCombination` and `Type=LoadType.None` (23). Combinations have no primary/reference engineering category, so `GetLoadType` and `GetReferenceLoadType` are not called. Factors, constituent cases, assignments and analysis results are outside these methods' scope. Returned combinations cannot be passed as cases to the primary/reference assignment query methods.
 
@@ -225,18 +226,78 @@ Discovery returns a fresh set of independent objects, with unspecified iteration
 
 Single lookup rejects nonpositive `lcId` before COM access. It validates the complete combination ID list and confirms membership **before** reading the title. An absent ID, including one belonging only to a primary/reference case, throws `InvalidOperationException`; zero combinations also throws without number/title reads. This tightens the main project's title-only lookup, which could otherwise misclassify another case or missing ID as a combination. Only the requested combination's title is read. Each lookup enumerates combination IDs afresh; use discovery when retrieving many combinations.
 
-Neither method activates a case or changes active-case state or model assignments. Reads are not an atomic snapshot: coordinate model edits and shared-session access on the appropriate COM thread, using a connected, undisposed wrapper. `LoadCase` hashing uses `Id`, `CaseType` and `Type`; remove an object from a HashSet before editing those fields or rebuild the set.
+These methods do not activate a case or change active-case state or model assignments. Reads are not an atomic snapshot: coordinate model edits and shared-session access on the appropriate COM thread, using a connected, undisposed wrapper. `LoadCase` hashing uses `Id`, `CaseType` and `Type`; remove an object from a HashSet before editing those fields or rebuild the set.
+
+Combination batch lookup follows the main project's **distinct set** semantics: `[201, 301, 201]` returns two records, with unspecified iteration order. This differs from primary/reference batches, which preserve order and duplicate entries. The public parameter name is `lcIds`, and the public return type remains `IEnumerable<ILoadCase>`.
+
+The batch operation enumerates input once, snapshots and validates every ID before COM access, and returns a fresh empty set for empty input without native calls. Null input throws `ArgumentNullException`; any nonpositive ID throws `ArgumentOutOfRangeException`, both naming `lcIds`. Input-enumerator failures propagate unchanged before COM, with the enumerator disposed. For nonempty input, the combination ID list is fetched and validated once. **Every requested membership is checked before any title is read**; a missing or primary-only ID throws rather than being skipped. Titles are read once per distinct requested ID; no partial set escapes on failure. Re-enumerating the returned set causes no native reads. Results, input IDs and native buffers are independent; shared-session and hash mutation constraints also apply to batch results.
 
 ```csharp
 var combinations = load.GetAllLoadCombinationCases();
 foreach (var lc in combinations)
     Console.WriteLine(lc.Id + ": " + lc.Title);
 var combination = load.GetLoadCombinationCaseFromId(lcId: 201);
+var distinctCombinations = load.GetLoadCombinationCasesFromIds(new[] { 201, 301, 201 });
 ```
 
 `OSLoadCombinationQueryTests` verifies enumeration and direct lookup, replacement/in-place buffers, sparse IDs, ownership, zero/invalid counts, count mismatches/errors, malformed/nonpositive/duplicate/unwritten arrays, nonzero bounds, title preservation, missing membership, native/binding errors at each stage and later failures without a partial set. Its stand-in omits activation and type APIs, so accidental calls to them fail.
 
 The installed Bentley 2025 reference's `GetLoadCombinationCaseNumbers` return description labels the positive result as a *primary* case count, despite the combination method name and example. This port interprets it as the retrieved combination count and validates it accordingly. Live release verification must use models with different primary/reference/combination counts to resolve that documentation inconsistency; offline stand-ins do not establish native behavior.
+
+`OSLoadCombinationBatchQueryTests` covers distinct/fresh/eager results, one membership fetch, empty/null/invalid input, membership checks before titles, single-pass enumeration and input mutation, enumerator disposal/failures, malformed native payloads, native/binding failures, nonzero bounds, and concrete adapter exposure.
+
+## Selecting a family and finding a case
+
+| Method | Contract |
+| --- | --- |
+| `GetAllLoadCasesOfType(LoadCaseType loadCaseType = LoadCaseType.PrimaryLoad)` | Eagerly returns a fresh HashSet exposed as `IEnumerable<ILoadCase>` for one supported family |
+| `GetLoadCase(int lcId, LoadCaseType loadCaseType)` | Reads the whole selected family, then returns its matching metadata object or null |
+
+Supported families are `PrimaryLoad`, `ReferenceLoad` and `LoadCombination`. Omitted family selection defaults to primary on both `IOSLoad` and `OSLoadAdapter`. `RepeatLoad` and undefined enum values throw `NotSupportedException` before COM access; repeat-load discovery remains pending. The main selector used `InvalidOperationException` for unsupported types; the port uses the same `NotSupportedException` convention as other unsupported load query families.
+
+Family selection delegates to the existing strict primary/reference/combination discovery methods. It preserves their native count, number, array, title and applicable engineering type validation. It merges no families, returns new independent objects per call, and returns a fresh empty set for zero count. Its reads finish before return; repeated enumeration performs no COM calls. Set iteration order is unspecified, and editing hash-defining properties requires removal from or rebuilding the set.
+
+Generic lookup requires a positive `lcId`, rejecting zero and negative IDs with `ArgumentOutOfRangeException` naming `lcId` before COM access. It preserves the main project's nullable lookup contract: **a successful family read without the ID returns null**, including an empty family or a number present only in another family. A primary/reference ID shared by those families is resolved using the selected family's metadata.
+
+`GetLoadCase` reads metadata for **every case in the selected family** before selecting the requested ID. A native or malformed metadata error still throws, even if it occurs in an unrelated case or the requested ID is absent. No error is converted to null. Use the focused `GetPrimaryLoadCaseFromId`, `GetReferenceLoadCaseFromId` or `GetLoadCombinationCaseFromId` when their narrower reads and throwing-on-error contracts fit your operation. A generic result has the selected `CaseType`; combination `Type` remains `None`.
+
+Both functions preserve active-case state and read metadata only, with no factors, constituent cases, assignments or analysis results loaded. They require a connected, undisposed wrapper and serialized shared-session/model access on the appropriate COM thread. Results are not atomic model snapshots, and editing returned metadata does not write to STAAD.
+
+```csharp
+var primaryCases = load.GetAllLoadCasesOfType();
+var referenceCases = load.GetAllLoadCasesOfType(LoadCaseType.ReferenceLoad);
+var combination = load.GetLoadCase(lcId: 201, loadCaseType: LoadCaseType.LoadCombination);
+if (combination != null)
+    Console.WriteLine(combination.Id + ": " + combination.Title);
+```
+
+`OSLoadCaseSelectionTests` verifies all supported families, interface/concrete defaults, isolated dispatch, fresh/eager/empty results, repeat/unknown rejection, overlapping and cross-family IDs, missing/empty nullable lookup, positive ID validation, malformed data/native/binding failures, and unrelated-case errors. Its stand-in has no activation methods, so accidental activation fails.
+
+## Filtering and materializing case lists
+
+| Method | Behavior |
+| --- | --- |
+| `GetLoadCases(int fromId, int toId, LoadCaseType loadCaseType)` | Returns existing metadata within an inclusive ID range |
+| `GetLoadCasesFromIds(IEnumerable<int> loadCasesIds, LoadCaseType loadCaseType)` | Returns distinct existing metadata matching requested IDs; missing IDs are omitted |
+| `GetLoadCasesOfType(LoadCaseType loadCaseType)` | Materializes all selected-family metadata into a concrete `List<ILoadCase>` |
+
+All support primary/reference/combination families, reject repeat/undefined values before COM, perform eager reads and return fresh managed lists in unspecified family order. The first two retain their public `IEnumerable<ILoadCase>` signatures while returning materialized lists. List mutation/re-enumeration does not contact STAAD. Every returned case is independent of earlier calls. They leave active-case state and model assignments unchanged.
+
+Range bounds must be positive, and `toId` must be at least `fromId`. Invalid bounds throw before native access: `ArgumentOutOfRangeException` names the nonpositive bound, and `ArgumentException` names `toId` for a reversed range. Both endpoints are included. Equal bounds return at most one existing case, sparse IDs are handled without fabrication, and the implementation filters metadata rather than iterating every integer, so ranges up to `Int32.MaxValue` do not create enormous ID buffers. A valid range without matches returns an empty list.
+
+Requested-ID filtering enumerates and snapshots input once, validates every ID and family before COM, collapses duplicate requests and omits absent IDs after a successful read. Result order follows the unspecified family enumeration order rather than the supplied order. Null input throws `ArgumentNullException`, and a nonpositive element throws `ArgumentOutOfRangeException`, both naming `loadCasesIds`. Empty input returns a fresh empty list without native calls, but unsupported families are still rejected. Enumerator failures propagate unchanged and dispose the input enumerator before any native read.
+
+For nonempty ID filters and valid ranges, the whole family is read and validated before filtering; errors in unmatched cases still throw. `GetLoadCasesOfType` also reads the complete family. No errors become empty results, and no partial list is returned. Native count/number/array/title/type validation, COM/binding errors, unit/category conventions and shared-session/thread requirements are inherited from the family reader. Combination `Type` remains `None`; factors, constituent cases and assignments are not loaded.
+
+The port preserves main-project signatures and matching semantics while making filters eager and input enumeration single-pass. It rejects invalid bounds explicitly rather than returning an accidental empty range, and rejects the main project's repeat-load list stub rather than returning null.
+
+```csharp
+var inRange = load.GetLoadCases(1, 50, LoadCaseType.PrimaryLoad);
+var requested = load.GetLoadCasesFromIds(new[] { 17, 41, 17 }, LoadCaseType.PrimaryLoad);
+var combinations = load.GetLoadCasesOfType(LoadCaseType.LoadCombination);
+```
+
+`OSLoadCaseFilterTests` verifies all three functions and supported families, eager/fresh list ownership, empty results, inclusive/equal/large ranges, invalid bounds/IDs, unsupported families including empty input, deduplication/absence, input snapshot/disposal, native/binding failures, unmatched metadata errors and concrete adapter exposure.
 
 ## Units and ownership
 
@@ -314,16 +375,16 @@ These safeguards extend the main project's implementation, which casts arrays di
 
 ## IntelliSense and automated verification
 
-Both interface and concrete methods contain expanded XML comments: summaries, every parameter, returns, field mappings, unit behavior, ownership, active-case effects, COM threading constraints, six exception categories for assignment reads (three for case discovery, four for single lookup, five for batch lookup), and examples. The build emits `StaadPro.Interop.xml`, and NuGet places it beside `StaadPro.Interop.dll` under `lib/net481/`.
+Both interface and concrete methods contain expanded XML comments: summaries, every parameter, returns, field mappings, unit behavior, ownership, active-case effects, COM threading constraints, six exception categories for assignment reads (three for case discovery, four for focused lookup/family selection, five for batch/generic lookup), and examples. The build emits `StaadPro.Interop.xml`, and NuGet places it beside `StaadPro.Interop.dll` under `lib/net481/`.
 
-`OSLoadQueryTests` verifies all seven assignment queries' component mapping, record order, signs, case identity, both activation paths, fresh object ownership, replacement/in-place output buffers, zero counts, invalid arguments, count/status failures, every malformed component, unwritten buffers, all supported directions, zero sentinels, nonzero SAFEARRAY bounds, COM exception propagation, and missing signatures. It includes the linear start/end/middle regression. `MemberLoadDefinitionTests` verifies constructors/copies, independent definitions, dimensional conversions, assignment dispatch under both case types, native argument order, missing-input handling, and exception propagation. `OSLoadQueryDocumentationTests` validates all thirty compiled method entries, matches interface/concrete text, and checks documentation for all four ported models.
+`OSLoadQueryTests` verifies all seven assignment queries' component mapping, record order, signs, case identity, both activation paths, fresh object ownership, replacement/in-place output buffers, zero counts, invalid arguments, count/status failures, every malformed component, unwritten buffers, all supported directions, zero sentinels, nonzero SAFEARRAY bounds, COM exception propagation, and missing signatures. It includes the linear start/end/middle regression. `MemberLoadDefinitionTests` verifies constructors/copies, independent definitions, dimensional conversions, assignment dispatch under both case types, native argument order, missing-input handling, and exception propagation. `OSLoadQueryDocumentationTests` validates all forty-two compiled method entries, matches interface/concrete text, and checks documentation for all four ported models.
 
-`eng/Verify-LoadPackage.ps1` checks the actual NuGet archive, creates an isolated `net481` consumer with a fresh package cache and no project reference, verifies the restored archive hash, compiles and executes all thirty packaged XML examples, and exercises all seven installed assignment APIs for primary/reference/empty cases, primary/reference/combination discovery and lookup, ordered duplicate/empty primary/reference batches, missing combination rejection and unchanged activation, plus all four ported models' assignment dispatch. This consumer uses a managed stand-in; it is not a live COM compatibility test.
+`eng/Verify-LoadPackage.ps1` checks the actual NuGet archive, creates an isolated `net481` consumer with a fresh package cache and no project reference, verifies the restored archive hash, compiles and executes all forty-two packaged XML examples, and exercises all seven installed assignment APIs for primary/reference/empty cases, primary/reference/combination discovery and lookup, ordered duplicate/empty primary/reference batches, distinct combination batches with one membership fetch, generic family/default selection, missing/empty nullable lookups, inclusive range/ID filters, concrete family lists, missing combination rejection and unchanged activation, plus all four ported models' assignment dispatch. This consumer uses a managed stand-in; it is not a live COM compatibility test.
 
 ```powershell
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261012.load5 -o artifacts/load-port/package
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261012.load5.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261012.load7 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261012.load7.nupkg
 ```
 
 The existing `OpenStaadWrapperProvider_DefaultGetRunning_ReturnsNullWhenNoStaad` test is explicitly marked `LiveIntegration`: it asserts an environmental precondition, namely that no STAAD session is running. Ordinary offline runs leave it unexecuted. It does not verify the load queries.
@@ -336,7 +397,7 @@ The offline suite and package consumer do not certify native COM SAFEARRAY marsh
 
 ## Sources inspected
 
-- Main project: `src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs`, at main repository revision `41dfc15ae34b7d530a1d5a46c8ee8dad063ccd4f` for increments 1–4. The fifth increment inspected the clean contract/adapter files at revision `3f930d742f972c27d961f0e8eff9f1e11c520ff2` on 12 October 2026.
+- Main project: `src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs`, at main repository revision `41dfc15ae34b7d530a1d5a46c8ee8dad063ccd4f` for increments 1–4. The fifth through seventh increments inspected the clean contract/adapter files at revision `3f930d742f972c27d961f0e8eff9f1e11c520ff2` on 12 October 2026.
 - Supporting models: main project's `Entities/Loads/MemberConcentratedMoment.cs`, `MemberLinearVaryingLoad.cs`, `MemberTrapezoidalLoad.cs`, and `MemberUniformMoment.cs` at the same revision.
 - Installed Bentley STAAD.Pro 2025 native programmer reference: `OSAPP_Help/group___property_load_nodal.html`, `group___property_load_mem.html`, `group___property_load_case.html`, and `group___property_load_def_ref_load.html`. These are under the installed STAAD.Pro 2025 directory; consult your own installation for the vendor documentation.
 - Installed Bentley `openstaadpy-25.0.1.1` source was inspected as an additional reference. It conflicts with the native documentation in some places (notably UDL Boolean status handling). This port follows the native status contract and the main C# method signatures; live verification is still required.

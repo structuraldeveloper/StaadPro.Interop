@@ -59,6 +59,9 @@ namespace StaadPro.Interop.Tests.Adapter
             }
         }
         [TestCase("GetPrimaryLoadCaseFromId", "System.Int32", "lcId", 4)]
+        [TestCase("GetLoadCombinationCasesFromIds", "System.Collections.Generic.IEnumerable{System.Int32}", "lcIds", 5)]
+        [TestCase("GetAllLoadCasesOfType", "StaadPro.Interop.Enums.LoadCaseType", "loadCaseType", 4)]
+        [TestCase("GetLoadCasesOfType", "StaadPro.Interop.Enums.LoadCaseType", "loadCaseType", 4)]
         [TestCase("GetReferenceLoadCaseFromId", "System.Int32", "lcId", 4)]
         [TestCase("GetLoadCombinationCaseFromId", "System.Int32", "lcId", 4)]
         [TestCase("GetReferenceLoadCasesFromIds", "System.Collections.Generic.IEnumerable{System.Int32}", "loadCasesIds", 5)]
@@ -75,6 +78,30 @@ namespace StaadPro.Interop.Tests.Adapter
                 Assert.That(member.Elements("param").Select(p => (string)p.Attribute("name")), Is.EqualTo(new[] { parameter }));
                 Assert.That(member.Element("param").Value.Trim(), Is.Not.Empty);
                 Assert.That(member.Elements("exception").Count(), Is.EqualTo(exceptions));
+                Assert.That(member.Elements("exception").All(e => !string.IsNullOrWhiteSpace(e.Value)), Is.True);
+                Assert.That(member.Descendants("inheritdoc"), Is.Empty);
+                Assert.That(member.Descendants().Attributes("cref").Any(c => c.Value.StartsWith("!:")), Is.False);
+                Assert.That(member.Element("example").Element("code").Value, Does.Contain("load." + method + "("));
+                if (previous != null) Assert.That(member.Elements().Select(e => e.ToString()), Is.EqualTo(previous.Elements().Select(e => e.ToString())));
+                previous = member;
+            }
+        }
+
+        [TestCase("GetLoadCase", "System.Int32,StaadPro.Interop.Enums.LoadCaseType", "lcId|loadCaseType", 5)]
+        [TestCase("GetLoadCases", "System.Int32,System.Int32,StaadPro.Interop.Enums.LoadCaseType", "fromId|toId|loadCaseType", 6)]
+        [TestCase("GetLoadCasesFromIds", "System.Collections.Generic.IEnumerable{System.Int32},StaadPro.Interop.Enums.LoadCaseType", "loadCasesIds|loadCaseType", 6)]
+        public void MultiParameterQuery_ContainsCompleteMatchingIntelliSense(string method, string signature, string parameters, int exceptionCount)
+        {
+            var document = XDocument.Load(Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml"));
+            XElement previous = null;
+            foreach (var type in new[] { typeof(IOSLoad), typeof(OSLoadAdapter) })
+            {
+                var member = document.Descendants("member").Single(m => (string)m.Attribute("name") == "M:" + type.FullName + "." + method + "(" + signature + ")");
+                foreach (string tag in new[] { "summary", "returns", "remarks", "example" })
+                    Assert.That(member.Element(tag)?.Value.Trim(), Is.Not.Null.And.Not.Empty, tag);
+                Assert.That(member.Elements("param").Select(p => (string)p.Attribute("name")), Is.EqualTo(parameters.Split('|')));
+                Assert.That(member.Elements("param").All(p => !string.IsNullOrWhiteSpace(p.Value)), Is.True);
+                Assert.That(member.Elements("exception").Count(), Is.EqualTo(exceptionCount));
                 Assert.That(member.Elements("exception").All(e => !string.IsNullOrWhiteSpace(e.Value)), Is.True);
                 Assert.That(member.Descendants("inheritdoc"), Is.Empty);
                 Assert.That(member.Descendants().Attributes("cref").Any(c => c.Value.StartsWith("!:")), Is.False);

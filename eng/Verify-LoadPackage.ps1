@@ -18,8 +18,13 @@ try {
     [xml] $xml = Read-PackageEntry 'lib/net481/StaadPro.Interop.xml'
     $readme = Read-PackageEntry 'README.md'
     $guide = Read-PackageEntry 'docs/Load-Queries.md'
+    $installation = Read-PackageEntry 'docs/Installation.md'
+    $publishing = Read-PackageEntry 'docs/Publishing.md'
+    if ($installation -notmatch 'net481' -or $publishing -notmatch 'nuget.org') { throw 'Incomplete installation/publishing guides.' }
+    $installationCode = [regex]::Match($installation, '(?s)```csharp\s*\r?\n(.*?)```').Groups[1].Value
+    if ([string]::IsNullOrWhiteSpace($installationCode)) { throw 'Missing installation C# example.' }
     if ($readme -notmatch 'net481') { throw 'Incomplete packaged README.' }
-    $queryMethods = @('GetNodalLoads', 'GetMemberUniformlyDistributedLoads', 'GetMemberConcentratedLoads', 'GetMemberConcentratedMoments', 'GetMemberLinearVaryingLoads', 'GetMemberTrapezoidalLoads', 'GetMemberUniformMoments', 'GetAllPrimaryLoadCases', 'GetAllReferenceLoadCases', 'GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId', 'GetPrimaryLoadCasesFromIds', 'GetReferenceLoadCasesFromIds', 'GetAllLoadCombinationCases', 'GetLoadCombinationCaseFromId')
+    $queryMethods = @('GetNodalLoads', 'GetMemberUniformlyDistributedLoads', 'GetMemberConcentratedLoads', 'GetMemberConcentratedMoments', 'GetMemberLinearVaryingLoads', 'GetMemberTrapezoidalLoads', 'GetAllPrimaryLoadCases', 'GetAllReferenceLoadCases', 'GetMemberUniformMoments', 'GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId', 'GetPrimaryLoadCasesFromIds', 'GetReferenceLoadCasesFromIds', 'GetAllLoadCombinationCases', 'GetLoadCombinationCaseFromId', 'GetLoadCombinationCasesFromIds', 'GetAllLoadCasesOfType', 'GetLoadCase', 'GetLoadCases', 'GetLoadCasesFromIds', 'GetLoadCasesOfType')
     foreach ($method in $queryMethods) {
         if ($readme -notmatch $method -or $guide -notmatch $method) { throw "Missing packaged guidance for $method" }
     }
@@ -33,10 +38,14 @@ try {
     $snippets = @()
     foreach ($owner in @('Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         foreach ($method in $queryMethods) {
-            $isEnumeration = $method -like 'GetAll*'
+            $isEnumeration = $method -in @('GetAllPrimaryLoadCases', 'GetAllReferenceLoadCases', 'GetAllLoadCombinationCases')
             $isSingleLookup = $method -in @('GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId', 'GetLoadCombinationCaseFromId')
-            $isBatchLookup = $method -in @('GetPrimaryLoadCasesFromIds', 'GetReferenceLoadCasesFromIds')
-            $suffix = if ($isEnumeration) { '' } elseif ($isSingleLookup) { '(System.Int32)' } elseif ($isBatchLookup) { '(System.Collections.Generic.IEnumerable{System.Int32})' } else { '(StaadPro.Interop.Entities.ILoadCase,System.Int32)' }
+            $isBatchLookup = $method -in @('GetPrimaryLoadCasesFromIds', 'GetReferenceLoadCasesFromIds', 'GetLoadCombinationCasesFromIds')
+            $isFamilyQuery = $method -in @('GetAllLoadCasesOfType', 'GetLoadCasesOfType')
+            $isGenericLookup = $method -eq 'GetLoadCase'
+            $isRangeQuery = $method -eq 'GetLoadCases'
+            $isIdFilter = $method -eq 'GetLoadCasesFromIds'
+            $suffix = if ($isEnumeration) { '' } elseif ($isFamilyQuery) { '(StaadPro.Interop.Enums.LoadCaseType)' } elseif ($isRangeQuery) { '(System.Int32,System.Int32,StaadPro.Interop.Enums.LoadCaseType)' } elseif ($isIdFilter) { '(System.Collections.Generic.IEnumerable{System.Int32},StaadPro.Interop.Enums.LoadCaseType)' } elseif ($isGenericLookup) { '(System.Int32,StaadPro.Interop.Enums.LoadCaseType)' } elseif ($isSingleLookup) { '(System.Int32)' } elseif ($isBatchLookup) { '(System.Collections.Generic.IEnumerable{System.Int32})' } else { '(StaadPro.Interop.Entities.ILoadCase,System.Int32)' }
             $name = "M:StaadPro.Interop.$owner.$method$suffix"
             $members = @($xml.doc.members.member | Where-Object name -eq $name)
             if ($members.Count -ne 1) { throw "Missing or duplicate IntelliSense entry: $name" }
@@ -45,8 +54,8 @@ try {
                 $node = $member.SelectSingleNode($tag)
                 if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $name" }
             }
-            $expectedParams = if ($isEnumeration) { 0 } elseif ($isSingleLookup -or $isBatchLookup) { 1 } else { 2 }
-            $expectedExceptions = if ($isEnumeration) { 3 } elseif ($isSingleLookup) { 4 } elseif ($isBatchLookup) { 5 } else { 6 }
+            $expectedParams = if ($isEnumeration) { 0 } elseif ($isRangeQuery) { 3 } elseif ($isSingleLookup -or $isBatchLookup -or $isFamilyQuery) { 1 } else { 2 }
+            $expectedExceptions = if ($isEnumeration) { 3 } elseif ($isSingleLookup -or $isFamilyQuery) { 4 } elseif ($isBatchLookup -or $isGenericLookup) { 5 } else { 6 }
             if (@($member.SelectNodes('param')).Count -ne $expectedParams -or @($member.exception).Count -ne $expectedExceptions -or $null -ne $member.SelectSingleNode('.//inheritdoc')) { throw "Incomplete contract for $name" }
             if ($member.OuterXml -match 'cref="!:') { throw "Unresolved documentation reference in $name" }
             $snippets += "{`n" + $member.SelectSingleNode('example/code').InnerText + "`n}"
@@ -69,7 +78,7 @@ $config = @"
 "@
 $project = @"
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><TargetFramework>net481</TargetFramework><OutputType>Exe</OutputType><LangVersion>latest</LangVersion><TreatWarningsAsErrors>true</TreatWarningsAsErrors><RestorePackagesPath>packages</RestorePackagesPath></PropertyGroup>
+  <PropertyGroup><TargetFramework>net481</TargetFramework><OutputType>Exe</OutputType><StartupObject>Program</StartupObject><LangVersion>latest</LangVersion><TreatWarningsAsErrors>true</TreatWarningsAsErrors><RestorePackagesPath>packages</RestorePackagesPath></PropertyGroup>
   <ItemGroup><Reference Include="Microsoft.CSharp"/><PackageReference Include="StaadPro.Interop" Version="$version"/></ItemGroup>
 </Project>
 "@
@@ -152,6 +161,38 @@ public static class Program
             bool missingCombination = false;
             try { load.GetLoadCombinationCaseFromId(17); } catch (InvalidOperationException) { missingCombination = true; }
             Check(missingCombination && fake.PrimaryTypeCalls == typeCallsBeforeCombinations, "combination membership and no engineering type lookup");
+            int numberCallsBeforeBatch = fake.CombinationNumberCalls;
+            var combinationBatch = load.GetLoadCombinationCasesFromIds(new[] { 201, 301, 201 });
+            int combinationBatchCount = 0;
+            foreach (var item in combinationBatch)
+            {
+                combinationBatchCount++;
+                Check((item.Id == 201 || item.Id == 301) && item.CaseType == LoadCaseType.LoadCombination && item.Type == LoadType.None && item.Title == "COMB " + item.Id, "combination batch metadata");
+            }
+            Check(combinationBatchCount == 2 && fake.CombinationNumberCalls == numberCallsBeforeBatch + 1, "distinct combination batch with one number fetch");
+            foreach (var item in combinationBatch) Check(item.Id > 0, "combination batch re-enumeration");
+            Check(fake.CombinationNumberCalls == numberCallsBeforeBatch + 1, "eager combination batch");
+            foreach (var type in new[] { LoadCaseType.PrimaryLoad, LoadCaseType.ReferenceLoad, LoadCaseType.LoadCombination })
+            {
+                var familyCases = load.GetAllLoadCasesOfType(type);
+                int familyCount = 0;
+                foreach (var item in familyCases) { familyCount++; Check(item.CaseType == type, "family dispatch"); }
+                Check(familyCount == (type == LoadCaseType.LoadCombination ? 2 : 1), "family count");
+                var familyList = load.GetLoadCasesOfType(type);
+                Check(familyList.Count == familyCount, "concrete family list");
+                int id = type == LoadCaseType.LoadCombination ? 201 : 17;
+                int rangeCount = 0;
+                foreach (var item in load.GetLoadCases(id, id, type)) { rangeCount++; Check(item.Id == id && item.CaseType == type, "inclusive equal range"); }
+                Check(rangeCount == 1, "equal range count");
+                int filteredCount = 0;
+                foreach (var item in load.GetLoadCasesFromIds(new[] { int.MaxValue, id, id }, type)) { filteredCount++; Check(item.Id == id && item.CaseType == type, "distinct existing family ID filter"); }
+                Check(filteredCount == 1, "ID filter omits missing and duplicate requests");
+                var found = load.GetLoadCase(id, type);
+                Check(found != null && found.Id == id && found.CaseType == type, "generic family lookup");
+                Check(load.GetLoadCase(int.MaxValue, type) == null, "absent generic lookup");
+            }
+            foreach (var item in load.GetAllLoadCasesOfType()) Check(item.CaseType == LoadCaseType.PrimaryLoad, "default family is primary");
+            Check(load.GetLoadCase(17, LoadCaseType.LoadCombination) == null, "generic lookup does not cross families");
             Check(fake.ActiveId == activeBeforeLookup && fake.Reference == referenceBeforeLookup, "lookup preserves activation");
             fake.Empty = true;
             Check(load.GetNodalLoads(new LoadCase(1), 10).Count == 0 && load.GetMemberUniformlyDistributedLoads(new LoadCase(1), 101).Count == 0 && load.GetMemberConcentratedLoads(new LoadCase(1), 101).Count == 0, "empty queries");
@@ -161,9 +202,23 @@ public static class Program
             bool emptyCombination = false;
             try { load.GetLoadCombinationCaseFromId(201); } catch (InvalidOperationException) { emptyCombination = true; }
             Check(emptyCombination, "lookup in empty combination set");
+            foreach (var type in new[] { LoadCaseType.PrimaryLoad, LoadCaseType.ReferenceLoad, LoadCaseType.LoadCombination })
+            {
+                int count = 0;
+                foreach (var item in load.GetAllLoadCasesOfType(type)) count++;
+                Check(count == 0 && load.GetLoadCase(17, type) == null, "empty generic family queries");
+                Check(load.GetLoadCasesOfType(type).Count == 0, "empty concrete family list");
+                int emptyFilterCount = 0;
+                foreach (var item in load.GetLoadCases(1, int.MaxValue, type)) emptyFilterCount++;
+                foreach (var item in load.GetLoadCasesFromIds(new[] { 17 }, type)) emptyFilterCount++;
+                Check(emptyFilterCount == 0, "empty family filters");
+            }
+            int emptyBatchCount = 0;
+            foreach (var item in load.GetLoadCombinationCasesFromIds(new int[0])) emptyBatchCount++;
+            Check(emptyBatchCount == 0, "empty combination batch");
             Check(typeof(IOSLoad).Assembly.GetType("StaadPro.Interop.Services.ConnectivityService") == null, "connectivity rollback");
         }
-        Console.WriteLine("PASS: thirty packaged XML examples, all fifteen installed-package queries, and four ported load models.");
+        Console.WriteLine("PASS: forty-two packaged XML examples, all twenty-one installed-package queries, and four ported load models.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load)
@@ -182,6 +237,7 @@ __EXAMPLES__
         public bool Reference { get; private set; }
         public bool Empty { get; set; }
         public int PrimaryTypeCalls { get; private set; }
+        public int CombinationNumberCalls { get; private set; }
         public string Assignment { get; private set; }
         public double[] AssignedValues { get; private set; }
         public bool SetLoadActive(int id) { ActiveId = id; Reference = false; return true; }
@@ -196,7 +252,7 @@ __EXAMPLES__
         public int GetPrimaryLoadCaseCount() => Empty ? 0 : 1;
         public int GetReferenceLoadCaseCount() => Empty ? 0 : 1;
         public int GetLoadCombinationCaseCount() => Empty ? 0 : 2;
-        public int GetLoadCombinationCaseNumbers(ref object ids) { ids = new[] { 201, 301 }; return 2; }
+        public int GetLoadCombinationCaseNumbers(ref object ids) { CombinationNumberCalls++; ids = new[] { 201, 301 }; return 2; }
         public int GetPrimaryLoadCaseNumbers(ref object ids) { ids = new[] { 17 }; return 1; }
         public int GetReferenceLoadCaseNumbers(ref object ids) { ids = new[] { 17 }; return 1; }
         public string GetLoadCaseTitle(int id) => id == 201 || id == 301 ? "COMB " + id : "PRIMARY";
@@ -232,6 +288,7 @@ $program = $program.Replace('__EXAMPLES__', ($snippets -join "`n"))
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'NuGet.Config'), $config)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Consumer.csproj'), $project)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Program.cs'), $program)
+[IO.File]::WriteAllText((Join-Path $consumerRoot 'InstallationExample.cs'), ('namespace GuideExamples {' + [Environment]::NewLine + $installationCode + [Environment]::NewLine + '}'))
 
 Write-Host "Verifying package $version in $consumerRoot"
 & dotnet restore (Join-Path $consumerRoot 'Consumer.csproj') --configfile (Join-Path $consumerRoot 'NuGet.Config') --verbosity minimal

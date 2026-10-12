@@ -738,6 +738,259 @@ namespace StaadPro.Interop.Adapters.Models
             return ReadCombinationCaseMetadata(lcId);
         }
 
+        /// <summary>Reads metadata for a distinct set of existing load combination IDs.</summary>
+        /// <param name="lcIds">Non-null sequence of positive STAAD combination numbers.
+        /// Input is enumerated once and every ID is validated before any COM access. Duplicate IDs
+        /// are collapsed; output order is unspecified.</param>
+        /// <returns>A fresh, non-null HashSet exposed as IEnumerable, containing one new
+        /// <see cref="LoadCase"/> per distinct requested ID. CaseType is LoadCombination and Type
+        /// is None. An empty input returns a fresh empty set without contacting OpenSTAAD.</returns>
+        /// <remarks>
+        /// <para>This operation is eager. It snapshots input, reads and validates the combination
+        /// ID list once, and checks every requested ID for membership before reading any title.
+        /// A missing or primary-only ID throws; no entries are silently skipped and no partial
+        /// set is returned. Titles are read once per distinct requested ID. No factors,
+        /// constituent cases, assignments or engineering type categories are loaded.</para>
+        /// <para>Native counts, number returns and arrays use the same strict validation as
+        /// GetAllLoadCombinationCases. Titles retain whitespace, Unicode, empty text and literal
+        /// "NONE"; non-string results throw. Input-enumerator, COM and binding failures propagate.
+        /// Re-enumerating the returned set performs no COM reads; call again to refresh metadata.</para>
+        /// <para>No case is activated or model data changed. Use a connected, undisposed wrapper
+        /// and serialize shared-session operations/model edits on the appropriate COM thread.
+        /// Membership and titles are not an atomic snapshot. Results are independent of input,
+        /// native buffers and previous calls. Remove an object from any HashSet before changing
+        /// its Id, CaseType or Type, or rebuild the set afterward to preserve hash consistency.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="lcIds"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Any element of <paramref name="lcIds"/> is not positive.</exception>
+        /// <exception cref="InvalidOperationException">A requested ID is absent or native data is malformed/inconsistent.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load and existing combinations:
+        /// <code>
+        /// var combinations = load.GetLoadCombinationCasesFromIds(new[] { 201, 301, 201 });
+        /// foreach (var lc in combinations) Console.WriteLine(lc.Id + ": " + lc.Title);
+        /// </code>
+        /// </example>
+        public IEnumerable<ILoadCase> GetLoadCombinationCasesFromIds(IEnumerable<int> lcIds)
+        {
+            if (lcIds == null) throw new ArgumentNullException(nameof(lcIds));
+            var ids = lcIds.ToList();
+            if (ids.Any(id => id <= 0))
+                throw new ArgumentOutOfRangeException(nameof(lcIds), "Every combination ID must be positive.");
+            var result = new HashSet<ILoadCase>();
+            if (ids.Count == 0) return result;
+            var requested = new HashSet<int>(ids);
+            var available = new HashSet<int>(ReadCombinationCaseIds());
+            foreach (int id in requested)
+                if (!available.Contains(id))
+                    throw new InvalidOperationException("OpenSTAAD has no load combination with ID " + id + ".");
+            foreach (int id in requested) result.Add(ReadCombinationCaseMetadata(id));
+            return result;
+        }
+        /// <summary>Reads all case metadata for one supported load case family.</summary>
+        /// <param name="loadCaseType">PrimaryLoad (the default), ReferenceLoad or LoadCombination.
+        /// RepeatLoad and undefined enum values are rejected before COM access.</param>
+        /// <returns>A fresh, non-null HashSet exposed as IEnumerable, with new <see cref="LoadCase"/>
+        /// metadata objects for the selected family. Zero native count returns a fresh empty set.
+        /// Iteration order is unspecified; combination Type is None and other types are validated.</returns>
+        /// <remarks>
+        /// <para>Delegates to GetAllPrimaryLoadCases, GetAllReferenceLoadCases or
+        /// GetAllLoadCombinationCases. Each family retains its strict count, number, array and
+        /// title validation; primary/reference engineering types use their own native APIs.
+        /// No families are merged. Repeat-load discovery is not implemented.</para>
+        /// <para>The read is eager: all native metadata calls finish before returning, and
+        /// re-enumerating the result makes no COM calls. Failures throw instead of returning a
+        /// partial set. No case is activated and no assignments or model data are changed.
+        /// Factors, constituent cases and analysis results are not loaded.</para>
+        /// <para>Use a connected, undisposed wrapper and serialize shared-session operations
+        /// and model edits on the appropriate COM thread. This is not an atomic snapshot.
+        /// Returned objects are independent of earlier calls; editing them does not write to
+        /// STAAD. Remove objects from HashSets before changing Id, CaseType or Type, or rebuild
+        /// the set afterward because those fields determine LoadCase equality and hashing.</para>
+        /// </remarks>
+        /// <exception cref="NotSupportedException"><paramref name="loadCaseType"/> is RepeatLoad or undefined.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed/inconsistent metadata.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load:
+        /// <code>
+        /// var primaryCases = load.GetAllLoadCasesOfType();
+        /// var referenceCases = load.GetAllLoadCasesOfType(LoadCaseType.ReferenceLoad);
+        /// foreach (var lc in referenceCases) Console.WriteLine(lc.Id + ": " + lc.Title);
+        /// </code>
+        /// </example>
+        public IEnumerable<ILoadCase> GetAllLoadCasesOfType(LoadCaseType loadCaseType = LoadCaseType.PrimaryLoad)
+        {
+            switch (loadCaseType)
+            {
+                case LoadCaseType.PrimaryLoad: return GetAllPrimaryLoadCases();
+                case LoadCaseType.ReferenceLoad: return GetAllReferenceLoadCases();
+                case LoadCaseType.LoadCombination: return GetAllLoadCombinationCases();
+                default: throw new NotSupportedException("Case discovery supports only PrimaryLoad, ReferenceLoad and LoadCombination.");
+            }
+        }
+        /// <summary>Finds a case by ID within a supported family, returning null when it is absent.</summary>
+        /// <param name="lcId">Positive STAAD case number. Zero and negative numbers are rejected
+        /// before COM access; a positive number need not exist in the selected family.</param>
+        /// <param name="loadCaseType">PrimaryLoad, ReferenceLoad or LoadCombination.
+        /// RepeatLoad and undefined enum values are rejected before COM access.</param>
+        /// <returns>A new <see cref="LoadCase"/> exposed as ILoadCase when the requested ID belongs
+        /// to the selected family; otherwise null, including when that family is empty.
+        /// The object has the selected CaseType and validated metadata; combination Type is None.</returns>
+        /// <remarks>
+        /// <para>Preserves the main project's lookup behavior by eagerly reading the entire family
+        /// through GetAllLoadCasesOfType, then finding the requested ID. A primary/reference number
+        /// does not match another family. Missing IDs return null; native or malformed metadata
+        /// failures throw, even if the failure concerns a different case in that family.</para>
+        /// <para>Use GetPrimaryLoadCaseFromId, GetReferenceLoadCaseFromId or
+        /// GetLoadCombinationCaseFromId when their focused lookup and throwing-on-error contracts
+        /// fit your operation. This generic lookup reads metadata for every case, does not load
+        /// assignments, factors or constituent cases, and performs no case activation/model changes.</para>
+        /// <para>The result is independent of earlier queries; editing it does not write to STAAD.
+        /// Use a connected, undisposed wrapper and serialize shared-session operations/model edits
+        /// on the appropriate COM thread. This is not an atomic snapshot. Remove a returned object
+        /// from any HashSet before changing Id, CaseType or Type, or rebuild the set afterward.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="lcId"/> is not positive.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="loadCaseType"/> is RepeatLoad or undefined.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed/inconsistent family metadata.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load:
+        /// <code>
+        /// var lc = load.GetLoadCase(lcId: 201, loadCaseType: LoadCaseType.LoadCombination);
+        /// if (lc != null) Console.WriteLine(lc.Id + ": " + lc.Title);
+        /// </code>
+        /// </example>
+        public ILoadCase GetLoadCase(int lcId, LoadCaseType loadCaseType)
+        {
+            if (lcId <= 0) throw new ArgumentOutOfRangeException(nameof(lcId), "The load case ID must be positive.");
+            return GetAllLoadCasesOfType(loadCaseType).FirstOrDefault(lc => lc.Id == lcId);
+        }
+
+        /// <summary>Reads case metadata whose IDs lie within an inclusive range in one supported family.</summary>
+        /// <param name="fromId">Positive lower STAAD case number, included in the range.</param>
+        /// <param name="toId">Positive upper STAAD case number, included in the range.
+        /// Must be greater than or equal to fromId; reversed bounds are not silently swapped.</param>
+        /// <param name="loadCaseType">PrimaryLoad, ReferenceLoad or LoadCombination.
+        /// RepeatLoad and undefined values are unsupported.</param>
+        /// <returns>A fresh, non-null List exposed as IEnumerable, containing new <see cref="LoadCase"/>
+        /// objects for existing cases in the selected family and inclusive range. No matches returns
+        /// an empty list. Result order is unspecified and missing IDs are not synthesized.</returns>
+        /// <remarks>
+        /// <para>Validates the bounds before COM access, then eagerly reads the complete family
+        /// through GetAllLoadCasesOfType and filters its metadata. It does not iterate every integer
+        /// in the range, sort cases or interpret IDs as array indices. Equal bounds select at most one
+        /// case. Native or malformed metadata errors throw even when outside the requested range.</para>
+        /// <para>All reads finish before return; re-enumeration makes no COM calls. No case is activated,
+        /// and no model data, assignments or factors are changed or loaded. The result and its objects
+        /// are independent of earlier calls; editing them does not write to STAAD.</para>
+        /// <para>Use a connected, undisposed wrapper and serialize shared-session operations/model
+        /// edits on the appropriate COM thread. This is a managed metadata result, not an atomic model
+        /// snapshot. Combination Type is None; primary/reference engineering types are validated.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException">fromId or toId is not positive.</exception>
+        /// <exception cref="ArgumentException">toId is less than fromId.</exception>
+        /// <exception cref="NotSupportedException">loadCaseType is RepeatLoad or undefined.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed/inconsistent family metadata.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load:
+        /// <code>
+        /// var cases = load.GetLoadCases(fromId: 1, toId: 50, loadCaseType: LoadCaseType.PrimaryLoad);
+        /// foreach (var lc in cases) Console.WriteLine(lc.Id + ": " + lc.Title);
+        /// </code>
+        /// </example>
+        public IEnumerable<ILoadCase> GetLoadCases(int fromId, int toId, LoadCaseType loadCaseType)
+        {
+            if (fromId <= 0) throw new ArgumentOutOfRangeException(nameof(fromId), "The lower case ID must be positive.");
+            if (toId <= 0) throw new ArgumentOutOfRangeException(nameof(toId), "The upper case ID must be positive.");
+            if (toId < fromId) throw new ArgumentException("The upper case ID must not be less than the lower case ID.", nameof(toId));
+            return GetAllLoadCasesOfType(loadCaseType).Where(lc => lc.Id >= fromId && lc.Id <= toId).ToList();
+        }
+        /// <summary>Filters one supported family's metadata by a sequence of requested case IDs.</summary>
+        /// <param name="loadCasesIds">Non-null sequence of positive STAAD case numbers.
+        /// Enumerated once and fully validated before COM access. Duplicate IDs collapse and
+        /// missing IDs are omitted; input order is not the result order.</param>
+        /// <param name="loadCaseType">PrimaryLoad, ReferenceLoad or LoadCombination.
+        /// RepeatLoad and undefined values are rejected even when the ID sequence is empty.</param>
+        /// <returns>A fresh, non-null List exposed as IEnumerable with one new <see cref="LoadCase"/>
+        /// per existing matching case in the selected family. Empty input or no matches returns an
+        /// empty list. Results contain distinct IDs in unspecified family enumeration order.</returns>
+        /// <remarks>
+        /// <para>This is a family filter, not the ordered primary/reference FromIds batch contract
+        /// and not combination batch membership validation. Input is snapshotted once; every ID and
+        /// the family are validated before COM access. Empty input makes no native calls.
+        /// Otherwise GetAllLoadCasesOfType eagerly reads the entire family before matching IDs.</para>
+        /// <para>Missing requested IDs are silently omitted after a successful family read; native
+        /// or malformed metadata failures still throw, including failures for unrequested cases.
+        /// Input-enumerator failures propagate unchanged before COM, and no partial result is returned.
+        /// Re-enumeration performs no native reads, and later input changes do not affect the result.</para>
+        /// <para>No case is activated or model data changed. Assignments, factors and constituent
+        /// cases are not loaded. Result objects are independent of earlier calls; editing them does
+        /// not write to STAAD. Use a connected, undisposed wrapper and serialize shared-session
+        /// operations/model edits on the appropriate COM thread; reads are not an atomic snapshot.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">loadCasesIds is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">An element of loadCasesIds is not positive.</exception>
+        /// <exception cref="NotSupportedException">loadCaseType is RepeatLoad or undefined.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed/inconsistent family metadata.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load:
+        /// <code>
+        /// var cases = load.GetLoadCasesFromIds(new[] { 17, 41, 17 }, LoadCaseType.PrimaryLoad);
+        /// foreach (var lc in cases) Console.WriteLine(lc.Id + ": " + lc.Title);
+        /// </code>
+        /// </example>
+        public IEnumerable<ILoadCase> GetLoadCasesFromIds(IEnumerable<int> loadCasesIds, LoadCaseType loadCaseType)
+        {
+            if (loadCasesIds == null) throw new ArgumentNullException(nameof(loadCasesIds));
+            var ids = loadCasesIds.ToList();
+            if (ids.Any(id => id <= 0))
+                throw new ArgumentOutOfRangeException(nameof(loadCasesIds), "Every requested case ID must be positive.");
+            ValidateCaseFilterFamily(loadCaseType);
+            var requested = new HashSet<int>(ids);
+            if (requested.Count == 0) return new List<ILoadCase>();
+            return GetAllLoadCasesOfType(loadCaseType).Where(lc => requested.Contains(lc.Id)).ToList();
+        }
+        /// <summary>Reads all metadata in one supported family into a concrete, mutable list.</summary>
+        /// <param name="loadCaseType">PrimaryLoad, ReferenceLoad or LoadCombination.
+        /// RepeatLoad and undefined values are unsupported and are never returned as null.</param>
+        /// <returns>A fresh, non-null List of new <see cref="LoadCase"/> objects exposed as ILoadCase,
+        /// with one entry per existing case in the selected family. A zero native count returns a
+        /// fresh empty list. Result order is unspecified; combination engineering Type is None.</returns>
+        /// <remarks>
+        /// <para>Eagerly delegates to GetAllLoadCasesOfType and copies the family set into a new list.
+        /// All native count, number, array, title and applicable engineering type checks are preserved.
+        /// No families are merged or sorted. Failure throws instead of returning a partial list.</para>
+        /// <para>List and records are independent of earlier calls. Editing them does not write to
+        /// STAAD; re-enumeration makes no COM calls. No case is activated and no model data changed.
+        /// Assignments, combination factors, constituent cases and analysis results are not loaded.</para>
+        /// <para>Use a connected, undisposed wrapper and serialize shared-session operations/model
+        /// edits on the appropriate COM thread. This is not an atomic model snapshot. Unlike the
+        /// main project's repeat-load stub, unsupported families throw rather than returning null.</para>
+        /// </remarks>
+        /// <exception cref="NotSupportedException">loadCaseType is RepeatLoad or undefined.</exception>
+        /// <exception cref="InvalidOperationException">OpenSTAAD reports failure or returns malformed/inconsistent family metadata.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The underlying COM operation fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load:
+        /// <code>
+        /// var cases = load.GetLoadCasesOfType(LoadCaseType.LoadCombination);
+        /// foreach (var lc in cases) Console.WriteLine(lc.Id + ": " + lc.Title);
+        /// </code>
+        /// </example>
+        public List<ILoadCase> GetLoadCasesOfType(LoadCaseType loadCaseType)
+            => GetAllLoadCasesOfType(loadCaseType).ToList();
+
         #region Load Case Clearing
 
         public bool ClearPrimaryLoadCase(ILoadCase loadCase, bool isReferenceLoad) =>
@@ -1133,6 +1386,12 @@ namespace StaadPro.Interop.Adapters.Models
             if (!(titleValue is string title))
                 throw new InvalidOperationException("OpenSTAAD returned a non-string combination title for ID " + id + ".");
             return new LoadCase(id, title, LoadCaseType.LoadCombination, LoadType.None);
+        }
+
+        private static void ValidateCaseFilterFamily(LoadCaseType type)
+        {
+            if (type != LoadCaseType.PrimaryLoad && type != LoadCaseType.ReferenceLoad && type != LoadCaseType.LoadCombination)
+                throw new NotSupportedException("Case filtering supports only PrimaryLoad, ReferenceLoad and LoadCombination.");
         }
 
         private static void ValidateLoadQuery(ILoadCase lc, int entityId, string idParameter)
