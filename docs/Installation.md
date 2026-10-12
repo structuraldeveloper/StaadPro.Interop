@@ -2,7 +2,7 @@
 
 ## Package and runtime
 
-This guide uses preview version `1.0.0-preview.20261012` of package `StaadPro.Interop`. Public-feed commands apply after that exact version is accepted and available on NuGet.org; [Publishing.md](Publishing.md) explains upload and verification. The same verified archive can be installed immediately through a local feed.
+This guide uses preview version `1.0.0-preview.20261012.1` of package `StaadPro.Interop`. Public-feed commands apply after that exact version is accepted and available on NuGet.org; [Publishing.md](Publishing.md) explains upload and verification. The same verified archive can be installed immediately through a local feed.
 
 | Requirement | Purpose |
 | --- | --- |
@@ -21,12 +21,12 @@ Newtonsoft.Json is restored as a package dependency. XML documentation is includ
 For an existing SDK-style project targeting `net481`, run:
 
 ```powershell
-dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261012 --source https://api.nuget.org/v3/index.json
+dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261012.1 --source https://api.nuget.org/v3/index.json
 dotnet restore ./YourApp.csproj
 dotnet build ./YourApp.csproj -c Release
 ```
 
-For SDK 10's noun-first CLI, the equivalent command is `dotnet package add StaadPro.Interop --project ./YourApp.csproj --version 1.0.0-preview.20261012 --source https://api.nuget.org/v3/index.json`. The older verb-first command above matches the SDK used for this repository's verification. See Microsoft's [package add reference](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-package-add).
+For SDK 10's noun-first CLI, the equivalent command is `dotnet package add StaadPro.Interop --project ./YourApp.csproj --version 1.0.0-preview.20261012.1 --source https://api.nuget.org/v3/index.json`. The older verb-first command above matches the SDK used for this repository's verification. See Microsoft's [package add reference](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-package-add).
 
 The resulting project reference should pin the version:
 
@@ -35,7 +35,7 @@ The resulting project reference should pin the version:
   <TargetFramework>net481</TargetFramework>
 </PropertyGroup>
 <ItemGroup>
-  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261012" />
+  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261012.1" />
 </ItemGroup>
 ```
 
@@ -63,8 +63,16 @@ Then run `dotnet restore ./YourApp.csproj --configfile ./NuGet.Config --packages
 The NuGet Package Manager Console equivalent is:
 
 ```powershell
-Install-Package StaadPro.Interop -Version 1.0.0-preview.20261012 -Source https://api.nuget.org/v3/index.json
+Install-Package StaadPro.Interop -Version 1.0.0-preview.20261012.1 -Source https://api.nuget.org/v3/index.json
 ```
+
+For the legacy WPF test solution `NugetTestApp`, the project is at `NugetTest\NugetTest.csproj`, one directory below the solution. Use the Package Manager Console command with an explicit project:
+
+```powershell
+Install-Package StaadPro.Interop -Version 1.0.0-preview.20261012.1 -ProjectName NugetTest -Source https://api.nuget.org/v3/index.json
+```
+
+`dotnet add package` searches its current directory for a project; Visual Studio's **Default project** selection does not change that directory for an external CLI command. Running it in the solution directory produces **Could not find any project**. Pointing it at this unconfigured legacy project produces **The project does not support adding package references through the add package command**. Use `Install-Package` or the Visual Studio NuGet UI. Alternatively, add a `PackageReference` to the legacy project and restore/build it with Visual Studio MSBuild; converting the entire WPF project to SDK style is unnecessary.
 
 Visual Studio source/version selection is described in the official [NuGet Package Manager guide](https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-visual-studio).
 
@@ -88,7 +96,7 @@ In the consumer directory, use a project-scoped `NuGet.Config`:
 NuGet.org remains configured for dependencies. Add the exact package reference with:
 
 ```powershell
-dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261012
+dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261012.1
 dotnet restore ./YourApp.csproj --configfile ./NuGet.Config --packages ./packages
 dotnet build ./YourApp.csproj -c Release --no-restore
 ```
@@ -108,7 +116,7 @@ For a small Windows console consumer, this SDK-style project is sufficient:
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261012" />
+    <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261012.1" />
   </ItemGroup>
 </Project>
 ```
@@ -145,9 +153,17 @@ These functions read existing case metadata. They do not create or activate a ca
 
 Assignment queries such as `GetNodalLoads` activate the supplied primary/reference case and leave it active. They preserve raw native values; validate read-back units before applying conversions. Combination metadata is not an assignment-query case, and repeat-load discovery remains unsupported.
 
+## Acquire a specific model
+
+Call `OpenStaadWrapperProvider.Get(fullPath)` on an STA thread (for example, the WPF UI thread). The provider queries the full filename using OpenSTAAD's output-VARIANT signature, compares normalized paths without case sensitivity, and reuses a matching model. If no matching model is registered, it opens the requested file once. It polls every 250 ms for up to two minutes until the requested filename, Geometry and Load interfaces, and read-only node/load-case count calls are available. Another model registered under the global ProgID is never accepted as a match.
+
+If the path does not exist, the provider retains its existing behavior of creating a blank model there. Connection failures/timeouts return null and emit `System.Diagnostics.Trace` messages. Check the result before using the adapters. `GetRunning()` attaches to a running session and never launches STAAD. Wrapper disposal releases managed references; it does not close the model or application.
+
+These connection fixes require a new package build; they are not present in published `1.0.0-preview.20261012`. Use a new version such as `1.0.0-preview.20261012.1` for the corrected archive.
+
 ## Check IntelliSense and package contents
 
-Under the installed package's `lib/net481` folder, check for both `StaadPro.Interop.dll` and `StaadPro.Interop.xml`. With the default cache, this is beneath `%USERPROFILE%\.nuget\packages\staadpro.interop\1.0.0-preview.20261012`. A custom cache uses the location you passed to restore.
+Under the installed package's `lib/net481` folder, check for both `StaadPro.Interop.dll` and `StaadPro.Interop.xml`. With the default cache, this is beneath `%USERPROFILE%\.nuget\packages\staadpro.interop\1.0.0-preview.20261012.1`. A custom cache uses the location you passed to restore.
 
 The XML supplies full method summaries, parameters, return/null semantics, mappings, side effects, exceptions and examples for the 21 ported query methods on both the interface and concrete adapter. The package's `docs` directory contains the load, installation and publishing guides. Editing a local package-cache copy is not a supported way to change the library; create a new source build/version instead.
 

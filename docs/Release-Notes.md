@@ -1,5 +1,18 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261012.1 - 12 October 2026
+
+Author: **Srinivasa Rao Masanam**. Copyright (c) 2026 StaadDev. License: MIT.
+
+- Fixes `Get(fullPath)` reopening a matching running model: `GetSTAADFile` now uses Bentley's output-VARIANT signature (`ref object filename, true`) rather than treating its return value as the filename.
+- Recognizes OpenSTAAD's registered class-ID ROT monikers as well as model paths and ProgID names. Always includes the active ProgID candidate, skips unrelated solution registrations, and releases enumeration COM objects after each lookup.
+- Replaces fixed three/four-second sleeps with polling every 250 ms, for up to two minutes. A path-specific acquisition returns only the requested model, with Geometry/Load interfaces and read-only count calls available. An identified loading model is waited for without reopening it. Connection failures/timeouts still return null, with Trace diagnostics.
+- Clarifies legacy WPF installation: use Visual Studio's `Install-Package` with the project selected. The solution directory may contain no project, and an unconfigured legacy project can also reject `dotnet add package`.
+- Validation: 361 passing offline tests, including 19 attachment/ROT regression cases; restore/build of a copy of the user's legacy WPF project against public `1.0.0-preview.20261012`; isolated corrected-package verification of 42 executable XML examples and all 21 load queries.
+- Live validation on installed STAAD.Pro 2025: the supplied model opened on the first call in approximately 41.8 seconds, returning Geometry/Load with 6,444 nodes and 74 primary load cases. The second call took approximately 57 ms and used the same STAAD process with no additional session. This is one model/version check; engineering units and broader version compatibility still require validation.
+
+This corrected version supersedes `1.0.0-preview.20261012`. Already-published `1.0.0-preview.20261012` remains unchanged. Public availability is recorded in the [release assessment](NuGet-Readiness.md); see [Publishing.md](Publishing.md) for public-feed verification.
+
 ## 1.0.0-preview.20261012 — 12 October 2026
 
 Author: **Srinivasa Rao Masanam**. Copyright (c) 2026 Srinivasa Rao Masanam. License: MIT.

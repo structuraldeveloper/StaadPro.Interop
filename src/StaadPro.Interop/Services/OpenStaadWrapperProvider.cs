@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
+using System.Diagnostics;
 using StaadPro.Interop.Helpers;
 using StaadPro.Interop.Interfaces;
 using StaadPro.Interop.Models;
@@ -28,7 +27,12 @@ namespace StaadPro.Interop.Services
         /// Attempts to acquire an <see cref="OpenStaadWrapper"/> for interacting with STAAD via OpenSTAAD.
         /// </summary>
         /// <param name="fileFullPath">Optional full path to a STAAD (.std) file.</param>
-        /// <returns>An <see cref="OpenStaadWrapper"/> instance.</returns>
+        /// <returns>A wrapper with Geometry and Load available, or null if connection fails or times out.</returns>
+        /// <remarks>
+        /// With a path, attaches to that model if already running; otherwise opens it (or creates a blank
+        /// model for a missing file). Waits up to two minutes for the matching model and both interfaces.
+        /// Call on an STA thread and serialize subsequent COM access.
+        /// </remarks>
         public static OpenStaadWrapper Get(string fileFullPath = null)
         {
             return Resolver.Get(fileFullPath);
@@ -69,8 +73,9 @@ namespace StaadPro.Interop.Services
                     return OpenStaadWrapperHelpers.GetWhenNoRunningInstancesExist(fileFullPath);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Trace.TraceWarning("Could not acquire OpenSTAAD for '{0}': {1}", fileFullPath, ex.Message);
                 return null;
             }
         }
@@ -79,23 +84,14 @@ namespace StaadPro.Interop.Services
         {
             try
             {
-                object active = Marshal.GetActiveObject("StaadPro.OpenSTAAD");
-                return new OpenStaadWrapper(active, isDedicated: false);
+                IList<object> running = RotHelpers.GetRunningOpenStaadInstances();
+                return running.Count > 0
+                    ? OpenStaadWrapperHelpers.GetWhenRunningInstancesExist(null, running)
+                    : null;
             }
-            catch
+            catch (Exception ex)
             {
-                try
-                {
-                    IList<object> running = RotHelpers.GetRunningOpenStaadInstances();
-                    if (running.Count > 0)
-                    {
-                        return new OpenStaadWrapper(running[0], isDedicated: false);
-                    }
-                }
-                catch
-                {
-                }
-
+                Trace.TraceWarning("Could not attach to running OpenSTAAD: {0}", ex.Message);
                 return null;
             }
         }

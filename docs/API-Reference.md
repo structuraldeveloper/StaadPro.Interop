@@ -1,7 +1,7 @@
 # StaadPro.Interop API Reference
 
 ## `OpenStaadWrapperProvider` Members
-- `Get(string fileFullPath = null)`: Acquires an `OpenStaadWrapper` by querying the Running Object Table (ROT), attaching to the active instance, opening the file, or starting STAAD.
+- `Get(string fileFullPath = null)`: With a path, reuses that model if already open; otherwise opens it once (or creates a blank model when the file is missing). Polls every 250 ms for up to two minutes for the matching filename and available Geometry/Load interfaces and count calls. Returns null on failure/timeout with Trace diagnostics. Without a path, attaches to a running session or starts STAAD. Call on an STA thread.
 - `GetRunning()`: Attaches to an existing active STAAD session without launching or modifying model state.
 
 ## `OpenStaadWrapper` Members

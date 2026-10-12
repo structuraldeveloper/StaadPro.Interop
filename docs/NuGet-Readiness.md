@@ -1,12 +1,12 @@
 # NuGet readiness assessment
 
-Assessment date: 12 October 2026. Repository baseline: `5f8c406` (fifth load query increment), plus the sixth/seventh increments and preview publishing/installation documentation prepared for release.
+Assessment date: 12 October 2026. Current release: `1.0.0-preview.20261012.1`, including the model attachment fixes and copyright update to StaadDev. The source commit is recorded in the package's repository metadata.
 
 ## Decision
 
-**The repository can produce an installable NuGet preview package. A stable public release is not yet verified.** Local build, offline tests, package archive checks, isolated installation, compilation, and execution have passed. Public submission of this preview remains pending; a browser login alone does not establish publication.
+**The repository can produce an installable NuGet preview package. A stable public release is not yet verified.** Local build, offline tests, package archive checks, isolated installation, compilation, execution, and live model connection checks on STAAD.Pro 2025 have passed. Public `1.0.0-preview.20261012` was downloaded and successfully restored/built in a copy of the user's legacy WPF project. Submission of corrected `1.0.0-preview.20261012.1` remains pending browser connection and upload; a browser login alone does not establish publication.
 
-The release artifact is `artifacts/release/StaadPro.Interop.1.0.0-preview.20261012.nupkg`. It can be used through a local feed immediately after verification. The project's default version remains `1.0.0`; use an explicit preview version while live gates remain open. The public flat-container index returned HTTP 404 during preparation, so no public version was confirmed. That result does not establish name reservation or publishing ownership. The user selected web upload and reported signing in, but desktop automation could not connect to the browser. The final portal submission and public-feed verification remain outstanding. See [Publishing.md](Publishing.md) and [Installation.md](Installation.md) for the exact steps.
+The corrected release artifact is `artifacts/release/StaadPro.Interop.1.0.0-preview.20261012.1.nupkg`. It can be used through a local feed immediately after verification. The project's default version remains `1.0.0`; use an explicit preview version while engineering-unit and broader compatibility gates remain open. The public flat-container index confirmed `1.0.0-preview.20261012`, whose contents and public restoration were checked. The final portal submission and public-feed verification of the new version remain outstanding. See [Publishing.md](Publishing.md) and [Installation.md](Installation.md) for the exact steps.
 
 ## Completed implementation
 
@@ -54,8 +54,8 @@ Every new method has comprehensive, expanded XML documentation on both the inter
 
 | Check | Result | Scope |
 | --- | --- | --- |
-| Release build | Passed, zero warnings/errors | Library and test project, .NET SDK 9.0.304 / .NET Framework 4.8.1 |
-| Automated test suite | **342 executed, 342 passed, 0 failed** | 33 original offline cases plus 309 query/model/documentation cases; 41 added for filtering, 94 since the repository baseline |
+| Release build | Passed, zero warnings/errors | Library and test project, .NET SDK 10.0.401 / .NET Framework 4.8.1 |
+| Automated test suite | **361 executed, 361 passed, 0 failed** | Original 342 offline cases plus 19 attachment/ROT regression cases |
 | Environment-dependent provider test | One explicit live test not executed | Asserts no running STAAD session; excluded from ordinary offline runs |
 | Package creation | Passed | Preview package with `lib/net481/StaadPro.Interop.dll` and XML |
 | Archive/metadata checks | Passed | Package identity, MIT metadata, repository URL, README, load/installation/publishing guides, forty-two complete XML query entries, four documented models, no connectivity API leakage |
@@ -64,9 +64,10 @@ Every new method has comprehensive, expanded XML documentation on both the inter
 | NuGet dependency vulnerability query | No vulnerable dependencies reported | `dotnet list ... package --vulnerable --include-transitive`, configured NuGet sources, assessment date |
 | CI verification | Passed for implementation commit `991f7ae` | [Windows CI run](https://github.com/structuraldeveloper/StaadPro.Interop/actions/runs/38230643566) built, tested, packed and verified the implemented queries; subsequent release metadata changes are verified locally before upload |
 | Real OpenSTAAD query execution | **Pending** | Native COM dispatch/marshaling, unit conventions, version compatibility |
-| NuGet.org publication | **Pending web submission** | User browser login reported; automation native pipe unavailable; no accepted submission/public restore confirmed |
+| Live model connection | Passed on STAAD.Pro 2025 | Supplied model opened in approximately 41.8 seconds, exposing Geometry/Load with 6,444 nodes and 74 primary load cases. Repeated calls reused the same process without launching another session. Does not certify engineering units or every query. |
+| NuGet.org publication | Original preview public; corrected preview pending upload | Public `1.0.0-preview.20261012` restored/built successfully; new `.1` requires browser connection and portal submission, then public-feed verification. |
 
-The test result file is `artifacts/load-port/tests/load-port.trx`. Its counters report 343 discovered cases and 342 executed; the remaining case is the explicit ROT/environment test. The console's passed total is 342. Offline passing results are not a certification of live STAAD engineering output.
+The current test result file is `artifacts/publish/tests/connection-fix.trx`. The suite contains 361 offline cases plus the explicit ROT/environment test, which is excluded from ordinary runs. Offline passing results are not a certification of live STAAD engineering output.
 
 ## What blocks a stable release
 
