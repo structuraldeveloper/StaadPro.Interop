@@ -48,6 +48,10 @@ namespace StaadPro.Interop.Models
         /// </summary>
         public object RawOpenStaad { get; private set; }
 
+        /// <summary>Gets the model-specific root binding used by extended geometry operations.</summary>
+        /// <value>The binding for RawOpenStaad, or null after disposal.</value>
+        public IOSRoot Root { get; private set; }
+
         /// <summary>
         /// Raw Geometry COM interface retrieved from OpenSTAAD.
         /// </summary>
@@ -102,6 +106,7 @@ namespace StaadPro.Interop.Models
 
         private void SetManagedObjects()
         {
+            Root = new OSRootAdapter(RawOpenStaad);
             try { Geometry = RawGeometry != null ? new OSGeometryAdapter(this) : null; } catch { Geometry = null; }
             try { Load = RawLoad != null ? new OSLoadAdapter(this) : null; } catch { Load = null; }
         }
@@ -158,6 +163,7 @@ namespace StaadPro.Interop.Models
         /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='OpenStaadWrapper.Dispose`0()']/*" />
         public void Dispose()
         {
+            Root = null;
             RawGeometry = null;
             RawLoad = null;
             RawOpenStaad = null;

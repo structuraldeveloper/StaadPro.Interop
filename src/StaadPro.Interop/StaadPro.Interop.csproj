@@ -14,7 +14,7 @@
     <Version>1.0.0</Version>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 StaadDev</Copyright>
-    <PackageReleaseNotes>Preview release for Windows and .NET Framework 4.8.1. Adds SegregateBeamsByConnectivity, SegregateMembersByConnectivity and SegregatePlatesByConnectivity with standalone managed grouping and matching scope defaults. Completes expanded XML IntelliSense for all 137 geometry and 54 load overloads on interfaces and concrete adapters, plus exported managed functions. Includes the geometry API comparison and nine pending-method audit, with six remaining after this port. Retains 21 load queries including GetLoadCases inclusive ID ranges and the verified model-attachment fixes. Engineering units and broader supported-version compatibility remain pending validation before a stable release. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Preview release for Windows and .NET Framework 4.8.1. Adds CreateMultipleBeamsExtended, CreateMultipleNodesExtended and MergeNodesExtended with a minimal IOSRoot binding exposed by wrapper.Root. Uses ordered CreateBeam calls instead of the reference's non-working bulk beam call. Adds AddReferenceLoadsTo, AddRepeatLoadsTo and the synchronous AddAxialThermalGradientTo overload with prevalidation and primary-case activation checks. Includes expanded XML IntelliSense for all 140 geometry and 57 load overloads and updated porting inventories. Retains 21 load queries including GetLoadCases inclusive ID ranges, connectivity grouping and model-attachment fixes. Live mutation, engineering-unit and broader supported-version validation remain pending before a stable release. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load operations.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
@@ -41,6 +41,7 @@
     <None Include="..\..\docs\NuGet-README.md" Pack="true" PackagePath="README.md" />
     <None Include="..\..\docs\Load-Queries.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Geometry-Porting.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Load-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Installation.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Publishing.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Release-Notes.md" Pack="true" PackagePath="docs\" />

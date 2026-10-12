@@ -11,6 +11,15 @@ namespace StaadPro.Interop.Adapters.Interfaces
     /// </summary>
     public interface IOSLoad : IOSBase
     {
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddReferenceLoadsTo']/*" />
+        IOSLoad AddReferenceLoadsTo(int loadCaseId, Dictionary<int, double> loadCaseNumberFactorPairs);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddRepeatLoadsTo']/*" />
+        IOSLoad AddRepeatLoadsTo(int loadCaseId, IDictionary<int, double> loadCaseNumberFactorPairs);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddAxialThermalGradientTo']/*" />
+        IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient);
+
         #region Load Assignment Queries
 
         /// <summary>

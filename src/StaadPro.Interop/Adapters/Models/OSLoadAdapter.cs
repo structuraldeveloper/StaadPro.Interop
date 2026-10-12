@@ -23,6 +23,57 @@ namespace StaadPro.Interop.Adapters.Models
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.P:ComObject']/*" />
         public dynamic ComObject { get; }
 
+        #region Reference, Repeat and Temperature Assignments
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddReferenceLoadsTo']/*" />
+        public IOSLoad AddReferenceLoadsTo(int loadCaseId, Dictionary<int, double> loadCaseNumberFactorPairs)
+        {
+            var pairs = ReadLoadCaseFactors(loadCaseId, loadCaseNumberFactorPairs);
+            if (pairs.Length == 0) return this;
+            ActivateQueryCase(new LoadCase(loadCaseId, string.Empty, LoadCaseType.PrimaryLoad));
+            ComObject.AddReferenceLoad(pairs.Select(p => p.Key).ToArray(), pairs.Select(p => p.Value).ToArray());
+            return this;
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddRepeatLoadsTo']/*" />
+        public IOSLoad AddRepeatLoadsTo(int loadCaseId, IDictionary<int, double> loadCaseNumberFactorPairs)
+        {
+            var pairs = ReadLoadCaseFactors(loadCaseId, loadCaseNumberFactorPairs);
+            if (pairs.Length == 0) return this;
+            ActivateQueryCase(new LoadCase(loadCaseId, string.Empty, LoadCaseType.PrimaryLoad));
+            ComObject.AddRepeatLoad(pairs.Select(p => p.Key).ToArray(), pairs.Select(p => p.Value).ToArray());
+            return this;
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddAxialThermalGradientTo']/*" />
+        public IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient)
+        {
+            if (loadCaseId <= 0) throw new ArgumentOutOfRangeException(nameof(loadCaseId), "The target case ID must be positive.");
+            if (entities == null) throw new ArgumentNullException(nameof(entities));
+            if (double.IsNaN(axialThermalGradient) || double.IsInfinity(axialThermalGradient))
+                throw new ArgumentOutOfRangeException(nameof(axialThermalGradient), "The thermal input must be finite.");
+            int[] ids = entities.ToArray();
+            if (ids.Any(id => id <= 0)) throw new ArgumentOutOfRangeException(nameof(entities), "Entity IDs must be positive.");
+            if (ids.Length == 0) return this;
+            ActivateQueryCase(new LoadCase(loadCaseId, string.Empty, LoadCaseType.PrimaryLoad));
+            ComObject.AddTemperatureLoad(ids, axialThermalGradient, 0.0, 0.0);
+            return this;
+        }
+
+        private static KeyValuePair<int, double>[] ReadLoadCaseFactors(int loadCaseId,
+            IEnumerable<KeyValuePair<int, double>> loadCaseNumberFactorPairs)
+        {
+            if (loadCaseId <= 0) throw new ArgumentOutOfRangeException(nameof(loadCaseId), "The target case ID must be positive.");
+            if (loadCaseNumberFactorPairs == null) throw new ArgumentNullException(nameof(loadCaseNumberFactorPairs));
+            var pairs = loadCaseNumberFactorPairs.ToArray();
+            if (pairs.Any(p => p.Key <= 0)) throw new ArgumentOutOfRangeException(nameof(loadCaseNumberFactorPairs), "Source case IDs must be positive.");
+            if (pairs.Any(p => double.IsNaN(p.Value) || double.IsInfinity(p.Value)))
+                throw new ArgumentException("Load factors must be finite.", nameof(loadCaseNumberFactorPairs));
+            return pairs;
+        }
+
+        #endregion
+
         #region Load Assignment Queries
 
         /// <summary>

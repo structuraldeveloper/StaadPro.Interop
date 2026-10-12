@@ -70,6 +70,28 @@ namespace StaadPro.Interop.Tests.Adapter
             Assert.That(contract.Elements("exception").Any(e => ((string)e.Attribute("cref")).EndsWith("ArgumentNullException")), Is.True);
         }
 
+        [TestCase(typeof(IOSGeometry), typeof(OSGeometryAdapter), "CreateMultipleBeamsExtended", "CreateBeam")]
+        [TestCase(typeof(IOSGeometry), typeof(OSGeometryAdapter), "CreateMultipleNodesExtended", "CreateMultipleNodes")]
+        [TestCase(typeof(IOSGeometry), typeof(OSGeometryAdapter), "MergeNodesExtended", "MergeNodes")]
+        [TestCase(typeof(IOSLoad), typeof(OSLoadAdapter), "AddReferenceLoadsTo", "AddReferenceLoad")]
+        [TestCase(typeof(IOSLoad), typeof(OSLoadAdapter), "AddRepeatLoadsTo", "AddRepeatLoad")]
+        [TestCase(typeof(IOSLoad), typeof(OSLoadAdapter), "AddAxialThermalGradientTo", "AddTemperatureLoad")]
+        public void NewMutationFunctionsHaveMatchingExpandedIntelliSenseAndExamples(Type contractType, Type adapterType, string name, string nativeName)
+        {
+            var xml = XDocument.Load(Path.ChangeExtension(contractType.Assembly.Location, ".xml"));
+            var entries = xml.Descendants("member").ToDictionary(m => (string)m.Attribute("name"));
+            var contractMethod = contractType.GetMethod(name);
+            var adapterMethod = adapterType.GetMethod(name);
+            Assert.That(adapterMethod.GetParameters().Select(p => (p.Name, p.ParameterType, p.DefaultValue)),
+                Is.EqualTo(contractMethod.GetParameters().Select(p => (p.Name, p.ParameterType, p.DefaultValue))));
+            var contract = entries[MethodId(contractMethod)];
+            var adapter = entries[MethodId(adapterMethod)];
+            Assert.That(adapter.Elements().Select(e => e.ToString()), Is.EqualTo(contract.Elements().Select(e => e.ToString())));
+            Assert.That(contract.Element("remarks").Value, Does.Contain(nativeName));
+            Assert.That(contract.Element("example")?.Element("code")?.Value, Does.Contain("." + name + "("));
+            Assert.That(contract.Elements("exception").Count(), Is.GreaterThanOrEqualTo(3));
+        }
+
         private static string MethodId(MethodInfo method)
         {
             string name = "M:" + method.DeclaringType.FullName.Replace('+', '.') + "." + method.Name;

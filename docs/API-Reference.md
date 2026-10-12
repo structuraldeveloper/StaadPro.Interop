@@ -8,6 +8,7 @@
 - `Geometry`: Managed `IOSGeometry` interface.
 - `Load`: Managed `IOSLoad` interface.
 - `RawOpenStaad`: Root OpenSTAAD COM object.
+- `Root`: Minimal `IOSRoot` binding for extended geometry methods; cleared on disposal.
 - `RawGeometry`: OpenSTAAD Geometry COM object.
 - `RawLoad`: OpenSTAAD Load COM object.
 - `IsDedicated`: Indicates if the instance is dedicated to the caller.
@@ -17,6 +18,9 @@
 - `InputLengthUnit`: Active length unit.
 
 ## `IOSGeometry` Members
+- `CreateMultipleNodesExtended(IOSRoot openStaad, IEnumerable<Node> nodeCollection)`: Creates explicit node IDs using an XYZ coordinate matrix in model input units.
+- `CreateMultipleBeamsExtended(IOSRoot openStaad, IEnumerable<Beam> beamCollection)`: Creates explicit beam IDs in order through synchronous native `CreateBeam` calls; endpoints must exist.
+- `MergeNodesExtended(IOSRoot openStaad, Node retain, IEnumerable<Node> nodesToMerge)`: Merges existing IDs, requiring the retained ID in the collection. See [Geometry-Porting.md](Geometry-Porting.md) for validation and partial-failure behavior.
 - `IsZUp()`: Returns whether the model uses global Z upwards.
 - `GetGlobalVerticalAxis()`: Returns `GlobalVerticalAxis.Y` or `GlobalVerticalAxis.Z`.
 - `CreateNode(Node)`: Creates a single node.
@@ -31,6 +35,14 @@
 - `DistributeTorque(...)`: Distributes torsional load as equivalent nodal forces.
 
 ## `IOSLoad` Members
+
+### Reference, Repeat and Temperature Assignments
+
+- `AddReferenceLoadsTo(int loadCaseId, Dictionary<int, double> loadCaseNumberFactorPairs)`: Adds factored reference contributions to an existing primary case.
+- `AddRepeatLoadsTo(int loadCaseId, IDictionary<int, double> loadCaseNumberFactorPairs)`: Adds factored repeat contributions to an existing primary case.
+- `AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient)`: Synchronously passes the raw thermal input as the first native temperature argument, with transverse arguments zero.
+
+Inputs are validated before activation. Empty collections make no native calls; nonempty assignments leave the primary target active, including on native assignment failure. Native assignment return values are not interpreted. See [Load-Porting.md](Load-Porting.md) for complete contracts, examples and the remaining load inventory.
 
 ### Load Assignment Queries
 

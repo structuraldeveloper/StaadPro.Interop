@@ -19,6 +19,15 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSGeometry.P:ComObject']/*" />
         dynamic ComObject { get; }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSGeometry.CreateMultipleBeamsExtended']/*" />
+        IOSGeometry CreateMultipleBeamsExtended(IOSRoot openStaad, IEnumerable<Beam> beamCollection);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSGeometry.CreateMultipleNodesExtended']/*" />
+        IOSGeometry CreateMultipleNodesExtended(IOSRoot openStaad, IEnumerable<Node> nodeCollection);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSGeometry.MergeNodesExtended']/*" />
+        IOSGeometry MergeNodesExtended(IOSRoot openStaad, Node retain, IEnumerable<Node> nodesToMerge);
+
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSGeometry.SegregateBeamsByConnectivity`0(IEnumerable&lt;Beam&gt;)']/*" />
         IEnumerable<IEnumerable<Beam>> SegregateBeamsByConnectivity(IEnumerable<Beam> beams);
 

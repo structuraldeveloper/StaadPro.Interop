@@ -3892,5 +3892,137 @@ Clears primary load cases by their integer identifiers.
         <para>This operation uses the current managed data. Coordinate-based calculations retain input length units; it does not automatically read or update a STAAD model.</para>
       </remarks>
     </member>
+    <member name="IOSGeometry.CreateMultipleBeamsExtended">
+      <summary>Creates beams with explicit IDs and endpoint node IDs in the model bound to the supplied OpenSTAAD root.</summary>
+      <param name="openStaad">A connected, undisposed root, normally <c>geometry.Wrapper.Root</c>. Its Geometry object selects the target model; it need not be the receiver's model.</param>
+      <param name="beamCollection">Beams in creation order. Each beam must be non-null, have a unique positive ID, and have two initialized endpoints with positive, different node IDs. Endpoint nodes must already exist in the target model. Endpoint coordinates are not sent.</param>
+      <returns>The receiving <see cref="StaadPro.Interop.Adapters.Interfaces.IOSGeometry"/> for fluent chaining, including for an empty collection. This is not a refreshed geometry snapshot or a success report from STAAD.</returns>
+      <remarks>
+        <para>The sequence is enumerated once and all beam IDs and incidences are copied and validated before any native mutation. Each beam is created with one synchronous native <c>Geometry.CreateBeam(beamId, startNodeId, endNodeId)</c> call, in input order. This avoids the non-working bulk call in the reference implementation. No compile-time obsolete restriction is carried forward.</para>
+        <para>Empty input makes no native calls. Existing beam IDs and node existence are checked by OpenSTAAD, not by reading the model first. Native return values are not interpreted; COM and binding exceptions propagate. If a later creation throws, earlier beams remain created; there is no rollback. The managed nodes, beams and wrapper collections are not updated.</para>
+        <para>Use the appropriate STAAD COM thread and serialize access to the target session. This method supplies neither synchronization across callers nor COM apartment marshaling. Save the model separately if persistence is required.</para>
+      </remarks>
+      <exception cref="System.ArgumentNullException"><paramref name="openStaad"/> or <paramref name="beamCollection"/> is null.</exception>
+      <exception cref="System.ArgumentOutOfRangeException">A beam or endpoint ID is not positive.</exception>
+      <exception cref="System.ArgumentException">An entry or endpoint is null, beam IDs repeat, or a beam has equal endpoint IDs.</exception>
+      <exception cref="System.InvalidOperationException">The supplied root or its Geometry object is unavailable.</exception>
+      <example><code><![CDATA[
+// Nodes 210 and 211 must already exist in this model.
+var start = new Node(210, 0, 0, 0);
+var end = new Node(211, 4.5, 0, 0);
+geometry.CreateMultipleBeamsExtended(geometry.Wrapper.Root,
+    new[] { new Beam(310, start, end) });
+]]></code></example>
+    </member>
+    <member name="IOSGeometry.CreateMultipleNodesExtended">
+      <summary>Creates nodes with explicit IDs and XYZ coordinates in one native call through the supplied OpenSTAAD root.</summary>
+      <param name="openStaad">A connected, undisposed root, normally <c>geometry.Wrapper.Root</c>. Its Geometry object selects the target model independently of the receiver.</param>
+      <param name="nodeCollection">Nodes in native array order. Entries must be non-null, IDs must be unique and positive, and XYZ coordinates must be finite. Coordinates use the target model's current input length units and global axes, without conversion or axis swapping.</param>
+      <returns>The receiving <see cref="StaadPro.Interop.Adapters.Interfaces.IOSGeometry"/> for fluent chaining, including for an empty collection. Native success is not inferred from this return value.</returns>
+      <remarks>
+        <para>The sequence is enumerated once, copied and fully validated before any native mutation. <c>Geometry.CreateMultipleNodes</c> receives an <c>int[]</c> of node IDs and a <c>double[count, 3]</c> coordinate matrix. Row i belongs to ID i; columns 0, 1 and 2 are X, Y and Z respectively. Managed values are passed unchanged.</para>
+        <para>Empty input makes no native calls. Existing IDs and model constraints are left to OpenSTAAD. Native return values are not interpreted, and COM and binding exceptions propagate. Native failure may leave partial changes; the method supplies no transaction or rollback, does not refresh managed collections, and does not save the model.</para>
+        <para>Call on the appropriate STAAD COM thread and serialize access to the target session; this method does not provide thread safety or apartment marshaling.</para>
+      </remarks>
+      <exception cref="System.ArgumentNullException"><paramref name="openStaad"/> or <paramref name="nodeCollection"/> is null.</exception>
+      <exception cref="System.ArgumentOutOfRangeException">A node ID is not positive.</exception>
+      <exception cref="System.ArgumentException">A node is null, an ID repeats, or a coordinate is NaN or infinite.</exception>
+      <exception cref="System.InvalidOperationException">The supplied root or its Geometry object is unavailable.</exception>
+      <example><code><![CDATA[
+// Use IDs that are unused in the target model; coordinates use its input units.
+geometry.CreateMultipleNodesExtended(geometry.Wrapper.Root, new[]
+{
+    new Node(210, 0, 0, 0),
+    new Node(211, 4.5, 0, 0)
+});
+]]></code></example>
+    </member>
+    <member name="IOSGeometry.MergeNodesExtended">
+      <summary>Merges selected nodes into an explicitly retained node through the supplied OpenSTAAD root.</summary>
+      <param name="openStaad">The connected, undisposed root whose Geometry object owns the target model, normally <c>geometry.Wrapper.Root</c>.</param>
+      <param name="retain">The non-null node whose positive ID is retained. Only its ID is sent; its coordinates and managed identity do not determine the native result.</param>
+      <param name="nodesToMerge">Non-null nodes with unique positive IDs, including <paramref name="retain"/>'s ID exactly once. All IDs must exist in the target model. Input order, including the position of the retained ID, is preserved.</param>
+      <returns>The receiving <see cref="StaadPro.Interop.Adapters.Interfaces.IOSGeometry"/>. A collection containing only the retained ID is a no-op. The return value does not report native success.</returns>
+      <remarks>
+        <para>The sequence is enumerated once and all IDs are validated before calling <c>Geometry.MergeNodes(retain.Id, nodeIds)</c>. The array intentionally includes the retained ID, preserving the reference implementation's workaround. Inclusion is checked by ID, so a separate managed Node with the same retained ID is accepted. Empty input or omission of the retained ID is invalid.</para>
+        <para>Native merge semantics, incidence changes and model constraints are handled by the installed OpenSTAAD version. Native return values are not interpreted; COM and binding exceptions propagate. Managed node objects, incidences and wrapper collections are not refreshed, no rollback is supplied, and the model is not saved. Re-read affected geometry after merging.</para>
+        <para>Call on the appropriate STAAD COM thread and serialize session access. The root selects the target model even if it differs from the receiver's model. This method supplies neither caller synchronization nor COM apartment marshaling.</para>
+      </remarks>
+      <exception cref="System.ArgumentNullException"><paramref name="openStaad"/>, <paramref name="retain"/> or <paramref name="nodesToMerge"/> is null.</exception>
+      <exception cref="System.ArgumentOutOfRangeException">The retained ID or a collection ID is not positive.</exception>
+      <exception cref="System.ArgumentException">A collection entry is null, an ID repeats, or the retained ID is absent.</exception>
+      <exception cref="System.InvalidOperationException">The supplied root or its Geometry object is unavailable.</exception>
+      <example><code><![CDATA[
+// Both IDs must exist and be suitable for merging in the target model.
+var retain = new Node(210, 0, 0, 0);
+var redundant = new Node(212, 0, 0, 0);
+geometry.MergeNodesExtended(geometry.Wrapper.Root, retain,
+    new[] { retain, redundant });
+]]></code></example>
+    </member>
+    <member name="IOSLoad.AddReferenceLoadsTo">
+      <summary>Adds factored reference-load contributions to an existing primary load case.</summary>
+      <param name="loadCaseId">The positive ID of the existing primary case to activate and receive the assignment. This method does not create the case.</param>
+      <param name="loadCaseNumberFactorPairs">A non-null dictionary mapping positive, existing reference-case IDs to finite dimensionless factors. Negative and zero factors are allowed. Case existence and family are checked by OpenSTAAD.</param>
+      <returns>The receiving <see cref="StaadPro.Interop.Adapters.Interfaces.IOSLoad"/> for fluent chaining. Empty input returns it without activation or assignment; the return value is not a native success code.</returns>
+      <remarks>
+        <para>Pairs are enumerated once and validated before activation. Source IDs and double-precision factors are copied together into parallel arrays, preserving pair association and enumeration order. After successful <c>SetLoadActive(loadCaseId)</c>, <c>AddReferenceLoad(ids, factors)</c> is called once. No scaling or unit conversion is applied.</para>
+        <para>The target remains active afterward, including if assignment throws. Previous activation is not restored. Existing assignments are not cleared. Native assignment return values are not interpreted; COM and binding exceptions propagate, and there is no rollback, managed collection refresh or automatic save.</para>
+        <para>Use a connected, undisposed wrapper on the appropriate STAAD COM thread and serialize session access. This method does not provide thread safety or apartment marshaling.</para>
+      </remarks>
+      <exception cref="System.ArgumentNullException"><paramref name="loadCaseNumberFactorPairs"/> is null.</exception>
+      <exception cref="System.ArgumentOutOfRangeException">The target or a source case ID is not positive.</exception>
+      <exception cref="System.ArgumentException">A factor is NaN or infinite.</exception>
+      <exception cref="System.InvalidOperationException">OpenSTAAD reports failed or unrecognized primary-case activation; no assignment is attempted.</exception>
+      <example><code><![CDATA[
+// Primary case 17 and reference case 41 must already exist.
+load.AddReferenceLoadsTo(17, new System.Collections.Generic.Dictionary<int, double>
+{
+    { 41, 1.25 }
+});
+]]></code></example>
+    </member>
+    <member name="IOSLoad.AddRepeatLoadsTo">
+      <summary>Adds factored repeat-load contributions to an existing primary load case.</summary>
+      <param name="loadCaseId">The positive ID of the existing primary case to activate and receive the repeat assignment. This method does not create the case.</param>
+      <param name="loadCaseNumberFactorPairs">A non-null dictionary mapping positive source load-case IDs to finite dimensionless factors. Negative and zero factors are allowed. The installed OpenSTAAD version checks source existence and suitability for repeat loading.</param>
+      <returns>The receiving <see cref="StaadPro.Interop.Adapters.Interfaces.IOSLoad"/>. Empty input returns it without activation or assignment; this return value does not report native success.</returns>
+      <remarks>
+        <para>Pairs are enumerated once and completely validated before activation. Parallel <c>int[]</c> ID and <c>double[]</c> factor arrays come from the same pair snapshot, preserving association even when dictionary Keys and Values enumerate differently. After successful <c>SetLoadActive(loadCaseId)</c>, <c>AddRepeatLoad(ids, factors)</c> is called once without conversion or scaling.</para>
+        <para>The target remains active, including on assignment failure. Previous activation is not restored and existing assignments are not cleared. Native assignment return values are not interpreted; COM and binding exceptions propagate. No transaction, rollback, managed refresh or automatic save is supplied.</para>
+        <para>Use a connected, undisposed wrapper on its appropriate STAAD COM thread and serialize session access; this method supplies neither thread safety nor apartment marshaling.</para>
+      </remarks>
+      <exception cref="System.ArgumentNullException"><paramref name="loadCaseNumberFactorPairs"/> is null.</exception>
+      <exception cref="System.ArgumentOutOfRangeException">The target or a source case ID is not positive.</exception>
+      <exception cref="System.ArgumentException">A factor is NaN or infinite.</exception>
+      <exception cref="System.InvalidOperationException">OpenSTAAD reports failed or unrecognized primary-case activation; no assignment is attempted.</exception>
+      <example><code><![CDATA[
+// Primary target 17 and suitable source cases 41 and 42 must already exist.
+load.AddRepeatLoadsTo(17, new System.Collections.Generic.Dictionary<int, double>
+{
+    { 41, 1.5 },
+    { 42, -0.75 }
+});
+]]></code></example>
+    </member>
+    <member name="IOSLoad.AddAxialThermalGradientTo">
+      <summary>Adds a temperature-load assignment using the axial thermal input to entities in an existing primary load case.</summary>
+      <param name="loadCaseId">The positive ID of the existing primary case to activate. This method does not create the case.</param>
+      <param name="entities">A non-null sequence of positive target entity IDs accepted by the installed native temperature-load API. Existence and entity suitability are checked by OpenSTAAD; order and duplicate IDs are preserved.</param>
+      <param name="axialThermalGradient">The finite thermal value passed unchanged as the first temperature argument of <c>AddTemperatureLoad</c>, with the two transverse arguments set to zero. Follow the installed STAAD input temperature convention; this method does not convert units, divide by a length, or infer a gradient from node coordinates. Negative and zero values are allowed.</param>
+      <returns>The receiving <see cref="StaadPro.Interop.Adapters.Interfaces.IOSLoad"/>. Empty input returns it without activation or assignment; the result is not a native success code.</returns>
+      <remarks>
+        <para>This is the synchronous three-parameter overload. Entity IDs are enumerated once into an <c>int[]</c> and validated before activation. After successful <c>SetLoadActive(loadCaseId)</c>, the call is <c>AddTemperatureLoad(ids, axialThermalGradient, 0.0, 0.0)</c>. No other loads are cleared.</para>
+        <para>The selected primary case remains active afterward, including when assignment throws. Previous activation is not restored. Native assignment return values are not interpreted; COM and binding exceptions propagate. There is no rollback, managed collection refresh or automatic save.</para>
+        <para>Use a connected, undisposed wrapper on the appropriate STAAD COM thread and serialize session access. This method supplies neither caller synchronization nor apartment marshaling.</para>
+      </remarks>
+      <exception cref="System.ArgumentNullException"><paramref name="entities"/> is null.</exception>
+      <exception cref="System.ArgumentOutOfRangeException">The target or an entity ID is not positive, or the thermal input is NaN or infinite.</exception>
+      <exception cref="System.InvalidOperationException">OpenSTAAD reports failed or unrecognized primary-case activation; no assignment is attempted.</exception>
+      <example><code><![CDATA[
+// Case 17 and temperature-load entities 101 and 102 must already exist.
+load.AddAxialThermalGradientTo(17, new[] { 101, 102 }, 15.5);
+]]></code></example>
+    </member>
   </members>
 </doc>

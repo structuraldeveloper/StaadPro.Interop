@@ -21,6 +21,8 @@ try {
     $installation = Read-PackageEntry 'docs/Installation.md'
     $publishing = Read-PackageEntry 'docs/Publishing.md'
     $releaseNotes = Read-PackageEntry 'docs/Release-Notes.md'
+    $geometryGuide = Read-PackageEntry 'docs/Geometry-Porting.md'
+    $loadPorting = Read-PackageEntry 'docs/Load-Porting.md'
     if ($installation -notmatch 'net481' -or $publishing -notmatch 'nuget.org') { throw 'Incomplete installation/publishing guides.' }
     $installationCode = [regex]::Match($installation, '(?s)```csharp\s*\r?\n(.*?)```').Groups[1].Value
     if ([string]::IsNullOrWhiteSpace($installationCode)) { throw 'Missing installation C# example.' }
@@ -84,8 +86,25 @@ try {
         }
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
+        $methods = if ($owner -match 'Geometry') {
+            @('CreateMultipleBeamsExtended', 'CreateMultipleNodesExtended', 'MergeNodesExtended')
+        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo') }
+        foreach ($method in $methods) {
+            $prefix = "M:StaadPro.Interop.$owner.$method("
+            $member = @($xml.doc.members.member | Where-Object { $_.name.StartsWith($prefix) })
+            if ($member.Count -ne 1) { throw "Missing new mutation IntelliSense: $owner.$method" }
+            foreach ($tag in @('summary','returns','remarks','example/code')) {
+                $node = $member[0].SelectSingleNode($tag)
+                if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $owner.$method" }
+            }
+            $documentation = if ($owner -match 'Geometry') { $geometryGuide } else { $loadPorting }
+            if ($documentation -notmatch $method -or $readme -notmatch $method) { throw "Missing packaged guidance for $method" }
+            $snippets += "{`n" + $member[0].SelectSingleNode('example/code').InnerText + "`n}"
+        }
+    }
+    foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 137 } else { 54 }
+        $expectedCount = if ($owner -match 'Geometry') { 140 } else { 57 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -131,6 +150,20 @@ public static class Program
         {
             IOSLoad load = wrapper.Load;
             RunDocumentationExamples(load, wrapper.Geometry);
+            Check(wrapper.Root != null && ReferenceEquals((object)wrapper.Root.ComObject, wrapper.RawOpenStaad), "root binding");
+            var geometry = ((FakeRoot)wrapper.RawOpenStaad).Geometry;
+            wrapper.Geometry.CreateMultipleNodesExtended(wrapper.Root, new[] { new Node(901, 1.25, -2.5, 3.75), new Node(902, 4, 5, 6) });
+            Check(geometry.Ids.SequenceEqual(new[] { 901, 902 }) && geometry.Coordinates.GetLength(0) == 2 && geometry.Coordinates.GetLength(1) == 3 && geometry.Coordinates[0, 0] == 1.25 && geometry.Coordinates[0, 1] == -2.5 && geometry.Coordinates[0, 2] == 3.75, "bulk node matrix");
+            wrapper.Geometry.CreateMultipleBeamsExtended(wrapper.Root, new[] { new Beam(903, new Node(901, 0, 0, 0), new Node(902, 0, 0, 0)) });
+            Check(geometry.BeamId == 903 && geometry.StartId == 901 && geometry.EndId == 902, "explicit beam incidence");
+            wrapper.Geometry.MergeNodesExtended(wrapper.Root, new Node(901, 0, 0, 0), new[] { new Node(902, 0, 0, 0), new Node(901, 0, 0, 0) });
+            Check(geometry.RetainId == 901 && geometry.Ids.SequenceEqual(new[] { 902, 901 }), "retained ID inclusion");
+            load.AddReferenceLoadsTo(17, new System.Collections.Generic.Dictionary<int, double> { { 41, -1.25 }, { 42, 0 } });
+            Check(fake.Assignment == "reference" && fake.AssignedIds.SequenceEqual(new[] { 41, 42 }) && fake.AssignedValues.SequenceEqual(new[] { -1.25, 0.0 }) && fake.ActiveId == 17 && !fake.Reference, "reference load factors");
+            load.AddRepeatLoadsTo(17, new System.Collections.Generic.Dictionary<int, double> { { 41, 1.123456789123 } });
+            Check(fake.Assignment == "repeat" && fake.AssignedIds[0] == 41 && fake.AssignedValues[0] == 1.123456789123, "repeat load precision");
+            load.AddAxialThermalGradientTo(17, new[] { 101, 102 }, -15.5);
+            Check(fake.Assignment == "temperature" && fake.AssignedIds.SequenceEqual(new[] { 101, 102 }) && fake.AssignedValues.SequenceEqual(new[] { -15.5, 0.0, 0.0 }), "temperature native arguments");
             foreach (var type in new[] { LoadCaseType.PrimaryLoad, LoadCaseType.ReferenceLoad })
             {
                 var lc = new LoadCase(17, "case", type);
@@ -253,7 +286,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: fifty-one packaged XML examples, all twenty-one load queries, three geometry grouping APIs, and four ported load models.");
+        Console.WriteLine("PASS: sixty-three packaged XML examples, all twenty-one load queries, three geometry grouping APIs, six new mutations, and four ported load models.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry)
@@ -264,7 +297,19 @@ __EXAMPLES__
     {
         public FakeRoot(FakeLoad load) { Load = load; }
         public FakeLoad Load { get; }
-        public object Geometry { get; } = new object();
+        public FakeGeometry Geometry { get; } = new FakeGeometry();
+    }
+    public class FakeGeometry
+    {
+        public int[] Ids { get; private set; }
+        public double[,] Coordinates { get; private set; }
+        public int BeamId { get; private set; }
+        public int StartId { get; private set; }
+        public int EndId { get; private set; }
+        public int RetainId { get; private set; }
+        public void CreateMultipleNodes(int[] ids, double[,] coordinates) { Ids = ids; Coordinates = coordinates; }
+        public void CreateBeam(int id, int start, int end) { BeamId = id; StartId = start; EndId = end; }
+        public void MergeNodes(int retain, int[] ids) { RetainId = retain; Ids = ids; }
     }
     public class FakeLoad
     {
@@ -275,6 +320,10 @@ __EXAMPLES__
         public int CombinationNumberCalls { get; private set; }
         public string Assignment { get; private set; }
         public double[] AssignedValues { get; private set; }
+        public int[] AssignedIds { get; private set; }
+        public void AddReferenceLoad(int[] ids, double[] factors) { Assignment = "reference"; AssignedIds = ids; AssignedValues = factors; }
+        public void AddRepeatLoad(int[] ids, double[] factors) { Assignment = "repeat"; AssignedIds = ids; AssignedValues = factors; }
+        public void AddTemperatureLoad(int[] ids, double axial, double y, double z) { Assignment = "temperature"; AssignedIds = ids; AssignedValues = new[] { axial, y, z }; }
         public bool SetLoadActive(int id) { ActiveId = id; Reference = false; return true; }
         public int SetReferenceLoadActive(int id) { ActiveId = id; Reference = true; return id; }
         public int GetNodalLoadCount(int id) => Empty ? 0 : 1;

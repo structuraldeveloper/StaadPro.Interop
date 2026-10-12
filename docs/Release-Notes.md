@@ -1,5 +1,15 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261012.3 - 12 October 2026 (prepared)
+
+- Added `CreateMultipleBeamsExtended(IOSRoot openStaad, IEnumerable<Beam> beamCollection)` with the original signature and ordered native `CreateBeam` calls. Replaced the reference's non-working bulk implementation; validated all incidences before mutation and documented partial failure without rollback.
+- Added `CreateMultipleNodesExtended(IOSRoot openStaad, IEnumerable<Node> nodeCollection)` with explicit IDs and a row-aligned XYZ coordinate matrix in model input units.
+- Added `MergeNodesExtended(IOSRoot openStaad, Node retain, IEnumerable<Node> nodesToMerge)` preserving retained-ID inclusion in the native merge array.
+- Added the minimal `IOSRoot`/`OSRootAdapter` binding and `OpenStaadWrapper.Root`, populated on construction and cleared on disposal. The supplied root selects the model for extended mutations.
+- Added `AddReferenceLoadsTo(int loadCaseId, Dictionary<int, double> loadCaseNumberFactorPairs)`, `AddRepeatLoadsTo(int loadCaseId, IDictionary<int, double> loadCaseNumberFactorPairs)` and the synchronous `AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient)` overload. Added input prevalidation, paired factor snapshots, primary activation checks and empty-input no-ops. Nonempty calls leave the target active.
+- Added matching detailed interface/concrete XML contracts and executable examples. Updated coverage to 140 geometry and 57 load overloads; three geometry and 63 reference load overloads remain pending. See [geometry](Geometry-Porting.md) and [load](Load-Porting.md) inventories.
+- Extended installed-package verification to compile/run 63 XML examples and check all six native argument contracts. Offline validation passed 441 tests. These checks use managed native stand-ins; live native mutation and unit/version validation remain pending. This version has not been published to NuGet.org.
+
 ## 1.0.0-preview.20261012.2 - 12 October 2026 (prepared)
 
 - Added `SegregateBeamsByConnectivity(IEnumerable<Beam> beams)` to group connected analytical beams and order simple chains.

@@ -27,6 +27,102 @@ namespace StaadPro.Interop.Adapters.Models
 
         #endregion
 
+        #region Root-bound Geometry Mutations
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSGeometry.CreateMultipleBeamsExtended']/*" />
+        public IOSGeometry CreateMultipleBeamsExtended(IOSRoot openStaad, IEnumerable<Beam> beamCollection)
+        {
+            if (openStaad == null) throw new ArgumentNullException(nameof(openStaad));
+            if (beamCollection == null) throw new ArgumentNullException(nameof(beamCollection));
+            var beams = beamCollection.ToList();
+            var ids = new HashSet<int>();
+            var beamIds = new int[beams.Count];
+            var incidences = new int[beams.Count, 2];
+            for (int i = 0; i < beams.Count; i++)
+            {
+                Beam beam = beams[i];
+                if (beam == null || beam.StartNode == null || beam.EndNode == null)
+                    throw new ArgumentException("Every beam must have initialized endpoints.", nameof(beamCollection));
+                if (beam.Id <= 0 || beam.StartNode.Id <= 0 || beam.EndNode.Id <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(beamCollection), "Beam and endpoint IDs must be positive.");
+                if (!ids.Add(beam.Id)) throw new ArgumentException("Beam IDs must be unique.", nameof(beamCollection));
+                if (beam.StartNode.Id == beam.EndNode.Id)
+                    throw new ArgumentException("A beam must connect two different node IDs.", nameof(beamCollection));
+                beamIds[i] = beam.Id;
+                incidences[i, 0] = beam.StartNode.Id;
+                incidences[i, 1] = beam.EndNode.Id;
+            }
+            if (beams.Count == 0) return this;
+
+            dynamic geometry = GetExtendedGeometry(openStaad);
+            // The reference bulk CreateMultipleBeams implementation is marked non-working.
+            // Serialize supported CreateBeam calls instead of sending its floating-point incidence matrix.
+            for (int i = 0; i < beamIds.Length; i++) geometry.CreateBeam(beamIds[i], incidences[i, 0], incidences[i, 1]);
+            return this;
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSGeometry.CreateMultipleNodesExtended']/*" />
+        public IOSGeometry CreateMultipleNodesExtended(IOSRoot openStaad, IEnumerable<Node> nodeCollection)
+        {
+            if (openStaad == null) throw new ArgumentNullException(nameof(openStaad));
+            if (nodeCollection == null) throw new ArgumentNullException(nameof(nodeCollection));
+            var nodes = nodeCollection.ToList();
+            var seen = new HashSet<int>();
+            var nodeIds = new int[nodes.Count];
+            var coords = new double[nodes.Count, 3];
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                Node node = nodes[i];
+                if (node == null) throw new ArgumentException("Node entries cannot be null.", nameof(nodeCollection));
+                if (node.Id <= 0) throw new ArgumentOutOfRangeException(nameof(nodeCollection), "Node IDs must be positive.");
+                if (!seen.Add(node.Id)) throw new ArgumentException("Node IDs must be unique.", nameof(nodeCollection));
+                if (!IsFiniteCoordinate(node.X) || !IsFiniteCoordinate(node.Y) || !IsFiniteCoordinate(node.Z))
+                    throw new ArgumentException("Node coordinates must be finite.", nameof(nodeCollection));
+                nodeIds[i] = node.Id;
+                coords[i, 0] = node.X;
+                coords[i, 1] = node.Y;
+                coords[i, 2] = node.Z;
+            }
+            if (nodes.Count == 0) return this;
+            dynamic geometry = GetExtendedGeometry(openStaad);
+            geometry.CreateMultipleNodes(nodeIds, coords);
+            return this;
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSGeometry.MergeNodesExtended']/*" />
+        public IOSGeometry MergeNodesExtended(IOSRoot openStaad, Node retain, IEnumerable<Node> nodesToMerge)
+        {
+            if (openStaad == null) throw new ArgumentNullException(nameof(openStaad));
+            if (retain == null) throw new ArgumentNullException(nameof(retain));
+            if (nodesToMerge == null) throw new ArgumentNullException(nameof(nodesToMerge));
+            if (retain.Id <= 0) throw new ArgumentOutOfRangeException(nameof(retain), "The retained node ID must be positive.");
+            var nodes = nodesToMerge.ToList();
+            var ids = new HashSet<int>();
+            foreach (Node node in nodes)
+            {
+                if (node == null) throw new ArgumentException("Node entries cannot be null.", nameof(nodesToMerge));
+                if (node.Id <= 0) throw new ArgumentOutOfRangeException(nameof(nodesToMerge), "Node IDs must be positive.");
+                if (!ids.Add(node.Id)) throw new ArgumentException("Merge node IDs must be unique.", nameof(nodesToMerge));
+            }
+            if (!ids.Contains(retain.Id)) throw new ArgumentException("The merge collection must include the retained node ID.", nameof(nodesToMerge));
+            if (nodes.Count == 1) return this;
+            dynamic geometry = GetExtendedGeometry(openStaad);
+            geometry.MergeNodes(retain.Id, nodes.Select(n => n.Id).ToArray());
+            return this;
+        }
+
+        private static object GetExtendedGeometry(IOSRoot openStaad)
+        {
+            dynamic root = openStaad.ComObject;
+            if ((object)root == null) throw new InvalidOperationException("The OpenSTAAD root object is unavailable.");
+            object geometry = root.Geometry;
+            return geometry ?? throw new InvalidOperationException("The supplied root does not expose a Geometry object.");
+        }
+
+        private static bool IsFiniteCoordinate(double value) => !double.IsNaN(value) && !double.IsInfinity(value);
+
+        #endregion
+
         #region Constructor
 
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='OSGeometryAdapter..ctor(OpenStaadWrapper)']/*" />

@@ -1,6 +1,6 @@
-# Geometry API comparison and connectivity grouping
+# Geometry API comparison, grouping and mutations
 
-The reference geometry interface and adapter contain 143 method overloads. Before this update, 134 were present here. The following nine methods were pending; three are now ported with the same names, parameter names, types and default values.
+The reference geometry interface and adapter contain 143 method overloads. The connectivity increment increased coverage from 134 to 137. This increment adds the three extended geometry mutations with the same public names, parameter names and types, bringing coverage to 140. The table tracks the original nine pending methods.
 
 | Function | Status after this update | Required supporting API |
 | --- | --- | --- |
@@ -10,13 +10,13 @@ The reference geometry interface and adapter contain 143 method overloads. Befor
 | `IdentifyPhysicalMembers(IEnumerable<Beam> beams, double angularToleranceDegrees = 0.005)` | Pending | `PhysicalMemberIdentificationResult` and member reconstruction |
 | `GroupPhysicalMembersByPlanAngle(IEnumerable<Member> members, double angularToleranceDegrees = 1e-3)` | Pending | `PhysicalMemberPlanAngleGroup` |
 | `GeneratePolygonMesh(IReadOnlyList<Node> boundaryNodes, int startingNodeId, int startingPlateId, double minimumAngleDegrees = 20.0, double maximumEdgeLength = 0.0)` | Pending | `PolygonMeshResult` and the mesh generation service |
-| `CreateMultipleBeamsExtended(IOSRoot openStaad, IEnumerable<Beam> beamCollection)` | Pending | `IOSRoot` and its geometry-update operations |
-| `CreateMultipleNodesExtended(IOSRoot openStaad, IEnumerable<Node> nodeCollection)` | Pending | `IOSRoot` and its geometry-update operations |
-| `MergeNodesExtended(IOSRoot openStaad, Node retain, IEnumerable<Node> nodesToMerge)` | Pending | `IOSRoot` and node merging |
+| `CreateMultipleBeamsExtended(IOSRoot openStaad, IEnumerable<Beam> beamCollection)` | Ported | `IOSRoot`, exposed as `wrapper.Root` |
+| `CreateMultipleNodesExtended(IOSRoot openStaad, IEnumerable<Node> nodeCollection)` | Ported | `IOSRoot`, exposed as `wrapper.Root` |
+| `MergeNodesExtended(IOSRoot openStaad, Node retain, IEnumerable<Node> nodesToMerge)` | Ported | `IOSRoot`, exposed as `wrapper.Root` |
 
-There are now 137 geometry overloads implemented and six pending. The counts include generic, asynchronous and collection overloads separately. The comparison covers both `IOSGeometry` and `OSGeometryAdapter`.
+There are now 140 geometry overloads implemented and three pending: `IdentifyPhysicalMembers`, `GroupPhysicalMembersByPlanAngle` and `GeneratePolygonMesh`. The counts include generic, asynchronous and collection overloads separately. The comparison covers both `IOSGeometry` and `OSGeometryAdapter`.
 
-## Newly ported functions
+## Connectivity grouping
 
 All three grouping operations run entirely on supplied managed data and make no native OpenSTAAD calls. They materialize input once, ignore null entity entries, allocate fresh group lists and reuse the original entity objects. They do not modify the supplied entities, select model elements, or change STAAD model state. The standalone `ConnectivityService` provides the same operations without requiring a wrapper.
 
@@ -44,14 +44,35 @@ var chain = groups.Single().ToList(); // two original beam objects
 // wrapper.Geometry.SegregatePlatesByConnectivity(plates, PlateConnectivityScope.SharedEdge);
 ```
 
+## Extended geometry mutations
+
+`wrapper.Root` supplies the minimal `IOSRoot` binding needed by the original signatures. `OSRootAdapter` wraps the raw root through late binding, without a Bentley build dependency. Other root methods remain outside this port. Disposal clears the wrapper's binding; callers must not use bindings captured from a disposed or disconnected session.
+
+- `CreateMultipleNodesExtended` sends explicit integer IDs and a `double[count, 3]` XYZ matrix through `openStaad.ComObject.Geometry.CreateMultipleNodes`. Coordinates use the target model's input length units with no conversion.
+- `CreateMultipleBeamsExtended` retains the public signature but replaces the reference's compile-time-obsolete, non-working bulk call with ordered synchronous `CreateBeam` calls using integer beam and endpoint IDs. Nodes must already exist. All input is checked before the first creation; a later native failure can leave earlier beams created.
+- `MergeNodesExtended` retains the reference workaround's inclusion of the retained ID in the merge array. The retained ID must occur exactly once; matching uses the ID rather than managed object equality. A retained-only collection makes no native call. Empty input is invalid.
+
+These methods validate positive IDs, reject null entries and repeated creation/merge IDs, and enumerate input once. Node coordinates must be finite. Each method returns the receiving geometry adapter, while the supplied root determines the target model. Native return values are not interpreted and native exceptions propagate. They do not refresh managed geometry, roll back native changes or save the model. Use the STAAD COM thread and serialize session access.
+
+```csharp
+// With a connected wrapper and unused node/beam IDs in its model:
+var a = new Node(210, 0, 0, 0);
+var b = new Node(211, 4.5, 0, 0);
+wrapper.Geometry.CreateMultipleNodesExtended(wrapper.Root, new[] { a, b });
+wrapper.Geometry.CreateMultipleBeamsExtended(wrapper.Root,
+    new[] { new Beam(310, a, b) });
+// To merge existing nodes, include the retained ID in the collection:
+// wrapper.Geometry.MergeNodesExtended(wrapper.Root, a, new[] { a, redundantNode });
+```
+
 ## IntelliSense in an installed package
 
-The earlier package contained an XML file but no method documentation for its 134 geometry overloads; 33 load-adapter methods also lacked expanded comments. The current source provides complete documentation on all 137 geometry and all 54 load overloads, on both interfaces and concrete adapters. Previously undocumented exported managed functions now have summaries, parameter descriptions and return documentation as well.
+The earlier package contained an XML file but no method documentation for its 134 geometry overloads; 33 load-adapter methods also lacked expanded comments. The current source provides complete documentation on all 140 geometry and all 57 load overloads, on both interfaces and concrete adapters. Previously undocumented exported managed functions now have summaries, parameter descriptions and return documentation as well.
 
 `Documentation/ApiMembers.xml` holds shared XML comments adapted from the reference interfaces and reviewed against the current implementation. Compiler `<include>` directives expand those comments into `StaadPro.Interop.xml`; consumers need neither this source file nor the private reference project. The package includes the generated XML alongside the DLL in `lib/net481`. Existing detailed load-query examples and contracts remain intact.
 
-Malformed or unresolved documentation warnings fail the build. Regression checks inspect the compiled XML for exported functions and adapter overloads, missing summaries, parameter-name coverage, generic parameters, returns, usage remarks, and unresolved include/inheritance/reference elements. Package verification installs an isolated NuGet consumer and compiles/runs all 51 XML examples, including nine examples covering the three new functions on interface, adapter and service surfaces.
+Malformed or unresolved documentation warnings fail the build. Regression checks inspect the compiled XML for exported functions and adapter overloads, missing summaries, parameter-name coverage, generic parameters, returns, usage remarks, and unresolved include/inheritance/reference elements. Package verification installs an isolated NuGet consumer and compiles/runs all 63 XML examples, including twelve examples for the six new mutations on interfaces and adapters.
 
-Already-published `1.0.0-preview.20261012.1` is unchanged. These additions are prepared in `1.0.0-preview.20261012.2`; publication is a separate step.
+Already-published versions are unchanged. These additions are prepared in `1.0.0-preview.20261012.3`; publication is a separate step.
 
-Validation passed with **383 offline tests**, a release build with zero warnings/errors, and the isolated installed-package checks above. Native engineering-unit and broader version checks remain separate from these managed connectivity algorithms.
+Offline checks cover array layouts, target-root routing, prevalidation, native exception propagation and partial beam failure. Live native mutation behavior and engineering-unit conventions require validation on the STAAD versions used by consumers.
