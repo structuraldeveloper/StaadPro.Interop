@@ -13,16 +13,19 @@ namespace StaadPro.Interop.Entities
     {
         #region Constructors
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='NodalLoad..ctor()']/*" />
         public NodalLoad() : base(LoadItemType.NodalLoad)
         {
             Forces = new Forces();
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='NodalLoad..ctor(Forces)']/*" />
         public NodalLoad(Forces forces) : base(LoadItemType.NodalLoad)
         {
             Forces = forces ?? new Forces();
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='NodalLoad..ctor(double,double,double,double,double,double)']/*" />
         public NodalLoad(double fx, double fy, double fz, double mx, double my, double mz) : base(LoadItemType.NodalLoad)
         {
             Forces = new Forces(fx, fy, fz, mx, my, mz);
@@ -32,6 +35,7 @@ namespace StaadPro.Interop.Entities
 
         #region Public Properties
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='NodalLoad.P:Forces']/*" />
         [JsonProperty]
         public Forces Forces { get; set; }
 
@@ -39,6 +43,7 @@ namespace StaadPro.Interop.Entities
 
         #region Public Methods
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='NodalLoad.DeepCopy`0()']/*" />
         public NodalLoad DeepCopy()
         {
             return new NodalLoad(Forces.Fx, Forces.Fy, Forces.Fz, Forces.Mx, Forces.My, Forces.Mz)
@@ -47,6 +52,7 @@ namespace StaadPro.Interop.Entities
             };
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='NodalLoad.ConvertUsing`0(UnitsConverter)']/*" />
         public void ConvertUsing(UnitsConverter uc)
         {
             Forces?.ConvertUsing(uc);

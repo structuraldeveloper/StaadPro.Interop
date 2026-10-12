@@ -15,10 +15,12 @@ namespace StaadPro.Interop.Entities
     {
         #region Constructors
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate..ctor()']/*" />
         public Plate()
         {
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate..ctor(Node,Node,Node,Node)']/*" />
         public Plate(Node a, Node b, Node c, Node d = null) : this()
         {
             A = a;
@@ -27,6 +29,7 @@ namespace StaadPro.Interop.Entities
             D = d;
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate..ctor(int,Node,Node,Node,Node)']/*" />
         public Plate(int id, Node a, Node b, Node c, Node d = null) : this(a, b, c, d)
         {
             Id = id;
@@ -36,18 +39,23 @@ namespace StaadPro.Interop.Entities
 
         #region Public Properties
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.P:Id']/*" />
         [JsonProperty(Order = 1)]
         public int Id { get => Get<int>(); set => Set(value); }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.P:A']/*" />
         [JsonProperty(Order = 2)]
         public Node A { get => Get<Node>(); set => Set(value); }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.P:B']/*" />
         [JsonProperty(Order = 3)]
         public Node B { get => Get<Node>(); set => Set(value); }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.P:C']/*" />
         [JsonProperty(Order = 4)]
         public Node C { get => Get<Node>(); set => Set(value); }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.P:D']/*" />
         [JsonProperty(Order = 5)]
         public Node D { get => Get<Node>(); set => Set(value); }
 
@@ -55,9 +63,11 @@ namespace StaadPro.Interop.Entities
 
         #region Public Read-only Properties
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.P:IsTriangle']/*" />
         [JsonIgnore]
         public bool IsTriangle => D == null;
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.P:Area']/*" />
         [JsonIgnore]
         public double Area
         {
@@ -76,6 +86,7 @@ namespace StaadPro.Interop.Entities
             }
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.P:Orientation']/*" />
         [JsonIgnore]
         public PlateOrientation Orientation
         {
@@ -104,6 +115,7 @@ namespace StaadPro.Interop.Entities
 
         #region Public Functions
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.TryGetLocalCoordinateSystemBasis`0(outVector3D,outVector3D,outVector3D)']/*" />
         public bool TryGetLocalCoordinateSystemBasis(out Vector3D localX, out Vector3D localY, out Vector3D localZ)
         {
             localX = default;
@@ -136,14 +148,17 @@ namespace StaadPro.Interop.Entities
 
         #region Equality
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.GetHashCode`0()']/*" />
         public override int GetHashCode() => Id.GetHashCode();
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.Equals`0(Plate)']/*" />
         public bool Equals(Plate other)
         {
             if (other is null) return false;
             return Id == other.Id && A == other.A && B == other.B && C == other.C && D == other.D;
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Plate.Equals`0(object)']/*" />
         public override bool Equals(object obj)
         {
             if (!(obj is Plate other)) return false;

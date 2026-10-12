@@ -10,6 +10,7 @@ namespace StaadPro.Interop.Common.Units
     {
         #region Constructors
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter..ctor(LengthInputUnit,ForceInputUnit,LengthInputUnit,ForceInputUnit)']/*" />
         public UnitsConverter(LengthInputUnit fromLength = LengthInputUnit.Meter,
                               ForceInputUnit fromForce = ForceInputUnit.KiloNewton,
                               LengthInputUnit toLength = LengthInputUnit.Meter,
@@ -25,23 +26,34 @@ namespace StaadPro.Interop.Common.Units
 
         #region Properties
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:FromLength']/*" />
         public LengthInputUnit FromLength { get; set; }
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:FromForce']/*" />
         public ForceInputUnit FromForce { get; set; }
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:ToLength']/*" />
         public LengthInputUnit ToLength { get; set; }
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:ToForce']/*" />
         public ForceInputUnit ToForce { get; set; }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:LengthConversionFactor']/*" />
         public double LengthConversionFactor => GetLengthToMeter(FromLength) / GetLengthToMeter(ToLength);
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:ForceConversionFactor']/*" />
         public double ForceConversionFactor => GetForceToKiloNewton(FromForce) / GetForceToKiloNewton(ToForce);
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:AreaConversionFactor']/*" />
         public double AreaConversionFactor => LengthConversionFactor * LengthConversionFactor;
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:VolumeConversionFactor']/*" />
         public double VolumeConversionFactor => AreaConversionFactor * LengthConversionFactor;
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:MomentConversionFactor']/*" />
         public double MomentConversionFactor => ForceConversionFactor * LengthConversionFactor;
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:LinearLoadConversionFactor']/*" />
         public double LinearLoadConversionFactor => ForceConversionFactor / LengthConversionFactor;
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:StressConversionFactor']/*" />
         public double StressConversionFactor => ForceConversionFactor / AreaConversionFactor;
 
         #endregion

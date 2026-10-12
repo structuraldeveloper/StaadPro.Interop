@@ -13,6 +13,7 @@ namespace StaadPro.Interop.Helpers
         private static readonly TimeSpan ConnectionTimeout = TimeSpan.FromMinutes(2);
         private static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(250);
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='OpenStaadWrapperHelpers.GetWhenRunningInstancesExist`0(string,IList&lt;object&gt;)']/*" />
         public static OpenStaadWrapper GetWhenRunningInstancesExist(string fileFullPath, IList<object> runningInstances)
         {
             if (string.IsNullOrWhiteSpace(fileFullPath))
@@ -23,6 +24,7 @@ namespace StaadPro.Interop.Helpers
                 RotHelpers.GetRunningOpenStaadInstances, LaunchModel, ConnectionTimeout, PollInterval);
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='OpenStaadWrapperHelpers.GetWhenNoRunningInstancesExist`0(string)']/*" />
         public static OpenStaadWrapper GetWhenNoRunningInstancesExist(string fileFullPath)
         {
             return string.IsNullOrWhiteSpace(fileFullPath)
@@ -30,6 +32,7 @@ namespace StaadPro.Interop.Helpers
                 : OpenExistingOrNewModel(fileFullPath);
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='OpenStaadWrapperHelpers.OpenExistingStaadModel`0(string)']/*" />
         public static OpenStaadWrapper OpenExistingStaadModel(string fileFullPath)
         {
             return OpenExistingOrNewModel(fileFullPath);
@@ -136,6 +139,7 @@ namespace StaadPro.Interop.Helpers
             Process.Start(new ProcessStartInfo { FileName = fileFullPath, UseShellExecute = true });
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='OpenStaadWrapperHelpers.CreateBlankStaadModel`0(string)']/*" />
         public static OpenStaadWrapper CreateBlankStaadModel(string fileFullPath)
         {
             try
@@ -162,6 +166,7 @@ namespace StaadPro.Interop.Helpers
             });
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='OpenStaadWrapperHelpers.StartStaadApplication`0()']/*" />
         public static OpenStaadWrapper StartStaadApplication()
         {
             string basePath = @"C:\Program Files\Bentley\Engineering";

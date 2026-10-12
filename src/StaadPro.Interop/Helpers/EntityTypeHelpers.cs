@@ -6,11 +6,13 @@ namespace StaadPro.Interop.Helpers
 {
     public static class EntityTypeHelpers
     {
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='EntityTypeHelpers.GetEntityType`1()']/*" />
         public static EntityType GetEntityType<T>()
         {
             return GetEntityType(typeof(T));
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='EntityTypeHelpers.GetEntityType`0(Type)']/*" />
         public static EntityType GetEntityType(Type type)
         {
             if (type == typeof(Node)) return EntityType.Node;

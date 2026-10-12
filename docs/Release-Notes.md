@@ -1,5 +1,15 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261012.2 - 12 October 2026 (prepared)
+
+- Added `SegregateBeamsByConnectivity(IEnumerable<Beam> beams)` to group connected analytical beams and order simple chains.
+- Added `SegregateMembersByConnectivity(IEnumerable<Member> members, MemberConnectivityScope scope = MemberConnectivityScope.EndpointsOnly)` for endpoint or all-node member grouping.
+- Added `SegregatePlatesByConnectivity(IEnumerable<Plate> plates, PlateConnectivityScope scope = PlateConnectivityScope.SharedEdge)` for candidate-edge or any-corner plate grouping, preserving the reference predicate.
+- Added the standalone `ConnectivityService` and matching connectivity-scope enums. The algorithms operate on managed entities without native STAAD calls. Beam input is explicitly deduplicated by ID to accommodate the target entity's endpoint-aware equality.
+- Restored and expanded XML documentation for every geometry/load overload on both interfaces and concrete adapters, plus previously undocumented exported managed functions. Shared XML source comments expand into the NuGet XML file; documentation warnings now fail builds.
+- Added a complete [geometry comparison](Geometry-Porting.md): nine methods were pending before this increment, three are now ported, and six remain.
+- Extended package checks to validate complete adapter documentation and compile/run 51 XML examples, including the three new APIs. Added offline connectivity and compiled-XML regression coverage. This version has not been published to NuGet.org.
+
 ## 1.0.0-preview.20261012.1 - 12 October 2026
 
 Author: **Srinivasa Rao Masanam**. Copyright (c) 2026 StaadDev. License: MIT.

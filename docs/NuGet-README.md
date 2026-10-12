@@ -8,6 +8,12 @@ A strongly typed wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load opera
 - A licensed STAAD.Pro installation exposing the OpenSTAAD methods used by your application. Bentley binaries are not distributed in this package or required to build it.
 - A connected model session, with COM access coordinated by the calling application. This wrapper does not guarantee thread safety across a shared STAAD session.
 
+## Geometry grouping and IntelliSense
+
+`IOSGeometry`, `OSGeometryAdapter` and the standalone `ConnectivityService` expose `SegregateBeamsByConnectivity`, `SegregateMembersByConnectivity` and `SegregatePlatesByConnectivity`. These functions group supplied managed entities without accessing STAAD. Member grouping defaults to `MemberConnectivityScope.EndpointsOnly`; plate grouping defaults to `PlateConnectivityScope.SharedEdge`. See the packaged `docs/Geometry-Porting.md` for behavior, source comparison and remaining methods.
+
+Full, expanded XML IntelliSense is included for all 137 geometry overloads and all 54 load overloads on both interfaces and concrete adapters. Shared source comments are expanded by the compiler; installed consumers need only `StaadPro.Interop.xml` beside the DLL.
+
 ## Load assignment queries
 
 The package exposes seven assignment read-back methods through `IOSLoad` and `OSLoadAdapter`:
@@ -53,7 +59,7 @@ Full XML IntelliSense accompanies the DLL for both interface and concrete method
 
 ## Release status
 
-Release `1.0.0-preview.20261012.1` is authored by **Srinivasa Rao Masanam**. Copyright (c) 2026 StaadDev. This preview fixes attachment to already-open models and waits for the requested model's Geometry and Load interfaces after launch. See [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md), also included as `docs/Release-Notes.md` in the package.
+Release `1.0.0-preview.20261012.2` is authored by **Srinivasa Rao Masanam**. Copyright (c) 2026 StaadDev. This prepared preview adds three managed connectivity grouping functions and full geometry/load IntelliSense, alongside the earlier model-attachment fixes. See [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md), also included as `docs/Release-Notes.md` in the package.
 
 Package creation and isolated consumer checks can be run locally and in CI. Offline tests exercise a managed OpenSTAAD stand-in; live COM marshaling and engineering unit conventions still require verification on each advertised STAAD version before a stable release. See the repository's [release assessment](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/NuGet-Readiness.md).
 

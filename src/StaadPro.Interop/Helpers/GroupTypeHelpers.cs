@@ -6,8 +6,10 @@ namespace StaadPro.Interop.Helpers
 {
     public static class GroupTypeHelpers
     {
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='GroupTypeHelpers.GetGroupType`1()']/*" />
         public static GroupType GetGroupType<T>() => GetGroupType(typeof(T));
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='GroupTypeHelpers.GetGroupType`0(Type)']/*" />
         public static GroupType GetGroupType(Type type)
         {
             if (type == typeof(Node)) return GroupType.Node;
@@ -17,6 +19,7 @@ namespace StaadPro.Interop.Helpers
             throw new NotSupportedException($"Group type for '{type.Name}' is not supported.");
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='GroupTypeHelpers.GetGroupType`0(EntityType)']/*" />
         public static GroupType GetGroupType(EntityType entityType)
         {
             switch (entityType)

@@ -13,15 +13,14 @@ namespace StaadPro.Interop.Adapters.Models
     /// </summary>
     public class OSLoadAdapter : OSBaseAdapter, IOSLoad
     {
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='OSLoadAdapter..ctor(OpenStaadWrapper)']/*" />
         public OSLoadAdapter(OpenStaadWrapper wrapper) : base(wrapper)
         {
             if (wrapper == null) throw new ArgumentNullException(nameof(wrapper));
             ComObject = wrapper.RawLoad ?? throw new ArgumentNullException(nameof(wrapper.RawLoad), "STAAD Load COM object is not initialized.");
         }
 
-        /// <summary>
-        /// Gets the underlying COM load object.
-        /// </summary>
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.P:ComObject']/*" />
         public dynamic ComObject { get; }
 
         #region Load Assignment Queries
@@ -993,9 +992,11 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Load Case Clearing
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='OSLoadAdapter.ClearPrimaryLoadCase`0(ILoadCase,bool)']/*" />
         public bool ClearPrimaryLoadCase(ILoadCase loadCase, bool isReferenceLoad) =>
             ClearPrimaryLoadCases(new List<ILoadCase> { loadCase }, isReferenceLoad);
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='OSLoadAdapter.ClearPrimaryLoadCases`0(IEnumerable&lt;ILoadCase&gt;,bool)']/*" />
         public bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases, bool isReferenceLoad)
         {
             if (loadCases == null) throw new ArgumentNullException(nameof(loadCases));
@@ -1003,6 +1004,7 @@ namespace StaadPro.Interop.Adapters.Models
             return ClearPrimaryLoadCases(primaryLcs.Select(lc => lc.Id), isReferenceLoad);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='OSLoadAdapter.ClearPrimaryLoadCases`0(IEnumerable&lt;int&gt;,bool)']/*" />
         public bool ClearPrimaryLoadCases(IEnumerable<int> lcIds, bool isReferenceLoad)
         {
             if (lcIds == null) throw new ArgumentNullException(nameof(lcIds));
@@ -1013,9 +1015,11 @@ namespace StaadPro.Interop.Adapters.Models
             return result != null && (int)result == 1;
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.ClearPrimaryLoadCase`0(ILoadCase)']/*" />
         public bool ClearPrimaryLoadCase(ILoadCase loadCase) =>
             ClearPrimaryLoadCases(new List<ILoadCase> { loadCase });
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.ClearPrimaryLoadCases`0(IEnumerable&lt;ILoadCase&gt;)']/*" />
         public bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases)
         {
             if (loadCases == null) throw new ArgumentNullException(nameof(loadCases));
@@ -1023,6 +1027,7 @@ namespace StaadPro.Interop.Adapters.Models
             return ClearPrimaryLoadCases(primaryLcs.Select(lc => lc.Id));
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.ClearPrimaryLoadCases`0(IEnumerable&lt;int&gt;)']/*" />
         public bool ClearPrimaryLoadCases(IEnumerable<int> lcIds)
         {
             if (lcIds == null) throw new ArgumentNullException(nameof(lcIds));
@@ -1033,9 +1038,11 @@ namespace StaadPro.Interop.Adapters.Models
             return result != null && (int)result == 1;
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.ClearReferenceLoadCase`0(ILoadCase)']/*" />
         public bool ClearReferenceLoadCase(ILoadCase loadCase) =>
             ClearReferenceLoadCases(new List<ILoadCase> { loadCase });
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.ClearReferenceLoadCases`0(IEnumerable&lt;ILoadCase&gt;)']/*" />
         public bool ClearReferenceLoadCases(IEnumerable<ILoadCase> loadCases)
         {
             if (loadCases == null) throw new ArgumentNullException(nameof(loadCases));
@@ -1043,6 +1050,7 @@ namespace StaadPro.Interop.Adapters.Models
             return ClearReferenceLoadCases(referenceLcs.Select(lc => lc.Id));
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.ClearReferenceLoadCases`0(IEnumerable&lt;int&gt;)']/*" />
         public bool ClearReferenceLoadCases(IEnumerable<int> lcIds)
         {
             if (lcIds == null) throw new ArgumentNullException(nameof(lcIds));
@@ -1057,6 +1065,7 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Load Case Creation & Titles
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateNewPrimaryLoad`0(string,LoadType)']/*" />
         public int CreateNewPrimaryLoad(string lcTitle, LoadType loadType)
         {
             if (string.IsNullOrEmpty(lcTitle)) throw new ArgumentNullException(nameof(lcTitle));
@@ -1065,6 +1074,7 @@ namespace StaadPro.Interop.Adapters.Models
             return Convert.ToInt32(result);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateNewPrimaryLoad`0(int,string,LoadType)']/*" />
         public int CreateNewPrimaryLoad(int lcId, string lcTitle, LoadType loadType)
         {
             if (string.IsNullOrEmpty(lcTitle)) throw new ArgumentNullException(nameof(lcTitle));
@@ -1073,18 +1083,21 @@ namespace StaadPro.Interop.Adapters.Models
             return Convert.ToInt32(result);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateNewPrimaryLoadEx`0(LoadCase)']/*" />
         public int CreateNewPrimaryLoadEx(LoadCase lc)
         {
             if (lc == null) throw new ArgumentNullException(nameof(lc));
             return CreateNewPrimaryLoad(lc.Title, lc.Type);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateNewPrimaryLoadEx2`0(LoadCase)']/*" />
         public int CreateNewPrimaryLoadEx2(LoadCase lc)
         {
             if (lc == null) throw new ArgumentNullException(nameof(lc));
             return CreateNewPrimaryLoad(lc.Id, lc.Title, lc.Type);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateNewReferenceLoad`0(int,string,LoadType)']/*" />
         public int CreateNewReferenceLoad(int lcId, string lcTitle, LoadType loadType)
         {
             if (string.IsNullOrEmpty(lcTitle)) throw new ArgumentNullException(nameof(lcTitle));
@@ -1093,12 +1106,14 @@ namespace StaadPro.Interop.Adapters.Models
             return Convert.ToInt32(result);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateNewReferenceLoad`0(LoadCase)']/*" />
         public int CreateNewReferenceLoad(LoadCase lc)
         {
             if (lc == null) throw new ArgumentNullException(nameof(lc));
             return CreateNewReferenceLoad(lc.Id, lc.Title, lc.Type);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.GetLoadCaseTitle`0(int)']/*" />
         public string GetLoadCaseTitle(int id)
         {
             if (ComObject == null) throw new InvalidOperationException("STAAD Load COM object is not initialized.");
@@ -1106,6 +1121,7 @@ namespace StaadPro.Interop.Adapters.Models
             return result != null ? result.ToString() : string.Empty;
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.SetLoadCaseActive`0(ILoadCase)']/*" />
         public IOSLoad SetLoadCaseActive(ILoadCase lc)
         {
             if (lc == null) throw new ArgumentNullException(nameof(lc));
@@ -1123,6 +1139,7 @@ namespace StaadPro.Interop.Adapters.Models
             return this;
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateNewLoadCase`0(ILoadCase)']/*" />
         public IOSLoad CreateNewLoadCase(ILoadCase lc)
         {
             if (lc == null) throw new ArgumentNullException(nameof(lc));
@@ -1155,23 +1172,27 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Support Settlement
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddSupportSettlement`0(ILoadCase,int,SettlementDirection,double)']/*" />
         public IOSLoad AddSupportSettlement(ILoadCase lc, int nodeId, SettlementDirection direction, double mmSettlement)
         {
             return AddSupportSettlement(lc, new List<int> { nodeId }, direction, mmSettlement);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddSupportSettlement`0(ILoadCase,Node,SettlementDirection,double)']/*" />
         public IOSLoad AddSupportSettlement(ILoadCase lc, Node node, SettlementDirection direction, double mmSettlement)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             return AddSupportSettlement(lc, new List<int> { node.Id }, direction, mmSettlement);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddSupportSettlement`0(ILoadCase,IEnumerable&lt;Node&gt;,SettlementDirection,double)']/*" />
         public IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<Node> nodes, SettlementDirection direction, double mmSettlement)
         {
             if (nodes == null) throw new ArgumentNullException(nameof(nodes));
             return AddSupportSettlement(lc, nodes.Select(n => n.Id), direction, mmSettlement);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddSupportSettlement`0(ILoadCase,IEnumerable&lt;int&gt;,SettlementDirection,double)']/*" />
         public IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<int> nodeIds, SettlementDirection direction, double mmSettlement)
         {
             if (lc == null) throw new ArgumentNullException(nameof(lc));
@@ -1191,9 +1212,11 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Batch Load Creation
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreatePrimaryLoadCases`0(HashSet&lt;ILoadCase&gt;)']/*" />
         public IOSLoad CreatePrimaryLoadCases(HashSet<ILoadCase> primaryLoadCases) =>
             CreatePrimaryLoadCases((IEnumerable<ILoadCase>)primaryLoadCases);
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreatePrimaryLoadCases`0(IEnumerable&lt;ILoadCase&gt;)']/*" />
         public IOSLoad CreatePrimaryLoadCases(IEnumerable<ILoadCase> primaryLoadCases)
         {
             if (primaryLoadCases != null)
@@ -1214,9 +1237,11 @@ namespace StaadPro.Interop.Adapters.Models
             return this;
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateReferenceLoadCases`0(HashSet&lt;ILoadCase&gt;)']/*" />
         public IOSLoad CreateReferenceLoadCases(HashSet<ILoadCase> referenceLoads) =>
             CreateReferenceLoadCases((IEnumerable<ILoadCase>)referenceLoads);
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateReferenceLoadCases`0(IEnumerable&lt;ILoadCase&gt;)']/*" />
         public IOSLoad CreateReferenceLoadCases(IEnumerable<ILoadCase> referenceLoads)
         {
             if (referenceLoads != null)
@@ -1241,12 +1266,14 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Nodal Loading
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddNodalLoad`0(ILoadCase,Node,NodalLoad)']/*" />
         public IOSLoad AddNodalLoad(ILoadCase lc, Node node, NodalLoad nl)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
             return AddNodalLoad(lc, new[] { node }, nl);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddNodalLoad`0(ILoadCase,IEnumerable&lt;Node&gt;,NodalLoad)']/*" />
         public IOSLoad AddNodalLoad(ILoadCase lc, IEnumerable<Node> nodes, NodalLoad nl)
         {
             if (lc == null) throw new ArgumentNullException(nameof(lc));
@@ -1268,12 +1295,14 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Member Loading
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddMemberLoad`0(ILoadCase,Beam,MemberLoad)']/*" />
         public IOSLoad AddMemberLoad(ILoadCase lc, Beam beam, MemberLoad ml)
         {
             if (beam == null) throw new ArgumentNullException(nameof(beam));
             return AddMemberLoad(lc, new[] { beam }, ml);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddMemberLoad`0(ILoadCase,IEnumerable&lt;Beam&gt;,MemberLoad)']/*" />
         public IOSLoad AddMemberLoad(ILoadCase lc, IEnumerable<Beam> beams, MemberLoad ml)
         {
             if (lc == null) throw new ArgumentNullException(nameof(lc));
@@ -1295,11 +1324,13 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Plate Pressure Loading
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddPlateUniformPressure`0(ILoadCase,int,double,LoadDirection)']/*" />
         public IOSLoad AddPlateUniformPressure(ILoadCase lc, int plateId, double pressure, LoadDirection direction = LoadDirection.LocalZ)
         {
             return AddPlateUniformPressure(lc, new[] { plateId }, pressure, direction);
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddPlateUniformPressure`0(ILoadCase,IEnumerable&lt;int&gt;,double,LoadDirection)']/*" />
         public IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<int> plateIds, double pressure, LoadDirection direction = LoadDirection.LocalZ)
         {
             if (lc == null) throw new ArgumentNullException(nameof(lc));
@@ -1316,6 +1347,7 @@ namespace StaadPro.Interop.Adapters.Models
             return this;
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddPlateUniformPressure`0(ILoadCase,IEnumerable&lt;Plate&gt;,double,LoadDirection)']/*" />
         public IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<Plate> plates, double pressure, LoadDirection direction = LoadDirection.LocalZ)
         {
             if (plates == null) throw new ArgumentNullException(nameof(plates));

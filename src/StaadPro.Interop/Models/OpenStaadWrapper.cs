@@ -155,6 +155,7 @@ namespace StaadPro.Interop.Models
 
         #region Public Methods
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='OpenStaadWrapper.Dispose`0()']/*" />
         public void Dispose()
         {
             RawGeometry = null;

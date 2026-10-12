@@ -70,7 +70,31 @@ try {
         $member = @($xml.doc.members.member | Where-Object name -eq "T:StaadPro.Interop.Entities.$typeName")
         if ($member.Count -ne 1 -or [string]::IsNullOrWhiteSpace($member[0].SelectSingleNode('summary').InnerText)) { throw "Missing model documentation: $typeName" }
     }
-    if ($xml.OuterXml -match 'ConnectivityService|SegregateMembersBasedOnConnectivity|SegregatePlatesBasedOnConnectivity') { throw 'Rolled-back connectivity API leaked into package.' }
+    $geometryMethods = @('SegregateBeamsByConnectivity', 'SegregateMembersByConnectivity', 'SegregatePlatesByConnectivity')
+    foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Services.ConnectivityService')) {
+        foreach ($method in $geometryMethods) {
+            $prefix = "M:StaadPro.Interop.$owner.$method("
+            $member = @($xml.doc.members.member | Where-Object { $_.name.StartsWith($prefix) })
+            if ($member.Count -ne 1) { throw "Missing geometry IntelliSense: $owner.$method" }
+            foreach ($tag in @('summary','returns','remarks','example/code')) {
+                $node = $member[0].SelectSingleNode($tag)
+                if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $owner.$method" }
+            }
+            $snippets += "{`n" + $member[0].SelectSingleNode('example/code').InnerText + "`n}"
+        }
+    }
+    foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
+        $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+        $expectedCount = if ($owner -match 'Geometry') { 137 } else { 54 }
+        if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
+        foreach ($entry in $entries) {
+            foreach ($tag in @('summary','remarks','returns')) {
+                $node = $entry.SelectSingleNode($tag)
+                if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $($entry.name)" }
+            }
+        }
+    }
+    if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -89,6 +113,7 @@ $project = @"
 "@
 $program = @'
 using System;
+using System.Linq;
 using StaadPro.Interop.Adapters.Interfaces;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
@@ -105,7 +130,7 @@ public static class Program
         using (var wrapper = new OpenStaadWrapper(new FakeRoot(fake)))
         {
             IOSLoad load = wrapper.Load;
-            RunDocumentationExamples(load);
+            RunDocumentationExamples(load, wrapper.Geometry);
             foreach (var type in new[] { LoadCaseType.PrimaryLoad, LoadCaseType.ReferenceLoad })
             {
                 var lc = new LoadCase(17, "case", type);
@@ -224,12 +249,14 @@ public static class Program
             int emptyBatchCount = 0;
             foreach (var item in load.GetLoadCombinationCasesFromIds(new int[0])) emptyBatchCount++;
             Check(emptyBatchCount == 0, "empty combination batch");
-            Check(typeof(IOSLoad).Assembly.GetType("StaadPro.Interop.Services.ConnectivityService") == null, "connectivity rollback");
+            Check(typeof(IOSGeometry).GetMethod("SegregateBeamsByConnectivity") != null, "beam connectivity contract");
+            Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
+            Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: forty-two packaged XML examples, all twenty-one installed-package queries, and four ported load models.");
+        Console.WriteLine("PASS: fifty-one packaged XML examples, all twenty-one load queries, three geometry grouping APIs, and four ported load models.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
-    private static void RunDocumentationExamples(IOSLoad load)
+    private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry)
     {
 __EXAMPLES__
     }
@@ -237,7 +264,7 @@ __EXAMPLES__
     {
         public FakeRoot(FakeLoad load) { Load = load; }
         public FakeLoad Load { get; }
-        public object Geometry => null;
+        public object Geometry { get; } = new object();
     }
     public class FakeLoad
     {

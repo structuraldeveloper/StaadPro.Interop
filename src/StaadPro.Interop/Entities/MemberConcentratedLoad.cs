@@ -11,10 +11,12 @@ namespace StaadPro.Interop.Entities
     {
         #region Constructors
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='MemberConcentratedLoad..ctor()']/*" />
         public MemberConcentratedLoad() : base()
         {
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='MemberConcentratedLoad..ctor(LoadDirection,double,double,double)']/*" />
         public MemberConcentratedLoad(LoadDirection direction, double magnitude, double position, double eccentricity = 0.0) : this()
         {
             Direction = direction;
@@ -49,6 +51,7 @@ namespace StaadPro.Interop.Entities
 
         #region Method Overrides
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='MemberConcentratedLoad.DeepCopy`0()']/*" />
         public override MemberLoad DeepCopy()
         {
             return new MemberConcentratedLoad(Direction, Magnitude, Position, Eccentricity)
@@ -57,6 +60,7 @@ namespace StaadPro.Interop.Entities
             };
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='MemberConcentratedLoad.ConvertUsing`0(UnitsConverter)']/*" />
         public override void ConvertUsing(UnitsConverter uc)
         {
             if (uc == null) return;
@@ -65,6 +69,7 @@ namespace StaadPro.Interop.Entities
             Eccentricity *= uc.LengthConversionFactor;
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='MemberConcentratedLoad.ApplyTo`0(dynamic,int[])']/*" />
         public override void ApplyTo(dynamic load, int[] beamIds)
         {
             if (load == null || beamIds == null || beamIds.Length == 0) return;

@@ -14,6 +14,7 @@ namespace StaadPro.Interop.Adapters.Models
             Wrapper = wrapper ?? throw new ArgumentNullException(nameof(wrapper));
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='OSBaseAdapter.P:Wrapper']/*" />
         public OpenStaadWrapper Wrapper { get; }
     }
 }

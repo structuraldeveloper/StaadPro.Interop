@@ -40,10 +40,13 @@ namespace StaadPro.Interop.Entities
 
         #region Abstract Methods
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='MemberLoad.DeepCopy`0()']/*" />
         public abstract MemberLoad DeepCopy();
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='MemberLoad.ConvertUsing`0(UnitsConverter)']/*" />
         public abstract void ConvertUsing(UnitsConverter uc);
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='MemberLoad.ApplyTo`0(dynamic,int[])']/*" />
         public abstract void ApplyTo(dynamic load, int[] beamIds);
 
         #endregion

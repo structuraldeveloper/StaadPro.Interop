@@ -15,6 +15,10 @@ namespace StaadPro.Interop.Helpers
         private static extern int CreateBindCtx(int reserved, out IBindCtx ppbc);
 
         /// <summary>Retrieves active OpenSTAAD COM objects registered by filename, class ID or ProgID.</summary>
+        /// <returns>A new, non-null list of candidate objects. Returns an empty list when no registrations
+        /// can be read. Candidate discovery does not guarantee that a model or its interfaces are ready.</returns>
+        /// <remarks>Reads the Windows ROT and includes the global active ProgID candidate. Individual
+        /// stale or inaccessible registrations are skipped. This method does not start STAAD.</remarks>
         public static IList<object> GetRunningOpenStaadInstances()
         {
             var results = new List<object>();

@@ -16,6 +16,8 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 - **OpenStaadWrapper & Provider**: Flexible acquisition via `OpenStaadWrapperProvider.Get()` and `GetRunning()` using Windows Running Object Table (ROT) lookup, active instance attachment, or automated background launching.
 - **Fluent API Design**: Chain node, beam, and plate creation operations seamlessly.
+- **Managed Connectivity Groups**: Group beams, physical members and plates with `SegregateBeamsByConnectivity`, `SegregateMembersByConnectivity` and `SegregatePlatesByConnectivity`. See [geometry API comparison and grouping](docs/Geometry-Porting.md) for scope defaults, semantics and the six remaining geometry functions.
+- **Package IntelliSense**: Expanded XML documentation covers all geometry/load overloads on interfaces and concrete adapters and accompanies the NuGet DLL.
 - **Parametric Surface & Meshing Tools**: Complete support for annular surfaces, solid circular surfaces, density lines, density control points, and polygonal openings.
 - **Load Case Creation & Management**: Create primary/reference cases, discover their metadata (`GetAllPrimaryLoadCases`, `GetAllReferenceLoadCases`), look up known cases (`GetPrimaryLoadCaseFromId`, `GetReferenceLoadCaseFromId`, `GetPrimaryLoadCasesFromIds`), query titles, and clear cases.
 - **Reference Batches & Combination Metadata**: Read ordered reference batches (`GetReferenceLoadCasesFromIds`), discover combinations (`GetAllLoadCombinationCases`) and verify individual combination metadata (`GetLoadCombinationCaseFromId`) without changing the active case.

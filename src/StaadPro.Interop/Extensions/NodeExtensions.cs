@@ -8,14 +8,17 @@ namespace StaadPro.Interop.Extensions
 {
     public static class NodeExtensions
     {
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='NodeExtensions.LastId`0(thisIEnumerable&lt;Node&gt;)']/*" />
         public static int LastId(this IEnumerable<Node> nodes) => nodes.Any() ? nodes.Max(n => n.Id) : 0;
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='NodeExtensions.GetCenter`0(thisIEnumerable&lt;Node&gt;)']/*" />
         public static Node GetCenter(this IEnumerable<Node> nodes)
         {
             if (nodes == null || !nodes.Any()) return null;
             return new Node(nodes.Average(n => n.X), nodes.Average(n => n.Y), nodes.Average(n => n.Z));
         }
 
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='NodeExtensions.DistributeTorque`0(thisIEnumerable&lt;Node&gt;,Node,double)']/*" />
         public static List<(int NodeId, double Fx, double Fz)> DistributeTorque(this IEnumerable<Node> nodes, Node center, double torque)
         {
             var result = new List<(int NodeId, double Fx, double Fz)>();

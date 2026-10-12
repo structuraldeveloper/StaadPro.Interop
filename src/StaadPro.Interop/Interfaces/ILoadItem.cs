@@ -8,7 +8,9 @@ namespace StaadPro.Interop.Interfaces
     /// </summary>
     public interface ILoadItem
     {
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='ILoadItem.P:LoadCase']/*" />
         ILoadCase LoadCase { get; set; }
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='ILoadItem.P:LoadItemType']/*" />
         LoadItemType LoadItemType { get; }
     }
 }
