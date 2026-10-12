@@ -24,6 +24,8 @@ The package exposes seven assignment read-back methods through `IOSLoad` and `OS
 
 `GetPrimaryLoadCaseFromId(int lcId)` and `GetReferenceLoadCaseFromId(int lcId)` read metadata for a known positive ID without activating or enumerating cases. `GetPrimaryLoadCasesFromIds(IEnumerable<int> loadCasesIds)` eagerly returns primary metadata in input order, preserving duplicates as independent objects. It validates the entire input before COM access; empty input produces a fresh empty list. Native errors and malformed metadata throw rather than returning partial results.
 
+`GetReferenceLoadCasesFromIds(IEnumerable<int> loadCasesIds)` provides the same batch contract for reference metadata. `GetAllLoadCombinationCases()` discovers combination metadata, and `GetLoadCombinationCaseFromId(int lcId)` verifies combination membership before reading a title. Combination results use `Type=None`; factors and constituent cases are not loaded. All three methods leave the active case unchanged and throw on malformed/native-error data.
+
 ```csharp
 using System;
 using StaadPro.Interop.Entities;

@@ -1,16 +1,16 @@
 # NuGet readiness assessment
 
-Assessment date: 8 October 2026. Repository baseline: `5957600` (third load query increment), plus the next three case lookup functions in this working tree.
+Assessment date: 12 October 2026. Repository baseline: `bff0f17` (fourth load query increment), plus reference batch and combination metadata functions in this working tree.
 
 ## Decision
 
 **The repository can produce an installable NuGet preview package. A stable public release is not yet verified.** Local build, offline tests, package archive checks, isolated installation, compilation, and execution have passed. No package has been pushed to NuGet.org.
 
-The generated artifact is `artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261008.load4.nupkg`. It can be used through a local NuGet feed for review and testing. The project's default version remains `1.0.0`; use an explicit preview version while the live verification gates below remain open. Package ID ownership, publishing credentials, and version availability on NuGet.org have not been checked.
+The generated artifact is `artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261012.load5.nupkg`. It can be used through a local NuGet feed for review and testing. The project's default version remains `1.0.0`; use an explicit preview version while the live verification gates below remain open. Package ID ownership, publishing credentials, and version availability on NuGet.org have not been checked.
 
 ## Completed implementation
 
-Twelve missing functions have now been ported from the main project's `IOSLoad`/`OSLoadAdapter`:
+Fifteen missing functions have now been ported from the main project's `IOSLoad`/`OSLoadAdapter`:
 
 1. `GetNodalLoads(ILoadCase lc, int nId)`.
 2. `GetMemberUniformlyDistributedLoads(ILoadCase lc, int mId)`.
@@ -24,8 +24,13 @@ Twelve missing functions have now been ported from the main project's `IOSLoad`/
 10. `GetPrimaryLoadCaseFromId(int lcId)`.
 11. `GetReferenceLoadCaseFromId(int lcId)`.
 12. `GetPrimaryLoadCasesFromIds(IEnumerable<int> loadCasesIds)`.
+13. `GetReferenceLoadCasesFromIds(IEnumerable<int> loadCasesIds)`.
+14. `GetAllLoadCombinationCases()`.
+15. `GetLoadCombinationCaseFromId(int lcId)`.
 
-The current increment adds functions 10–12, reusing the existing `LoadCase` model. Implementations and private helpers remain in the single, non-partial `OSLoadAdapter.cs`; signatures remain in `IOSLoad.cs`. Direct lookups and earlier enumerations share strict native title/type validation. There are no new private application or Bentley binary dependencies.
+The current increment adds functions 13–15, reusing the existing `LoadCase` model. Implementations and private helpers remain in the single, non-partial `OSLoadAdapter.cs`; signatures remain in `IOSLoad.cs`. Reference batch lookup shares strict native title/type validation with the preceding lookups. There are no new private application or Bentley binary dependencies.
+
+Reference batches snapshot input once and validate all IDs before COM access, preserve order and duplicates as independent records, and use reference-specific title/type APIs. Combination discovery validates native count/number results and titles, while direct lookup verifies membership before reading a title. Combinations have `CaseType=LoadCombination` and `Type=None`, with no type API call and no factors/constituent cases loaded. All three methods preserve active-case state, return fresh objects and throw rather than returning partial results.
 
 Single lookups reject nonpositive IDs before COM access and read the matching family's title/type APIs without activation or case enumeration. Batch primary lookup enumerates and snapshots input once, validates every ID before COM, preserves order and duplicate IDs as independent objects, returns a fresh empty list for empty input, and returns no partial result on failure. Its eager behavior, native errors, ownership and session constraints are documented in both interface and concrete IntelliSense.
 
@@ -40,18 +45,18 @@ Every new method has comprehensive, expanded XML documentation on both the inter
 | Check | Result | Scope |
 | --- | --- | --- |
 | Release build | Passed, zero warnings/errors | Library and test project, .NET SDK 9.0.304 / .NET Framework 4.8.1 |
-| Automated test suite | **212 executed, 212 passed, 0 failed** | 33 original offline cases plus 179 query/model/documentation cases; 28 added in this increment |
+| Automated test suite | **248 executed, 248 passed, 0 failed** | 33 original offline cases plus 215 query/model/documentation cases; 36 added in this increment |
 | Environment-dependent provider test | One explicit live test not executed | Asserts no running STAAD session; excluded from ordinary offline runs |
 | Package creation | Passed | Preview package with `lib/net481/StaadPro.Interop.dll` and XML |
-| Archive/metadata checks | Passed | Package identity, MIT metadata, repository URL, README, load guide, twenty-four complete XML query entries, four documented models, no connectivity API leakage |
+| Archive/metadata checks | Passed | Package identity, MIT metadata, repository URL, README, load guide, thirty complete XML query entries, four documented models, no connectivity API leakage |
 | Isolated package restore | Passed | Fresh temporary consumer/cache; PackageReference only, no repository ProjectReference |
-| Installed-package compilation/runtime | Passed, zero build warnings/errors | All twenty-four XML examples, seven assignment APIs under primary/reference/empty cases, both enumerations, direct primary/reference lookup, ordered duplicate/empty primary batches, unchanged active case during metadata reads, and four models' assignment dispatch using a managed stand-in; restored archive SHA256 matches the supplied package |
+| Installed-package compilation/runtime | Passed, zero build warnings/errors | All thirty XML examples, seven assignment APIs, primary/reference/combination discovery and lookup, ordered duplicate/empty primary/reference batches, missing combination rejection, unchanged activation/no type lookup for combinations, and four models' assignment dispatch using a managed stand-in; restored archive SHA256 matches the supplied package |
 | NuGet dependency vulnerability query | No vulnerable dependencies reported | `dotnet list ... package --vulnerable --include-transitive`, configured NuGet sources, assessment date |
 | CI verification configuration | Existing workflow extended by verifier changes | Windows CI packs a preview and runs the installed-package verifier, now covering the lookup APIs; remote CI has not been observed in this session |
 | Real OpenSTAAD query execution | **Pending** | Native COM dispatch/marshaling, unit conventions, version compatibility |
 | NuGet.org publication | **Not performed** | Account ownership, credentials, and version availability unverified |
 
-The test result file is `artifacts/load-port/tests/load-port.trx`. Its counters report 213 discovered cases and 212 executed; the remaining case is the explicit ROT/environment test. The console's passed total is 212. Offline passing results are not a certification of live STAAD engineering output.
+The test result file is `artifacts/load-port/tests/load-port.trx`. Its counters report 249 discovered cases and 248 executed; the remaining case is the explicit ROT/environment test. The console's passed total is 248. Offline passing results are not a certification of live STAAD engineering output.
 
 ## What blocks a stable release
 
@@ -60,6 +65,8 @@ The test result file is `artifacts/load-port/tests/load-port.trx`. Its counters 
 Execute the known-model validation described in [Load-Queries.md](Load-Queries.md#live-validation-before-release) on each STAAD version and architecture to be advertised. Verify all nodal components, every supported direction, partial/full UDL positions, concentrated and uniform moments, local linear/triangular start/end/middle intensities, partial-span and projected trapezoidal loads, eccentricities, multiple and empty assignments, primary/reference activation, invalid IDs, native fetch statuses, and both metric/imperial read-back behavior. Verify distinct concentrated moment, distributed moment, length, and force-per-length conversion factors. Also verify case enumeration counts/statuses, sparse and overlapping IDs, titles/types and unchanged active case. Verify direct lookup for both families, including missing IDs, and ordered primary batches with duplicate/empty input and failures after earlier records succeed. Record expected and observed values. The installed native 2025 documentation was inspected; no live execution was performed.
 
 The installed Bentley Python wrapper and native reference disagree in a few details. For example, the Python UDL wrapper checks a Boolean-style return while the native reference documents `0` as success. The new C# methods follow the native reference's status semantics and the main C# signatures. Live evidence must settle compatibility before claiming a supported version range.
+
+Verify combination number retrieval on models whose primary/reference/combination counts differ. The installed native return description inconsistently calls its positive result a primary case count; this port interprets it as the retrieved combination count. Also verify reference batches, sparse/empty combinations, title values, membership checks for absent or primary-only IDs, and unchanged activation. This documentation inconsistency remains a live release gate, not a behavior proven by offline tests.
 
 ### 2. Define and validate the release's supported API scope
 
@@ -79,7 +86,7 @@ Confirm the intended NuGet ID/owner and available preview/stable versions. Verif
 
 ## Recommended sequence
 
-1. Review direct primary/reference lookup and primary batch lookup alongside the preceding nine functions; keep the guide, input enumeration/order/failure tests and shared metadata regression checks with the port.
+1. Review reference batches and both combination metadata queries alongside the preceding twelve functions; retain the guide, batch and combination count/membership/failure tests with the port.
 2. Run native known-model tests and record supported versions, architecture, units, and status behavior.
 3. Resolve the inherited load-ID, settlement-unit, activation, and COM-threading concerns for the intended release scope; adjust advertised capabilities to match verified behavior.
 4. Run a clean Release build, all applicable automated/live checks, and isolated package verification in Windows CI.
@@ -92,8 +99,8 @@ Confirm the intended NuGet ID/owner and available preview/stable versions. Verif
 dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release --logger "trx;LogFileName=load-port.trx" --results-directory artifacts/load-port/tests
 dotnet list src/StaadPro.Interop/StaadPro.Interop.csproj package --vulnerable --include-transitive
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261008.load4 -o artifacts/load-port/package
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261008.load4.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261012.load5 -o artifacts/load-port/package
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261012.load5.nupkg
 ```
 
 The verifier leaves its uniquely named temporary consumer directory in the user's temporary folder so the restored package and executable can be inspected. It makes no changes to a STAAD model and does not publish anything.

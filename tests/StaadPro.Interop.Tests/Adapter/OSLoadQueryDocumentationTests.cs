@@ -60,6 +60,8 @@ namespace StaadPro.Interop.Tests.Adapter
         }
         [TestCase("GetPrimaryLoadCaseFromId", "System.Int32", "lcId", 4)]
         [TestCase("GetReferenceLoadCaseFromId", "System.Int32", "lcId", 4)]
+        [TestCase("GetLoadCombinationCaseFromId", "System.Int32", "lcId", 4)]
+        [TestCase("GetReferenceLoadCasesFromIds", "System.Collections.Generic.IEnumerable{System.Int32}", "loadCasesIds", 5)]
         [TestCase("GetPrimaryLoadCasesFromIds", "System.Collections.Generic.IEnumerable{System.Int32}", "loadCasesIds", 5)]
         public void CaseLookup_ContainsCompleteMatchingIntelliSense(string method, string signature, string parameter, int exceptions)
         {
@@ -82,6 +84,7 @@ namespace StaadPro.Interop.Tests.Adapter
             }
         }
 
+        [TestCase("GetAllLoadCombinationCases")]
         [TestCase("GetAllPrimaryLoadCases")]
         [TestCase("GetAllReferenceLoadCases")]
         public void CaseEnumeration_ContainsCompleteMatchingIntelliSense(string method)

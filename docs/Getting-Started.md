@@ -111,6 +111,8 @@ Discover existing case metadata with `load.GetAllPrimaryLoadCases()` and `load.G
 
 For known case numbers, use `load.GetPrimaryLoadCaseFromId(17)` or `load.GetReferenceLoadCaseFromId(101)`. Read several primary cases with `load.GetPrimaryLoadCasesFromIds(new[] { 41, 17, 41 })`; input order and duplicate IDs are preserved. These metadata lookups leave the active case unchanged. All IDs must be positive and already exist; failed metadata reads throw.
 
+Use `load.GetReferenceLoadCasesFromIds(new[] { 101, 103, 101 })` for ordered reference metadata. Discover combinations with `load.GetAllLoadCombinationCases()` or look up a verified combination ID with `load.GetLoadCombinationCaseFromId(201)`. Combination metadata has `Type=None` and contains no factors or constituent cases; these calls leave the active case unchanged.
+
 - `StaadPro.Interop.Services`: `OpenStaadWrapperProvider` factory for acquiring model sessions across ROT, active instances, and file launch.
 - `StaadPro.Interop.Models`: `OpenStaadWrapper` model session container exposing `Geometry` (`IOSGeometry`), `Load` (`IOSLoad`), and unit system metadata.
 - `StaadPro.Interop.Adapters.Interfaces`: `IOSGeometry`, `IOSLoad`, `IOSBase` adapter contracts.

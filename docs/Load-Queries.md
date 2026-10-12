@@ -2,7 +2,7 @@
 
 ## Scope and provenance
 
-Four increments port twelve methods from the main project's `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs` into the open source `IOSLoad` contract and `OSLoadAdapter`. The first added nodal, uniform member, and concentrated member force queries. The second added concentrated member moments, linear varying forces, and trapezoidal forces. The third added uniform member moments with their required model, and primary/reference case discovery. The fourth adds direct primary/reference case lookup and ordered primary batch lookup. Public signatures and assignment mappings are preserved. Private application dependencies and Bentley binaries are not copied. Corrections to reference metadata lookup and uniform-moment conversion are described below.
+Five increments port fifteen methods from the main project's `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs` into the open source `IOSLoad` contract and `OSLoadAdapter`. The first added nodal, uniform member, and concentrated member force queries. The second added concentrated member moments, linear varying forces, and trapezoidal forces. The third added uniform member moments with their required model, and primary/reference case discovery. The fourth added direct primary/reference case lookup and ordered primary batch lookup. The fifth adds reference batch lookup, combination discovery and combination lookup. Public signatures and assignment mappings are preserved. Private application dependencies and Bentley binaries are not copied. Corrections to reference metadata lookup and uniform-moment conversion are described below.
 
 The earlier connectivity increment has been removed: its three grouping functions, service, scope enums, tests, guide, and verification script are absent. The public geometry interface and adapter are restored to the pre-increment revision. Package and documentation verification now covers load queries.
 
@@ -16,7 +16,7 @@ The earlier connectivity increment has been removed: its three grouping function
 | `GetMemberTrapezoidalLoads(ILoadCase lc, int mId)` | `List<MemberTrapezoidalLoad>` | `GetTrapLoadCount` / `GetTrapLoads` |
 | `GetMemberUniformMoments(ILoadCase lc, int mId)` | `List<MemberUniformMoment>` | `GetUNIMomentCount` / `GetUNIMoments` |
 
-All seven assignment methods are available through `wrapper.Load` (`IOSLoad`) and the concrete `OSLoadAdapter`. They read **assigned load items**. They do not retrieve reactions, member internal forces, displacements, or other analysis results. They do not create load cases or add, remove, or alter assignments. The five case discovery/lookup methods described below are also available through both types.
+All seven assignment methods are available through `wrapper.Load` (`IOSLoad`) and the concrete `OSLoadAdapter`. They read **assigned load items**. They do not retrieve reactions, member internal forces, displacements, or other analysis results. They do not create load cases or add, remove, or alter assignments. The eight case discovery/lookup methods described below are also available through both types.
 
 Signatures are declared in `Adapters/Interfaces/IOSLoad.cs`; all implementations and their private helpers reside in `Adapters/Models/OSLoadAdapter.cs`. Adapters use a single, non-partial class. Separate helpers or services may be introduced when needed.
 
@@ -187,14 +187,15 @@ foreach (var lc in referenceCases)
 | `GetPrimaryLoadCaseFromId(int lcId)` | `ILoadCase` (a new `LoadCase`) | `GetLoadCaseTitle(lcId)`, then `GetLoadType(lcId)` |
 | `GetReferenceLoadCaseFromId(int lcId)` | `ILoadCase` (a new `LoadCase`) | `GetReferenceLoadCaseTitle(lcId)`, then `GetReferenceLoadType(lcId)` |
 | `GetPrimaryLoadCasesFromIds(IEnumerable<int> loadCasesIds)` | `List<ILoadCase>` | Primary title/type pair for each input ID |
+| `GetReferenceLoadCasesFromIds(IEnumerable<int> loadCasesIds)` | `List<ILoadCase>` | Reference title/type pair for each input ID |
 
 Use these methods when you already know the case numbers. Each returns metadata without case activation, case-number enumeration or assignment retrieval. All signatures are ported from the main project; the reference lookup uses the reference-specific type API, consistent with case discovery.
 
 Single lookup requires a positive `lcId`. Zero is rejected rather than forwarded as the native active-case shortcut. Negative IDs also throw `ArgumentOutOfRangeException` with parameter name `lcId` before COM access. The native title must be a string, and its type must be a signed Int16/Int32/Int64 code defined by `LoadType` (0–23). Non-string titles, native type errors and undefined codes throw `InvalidOperationException`. Native/binding failures propagate unchanged. A missing ID follows the native metadata error contract; it is not silently returned as null. Empty strings and a literal `NONE` title are preserved, since those texts alone do not prove absence.
 
-The batch operation is eager. It enumerates `loadCasesIds` **once**, snapshots all IDs, and validates every ID before the first COM call. Null input throws `ArgumentNullException`; any nonpositive element throws `ArgumentOutOfRangeException`, both naming `loadCasesIds`. A late invalid element or input-enumerator failure therefore causes no partial native read. Enumerator exceptions propagate unchanged and the enumerator is disposed.
+Both batch operations are eager. They enumerate `loadCasesIds` **once**, snapshot all IDs, and validate every ID before the first COM call. Null input throws `ArgumentNullException`; any nonpositive element throws `ArgumentOutOfRangeException`, both naming `loadCasesIds`. A late invalid element or input-enumerator failure therefore causes no partial native read. Enumerator exceptions propagate unchanged and the enumerator is disposed.
 
-Batch results preserve input order and duplicates. For `[41, 17, 41]`, the result has three entries with those IDs; the first and last are separate objects. Each entry is read independently and has `CaseType=PrimaryLoad`. Empty input returns a fresh empty list without native access. If any metadata read fails, the operation throws and returns no partial list. It does not silently skip missing IDs or deduplicate input.
+Batch results preserve input order and duplicates. For `[41, 17, 41]`, the result has three entries with those IDs; the first and last are separate objects. Each entry is read independently and has the requested family's `CaseType`. Reference batches call `GetReferenceLoadCaseTitle` then `GetReferenceLoadType`; primary batches call `GetLoadCaseTitle` then `GetLoadType`. Empty input returns a fresh empty list without native access. If any metadata read fails, the operation throws and returns no partial list. Neither operation silently skips missing IDs or deduplicates input.
 
 Single and batch results are fresh, mutable metadata objects. Modifying them does not write to STAAD or affect records from other lookups. Repeated IDs can observe different metadata if an external edit occurs between reads; the input snapshot is not an atomic model snapshot. Serialize session access and model editing on the appropriate COM thread, and keep the wrapper connected and undisposed. Neither operation restores or changes active-case state because neither activates a case. As with enumeration results, remove objects from HashSets before changing fields used in equality/hashing.
 
@@ -202,11 +203,40 @@ Single and batch results are fresh, mutable metadata objects. Modifying them doe
 var primary = load.GetPrimaryLoadCaseFromId(lcId: 17);
 var reference = load.GetReferenceLoadCaseFromId(lcId: 101);
 var orderedPrimaryCases = load.GetPrimaryLoadCasesFromIds(new[] { 41, 17, 41 });
+var orderedReferenceCases = load.GetReferenceLoadCasesFromIds(new[] { 101, 103, 101 });
 foreach (var lc in orderedPrimaryCases)
     Console.WriteLine(lc.Id + ": " + lc.Title + " (" + lc.Type + ")");
 ```
 
 `OSLoadCaseLookupTests` checks both families, every documented type and supported integer representation, title preservation, ID validation before COM, overlapping family IDs, independent ownership, native/binding errors, ordered duplicate batch entries, empty inputs, single-pass enumeration, input mutation during reads, enumerator failure/disposal, and failures after earlier records succeeded. Its stand-in exposes only metadata APIs, so accidental activation or case enumeration fails immediately. The earlier enumeration tests also cover the shared metadata reader.
+
+## Discovering and looking up load combinations
+
+| Method | Result | Native calls |
+| --- | --- | --- |
+| `GetAllLoadCombinationCases()` | `HashSet<ILoadCase>` | `GetLoadCombinationCaseCount`, `GetLoadCombinationCaseNumbers`, then `GetLoadCaseTitle` per ID |
+| `GetLoadCombinationCaseFromId(int lcId)` | `ILoadCase` (a new `LoadCase`) | Combination count/numbers for membership, then title only for the requested ID |
+
+These methods read existing **combination metadata**. Every result has `CaseType=LoadCombination` and `Type=LoadType.None` (23). Combinations have no primary/reference engineering category, so `GetLoadType` and `GetReferenceLoadType` are not called. Factors, constituent cases, assignments and analysis results are outside these methods' scope. Returned combinations cannot be passed as cases to the primary/reference assignment query methods.
+
+Count retrieval must return a nonnegative signed integer within Int32 range. For positive counts, number retrieval must return the matching count; zero success semantics are not used. Its output must be an exact-length, one-dimensional Int32 array with positive, unique IDs; zero/nonzero SAFEARRAY lower bounds are accepted. All IDs are validated before any title is read. Negative statuses such as `-1`, `-106` and `-114`, mismatched counts, malformed arrays and non-string titles throw `InvalidOperationException`. COM/binding exceptions propagate unchanged, and no partial collection is returned.
+
+Discovery returns a fresh set of independent objects, with unspecified iteration order. Zero count returns a fresh empty set and skips number/title reads. Title strings preserve whitespace, Unicode, empty text and literal `NONE`. COM array buffers are copied rather than exposed. A title change on a returned object does not update STAAD.
+
+Single lookup rejects nonpositive `lcId` before COM access. It validates the complete combination ID list and confirms membership **before** reading the title. An absent ID, including one belonging only to a primary/reference case, throws `InvalidOperationException`; zero combinations also throws without number/title reads. This tightens the main project's title-only lookup, which could otherwise misclassify another case or missing ID as a combination. Only the requested combination's title is read. Each lookup enumerates combination IDs afresh; use discovery when retrieving many combinations.
+
+Neither method activates a case or changes active-case state or model assignments. Reads are not an atomic snapshot: coordinate model edits and shared-session access on the appropriate COM thread, using a connected, undisposed wrapper. `LoadCase` hashing uses `Id`, `CaseType` and `Type`; remove an object from a HashSet before editing those fields or rebuild the set.
+
+```csharp
+var combinations = load.GetAllLoadCombinationCases();
+foreach (var lc in combinations)
+    Console.WriteLine(lc.Id + ": " + lc.Title);
+var combination = load.GetLoadCombinationCaseFromId(lcId: 201);
+```
+
+`OSLoadCombinationQueryTests` verifies enumeration and direct lookup, replacement/in-place buffers, sparse IDs, ownership, zero/invalid counts, count mismatches/errors, malformed/nonpositive/duplicate/unwritten arrays, nonzero bounds, title preservation, missing membership, native/binding errors at each stage and later failures without a partial set. Its stand-in omits activation and type APIs, so accidental calls to them fail.
+
+The installed Bentley 2025 reference's `GetLoadCombinationCaseNumbers` return description labels the positive result as a *primary* case count, despite the combination method name and example. This port interprets it as the retrieved combination count and validates it accordingly. Live release verification must use models with different primary/reference/combination counts to resolve that documentation inconsistency; offline stand-ins do not establish native behavior.
 
 ## Units and ownership
 
@@ -286,30 +316,32 @@ These safeguards extend the main project's implementation, which casts arrays di
 
 Both interface and concrete methods contain expanded XML comments: summaries, every parameter, returns, field mappings, unit behavior, ownership, active-case effects, COM threading constraints, six exception categories for assignment reads (three for case discovery, four for single lookup, five for batch lookup), and examples. The build emits `StaadPro.Interop.xml`, and NuGet places it beside `StaadPro.Interop.dll` under `lib/net481/`.
 
-`OSLoadQueryTests` verifies all seven assignment queries' component mapping, record order, signs, case identity, both activation paths, fresh object ownership, replacement/in-place output buffers, zero counts, invalid arguments, count/status failures, every malformed component, unwritten buffers, all supported directions, zero sentinels, nonzero SAFEARRAY bounds, COM exception propagation, and missing signatures. It includes the linear start/end/middle regression. `MemberLoadDefinitionTests` verifies constructors/copies, independent definitions, dimensional conversions, assignment dispatch under both case types, native argument order, missing-input handling, and exception propagation. `OSLoadQueryDocumentationTests` validates all twenty-four compiled method entries, matches interface/concrete text, and checks documentation for all four ported models.
+`OSLoadQueryTests` verifies all seven assignment queries' component mapping, record order, signs, case identity, both activation paths, fresh object ownership, replacement/in-place output buffers, zero counts, invalid arguments, count/status failures, every malformed component, unwritten buffers, all supported directions, zero sentinels, nonzero SAFEARRAY bounds, COM exception propagation, and missing signatures. It includes the linear start/end/middle regression. `MemberLoadDefinitionTests` verifies constructors/copies, independent definitions, dimensional conversions, assignment dispatch under both case types, native argument order, missing-input handling, and exception propagation. `OSLoadQueryDocumentationTests` validates all thirty compiled method entries, matches interface/concrete text, and checks documentation for all four ported models.
 
-`eng/Verify-LoadPackage.ps1` checks the actual NuGet archive, creates an isolated `net481` consumer with a fresh package cache and no project reference, verifies the restored archive hash, compiles and executes all twenty-four packaged XML examples, and exercises all seven installed assignment APIs for primary/reference/empty cases, both case enumerations, direct primary/reference lookups, ordered duplicate/empty primary batches with unchanged activation, plus all four ported models' assignment dispatch. This consumer uses a managed stand-in; it is not a live COM compatibility test.
+`eng/Verify-LoadPackage.ps1` checks the actual NuGet archive, creates an isolated `net481` consumer with a fresh package cache and no project reference, verifies the restored archive hash, compiles and executes all thirty packaged XML examples, and exercises all seven installed assignment APIs for primary/reference/empty cases, primary/reference/combination discovery and lookup, ordered duplicate/empty primary/reference batches, missing combination rejection and unchanged activation, plus all four ported models' assignment dispatch. This consumer uses a managed stand-in; it is not a live COM compatibility test.
 
 ```powershell
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261008.load4 -o artifacts/load-port/package
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261008.load4.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261012.load5 -o artifacts/load-port/package
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/load-port/package/StaadPro.Interop.1.0.0-preview.20261012.load5.nupkg
 ```
 
 The existing `OpenStaadWrapperProvider_DefaultGetRunning_ReturnsNullWhenNoStaad` test is explicitly marked `LiveIntegration`: it asserts an environmental precondition, namely that no STAAD session is running. Ordinary offline runs leave it unexecuted. It does not verify the load queries.
 
 ## Live validation before release
 
-Use an isolated known model, rather than a user's working model. For each STAAD version advertised as supported, verify primary and reference cases, a node with distinct signed values in all six components, a member with full-span and partial UDLs, projected UDL directions, concentrated forces and moments with eccentricities, full-member linear and triangular definitions with distinct endpoint/middle intensities, partial/full-span trapezoidal loads including projected directions, uniform moments with signed intensities/spans/offsets and projected axes, and entities with no such assignments. Compare every output against the model's definitions under both metric and imperial conventions, with at least one input-unit change. Check concentrated versus distributed moment and force-per-length conversion dimensions and native start/end/middle order. Exercise nonexistent IDs and case activation failures. Record application build, process architecture, units, COM statuses, payload element types, expected values, and observed values. Confirm that assignments are unchanged and the requested case remains active after assignment reads. Also verify both case enumerations, including zero/sparse cases, title/type metadata and overlapping IDs, with unchanged active case before/after enumeration. Verify direct lookup for both families and ordered primary batches with duplicates, empty inputs, missing cases and malformed/error metadata, confirming unchanged activation and no partially returned results.
+Use an isolated known model, rather than a user's working model. For each STAAD version advertised as supported, verify primary and reference cases, a node with distinct signed values in all six components, a member with full-span and partial UDLs, projected UDL directions, concentrated forces and moments with eccentricities, full-member linear and triangular definitions with distinct endpoint/middle intensities, partial/full-span trapezoidal loads including projected directions, uniform moments with signed intensities/spans/offsets and projected axes, and entities with no such assignments. Compare every output against the model's definitions under both metric and imperial conventions, with at least one input-unit change. Check concentrated versus distributed moment and force-per-length conversion dimensions and native start/end/middle order. Exercise nonexistent IDs and case activation failures. Record application build, process architecture, units, COM statuses, payload element types, expected values, and observed values. Confirm that assignments are unchanged and the requested case remains active after assignment reads. Also verify both case enumerations, including zero/sparse cases, title/type metadata and overlapping IDs, with unchanged active case before/after enumeration. Verify direct lookup for both families and ordered primary/reference batches with duplicates, empty inputs, missing cases and malformed/error metadata, confirming unchanged activation and no partially returned results.
 
 The offline suite and package consumer do not certify native COM SAFEARRAY marshaling, live unit conventions, or all STAAD versions. These remain explicit stable-release gates in [NuGet-Readiness.md](NuGet-Readiness.md).
 
 ## Sources inspected
 
-- Main project: `src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs`, at main repository revision `41dfc15ae34b7d530a1d5a46c8ee8dad063ccd4f`.
+- Main project: `src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs`, at main repository revision `41dfc15ae34b7d530a1d5a46c8ee8dad063ccd4f` for increments 1–4. The fifth increment inspected the clean contract/adapter files at revision `3f930d742f972c27d961f0e8eff9f1e11c520ff2` on 12 October 2026.
 - Supporting models: main project's `Entities/Loads/MemberConcentratedMoment.cs`, `MemberLinearVaryingLoad.cs`, `MemberTrapezoidalLoad.cs`, and `MemberUniformMoment.cs` at the same revision.
 - Installed Bentley STAAD.Pro 2025 native programmer reference: `OSAPP_Help/group___property_load_nodal.html`, `group___property_load_mem.html`, `group___property_load_case.html`, and `group___property_load_def_ref_load.html`. These are under the installed STAAD.Pro 2025 directory; consult your own installation for the vendor documentation.
 - Installed Bentley `openstaadpy-25.0.1.1` source was inspected as an additional reference. It conflicts with the native documentation in some places (notably UDL Boolean status handling). This port follows the native status contract and the main C# method signatures; live verification is still required.
 
 - Installed Bentley technical reference: Help/topics/Commands_TechRef/r-stpst_Member_Load_Specification.html and uniform member load/modeling help describe distributed moments and span/offset conventions.
 - Bentley [Unit System of OpenSTAAD](https://bentleysystems.service-now.com/community?id=kb_article&sysparm_article=KB0111068) describes base-system read-back units. Confirm actual read-back units rather than assuming input units.
+
+- Installed native combination APIs: OSAPP_Help/group___property_load_operation.html (GetLoadCombinationCaseCount, GetLoadCombinationCaseNumbers and GetLoadCaseTitle). Confirm the positive number-return interpretation with differing family counts before release.

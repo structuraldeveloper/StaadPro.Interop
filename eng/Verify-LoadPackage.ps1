@@ -19,7 +19,7 @@ try {
     $readme = Read-PackageEntry 'README.md'
     $guide = Read-PackageEntry 'docs/Load-Queries.md'
     if ($readme -notmatch 'net481') { throw 'Incomplete packaged README.' }
-    $queryMethods = @('GetNodalLoads', 'GetMemberUniformlyDistributedLoads', 'GetMemberConcentratedLoads', 'GetMemberConcentratedMoments', 'GetMemberLinearVaryingLoads', 'GetMemberTrapezoidalLoads', 'GetMemberUniformMoments', 'GetAllPrimaryLoadCases', 'GetAllReferenceLoadCases', 'GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId', 'GetPrimaryLoadCasesFromIds')
+    $queryMethods = @('GetNodalLoads', 'GetMemberUniformlyDistributedLoads', 'GetMemberConcentratedLoads', 'GetMemberConcentratedMoments', 'GetMemberLinearVaryingLoads', 'GetMemberTrapezoidalLoads', 'GetMemberUniformMoments', 'GetAllPrimaryLoadCases', 'GetAllReferenceLoadCases', 'GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId', 'GetPrimaryLoadCasesFromIds', 'GetReferenceLoadCasesFromIds', 'GetAllLoadCombinationCases', 'GetLoadCombinationCaseFromId')
     foreach ($method in $queryMethods) {
         if ($readme -notmatch $method -or $guide -notmatch $method) { throw "Missing packaged guidance for $method" }
     }
@@ -34,8 +34,8 @@ try {
     foreach ($owner in @('Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         foreach ($method in $queryMethods) {
             $isEnumeration = $method -like 'GetAll*'
-            $isSingleLookup = $method -in @('GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId')
-            $isBatchLookup = $method -eq 'GetPrimaryLoadCasesFromIds'
+            $isSingleLookup = $method -in @('GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId', 'GetLoadCombinationCaseFromId')
+            $isBatchLookup = $method -in @('GetPrimaryLoadCasesFromIds', 'GetReferenceLoadCasesFromIds')
             $suffix = if ($isEnumeration) { '' } elseif ($isSingleLookup) { '(System.Int32)' } elseif ($isBatchLookup) { '(System.Collections.Generic.IEnumerable{System.Int32})' } else { '(StaadPro.Interop.Entities.ILoadCase,System.Int32)' }
             $name = "M:StaadPro.Interop.$owner.$method$suffix"
             $members = @($xml.doc.members.member | Where-Object name -eq $name)
@@ -139,14 +139,31 @@ public static class Program
             Check(!ReferenceEquals(batchLookup[0], batchLookup[2]) && !ReferenceEquals(batchLookup[1], primaryLookup), "independent lookup records");
             foreach (var item in batchLookup) Check(item.Title == "PRIMARY" && item.Type == LoadType.Dead && item.CaseType == LoadCaseType.PrimaryLoad, "batch metadata");
             Check(load.GetPrimaryLoadCasesFromIds(new int[0]).Count == 0, "empty batch lookup");
+            var referenceBatch = load.GetReferenceLoadCasesFromIds(new[] { 41, 17, 41 });
+            Check(referenceBatch.Count == 3 && referenceBatch[0].Id == 41 && referenceBatch[1].Id == 17 && referenceBatch[2].Id == 41 && !ReferenceEquals(referenceBatch[0], referenceBatch[2]), "ordered independent reference batch");
+            foreach (var item in referenceBatch) Check(item.Title == "REFERENCE" && item.Type == LoadType.Mass && item.CaseType == LoadCaseType.ReferenceLoad, "reference batch metadata");
+            Check(load.GetReferenceLoadCasesFromIds(new int[0]).Count == 0, "empty reference batch");
+            int typeCallsBeforeCombinations = fake.PrimaryTypeCalls;
+            var combinations = load.GetAllLoadCombinationCases();
+            Check(combinations.Count == 2, "combination enumeration count");
+            foreach (var item in combinations) Check((item.Id == 201 || item.Id == 301) && item.Title == "COMB " + item.Id && item.Type == LoadType.None && item.CaseType == LoadCaseType.LoadCombination, "combination metadata");
+            var combination = load.GetLoadCombinationCaseFromId(201);
+            Check(combination.Id == 201 && combination.Title == "COMB 201" && combination.Type == LoadType.None && combination.CaseType == LoadCaseType.LoadCombination, "combination lookup");
+            bool missingCombination = false;
+            try { load.GetLoadCombinationCaseFromId(17); } catch (InvalidOperationException) { missingCombination = true; }
+            Check(missingCombination && fake.PrimaryTypeCalls == typeCallsBeforeCombinations, "combination membership and no engineering type lookup");
             Check(fake.ActiveId == activeBeforeLookup && fake.Reference == referenceBeforeLookup, "lookup preserves activation");
             fake.Empty = true;
             Check(load.GetNodalLoads(new LoadCase(1), 10).Count == 0 && load.GetMemberUniformlyDistributedLoads(new LoadCase(1), 101).Count == 0 && load.GetMemberConcentratedLoads(new LoadCase(1), 101).Count == 0, "empty queries");
             Check(load.GetMemberConcentratedMoments(new LoadCase(1), 101).Count == 0 && load.GetMemberLinearVaryingLoads(new LoadCase(1), 101).Count == 0 && load.GetMemberTrapezoidalLoads(new LoadCase(1), 101).Count == 0, "empty new queries");
             Check(load.GetMemberUniformMoments(new LoadCase(1), 101).Count == 0 && load.GetAllPrimaryLoadCases().Count == 0 && load.GetAllReferenceLoadCases().Count == 0, "empty third increment");
+            Check(load.GetAllLoadCombinationCases().Count == 0, "empty combination enumeration");
+            bool emptyCombination = false;
+            try { load.GetLoadCombinationCaseFromId(201); } catch (InvalidOperationException) { emptyCombination = true; }
+            Check(emptyCombination, "lookup in empty combination set");
             Check(typeof(IOSLoad).Assembly.GetType("StaadPro.Interop.Services.ConnectivityService") == null, "connectivity rollback");
         }
-        Console.WriteLine("PASS: twenty-four packaged XML examples, all twelve installed-package queries, and four ported load models.");
+        Console.WriteLine("PASS: thirty packaged XML examples, all fifteen installed-package queries, and four ported load models.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load)
@@ -164,6 +181,7 @@ __EXAMPLES__
         public int ActiveId { get; private set; }
         public bool Reference { get; private set; }
         public bool Empty { get; set; }
+        public int PrimaryTypeCalls { get; private set; }
         public string Assignment { get; private set; }
         public double[] AssignedValues { get; private set; }
         public bool SetLoadActive(int id) { ActiveId = id; Reference = false; return true; }
@@ -177,11 +195,13 @@ __EXAMPLES__
         public int GetUNIMomentCount(int id) => Empty ? 0 : 1;
         public int GetPrimaryLoadCaseCount() => Empty ? 0 : 1;
         public int GetReferenceLoadCaseCount() => Empty ? 0 : 1;
+        public int GetLoadCombinationCaseCount() => Empty ? 0 : 2;
+        public int GetLoadCombinationCaseNumbers(ref object ids) { ids = new[] { 201, 301 }; return 2; }
         public int GetPrimaryLoadCaseNumbers(ref object ids) { ids = new[] { 17 }; return 1; }
         public int GetReferenceLoadCaseNumbers(ref object ids) { ids = new[] { 17 }; return 1; }
-        public string GetLoadCaseTitle(int id) => "PRIMARY";
+        public string GetLoadCaseTitle(int id) => id == 201 || id == 301 ? "COMB " + id : "PRIMARY";
         public string GetReferenceLoadCaseTitle(int id) => "REFERENCE";
-        public int GetLoadType(int id) => (int)LoadType.Dead;
+        public int GetLoadType(int id) { PrimaryTypeCalls++; return (int)LoadType.Dead; }
         public int GetReferenceLoadType(int id) => (int)LoadType.Mass;
         public int GetUNIMoments(int id, ref object direction, ref object moment, ref object start, ref object end, ref object offset)
         { direction = new[] { 9 }; moment = new[] { -13.5 }; start = new[] { 1.25 }; end = new[] { 0.0 }; offset = new[] { -.75 }; return 0; }

@@ -56,8 +56,16 @@ Discovery does not activate cases. Counts, ID arrays, titles and types are valid
 - `GetPrimaryLoadCaseFromId(int lcId)`: Reads a fresh primary `LoadCase` metadata object, returned as `ILoadCase`.
 - `GetReferenceLoadCaseFromId(int lcId)`: Reads reference metadata with the reference-specific title/type APIs.
 - `GetPrimaryLoadCasesFromIds(IEnumerable<int> loadCasesIds)`: Returns an eager `List<ILoadCase>` in input order, preserving duplicates as independent objects.
+- `GetReferenceLoadCasesFromIds(IEnumerable<int> loadCasesIds)`: Uses the same ordered, eager batch contract with reference-specific title/type APIs.
 
 All IDs must be positive. Batch input is enumerated once and completely validated before COM access; empty input returns a fresh empty list. Lookups leave the active case unchanged, do not enumerate cases, and throw on malformed/native-error metadata. See [Load-Queries.md](Load-Queries.md#looking-up-cases-by-id) for ownership, exceptions, examples and verification.
+
+### Load Combination Metadata
+
+- `GetAllLoadCombinationCases()`: Returns a fresh `HashSet<ILoadCase>` with combination IDs/titles, `CaseType=LoadCombination` and `Type=None`.
+- `GetLoadCombinationCaseFromId(int lcId)`: Verifies membership in the combination ID list before reading the requested title; absent IDs throw.
+
+These methods leave the active case unchanged and validate native count/number/title results. Combinations have no engineering type category, so no type API is called. Factors and constituent cases are not loaded. See [Load-Queries.md](Load-Queries.md#discovering-and-looking-up-load-combinations).
 
 ### Load Case Creation & Titles
 - `CreateNewPrimaryLoad(string lcTitle, LoadType loadType)`: Creates a new primary load case with automatic ID assignment.
