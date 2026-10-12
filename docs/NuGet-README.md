@@ -53,6 +53,8 @@ Full XML IntelliSense accompanies the DLL for both interface and concrete method
 
 ## Release status
 
+Release `1.0.0-preview.20261012` is authored by **Srinivasa Rao Masanam**. Copyright (c) 2026 Srinivasa Rao Masanam. See [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md), also included as `docs/Release-Notes.md` in the package.
+
 Package creation and isolated consumer checks can be run locally and in CI. Offline tests exercise a managed OpenSTAAD stand-in; live COM marshaling and engineering unit conventions still require verification on each advertised STAAD version before a stable release. See the repository's [release assessment](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/NuGet-Readiness.md).
 
 MIT licensed. Bentley STAAD.Pro is a separate product.

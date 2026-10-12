@@ -6,7 +6,7 @@ Assessment date: 12 October 2026. Repository baseline: `5f8c406` (fifth load que
 
 **The repository can produce an installable NuGet preview package. A stable public release is not yet verified.** Local build, offline tests, package archive checks, isolated installation, compilation, and execution have passed. Public submission of this preview remains pending; a browser login alone does not establish publication.
 
-The release artifact is `artifacts/release/StaadPro.Interop.1.0.0-preview.20261012.load7.nupkg`. It can be used through a local feed immediately after verification. The project's default version remains `1.0.0`; use an explicit preview version while live gates remain open. The public flat-container index returned HTTP 404 during preparation, so no public version was confirmed. That result does not establish name reservation or publishing ownership. The user selected web upload and reported signing in, but desktop automation could not connect to the browser. The final portal submission and public-feed verification remain outstanding. See [Publishing.md](Publishing.md) and [Installation.md](Installation.md) for the exact steps.
+The release artifact is `artifacts/release/StaadPro.Interop.1.0.0-preview.20261012.nupkg`. It can be used through a local feed immediately after verification. The project's default version remains `1.0.0`; use an explicit preview version while live gates remain open. The public flat-container index returned HTTP 404 during preparation, so no public version was confirmed. That result does not establish name reservation or publishing ownership. The user selected web upload and reported signing in, but desktop automation could not connect to the browser. The final portal submission and public-feed verification remain outstanding. See [Publishing.md](Publishing.md) and [Installation.md](Installation.md) for the exact steps.
 
 ## Completed implementation
 
@@ -62,7 +62,7 @@ Every new method has comprehensive, expanded XML documentation on both the inter
 | Isolated package restore | Passed | Fresh temporary consumer/cache; PackageReference only, no repository ProjectReference |
 | Installed-package compilation/runtime | Passed, zero build warnings/errors | All forty-two XML examples, compiled installation example, twenty-one ported APIs including inclusive range/ID filters and concrete family lists, unchanged activation and four models' assignment dispatch using a managed stand-in; restored archive SHA256 matches the supplied package |
 | NuGet dependency vulnerability query | No vulnerable dependencies reported | `dotnet list ... package --vulnerable --include-transitive`, configured NuGet sources, assessment date |
-| CI verification configuration | Existing workflow extended by verifier changes | Windows CI packs a preview and runs the installed-package verifier, now covering the lookup APIs; remote CI has not been observed in this session |
+| CI verification | Passed for implementation commit `991f7ae` | [Windows CI run](https://github.com/structuraldeveloper/StaadPro.Interop/actions/runs/38230643566) built, tested, packed and verified the implemented queries; subsequent release metadata changes are verified locally before upload |
 | Real OpenSTAAD query execution | **Pending** | Native COM dispatch/marshaling, unit conventions, version compatibility |
 | NuGet.org publication | **Pending web submission** | User browser login reported; automation native pipe unavailable; no accepted submission/public restore confirmed |
 
@@ -111,8 +111,8 @@ Confirm the intended NuGet ID/owner and available preview/stable versions. Verif
 dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release --logger "trx;LogFileName=load-port.trx" --results-directory artifacts/load-port/tests
 dotnet list src/StaadPro.Interop/StaadPro.Interop.csproj package --vulnerable --include-transitive
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261012.load7 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261012.load7.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261012 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261012.nupkg
 ```
 
 The verifier leaves its uniquely named temporary consumer directory in the user's temporary folder so the restored package and executable can be inspected. It makes no changes to a STAAD model and does not publish anything.

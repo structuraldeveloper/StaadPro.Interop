@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("StaadPro.Interop")]
 [assembly: AssemblyDescription("Modern strongly-typed .NET wrapper for Bentley STAAD.Pro OpenSTAAD COM API.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("structs-dev")]
+[assembly: AssemblyCompany("Srinivasa Rao Masanam")]
 [assembly: AssemblyProduct("StaadPro.Interop")]
-[assembly: AssemblyCopyright("Copyright © 2026 structs-dev")]
+[assembly: AssemblyCopyright("Copyright (c) 2026 Srinivasa Rao Masanam")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

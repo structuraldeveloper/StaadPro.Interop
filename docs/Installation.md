@@ -2,7 +2,7 @@
 
 ## Package and runtime
 
-This guide uses preview version `1.0.0-preview.20261012.load7` of package `StaadPro.Interop`. Public-feed commands apply after that exact version is accepted and available on NuGet.org; [Publishing.md](Publishing.md) explains upload and verification. The same verified archive can be installed immediately through a local feed.
+This guide uses preview version `1.0.0-preview.20261012` of package `StaadPro.Interop`. Public-feed commands apply after that exact version is accepted and available on NuGet.org; [Publishing.md](Publishing.md) explains upload and verification. The same verified archive can be installed immediately through a local feed.
 
 | Requirement | Purpose |
 | --- | --- |
@@ -21,12 +21,12 @@ Newtonsoft.Json is restored as a package dependency. XML documentation is includ
 For an existing SDK-style project targeting `net481`, run:
 
 ```powershell
-dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261012.load7 --source https://api.nuget.org/v3/index.json
+dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261012 --source https://api.nuget.org/v3/index.json
 dotnet restore ./YourApp.csproj
 dotnet build ./YourApp.csproj -c Release
 ```
 
-For SDK 10's noun-first CLI, the equivalent command is `dotnet package add StaadPro.Interop --project ./YourApp.csproj --version 1.0.0-preview.20261012.load7 --source https://api.nuget.org/v3/index.json`. The older verb-first command above matches the SDK used for this repository's verification. See Microsoft's [package add reference](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-package-add).
+For SDK 10's noun-first CLI, the equivalent command is `dotnet package add StaadPro.Interop --project ./YourApp.csproj --version 1.0.0-preview.20261012 --source https://api.nuget.org/v3/index.json`. The older verb-first command above matches the SDK used for this repository's verification. See Microsoft's [package add reference](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-package-add).
 
 The resulting project reference should pin the version:
 
@@ -35,7 +35,7 @@ The resulting project reference should pin the version:
   <TargetFramework>net481</TargetFramework>
 </PropertyGroup>
 <ItemGroup>
-  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261012.load7" />
+  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261012" />
 </ItemGroup>
 ```
 
@@ -63,7 +63,7 @@ Then run `dotnet restore ./YourApp.csproj --configfile ./NuGet.Config --packages
 The NuGet Package Manager Console equivalent is:
 
 ```powershell
-Install-Package StaadPro.Interop -Version 1.0.0-preview.20261012.load7 -Source https://api.nuget.org/v3/index.json
+Install-Package StaadPro.Interop -Version 1.0.0-preview.20261012 -Source https://api.nuget.org/v3/index.json
 ```
 
 Visual Studio source/version selection is described in the official [NuGet Package Manager guide](https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-visual-studio).
@@ -88,7 +88,7 @@ In the consumer directory, use a project-scoped `NuGet.Config`:
 NuGet.org remains configured for dependencies. Add the exact package reference with:
 
 ```powershell
-dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261012.load7
+dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261012
 dotnet restore ./YourApp.csproj --configfile ./NuGet.Config --packages ./packages
 dotnet build ./YourApp.csproj -c Release --no-restore
 ```
@@ -108,7 +108,7 @@ For a small Windows console consumer, this SDK-style project is sufficient:
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261012.load7" />
+    <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261012" />
   </ItemGroup>
 </Project>
 ```
@@ -147,7 +147,7 @@ Assignment queries such as `GetNodalLoads` activate the supplied primary/referen
 
 ## Check IntelliSense and package contents
 
-Under the installed package's `lib/net481` folder, check for both `StaadPro.Interop.dll` and `StaadPro.Interop.xml`. With the default cache, this is beneath `%USERPROFILE%\.nuget\packages\staadpro.interop\1.0.0-preview.20261012.load7`. A custom cache uses the location you passed to restore.
+Under the installed package's `lib/net481` folder, check for both `StaadPro.Interop.dll` and `StaadPro.Interop.xml`. With the default cache, this is beneath `%USERPROFILE%\.nuget\packages\staadpro.interop\1.0.0-preview.20261012`. A custom cache uses the location you passed to restore.
 
 The XML supplies full method summaries, parameters, return/null semantics, mappings, side effects, exceptions and examples for the 21 ported query methods on both the interface and concrete adapter. The package's `docs` directory contains the load, installation and publishing guides. Editing a local package-cache copy is not a supported way to change the library; create a new source build/version instead.
 
