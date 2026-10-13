@@ -2,7 +2,7 @@
   <PropertyGroup>
     <PackageId>StaadPro.Interop.Core.Testing</PackageId>
     <Title>StaadPro.Interop Windows .NET 8 testing preview</Title>
-    <Description>Temporary testing preview of the independent PreferExistingOpenStaadWrapperProvider for Windows .NET 8 applications. Requires Windows Desktop/WPF and installed licensed Bentley STAAD.Pro. Not a stable production release. Assembly and namespaces remain StaadPro.Interop; do not reference alongside the main package.</Description>
+    <Description>Temporary testing preview of the independent OpenStaadSessionProvider for Windows .NET 8 applications. Requires Windows Desktop/WPF and installed licensed Bentley STAAD.Pro. Not a stable production release. Assembly and namespaces remain StaadPro.Interop; do not reference alongside the main package.</Description>
     <PackageReleaseNotes>Testing-only Windows .NET 8 preview. Adds verified existing-model acquisition, retained roots, conservative blank validation, atomic non-overwriting target preparation, process-verified startup, discovery policies and immutable diagnostics. The legacy provider and OpenStaadWrapper source remain unchanged. Managed tests pass on net481 and net8.0-windows; controlled native acquisition tests passed on STAAD.Pro 2026. Unmapped blank instances, synchronous COM hangs and other vendor versions remain limitations. This package has a separate ID and may be unlisted after testing. Guide: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main-wrapper-redesign/docs/Core-Testing-Package.md</PackageReleaseNotes>
     <PackageTags>staad;openstaad;windows;net8;testing;preview;interop</PackageTags>
   </PropertyGroup>

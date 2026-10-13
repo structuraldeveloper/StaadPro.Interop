@@ -11,7 +11,7 @@ using StaadPro.Interop.Services.Acquisition;
 namespace StaadPro.Interop.Tests.Services
 {
     [TestFixture, Apartment(ApartmentState.STA)]
-    public class PreferExistingProviderTests
+    public class OpenStaadSessionProviderTests
     {
         private const string Target = @"C:\Models\Target.std";
         private const string Other = @"C:\Other\Target.std";
@@ -91,7 +91,7 @@ namespace StaadPro.Interop.Tests.Services
         {
             var env = new FakeEnvironment(); env.Add(new RootCom(1, "")); var root = new RootCom(2, Target); env.Add(root);
             var original = OpenStaadWrapperProvider.Resolver;
-            using (var provider = new PreferExistingOpenStaadWrapperProvider(Options(), env))
+            using (var provider = new OpenStaadSessionProvider(Options(), env))
             using (var wrapper = provider.Get(Target.ToUpperInvariant()))
             { Assert.That(wrapper.RawOpenStaad, Is.SameAs(root)); Assert.That(wrapper.IsDedicated, Is.False); }
             Assert.That(env.Launches, Is.Zero); Assert.That(OpenStaadWrapperProvider.Resolver, Is.SameAs(original));
@@ -100,7 +100,7 @@ namespace StaadPro.Interop.Tests.Services
         public void UsableBlankIsReturnedWithoutOpeningRequestedTarget(int count)
         {
             var env = new FakeEnvironment(); for (int id=1; id<=count; id++) env.Add(new RootCom(id, ""));
-            using (var provider = new PreferExistingOpenStaadWrapperProvider(Options(), env))
+            using (var provider = new OpenStaadSessionProvider(Options(), env))
             {
                 var result = provider.Acquire(Target);
                 Assert.That(result.Outcome, Is.EqualTo(OpenStaadAcquisitionOutcome.ExistingBlank));
@@ -114,7 +114,7 @@ namespace StaadPro.Interop.Tests.Services
         public void NoProcessesCreatesAndLaunchesOnceAfterCoordinationRecheck()
         {
             var env = new FakeEnvironment();
-            using (var provider = new PreferExistingOpenStaadWrapperProvider(Options(), env))
+            using (var provider = new OpenStaadSessionProvider(Options(), env))
             {
                 var result = provider.Acquire(Target);
                 Assert.That(result.Outcome, Is.EqualTo(OpenStaadAcquisitionOutcome.OpenedTarget));
@@ -127,7 +127,7 @@ namespace StaadPro.Interop.Tests.Services
         public void DifferentDirectorySameFilenameDoesNotMatch()
         {
             var env = new FakeEnvironment(); var other = new RootCom(1, Other); env.Add(other);
-            using (var provider = new PreferExistingOpenStaadWrapperProvider(Options(), env))
+            using (var provider = new OpenStaadSessionProvider(Options(), env))
             {
                 var result = provider.Acquire(Target); Assert.That(result.Outcome, Is.EqualTo(OpenStaadAcquisitionOutcome.OpenedTarget));
                 Assert.That(result.Wrapper.RawOpenStaad, Is.Not.SameAs(other)); result.Wrapper.Dispose();
@@ -138,7 +138,7 @@ namespace StaadPro.Interop.Tests.Services
         public void KnownBusyTargetNeverFallsThroughToBlankOrLaunch(OpenStaadDiscoveryPolicy policy)
         {
             var env = new FakeEnvironment(); env.Add(new RootCom(1, "")); env.Add(new RootCom(2, Target) { BrokenGeometry=true });
-            using (var provider = new PreferExistingOpenStaadWrapperProvider(Options(policy), env))
+            using (var provider = new OpenStaadSessionProvider(Options(policy), env))
             { var result=provider.Acquire(Target); Assert.That(result.Failure, Is.EqualTo(OpenStaadAcquisitionFailure.Timeout)); Assert.That(result.Wrapper, Is.Null); }
             Assert.That(env.Launches, Is.Zero); Assert.That(env.Prepares, Is.Zero);
         }
@@ -146,7 +146,7 @@ namespace StaadPro.Interop.Tests.Services
         public void BusyTargetCanBecomeReadyWithoutReopening()
         {
             var env = new FakeEnvironment(); var root = new RootCom(1, Target) { BrokenGeometry=true }; env.Add(root); env.OnWait=()=>root.BrokenGeometry=false;
-            using (var provider = new PreferExistingOpenStaadWrapperProvider(Options(), env))
+            using (var provider = new OpenStaadSessionProvider(Options(), env))
             using (var wrapper = provider.Get(Target)) Assert.That(wrapper.RawOpenStaad, Is.SameAs(root));
             Assert.That(env.Launches, Is.Zero);
         }
@@ -154,7 +154,7 @@ namespace StaadPro.Interop.Tests.Services
         public void UnmappedApplicationsFollowExplicitPolicy(OpenStaadDiscoveryPolicy policy)
         {
             var env=new FakeEnvironment(); env.Processes.Add(new StaadProcessIdentity(10, DateTime.UtcNow));
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(policy),env))
+            using(var provider=new OpenStaadSessionProvider(Options(policy),env))
             {
                 var result=provider.Acquire(Target);
                 if(policy==OpenStaadDiscoveryPolicy.BestEffort)
@@ -168,7 +168,7 @@ namespace StaadPro.Interop.Tests.Services
         public void MappedUnwrittenFilenameBlocksFallback(OpenStaadDiscoveryPolicy policy)
         {
             var env=new FakeEnvironment(); env.Add(new RootCom(1,"") { WriteFilename=false });
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(policy),env))
+            using(var provider=new OpenStaadSessionProvider(Options(policy),env))
                 Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.IdentityUnavailable));
             Assert.That(env.Prepares,Is.Zero); Assert.That(env.Launches,Is.Zero);
         }
@@ -179,7 +179,7 @@ namespace StaadPro.Interop.Tests.Services
             if(component==0)root.G.Nodes=1;if(component==1)root.G.Members=1;if(component==2)root.G.Plates=1;if(component==3)root.G.Solids=1;
             if(component==4)root.L.Primary=1;if(component==5)root.L.Reference=1;if(component==6)root.L.Combinations=1;
             env.Add(root);
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            using(var provider=new OpenStaadSessionProvider(Options(),env))
             {var result=provider.Acquire(Target);Assert.That(result.Outcome,Is.EqualTo(OpenStaadAcquisitionOutcome.OpenedTarget));Assert.That(result.Wrapper.RawOpenStaad,Is.Not.SameAs(root));result.Wrapper.Dispose();}
             Assert.That(root.Path,Is.Empty);
         }
@@ -187,35 +187,35 @@ namespace StaadPro.Interop.Tests.Services
         public void MalformedNamedReadinessCannotReturnAWrapper(object count)
         {
             var env=new FakeEnvironment();var root=new RootCom(1,Target);root.G.Nodes=count;env.Add(root);
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))Assert.That(provider.Acquire(Target).Succeeded,Is.False);
+            using(var provider=new OpenStaadSessionProvider(Options(),env))Assert.That(provider.Acquire(Target).Succeeded,Is.False);
             Assert.That(env.Launches,Is.Zero);
         }
         [Test]
         public void CapturedWrapperInterfaceMustPassReadinessAgain()
         {
             var env=new FakeEnvironment();env.Add(new RootCom(1,Target){BreakGeometryAfter=1});
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))Assert.That(provider.Acquire(Target).Succeeded,Is.False);
+            using(var provider=new OpenStaadSessionProvider(Options(),env))Assert.That(provider.Acquire(Target).Succeeded,Is.False);
             Assert.That(env.Launches,Is.Zero);
         }
         [Test]
         public void NegativeReferenceCountDoesNotProveAnUnnamedSessionEmpty()
         {
             var env=new FakeEnvironment();var root=new RootCom(1,"");root.L.Reference=-1;env.Add(root);
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            using(var provider=new OpenStaadSessionProvider(Options(),env))
             {var result=provider.Acquire(Target);Assert.That(result.Outcome,Is.EqualTo(OpenStaadAcquisitionOutcome.OpenedTarget));Assert.That(result.Diagnostics.Any(d=>d.Contains("reference load count")),Is.True);result.Wrapper.Dispose();}
         }
         [Test]
         public void ModelChangeDuringConstructionCannotReturnWrongTarget()
         {
             var env=new FakeEnvironment();var root=new RootCom(1,Target);root.OnFilename=r=>{if(r.FilenameReads==2)r.Path=Other;};env.Add(root);
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            using(var provider=new OpenStaadSessionProvider(Options(),env))
             {var result=provider.Acquire(Target);Assert.That(result.Outcome,Is.EqualTo(OpenStaadAcquisitionOutcome.OpenedTarget));Assert.That(result.Wrapper.RawOpenStaad,Is.Not.SameAs(root));result.Wrapper.Dispose();}
         }
         [Test]
         public void RetainedNamedRootCanBeRevalidatedAfterBecomingBlank()
         {
             var env=new FakeEnvironment();var root=new RootCom(1,Target);env.Add(root);
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            using(var provider=new OpenStaadSessionProvider(Options(),env))
             {using(var first=provider.Get(Target))Assert.That(first.RawOpenStaad,Is.SameAs(root));root.Path="";env.Discovery.Roots.Clear();
                 var second=provider.Acquire(Other);Assert.That(second.Outcome,Is.EqualTo(OpenStaadAcquisitionOutcome.ExistingBlank));Assert.That(second.Wrapper.RawOpenStaad,Is.SameAs(root));second.Wrapper.Dispose();}
             Assert.That(env.Launches,Is.Zero);
@@ -224,14 +224,14 @@ namespace StaadPro.Interop.Tests.Services
         public void RegisteredRootWorksWhenItsGlobalRegistrationIsNotVisible()
         {
             var env=new FakeEnvironment();var root=new RootCom(1,"");env.Add(root);env.Discovery.Roots.Clear();
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            using(var provider=new OpenStaadSessionProvider(Options(),env))
             {provider.RegisterRoot(root);var result=provider.Acquire(Target);Assert.That(result.Outcome,Is.EqualTo(OpenStaadAcquisitionOutcome.ExistingBlank));result.Wrapper.Dispose();provider.ClearRetainedRoots();}
         }
         [Test]
         public void PidReuseInvalidatesRetainedRoot()
         {
             var env=new FakeEnvironment();var old=new RootCom(1,Target);var identity=env.Add(old);
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            using(var provider=new OpenStaadSessionProvider(Options(),env))
             {using(var first=provider.Get(Target)){}env.Discovery.Roots.Clear();env.Processes.Clear();env.Processes.Add(new StaadProcessIdentity(1,identity.StartedUtc.AddHours(1)));
                 var result=provider.Acquire(Target);Assert.That(result.Outcome,Is.EqualTo(OpenStaadAcquisitionOutcome.OpenedTarget));Assert.That(result.Wrapper.RawOpenStaad,Is.Not.SameAs(old));result.Wrapper.Dispose();}
         }
@@ -239,40 +239,40 @@ namespace StaadPro.Interop.Tests.Services
         public void DuplicateRegistrationsAreOneProcessAndDoNotCreateExtraWrappers()
         {
             var env=new FakeEnvironment();var root=new RootCom(1,Target);env.Add(root);env.Discovery.Roots.Add(root);env.Discovery.Roots.Add(new RootCom(1,Target));
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env)){var result=provider.Acquire(Target);Assert.That(result.DiscoveryComplete,Is.True);Assert.That(result.ProcessId,Is.EqualTo(1));result.Wrapper.Dispose();}
+            using(var provider=new OpenStaadSessionProvider(Options(),env)){var result=provider.Acquire(Target);Assert.That(result.DiscoveryComplete,Is.True);Assert.That(result.ProcessId,Is.EqualTo(1));result.Wrapper.Dispose();}
         }
         [Test]
         public void FreshReadableAliasSupersedesBrokenRetainedProxy()
         {
             var env=new FakeEnvironment();var root=new RootCom(1,Target);env.Add(root);
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            using(var provider=new OpenStaadSessionProvider(Options(),env))
             {using(var first=provider.Get(Target)){}root.WriteFilename=false;env.Discovery.Roots.Clear();var fresh=new RootCom(1,Target);env.Discovery.Roots.Add(fresh);using(var second=provider.Get(Target))Assert.That(second.RawOpenStaad,Is.SameAs(fresh));}
         }
         [Test]
         public void ConflictingPathsForSameProcessRequireRescan()
         {
             var env=new FakeEnvironment();env.Add(new RootCom(1,Target));env.Discovery.Roots.Add(new RootCom(1,Other));
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.IdentityUnavailable));
+            using(var provider=new OpenStaadSessionProvider(Options(),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.IdentityUnavailable));
             Assert.That(env.Launches,Is.Zero);
         }
         [Test]
         public void CancellationBeforeDiscoveryHasNoSideEffects()
         {
-            var env=new FakeEnvironment();using(var source=new CancellationTokenSource())using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            var env=new FakeEnvironment();using(var source=new CancellationTokenSource())using(var provider=new OpenStaadSessionProvider(Options(),env))
             {source.Cancel();Assert.That(provider.Acquire(Target,source.Token).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.Cancelled));}
             Assert.That(env.Inventories,Is.Zero);Assert.That(env.Prepares,Is.Zero);Assert.That(env.Launches,Is.Zero);
         }
         [Test]
         public void CancellationAfterPreparationPreventsLateLaunch()
         {
-            var env=new FakeEnvironment();using(var source=new CancellationTokenSource())using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            var env=new FakeEnvironment();using(var source=new CancellationTokenSource())using(var provider=new OpenStaadSessionProvider(Options(),env))
             {env.OnPrepare=source.Cancel;Assert.That(provider.Acquire(Target,source.Token).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.Cancelled));}
             Assert.That(env.Prepares,Is.EqualTo(1));Assert.That(env.Launches,Is.Zero);Assert.That(env.LeasesReleased,Is.EqualTo(1));
         }
         [Test]
         public void CancellationAfterLaunchPreservesStartupIdentityForDiagnostics()
         {
-            var env=new FakeEnvironment();using(var source=new CancellationTokenSource())using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            var env=new FakeEnvironment();using(var source=new CancellationTokenSource())using(var provider=new OpenStaadSessionProvider(Options(),env))
             {env.OnLaunch=path=>{var launched=env.Add(new RootCom(900,path));source.Cancel();return launched;};var result=provider.Acquire(Target,source.Token);
                 Assert.That(result.Failure,Is.EqualTo(OpenStaadAcquisitionFailure.Cancelled));Assert.That(result.Wrapper,Is.Null);Assert.That(result.LaunchedProcessId,Is.EqualTo(900));Assert.That(result.LaunchedProcessStartTimeUtc,Is.Not.Null);}
             Assert.That(env.Launches,Is.EqualTo(1));
@@ -280,86 +280,86 @@ namespace StaadPro.Interop.Tests.Services
         [Test]
         public void CoordinationTimeoutDoesNotCreateOrLaunch()
         {
-            var env=new FakeEnvironment(){Locked=true};using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.Timeout));
+            var env=new FakeEnvironment(){Locked=true};using(var provider=new OpenStaadSessionProvider(Options(),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.Timeout));
             Assert.That(env.Prepares,Is.Zero);Assert.That(env.Launches,Is.Zero);
         }
         [TestCase(false), TestCase(true)]
         public void MissingOrInvalidLauncherFailsBeforeTargetPreparation(bool invalid)
         {
             var env=new FakeEnvironment();var options=Options();if(invalid)env.LaunchValidationError=new FileNotFoundException("not installed");else options.StaadExecutablePath=null;
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(options,env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.LaunchFailed));
+            using(var provider=new OpenStaadSessionProvider(options,env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.LaunchFailed));
             Assert.That(env.Prepares,Is.Zero);Assert.That(env.Launches,Is.Zero);Assert.That(env.LeasesReleased,Is.EqualTo(1));
         }
         [TestCase("inventory"),TestCase("prepare"),TestCase("launch")]
         public void OperationalErrorsAreReportedAndNeverProduceAWrapper(string stage)
         {
             var env=new FakeEnvironment();if(stage=="inventory")env.InventoryError=new UnauthorizedAccessException("inventory denied");if(stage=="prepare")env.PrepareError=new IOException("disk failure");if(stage=="launch")env.LaunchError=new IOException("startup failure");
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env)){var result=provider.Acquire(Target);Assert.That(result.Succeeded,Is.False);Assert.That(result.Failure,Is.EqualTo(stage=="inventory"?OpenStaadAcquisitionFailure.DiscoveryFailed:stage=="prepare"?OpenStaadAcquisitionFailure.FilePreparationFailed:OpenStaadAcquisitionFailure.LaunchFailed));Assert.That(result.Diagnostics.Count,Is.GreaterThan(0));}
+            using(var provider=new OpenStaadSessionProvider(Options(),env)){var result=provider.Acquire(Target);Assert.That(result.Succeeded,Is.False);Assert.That(result.Failure,Is.EqualTo(stage=="inventory"?OpenStaadAcquisitionFailure.DiscoveryFailed:stage=="prepare"?OpenStaadAcquisitionFailure.FilePreparationFailed:OpenStaadAcquisitionFailure.LaunchFailed));Assert.That(result.Diagnostics.Count,Is.GreaterThan(0));}
             Assert.That(env.Launches,Is.LessThanOrEqualTo(1));
         }
         [Test]
         public void PreExistingLaunchIdentityIsRejected()
         {
             var env=new FakeEnvironment();var identity=env.Add(new RootCom(1,Other));env.OnLaunch=path=>identity;
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.LaunchRedirected));Assert.That(env.Launches,Is.EqualTo(1));
+            using(var provider=new OpenStaadSessionProvider(Options(),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.LaunchRedirected));Assert.That(env.Launches,Is.EqualTo(1));
         }
         [Test]
         public void TargetOpenedInDifferentProcessIsRejected()
         {
             var env=new FakeEnvironment();env.OnLaunch=path=>{env.Add(new RootCom(901,path));var process=new StaadProcessIdentity(900,DateTime.UtcNow);env.Processes.Add(process);return process;};
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.LaunchRedirected));Assert.That(env.Launches,Is.EqualTo(1));
+            using(var provider=new OpenStaadSessionProvider(Options(),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.LaunchRedirected));Assert.That(env.Launches,Is.EqualTo(1));
         }
         [Test]
         public void LaunchedProcessExitDoesNotCauseAnotherLaunch()
         {
             var env=new FakeEnvironment();env.OnLaunch=path=>new StaadProcessIdentity(900,DateTime.UtcNow);
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.LaunchedProcessExited));Assert.That(env.Launches,Is.EqualTo(1));
+            using(var provider=new OpenStaadSessionProvider(Options(),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.LaunchedProcessExited));Assert.That(env.Launches,Is.EqualTo(1));
         }
         [Test]
         public void CoverageChangeDuringBlankValidationBlocksStrictReuse()
         {
             var env=new FakeEnvironment();env.Add(new RootCom(1,""));env.OnInventory=count=>{if(count==2)env.Processes.Add(new StaadProcessIdentity(2,DateTime.UtcNow));};
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(OpenStaadDiscoveryPolicy.RequireCompleteDiscovery),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.IncompleteDiscovery));Assert.That(env.Launches,Is.Zero);
+            using(var provider=new OpenStaadSessionProvider(Options(OpenStaadDiscoveryPolicy.RequireCompleteDiscovery),env))Assert.That(provider.Acquire(Target).Failure,Is.EqualTo(OpenStaadAcquisitionFailure.IncompleteDiscovery));Assert.That(env.Launches,Is.Zero);
         }
         [Test]
         public void AttachmentOnlyNeverLaunchesAndReportsNoSession()
         {
-            var env=new FakeEnvironment();using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))Assert.That(provider.Acquire().Failure,Is.EqualTo(OpenStaadAcquisitionFailure.NoRunningSession));Assert.That(env.Launches,Is.Zero);
+            var env=new FakeEnvironment();using(var provider=new OpenStaadSessionProvider(Options(),env))Assert.That(provider.Acquire().Failure,Is.EqualTo(OpenStaadAcquisitionFailure.NoRunningSession));Assert.That(env.Launches,Is.Zero);
         }
         [Test]
         public void DisposingProviderDoesNotDisposeReturnedWrapper()
         {
-            var env=new FakeEnvironment();env.Add(new RootCom(1,Target));var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env);var wrapper=provider.Get(Target);provider.Dispose();provider.Dispose();Assert.That(wrapper.IsConnected,Is.True);Assert.That(env.Disposed,Is.True);Assert.Throws<ObjectDisposedException>(()=>provider.Get(Target));wrapper.Dispose();
+            var env=new FakeEnvironment();env.Add(new RootCom(1,Target));var provider=new OpenStaadSessionProvider(Options(),env);var wrapper=provider.Get(Target);provider.Dispose();provider.Dispose();Assert.That(wrapper.IsConnected,Is.True);Assert.That(env.Disposed,Is.True);Assert.Throws<ObjectDisposedException>(()=>provider.Get(Target));wrapper.Dispose();
         }
         [Test]
         public void WrongThreadAndReentrancyAreRejected()
         {
-            var env=new FakeEnvironment();env.Add(new RootCom(1,Target){BrokenGeometry=true});using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            var env=new FakeEnvironment();env.Add(new RootCom(1,Target){BrokenGeometry=true});using(var provider=new OpenStaadSessionProvider(Options(),env))
             {Exception error=null;var thread=new Thread(()=>{try{provider.Get(Target);}catch(Exception ex){error=ex;}});thread.Start();thread.Join();Assert.That(error,Is.TypeOf<InvalidOperationException>());
                 env.OnWait=()=>{Assert.Throws<InvalidOperationException>(()=>provider.Get(Target));Assert.Throws<InvalidOperationException>(()=>provider.ClearRetainedRoots());Assert.Throws<InvalidOperationException>(()=>provider.Dispose());};Assert.That(provider.Acquire(Target).Succeeded,Is.False);}
         }
         [TestCase("relative.std"),TestCase("C:relative.std"),TestCase(@"\Models\file.std"),TestCase("/Models/file.std"),TestCase(""),TestCase(" "),TestCase(@"C:\Models\file.txt"),TestCase(@"C:\Models\NUL.std"),TestCase(@"C:\Models\file:stream.std"),TestCase(@"C:\Models\wild*.std"),TestCase(@"C:\Models\bad .std ")]
         public void InvalidTargetIsRejectedBeforeDiscovery(string target)
         {
-            var env=new FakeEnvironment();using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))Assert.Throws<ArgumentException>(()=>provider.Acquire(target));Assert.That(env.Inventories,Is.Zero);Assert.That(env.Prepares,Is.Zero);
+            var env=new FakeEnvironment();using(var provider=new OpenStaadSessionProvider(Options(),env))Assert.Throws<ArgumentException>(()=>provider.Acquire(target));Assert.That(env.Inventories,Is.Zero);Assert.That(env.Prepares,Is.Zero);
         }
         [Test]
         public void OptionsAreCopiedAndDiagnosticsImmutable()
         {
-            var env=new FakeEnvironment();env.Add(new RootCom(1,Target));var options=Options();using(var provider=new PreferExistingOpenStaadWrapperProvider(options,env))
+            var env=new FakeEnvironment();env.Add(new RootCom(1,Target));var options=Options();using(var provider=new OpenStaadSessionProvider(options,env))
             {options.Timeout=TimeSpan.Zero;var result=provider.Acquire(Target);Assert.That(result.Succeeded,Is.True);Assert.Throws<NotSupportedException>(()=>((IList<string>)result.Diagnostics).Add("mutate"));result.Wrapper.Dispose();}
         }
         [Test]
         public void BoundedDiagnosticsAlwaysRetainFinalFailureReason()
         {
             var env=new FakeEnvironment();for(int i=0;i<150;i++)env.Discovery.Diagnostics.Add("discovery note "+i);
-            using(var provider=new PreferExistingOpenStaadWrapperProvider(Options(),env))
+            using(var provider=new OpenStaadSessionProvider(Options(),env))
             {var result=provider.Acquire();Assert.That(result.Failure,Is.EqualTo(OpenStaadAcquisitionFailure.NoRunningSession));Assert.That(result.Diagnostics.Count,Is.EqualTo(128));Assert.That(result.Diagnostics.Last(),Does.Contain("Attachment-only"));}
         }
         [Test]
         public void InvalidTimingOptionsAreRejected()
         {
-            var options=Options();options.PollInterval=TimeSpan.Zero;Assert.Throws<ArgumentOutOfRangeException>(()=>new PreferExistingOpenStaadWrapperProvider(options,new FakeEnvironment()));options=Options();options.DiscoveryGracePeriod=TimeSpan.FromDays(2);Assert.Throws<ArgumentOutOfRangeException>(()=>new PreferExistingOpenStaadWrapperProvider(options,new FakeEnvironment()));
+            var options=Options();options.PollInterval=TimeSpan.Zero;Assert.Throws<ArgumentOutOfRangeException>(()=>new OpenStaadSessionProvider(options,new FakeEnvironment()));options=Options();options.DiscoveryGracePeriod=TimeSpan.FromDays(2);Assert.Throws<ArgumentOutOfRangeException>(()=>new OpenStaadSessionProvider(options,new FakeEnvironment()));
         }
     }
 }

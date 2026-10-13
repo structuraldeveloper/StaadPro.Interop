@@ -6,7 +6,7 @@
 
 The existing `OpenStaadWrapperProvider.Get(targetFile)` still skips blank filenames and launches the target when it cannot identify a matching model. Counting applications would improve diagnostics, but would not make otherwise inaccessible objects accessible.
 
-**Implementation status:** `PreferExistingOpenStaadWrapperProvider` is now implemented independently, with native discovery, process identity checks, retained roots, explicit discovery policies, cancellation between calls, atomic target publication and typed diagnostics. The library builds for `net481` and `net8.0-windows`; existing provider/helper/wrapper source files are unchanged. See [provider usage and deployment](../Prefer-Existing-Provider.md).
+**Implementation status:** `OpenStaadSessionProvider` is now implemented independently, with native discovery, process identity checks, retained roots, explicit discovery policies, cancellation between calls, atomic target publication and typed diagnostics. The library builds for `net481` and `net8.0-windows`; existing provider/helper/wrapper source files are unchanged. See [provider usage and deployment](../OpenStaad-Session-Provider.md).
 
 The native startup and attachment checks passed. An owned empty model became an unnamed application after closing it, but its native reference-load count was `-1`. The provider did not reinterpret that as zero; it used the create/open fallback. Retained-root reuse is available when the retained session actually passes the blank contract.
 
@@ -127,7 +127,7 @@ Neither improvement can recover every never-observed blank after the provider st
 
 **Implemented provider contract**
 
-`PreferExistingOpenStaadWrapperProvider` is the new, independent provider. Its normal policy is **best effort discovery with explicit fallback**, matching your original sequence. Offer **RequireCompleteDiscovery** as an opt-in policy for applications that would rather fail than risk a duplicate opening. Neither policy should hide the fact that an already obtained root has a known matching target but is not ready: wait for that target, and fail on timeout rather than launch it again.
+`OpenStaadSessionProvider` is the new, independent provider. Its normal policy is **best effort discovery with explicit fallback**, matching your original sequence. Offer **RequireCompleteDiscovery** as an opt-in policy for applications that would rather fail than risk a duplicate opening. Neither policy should hide the fact that an already obtained root has a known matching target but is not ready: wait for that target, and fail on timeout rather than launch it again.
 
 The provider's wrapper-returning `Get(targetFileFullPath)` should delegate to an acquisition operation that also makes a separate result available. Suggested result fields are the unchanged `OpenStaadWrapper`, requested path, actual native path, selected PID/start time, outcome (`ExistingTarget`, `ExistingBlank`, `OpenedTarget`, or failure), discovery completeness and diagnostics. These fields belong to a separate acquisition-result type, not to new wrapper properties. They make it clear when the returned blank has not opened the requested file.
 
@@ -348,7 +348,7 @@ No-target `Acquire()` is attachment only: try ready named sessions or verified b
 
 **Implemented provider architecture and verification**
 
-The implemented provider is `PreferExistingOpenStaadWrapperProvider`. It uses independent process-inventory, retained-root registry, COM discovery, classification, selection and target-launch services without editing existing providers or creating partial adapter classes. Acquisition-result diagnostics should be a separate type; no wrapper properties need to be added. Keep the provider and registry on a defined STA context and do not distribute retained raw roots to arbitrary worker threads.
+The implemented provider is `OpenStaadSessionProvider`. It uses independent process-inventory, retained-root registry, COM discovery, classification, selection and target-launch services without editing existing providers or creating partial adapter classes. Acquisition-result diagnostics should be a separate type; no wrapper properties need to be added. Keep the provider and registry on a defined STA context and do not distribute retained raw roots to arbitrary worker threads.
 
 The implementation follows this sequence:
 

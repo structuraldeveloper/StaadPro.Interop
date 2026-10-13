@@ -1,6 +1,10 @@
-# PreferExistingOpenStaadWrapperProvider
+# OpenStaadSessionProvider
+
+`OpenStaadSessionProvider` acquires an **`OpenStaadWrapper`** connected to a STAAD session. `Get()` returns the wrapper directly; `Acquire()` returns an `OpenStaadAcquisitionResult` whose `Wrapper` property contains it on success. The provider holds acquisition configuration and retained connections; the wrapper exposes the native OpenSTAAD root, geometry and load interfaces. Disposing the provider does not dispose returned wrappers or close STAAD applications.
 
 The independent provider prefers an already-open target, then a reachable verified unnamed session, then a newly opened target. It does not replace `OpenStaadWrapperProvider.Resolver`, edit the legacy provider, or change `OpenStaadWrapper` or its properties.
+
+The provider was previously named `PreferExistingOpenStaadWrapperProvider` in the first testing archive. Update its type and constructor references to `OpenStaadSessionProvider` when installing the renamed implementation. The method signatures, acquisition behavior and `OpenStaadWrapper` type are unchanged. Existing binaries compiled against the earlier provider name must be rebuilt.
 
 Current source builds for `net481` and `net8.0-windows`. Modern .NET support is **Windows only** and uses the built-in COM runtime. The library retains its WPF geometry types, so modern consumers require the Windows Desktop/WPF framework even if their application is a console program. Earlier published previews do not acquire these capabilities merely by installing them; build/install a package containing this implementation.
 
@@ -26,7 +30,7 @@ internal static class Program
     [STAThread]
     private static void Main()
     {
-        using (var provider = new PreferExistingOpenStaadWrapperProvider(
+        using (var provider = new OpenStaadSessionProvider(
             new OpenStaadAcquisitionOptions
             {
                 // Configure the actual installed executable. No version is assumed by the provider.

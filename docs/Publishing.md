@@ -2,7 +2,7 @@
 
 ## Separate Windows .NET 8 testing package
 
-The new provider implementation is being prepared as **`StaadPro.Interop.Core.Testing`**, version **`1.0.0-preview.20261013.1`**, on branch `main-wrapper-redesign`. This separate package targets Windows .NET 8 only and retains the `StaadPro.Interop` assembly name. See [Core-Testing-Package.md](Core-Testing-Package.md) for its reproducible build, manual upload, installation, public-feed verification and unlisting instructions. It is not publicly available until upload and public restore verification complete. The main-package release instructions below describe the earlier Framework release preparation, not this test archive.
+The new provider implementation is being prepared as **`StaadPro.Interop.Core.Testing`**, version **`1.0.0-preview.20261013.2`**, on branch `main-wrapper-redesign`. This separate package targets Windows .NET 8 only and retains the `StaadPro.Interop` assembly name. See [Core-Testing-Package.md](Core-Testing-Package.md) for its reproducible build, manual upload, installation, public-feed verification and unlisting instructions. It is not publicly available until upload and public restore verification complete. The main-package release instructions below describe the earlier Framework release preparation, not this test archive.
 
 ## Release being prepared
 

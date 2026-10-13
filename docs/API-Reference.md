@@ -1,17 +1,17 @@
 # StaadPro.Interop API Reference
 
-## `PreferExistingOpenStaadWrapperProvider` Members
+## `OpenStaadSessionProvider` Members
 
-The independent instance provider targets `net481` and `net8.0-windows` without modifying the legacy static provider or wrapper. Create, use and dispose it on one Windows STA thread.
+The independent instance provider acquires an `OpenStaadWrapper` bound to a STAAD session. It targets `net481` and `net8.0-windows` without modifying the legacy static provider or wrapper. Create, use and dispose it on one Windows STA thread.
 
 - Constructor: copies validated `OpenStaadAcquisitionOptions`; default construction permits attachment but does not configure launching.
-- `Get(string fileFullPath = null)`: returns a verified wrapper or null on operational failure. Null path is attachment only.
+- `OpenStaadWrapper Get(string fileFullPath = null)`: returns a verified wrapper or null on operational failure. Null path is attachment only.
 - `Acquire(string fileFullPath = null, CancellationToken cancellationToken = default)`: returns an immutable `OpenStaadAcquisitionResult` containing outcome, wrapper, native/requested paths, verified PID/start time, discovery completeness, startup evidence and diagnostics.
 - `RegisterRoot(object openStaad)`: validates and retains a root already obtained by the caller; it does not perform arbitrary PID-to-root binding.
 - `ClearRetainedRoots()`: clears references without closing STAAD or final-releasing shared proxies.
 - `Dispose()`: clears references and balances provider COM initialization on the owning thread; returned wrappers remain caller-owned.
 
-Target preference precedes blank preference. Known busy targets are awaited. Unnamed reuse requires explicit empty native filename and zero nodes, members, plates, solids, primary/reference loads and combinations. Negative or unsupported counts are not treated as empty. Best-effort fallback reports incomplete coverage; `RequireCompleteDiscovery` blocks blank reuse/launch until coverage is complete. See [Prefer-Existing-Provider.md](Prefer-Existing-Provider.md) for examples, Windows .NET deployment, ownership and timeout limits.
+Target preference precedes blank preference. Known busy targets are awaited. Unnamed reuse requires explicit empty native filename and zero nodes, members, plates, solids, primary/reference loads and combinations. Negative or unsupported counts are not treated as empty. Best-effort fallback reports incomplete coverage; `RequireCompleteDiscovery` blocks blank reuse/launch until coverage is complete. See [OpenStaad-Session-Provider.md](OpenStaad-Session-Provider.md) for examples, Windows .NET deployment, ownership and timeout limits.
 
 ## `OpenStaadWrapperProvider` Members
 - `Get(string fileFullPath = null)`: With a path, reuses that model if already open; otherwise opens it once (or creates a blank model when the file is missing). Polls every 250 ms for up to two minutes for the matching filename and available Geometry/Load interfaces and count calls. Returns null on failure/timeout with Trace diagnostics. Without a path, attaches to a running session or starts STAAD. Call on an STA thread.

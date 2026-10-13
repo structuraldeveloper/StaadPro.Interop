@@ -10,7 +10,7 @@ A strongly typed wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load opera
 
 ## Verified model acquisition
 
-The independent `PreferExistingOpenStaadWrapperProvider` prefers an existing target, then a verified reachable blank, then a verified new target. It adds retained roots, PID/start-time checks, immutable diagnostics, explicit discovery policies, cancellation between native calls and atomic non-overwriting target creation. It leaves the existing provider and wrapper unchanged. See packaged `docs/Prefer-Existing-Provider.md` for STA usage, blank semantics, limitations and examples.
+The independent `OpenStaadSessionProvider` prefers an existing target, then a verified reachable blank, then a verified new target. It adds retained roots, PID/start-time checks, immutable diagnostics, explicit discovery policies, cancellation between native calls and atomic non-overwriting target creation. It leaves the existing provider and wrapper unchanged. See packaged `docs/OpenStaad-Session-Provider.md` for STA usage, blank semantics, limitations and examples.
 
 ## Geometry grouping and IntelliSense
 

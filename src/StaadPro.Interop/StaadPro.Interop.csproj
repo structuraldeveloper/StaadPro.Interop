@@ -15,7 +15,7 @@
     <Version>1.0.0</Version>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 StaadDev</Copyright>
-    <PackageReleaseNotes>Windows preview for .NET Framework 4.8.1 and Windows .NET 8. Adds the independent PreferExistingOpenStaadWrapperProvider with verified process identity, retained roots, explicit blank/content checks, discovery policies, immutable acquisition diagnostics, cancellation between native calls and atomic non-overwriting target creation. Retains the existing provider and wrapper source unchanged. Includes expanded IntelliSense and managed tests on both targets plus controlled STAAD.Pro 2026 attachment/startup verification. Unmapped blanks, synchronous COM hangs and broader vendor/version validation remain documented limitations. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Windows preview for .NET Framework 4.8.1 and Windows .NET 8. Adds the independent OpenStaadSessionProvider with verified process identity, retained roots, explicit blank/content checks, discovery policies, immutable acquisition diagnostics, cancellation between native calls and atomic non-overwriting target creation. Retains the existing provider and wrapper source unchanged. Includes expanded IntelliSense and managed tests on both targets plus controlled STAAD.Pro 2026 attachment/startup verification. Unmapped blanks, synchronous COM hangs and broader vendor/version validation remain documented limitations. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed Windows .NET wrapper for Bentley STAAD.Pro OpenSTAAD geometry, loads and verified model acquisition.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
@@ -51,7 +51,7 @@
     <None Include="..\..\docs\Installation.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Publishing.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Release-Notes.md" Pack="true" PackagePath="docs\" />
-    <None Include="..\..\docs\Prefer-Existing-Provider.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\OpenStaad-Session-Provider.md" Pack="true" PackagePath="docs\" />
   </ItemGroup>
 
   <!-- Opt-in metadata for the disposable modern-.NET test package; ordinary packaging is unchanged. -->

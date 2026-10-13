@@ -1,19 +1,21 @@
 # StaadPro.Interop.Core.Testing
 
-This is a separate, temporary testing package for **Windows .NET 8** applications. It contains the independent `PreferExistingOpenStaadWrapperProvider`, expanded XML IntelliSense and the existing wrapper/adapters. It is a preview for testing, not a stable production release. Its package ID differs from the main `StaadPro.Interop` package; the assembly name and namespaces remain `StaadPro.Interop`.
+This is a separate, temporary testing package for **Windows .NET 8** applications. It contains the independent `OpenStaadSessionProvider`, expanded XML IntelliSense and the existing wrapper/adapters. It is a preview for testing, not a stable production release. Its package ID differs from the main `StaadPro.Interop` package; the assembly name and namespaces remain `StaadPro.Interop`.
 
 | Item | Value |
 | --- | --- |
 | Package ID | `StaadPro.Interop.Core.Testing` |
-| Test version | `1.0.0-preview.20261013.1` |
+| Test version | `1.0.0-preview.20261013.2` |
 | Target | `net8.0-windows` (NuGet asset `net8.0-windows7.0`) |
 | Author | Srinivasa Rao Masanam |
 | Copyright | Copyright (c) 2026 StaadDev |
 | License | MIT |
 | Source branch | `main-wrapper-redesign` |
-| Upload archive | `artifacts/core-testing/StaadPro.Interop.Core.Testing.1.0.0-preview.20261013.1.nupkg` |
+| Upload archive | `artifacts/core-testing/StaadPro.Interop.Core.Testing.1.0.0-preview.20261013.2.nupkg` |
 
 The asset suffix is a framework identifier; it does not certify Windows 7 as a supported .NET 8 operating system. Use an operating system supported by the Windows .NET 8 runtime. This package does not target .NET Core 3.1 or non-Windows applications. Bentley executables, licensing and native components are not included.
+
+Version `1.0.0-preview.20261013.2` is the next testing version being prepared for the provider rename. The earlier `.1` archive exposes `PreferExistingOpenStaadWrapperProvider`; it does not contain `OpenStaadSessionProvider`. Update provider type/constructor references and rebuild when moving to `.2`. Existing `.1` archives are preserved; build the `.2` release from a clean committed checkout before uploading it. `OpenStaadWrapper` remains the returned type, with its existing name and properties.
 
 ## Build and verify the archive
 
@@ -36,10 +38,10 @@ The selected publication route is manual web upload. A locally generated package
 3. Submit, inspect the displayed status and wait for validation/indexing. Resolve an ownership/name rejection rather than assuming an absent feed entry guarantees an available ID.
 4. Verify the exact version through the public feed and a fresh consumer restore as shown below. Until those checks pass, treat publication as pending.
 
-The expected package page after acceptance is [StaadPro.Interop.Core.Testing 1.0.0-preview.20261013.1](https://www.nuget.org/packages/StaadPro.Interop.Core.Testing/1.0.0-preview.20261013.1). It may not exist before upload. The publisher becomes the owner; the Authors metadata does not grant ownership. See Microsoft's [publishing instructions](https://learn.microsoft.com/en-us/nuget/nuget-org/publish-a-package).
+The expected package page after acceptance is [StaadPro.Interop.Core.Testing 1.0.0-preview.20261013.2](https://www.nuget.org/packages/StaadPro.Interop.Core.Testing/1.0.0-preview.20261013.2). It may not exist before upload. The publisher becomes the owner; the Authors metadata does not grant ownership. See Microsoft's [publishing instructions](https://learn.microsoft.com/en-us/nuget/nuget-org/publish-a-package).
 
 ```powershell
-$testVersion = '1.0.0-preview.20261013.1'
+$testVersion = '1.0.0-preview.20261013.2'
 $index = Invoke-RestMethod 'https://api.nuget.org/v3-flatcontainer/staadpro.interop.core.testing/index.json'
 if ($index.versions -notcontains $testVersion) {
     throw 'The exact testing version is not publicly downloadable yet.'
@@ -59,7 +61,7 @@ Do not reference this package alongside `StaadPro.Interop`: both provide the sam
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StaadPro.Interop.Core.Testing"
-                      Version="1.0.0-preview.20261013.1" />
+                      Version="1.0.0-preview.20261013.2" />
   </ItemGroup>
 </Project>
 ```
@@ -67,7 +69,7 @@ Do not reference this package alongside `StaadPro.Interop`: both provide the sam
 After publication, the installation command is:
 
 ```powershell
-dotnet add package StaadPro.Interop.Core.Testing --version 1.0.0-preview.20261013.1 --source https://api.nuget.org/v3/index.json
+dotnet add package StaadPro.Interop.Core.Testing --version 1.0.0-preview.20261013.2 --source https://api.nuget.org/v3/index.json
 dotnet restore --source https://api.nuget.org/v3/index.json --packages ./public-restore-cache
 dotnet build --no-restore
 ```
@@ -89,7 +91,7 @@ internal static class Program
     [STAThread]
     private static int Main()
     {
-        using (var provider = new PreferExistingOpenStaadWrapperProvider())
+        using (var provider = new OpenStaadSessionProvider())
         {
             var result = provider.Acquire();
             foreach (string diagnostic in result.Diagnostics)
@@ -107,7 +109,7 @@ internal static class Program
 }
 ```
 
-Run against an already-open licensed STAAD model in the same Windows session and privilege context. `Acquire()` without a path never creates files or launches STAAD. It reports failure if no usable root is available. For filename acquisition, launcher configuration, discovery policies, blank semantics, ownership and cancellation, read [the full provider guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main-wrapper-redesign/docs/Prefer-Existing-Provider.md).
+Run against an already-open licensed STAAD model in the same Windows session and privilege context. `Acquire()` without a path never creates files or launches STAAD. It reports failure if no usable root is available. For filename acquisition, launcher configuration, discovery policies, blank semantics, ownership and cancellation, read [the full provider guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main-wrapper-redesign/docs/OpenStaad-Session-Provider.md).
 
 Acquisition and wrapper use must remain on the same STA thread. Unmapped blank processes cannot be bound reliably by arbitrary PID; a synchronous native COM call can exceed the logical timeout. Existing provider/wrapper source remains unchanged. Trimmed/AOT deployment and other STAAD releases have not been validated.
 

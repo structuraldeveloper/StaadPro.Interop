@@ -12,7 +12,7 @@ using StaadPro.Interop.Services.Acquisition;
 namespace StaadPro.Interop.Tests.Services
 {
     [TestFixture, Apartment(ApartmentState.STA), Category("LiveIntegration")]
-    public class PreferExistingProviderNativeTests
+    public class OpenStaadSessionProviderNativeTests
     {
         [Test, Explicit("Launches one temporary named model in a new licensed STAAD application, then closes only that verified new process.")]
         public void NativeNewNamedTargetHasVerifiedDedicatedOwnership()
@@ -25,7 +25,7 @@ namespace StaadPro.Interop.Tests.Services
             var before = environment.Inventory().Select(p => p.Key).ToArray();
             try
             {
-                using (var provider = new PreferExistingOpenStaadWrapperProvider(new OpenStaadAcquisitionOptions
+                using (var provider = new OpenStaadSessionProvider(new OpenStaadAcquisitionOptions
                 { StaadExecutablePath = executable, Timeout = TimeSpan.FromSeconds(45) }, environment))
                 {
                     var result = provider.Acquire(target);

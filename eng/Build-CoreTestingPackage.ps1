@@ -1,5 +1,5 @@
 param(
-    [string] $Version = '1.0.0-preview.20261013.1'
+    [string] $Version = '1.0.0-preview.20261013.2'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -48,11 +48,11 @@ try {
             throw 'The testing package must contain only the modern library asset.'
         }
         [xml] $intelliSense = Read-Entry 'lib/net8.0-windows7.0/StaadPro.Interop.xml'
-        if ($null -eq $intelliSense.SelectSingleNode("//member[@name='T:StaadPro.Interop.Services.PreferExistingOpenStaadWrapperProvider']/summary")) {
+        if ($null -eq $intelliSense.SelectSingleNode("//member[@name='T:StaadPro.Interop.Services.OpenStaadSessionProvider']/summary")) {
             throw 'Missing provider IntelliSense.'
         }
         if ((Read-Entry 'README.md') -notmatch 'StaadPro.Interop.Core.Testing') { throw 'Wrong test package README.' }
-        [void] (Read-Entry 'docs/Prefer-Existing-Provider.md')
+        [void] (Read-Entry 'docs/OpenStaad-Session-Provider.md')
         if ($metadata.frameworkReferences.group.frameworkReference.name -notcontains 'Microsoft.WindowsDesktop.App.WPF') {
             throw 'Missing Windows Desktop/WPF dependency.'
         }

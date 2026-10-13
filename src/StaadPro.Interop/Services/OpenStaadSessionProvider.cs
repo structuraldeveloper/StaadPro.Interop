@@ -10,15 +10,17 @@ using StaadPro.Interop.Services.Acquisition;
 
 namespace StaadPro.Interop.Services
 {
-    /// <summary>Independently acquires a verified target, reusable unnamed session, or newly opened target.</summary>
+    /// <summary>Acquires an <see cref="OpenStaadWrapper"/> for a verified existing STAAD session or a newly opened target model.</summary>
     /// <remarks>
     /// <para>Create, use and dispose this provider on one Windows STA thread. It retains previously obtained roots
     /// and validates process ID/start time on subsequent requests. The existing provider and wrapper are not modified.</para>
+    /// <para>The provider manages acquisition state. The returned wrapper exposes the native OpenSTAAD interfaces;
+    /// disposing the provider does not dispose returned wrappers or close their STAAD applications.</para>
     /// <para>Best-effort discovery permits fallback when applications are unmapped; it cannot guarantee that an
     /// inaccessible application does not already contain the target. Strict discovery can instead fail.
     /// Synchronous COM calls cannot be forcibly interrupted by the logical timeout or cancellation token.</para>
     /// </remarks>
-    public sealed class PreferExistingOpenStaadWrapperProvider : IOpenStaadWrapperResolver, IDisposable
+    public sealed class OpenStaadSessionProvider : IOpenStaadWrapperResolver, IDisposable
     {
         private readonly IOpenStaadAcquisitionEnvironment environment;
         private readonly OpenStaadAcquisitionOptions options;
@@ -34,21 +36,21 @@ namespace StaadPro.Interop.Services
         /// <exception cref="InvalidOperationException">The caller is not an STA thread.</exception>
         /// <exception cref="ArgumentException">An executable path or discovery policy is invalid.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Timeout, polling or grace values are invalid.</exception>
-        public PreferExistingOpenStaadWrapperProvider(OpenStaadAcquisitionOptions options = null)
+        public OpenStaadSessionProvider(OpenStaadAcquisitionOptions options = null)
         {
             this.options = CopyOptions(options);
             CheckThread();
             environment = new WindowsOpenStaadEnvironment();
         }
 
-        internal PreferExistingOpenStaadWrapperProvider(OpenStaadAcquisitionOptions options, IOpenStaadAcquisitionEnvironment environment)
+        internal OpenStaadSessionProvider(OpenStaadAcquisitionOptions options, IOpenStaadAcquisitionEnvironment environment)
         {
             this.options = CopyOptions(options);
             CheckThread();
             this.environment = environment ?? throw new ArgumentNullException(nameof(environment));
         }
 
-        /// <summary>Acquires a verified wrapper, returning null on an operational acquisition failure.</summary>
+        /// <summary>Acquires an <see cref="OpenStaadWrapper"/>, returning null on an operational acquisition failure.</summary>
         /// <param name="fileFullPath">Absolute .std target path, or null for attachment only without creation or launch.</param>
         /// <returns>A target, blank or running-session wrapper; null if acquisition fails. Use Acquire to inspect the outcome and diagnostics.</returns>
         /// <remarks>A returned ExistingBlank does not open the requested path. Run on the provider's owning STA thread.
@@ -58,7 +60,7 @@ namespace StaadPro.Interop.Services
         /// <exception cref="ObjectDisposedException">The provider has been disposed.</exception>
         public OpenStaadWrapper Get(string fileFullPath = null) => Acquire(fileFullPath).Wrapper;
 
-        /// <summary>Acquires a wrapper with immutable process, outcome and discovery diagnostics.</summary>
+        /// <summary>Acquires an <see cref="OpenStaadWrapper"/> in a result containing immutable process, outcome and discovery diagnostics.</summary>
         /// <param name="fileFullPath">Absolute .std target path, or null for attachment only.</param>
         /// <param name="cancellationToken">Cancellation observed before side effects and between synchronous native operations.</param>
         /// <returns>A non-null result; Wrapper is null on operational failure. Successful blank outcomes have an empty ActualPath.</returns>
@@ -76,7 +78,7 @@ namespace StaadPro.Interop.Services
         /// <exception cref="ObjectDisposedException">The provider has been disposed.</exception>
         /// <example><code>
         /// // On a Windows STA thread:
-        /// using (var provider = new PreferExistingOpenStaadWrapperProvider())
+        /// using (var provider = new OpenStaadSessionProvider())
         /// {
         ///     var result = provider.Acquire(); // attachment only; never launches
         ///     if (result.Succeeded) result.Wrapper.Dispose();
@@ -390,7 +392,7 @@ namespace StaadPro.Interop.Services
             if (Environment.OSVersion.Platform != PlatformID.Win32NT) throw new PlatformNotSupportedException("OpenSTAAD requires Windows.");
             if (Thread.CurrentThread.ManagedThreadId != ownerThread || Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
                 throw new InvalidOperationException("Use this provider exclusively on its owning Windows STA thread.");
-            if (disposed) throw new ObjectDisposedException(nameof(PreferExistingOpenStaadWrapperProvider));
+            if (disposed) throw new ObjectDisposedException(nameof(OpenStaadSessionProvider));
         }
         private void CheckIdle() { CheckThread(); if (acquisitionDepth != 0) throw new InvalidOperationException("Registry and lifecycle operations cannot reenter acquisition."); }
         private static void Note(List<string> diagnostics, string message) { if (!diagnostics.Contains(message) && diagnostics.Count < 128) diagnostics.Add(message); }
