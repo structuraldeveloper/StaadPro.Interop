@@ -1,5 +1,12 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261013.8 - 13 October 2026 (load batch 2, prepared)
+
+Added GetLoadCombination, GetMemberLoadsGroupedByLoadCase and GetNodalLoadsGroupedByLoadCase with detailed matching IntelliSense. Validated combination Boolean status, source arrays and primary membership; rejected unrepresentable SRSS overall factors. Preserved managed refresh, reference case identity, exact definition comparison and duplicate-assignment buckets.
+
+Validated 720 offline tests and 111 installed-package XML examples. Load coverage is 72 overloads, with 48 reference overloads pending. Live native unit/version validation remains pending.
+
+
 ## 1.0.0-preview.20261013.7 - 13 October 2026 (load batch 1, prepared)
 
 Added the thread-count AddSelfweightInXYZTo overload, CreateLoadCombinations and editor-definition CreateLoadEnvelopExt with matching signatures. Preserved the existing typed self-weight and integer-envelope implementations. Added invariant-culture editor combinations, eager filtering/validation and caller-thread entity-specific self-weight. Shared XML documentation is now an explicit compiler input for reliable incremental IntelliSense updates.

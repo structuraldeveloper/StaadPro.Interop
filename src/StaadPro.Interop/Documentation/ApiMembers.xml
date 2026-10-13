@@ -4155,5 +4155,51 @@ load.CreateLoadCombinations(new[] { new EditorLoadCombination(201, "LOAD COMB 20
 load.CreateLoadEnvelopExt(7, LoadEnvelopType.Strength, new[] { new EditorLoadCombination(201, "COMB", "17 1.5 41 -0.75") });
 ]]></code></example>
     </member>
+    <member name="IOSLoad.GetLoadCombination">
+      <summary>Reads an ordinary combination with validated primary-case metadata and signed factors.</summary>
+      <param name="id">Positive combination ID in the connected model. A successful zero pair count returns null.</param>
+      <returns>A fresh StaadLoadCombination with independent dictionary/case metadata, or null for a successful zero pair count. No partial object is returned.</returns>
+      <remarks><para>Reads GetNoOfLoadAndFactorPairsForCombination, native title and GetLoadAndFactorForCombination. The native fetch uses Boolean/VARIANT success, distinct from assignment readers&#x27; integer-zero status. Checks integer counts, typed one-dimensional arrays, positive unique source IDs, finite coefficients and primary-family membership. Nonzero SAFEARRAY lower bounds are supported.</para><para>Allocates an extra factor slot as documented for SRSS. A written overall multiplier cannot be represented by the reference return type and throws NotSupportedException; ordinary arrays use their first count coefficients, with an unwritten extra sentinel ignored. This method does not silently discard an SRSS overall factor.</para><para>Reads primary metadata once through the existing validated family reader. Unrelated primary metadata failures propagate. Signs, precision and title remain unchanged; factors are dimensionless. No case activation, unit conversion, managed-source mutation, native assignment, save or rollback occurs. Editing the returned dictionary performs no native writes. Use the appropriate caller COM thread and serialize session access.</para></remarks>
+      <exception cref="System.ArgumentOutOfRangeException">id is not positive.</exception>
+      <exception cref="System.InvalidOperationException">Native data/status or primary membership is invalid.</exception>
+      <exception cref="System.NotSupportedException">An SRSS overall multiplier is returned.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">A native query fails.</exception>
+      <example><code><![CDATA[
+var combination = load.GetLoadCombination(201);
+if (combination != null) foreach (var pair in combination.Factors) Console.WriteLine($"{pair.Key.Id}: {pair.Value}");
+]]></code></example>
+    </member>
+    <member name="IOSLoad.GetMemberLoadsGroupedByLoadCase">
+      <summary>Refreshes six supported member load families and groups equivalent assignments by destination case.</summary>
+      <param name="forBeams">Non-null sequence of initialized beams with positive IDs. MemberLoadItems are replaced in place; geometry/incidences are not fetched or changed.</param>
+      <param name="fromLoadCases">Non-null sequence of initialized positive primary/reference cases. The original case objects are attached to retrieved definitions.</param>
+      <returns>An eager dictionary mapping cases to named (MemberLoad Load, List&lt;Beam&gt; Beams) tuples with duplicate assignments split into separate buckets.</returns>
+      <remarks><para>Input sequences are each materialized once, and initialized positive entity IDs and existing primary/reference case arguments are validated before managed lists are cleared. Supply each entity object once; repeated input objects can cause repeated population and flattening. Keep entity/case identity and hash fields stable throughout.</para><para>This refreshes supplied managed entity load lists: existing entries are cleared, including when no cases are supplied. Native assignments are read without conversion, summation or model mutation. Reader activation leaves the last processed case selected; the previous selection is not restored. Empty entity input makes no native calls; successful no-load reads produce an empty dictionary.</para><para>Grouping follows the reference case-object identity predicate and exact load fields. Repeated identical assignments for one entity ID are split into distinct buckets with no repeated ID within a bucket; later buckets copy the definition and retain its LoadCase reference. Entity objects are reused and group lists are new. Ordering is not a sorting contract.</para><para>Native reader failures stop processing and may leave partially refreshed managed lists and changed active-case state. There is no rollback. Use the caller COM thread and serialize session access. Null input/entries and unsupported cases fail before clearing; COM/binding and validated-reader exceptions propagate.</para><para>Refresh order matches the reference: concentrated forces, concentrated moments, uniform forces, uniform moments, linear-varying forces and trapezoidal forces. Each family is read in case/entity input order. Definition equality requires the same runtime subtype, same case object and matching LoadDefiningProperty fields. Managed Members associations remain empty.</para></remarks>
+      <exception cref="System.ArgumentNullException">An input sequence or case entry is null.</exception>
+      <exception cref="System.ArgumentException">An entity entry is null or has a nonpositive ID.</exception>
+      <exception cref="System.NotSupportedException">A requested case family is unsupported.</exception>
+      <exception cref="System.InvalidOperationException">A delegated native reader fails or returns malformed data.</exception>
+      <example><code><![CDATA[
+var beam = new Beam(101, new Node(1, 0, 0, 0), new Node(2, 5, 0, 0));
+var groups = load.GetMemberLoadsGroupedByLoadCase(new[] { beam }, new[] { new LoadCase(17) });
+Console.WriteLine(groups.Count);
+]]></code></example>
+    </member>
+    <member name="IOSLoad.GetNodalLoadsGroupedByLoadCase">
+      <summary>Refreshes supplied nodes&#x27; six-component assignments and groups equivalent nodal loads by case.</summary>
+      <param name="forNodes">Non-null initialized nodes with positive IDs. Existing NodalLoadItems are cleared and repopulated; coordinates are unchanged.</param>
+      <param name="fromLoadCases">Non-null initialized positive primary/reference cases. Definitions reuse the supplied case objects.</param>
+      <returns>An eager dictionary of named (NodalLoad Load, List&lt;Node&gt; Nodes) tuples; repeated assignments are preserved in separate buckets.</returns>
+      <remarks><para>Input sequences are each materialized once, and initialized positive entity IDs and existing primary/reference case arguments are validated before managed lists are cleared. Supply each entity object once; repeated input objects can cause repeated population and flattening. Keep entity/case identity and hash fields stable throughout.</para><para>This refreshes supplied managed entity load lists: existing entries are cleared, including when no cases are supplied. Native assignments are read without conversion, summation or model mutation. Reader activation leaves the last processed case selected; the previous selection is not restored. Empty entity input makes no native calls; successful no-load reads produce an empty dictionary.</para><para>Grouping follows the reference case-object identity predicate and exact load fields. Repeated identical assignments for one entity ID are split into distinct buckets with no repeated ID within a bucket; later buckets copy the definition and retain its LoadCase reference. Entity objects are reused and group lists are new. Ordering is not a sorting contract.</para><para>Native reader failures stop processing and may leave partially refreshed managed lists and changed active-case state. There is no rollback. Use the caller COM thread and serialize session access. Null input/entries and unsupported cases fail before clearing; COM/binding and validated-reader exceptions propagate.</para><para>Reads GetNodalLoads in case/node input order. Equality compares the same case object and exact Fx/Fy/Fz/Mx/My/Mz values. Additional duplicate buckets use NodalLoad.DeepCopy with independent Forces and the original case reference, replacing the reference&#x27;s external cloning dependency.</para></remarks>
+      <exception cref="System.ArgumentNullException">An input sequence or case entry is null.</exception>
+      <exception cref="System.ArgumentException">A node entry is null or has a nonpositive ID.</exception>
+      <exception cref="System.NotSupportedException">A requested case family is unsupported.</exception>
+      <exception cref="System.InvalidOperationException">A delegated native reader fails or returns malformed data.</exception>
+      <example><code><![CDATA[
+var node = new Node(10, 0, 0, 0);
+var groups = load.GetNodalLoadsGroupedByLoadCase(new[] { node }, new[] { new LoadCase(17) });
+Console.WriteLine(groups.Count);
+]]></code></example>
+    </member>
   </members>
 </doc>

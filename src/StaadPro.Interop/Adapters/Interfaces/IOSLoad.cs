@@ -31,6 +31,13 @@ namespace StaadPro.Interop.Adapters.Interfaces
 
         #region Load Assignment Queries
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.GetLoadCombination']/*" />
+        StaadLoadCombination GetLoadCombination(int id);
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.GetMemberLoadsGroupedByLoadCase']/*" />
+        Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> GetMemberLoadsGroupedByLoadCase(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases);
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.GetNodalLoadsGroupedByLoadCase']/*" />
+        Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> GetNodalLoadsGroupedByLoadCase(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases);
+
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.SelfWeightThreads']/*" />
         IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1);
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateEnvelopeCombinations']/*" />

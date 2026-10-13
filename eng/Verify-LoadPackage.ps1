@@ -90,7 +90,7 @@ try {
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         $methods = if ($owner -match 'Geometry') {
             @('CreateMultipleBeamsExtended', 'CreateMultipleNodesExtended', 'MergeNodesExtended')
-        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo', 'AddMemberLoadsFromGroupsByLoadCase', 'AddNodalLoadsFromGroupsByLoadCase', 'AddSelfweightInXYZTo', 'CreateLoadEnvelopExt', 'CreateLoadList', 'CreateLoadCombinations') }
+        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo', 'AddMemberLoadsFromGroupsByLoadCase', 'AddNodalLoadsFromGroupsByLoadCase', 'AddSelfweightInXYZTo', 'CreateLoadEnvelopExt', 'CreateLoadList', 'CreateLoadCombinations', 'GetLoadCombination', 'GetMemberLoadsGroupedByLoadCase', 'GetNodalLoadsGroupedByLoadCase') }
         foreach ($method in $methods) {
             $prefix = "M:StaadPro.Interop.$owner.$method("
             $member = @($xml.doc.members.member | Where-Object { $_.name.StartsWith($prefix) })
@@ -122,7 +122,7 @@ try {
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 9 } else { 69 }
+        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 9 } else { 72 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -132,7 +132,7 @@ try {
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 105) { throw "Expected 105 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 111) { throw "Expected 111 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -360,7 +360,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: 105 packaged XML examples and complete geometry/load IntelliSense.");
+        Console.WriteLine("PASS: 111 packaged XML examples and complete geometry/load IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -426,6 +426,8 @@ __EXAMPLES__
         public string Assignment { get; private set; }
         public double[] AssignedValues { get; private set; }
         public int[] AssignedIds { get; private set; }
+        public int GetNoOfLoadAndFactorPairsForCombination(int id) => Empty ? 0 : 1;
+        public bool GetLoadAndFactorForCombination(int id, ref object ids, ref object factors) { ids = new[] { 17 }; factors = new[] { -1.25 }; return true; }
         public int Direction { get; private set; }
         public int CreatedEnvelopeId { get; private set; }
         public bool AddSelfWeightInXYZToGeometry(int[] ids, int direction, double factor)

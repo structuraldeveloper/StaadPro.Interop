@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StaadPro.Interop.Adapters.Interfaces;
+using StaadPro.Interop.Comparers;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
+using StaadPro.Interop.Extensions;
 using StaadPro.Interop.Models;
 
 namespace StaadPro.Interop.Adapters.Models
@@ -125,6 +127,97 @@ namespace StaadPro.Interop.Adapters.Models
         #endregion
 
         #region Load Assignment Queries
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.GetLoadCombination']/*" />
+        public StaadLoadCombination GetLoadCombination(int id)
+        {
+            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
+            int count = ReadQueryCount((object)ComObject.GetNoOfLoadAndFactorPairsForCombination(id), "GetNoOfLoadAndFactorPairsForCombination");
+            if (count == 0) return null;
+            if (count == int.MaxValue) throw new InvalidOperationException("Combination factor count is too large.");
+            object title = ComObject.GetLoadCaseTitle(id);
+            if (!(title is string text)) throw new InvalidOperationException("Native combination title is not a string.");
+            object ids = new int[count], factors = CreateQueryBuffer(count + 1);
+            RequireLoadMutationSuccess((object)ComObject.GetLoadAndFactorForCombination(id, ref ids, ref factors), "GetLoadAndFactorForCombination");
+            int[] sourceIds = ReadQueryArray<int>(ids, count, "combination source IDs");
+            if (!(factors is Array array) || array.Rank != 1 || array.GetType().GetElementType() != typeof(double) || (array.Length != count && array.Length != count + 1))
+                throw new InvalidOperationException("Native combination factor array is malformed.");
+            int lower = array.GetLowerBound(0);
+            if (array.Length == count + 1 && !double.IsNaN((double)array.GetValue(lower + count)))
+                throw new NotSupportedException("SRSS overall factors cannot be represented by StaadLoadCombination.");
+            var values = new double[count];
+            for (int i = 0; i < count; i++) values[i] = (double)array.GetValue(lower + i);
+            values = ReadQueryValues(values, count, "combination factors");
+            if (sourceIds.Any(n => n <= 0) || sourceIds.Distinct().Count() != count)
+                throw new InvalidOperationException("Native source IDs must be positive and unique.");
+            var primary = ReadAllLoadCases(LoadCaseType.PrimaryLoad).ToDictionary(c => c.Id);
+            var result = new StaadLoadCombination(id, text);
+            for (int i = 0; i < count; i++)
+            {
+                if (!primary.TryGetValue(sourceIds[i], out var source)) throw new InvalidOperationException("Combination source case was not found in the primary family.");
+                result.Factors.Add(source, values[i]);
+            }
+            return result;
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.GetMemberLoadsGroupedByLoadCase']/*" />
+        public Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> GetMemberLoadsGroupedByLoadCase(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)
+        {
+            var beams = SnapshotPopulationEntities(forBeams, b => b.Id, nameof(forBeams));
+            var cases = SnapshotPopulationCases(fromLoadCases);
+            PopulateAllMemberLoadsCore(beams, cases);
+            return beams.SelectMany(b => b.MemberLoadItems.Select(load => (Beam: b, Load: load)))
+                .GroupBy(x => x.Load.LoadCase)
+                .ToDictionary(g => g.Key, g => g.GroupBy(x => x.Load, new MemberLoadComparer())
+                    .Select(sub => (Load: sub.Key, Beams: sub.Select(x => x.Beam).ToList())).SplitDuplicateBeams().ToList());
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.GetNodalLoadsGroupedByLoadCase']/*" />
+        public Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> GetNodalLoadsGroupedByLoadCase(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)
+        {
+            var nodes = SnapshotPopulationEntities(forNodes, n => n.Id, nameof(forNodes));
+            var cases = SnapshotPopulationCases(fromLoadCases);
+            foreach (var node in nodes) node.NodalLoadItems.Clear();
+            foreach (var lc in cases)
+                foreach (var node in nodes) node.NodalLoadItems.AddRange(GetNodalLoads(lc, node.Id));
+            return nodes.SelectMany(n => n.NodalLoadItems.Select(load => (Node: n, Load: load)))
+                .GroupBy(x => x.Load.LoadCase)
+                .ToDictionary(g => g.Key, g => g.GroupBy(x => x.Load, new NodalLoadComparer())
+                    .Select(sub => (Load: sub.Key, Nodes: sub.Select(x => x.Node).ToList())).SplitDuplicateNodes().ToList());
+        }
+
+        private static List<T> SnapshotPopulationEntities<T>(IEnumerable<T> entities, Func<T, int> id, string parameter) where T : class
+        {
+            if (entities == null) throw new ArgumentNullException(parameter);
+            var result = entities.ToList();
+            if (result.Any(e => e == null || id(e) <= 0)) throw new ArgumentException("Entities must be initialized with positive IDs.", parameter);
+            return result;
+        }
+
+        private static List<ILoadCase> SnapshotPopulationCases(IEnumerable<ILoadCase> fromLoadCases)
+        {
+            if (fromLoadCases == null) throw new ArgumentNullException(nameof(fromLoadCases));
+            var result = fromLoadCases.ToList();
+            foreach (var lc in result) ValidateLoadQuery(lc, 1, nameof(fromLoadCases));
+            return result;
+        }
+
+        private void PopulateMemberLoadsCore<T>(List<Beam> beams, List<ILoadCase> cases, Func<ILoadCase, int, List<T>> read) where T : MemberLoad
+        {
+            foreach (var lc in cases)
+                foreach (var beam in beams) beam.MemberLoadItems.AddRange(read(lc, beam.Id));
+        }
+
+        private void PopulateAllMemberLoadsCore(List<Beam> beams, List<ILoadCase> cases)
+        {
+            foreach (var beam in beams) beam.MemberLoadItems.Clear();
+            PopulateMemberLoadsCore(beams, cases, GetMemberConcentratedLoads);
+            PopulateMemberLoadsCore(beams, cases, GetMemberConcentratedMoments);
+            PopulateMemberLoadsCore(beams, cases, GetMemberUniformlyDistributedLoads);
+            PopulateMemberLoadsCore(beams, cases, GetMemberUniformMoments);
+            PopulateMemberLoadsCore(beams, cases, GetMemberLinearVaryingLoads);
+            PopulateMemberLoadsCore(beams, cases, GetMemberTrapezoidalLoads);
+        }
 
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.SelfWeightThreads']/*" />
         public IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)
