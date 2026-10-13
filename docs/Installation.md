@@ -2,6 +2,8 @@
 
 ## Package and runtime
 
+**Unreleased current-source addition:** the independent prefer-existing provider and `net8.0-windows` asset are now implemented alongside `net481`. These additions are not included in the older public previews referenced below. Modern Windows consumers require the Windows Desktop/WPF runtime and STA usage; see [Prefer-Existing-Provider.md](Prefer-Existing-Provider.md). The historical public-feed commands below remain instructions for the earlier Framework-only package.
+
 The current source also prepares `1.0.0-preview.20261013.4`, adding self-weight/envelope/load-list mutations and root path queries, plus the prior envelope queries and standalone types. This version has passed local package verification but has not been published by this work. To use its new functions now, install the verified archive through the local-feed instructions with that version. The public-feed examples below retain the already verified `1.0.0-preview.20261012.1`; that older package does not contain these additions. Current-source packages ship 66 documented load overloads, 24 load queries and nine documented root functions. See [Load-Porting.md](Load-Porting.md) and [Root-Porting.md](Root-Porting.md) for usage.
 
 This guide uses preview version `1.0.0-preview.20261012.1` of package `StaadPro.Interop`. Public-feed commands apply after that exact version is accepted and available on NuGet.org; [Publishing.md](Publishing.md) explains upload and verification. The same verified archive can be installed immediately through a local feed.
@@ -14,7 +16,7 @@ This guide uses preview version `1.0.0-preview.20261012.1` of package `StaadPro.
 | A connected, open model | Required for model metadata and assignment queries |
 | Serialized COM access on the appropriate thread | Coordinates the shared STAAD session |
 
-Installation and managed package checks do not require a STAAD license. Native STAAD operations do. Bentley software/binaries are separately installed and licensed. The package targets `net481`; this release does not advertise .NET 8/9/10 application compatibility. SDK version and the consuming application's target framework are different things.
+Installation and managed package checks do not require a STAAD license. Native STAAD operations do. Bentley software/binaries are separately installed and licensed. The older public preview targets `net481`; current source also builds a `net8.0-windows` asset. SDK version and the consuming application's target framework are different things.
 
 Newtonsoft.Json is restored as a package dependency. XML documentation is included beside the DLL for IntelliSense on both `IOSLoad` and `OSLoadAdapter`.
 

@@ -1,5 +1,15 @@
 # StaadPro.Interop release notes
 
+## Unreleased provider and modern Windows .NET support - 13 October 2026
+
+- Added the independent `PreferExistingOpenStaadWrapperProvider`, configuration, typed acquisition results and native discovery/file/coordination helpers. Existing provider, ROT-helper and `OpenStaadWrapper` source files remain unchanged.
+- Prefer a verified existing target, then a reachable unnamed session that passes all seven blank-content counts, then verified one-shot startup. Wait for known busy targets; reject unreadable mapped identities, malformed counts, changed processes/models and redirected startup.
+- Retain/revalidate roots using PID plus UTC start time, accept caller-obtained roots, and expose explicit best-effort/strict policies. Preserve startup identity in diagnostics after failure or cancellation. No new wrapper properties or partial adapter classes were introduced.
+- Prepare missing targets with exclusive sibling temporary files and atomic non-overwriting publication. Coordinate cooperating requests by normalized target, release coordination on every exit, and preserve existing files/applications.
+- Multi-target `net481` and `net8.0-windows`; add a modern-target native OLE compatibility helper without editing the Framework helper. Modern consumers require Windows Desktop/WPF and STA usage. Older published previews remain Framework-only.
+- Added automated state-machine, filesystem-race, cancellation, ownership, lifetime and documentation checks on both runtimes, plus explicit controlled native startup tests. Local STAAD.Pro 2026 reports a negative reference-load count after closing an empty model; that state is rejected as an unverified blank and handled through fallback.
+- Expanded provider IntelliSense and added [usage/deployment guidance](Prefer-Existing-Provider.md). Synchronous COM hangs, inaccessible roots, UI races, launch redirection and broader vendor/version support remain explicit limits; an absolute absence of external failures is not claimed. No public package upload is included in this increment.
+
 ## 1.0.0-preview.20261013.4 - 13 October 2026 (prepared)
 
 - Added root `GetShortJobInfo()`, `GetFullJobInfo()` and `SetInputUnitsEx(LengthInputUnit lengthUnit, ForceInputUnit forceUnit)` with reference signatures and complete matching interface/concrete XML IntelliSense. Implementations stay in the existing non-partial root adapter.

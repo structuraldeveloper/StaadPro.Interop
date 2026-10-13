@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-13",
+  "timezone": "Asia/Calcutta",
+  "sourceState": "Validation recorded before the provider implementation commit, based on legacy commit 517d79bf7bfea9e039a9a5c4cdea90ce61c0c238; the release archive records its actual committed source in nuspec repository metadata",
+  "automatedTests": {
+    "net481": {
+      "passed": 765,
+      "failed": 0
+    },
+    "net8.0-windows": {
+      "passed": 765,
+      "failed": 0
+    }
+  },
+  "explicitNativeTests": {
+    "staadVersion": "26.00.00.340",
+    "net481": {
+      "passed": true,
+      "newTargetPid": 39812,
+      "repeatAttachmentReusedPid": true,
+      "closedModelReferenceCount": -1,
+      "fallbackTargetPid": 40116
+    },
+    "net8.0-windows": {
+      "passed": true,
+      "newTargetPid": 34564,
+      "repeatAttachmentReusedPid": true,
+      "closedModelReferenceCount": -1,
+      "fallbackTargetPid": 37416
+    },
+    "cleanup": "Normal close of only test-started processes with matching PID and UTC start time; customer process 20340 remained running"
+  },
+  "readOnlyAttachmentChecks": {
+    "net481": {
+      "legacyGetRunningSucceeded": true,
+      "newProviderAttached": true,
+      "requestedTargetReused": true,
+      "existingOwnershipWasNotClaimed": true,
+      "wrapperWorkedAfterProviderDispose": true
+    },
+    "net8.0-windows": {
+      "legacyGetRunningSucceeded": true,
+      "newProviderAttached": true,
+      "requestedTargetReused": true,
+      "existingOwnershipWasNotClaimed": true,
+      "wrapperWorkedAfterProviderDispose": true
+    }
+  },
+  "limitations": [
+    "Negative native counts were not interpreted as zero; the tested closed-model state did not qualify for ExistingBlank.",
+    "Managed tests verify retained-root reuse when all blank checks succeed; broader native ready-blank states remain unverified.",
+    "Logical timeout and cancellation cannot interrupt an in-progress synchronous COM call.",
+    "Inaccessible applications may hide a matching target under best-effort policy.",
+    "Only local STAAD.Pro 2026 integration was validated; no public package publication is claimed."
+  ],
+  "packageConsumers": {
+    "net481": {
+      "built": true,
+      "readOnlyAttachment": true
+    },
+    "net8.0-windows": {
+      "built": true,
+      "readOnlyAttachment": true
+    },
+    "status": "Local draft inspected; final package restored, built and attached read-only on both runtimes; not published"
+  }
+}

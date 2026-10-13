@@ -41,7 +41,13 @@ try {
     if ($metadata.repository.url -ne 'https://github.com/structuraldeveloper/StaadPro.Interop') { throw 'Missing repository metadata.' }
     if ([string]$metadata.authors -ne 'Srinivasa Rao Masanam') { throw 'Incorrect package author.' }
     if ([string]$metadata.copyright -ne 'Copyright (c) 2026 StaadDev') { throw 'Incorrect package copyright.' }
-    if ([string]::IsNullOrWhiteSpace([string]$metadata.releaseNotes) -or [string]$metadata.releaseNotes -notmatch 'GetLoadCases|inclusive ID ranges') { throw 'Missing load-query release notes in package metadata.' }
+    if ([string]::IsNullOrWhiteSpace([string]$metadata.releaseNotes) -or [string]$metadata.releaseNotes -notmatch 'GetLoadCases|inclusive ID ranges|PreferExistingOpenStaadWrapperProvider') { throw 'Missing implemented-feature release notes in package metadata.' }
+    if ($null -ne $archive.GetEntry('lib/net8.0-windows7.0/StaadPro.Interop.dll')) {
+        [xml] $modernDocumentation = Read-PackageEntry 'lib/net8.0-windows7.0/StaadPro.Interop.xml'
+        if ($null -eq $modernDocumentation.SelectSingleNode("//member[@name='T:StaadPro.Interop.Services.PreferExistingOpenStaadWrapperProvider']/summary")) { throw 'Missing modern provider IntelliSense.' }
+        [void] (Read-PackageEntry 'docs/Prefer-Existing-Provider.md')
+        if ($metadata.frameworkReferences.group.frameworkReference.name -notcontains 'Microsoft.WindowsDesktop.App.WPF') { throw 'Missing modern WPF framework reference.' }
+    }
     if ($releaseNotes -notmatch '1.0.0-preview.20261012' -or $releaseNotes -notmatch 'Srinivasa Rao Masanam' -or $releaseNotes -notmatch 'GetLoadCasesFromIds') { throw 'Incomplete packaged release notes.' }
     $version = [string]$metadata.version
     $snippets = @()

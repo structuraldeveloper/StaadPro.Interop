@@ -98,10 +98,18 @@ namespace StaadPro.Interop.Tests.Adapter
         }
 
         [TestCase("name")] [TestCase("anl")]
-        public void DerivedPathsPropagateInvalidWindowsPathSyntax(string operation)
+        public void DerivedPathsUseTargetRuntimePathSyntaxValidation(string operation)
         {
             var native = new NativeRoot { Path = "invalid\0path.std" };
+#if NET8_0_OR_GREATER
+            // Modern Path.GetFileName/Combine are lexical APIs and no longer validate NUL here.
+            string expected = operation == "name" ? System.IO.Path.GetFileName((string)native.Path) :
+                System.IO.Path.Combine(System.IO.Path.GetDirectoryName((string)native.Path) ?? string.Empty,
+                    System.IO.Path.GetFileNameWithoutExtension((string)native.Path) + ".ANL");
+            Assert.That(Read(new OSRootAdapter(native), operation), Is.EqualTo(expected));
+#else
             Assert.Throws<ArgumentException>(() => Read(new OSRootAdapter(native), operation));
+#endif
             Assert.That(native.Calls, Is.EqualTo(1));
         }
 

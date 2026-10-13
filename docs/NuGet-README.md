@@ -4,9 +4,13 @@ A strongly typed wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load opera
 
 ## Requirements
 
-- Windows and .NET Framework **4.8.1** (`net481`). This package does not currently target .NET 8.
+- Current source builds for Windows .NET Framework **4.8.1** (`net481`) and **Windows .NET 8** (`net8.0-windows`). Modern consumers require the Windows Desktop/WPF runtime because the existing wrapper uses WPF geometry types. Earlier published previews remain `net481` only.
 - A licensed STAAD.Pro installation exposing the OpenSTAAD methods used by your application. Bentley binaries are not distributed in this package or required to build it.
 - A connected model session, with COM access coordinated by the calling application. This wrapper does not guarantee thread safety across a shared STAAD session.
+
+## Verified model acquisition
+
+The independent `PreferExistingOpenStaadWrapperProvider` prefers an existing target, then a verified reachable blank, then a verified new target. It adds retained roots, PID/start-time checks, immutable diagnostics, explicit discovery policies, cancellation between native calls and atomic non-overwriting target creation. It leaves the existing provider and wrapper unchanged. See packaged `docs/Prefer-Existing-Provider.md` for STA usage, blank semantics, limitations and examples.
 
 ## Geometry grouping and IntelliSense
 

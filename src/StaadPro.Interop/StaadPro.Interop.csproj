@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
+    <TargetFrameworks>net481;net8.0-windows</TargetFrameworks>
+    <UseWPF Condition="'$(TargetFramework)' == 'net8.0-windows'">true</UseWPF>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -14,8 +15,8 @@
     <Version>1.0.0</Version>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 StaadDev</Copyright>
-    <PackageReleaseNotes>Preview for Windows and .NET Framework 4.8.1. Adds root GetShortJobInfo, GetFullJobInfo and SetInputUnitsEx with standalone job models, checked BSTR outputs, culture-aware date parsing and validated native unit codes. Includes matching interface/concrete IntelliSense for 140 geometry, 66 load and 9 root methods, expanded root documentation and 99 executable XML examples. Retains GetLoadCases inclusive ID ranges and earlier identity, query, mutation and model-attachment work. Native named-model metadata/date conventions, unit switching and broader-version validation remain pending. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
-    <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load operations.</Description>
+    <PackageReleaseNotes>Windows preview for .NET Framework 4.8.1 and Windows .NET 8. Adds the independent PreferExistingOpenStaadWrapperProvider with verified process identity, retained roots, explicit blank/content checks, discovery policies, immutable acquisition diagnostics, cancellation between native calls and atomic non-overwriting target creation. Retains the existing provider and wrapper source unchanged. Includes expanded IntelliSense and managed tests on both targets plus controlled STAAD.Pro 2026 attachment/startup verification. Unmapped blanks, synchronous COM hangs and broader vendor/version validation remain documented limitations. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <Description>A strongly-typed Windows .NET wrapper for Bentley STAAD.Pro OpenSTAAD geometry, loads and verified model acquisition.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
     <RepositoryType>git</RepositoryType>
@@ -24,13 +25,17 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="WindowsBase" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+    <Compile Remove="Helpers\RotHelpers.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +51,10 @@
     <None Include="..\..\docs\Installation.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Publishing.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Release-Notes.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Prefer-Existing-Provider.md" Pack="true" PackagePath="docs\" />
   </ItemGroup>
+
+  <!-- Opt-in metadata for the disposable modern-.NET test package; ordinary packaging is unchanged. -->
+  <Import Project="..\..\eng\CoreTesting.Package.props" Condition="'$(BuildCoreTestingPackage)' == 'true'" />
 
 </Project>

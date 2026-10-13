@@ -1,0 +1,72 @@
+{
+  "observationDate": "2026-10-13",
+  "timezone": "Asia/Calcutta",
+  "staadEdition": "STAAD.Pro Advanced 2026",
+  "executableFileVersion": "26.00.00.340",
+  "executableProductVersion": "26.00.00.340",
+  "repositoryCommit": "517d79bf7bfea9e039a9a5c4cdea90ce61c0c238",
+  "probeApartment": "STA",
+  "rootClassId": "1797f52c-c5e2-4f41-b524-f5a107ea6453",
+  "classMoniker": "!{1797F52C-C5E2-4F41-B524-F5A107EA6453}",
+  "existingApplication": {
+    "pid": 20340,
+    "nativePathWasNamed": true,
+    "nativeFilenameOmitted": "Customer project path intentionally excluded from repository evidence",
+    "nodeCount": 424,
+    "primaryLoadCaseCount": 223
+  },
+  "scenarios": [
+    {
+      "state": "Existing named application only",
+      "applicationPids": [20340],
+      "matchingClassMonikerCount": 1,
+      "classGetObjectResultPids": [20340],
+      "globalActiveObjectResultPid": 20340,
+      "namedFileMonikerResultPid": 20340
+    },
+    {
+      "state": "Existing named application and one newly launched model-less startup application",
+      "applicationPids": [20340, 35108],
+      "matchingClassMonikerCount": 2,
+      "classGetObjectResultPids": [20340, 20340],
+      "globalActiveObjectResultPid": 20340,
+      "namedFileMonikerResultPid": 20340,
+      "unmappedPids": [35108]
+    },
+    {
+      "state": "Existing named application and two newly launched model-less startup applications",
+      "applicationPids": [20340, 35108, 34060],
+      "matchingClassMonikerCount": 3,
+      "classGetObjectResultPids": [20340, 20340, 20340],
+      "globalActiveObjectResultPid": 20340,
+      "namedFileMonikerResultPid": 20340,
+      "unmappedPids": [35108, 34060]
+    }
+  ],
+  "additionalProbes": {
+    "classMonikerBindToObject": "Invalid-argument failure; did not return new application roots",
+    "namedFileMonikerBindToObjectResultPid": 20340,
+    "mainWindowNativeObjectModel": [
+      {"pid": 20340, "objectId": "OBJID_NATIVEOM", "requestedInterface": "IID_IDispatch", "hresult": "0x80004005"},
+      {"pid": 35108, "objectId": "OBJID_NATIVEOM", "requestedInterface": "IID_IDispatch", "hresult": "0x80004005"},
+      {"pid": 34060, "objectId": "OBJID_NATIVEOM", "requestedInterface": "IID_IDispatch", "hresult": "0x80004005"}
+    ]
+  },
+  "cleanup": {
+    "normalCloseRequestedPids": [35108, 34060],
+    "testApplicationsExited": true,
+    "remainingApplicationPids": [20340],
+    "existingModelMutatedByProbe": false
+  },
+  "limitations": [
+    "New applications were model-less startup applications; their analytical-model readiness could not be established because no roots were obtained.",
+    "A sole ready blank, two ready blanks, and named-plus-ready-blank combinations were not independently reproduced during this revision.",
+    "The native-object accessibility probe covered main windows only, not child windows or custom vendor interfaces.",
+    "Observed duplicate-name selection is not claimed as a universal ordering contract.",
+    "No universal claim of impossibility is made across STAAD versions or host extensions."
+  ],
+  "sourceCommits": {
+    "BentleySystems/openstaad-mcp": "1b12202f2344e9d7a4981d6342840807666aee6d",
+    "BentleySystems/openstaadpy": "233a74351e4903c0e0fc01bd1ef6ad11b584b87a"
+  }
+}
