@@ -31,6 +31,13 @@ namespace StaadPro.Interop.Adapters.Interfaces
 
         #region Load Assignment Queries
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.PopulateMemberLinearVaryingLoads']/*" />
+        void PopulateMemberLinearVaryingLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases);
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.PopulateMemberLoads']/*" />
+        IEnumerable<Beam> PopulateMemberLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases);
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.PopulateMemberTrapezoidalLoads']/*" />
+        void PopulateMemberTrapezoidalLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases);
+
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.GetRepeatLoadCases']/*" />
         HashSet<ILoadCase> GetRepeatLoadCases();
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.PopulateMemberConcentratedLoads']/*" />

@@ -1,5 +1,12 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261013.10 - 13 October 2026 (load batch 4, prepared)
+
+Added PopulateMemberLinearVaryingLoads, PopulateMemberLoads and PopulateMemberTrapezoidalLoads with matching signatures and detailed IntelliSense. Individual-family calls append; full population replaces managed lists with all six supported families in reference order and returns an eager snapshot of original beam objects. Preserved raw fields and supplied case identity with input validation before updates and documented partial failure behavior.
+
+Completed twelve pending overloads in four batches. Validated 733 offline tests and 123 installed-package XML examples. Load coverage is 78 overloads, with 42 reference overloads pending. Live native mutation/unit/version checks remain pending.
+
+
 ## 1.0.0-preview.20261013.9 - 13 October 2026 (load batch 3, prepared)
 
 Added GetRepeatLoadCases by scanning checked primary activation and native repeat-command counts, replacing the reference stub. Returned metadata classifies underlying primary IDs as RepeatLoad; native zero-count ambiguity is documented. Added append-only PopulateMemberConcentratedLoads and PopulateMemberConcentratedMoments with original case identity, single input snapshots and validated native readers.

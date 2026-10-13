@@ -1,8 +1,8 @@
 # Load API porting and new assignments
 
-The reference `IOSLoad` contains 115 method overloads. This repository now exposes 75: 70 matching reference overloads plus five repository-specific convenience overloads. There are 45 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
+The reference `IOSLoad` contains 115 method overloads. This repository now exposes 78: 73 matching reference overloads plus five repository-specific convenience overloads. There are 42 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
 
-The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 75 from 115 does not give the pending reference count.
+The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 78 from 115 does not give the pending reference count.
 
 ## Batch 1: AddSelfweightInXYZTo, CreateLoadCombinations, CreateLoadEnvelopExt
 
@@ -15,6 +15,10 @@ Added combination coefficient read-back with validated Boolean native status, ty
 ## Batch 3: GetRepeatLoadCases, PopulateMemberConcentratedLoads, PopulateMemberConcentratedMoments
 
 Implemented the reference repeat-discovery stub by scanning validated primary cases and checking GetRepeatLoadCount. Positive reports produce independent RepeatLoad metadata with underlying primary IDs; zero native results have documented no-command/general-error ambiguity. Added append-only concentrated force and moment population methods with single input snapshots, validated readers and original case identity. Managed/native partial failure and active-case effects are documented.
+
+## Batch 4: PopulateMemberLinearVaryingLoads, PopulateMemberLoads, PopulateMemberTrapezoidalLoads
+
+Added append-only linear-varying and trapezoidal member population methods. Added eager full member refresh that clears old entries and repopulates all six families in reference order, returning a reusable snapshot of original beam objects. Inputs are enumerated once and validated before managed mutation. Exact native field mapping, case identity, no conversion and partial refresh failure behavior are documented.
 
 ## Newly ported functions
 
@@ -105,7 +109,7 @@ wrapper.Load.AddAxialThermalGradientTo(17, new[] { 101, 102 }, 15.5);
 
 ## IntelliSense and validation
 
-Each new method has identical expanded XML on `IOSLoad` and `OSLoadAdapter`, including inputs, native mapping, empty input, activation side effects, exceptions and executable examples. The XML ships beside the DLL and does not require source access. The current package includes documentation for 75 load overloads and verifies all 117 XML examples across the library, including envelope reads, both thermal signatures and the grouped methods.
+Each new method has identical expanded XML on `IOSLoad` and `OSLoadAdapter`, including inputs, native mapping, empty input, activation side effects, exceptions and executable examples. The XML ships beside the DLL and does not require source access. The current package includes documentation for 78 load overloads and verifies all 123 XML examples across the library, including envelope reads, both thermal signatures and the grouped methods.
 
 Offline tests check paired arrays, double precision, one thermal input snapshot, caller-thread scalar assignments, primary/reference grouped routing, member subtype dispatch, all six nodal components, skipped/null/empty group entries, unchanged managed data, activation ordering/failure and partial native failures. Installed-package verification compiles and runs the interface and concrete XML examples and checks argument layouts using managed native stand-ins. Live native mutations, engineering units and version-specific behavior remain unverified for these additions.
 
@@ -113,9 +117,6 @@ Offline tests check paired arrays, double precision, one thermal input snapshot,
 
 The following inventory was compared by method name, generic arity and parameter types. It lists source signatures, including supporting types that may themselves need porting. A name already present here can still appear when a different overload is pending.
 
-- `void PopulateMemberLinearVaryingLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)`
-- `IEnumerable<Beam> PopulateMemberLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)`
-- `void PopulateMemberTrapezoidalLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)`
 - `void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)`
 - `void PopulateMemberUniformMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)`
 - `IEnumerable<Node> PopulateNodalLoads(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)`

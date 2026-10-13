@@ -4244,5 +4244,53 @@ load.PopulateMemberConcentratedMoments(new[] { beam }, new[] { new LoadCase(17) 
 Console.WriteLine(beam.MemberLoadItems.Count);
 ]]></code></example>
     </member>
+    <member name="IOSLoad.PopulateMemberLinearVaryingLoads">
+      <summary>Appends native linear-varying forces to supplied beams&#x27; managed load lists.</summary>
+      <param name="forBeams">Non-null initialized beams with positive IDs. Existing MemberLoadItems are preserved and new records appended.</param>
+      <param name="fromLoadCases">Non-null initialized positive primary/reference cases, shared by retrieved definitions.</param>
+      <returns>No value; the supplied beam objects receive appended definitions.</returns>
+      <remarks><para>Inputs are materialized once and initialized positive beam IDs and primary/reference case arguments are validated before any managed update. Native entity existence is not pre-read. Original beam and case objects are reused; geometry and load Members associations remain unchanged.</para><para>Values and field mappings follow the existing validated native readers. There is no unit conversion, aggregation or deduplication. Last-read-case activation remains in effect; previous native selection is not restored. Calls execute synchronously on the caller COM thread; serialize session access.</para><para>A later native exception stops processing and may leave partial managed updates and changed native activation. No rollback, native load assignment, analysis or automatic save occurs. Input collections are not modified, but the supplied beams&#x27; MemberLoadItems are.</para><para>Reads only linear-varying forces through GetMemberLinearVaryingLoads in case/beam order. Existing entries are not cleared; repeated calls accumulate assignments. Empty beam or case input is a no-op. WStart, WEnd and WMiddle retain the native start/end/middle mapping and local direction convention.</para></remarks>
+      <exception cref="System.ArgumentNullException">An input sequence or case entry is null.</exception>
+      <exception cref="System.ArgumentException">A beam is null or its ID is nonpositive.</exception>
+      <exception cref="System.NotSupportedException">A case family is unsupported.</exception>
+      <exception cref="System.InvalidOperationException">A native reader reports failure or malformed data.</exception>
+      <example><code><![CDATA[
+var beam = new Beam(101, new Node(1, 0, 0, 0), new Node(2, 5, 0, 0));
+load.PopulateMemberLinearVaryingLoads(new[] { beam }, new[] { new LoadCase(17) });
+Console.WriteLine(beam.MemberLoadItems.Count);
+]]></code></example>
+    </member>
+    <member name="IOSLoad.PopulateMemberTrapezoidalLoads">
+      <summary>Appends native trapezoidal forces to supplied beams&#x27; managed load lists.</summary>
+      <param name="forBeams">Non-null initialized beams with positive IDs. Existing MemberLoadItems are preserved and new records appended.</param>
+      <param name="fromLoadCases">Non-null initialized positive primary/reference cases, shared by retrieved definitions.</param>
+      <returns>No value; the supplied beam objects receive appended definitions.</returns>
+      <remarks><para>Inputs are materialized once and initialized positive beam IDs and primary/reference case arguments are validated before any managed update. Native entity existence is not pre-read. Original beam and case objects are reused; geometry and load Members associations remain unchanged.</para><para>Values and field mappings follow the existing validated native readers. There is no unit conversion, aggregation or deduplication. Last-read-case activation remains in effect; previous native selection is not restored. Calls execute synchronously on the caller COM thread; serialize session access.</para><para>A later native exception stops processing and may leave partial managed updates and changed native activation. No rollback, native load assignment, analysis or automatic save occurs. Input collections are not modified, but the supplied beams&#x27; MemberLoadItems are.</para><para>Reads only trapezoidal forces through GetMemberTrapezoidalLoads in case/beam order. Existing entries are not cleared; repeated calls accumulate assignments. Empty beam or case input is a no-op. WStart/WEnd, SPosition/EPosition and direction retain raw native meanings and loaded-span positions.</para></remarks>
+      <exception cref="System.ArgumentNullException">An input sequence or case entry is null.</exception>
+      <exception cref="System.ArgumentException">A beam is null or its ID is nonpositive.</exception>
+      <exception cref="System.NotSupportedException">A case family is unsupported.</exception>
+      <exception cref="System.InvalidOperationException">A native reader reports failure or malformed data.</exception>
+      <example><code><![CDATA[
+var beam = new Beam(101, new Node(1, 0, 0, 0), new Node(2, 5, 0, 0));
+load.PopulateMemberTrapezoidalLoads(new[] { beam }, new[] { new LoadCase(17) });
+Console.WriteLine(beam.MemberLoadItems.Count);
+]]></code></example>
+    </member>
+    <member name="IOSLoad.PopulateMemberLoads">
+      <summary>Replaces supplied beams&#x27; managed load lists with all six supported native member-load families.</summary>
+      <param name="forBeams">Non-null initialized beams with positive IDs. MemberLoadItems are cleared after all input validation and repopulated in place.</param>
+      <param name="fromLoadCases">Non-null initialized positive primary/reference cases, attached unchanged to read definitions.</param>
+      <returns>An eager independent List exposed as IEnumerable containing the original beam objects in input order. Re-enumerating it performs no native reads; it is not the original input sequence object.</returns>
+      <remarks><para>Inputs are materialized once and initialized positive beam IDs and primary/reference case arguments are validated before any managed update. Native entity existence is not pre-read. Original beam and case objects are reused; geometry and load Members associations remain unchanged.</para><para>Values and field mappings follow the existing validated native readers. There is no unit conversion, aggregation or deduplication. Last-read-case activation remains in effect; previous native selection is not restored. Calls execute synchronously on the caller COM thread; serialize session access.</para><para>A later native exception stops processing and may leave partial managed updates and changed native activation. No rollback, native load assignment, analysis or automatic save occurs. Input collections are not modified, but the supplied beams&#x27; MemberLoadItems are.</para><para>Matches the reference family order: concentrated forces, concentrated moments, uniform forces, uniform moments, linear-varying forces and trapezoidal forces. Each family is read in case/beam order using the existing validated reader. Clears old managed entries, including when cases are empty; empty beam input makes no native calls.</para><para>All reads are eager and inputs are enumerated once, replacing the reference&#x27;s repeated enumeration while retaining the original beam objects. This is a managed refresh, not a native assignment operation. Failure after clearing can leave empty/partially filled lists.</para></remarks>
+      <exception cref="System.ArgumentNullException">An input sequence or case entry is null.</exception>
+      <exception cref="System.ArgumentException">A beam is null or its ID is nonpositive.</exception>
+      <exception cref="System.NotSupportedException">A case family is unsupported.</exception>
+      <exception cref="System.InvalidOperationException">A native reader reports failure or malformed data.</exception>
+      <example><code><![CDATA[
+var beam = new Beam(101, new Node(1, 0, 0, 0), new Node(2, 5, 0, 0));
+var populated = load.PopulateMemberLoads(new[] { beam }, new[] { new LoadCase(17) });
+foreach (var item in populated) Console.WriteLine(item.MemberLoadItems.Count);
+]]></code></example>
+    </member>
   </members>
 </doc>

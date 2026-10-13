@@ -37,7 +37,7 @@ Get-FileHash "artifacts/release/StaadPro.Interop.$releaseVersion.nupkg" -Algorit
 
 Stop if a command fails. Publish the exact archive that passed verification. Keep its version, source commit, SHA256 and test results together. When preparing an ordinary release, commit the implementation and documentation before packing so repository metadata identifies the matching source. The project retains its default `1.0.0` version; always override it with the intended preview version until the stable-release gates are closed.
 
-The verifier restores through a fresh temporary PackageReference-only consumer/cache, checks the restored archive hash, validates package metadata and shipped documentation, and compiles/runs all 99 XML examples plus the 24 ported queries. It uses a managed stand-in and does not modify a STAAD model or contact NuGet.org to upload anything.
+The verifier restores through a fresh temporary PackageReference-only consumer/cache, checks the restored archive hash, validates package metadata and shipped documentation, and compiles/runs all 123 XML examples plus the 24 ported queries. It uses a managed stand-in and does not modify a STAAD model or contact NuGet.org to upload anything.
 
 ## 2. Publish through the signed-in NuGet.org browser
 

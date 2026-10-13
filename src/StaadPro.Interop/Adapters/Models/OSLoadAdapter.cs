@@ -128,6 +128,27 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Load Assignment Queries
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.PopulateMemberLinearVaryingLoads']/*" />
+        public void PopulateMemberLinearVaryingLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)
+        {
+            PopulateMemberLoadsCore(SnapshotPopulationEntities(forBeams, b => b.Id, nameof(forBeams)), SnapshotPopulationCases(fromLoadCases), GetMemberLinearVaryingLoads);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.PopulateMemberLoads']/*" />
+        public IEnumerable<Beam> PopulateMemberLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)
+        {
+            var beams = SnapshotPopulationEntities(forBeams, b => b.Id, nameof(forBeams));
+            var cases = SnapshotPopulationCases(fromLoadCases);
+            PopulateAllMemberLoadsCore(beams, cases);
+            return beams;
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.PopulateMemberTrapezoidalLoads']/*" />
+        public void PopulateMemberTrapezoidalLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)
+        {
+            PopulateMemberLoadsCore(SnapshotPopulationEntities(forBeams, b => b.Id, nameof(forBeams)), SnapshotPopulationCases(fromLoadCases), GetMemberTrapezoidalLoads);
+        }
+
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.GetRepeatLoadCases']/*" />
         public HashSet<ILoadCase> GetRepeatLoadCases()
         {
