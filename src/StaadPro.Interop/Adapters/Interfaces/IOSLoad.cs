@@ -31,6 +31,13 @@ namespace StaadPro.Interop.Adapters.Interfaces
 
         #region Load Assignment Queries
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.SelfWeightThreads']/*" />
+        IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1);
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateEnvelopeCombinations']/*" />
+        IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<EditorLoadCombination> loadCombinations);
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateLoadCombinations']/*" />
+        IOSLoad CreateLoadCombinations(IEnumerable<EditorLoadCombination> loadCombinations);
+
         /// <summary>
         /// Reads assigned nodal forces and moments for one node in an existing primary or reference case.
         /// </summary>

@@ -1,8 +1,12 @@
 # Load API porting and new assignments
 
-The reference `IOSLoad` contains 115 method overloads. This repository now exposes 66: 61 matching reference overloads plus five repository-specific convenience overloads. There are 54 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
+The reference `IOSLoad` contains 115 method overloads. This repository now exposes 69: 64 matching reference overloads plus five repository-specific convenience overloads. There are 51 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
 
-The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 66 from 115 does not give the pending reference count.
+The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 69 from 115 does not give the pending reference count.
+
+## Batch 1: AddSelfweightInXYZTo, CreateLoadCombinations, CreateLoadEnvelopExt
+
+Added the pending thread-count `AddSelfweightInXYZTo` overload, `CreateLoadCombinations`, and editor-definition `CreateLoadEnvelopExt`. Preserved the existing typed self-weight and integer-envelope APIs brought in from origin/main. Added managed combination definition types, eager input filtering/validation, entity-scoped caller-thread self-weight and checked envelope creation.
 
 ## Newly ported functions
 
@@ -93,7 +97,7 @@ wrapper.Load.AddAxialThermalGradientTo(17, new[] { 101, 102 }, 15.5);
 
 ## IntelliSense and validation
 
-Each new method has identical expanded XML on `IOSLoad` and `OSLoadAdapter`, including inputs, native mapping, empty input, activation side effects, exceptions and executable examples. The XML ships beside the DLL and does not require source access. The current package includes documentation for 66 load overloads and verifies all 99 XML examples across the library, including envelope reads, both thermal signatures and the grouped methods.
+Each new method has identical expanded XML on `IOSLoad` and `OSLoadAdapter`, including inputs, native mapping, empty input, activation side effects, exceptions and executable examples. The XML ships beside the DLL and does not require source access. The current package includes documentation for 69 load overloads and verifies all 105 XML examples across the library, including envelope reads, both thermal signatures and the grouped methods.
 
 Offline tests check paired arrays, double precision, one thermal input snapshot, caller-thread scalar assignments, primary/reference grouped routing, member subtype dispatch, all six nodal components, skipped/null/empty group entries, unchanged managed data, activation ordering/failure and partial native failures. Installed-package verification compiles and runs the interface and concrete XML examples and checks argument layouts using managed native stand-ins. Live native mutations, engineering units and version-specific behavior remain unverified for these additions.
 
@@ -101,9 +105,6 @@ Offline tests check paired arrays, double precision, one thermal input snapshot,
 
 The following inventory was compared by method name, generic arity and parameter types. It lists source signatures, including supporting types that may themselves need porting. A name already present here can still appear when a different overload is pending.
 
-- `IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)`
-- `IOSLoad CreateLoadCombinations(IEnumerable<EditorLoadCombination> loadCombinations)`
-- `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<EditorLoadCombination> loadCombinations)`
 - `StaadLoadCombination GetLoadCombination(int id)`
 - `Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> GetMemberLoadsGroupedByLoadCase(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)`
 - `Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> GetNodalLoadsGroupedByLoadCase(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)`

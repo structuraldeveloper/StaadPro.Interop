@@ -1,5 +1,12 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261013.7 - 13 October 2026 (load batch 1, prepared)
+
+Added the thread-count AddSelfweightInXYZTo overload, CreateLoadCombinations and editor-definition CreateLoadEnvelopExt with matching signatures. Preserved the existing typed self-weight and integer-envelope implementations. Added invariant-culture editor combinations, eager filtering/validation and caller-thread entity-specific self-weight. Shared XML documentation is now an explicit compiler input for reliable incremental IntelliSense updates.
+
+Validated 708 offline tests and 105 installed-package XML examples. Load coverage is 69 overloads, with 51 reference overloads pending. Live native mutation/unit/version verification remains pending.
+
+
 ## 1.0.0-preview.20261013.4 - 13 October 2026 (prepared)
 
 - Added root `GetShortJobInfo()`, `GetFullJobInfo()` and `SetInputUnitsEx(LengthInputUnit lengthUnit, ForceInputUnit forceUnit)` with reference signatures and complete matching interface/concrete XML IntelliSense. Implementations stay in the existing non-partial root adapter.

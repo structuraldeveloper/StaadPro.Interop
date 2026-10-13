@@ -129,8 +129,9 @@ namespace StaadPro.Interop.Tests.Adapter
         {
             var xml = XDocument.Load(Path.ChangeExtension(contractType.Assembly.Location, ".xml"));
             var entries = xml.Descendants("member").ToDictionary(m => (string)m.Attribute("name"));
-            var method = contractType.GetMethod(name);
-            var adapterMethod = adapterType.GetMethod(name);
+            foreach (var method in contractType.GetMethods().Where(m => m.Name == name))
+            {
+            var adapterMethod = adapterType.GetMethod(name, method.GetParameters().Select(p => p.ParameterType).ToArray());
             var contract = entries[MethodId(method)];
             var adapter = entries[MethodId(adapterMethod)];
             Assert.That(adapter.Elements().Select(e => e.ToString()), Is.EqualTo(contract.Elements().Select(e => e.ToString())));
@@ -139,6 +140,7 @@ namespace StaadPro.Interop.Tests.Adapter
             Assert.That(contract.Element("example")?.Element("code")?.Value, Does.Contain(receiver + "." + name + "("));
             Assert.That(contract.Elements("exception").All(e => !string.IsNullOrWhiteSpace(e.Value)), Is.True);
             Assert.That(contract.Elements("exception").Count(), Is.GreaterThanOrEqualTo(3));
+            }
         }
 
         [TestCase("SelfWeightDirection", 4)]

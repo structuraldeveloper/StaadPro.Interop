@@ -4113,5 +4113,47 @@ var groups = new System.Collections.Generic.Dictionary<ILoadCase,
 load.AddNodalLoadsFromGroupsByLoadCase(groups);
 ]]></code></example>
     </member>
+    <member name="IOSLoad.SelfWeightThreads">
+      <summary>Applies factored global-axis self-weight to the specified entities in an existing primary case.</summary>
+      <param name="loadCaseId">Positive primary target case ID; no case is created.</param>
+      <param name="entities">Entity IDs accepted by the native entity-specific API; order and duplicates are preserved.</param>
+      <param name="nThreads">Positive compatibility argument. This port keeps COM dispatch on the caller thread; it does not schedule workers.</param>
+      <param name="loadDirection">Global X/Y/Z direction. Default is GlobalY (native code 2).</param>
+      <param name="factor">Finite dimensionless self-weight multiplier, default -1; passed unchanged.</param>
+      <returns>The receiving IOSLoad, including for null/empty entity input.</returns>
+      <remarks><para>All native calls execute synchronously on the caller&#x27;s COM thread. Serialize access to the session; there is no cross-caller synchronization, rollback, managed refresh or automatic save. The delegated entity-self-weight helper checks native assignment success; COM/binding exceptions propagate.</para><para>Input is materialized once before activation. Null/empty sequences are no-ops. Positive target/entity IDs, finite factors and directions 1..3 are validated for nonempty supported cases. Negative and zero dimensionless factors are allowed. Successful activation leaves the target selected, including on subsequent assignment failure.</para><para>Uses AddSelfWeightInXYZToGeometry(int[] ids, int direction, double factor) once. This corrects the reference threaded implementation, which ignored each entity ID and repeatedly called the whole-model AddSelfWeightInXYZ operation. The provided IDs now scope assignment; density, gravity and geometry remain native responsibilities.</para></remarks>
+      <exception cref="System.ArgumentOutOfRangeException">nThreads is not positive, or a nonempty assignment has invalid IDs, direction or nonfinite factor.</exception>
+      <exception cref="System.InvalidOperationException">Primary activation fails; assignment is not attempted.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">Native self-weight assignment fails; the original exception propagates.</exception>
+      <example><code><![CDATA[
+load.AddSelfweightInXYZTo(17, new[] { 101, 102 }, nThreads: 2);
+]]></code></example>
+    </member>
+    <member name="IOSLoad.CreateLoadCombinations">
+      <summary>Creates native load combinations and assigns their source-case factors from editor definitions.</summary>
+      <param name="loadCombinations">Definitions with alternating invariant-culture case/factor text. Null input, null entries and definitions failing the reference nonempty/nonzero IsValid predicate are skipped. Retained combination/source IDs must be positive and factors finite.</param>
+      <returns>The receiving IOSLoad after processing all retained definitions; empty input is a no-op.</returns>
+      <remarks><para>All retained definitions and factor arrays are prepared before native mutation. Each combination calls CreateNewLoadCombination(title, id), followed by AddLoadAndFactorToCombination(combinationId, sourceId, factor) for each parsed pair. Source IDs and double factors stay associated; signs, precision and title are passed unchanged.</para><para>Parsing errors, duplicate source IDs, odd token counts and nonpositive retained IDs fail before mutation. Native existence and duplicate combination constraints are not pre-read. Enumeration order is preserved; repeated input definitions are not deduplicated. No active case is selected or restored.</para><para>A native exception stops processing, potentially leaving a created combination or earlier factors in place. Native return values are not interpreted, no rollback or automatic save occurs, and managed data is unchanged. Use the appropriate caller COM thread and serialize session access.</para></remarks>
+      <exception cref="System.ArgumentException">Retained IDs are not positive, factors are nonfinite, or a parsed source ID repeats.</exception>
+      <exception cref="System.FormatException">Text contains invalid invariant-culture numbers.</exception>
+      <exception cref="System.InvalidOperationException">Combination text has an odd token count.</exception>
+      <example><code><![CDATA[
+load.CreateLoadCombinations(new[] { new EditorLoadCombination(201, "LOAD COMB 201 1.5D-0.75L", "17 1.5 41 -0.75") });
+]]></code></example>
+    </member>
+    <member name="IOSLoad.CreateEnvelopeCombinations">
+      <summary>Creates a native envelope using valid editor-combination definitions as membership.</summary>
+      <param name="envelopId">Positive envelope number to create.</param>
+      <param name="envelopType">Defined native envelope classification, code 0..6.</param>
+      <param name="loadCombinations">Non-null sequence of editor combinations. Null definitions and those failing the reference nonempty/nonzero factor predicate are skipped. Retained IDs must be positive. Combination parsing errors propagate before mutation.</param>
+      <returns>The receiving IOSLoad after checked native envelope creation.</returns>
+      <remarks><para>The sequence is materialized once and filtered with EditorLoadCombination.IsValid. Only retained combination IDs are sent; this does not create the combinations or use their factors as envelope coefficients. Order and duplicates are preserved.</para><para>Delegates to the existing integer-ID CreateLoadEnvelopExt overload for ID/type validation, native CreateLoadEnvelop dispatch and Boolean/VARIANT success checks. An empty filtered array is forwarded for native acceptance/rejection. No case activation, lookup, managed metadata refresh, save or rollback occurs.</para><para>Parsing or validation fails before native mutation. Native exceptions propagate and native failure may have side effects. Calls stay on the caller COM thread; serialize shared-session access.</para></remarks>
+      <exception cref="System.ArgumentNullException">loadCombinations is null.</exception>
+      <exception cref="System.ArgumentOutOfRangeException">Envelope/member IDs are nonpositive or envelope type is undefined.</exception>
+      <exception cref="System.InvalidOperationException">Native envelope creation fails or combination text has an odd token count.</exception>
+      <example><code><![CDATA[
+load.CreateLoadEnvelopExt(7, LoadEnvelopType.Strength, new[] { new EditorLoadCombination(201, "COMB", "17 1.5 41 -0.75") });
+]]></code></example>
+    </member>
   </members>
 </doc>

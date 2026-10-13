@@ -126,6 +126,44 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Load Assignment Queries
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.SelfWeightThreads']/*" />
+        public IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)
+        {
+            if (nThreads <= 0) throw new ArgumentOutOfRangeException(nameof(nThreads));
+            if (entities == null) return this;
+            return AddSelfweightInXYZTo(loadCaseId, LoadCaseType.PrimaryLoad, entities, loadDirection, factor);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateEnvelopeCombinations']/*" />
+        public IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<EditorLoadCombination> loadCombinations)
+        {
+            if (loadCombinations == null) throw new ArgumentNullException(nameof(loadCombinations));
+            int[] ids = loadCombinations.Where(EditorLoadCombination.IsValid).Select(c => c.Id).ToArray();
+            return CreateLoadEnvelopExt(envelopId, envelopType, ids);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.CreateLoadCombinations']/*" />
+        public IOSLoad CreateLoadCombinations(IEnumerable<EditorLoadCombination> loadCombinations)
+        {
+            if (loadCombinations == null) return this;
+            var definitions = new List<(EditorLoadCombination Definition, KeyValuePair<int, double>[] Factors)>();
+            foreach (var combination in loadCombinations)
+            {
+                if (!EditorLoadCombination.IsValid(combination)) continue;
+                var factors = combination.Factors.ToArray();
+                if (combination.Id <= 0 || factors.Any(p => p.Key <= 0 || double.IsNaN(p.Value) || double.IsInfinity(p.Value)))
+                    throw new ArgumentException("Combination and source IDs must be positive and factors finite.", nameof(loadCombinations));
+                definitions.Add((combination, factors));
+            }
+            foreach (var definition in definitions)
+            {
+                ComObject.CreateNewLoadCombination(definition.Definition.Title, definition.Definition.Id);
+                foreach (var pair in definition.Factors)
+                    ComObject.AddLoadAndFactorToCombination(definition.Definition.Id, pair.Key, pair.Value);
+            }
+            return this;
+        }
+
         /// <summary>
         /// Reads assigned nodal forces and moments for one node in an existing primary or reference case.
         /// </summary>

@@ -90,11 +90,11 @@ try {
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         $methods = if ($owner -match 'Geometry') {
             @('CreateMultipleBeamsExtended', 'CreateMultipleNodesExtended', 'MergeNodesExtended')
-        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo', 'AddMemberLoadsFromGroupsByLoadCase', 'AddNodalLoadsFromGroupsByLoadCase', 'AddSelfweightInXYZTo', 'CreateLoadEnvelopExt', 'CreateLoadList') }
+        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo', 'AddMemberLoadsFromGroupsByLoadCase', 'AddNodalLoadsFromGroupsByLoadCase', 'AddSelfweightInXYZTo', 'CreateLoadEnvelopExt', 'CreateLoadList', 'CreateLoadCombinations') }
         foreach ($method in $methods) {
             $prefix = "M:StaadPro.Interop.$owner.$method("
             $member = @($xml.doc.members.member | Where-Object { $_.name.StartsWith($prefix) })
-            $expectedOverloads = if ($method -eq 'AddAxialThermalGradientTo') { 2 } else { 1 }
+            $expectedOverloads = if ($method -in @('AddAxialThermalGradientTo','AddSelfweightInXYZTo','CreateLoadEnvelopExt')) { 2 } else { 1 }
             if ($member.Count -ne $expectedOverloads) { throw "Missing new mutation IntelliSense: $owner.$method" }
             foreach ($entry in $member) {
                 foreach ($tag in @('summary','returns','remarks','example/code')) {
@@ -122,7 +122,7 @@ try {
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 9 } else { 66 }
+        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 9 } else { 69 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -132,7 +132,7 @@ try {
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 99) { throw "Expected 99 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 105) { throw "Expected 105 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -360,7 +360,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: ninety-nine packaged XML examples, twenty-four load queries, eight root queries, root unit selection, retained mutations and standalone job models.");
+        Console.WriteLine("PASS: 105 packaged XML examples and complete geometry/load IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -445,6 +445,8 @@ __EXAMPLES__
         { Assignment = "pointforce"; AssignedIds = ids; AssignedValues = new[] { force, position, offset }; }
         public void AddNodalLoad(int[] ids, double fx, double fy, double fz, double mx, double my, double mz)
         { Assignment = "nodal"; AssignedIds = ids; AssignedValues = new[] { fx, fy, fz, mx, my, mz }; }
+        public void CreateNewLoadCombination(string title, int id) { Assignment = "combination"; }
+        public void AddLoadAndFactorToCombination(int combinationId, int caseId, double factor) { AssignedIds = new[] { combinationId, caseId }; AssignedValues = new[] { factor }; }
         public bool SetLoadActive(int id) { ActiveId = id; Reference = false; return true; }
         public int SetReferenceLoadActive(int id) { ActiveId = id; Reference = true; return id; }
         public int GetNodalLoadCount(int id) => Empty ? 0 : 1;
