@@ -1,5 +1,12 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261013.9 - 13 October 2026 (load batch 3, prepared)
+
+Added GetRepeatLoadCases by scanning checked primary activation and native repeat-command counts, replacing the reference stub. Returned metadata classifies underlying primary IDs as RepeatLoad; native zero-count ambiguity is documented. Added append-only PopulateMemberConcentratedLoads and PopulateMemberConcentratedMoments with original case identity, single input snapshots and validated native readers.
+
+Validated 728 offline tests and 117 installed-package XML examples. Load coverage is 75 overloads, with 45 reference overloads pending. Live native mutation/unit/version checks remain pending.
+
+
 ## 1.0.0-preview.20261013.8 - 13 October 2026 (load batch 2, prepared)
 
 Added GetLoadCombination, GetMemberLoadsGroupedByLoadCase and GetNodalLoadsGroupedByLoadCase with detailed matching IntelliSense. Validated combination Boolean status, source arrays and primary membership; rejected unrepresentable SRSS overall factors. Preserved managed refresh, reference case identity, exact definition comparison and duplicate-assignment buckets.

@@ -128,6 +128,31 @@ namespace StaadPro.Interop.Adapters.Models
 
         #region Load Assignment Queries
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.GetRepeatLoadCases']/*" />
+        public HashSet<ILoadCase> GetRepeatLoadCases()
+        {
+            var result = new HashSet<ILoadCase>();
+            foreach (var primary in ReadAllLoadCases(LoadCaseType.PrimaryLoad))
+            {
+                ActivateQueryCase(primary);
+                int count = ReadQueryCount((object)ComObject.GetRepeatLoadCount(), "GetRepeatLoadCount");
+                if (count > 0) result.Add(new LoadCase(primary.Id, primary.Title, LoadCaseType.RepeatLoad, primary.Type));
+            }
+            return result;
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.PopulateMemberConcentratedLoads']/*" />
+        public void PopulateMemberConcentratedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)
+        {
+            PopulateMemberLoadsCore(SnapshotPopulationEntities(forBeams, b => b.Id, nameof(forBeams)), SnapshotPopulationCases(fromLoadCases), GetMemberConcentratedLoads);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.PopulateMemberConcentratedMoments']/*" />
+        public void PopulateMemberConcentratedMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)
+        {
+            PopulateMemberLoadsCore(SnapshotPopulationEntities(forBeams, b => b.Id, nameof(forBeams)), SnapshotPopulationCases(fromLoadCases), GetMemberConcentratedMoments);
+        }
+
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.GetLoadCombination']/*" />
         public StaadLoadCombination GetLoadCombination(int id)
         {

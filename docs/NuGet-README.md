@@ -18,7 +18,7 @@ A strongly typed wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load opera
 
 The four-parameter `AddAxialThermalGradientTo` overload is also available. It validates `nThreads` and preserves per-entity scalar assignments while keeping COM calls on the caller's thread. `AddMemberLoadsFromGroupsByLoadCase` and `AddNodalLoadsFromGroupsByLoadCase` apply tuples to the cases identified by their dictionary keys through the existing assignment helpers. See `docs/Load-Porting.md` for skip/null behavior, legacy activation-status handling and partial failures.
 
-Full, expanded XML IntelliSense is included for all 140 geometry overloads and all 72 load overloads on both interfaces and concrete adapters. Shared source comments are expanded by the compiler; installed consumers need only `StaadPro.Interop.xml` beside the DLL.
+Full, expanded XML IntelliSense is included for all 140 geometry overloads and all 75 load overloads on both interfaces and concrete adapters. Shared source comments are expanded by the compiler; installed consumers need only `StaadPro.Interop.xml` beside the DLL.
 
 Envelope metadata queries `GetEnvelopeIds()`, `GetLoadEnvelopeDetail(int envId)` and `GetAllLoadEnvelopeDetails()` return fresh IDs, classification/count/membership records, and complete envelope sets. They check native success status 1, reject invalid/malformed data and preserve the active case/load list. Successful zero counts produce non-null empty sets; a failed read throws. The standalone `LoadEnvelopeDetail` model and `LoadEnvelopType` enum accompany these functions. See the shipped `docs/Load-Queries.md` for details.
 
@@ -29,6 +29,10 @@ Added the pending thread-count `AddSelfweightInXYZTo` overload, `CreateLoadCombi
 ## Load API batch 2: GetLoadCombination, GetMemberLoadsGroupedByLoadCase, GetNodalLoadsGroupedByLoadCase
 
 Added combination coefficient read-back with validated Boolean native status, typed arrays and primary-case membership. SRSS overall multipliers are rejected because the return model cannot represent them. Added eager member/nodal read-and-group APIs that refresh managed lists, use original case identities, exact definition fields and duplicate-assignment buckets. Input sequences are snapshotted once before clearing; native failures may leave partial refreshes.
+
+## Load API batch 3: GetRepeatLoadCases, PopulateMemberConcentratedLoads, PopulateMemberConcentratedMoments
+
+Implemented the reference repeat-discovery stub by scanning validated primary cases and checking GetRepeatLoadCount. Positive reports produce independent RepeatLoad metadata with underlying primary IDs; zero native results have documented no-command/general-error ambiguity. Added append-only concentrated force and moment population methods with single input snapshots, validated readers and original case identity. Managed/native partial failure and active-case effects are documented.
 
 ## Load assignment queries
 
@@ -81,7 +85,7 @@ Full XML IntelliSense accompanies the DLL for both interface and concrete method
 
 ## Release status
 
-Release `1.0.0-preview.20261013.8` is authored by **Srinivasa Rao Masanam**. Copyright (c) 2026 StaadDev. This prepared preview adds the four-parameter thermal overload and grouped member/nodal load assignments with detailed XML IntelliSense. It retains the earlier geometry, factored-load, connectivity and model-attachment additions. See [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md), also included as `docs/Release-Notes.md` in the package. This version has not been published to NuGet.org.
+Release `1.0.0-preview.20261013.9` is authored by **Srinivasa Rao Masanam**. Copyright (c) 2026 StaadDev. This prepared preview adds the four-parameter thermal overload and grouped member/nodal load assignments with detailed XML IntelliSense. It retains the earlier geometry, factored-load, connectivity and model-attachment additions. See [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md), also included as `docs/Release-Notes.md` in the package. This version has not been published to NuGet.org.
 
 Package creation and isolated consumer checks can be run locally and in CI. Offline tests exercise a managed OpenSTAAD stand-in; live COM marshaling and engineering unit conventions still require verification on each advertised STAAD version before a stable release. See the repository's [release assessment](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/NuGet-Readiness.md).
 

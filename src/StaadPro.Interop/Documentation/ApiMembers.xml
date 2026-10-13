@@ -4201,5 +4201,48 @@ var groups = load.GetNodalLoadsGroupedByLoadCase(new[] { node }, new[] { new Loa
 Console.WriteLine(groups.Count);
 ]]></code></example>
     </member>
+    <member name="IOSLoad.GetRepeatLoadCases">
+      <summary>Discovers primary cases that report at least one native repeat-load command.</summary>
+      <returns>A fresh non-null HashSet of independent LoadCase metadata classified as RepeatLoad; successful empty discovery returns an empty set. IDs and engineering types come from the underlying primary cases.</returns>
+      <remarks><para>Replaces the reference null-returning stub with native discovery: reads validated primary metadata once, checks activation for each primary case, then reads GetRepeatLoadCount. Positive counts include that case once. Scan and set order are unspecified. No repeat factors or source definitions are fetched.</para><para>Repeat commands belong to native primary cases. Returned CaseType is RepeatLoad to classify discovery results; use PrimaryLoad when querying or activating their underlying IDs through APIs that accept primary/reference families. Existing generic family queries remain unchanged and do not support RepeatLoad.</para><para>The last scanned primary remains active, including after a later native failure; no previous-case restoration occurs. No load assignments, managed input collections, saved models or analysis state are modified. With no primary cases there is no activation/count scan.</para><para>Bentley documents zero GetRepeatLoadCount for general error as well as the practical no-command result. This API cannot distinguish those zero outcomes: zero is treated as no reported repeat commands, not proof of error-free absence. Negative or malformed counts, failed activation and COM/binding failures throw; no partial set is returned. Use the caller COM thread and serialize session access.</para></remarks>
+      <exception cref="System.InvalidOperationException">Primary metadata/counts are invalid or activation fails.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">A native metadata or repeat-count operation fails.</exception>
+      <example><code><![CDATA[
+var repeats = load.GetRepeatLoadCases();
+foreach (var item in repeats) Console.WriteLine($"{item.Id}: {item.Title}");
+]]></code></example>
+    </member>
+    <member name="IOSLoad.PopulateMemberConcentratedLoads">
+      <summary>Appends native concentrated member forces assignments to supplied beams&#x27; managed load lists.</summary>
+      <param name="forBeams">Non-null sequence of initialized beams with positive IDs. MemberLoadItems is appended in place, not cleared.</param>
+      <param name="fromLoadCases">Non-null sequence of initialized positive primary/reference cases. Returned definitions share these case objects.</param>
+      <returns>No value; retrieved definitions are appended to the supplied beam objects.</returns>
+      <remarks><para>Inputs are materialized once and validated before modifying managed lists. Entries must be initialized with positive IDs; cases must be primary or reference. Native entity existence is not pre-read. Empty input makes no native calls and preserves existing lists.</para><para>Appends assignments in case/beam input order without clearing existing entries. Repeated calls append again. Reuses the supplied case objects; beam geometry and Members associations are unchanged. Raw native values, signs, direction and units follow the delegated reader with no conversion, aggregation or deduplication.</para><para>Case activation is checked by the existing reader and the most recently read case remains active, including on a later read failure. A failure may leave earlier appends in place; there is no managed rollback or prior-case restoration. These calls do not write native assignments or save a model. Use the caller COM thread and serialize session access.</para><para>Delegates to GetMemberConcentratedLoads; the existing count/status/array/direction validation and exact field mapping are retained. Reads concentrated member forces, not other families or analysis results.</para></remarks>
+      <exception cref="System.ArgumentNullException">An input sequence or case entry is null.</exception>
+      <exception cref="System.ArgumentException">An entity is null or its ID is not positive.</exception>
+      <exception cref="System.NotSupportedException">A case family is unsupported.</exception>
+      <exception cref="System.InvalidOperationException">Native activation/read data is invalid.</exception>
+      <example><code><![CDATA[
+var beam = new Beam(101, new Node(1, 0, 0, 0), new Node(2, 5, 0, 0));
+load.PopulateMemberConcentratedLoads(new[] { beam }, new[] { new LoadCase(17) });
+Console.WriteLine(beam.MemberLoadItems.Count);
+]]></code></example>
+    </member>
+    <member name="IOSLoad.PopulateMemberConcentratedMoments">
+      <summary>Appends native concentrated member moments assignments to supplied beams&#x27; managed load lists.</summary>
+      <param name="forBeams">Non-null sequence of initialized beams with positive IDs. MemberLoadItems is appended in place, not cleared.</param>
+      <param name="fromLoadCases">Non-null sequence of initialized positive primary/reference cases. Returned definitions share these case objects.</param>
+      <returns>No value; retrieved definitions are appended to the supplied beam objects.</returns>
+      <remarks><para>Inputs are materialized once and validated before modifying managed lists. Entries must be initialized with positive IDs; cases must be primary or reference. Native entity existence is not pre-read. Empty input makes no native calls and preserves existing lists.</para><para>Appends assignments in case/beam input order without clearing existing entries. Repeated calls append again. Reuses the supplied case objects; beam geometry and Members associations are unchanged. Raw native values, signs, direction and units follow the delegated reader with no conversion, aggregation or deduplication.</para><para>Case activation is checked by the existing reader and the most recently read case remains active, including on a later read failure. A failure may leave earlier appends in place; there is no managed rollback or prior-case restoration. These calls do not write native assignments or save a model. Use the caller COM thread and serialize session access.</para><para>Delegates to GetMemberConcentratedMoments; the existing count/status/array/direction validation and exact field mapping are retained. Reads concentrated member moments, not other families or analysis results.</para></remarks>
+      <exception cref="System.ArgumentNullException">An input sequence or case entry is null.</exception>
+      <exception cref="System.ArgumentException">An entity is null or its ID is not positive.</exception>
+      <exception cref="System.NotSupportedException">A case family is unsupported.</exception>
+      <exception cref="System.InvalidOperationException">Native activation/read data is invalid.</exception>
+      <example><code><![CDATA[
+var beam = new Beam(101, new Node(1, 0, 0, 0), new Node(2, 5, 0, 0));
+load.PopulateMemberConcentratedMoments(new[] { beam }, new[] { new LoadCase(17) });
+Console.WriteLine(beam.MemberLoadItems.Count);
+]]></code></example>
+    </member>
   </members>
 </doc>
