@@ -1,5 +1,24 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261013.2 - 13 October 2026 (prepared)
+
+- Added OSLoad `AddSelfweightInXYZTo(int, LoadCaseType, IEnumerable<int>, SelfWeightDirection, double)`, `CreateLoadEnvelopExt(int, LoadEnvelopType, IEnumerable<int>)` and `CreateLoadList(LoadListType, IEnumerable<int>)` with matching main-project signatures. Added documented native-code enums and checked activation/status handling, input snapshots and independent ID arrays.
+- Added OSRoot `GetStaadFileFullPath()`, `GetStaadFileNameOnly()` and `GetAnlFileFullPath()` to the existing interface/adapter binding exposed by `wrapper.Root`. Each uses one native model-path read. Analysis paths use a single snapshot and do not imply existing/current results.
+- Included the prior envelope-query batch in the committed source, with standalone models, full validation and independent metadata. No adapter partial classes or private application/Bentley binary dependencies were introduced.
+- Shipped matching expanded XML for every new interface/concrete function, executable examples, parameter/default/return/exception/state-change contracts, load/native mapping documentation and a root implementation/pending-method guide.
+- Load coverage is now **66 overloads** (61 reference matches plus five conveniences), with **54 reference overloads pending**. Root coverage is **3 of 23 methods**, with **20 pending**. Custom implementations of `IOSLoad`/`IOSRoot` must implement the added interface members.
+- Passed **583 offline tests**, with 62 added for this batch and 113 since the last committed grouped-assignment baseline. Release build has zero warnings/errors. Isolated package verification compiles/runs **87 XML examples** and exercises all new load/root functions without ProjectReferences.
+- Native self-weight/envelope mutation, load-list semantics, new root reads and envelope marshaling still require live STAAD/version validation. The preview is built for NuGet distribution; public upload is a separate step and was not performed by this increment.
+
+## 1.0.0-preview.20261013.1 - 13 October 2026 (prepared)
+
+- Added `GetEnvelopeIds()`, `GetLoadEnvelopeDetail(int envId)` and `GetAllLoadEnvelopeDetails()` with matching main-project public signatures in `IOSLoad` and implementations/helpers in the existing non-partial `OSLoadAdapter`.
+- Added standalone `ILoadEnvelopeDetail`, `LoadEnvelopeDetail` and `LoadEnvelopType` with all native classification codes 0–6, property notification and independent constructor/query membership sets.
+- Checked envelope fetch success **1** and rejected failure **-1**, malformed counts, invalid classifications, inconsistent arrays, duplicate/nonpositive IDs and unwritten outputs. Supported replaced/in-place arrays and nonzero SAFEARRAY lower bounds. Valid zero counts return non-null empty sets; all-envelope reads are eager and return no partial result on failure.
+- Preserved active-case and active-load-list state. Envelope results contain metadata/membership, with no computed extrema, native writes or member-case resolution. Documented mutable-model behavior and the intentional validation/empty-result differences from the main reference.
+- Added full expanded IntelliSense on interface and concrete calls, supporting-type documentation, an envelope guide and updated API/inventory references. Load coverage is now **63 overloads**, comprising 58 reference matches plus five repository-specific conveniences; **57 reference overloads remain pending**.
+- Verification covers **521 passing offline tests**, a Release build with no warnings/errors, and isolated package installation with **75 compiled/executed XML examples**, including all six new envelope examples. Live envelope queries remain pending validation against native STAAD. This prepared version has not been published by this increment.
+
 ## 1.0.0-preview.20261013 - 13 October 2026 (prepared)
 
 - Added `AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads)` with the reference signature and one scalar temperature assignment per entity. Validated all inputs before checked primary-case activation. Kept COM calls on the caller's thread instead of the reference worker dispatch; positive `nThreads` is retained for compatibility and does not control concurrency.

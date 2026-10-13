@@ -18,9 +18,15 @@ A strongly typed wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load opera
 
 The four-parameter `AddAxialThermalGradientTo` overload is also available. It validates `nThreads` and preserves per-entity scalar assignments while keeping COM calls on the caller's thread. `AddMemberLoadsFromGroupsByLoadCase` and `AddNodalLoadsFromGroupsByLoadCase` apply tuples to the cases identified by their dictionary keys through the existing assignment helpers. See `docs/Load-Porting.md` for skip/null behavior, legacy activation-status handling and partial failures.
 
-Full, expanded XML IntelliSense is included for all 140 geometry overloads and all 60 load overloads on both interfaces and concrete adapters. Shared source comments are expanded by the compiler; installed consumers need only `StaadPro.Interop.xml` beside the DLL.
+Full, expanded XML IntelliSense is included for all 140 geometry overloads and all 66 load overloads on both interfaces and concrete adapters. Shared source comments are expanded by the compiler; installed consumers need only `StaadPro.Interop.xml` beside the DLL.
+
+Envelope metadata queries `GetEnvelopeIds()`, `GetLoadEnvelopeDetail(int envId)` and `GetAllLoadEnvelopeDetails()` return fresh IDs, classification/count/membership records, and complete envelope sets. They check native success status 1, reject invalid/malformed data and preserve the active case/load list. Successful zero counts produce non-null empty sets; a failed read throws. The standalone `LoadEnvelopeDetail` model and `LoadEnvelopType` enum accompany these functions. See the shipped `docs/Load-Queries.md` for details.
 
 ## Load assignment queries
+
+New load mutations include `AddSelfweightInXYZTo(int, LoadCaseType, IEnumerable<int>, SelfWeightDirection, double)`, `CreateLoadEnvelopExt(int, LoadEnvelopType, IEnumerable<int>)` and `CreateLoadList(LoadListType, IEnumerable<int>)`. They snapshot/validate inputs before native calls and check each API's distinct success contract. Self-weight activates a primary/reference target; envelope creation and load-list selection do not activate a case. These are native mutations with no automatic save or rollback; see `docs/Load-Porting.md` for full contracts.
+
+`wrapper.Root` now exposes `GetStaadFileFullPath()`, `GetStaadFileNameOnly()` and `GetAnlFileFullPath()`. Each uses one native model-path read. The derived `.ANL` path does not prove file existence or current results. Matching interface/concrete IntelliSense and the shipped `docs/Root-Porting.md` explain empty/error behavior and all 20 pending root methods.
 
 The package exposes seven assignment read-back methods through `IOSLoad` and `OSLoadAdapter`:
 

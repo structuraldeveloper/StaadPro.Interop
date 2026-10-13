@@ -1,12 +1,55 @@
 # Load API porting and new assignments
 
-The reference `IOSLoad` contains 115 method overloads. This repository now exposes 60: 55 matching reference overloads plus five repository-specific convenience overloads. There are 60 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
+The reference `IOSLoad` contains 115 method overloads. This repository now exposes 66: 61 matching reference overloads plus five repository-specific convenience overloads. There are 54 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
 
-The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 60 from 115 does not give the pending reference count.
+The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 66 from 115 does not give the pending reference count.
 
 ## Newly ported functions
 
-The next three inventory entries are now exposed on both `IOSLoad` and `OSLoadAdapter`:
+```csharp
+IOSLoad AddSelfweightInXYZTo(int loadCaseId, LoadCaseType lcType, IEnumerable<int> entities,
+    SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1);
+IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<int> loadCaseList);
+dynamic CreateLoadList(LoadListType loadListType, IEnumerable<int> loadCaseIds);
+```
+
+Each retains the main signature and uses the existing non-partial adapter. `SelfWeightDirection` and `LoadListType` preserve native codes/spelling and ship full enum IntelliSense. Input sequences are snapshotted once before native calls; every ID must be positive, order/duplicates are preserved, and caller collections remain unchanged. Null input throws `ArgumentNullException`; invalid IDs/enums/non-finite factors throw `ArgumentOutOfRangeException`. Native COM/binding errors propagate. No mutation is automatically saved or rolled back.
+
+### Self-weight assignment
+
+The family overload supports primary/reference targets only; other families throw `NotSupportedException` before COM. Validates positive case ID, global direction X=1/Y=2/Z=3 and a finite dimensionless factor (default GlobalY/-1). Zero and either sign are allowed. Empty input returns this adapter without activation or assignment. Nonempty input performs checked family activation, then one `AddSelfWeightInXYZToGeometry` call with an independent Int32 array, integer direction and double factor. All COM calls stay on the caller's thread. The target remains active after success or a later mutation failure; no prior-state restoration occurs.
+
+### Envelope creation
+
+`CreateLoadEnvelopExt` validates a positive envelope ID and a defined envelope code 0–6, then calls native `CreateLoadEnvelop` once with integer ID/type and an Int32 case-ID array. Empty input is forwarded for native acceptance/rejection. Case suitability, duplicate membership, existing envelope conflicts and empty-envelope support remain native decisions. No preliminary case lookup or activation occurs. Read-back is available through `GetLoadEnvelopeDetail`; the creation method does not populate managed envelope metadata.
+
+### Load-list selection and different success contracts
+
+`CreateLoadList` validates native list type 0 (`LoadList`) or 1 (`EnvelopList`) and calls the native method once. For an envelope list, IDs identify envelopes rather than cases, despite the reference parameter name `loadCaseIds`. Empty input is forwarded; the wrapper does not infer whether it clears a list. Selection changes native load-list state used by subsequent native commands. It does not activate a case or start analysis.
+
+Bentley's installed 2025 native documentation specifies Boolean success for self-weight, 1/True success for envelope creation, and integer **0 success / -1 failure** for load-list creation. The first two accept Boolean true or native integer 1/-1 for VARIANT_TRUE; false, zero and other/malformed statuses throw `InvalidOperationException`. For load-list creation, only boxed integer zero (`short`, `int`, `long`) is accepted, and the original boxed result is returned through the preserved dynamic signature. Boolean values and nonzero integers are rejected. These mutation semantics deliberately differ from envelope queries' integer-1 success.
+
+This port checks statuses/activation that the reference ignores and snapshots input rather than repeatedly enumerating it. Native references: `OSAPP_Help/group___property_load_self_weight.html`, `group___property_load_enve.html` and `group___property_load_operation.html`. Live mutation, native status marshaling and engineering behavior still need validation on each advertised STAAD version. Offline tests cover argument layouts, input ownership/enumeration/disposal, defaults, every supported classification, activation ordering, failure stopping, exact factors and integer/Boolean status distinctions.
+
+```csharp
+load.AddSelfweightInXYZTo(17, LoadCaseType.PrimaryLoad, new[] { 101, 102 });
+load.CreateLoadEnvelopExt(7, LoadEnvelopType.Strength, new[] { 17, 41 });
+object status = load.CreateLoadList(LoadListType.EnvelopList, new[] { 7 });
+```
+
+These IDs must exist and be suitable in the connected model. The statements mutate native state; coordinate COM session access and native persistence in the calling application.
+
+## Envelope queries from the previous batch
+
+The envelope query batch adds `GetEnvelopeIds()`, `GetLoadEnvelopeDetail(int envId)` and `GetAllLoadEnvelopeDetails()`, along with standalone `LoadEnvelopeDetail`, `ILoadEnvelopeDetail` and `LoadEnvelopType`. All function signatures are on `IOSLoad`; all native implementations/helpers are in the existing non-partial `OSLoadAdapter`. The [envelope query guide](Load-Queries.md#load-envelope-queries) covers exact native statuses, empty/invalid results, ownership, examples and live validation.
+
+These three functions complete envelope metadata discovery and membership reads. Unlike the reference's nullable empty results and unchecked native calls, this port returns fresh empty sets on successful zero counts, rejects invalid envelope arguments before COM and throws on native failures or malformed data. Envelope fetching requires integer success status **1**, with **-1** treated as failure. It does not use assignment-query zero success or case-number count semantics. Returned membership is an independent snapshot; editing it performs no native writes.
+
+Reference provenance: main project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`, `Adapters/Interfaces/IOSLoad.cs`, `Adapters/Models/OSLoadAdapter.cs`, `Interfaces/ILoadEnvelopeDetail.cs`, `Entities/Loads/LoadEnvelopeDetail.cs` and `Enums/Loads/LoadEnvelopType.cs`. The main project was not modified.
+
+## Earlier grouped assignment additions
+
+The previous batch exposed these three overloads on both `IOSLoad` and `OSLoadAdapter`:
 
 ```csharp
 IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads);
@@ -50,7 +93,7 @@ wrapper.Load.AddAxialThermalGradientTo(17, new[] { 101, 102 }, 15.5);
 
 ## IntelliSense and validation
 
-Each method has identical expanded XML on `IOSLoad` and `OSLoadAdapter`, including input units, native mapping, empty input, activation side effects, exceptions and executable examples. The XML ships beside the DLL and does not require source access. The current package includes documentation for 60 load overloads and verifies all 69 XML examples across the library, including both thermal signatures and the grouped methods.
+Each new method has identical expanded XML on `IOSLoad` and `OSLoadAdapter`, including inputs, native mapping, empty input, activation side effects, exceptions and executable examples. The XML ships beside the DLL and does not require source access. The current package includes documentation for 66 load overloads and verifies all 87 XML examples across the library, including envelope reads, both thermal signatures and the grouped methods.
 
 Offline tests check paired arrays, double precision, one thermal input snapshot, caller-thread scalar assignments, primary/reference grouped routing, member subtype dispatch, all six nodal components, skipped/null/empty group entries, unchanged managed data, activation ordering/failure and partial native failures. Installed-package verification compiles and runs the interface and concrete XML examples and checks argument layouts using managed native stand-ins. Live native mutations, engineering units and version-specific behavior remain unverified for these additions.
 
@@ -59,14 +102,9 @@ Offline tests check paired arrays, double precision, one thermal input snapshot,
 The following inventory was compared by method name, generic arity and parameter types. It lists source signatures, including supporting types that may themselves need porting. A name already present here can still appear when a different overload is pending.
 
 - `IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)`
-- `IOSLoad AddSelfweightInXYZTo(int loadCaseId, LoadCaseType lcType, IEnumerable<int> entities, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)`
 - `IOSLoad CreateLoadCombinations(IEnumerable<EditorLoadCombination> loadCombinations)`
 - `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<EditorLoadCombination> loadCombinations)`
-- `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<int> loadCaseList)`
-- `HashSet<ILoadEnvelopeDetail> GetAllLoadEnvelopeDetails()`
-- `HashSet<int> GetEnvelopeIds()`
 - `StaadLoadCombination GetLoadCombination(int id)`
-- `ILoadEnvelopeDetail GetLoadEnvelopeDetail(int envId)`
 - `Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> GetMemberLoadsGroupedByLoadCase(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)`
 - `Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> GetNodalLoadsGroupedByLoadCase(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)`
 - `HashSet<ILoadCase> GetRepeatLoadCases()`
@@ -78,7 +116,6 @@ The following inventory was compared by method name, generic arity and parameter
 - `void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)`
 - `void PopulateMemberUniformMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)`
 - `IEnumerable<Node> PopulateNodalLoads(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)`
-- `dynamic CreateLoadList(LoadListType loadListType, IEnumerable<int> loadCaseIds)`
 - `int AddWindDefinition(int typeNo, string typeName)`
 - `int AddWindExposure(int typeNo, double exposureFactor, IEnumerable<int> nodeIds)`
 - `int AddWindExposure(int typeNo, double exposureFactor, IEnumerable<Node> nodes)`

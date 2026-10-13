@@ -10,6 +10,23 @@ namespace StaadPro.Interop.Tests.Adapter
     [TestFixture]
     public class OSLoadQueryDocumentationTests
     {
+        [TestCase("Entities.LoadEnvelopeDetail", 8)]
+        [TestCase("Entities.ILoadEnvelopeDetail", 4)]
+        [TestCase("Enums.LoadEnvelopType", 8)]
+        public void EnvelopeSupportingTypesHaveExpandedDocumentation(string typeName, int expectedCount)
+        {
+            var document = XDocument.Load(Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml"));
+            string owner = "StaadPro.Interop." + typeName;
+            var members = document.Descendants("member").Where(m => (string)m.Attribute("name") == "T:" + owner || ((string)m.Attribute("name")).Substring(2).StartsWith(owner + ".")).ToList();
+            Assert.That(members.Count, Is.EqualTo(expectedCount));
+            foreach (var member in members)
+            {
+                Assert.That(member.Element("summary")?.Value.Trim(), Is.Not.Null.And.Not.Empty);
+                Assert.That(member.Elements("param").All(p => !string.IsNullOrWhiteSpace(p.Value)), Is.True);
+                Assert.That(member.Descendants().Attributes("cref").Any(c => c.Value.StartsWith("!:")), Is.False);
+            }
+        }
+
         [TestCase("MemberConcentratedMoment", 9)]
         [TestCase("MemberLinearVaryingLoad", 9)]
         [TestCase("MemberTrapezoidalLoad", 10)]
@@ -59,6 +76,7 @@ namespace StaadPro.Interop.Tests.Adapter
             }
         }
         [TestCase("GetPrimaryLoadCaseFromId", "System.Int32", "lcId", 4)]
+        [TestCase("GetLoadEnvelopeDetail", "System.Int32", "envId", 4)]
         [TestCase("GetLoadCombinationCasesFromIds", "System.Collections.Generic.IEnumerable{System.Int32}", "lcIds", 5)]
         [TestCase("GetAllLoadCasesOfType", "StaadPro.Interop.Enums.LoadCaseType", "loadCaseType", 4)]
         [TestCase("GetLoadCasesOfType", "StaadPro.Interop.Enums.LoadCaseType", "loadCaseType", 4)]
@@ -112,6 +130,8 @@ namespace StaadPro.Interop.Tests.Adapter
         }
 
         [TestCase("GetAllLoadCombinationCases")]
+        [TestCase("GetEnvelopeIds")]
+        [TestCase("GetAllLoadEnvelopeDetails")]
         [TestCase("GetAllPrimaryLoadCases")]
         [TestCase("GetAllReferenceLoadCases")]
         public void CaseEnumeration_ContainsCompleteMatchingIntelliSense(string method)

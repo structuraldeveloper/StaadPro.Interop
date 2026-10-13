@@ -2,9 +2,11 @@
 
 ## Scope and provenance
 
+The subsequent envelope-query increment adds three more functions, bringing the ported query total to twenty-four: `GetEnvelopeIds`, `GetLoadEnvelopeDetail` and `GetAllLoadEnvelopeDetails`. See [load envelope queries](#load-envelope-queries) for the complete contract and the [current load inventory](Load-Porting.md) for all 66 implemented overloads and 54 pending reference overloads.
+
 Seven increments port twenty-one methods from the main project's `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs` and `Adapters/Models/OSLoadAdapter.cs` into the open source `IOSLoad` contract and `OSLoadAdapter`. The first added nodal, uniform member, and concentrated member force queries. The second added concentrated member moments, linear varying forces, and trapezoidal forces. The third added uniform member moments with their required model, and primary/reference case discovery. The fourth added direct primary/reference case lookup and ordered primary batch lookup. The fifth added reference batch lookup, combination discovery and combination lookup. The sixth added distinct combination batch lookup, family selection and generic nullable lookup. The seventh adds range filtering, requested-ID filtering and concrete family lists. Public signatures and assignment mappings are preserved. Private application dependencies and Bentley binaries are not copied. Corrections to reference metadata lookup and uniform-moment conversion are described below.
 
-The earlier connectivity increment has been removed: its three grouping functions, service, scope enums, tests, guide, and verification script are absent. The public geometry interface and adapter are restored to the pre-increment revision. Package and documentation verification now covers load queries.
+The original connectivity attempt was removed before these load-query increments. The subsequent geometry port has since added reviewed grouping functions, scope enums, tests and documentation; see [Geometry-Porting.md](Geometry-Porting.md) for current coverage. Package verification covers those geometry APIs alongside the load queries.
 
 | Public method | Result type | OpenSTAAD count / fetch pair |
 | --- | --- | --- |
@@ -383,8 +385,8 @@ Both interface and concrete methods contain expanded XML comments: summaries, ev
 
 ```powershell
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261012 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261012.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261013.2 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261013.2.nupkg
 ```
 
 The existing `OpenStaadWrapperProvider_DefaultGetRunning_ReturnsNullWhenNoStaad` test is explicitly marked `LiveIntegration`: it asserts an environmental precondition, namely that no STAAD session is running. Ordinary offline runs leave it unexecuted. It does not verify the load queries.
@@ -406,3 +408,73 @@ The offline suite and package consumer do not certify native COM SAFEARRAY marsh
 - Bentley [Unit System of OpenSTAAD](https://bentleysystems.service-now.com/community?id=kb_article&sysparm_article=KB0111068) describes base-system read-back units. Confirm actual read-back units rather than assuming input units.
 
 - Installed native combination APIs: OSAPP_Help/group___property_load_operation.html (GetLoadCombinationCaseCount, GetLoadCombinationCaseNumbers and GetLoadCaseTitle). Confirm the positive number-return interpretation with differing family counts before release.
+
+## Load envelope queries
+
+These three functions read envelope metadata from the connected model. They perform no native writes, leave the active case and active load list unchanged, and do not calculate min/max analysis results. All methods are eager. The native reads are sequential calls, not an atomic snapshot; coordinate COM access on the appropriate STAAD session thread.
+
+| Managed signature | Native calls | Successful empty result |
+| --- | --- | --- |
+| `HashSet<int> GetEnvelopeIds()` | `GetEnvelopeCount`, then `GetEnvelopeIDs` for a positive count | Fresh empty set when there are no envelopes; ID fetch skipped |
+| `ILoadEnvelopeDetail GetLoadEnvelopeDetail(int envId)` | `GetLoadEnvelopeDetails`, then `GetLoadListfromLoadEnvelope` for a positive member count | Metadata object with count zero and an independent empty membership set; membership fetch skipped |
+| `HashSet<ILoadEnvelopeDetail> GetAllLoadEnvelopeDetails()` | One envelope-ID discovery, then one detail read for every discovered ID | Fresh empty set when there are no envelopes |
+
+### Native return contracts and validation
+
+The installed Bentley STAAD.Pro 2025 native documentation, `OSAPP_Help/group___property_load_enve.html`, specifies a nonnegative envelope count and integer success **1** for each of `GetEnvelopeIDs`, `GetLoadEnvelopeDetails` and `GetLoadListfromLoadEnvelope`. For those fetch methods, **-1 means failure**. This differs from zero-success assignment readers and count-returning case-number readers. The port accepts integer `short`, `int` and `long` status representations; Boolean true, floating-point 1, strings, null, zero, negative statuses and any integer other than 1 are rejected.
+
+Both identifier arrays must be one-dimensional native Int32 arrays of exactly the reported length. IDs must be positive and distinct; unwritten zero slots are rejected. Replaced output arrays, in-place population and nonzero SAFEARRAY lower bounds are supported. A failed fetch throws before its outputs are consumed. Native type/count outputs are initialized to invalid sentinels so an unwritten type cannot look like `None` and an unwritten count cannot look like a legitimate empty envelope.
+
+`envId` must be positive; zero and negative arguments throw `ArgumentOutOfRangeException` with `ParamName="envId"` before COM access. A positive ID is read directly without enumerating envelopes. Missing envelope behavior is delegated to OpenSTAAD; its failure status becomes `InvalidOperationException`, with no null/empty fallback. Native COM exceptions and runtime binding exceptions propagate unchanged.
+
+Invalid counts, unknown classifications, inconsistent arrays, duplicate IDs and nonpositive IDs throw `InvalidOperationException`. Reading all envelopes validates the entire discovered ID array before fetching details. Any later detail/membership failure aborts the call; no partial result is returned. Concurrent native model edits may make successive reads inconsistent and cause these checks to fail.
+
+### Returned model and classifications
+
+`LoadEnvelopeDetail` and `ILoadEnvelopeDetail` live in `StaadPro.Interop.Entities`; `LoadEnvelopType` lives in `StaadPro.Interop.Enums`. These standalone types retain the main API's `Envelop` spelling and property names. They use the repository's `IEntity` and property store, with no dependency on the private main application's shared libraries.
+
+| Property | Meaning |
+| --- | --- |
+| `Id` | Envelope identifier, distinct from member load-case identifiers |
+| `EnvelopType` | Native classification using the codes below |
+| `LoadCasesCount` | Reported member count; matches `LoadCaseIds.Count` for a successful query |
+| `LoadCaseIds` | Independent, non-null set of member load-case IDs; ordering unspecified |
+
+| Native code | `LoadEnvelopType` |
+| --- | --- |
+| 0 | `None` |
+| 1 | `Stress` |
+| 2 | `Serviceability` |
+| 3 | `Column` |
+| 4 | `Connection` |
+| 5 | `Strength` |
+| 6 | `Temporary` |
+
+Queries copy native arrays into fresh managed data. Separate envelopes and successive calls have separate models and membership sets. The four-argument model constructor also copies its supplied set; null creates an empty set. Default/three-argument constructors initialize their own empty sets. These constructors store metadata without native existence checks or count reconciliation. The mutable model uses reference equality.
+
+Editing a result changes only managed data. Assigning properties raises `PropertyChanged` when the value changes; editing a HashSet's contents does not raise that event or recalculate `LoadCasesCount`. The setters remain editable like the main model, so callers can independently change counts/classification and replace the set, including with null. No member titles, combination factors, assignment loads or analysis extrema are loaded by these methods.
+
+### Example
+
+With an already connected `IOSLoad` named `load`:
+
+```csharp
+foreach (int envelopeId in load.GetEnvelopeIds())
+    Console.WriteLine("Envelope " + envelopeId);
+
+// Envelope 7 must exist in the connected model.
+var detail = load.GetLoadEnvelopeDetail(7);
+Console.WriteLine(detail.Id + ": " + detail.EnvelopType);
+foreach (int caseId in detail.LoadCaseIds) Console.WriteLine(caseId);
+
+foreach (var envelope in load.GetAllLoadEnvelopeDetails())
+    Console.WriteLine(envelope.Id + ": " + envelope.LoadCasesCount + " cases");
+```
+
+The interface and concrete adapter both ship complete XML summaries, parameters, returns, remarks, exception contracts and examples beside the installed DLL. Envelope examples are compiled and executed in the isolated installed-package consumer alongside the existing query, geometry and mutation examples.
+
+### Main-project differences and live validation
+
+The main reference is commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Public function signatures and classification codes are preserved. This port deliberately replaces nullable empty results and unchecked native calls with non-null empty sets, positive-ID validation, checked statuses and strict metadata checks. Model constructors initialize/copy membership sets to prevent accidental sharing; mutable property semantics remain available.
+
+Before claiming live support for these queries, compare an empty model, a zero-member envelope if the installed STAAD version permits it, sparse/multiple envelope IDs and every supported classification against the STAAD UI/input file. Check exact members/counts, missing-ID failures, native success/failure conventions, marshaled Int32 arrays, and unchanged active case/load-list state on each advertised STAAD version/architecture. Offline stand-ins verify managed contracts; live envelope execution remains pending.

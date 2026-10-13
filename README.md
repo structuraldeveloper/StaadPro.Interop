@@ -146,6 +146,10 @@ StaadPro.Interop/
 
 ## Building and Testing
 
+The current load port exposes 66 overloads, with 54 reference overloads pending. The latest additions assign self-weight, create envelopes and select native load lists, alongside the envelope metadata queries. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
+
+The root adapter now implements three of the reference's 23 methods: model-path, filename and analysis-file-path retrieval. Access them through `wrapper.Root`; see [root porting progress and examples](docs/Root-Porting.md).
+
 ```powershell
 # Restore & Build
 dotnet build StaadPro.Interop.sln -c Release
@@ -154,8 +158,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261013 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261013.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261013.2 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261013.2.nupkg
 ```
 
 ---

@@ -14,7 +14,7 @@
     <Version>1.0.0</Version>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 StaadDev</Copyright>
-    <PackageReleaseNotes>Preview release for Windows and .NET Framework 4.8.1. Adds the four-parameter AddAxialThermalGradientTo overload, AddMemberLoadsFromGroupsByLoadCase and AddNodalLoadsFromGroupsByLoadCase with matching public signatures and detailed XML IntelliSense. Keeps per-entity thermal COM calls on the caller's thread; nThreads is validated for compatibility and does not schedule workers. Preserves grouped delegation to existing assignment helpers, raw values and native mapping, with documented skip/null behavior, legacy activation-status handling and partial failures. Includes documentation for 140 geometry and 60 load overloads and verifies 69 packaged XML examples. Retains 21 load queries including GetLoadCases inclusive ID ranges and the earlier geometry, factored-load and model-attachment additions. Live mutation, engineering-unit and STAAD-version validation remain pending before stable release. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Preview for Windows and .NET Framework 4.8.1. Adds checked self-weight assignment, envelope creation and load-list selection, plus root model-path, filename and analysis-file-path queries with matching reference signatures. Includes prior envelope metadata queries, full XML IntelliSense for 140 geometry, 66 load and 3 root methods, expanded load/root guides, and 87 executable packaged XML examples. Inputs are validated and snapshotted before native access; native success conventions, activation and mutation side effects are documented. Preserves GetLoadCases inclusive ID ranges and earlier query, grouped-assignment, geometry and model-attachment work. Live native mutations, marshaling, engineering units and broader STAAD-version validation remain pending before stable release. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load operations.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
@@ -42,6 +42,7 @@
     <None Include="..\..\docs\Load-Queries.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Geometry-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Load-Porting.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Root-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Installation.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Publishing.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Release-Notes.md" Pack="true" PackagePath="docs\" />

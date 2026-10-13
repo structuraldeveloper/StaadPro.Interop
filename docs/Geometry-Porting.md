@@ -67,12 +67,12 @@ wrapper.Geometry.CreateMultipleBeamsExtended(wrapper.Root,
 
 ## IntelliSense in an installed package
 
-The earlier package contained an XML file but no method documentation for its 134 geometry overloads; 33 load-adapter methods also lacked expanded comments. The current source provides complete documentation on all 140 geometry and all 60 load overloads, on both interfaces and concrete adapters. Previously undocumented exported managed functions now have summaries, parameter descriptions and return documentation as well.
+The earlier package contained an XML file but no method documentation for its 134 geometry overloads; 33 load-adapter methods also lacked expanded comments. The current source provides complete documentation on all 140 geometry and all 66 load overloads, on both interfaces and concrete adapters. Previously undocumented exported managed functions now have summaries, parameter descriptions and return documentation as well.
 
 `Documentation/ApiMembers.xml` holds shared XML comments adapted from the reference interfaces and reviewed against the current implementation. Compiler `<include>` directives expand those comments into `StaadPro.Interop.xml`; consumers need neither this source file nor the private reference project. The package includes the generated XML alongside the DLL in `lib/net481`. Existing detailed load-query examples and contracts remain intact.
 
-Malformed or unresolved documentation warnings fail the build. Regression checks inspect the compiled XML for exported functions and adapter overloads, missing summaries, parameter-name coverage, generic parameters, returns, usage remarks, and unresolved include/inheritance/reference elements. Package verification installs an isolated NuGet consumer and compiles/runs all 69 XML examples, including eighteen examples for the nine mutation overloads on interfaces and adapters.
+Malformed or unresolved documentation warnings fail the build. Regression checks inspect the compiled XML for exported functions and adapter overloads, missing summaries, parameter-name coverage, generic parameters, returns, usage remarks, and unresolved include/inheritance/reference elements. Package verification installs an isolated NuGet consumer and compiles/runs all 87 XML examples, including eighteen examples for the nine mutation overloads on interfaces and adapters.
 
-Already-published versions are unchanged. These additions are prepared in `1.0.0-preview.20261013`; publication is a separate step.
+Already-published versions are unchanged. These additions are prepared in `1.0.0-preview.20261013.2`; publication is a separate step.
 
 Offline checks cover array layouts, target-root routing, prevalidation, native exception propagation and partial beam failure. Live native mutation behavior and engineering-unit conventions require validation on the STAAD versions used by consumers.

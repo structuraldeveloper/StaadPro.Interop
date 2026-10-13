@@ -41,6 +41,8 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase(typeof(OSGeometryAdapter))]
         [TestCase(typeof(IOSLoad))]
         [TestCase(typeof(OSLoadAdapter))]
+        [TestCase(typeof(IOSRoot))]
+        [TestCase(typeof(OSRootAdapter))]
         [TestCase(typeof(ConnectivityService))]
         public void EveryAdapterFunctionHasUsageRemarksAndGenericParameterDocumentation(Type type)
         {
@@ -109,6 +111,39 @@ namespace StaadPro.Interop.Tests.Adapter
             Assert.That(contract.Element("remarks").Value, Does.Contain(mapping));
             Assert.That(contract.Element("example")?.Element("code")?.Value, Does.Contain("load." + name + "("));
             if (parameterCount == 4) Assert.That(contract.Elements("param").Single(p => (string)p.Attribute("name") == "nThreads").Value, Does.Contain("does not launch worker threads"));
+        }
+
+        [TestCase(typeof(IOSLoad), typeof(OSLoadAdapter), "AddSelfweightInXYZTo", "load")]
+        [TestCase(typeof(IOSLoad), typeof(OSLoadAdapter), "CreateLoadEnvelopExt", "load")]
+        [TestCase(typeof(IOSLoad), typeof(OSLoadAdapter), "CreateLoadList", "load")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetStaadFileFullPath", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetStaadFileNameOnly", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetAnlFileFullPath", "root")]
+        public void LoadAndRootPortHasMatchingCompleteExecutableIntelliSense(Type contractType, Type adapterType, string name, string receiver)
+        {
+            var xml = XDocument.Load(Path.ChangeExtension(contractType.Assembly.Location, ".xml"));
+            var entries = xml.Descendants("member").ToDictionary(m => (string)m.Attribute("name"));
+            var method = contractType.GetMethod(name);
+            var adapterMethod = adapterType.GetMethod(name);
+            var contract = entries[MethodId(method)];
+            var adapter = entries[MethodId(adapterMethod)];
+            Assert.That(adapter.Elements().Select(e => e.ToString()), Is.EqualTo(contract.Elements().Select(e => e.ToString())));
+            Assert.That(method.ReturnType, Is.EqualTo(adapterMethod.ReturnType));
+            Assert.That(adapterMethod.GetParameters().Select(p => (p.Name, p.ParameterType, p.DefaultValue)), Is.EqualTo(method.GetParameters().Select(p => (p.Name, p.ParameterType, p.DefaultValue))));
+            Assert.That(contract.Element("example")?.Element("code")?.Value, Does.Contain(receiver + "." + name + "("));
+            Assert.That(contract.Elements("exception").All(e => !string.IsNullOrWhiteSpace(e.Value)), Is.True);
+            Assert.That(contract.Elements("exception").Count(), Is.GreaterThanOrEqualTo(3));
+        }
+
+        [TestCase("SelfWeightDirection", 4)]
+        [TestCase("LoadListType", 3)]
+        public void NativeSelectionEnumsHaveDocumentedTypesAndAllValues(string typeName, int count)
+        {
+            var xml = XDocument.Load(Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml"));
+            string owner = "StaadPro.Interop.Enums." + typeName;
+            var entries = xml.Descendants("member").Where(e => ((string)e.Attribute("name")).Substring(2) == owner || ((string)e.Attribute("name")).Substring(2).StartsWith(owner + ".")).ToList();
+            Assert.That(entries.Count, Is.EqualTo(count));
+            Assert.That(entries.All(e => !string.IsNullOrWhiteSpace(e.Element("summary")?.Value)), Is.True);
         }
 
         private static string MethodId(MethodInfo method)

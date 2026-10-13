@@ -1,5 +1,15 @@
 # NuGet readiness assessment
 
+## Current source update - 13 October 2026
+
+The current source includes the envelope queries and new self-weight, envelope creation and load-list mutations. Source load coverage is **66 overloads**, including 61 matching reference signatures; **54 reference overloads remain pending**. The root adapter adds three model/analysis filename queries: **3 of 23 root methods implemented, 20 pending**. See [Load-Porting.md](Load-Porting.md), [Root-Porting.md](Root-Porting.md) and the [envelope query guide](Load-Queries.md#load-envelope-queries).
+
+Verification of this source passed: **583 offline tests** (113 added since the grouped-assignment baseline, 62 in this batch), Release build with zero warnings/errors, and an isolated package consumer executing **87 compiled XML examples**, all 24 load queries, all three root queries and the new mutations. One explicit environment-dependent provider test is outside the offline run. The test evidence is `artifacts/load-root-port/tests/load-root-port.trx`; the release package is `artifacts/release/StaadPro.Interop.1.0.0-preview.20261013.2.nupkg`. Its matching source commit and SHA256 are recorded in the adjacent release receipt.
+
+This verifies that the new APIs and IntelliSense ship in an installable preview. Live envelope/root reads, self-weight/envelope mutations, load-list selection, native marshaling/status conventions, supported STAAD versions and engineering output still need native validation. This increment has not uploaded a new package; the published versions described below remain unchanged. Follow [Publishing.md](Publishing.md) to publish the exact verified archive after reviewing its release receipt.
+
+## Previously verified public preview
+
 Assessment date: 12 October 2026. Current release: `1.0.0-preview.20261012.1`, including the model attachment fixes and copyright update to StaadDev. The source commit is recorded in the package's repository metadata.
 
 ## Decision

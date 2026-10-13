@@ -23,11 +23,13 @@ try {
     $releaseNotes = Read-PackageEntry 'docs/Release-Notes.md'
     $geometryGuide = Read-PackageEntry 'docs/Geometry-Porting.md'
     $loadPorting = Read-PackageEntry 'docs/Load-Porting.md'
+    $rootPorting = Read-PackageEntry 'docs/Root-Porting.md'
     if ($installation -notmatch 'net481' -or $publishing -notmatch 'nuget.org') { throw 'Incomplete installation/publishing guides.' }
     $installationCode = [regex]::Match($installation, '(?s)```csharp\s*\r?\n(.*?)```').Groups[1].Value
     if ([string]::IsNullOrWhiteSpace($installationCode)) { throw 'Missing installation C# example.' }
     if ($readme -notmatch 'net481') { throw 'Incomplete packaged README.' }
     $queryMethods = @('GetNodalLoads', 'GetMemberUniformlyDistributedLoads', 'GetMemberConcentratedLoads', 'GetMemberConcentratedMoments', 'GetMemberLinearVaryingLoads', 'GetMemberTrapezoidalLoads', 'GetAllPrimaryLoadCases', 'GetAllReferenceLoadCases', 'GetMemberUniformMoments', 'GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId', 'GetPrimaryLoadCasesFromIds', 'GetReferenceLoadCasesFromIds', 'GetAllLoadCombinationCases', 'GetLoadCombinationCaseFromId', 'GetLoadCombinationCasesFromIds', 'GetAllLoadCasesOfType', 'GetLoadCase', 'GetLoadCases', 'GetLoadCasesFromIds', 'GetLoadCasesOfType')
+    $queryMethods += @('GetEnvelopeIds', 'GetLoadEnvelopeDetail', 'GetAllLoadEnvelopeDetails')
     foreach ($method in $queryMethods) {
         if ($readme -notmatch $method -or $guide -notmatch $method) { throw "Missing packaged guidance for $method" }
     }
@@ -45,8 +47,8 @@ try {
     $snippets = @()
     foreach ($owner in @('Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         foreach ($method in $queryMethods) {
-            $isEnumeration = $method -in @('GetAllPrimaryLoadCases', 'GetAllReferenceLoadCases', 'GetAllLoadCombinationCases')
-            $isSingleLookup = $method -in @('GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId', 'GetLoadCombinationCaseFromId')
+            $isEnumeration = $method -in @('GetAllPrimaryLoadCases', 'GetAllReferenceLoadCases', 'GetAllLoadCombinationCases', 'GetEnvelopeIds', 'GetAllLoadEnvelopeDetails')
+            $isSingleLookup = $method -in @('GetPrimaryLoadCaseFromId', 'GetReferenceLoadCaseFromId', 'GetLoadCombinationCaseFromId', 'GetLoadEnvelopeDetail')
             $isBatchLookup = $method -in @('GetPrimaryLoadCasesFromIds', 'GetReferenceLoadCasesFromIds', 'GetLoadCombinationCasesFromIds')
             $isFamilyQuery = $method -in @('GetAllLoadCasesOfType', 'GetLoadCasesOfType')
             $isGenericLookup = $method -eq 'GetLoadCase'
@@ -88,7 +90,7 @@ try {
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         $methods = if ($owner -match 'Geometry') {
             @('CreateMultipleBeamsExtended', 'CreateMultipleNodesExtended', 'MergeNodesExtended')
-        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo', 'AddMemberLoadsFromGroupsByLoadCase', 'AddNodalLoadsFromGroupsByLoadCase') }
+        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo', 'AddMemberLoadsFromGroupsByLoadCase', 'AddNodalLoadsFromGroupsByLoadCase', 'AddSelfweightInXYZTo', 'CreateLoadEnvelopExt', 'CreateLoadList') }
         foreach ($method in $methods) {
             $prefix = "M:StaadPro.Interop.$owner.$method("
             $member = @($xml.doc.members.member | Where-Object { $_.name.StartsWith($prefix) })
@@ -105,9 +107,21 @@ try {
             if ($documentation -notmatch $method -or $readme -notmatch $method) { throw "Missing packaged guidance for $method" }
         }
     }
-    foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
+    foreach ($owner in @('Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
+        foreach ($method in @('GetStaadFileFullPath', 'GetStaadFileNameOnly', 'GetAnlFileFullPath')) {
+            $entry = @($xml.doc.members.member | Where-Object name -eq "M:StaadPro.Interop.$owner.$method")
+            if ($entry.Count -ne 1) { throw "Missing root IntelliSense: $owner.$method" }
+            foreach ($tag in @('summary','returns','remarks','example/code')) {
+                $node = $entry[0].SelectSingleNode($tag)
+                if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $owner.$method" }
+            }
+            $snippets += "{`n" + $entry[0].SelectSingleNode('example/code').InnerText + "`n}"
+            if ($rootPorting -notmatch $method -or $readme -notmatch $method) { throw "Missing packaged root guidance for $method" }
+        }
+    }
+    foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 140 } else { 60 }
+        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 3 } else { 66 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -117,7 +131,7 @@ try {
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 69) { throw "Expected 69 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 87) { throw "Expected 87 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -153,7 +167,28 @@ public static class Program
         using (var wrapper = new OpenStaadWrapper(new FakeRoot(fake)))
         {
             IOSLoad load = wrapper.Load;
-            RunDocumentationExamples(load, wrapper.Geometry);
+            RunDocumentationExamples(load, wrapper.Geometry, wrapper.Root);
+            Check(wrapper.Root.GetStaadFileFullPath() == @"C:\Models\Frame.v2.STD" && wrapper.Root.GetStaadFileNameOnly() == "Frame.v2.STD" && wrapper.Root.GetAnlFileFullPath() == @"C:\Models\Frame.v2.ANL", "root paths from installed package");
+            load.AddSelfweightInXYZTo(17, LoadCaseType.ReferenceLoad, new[] { 101, 102 }, SelfWeightDirection.GlobalZ, -1.25);
+            Check(fake.Assignment == "selfweight" && fake.AssignedIds.SequenceEqual(new[] { 101, 102 }) && fake.AssignedValues[0] == -1.25 && fake.Reference && fake.Direction == 3, "self-weight native arguments and family");
+            load.CreateLoadEnvelopExt(7, LoadEnvelopType.Strength, new[] { 17, 41 });
+            Check(fake.Assignment == "envelope" && fake.CreatedEnvelopeId == 7 && fake.Direction == 5 && fake.AssignedIds.SequenceEqual(new[] { 17, 41 }), "envelope creation arguments");
+            object listStatus = load.CreateLoadList(LoadListType.EnvelopList, new[] { 7 });
+            Check(listStatus is int && (int)listStatus == 0 && fake.Assignment == "list" && fake.Direction == 1 && fake.AssignedIds.SequenceEqual(new[] { 7 }), "native integer-zero load-list contract");
+            int envelopeActiveId = fake.ActiveId;
+            bool envelopeReference = fake.Reference;
+            int envelopeCountCalls = fake.EnvelopeCountCalls;
+            int envelopeIdCalls = fake.EnvelopeIdCalls;
+            var envelopes = load.GetAllLoadEnvelopeDetails();
+            Check(envelopes.Count == 2 && fake.EnvelopeCountCalls == envelopeCountCalls + 1 && fake.EnvelopeIdCalls == envelopeIdCalls + 1, "envelope enumeration reads IDs once");
+            var strength = envelopes.Single(e => e.Id == 7);
+            Check(strength is LoadEnvelopeDetail && strength.EnvelopType == LoadEnvelopType.Strength && strength.LoadCasesCount == 2 && strength.LoadCaseIds.SetEquals(new[] { 17, 41 }), "envelope type, count and membership mapping");
+            var emptyEnvelope = envelopes.Single(e => e.Id == 19);
+            Check(emptyEnvelope.EnvelopType == LoadEnvelopType.None && emptyEnvelope.LoadCasesCount == 0 && emptyEnvelope.LoadCaseIds.Count == 0, "valid zero-member envelope");
+            var envelopeCopy = load.GetLoadEnvelopeDetail(7);
+            strength.LoadCaseIds.Clear();
+            Check(envelopeCopy.LoadCaseIds.SetEquals(new[] { 17, 41 }) && !ReferenceEquals(strength, envelopeCopy), "independent envelope metadata");
+            Check(fake.ActiveId == envelopeActiveId && fake.Reference == envelopeReference, "envelope queries preserve active state");
             Check(wrapper.Root != null && ReferenceEquals((object)wrapper.Root.ComObject, wrapper.RawOpenStaad), "root binding");
             var geometry = ((FakeRoot)wrapper.RawOpenStaad).Geometry;
             wrapper.Geometry.CreateMultipleNodesExtended(wrapper.Root, new[] { new Node(901, 1.25, -2.5, 3.75), new Node(902, 4, 5, 6) });
@@ -284,6 +319,8 @@ public static class Program
             Check(load.GetLoadCase(17, LoadCaseType.LoadCombination) == null, "generic lookup does not cross families");
             Check(fake.ActiveId == activeBeforeLookup && fake.Reference == referenceBeforeLookup, "lookup preserves activation");
             fake.Empty = true;
+            int emptyEnvelopeIdCalls = fake.EnvelopeIdCalls;
+            Check(load.GetEnvelopeIds().Count == 0 && load.GetAllLoadEnvelopeDetails().Count == 0 && fake.EnvelopeIdCalls == emptyEnvelopeIdCalls, "zero envelope count skips IDs and details");
             Check(load.GetNodalLoads(new LoadCase(1), 10).Count == 0 && load.GetMemberUniformlyDistributedLoads(new LoadCase(1), 101).Count == 0 && load.GetMemberConcentratedLoads(new LoadCase(1), 101).Count == 0, "empty queries");
             Check(load.GetMemberConcentratedMoments(new LoadCase(1), 101).Count == 0 && load.GetMemberLinearVaryingLoads(new LoadCase(1), 101).Count == 0 && load.GetMemberTrapezoidalLoads(new LoadCase(1), 101).Count == 0, "empty new queries");
             Check(load.GetMemberUniformMoments(new LoadCase(1), 101).Count == 0 && load.GetAllPrimaryLoadCases().Count == 0 && load.GetAllReferenceLoadCases().Count == 0, "empty third increment");
@@ -309,10 +346,10 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: sixty-nine packaged XML examples, all twenty-one load queries, three geometry grouping APIs, nine mutation overloads, and four ported load models.");
+        Console.WriteLine("PASS: eighty-seven packaged XML examples, twenty-four load queries, three root queries, three geometry grouping APIs, twelve mutation overloads, and envelope/load models.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
-    private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry)
+    private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
     {
 __EXAMPLES__
     }
@@ -321,6 +358,11 @@ __EXAMPLES__
         public FakeRoot(FakeLoad load) { Load = load; }
         public FakeLoad Load { get; }
         public FakeGeometry Geometry { get; } = new FakeGeometry();
+        public void GetSTAADFile(ref object name, bool fullPath)
+        {
+            if (!fullPath) throw new Exception("Expected full-path native flag.");
+            name = @"C:\Models\Frame.v2.STD";
+        }
     }
     public class FakeGeometry
     {
@@ -341,9 +383,24 @@ __EXAMPLES__
         public bool Empty { get; set; }
         public int PrimaryTypeCalls { get; private set; }
         public int CombinationNumberCalls { get; private set; }
+        public int EnvelopeCountCalls { get; private set; }
+        public int EnvelopeIdCalls { get; private set; }
+        public int GetEnvelopeCount() { EnvelopeCountCalls++; return Empty ? 0 : 2; }
+        public int GetEnvelopeIDs(ref object ids) { EnvelopeIdCalls++; ids = new[] { 7, 19 }; return 1; }
+        public int GetLoadEnvelopeDetails(int id, ref int type, ref int count)
+        { type = id == 7 ? 5 : 0; count = Empty || id == 19 ? 0 : 2; return 1; }
+        public int GetLoadListfromLoadEnvelope(int id, ref object ids) { ids = new[] { 17, 41 }; return 1; }
         public string Assignment { get; private set; }
         public double[] AssignedValues { get; private set; }
         public int[] AssignedIds { get; private set; }
+        public int Direction { get; private set; }
+        public int CreatedEnvelopeId { get; private set; }
+        public bool AddSelfWeightInXYZToGeometry(int[] ids, int direction, double factor)
+        { Assignment = "selfweight"; AssignedIds = ids; Direction = direction; AssignedValues = new[] { factor }; return true; }
+        public bool CreateLoadEnvelop(int id, int type, int[] ids)
+        { Assignment = "envelope"; CreatedEnvelopeId = id; Direction = type; AssignedIds = ids; return true; }
+        public int CreateLoadList(int type, int[] ids)
+        { Assignment = "list"; Direction = type; AssignedIds = ids; return 0; }
         public System.Collections.Generic.List<int> ScalarTemperatureIds { get; } = new System.Collections.Generic.List<int>();
         public System.Collections.Generic.List<int> TemperatureThreadIds { get; } = new System.Collections.Generic.List<int>();
         public void AddReferenceLoad(int[] ids, double[] factors) { Assignment = "reference"; AssignedIds = ids; AssignedValues = factors; }

@@ -917,5 +917,175 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// </example>
         List<ILoadCase> GetLoadCasesOfType(LoadCaseType loadCaseType);
 
+        /// <summary>Reads the identifiers of all load envelopes defined in the connected STAAD model.</summary>
+        /// <returns>A fresh, non-null HashSet of positive, distinct envelope IDs; empty when the native count is zero. Ordering is unspecified.</returns>
+        /// <remarks>
+        /// <para>Reads GetEnvelopeCount and, for a positive count, GetEnvelopeIDs. The fetch return must be
+        /// integer 1 (success), not the number of IDs or assignment-query zero success. Native integer counts
+        /// must be nonnegative; IDs must be distinct, positive Int32 values in a one-dimensional array
+        /// of exactly the reported length. Nonzero SAFEARRAY lower bounds are supported.</para>
+        /// <para>The operation is eager, returns independent managed data and never activates a case,
+        /// changes the active load list, computes results or modifies the model. Zero count skips fetching.
+        /// Coordinate COM access on the appropriate session thread; model changes between native reads
+        /// may cause validation failures. Native failures throw; they are not treated as an empty model.</para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">A native status, count, classification or ID array is invalid or inconsistent.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">OpenSTAAD reports a COM failure; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load:
+        /// <code>
+        /// foreach (int envelopeId in load.GetEnvelopeIds())
+        ///     Console.WriteLine("Envelope " + envelopeId);
+        /// </code>
+        /// </example>
+        HashSet<int> GetEnvelopeIds();
+
+        /// <summary>Reads one load envelope's classification, reported case count and member load-case IDs.</summary>
+        /// <param name="envId">Positive native envelope ID to read directly. This is not a load-case ID; no envelope enumeration is performed.</param>
+        /// <returns>A fresh LoadEnvelopeDetail with the requested ID, a defined LoadEnvelopType and an independent, non-null membership set. A valid zero-member envelope has count zero and an empty set.</returns>
+        /// <remarks>
+        /// <para>Calls GetLoadEnvelopeDetails with Int32 reference outputs for type and count.
+        /// Its return must be integer 1. Defined native types 0 through 6 are mapped without conversion.
+        /// For a positive count, calls GetLoadListfromLoadEnvelope with a preallocated Int32 array;
+        /// its return must also be integer 1, and the array must have the exact reported size,
+        /// distinct positive IDs and one dimension. Nonzero SAFEARRAY lower bounds are supported.
+        /// A zero count skips the membership fetch.</para>
+        /// <para>This eager metadata read neither activates a case nor changes the active load list.
+        /// It does not resolve member cases, read their titles or factors, or compute envelope extrema.
+        /// A missing positive ID is delegated to OpenSTAAD and a native failure throws rather than
+        /// returning null. Type/count outputs must be written even for a valid empty envelope.</para>
+        /// <para>Editing the returned model does not write to STAAD. Membership ordering is unspecified;
+        /// editing its set does not synchronize LoadCasesCount or raise property notifications.
+        /// Serialize native session access; concurrent model changes can produce inconsistent reads.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException">envId is zero or negative; rejected before native access.</exception>
+        /// <exception cref="InvalidOperationException">A native status, count, classification or ID array is invalid or inconsistent.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">OpenSTAAD reports a COM failure; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load and an existing envelope 7:
+        /// <code>
+        /// var envelope = load.GetLoadEnvelopeDetail(7);
+        /// Console.WriteLine(envelope.Id + ": " + envelope.EnvelopType);
+        /// foreach (int caseId in envelope.LoadCaseIds) Console.WriteLine(caseId);
+        /// </code>
+        /// </example>
+        ILoadEnvelopeDetail GetLoadEnvelopeDetail(int envId);
+
+        /// <summary>Eagerly reads metadata and membership for every defined load envelope.</summary>
+        /// <returns>A fresh, non-null HashSet of independent LoadEnvelopeDetail objects. An envelope-free model returns an empty set; ordering is unspecified.</returns>
+        /// <remarks>
+        /// <para>Calls GetEnvelopeIds once, then GetLoadEnvelopeDetail for each discovered ID.
+        /// All count, success-status, classification, array and membership checks from those readers
+        /// apply. Each object and its membership set belongs to this result and is not a native buffer.</para>
+        /// <para>Reads all envelopes before returning and throws if any envelope fails; no partial result
+        /// escapes. Zero envelope count skips all detail reads. A valid zero-member envelope is retained.
+        /// The native model may change between calls; this is not an atomic model snapshot.</para>
+        /// <para>Leaves the active case and active load list unchanged, performs no native writes and
+        /// does not calculate envelope extrema or resolve member cases. Coordinate session COM calls
+        /// on the appropriate thread. Managed edits do not write to STAAD or synchronize case counts.</para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">A native status, count, classification or ID array is invalid or inconsistent.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">OpenSTAAD reports a COM failure; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load:
+        /// <code>
+        /// foreach (var envelope in load.GetAllLoadEnvelopeDetails())
+        ///     Console.WriteLine(envelope.Id + ": " + envelope.LoadCasesCount + " cases");
+        /// </code>
+        /// </example>
+        HashSet<ILoadEnvelopeDetail> GetAllLoadEnvelopeDetails();
+
+        /// <summary>Assigns directional self-weight to specified geometry in an existing primary or reference load case.</summary>
+        /// <param name="loadCaseId">Positive existing target case ID; native existence is checked by OpenSTAAD.</param>
+        /// <param name="lcType">PrimaryLoad or ReferenceLoad. Repeat, combination and undefined families are unsupported.</param>
+        /// <param name="entities">Non-null geometry IDs for beams, plates or solids. Every ID must be positive. Input is snapshotted once; order and duplicates are preserved. Empty input makes no native calls.</param>
+        /// <param name="loadDirection">Defined global self-weight direction: X=1, Y=2 or Z=3; defaults to GlobalY.</param>
+        /// <param name="factor">Finite, dimensionless self-weight multiplier, default -1. Zero and positive or negative values are passed unchanged.</param>
+        /// <returns>This adapter after successful validation and assignment, including the empty-input no-op.</returns>
+        /// <remarks>
+        /// <para>Validates all arguments and the entire input before COM access. For nonempty input,
+        /// activates the requested family using checked SetLoadActive or SetReferenceLoadActive,
+        /// then sends one Int32 ID array, integer direction and double factor to AddSelfWeightInXYZToGeometry.
+        /// The mutation must report Boolean true or integer 1/-1 (VARIANT_TRUE); false, zero and other statuses throw.</para>
+        /// <para>Calls stay on the caller's COM thread. Self-weight uses native model geometry/materials;
+        /// no unit conversion, geometry lookup or managed load collection update is performed.
+        /// The target case remains active after assignment, including a later native assignment failure.
+        /// No save, rollback or restoration of prior activation is performed. Serialize shared-session access.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">entities is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">loadCaseId or an entity ID is nonpositive, loadDirection is undefined, or factor is non-finite.</exception>
+        /// <exception cref="NotSupportedException">lcType is not PrimaryLoad or ReferenceLoad.</exception>
+        /// <exception cref="InvalidOperationException">Native activation or mutation reports failure or an invalid status.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">A native COM call fails; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load and existing target/geometry IDs:
+        /// <code>
+        /// load.AddSelfweightInXYZTo(17, LoadCaseType.PrimaryLoad, new[] { 101, 102 },
+        ///     SelfWeightDirection.GlobalY, factor: -1.0);
+        /// </code>
+        /// </example>
+        IOSLoad AddSelfweightInXYZTo(int loadCaseId, LoadCaseType lcType, IEnumerable<int> entities, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1);
+
+        /// <summary>Creates a native load envelope from an explicit list of member load-case IDs.</summary>
+        /// <param name="envelopId">Positive native identifier for the envelope to create.</param>
+        /// <param name="envelopType">Defined LoadEnvelopType code 0 through 6, including None.</param>
+        /// <param name="loadCaseList">Non-null case-ID sequence, snapshotted once. IDs must be positive; order and duplicates are preserved. An empty Int32 array is forwarded for native acceptance or rejection.</param>
+        /// <returns>This adapter after OpenSTAAD reports successful envelope creation.</returns>
+        /// <remarks>
+        /// <para>Validates all input before one CreateLoadEnvelop call with integer envelope ID/type
+        /// and an independent Int32 array. Boolean true or integer 1/-1 (VARIANT_TRUE) means success;
+        /// false, zero or malformed statuses throw. Native case suitability, envelope-ID conflicts,
+        /// duplicate membership and empty-envelope support are delegated to OpenSTAAD.</para>
+        /// <para>No case activation, preliminary case lookup, native read-back, save or rollback occurs.
+        /// This mutates the native model; query it through GetLoadEnvelopeDetail when read-back is required.
+        /// Caller collections remain unchanged and returned metadata is not populated automatically.
+        /// Calls run on the caller's COM thread. Failed native operations can have native side effects.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">loadCaseList is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">envelopId or a member ID is nonpositive, or envelopType is undefined.</exception>
+        /// <exception cref="InvalidOperationException">Native activation or mutation reports failure or an invalid status.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">A native COM call fails; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load and suitable existing load cases:
+        /// <code>
+        /// load.CreateLoadEnvelopExt(7, LoadEnvelopType.Strength, new[] { 17, 41 });
+        /// </code>
+        /// </example>
+        IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<int> loadCaseList);
+
+        /// <summary>Creates the native load-case or envelope load list from explicit IDs.</summary>
+        /// <param name="loadListType">LoadList (native 0) for case IDs or EnvelopList (native 1) for envelope IDs.</param>
+        /// <param name="loadCaseIds">Non-null ID sequence for the selected list type. All IDs must be positive; input is snapshotted once with order and duplicates preserved. Empty input is forwarded for native handling.</param>
+        /// <returns>The original integer zero success result from CreateLoadList, preserving its boxed integer representation and the reference dynamic return signature.</returns>
+        /// <remarks>
+        /// <para>Validates all input before calling CreateLoadList once with an integer list type
+        /// and an independent Int32 array. Bentley's native contract specifies integer 0 success
+        /// and -1 failure. Boolean values, nonzero integers and malformed results throw.
+        /// Native integer short, Int32 and Int64 success representations are accepted unchanged.</para>
+        /// <para>This changes native load-list state and may affect subsequent commands using that list.
+        /// No case activation, ID existence check, automatic analysis, save or rollback is performed.
+        /// Envelope-list IDs identify envelopes rather than load cases despite the parameter's reference name.
+        /// Native handling of empty input and duplicate/suitable IDs is not inferred by this wrapper.
+        /// Coordinate session access on the appropriate COM thread; native failures propagate.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">loadCaseIds is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">loadListType is undefined or a supplied ID is nonpositive.</exception>
+        /// <exception cref="InvalidOperationException">Native activation or mutation reports failure or an invalid status.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">A native COM call fails; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load interface lacks a required signature.</exception>
+        /// <example>
+        /// With a connected IOSLoad named load and existing envelope 7:
+        /// <code>
+        /// object status = load.CreateLoadList(LoadListType.EnvelopList, new[] { 7 });
+        /// Console.WriteLine(status);
+        /// </code>
+        /// </example>
+        dynamic CreateLoadList(LoadListType loadListType, IEnumerable<int> loadCaseIds);
+
     }
 }

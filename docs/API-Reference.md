@@ -133,6 +133,16 @@ All three preserve active-case state and return eager metadata lists in unspecif
 - `AddPlateUniformPressure(ILoadCase lc, IEnumerable<int> plateIds, double pressure, LoadDirection direction = LoadDirection.LocalZ)`: Applies uniform surface pressure across multiple plate IDs.
 - `AddPlateUniformPressure(ILoadCase lc, IEnumerable<Plate> plates, double pressure, LoadDirection direction = LoadDirection.LocalZ)`: Applies uniform surface pressure across multiple Plate entities.
 
+### Load Envelope Metadata
+
+| Method | Behavior |
+| --- | --- |
+| `HashSet<int> GetEnvelopeIds()` | Reads distinct positive native envelope IDs; a successful zero count returns a fresh empty set. |
+| `ILoadEnvelopeDetail GetLoadEnvelopeDetail(int envId)` | Reads the classification, reported count and independent membership set for a positive envelope ID. |
+| `HashSet<ILoadEnvelopeDetail> GetAllLoadEnvelopeDetails()` | Eagerly reads all envelopes after one ID discovery; throws on any failure without returning partial results. |
+
+Each method preserves active-case/load-list state and checks native fetch success **1**, counts, array dimensions, positive IDs and duplicate IDs. Valid zero-member envelopes are retained with an empty set. `LoadEnvelopType` preserves native values 0–6 and the reference spelling. See the [full envelope guide](Load-Queries.md#load-envelope-queries) for examples, errors, ownership and native validation.
+
 ### Batch Load Case Creation
 - `CreatePrimaryLoadCases(HashSet<ILoadCase> / IEnumerable<ILoadCase>)`: Batch creates primary load cases in the active model.
 - `CreateReferenceLoadCases(HashSet<ILoadCase> / IEnumerable<ILoadCase>)`: Batch creates reference load cases in the active model.
@@ -147,3 +157,25 @@ All three preserve active-case state and return eager metadata lists in unspecif
 - `ClearReferenceLoadCase(ILoadCase)`: Clears a single reference load case.
 - `ClearReferenceLoadCases(IEnumerable<ILoadCase>)`: Clears multiple reference load cases.
 - `ClearReferenceLoadCases(IEnumerable<int>)`: Clears reference load cases by IDs.
+
+### Self-Weight, Envelope Creation and Load Lists
+
+| Method | Native behavior |
+| --- | --- |
+| `AddSelfweightInXYZTo(int loadCaseId, LoadCaseType lcType, IEnumerable<int> entities, SelfWeightDirection loadDirection = GlobalY, double factor = -1)` | Checked primary/reference activation followed by one geometry self-weight assignment; empty input skips native access. |
+| `CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<int> loadCaseList)` | One checked native envelope creation; no activation or read-back. |
+| `CreateLoadList(LoadListType loadListType, IEnumerable<int> loadCaseIds)` | Native load-case/envelope-list selection, returning its original integer-zero success status. |
+
+Inputs are snapshotted and validated before native access. The first two mutation APIs use Boolean success; load-list selection uses integer zero. Native existence/suitability and empty-envelope/list behavior remain native decisions. See [Load-Porting.md](Load-Porting.md) for input, empty-result, failure and state-change contracts.
+
+## Root Adapter
+
+`OpenStaadWrapper.Root` exposes `IOSRoot`, implemented by the existing non-partial `OSRootAdapter`.
+
+| Method | Result |
+| --- | --- |
+| `string GetStaadFileFullPath()` | Exact current model path from one void `GetSTAADFile` output read. |
+| `string GetStaadFileNameOnly()` | Windows filename including its extension, derived from one path read. |
+| `string GetAnlFileFullPath()` | Same directory and model stem with uppercase `.ANL`, derived from one path read. |
+
+Empty native filenames return empty strings. Unwritten/non-string outputs throw; native COM/binding errors propagate. Derived filenames use Windows Path APIs and do not check file existence. No model writes or analysis occur. See [Root-Porting.md](Root-Porting.md) for complete contracts, examples and the remaining 20 reference methods.

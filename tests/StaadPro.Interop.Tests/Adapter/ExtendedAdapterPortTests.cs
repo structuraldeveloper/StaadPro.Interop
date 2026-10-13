@@ -379,6 +379,9 @@ namespace StaadPro.Interop.Tests.Adapter
         {
             public int Reads { get; private set; }
             public dynamic ComObject { get { Reads++; return null; } }
+            public string GetStaadFileFullPath() => throw new NotSupportedException();
+            public string GetStaadFileNameOnly() => throw new NotSupportedException();
+            public string GetAnlFileFullPath() => throw new NotSupportedException();
         }
 
         private sealed class Once<T> : IEnumerable<T>

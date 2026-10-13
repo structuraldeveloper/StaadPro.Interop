@@ -2,6 +2,8 @@
 
 ## Overview & Prerequisites
 
+The latest port adds self-weight, envelope creation and load-list selection through `wrapper.Load`, plus current-model path/filename and derived analysis-file path through `wrapper.Root`. See [Load-Porting.md](Load-Porting.md) and [Root-Porting.md](Root-Porting.md) for signatures, examples and native success/state-change contracts. All new functions include expanded interface/concrete IntelliSense in installed packages.
+
 StaadPro.Interop provides a modern, strongly-typed .NET interface for Bentley STAAD.Pro.
 
 - **Target Framework**: .NET Framework 4.8.1 (`net481`) on Windows. There is currently no .NET 8 target.
