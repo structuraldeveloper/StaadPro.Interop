@@ -60,6 +60,24 @@ namespace StaadPro.Interop.Adapters.Models
             return this;
         }
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddAxialThermalGradientTo.ThreadCount']/*" />
+        public IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads)
+        {
+            if (nThreads <= 0) throw new ArgumentOutOfRangeException(nameof(nThreads), "The thread count must be positive.");
+            if (loadCaseId <= 0) throw new ArgumentOutOfRangeException(nameof(loadCaseId), "The target case ID must be positive.");
+            if (entities == null) throw new ArgumentNullException(nameof(entities));
+            if (double.IsNaN(axialThermalGradient) || double.IsInfinity(axialThermalGradient))
+                throw new ArgumentOutOfRangeException(nameof(axialThermalGradient), "The thermal input must be finite.");
+            int[] ids = entities.ToArray();
+            if (ids.Any(id => id <= 0)) throw new ArgumentOutOfRangeException(nameof(entities), "Entity IDs must be positive.");
+            if (ids.Length == 0) return this;
+            ActivateQueryCase(new LoadCase(loadCaseId, string.Empty, LoadCaseType.PrimaryLoad));
+            // Keep shared-session COM access on the caller's apartment instead of worker threads.
+            // Preserve the reference overload's one native scalar assignment per entity.
+            foreach (int id in ids) ComObject.AddTemperatureLoad(id, axialThermalGradient, 0.0, 0.0);
+            return this;
+        }
+
         private static KeyValuePair<int, double>[] ReadLoadCaseFactors(int loadCaseId,
             IEnumerable<KeyValuePair<int, double>> loadCaseNumberFactorPairs)
         {
@@ -70,6 +88,38 @@ namespace StaadPro.Interop.Adapters.Models
             if (pairs.Any(p => double.IsNaN(p.Value) || double.IsInfinity(p.Value)))
                 throw new ArgumentException("Load factors must be finite.", nameof(loadCaseNumberFactorPairs));
             return pairs;
+        }
+
+        #endregion
+
+        #region Grouped Load Assignment
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddMemberLoadsFromGroupsByLoadCase']/*" />
+        public IOSLoad AddMemberLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> grouped)
+        {
+            if (grouped == null) throw new ArgumentNullException(nameof(grouped));
+            foreach (var kvp in grouped)
+            {
+                if (kvp.Value == null) throw new ArgumentException("A load-case group list cannot be null.", nameof(grouped));
+                foreach (var (ml, members) in kvp.Value)
+                {
+                    if (members == null || members.Count == 0 || ml == null) continue;
+                    AddMemberLoad(kvp.Key, members, ml);
+                }
+            }
+            return this;
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddNodalLoadsFromGroupsByLoadCase']/*" />
+        public IOSLoad AddNodalLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> grouped)
+        {
+            if (grouped == null) throw new ArgumentNullException(nameof(grouped));
+            foreach (var kvp in grouped)
+            {
+                if (kvp.Value == null) throw new ArgumentException("A load-case group list cannot be null.", nameof(grouped));
+                foreach (var (nl, nodes) in kvp.Value) AddNodalLoad(kvp.Key, nodes, nl);
+            }
+            return this;
         }
 
         #endregion

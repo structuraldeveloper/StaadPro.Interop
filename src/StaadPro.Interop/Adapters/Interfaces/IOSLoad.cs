@@ -20,6 +20,15 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddAxialThermalGradientTo']/*" />
         IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient);
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddAxialThermalGradientTo.ThreadCount']/*" />
+        IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddMemberLoadsFromGroupsByLoadCase']/*" />
+        IOSLoad AddMemberLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> grouped);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddNodalLoadsFromGroupsByLoadCase']/*" />
+        IOSLoad AddNodalLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> grouped);
+
         #region Load Assignment Queries
 
         /// <summary>

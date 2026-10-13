@@ -41,8 +41,16 @@
 - `AddReferenceLoadsTo(int loadCaseId, Dictionary<int, double> loadCaseNumberFactorPairs)`: Adds factored reference contributions to an existing primary case.
 - `AddRepeatLoadsTo(int loadCaseId, IDictionary<int, double> loadCaseNumberFactorPairs)`: Adds factored repeat contributions to an existing primary case.
 - `AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient)`: Synchronously passes the raw thermal input as the first native temperature argument, with transverse arguments zero.
+- `AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads)`: Preserves the reference four-parameter signature, but executes one scalar assignment per entity on the caller's COM thread. `nThreads` must be positive and does not create workers.
 
 Inputs are validated before activation. Empty collections make no native calls; nonempty assignments leave the primary target active, including on native assignment failure. Native assignment return values are not interpreted. See [Load-Porting.md](Load-Porting.md) for complete contracts, examples and the remaining load inventory.
+
+### Grouped Assignments by Load Case
+
+- `AddMemberLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> grouped)`: Delegates member tuples to `AddMemberLoad`, skipping null load definitions and null/empty beam lists.
+- `AddNodalLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> grouped)`: Delegates every nodal tuple to `AddNodalLoad`, which rejects null loads/node lists and filters individual null nodes.
+
+Dictionary keys select the destination case. These functions preserve the existing assignment helpers' native mapping and activation-status handling; they do not convert units, change load metadata, refresh managed collections or supply rollback. Use valid existing primary/reference cases. See [Load-Porting.md](Load-Porting.md) for empty-entry behavior and partial failures.
 
 ### Load Assignment Queries
 

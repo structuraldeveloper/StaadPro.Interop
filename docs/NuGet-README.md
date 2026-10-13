@@ -16,7 +16,9 @@ A strongly typed wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load opera
 
 `IOSLoad` and `OSLoadAdapter` also expose `AddReferenceLoadsTo`, `AddRepeatLoadsTo` and the synchronous `AddAxialThermalGradientTo` overload. They validate inputs before activating an existing primary case, preserve raw factors/thermal values and leave the target case active. See the packaged `docs/Load-Porting.md` for complete contracts and remaining functions.
 
-Full, expanded XML IntelliSense is included for all 140 geometry overloads and all 57 load overloads on both interfaces and concrete adapters. Shared source comments are expanded by the compiler; installed consumers need only `StaadPro.Interop.xml` beside the DLL.
+The four-parameter `AddAxialThermalGradientTo` overload is also available. It validates `nThreads` and preserves per-entity scalar assignments while keeping COM calls on the caller's thread. `AddMemberLoadsFromGroupsByLoadCase` and `AddNodalLoadsFromGroupsByLoadCase` apply tuples to the cases identified by their dictionary keys through the existing assignment helpers. See `docs/Load-Porting.md` for skip/null behavior, legacy activation-status handling and partial failures.
+
+Full, expanded XML IntelliSense is included for all 140 geometry overloads and all 60 load overloads on both interfaces and concrete adapters. Shared source comments are expanded by the compiler; installed consumers need only `StaadPro.Interop.xml` beside the DLL.
 
 ## Load assignment queries
 
@@ -63,7 +65,7 @@ Full XML IntelliSense accompanies the DLL for both interface and concrete method
 
 ## Release status
 
-Release `1.0.0-preview.20261012.3` is authored by **Srinivasa Rao Masanam**. Copyright (c) 2026 StaadDev. This prepared preview adds three extended geometry mutations and three load assignments with full XML IntelliSense, alongside the earlier connectivity and model-attachment fixes. See [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md), also included as `docs/Release-Notes.md` in the package. This version has not been published to NuGet.org.
+Release `1.0.0-preview.20261013` is authored by **Srinivasa Rao Masanam**. Copyright (c) 2026 StaadDev. This prepared preview adds the four-parameter thermal overload and grouped member/nodal load assignments with detailed XML IntelliSense. It retains the earlier geometry, factored-load, connectivity and model-attachment additions. See [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md), also included as `docs/Release-Notes.md` in the package. This version has not been published to NuGet.org.
 
 Package creation and isolated consumer checks can be run locally and in CI. Offline tests exercise a managed OpenSTAAD stand-in; live COM marshaling and engineering unit conventions still require verification on each advertised STAAD version before a stable release. See the repository's [release assessment](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/NuGet-Readiness.md).
 

@@ -88,23 +88,26 @@ try {
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         $methods = if ($owner -match 'Geometry') {
             @('CreateMultipleBeamsExtended', 'CreateMultipleNodesExtended', 'MergeNodesExtended')
-        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo') }
+        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo', 'AddMemberLoadsFromGroupsByLoadCase', 'AddNodalLoadsFromGroupsByLoadCase') }
         foreach ($method in $methods) {
             $prefix = "M:StaadPro.Interop.$owner.$method("
             $member = @($xml.doc.members.member | Where-Object { $_.name.StartsWith($prefix) })
-            if ($member.Count -ne 1) { throw "Missing new mutation IntelliSense: $owner.$method" }
-            foreach ($tag in @('summary','returns','remarks','example/code')) {
-                $node = $member[0].SelectSingleNode($tag)
-                if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $owner.$method" }
+            $expectedOverloads = if ($method -eq 'AddAxialThermalGradientTo') { 2 } else { 1 }
+            if ($member.Count -ne $expectedOverloads) { throw "Missing new mutation IntelliSense: $owner.$method" }
+            foreach ($entry in $member) {
+                foreach ($tag in @('summary','returns','remarks','example/code')) {
+                    $node = $entry.SelectSingleNode($tag)
+                    if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $($entry.name)" }
+                }
+                $snippets += "{`n" + $entry.SelectSingleNode('example/code').InnerText + "`n}"
             }
             $documentation = if ($owner -match 'Geometry') { $geometryGuide } else { $loadPorting }
             if ($documentation -notmatch $method -or $readme -notmatch $method) { throw "Missing packaged guidance for $method" }
-            $snippets += "{`n" + $member[0].SelectSingleNode('example/code').InnerText + "`n}"
         }
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 140 } else { 57 }
+        $expectedCount = if ($owner -match 'Geometry') { 140 } else { 60 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -114,6 +117,7 @@ try {
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
+    if ($snippets.Count -ne 69) { throw "Expected 69 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -164,6 +168,25 @@ public static class Program
             Check(fake.Assignment == "repeat" && fake.AssignedIds[0] == 41 && fake.AssignedValues[0] == 1.123456789123, "repeat load precision");
             load.AddAxialThermalGradientTo(17, new[] { 101, 102 }, -15.5);
             Check(fake.Assignment == "temperature" && fake.AssignedIds.SequenceEqual(new[] { 101, 102 }) && fake.AssignedValues.SequenceEqual(new[] { -15.5, 0.0, 0.0 }), "temperature native arguments");
+            fake.ScalarTemperatureIds.Clear();
+            fake.TemperatureThreadIds.Clear();
+            load.AddAxialThermalGradientTo(17, new[] { 103, 101, 103 }, -12.25, nThreads: 4);
+            Check(fake.ScalarTemperatureIds.SequenceEqual(new[] { 103, 101, 103 }) && fake.TemperatureThreadIds.All(id => id == System.Threading.Thread.CurrentThread.ManagedThreadId), "thermal scalar order and caller thread");
+            Check(fake.AssignedValues.SequenceEqual(new[] { -12.25, 0.0, 0.0 }) && fake.ActiveId == 17 && !fake.Reference, "thermal overload values and activation");
+            var memberGroups = new System.Collections.Generic.Dictionary<ILoadCase, System.Collections.Generic.List<(MemberLoad Load, System.Collections.Generic.List<Beam> Beams)>>
+            {
+                { new LoadCase(41, "REF", LoadCaseType.ReferenceLoad), new System.Collections.Generic.List<(MemberLoad Load, System.Collections.Generic.List<Beam> Beams)>
+                    { (new MemberConcentratedLoad(LoadDirection.GlobalZ, -11.25, 1.75, -.5) { LoadCase = new LoadCase(999) }, new System.Collections.Generic.List<Beam> { new Beam(101, new Node(1, 0, 0, 0), new Node(2, 5, 0, 0)) }) } }
+            };
+            load.AddMemberLoadsFromGroupsByLoadCase(memberGroups);
+            Check(fake.Assignment == "pointforce" && fake.ActiveId == 41 && fake.Reference && fake.AssignedIds[0] == 101 && fake.AssignedValues.SequenceEqual(new[] { -11.25, 1.75, -.5 }), "grouped member mapping and reference routing");
+            var nodalGroups = new System.Collections.Generic.Dictionary<ILoadCase, System.Collections.Generic.List<(NodalLoad Load, System.Collections.Generic.List<Node> Nodes)>>
+            {
+                { new LoadCase(17), new System.Collections.Generic.List<(NodalLoad Load, System.Collections.Generic.List<Node> Nodes)>
+                    { (new NodalLoad(1, -2, 3, -4, 5, -6), new System.Collections.Generic.List<Node> { new Node(10, 0, 0, 0), null, new Node(10, 0, 0, 0) }) } }
+            };
+            load.AddNodalLoadsFromGroupsByLoadCase(nodalGroups);
+            Check(fake.Assignment == "nodal" && fake.ActiveId == 17 && !fake.Reference && fake.AssignedIds.SequenceEqual(new[] { 10, 10 }) && fake.AssignedValues.SequenceEqual(new[] { 1.0, -2.0, 3.0, -4.0, 5.0, -6.0 }), "grouped nodal mapping and primary routing");
             foreach (var type in new[] { LoadCaseType.PrimaryLoad, LoadCaseType.ReferenceLoad })
             {
                 var lc = new LoadCase(17, "case", type);
@@ -286,7 +309,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: sixty-three packaged XML examples, all twenty-one load queries, three geometry grouping APIs, six new mutations, and four ported load models.");
+        Console.WriteLine("PASS: sixty-nine packaged XML examples, all twenty-one load queries, three geometry grouping APIs, nine mutation overloads, and four ported load models.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry)
@@ -321,9 +344,17 @@ __EXAMPLES__
         public string Assignment { get; private set; }
         public double[] AssignedValues { get; private set; }
         public int[] AssignedIds { get; private set; }
+        public System.Collections.Generic.List<int> ScalarTemperatureIds { get; } = new System.Collections.Generic.List<int>();
+        public System.Collections.Generic.List<int> TemperatureThreadIds { get; } = new System.Collections.Generic.List<int>();
         public void AddReferenceLoad(int[] ids, double[] factors) { Assignment = "reference"; AssignedIds = ids; AssignedValues = factors; }
         public void AddRepeatLoad(int[] ids, double[] factors) { Assignment = "repeat"; AssignedIds = ids; AssignedValues = factors; }
         public void AddTemperatureLoad(int[] ids, double axial, double y, double z) { Assignment = "temperature"; AssignedIds = ids; AssignedValues = new[] { axial, y, z }; }
+        public void AddTemperatureLoad(int id, double axial, double y, double z)
+        { Assignment = "temperature-scalar"; AssignedIds = new[] { id }; AssignedValues = new[] { axial, y, z }; ScalarTemperatureIds.Add(id); TemperatureThreadIds.Add(System.Threading.Thread.CurrentThread.ManagedThreadId); }
+        public void AddMemberConcForce(int[] ids, int direction, double force, double position, double offset)
+        { Assignment = "pointforce"; AssignedIds = ids; AssignedValues = new[] { force, position, offset }; }
+        public void AddNodalLoad(int[] ids, double fx, double fy, double fz, double mx, double my, double mz)
+        { Assignment = "nodal"; AssignedIds = ids; AssignedValues = new[] { fx, fy, fz, mx, my, mz }; }
         public bool SetLoadActive(int id) { ActiveId = id; Reference = false; return true; }
         public int SetReferenceLoadActive(int id) { ActiveId = id; Reference = true; return id; }
         public int GetNodalLoadCount(int id) => Empty ? 0 : 1;

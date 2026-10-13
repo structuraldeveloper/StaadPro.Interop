@@ -4024,5 +4024,94 @@ load.AddRepeatLoadsTo(17, new System.Collections.Generic.Dictionary<int, double>
 load.AddAxialThermalGradientTo(17, new[] { 101, 102 }, 15.5);
 ]]></code></example>
     </member>
+    <member name="IOSLoad.AddAxialThermalGradientTo.ThreadCount">
+      <summary>Assigns axial thermal input to individual entities using the reference four-parameter signature, with native calls kept on the caller's COM thread.</summary>
+      <param name="loadCaseId">The positive ID of an existing primary case to activate and receive the assignments. The case is not created by this operation.</param>
+      <param name="entities">A non-null sequence of positive entity IDs accepted by the installed temperature-load API. The sequence is copied once, preserving order and duplicate IDs; native entity existence and suitability are not pre-read.</param>
+      <param name="axialThermalGradient">A finite value passed unchanged as the first native temperature argument for each entity. Both transverse arguments are zero. Use the installed STAAD temperature-input convention; no unit conversion, length division or coordinate-based calculation is performed. Zero and negative values are accepted.</param>
+      <param name="nThreads">The positive thread-count argument retained for source compatibility. This port validates it but does not launch worker threads or change scheduling according to its value: all native calls execute synchronously on the caller's thread to avoid sharing a COM session across worker apartments.</param>
+      <returns>The receiving <see cref="StaadPro.Interop.Adapters.Interfaces.IOSLoad"/> for fluent chaining. Empty input returns it without activation or assignment. This return value does not report native success.</returns>
+      <remarks>
+        <para>All IDs and the thermal value are validated before native access. Successful <c>SetLoadActive(loadCaseId)</c> is followed by one <c>AddTemperatureLoad(entityId, axialThermalGradient, 0.0, 0.0)</c> call per input ID, in input order. Unlike the three-parameter overload, each native call receives a scalar ID. This preserves the reference overload's per-entity assignment while replacing its worker-thread dispatch with caller-thread dispatch.</para>
+        <para>The target primary case remains selected after successful activation, including when a later assignment throws. A failure stops processing and earlier assignments may remain; there is no rollback or restoration of the previous active case. Native assignment return values are not interpreted; COM and binding failures propagate.</para>
+        <para>Existing assignments are not cleared, managed load collections are not refreshed, and the model is not saved. Use a connected, undisposed wrapper on its appropriate COM thread and serialize access to the STAAD session. This operation supplies no cross-caller synchronization or apartment marshaling.</para>
+      </remarks>
+      <exception cref="System.ArgumentNullException"><paramref name="entities"/> is null.</exception>
+      <exception cref="System.ArgumentOutOfRangeException">The target ID, an entity ID or <paramref name="nThreads"/> is not positive, or the thermal value is NaN or infinite.</exception>
+      <exception cref="System.InvalidOperationException">OpenSTAAD reports failed or unrecognized primary-case activation; no assignments are attempted.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">Native activation or a temperature assignment fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed Load object does not expose a required native signature.</exception>
+      <example><code><![CDATA[
+// Primary case 17 and temperature-load entities 101/102 must already exist.
+// nThreads preserves the signature; this port keeps COM calls on this thread.
+load.AddAxialThermalGradientTo(17, new[] { 101, 102 }, -15.5, nThreads: 2);
+]]></code></example>
+    </member>
+    <member name="IOSLoad.AddMemberLoadsFromGroupsByLoadCase">
+      <summary>Applies member-load definitions and beam lists grouped by their destination load cases.</summary>
+      <param name="grouped">A non-null dictionary whose keys are existing primary or reference cases and whose values are non-null lists of named <c>(MemberLoad Load, List&lt;Beam&gt; Beams)</c> tuples. The dictionary key selects the destination; a load definition's LoadCase property is neither used to select the case nor changed. Tuple entries with a null load, null beam list or empty beam list are skipped.</param>
+      <returns>The receiving <see cref="StaadPro.Interop.Adapters.Interfaces.IOSLoad"/> for fluent chaining, including when the dictionary is empty or every member tuple is skipped.</returns>
+      <remarks>
+        <para>This ports the reference grouping loop and delegates each retained tuple once to <c>AddMemberLoad(case, beams, load)</c>. It follows dictionary enumeration order and then list order; dictionary order is not a sorting contract. The existing assignment helper selects the case and calls the concrete MemberLoad's <c>ApplyTo</c>, so supported load subtypes keep their native field mapping. Individual null beam entries are filtered by that helper; duplicate beam IDs are preserved. A nonempty list containing only null beams still attempts activation but supplies no native load assignment.</para>
+        <para>Numeric fields and IDs follow the existing assignment helper's contract. There is no automatic unit conversion, aggregation, deduplication or load-definition copy. Supply values in the target STAAD input convention and keep dictionaries, case hash/equality fields, tuple lists, entity IDs and load objects stable during processing. Managed Members and LoadCase properties are not populated or changed.</para>
+        <para>Empty dictionaries, empty case-group lists and skipped tuples make no native calls. A null case-group list throws when reached. Other validation and failures occur tuple by tuple, so earlier assignments may remain if a later tuple fails. No rollback, managed refresh, automatic save or previous-case restoration is supplied.</para>
+        <para>The existing <c>SetLoadCaseActive</c> helper ignores native activation return statuses. Use existing primary/reference cases: other case families do not activate a new case in that helper. Native assignment return values are also not interpreted. COM and dynamic binding exceptions propagate. After successful activation the most recently processed case remains selected; failed status-only activation does not prevent a subsequent assignment.</para>
+        <para>Call through a connected, undisposed wrapper on its appropriate COM thread and serialize session access. This operation does not schedule workers or provide apartment marshaling or cross-caller synchronization.</para>
+      </remarks>
+      <exception cref="System.ArgumentNullException"><paramref name="grouped"/> is null, or a required case argument fails validation in the delegated helper.</exception>
+      <exception cref="System.ArgumentException">A dictionary value is a null case-group list.</exception>
+      <exception cref="System.InvalidOperationException">The delegated assignment helper has no initialized Load object, or a concrete load implementation reports an invalid operation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">Native activation or member assignment fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native assignment signature is unavailable.</exception>
+      <example><code><![CDATA[
+// Case 17 and member 101 must already exist; numeric fields use model input units.
+var groups = new System.Collections.Generic.Dictionary<ILoadCase,
+    System.Collections.Generic.List<(MemberLoad Load, System.Collections.Generic.List<Beam> Beams)>>
+{
+    { new LoadCase(17), new System.Collections.Generic.List<(MemberLoad Load,
+        System.Collections.Generic.List<Beam> Beams)>
+        {
+            (new MemberConcentratedLoad(LoadDirection.GlobalY, -7.25, 2.5),
+             new System.Collections.Generic.List<Beam>
+             { new Beam(101, new Node(1, 0, 0, 0), new Node(2, 5, 0, 0)) })
+        }
+    }
+};
+load.AddMemberLoadsFromGroupsByLoadCase(groups);
+]]></code></example>
+    </member>
+    <member name="IOSLoad.AddNodalLoadsFromGroupsByLoadCase">
+      <summary>Applies six-component nodal-load definitions and node lists grouped by their destination load cases.</summary>
+      <param name="grouped">A non-null dictionary whose keys identify existing primary or reference cases and whose values are non-null lists of named <c>(NodalLoad Load, List&lt;Node&gt; Nodes)</c> tuples. Each tuple's load and node list must be non-null. The dictionary key selects the destination independently of the load definition's LoadCase property.</param>
+      <returns>The receiving <see cref="StaadPro.Interop.Adapters.Interfaces.IOSLoad"/> for fluent chaining. Empty dictionaries and empty case-group lists perform no native operations.</returns>
+      <remarks>
+        <para>This ports the reference grouping loop and delegates every tuple once to <c>AddNodalLoad(case, nodes, load)</c>, following dictionary enumeration and then tuple-list order. Cases are not sorted. Unlike the member grouping method, null tuple payloads are not skipped: the delegated helper rejects them before that tuple's activation. A null dictionary value is rejected when its case-group list is reached.</para>
+        <para>The existing nodal helper activates the case, filters individual null node entries and preserves remaining ID order and duplicates. It calls <c>AddNodalLoad(nodeIds, Fx, Fy, Fz, Mx, My, Mz)</c> once when IDs remain and Forces is non-null. Fx/Fy/Fz are forces along the native axes and Mx/My/Mz are moments about them, passed unchanged in the target input convention. Empty or all-null node lists and null Forces still attempt activation but make no native assignment.</para>
+        <para>No conversion, summation, deduplication or load copy occurs. The source dictionary, lists, nodes and load objects are not modified; Nodes' NodalLoadItems and load LoadCase properties are not populated. Keep all supplied mutable data and dictionary-key hash/equality fields stable during processing. Numeric validity and node existence follow the existing helper/native API; no model pre-read is performed.</para>
+        <para>Validation and assignment proceed tuple by tuple. A later invalid tuple or native exception stops processing and may leave earlier changes in place. There is no transaction, rollback, managed refresh, automatic save or restoration of the previous active case. The existing <c>SetLoadCaseActive</c> helper ignores activation statuses and only activates primary/reference cases; other families leave the current selection unchanged. Native assignment statuses are likewise not interpreted. Use valid existing primary/reference targets; a failed status-only activation does not prevent assignment.</para>
+        <para>COM and binding exceptions propagate. Use a connected, undisposed wrapper on the appropriate COM thread and serialize session access. The operation provides no worker scheduling, cross-caller synchronization or COM apartment marshaling.</para>
+      </remarks>
+      <exception cref="System.ArgumentNullException"><paramref name="grouped"/> is null, or a tuple's case, node list or load is null.</exception>
+      <exception cref="System.ArgumentException">A dictionary value is a null case-group list.</exception>
+      <exception cref="System.InvalidOperationException">The delegated assignment helper has no initialized Load object.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">Native activation or nodal assignment fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native assignment signature is unavailable.</exception>
+      <example><code><![CDATA[
+// Case 17 and nodes 10/11 must already exist; fields use model input units.
+var groups = new System.Collections.Generic.Dictionary<ILoadCase,
+    System.Collections.Generic.List<(NodalLoad Load, System.Collections.Generic.List<Node> Nodes)>>
+{
+    { new LoadCase(17), new System.Collections.Generic.List<(NodalLoad Load,
+        System.Collections.Generic.List<Node> Nodes)>
+        {
+            (new NodalLoad(1, -2, 3, -4, 5, -6),
+             new System.Collections.Generic.List<Node>
+             { new Node(10, 0, 0, 0), new Node(11, 1, 0, 0) })
+        }
+    }
+};
+load.AddNodalLoadsFromGroupsByLoadCase(groups);
+]]></code></example>
+    </member>
   </members>
 </doc>

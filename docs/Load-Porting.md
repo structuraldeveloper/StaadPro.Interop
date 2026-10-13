@@ -1,10 +1,28 @@
 # Load API porting and new assignments
 
-The reference `IOSLoad` contains 115 method overloads. This repository now exposes 57: 52 matching reference overloads plus five repository-specific convenience overloads. There are 63 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
+The reference `IOSLoad` contains 115 method overloads. This repository now exposes 60: 55 matching reference overloads plus five repository-specific convenience overloads. There are 60 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
 
-The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 57 from 115 does not give the pending reference count.
+The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 60 from 115 does not give the pending reference count.
 
 ## Newly ported functions
+
+The next three inventory entries are now exposed on both `IOSLoad` and `OSLoadAdapter`:
+
+```csharp
+IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads);
+IOSLoad AddMemberLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> grouped);
+IOSLoad AddNodalLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> grouped);
+```
+
+- **Four-parameter thermal overload:** preserves parameter names and types, validates positive `nThreads`, snapshots and validates all input, activates the primary target once and issues one scalar `AddTemperatureLoad(entityId, value, 0.0, 0.0)` call per entity in input order. The reference uses worker threads; this port keeps every COM call on the caller's thread. `nThreads` is retained for compatibility and does not control concurrency. Empty input makes no native calls; duplicate IDs and raw thermal values are preserved. A later native exception stops processing without rolling back earlier assignments.
+- **Grouped member assignments:** delegates each retained tuple to the existing `AddMemberLoad` helper. Null load definitions, null beam lists and empty beam lists are skipped, preserving the reference loop. Individual null beams are filtered by the helper; a nonempty list of only null beams still attempts case activation. Concrete member-load types retain their `ApplyTo` native mapping.
+- **Grouped nodal assignments:** delegates every tuple to the existing `AddNodalLoad` helper. Null loads or node lists are rejected by that helper. Individual null nodes are filtered, remaining ID order and duplicates are preserved, and Fx/Fy/Fz/Mx/My/Mz are passed unchanged. Empty/all-null node lists or null Forces still attempt case activation but supply no assignment.
+
+Grouped dictionary keys select the destination independently of the load definition's `LoadCase` property. Dictionaries and lists are not sorted, copied or aggregated, and managed entity/load collections are not refreshed. Empty dictionaries and empty case-group lists do nothing. Null case-group lists throw when reached. Validation and failures occur tuple by tuple, so earlier changes may remain after a later invalid entry or native exception. Keep mutable inputs and case-key hash/equality fields stable during processing.
+
+The grouped methods retain the existing assignment helpers' activation behavior: `SetLoadCaseActive` only selects primary/reference cases and ignores native return statuses. Use valid existing primary/reference targets. A failed status-only activation does not prevent assignment; these wrappers do not strengthen that legacy contract. The thermal overload checks activation status before any assignment. All three preserve raw input units, supply no rollback or automatic save, and require serialized access on the appropriate COM thread.
+
+## Earlier factored and thermal assignments
 
 The following signatures preserve the reference method names, parameter names, types and order:
 
@@ -16,7 +34,7 @@ IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, dou
 
 - **Reference loads:** snapshots source-case/factor pairs together, activates an existing primary target with `SetLoadActive`, then calls `AddReferenceLoad(int[] ids, double[] factors)`.
 - **Repeat loads:** uses the same paired snapshot and activation contract, then calls `AddRepeatLoad(int[] ids, double[] factors)`. It does not enumerate `Keys` and `Values` independently.
-- **Thermal loading:** snapshots entity IDs, activates the primary target and calls `AddTemperatureLoad(ids, axialThermalGradient, 0.0, 0.0)`. The supplied value is the raw first native temperature argument. The method does not divide by a length or interpret node coordinates; use the installed STAAD temperature-input convention. The four-parameter threaded overload remains pending.
+- **Thermal loading:** the three-parameter overload snapshots entity IDs, activates the primary target and calls `AddTemperatureLoad(ids, axialThermalGradient, 0.0, 0.0)` with one array. The supplied value is the raw first native temperature argument. The method does not divide by a length or interpret node coordinates; use the installed STAAD temperature-input convention. The four-parameter overload is now ported as described above.
 
 All target/source/entity IDs must be positive, dictionaries and sequences must be non-null, and factors/thermal values must be finite. Negative and zero factors and thermal values are accepted. Thermal ID order and duplicates are preserved. Validation finishes before native activation or assignment; empty inputs return the same adapter without native access. Native case existence, source-family suitability and entity suitability are handled by OpenSTAAD.
 
@@ -32,17 +50,14 @@ wrapper.Load.AddAxialThermalGradientTo(17, new[] { 101, 102 }, 15.5);
 
 ## IntelliSense and validation
 
-Each method has identical expanded XML on `IOSLoad` and `OSLoadAdapter`, including input units, native mapping, empty input, activation side effects, exceptions and executable examples. The XML ships beside the DLL and does not require source access.
+Each method has identical expanded XML on `IOSLoad` and `OSLoadAdapter`, including input units, native mapping, empty input, activation side effects, exceptions and executable examples. The XML ships beside the DLL and does not require source access. The current package includes documentation for 60 load overloads and verifies all 69 XML examples across the library, including both thermal signatures and the grouped methods.
 
-Offline tests check paired arrays, double precision, one input snapshot, activation ordering/failure, native exception propagation and empty-input behavior. Installed-package verification compiles and runs the interface and concrete XML examples and checks argument layouts using managed native stand-ins. Live native mutations, engineering units and version-specific behavior remain unverified for these additions.
+Offline tests check paired arrays, double precision, one thermal input snapshot, caller-thread scalar assignments, primary/reference grouped routing, member subtype dispatch, all six nodal components, skipped/null/empty group entries, unchanged managed data, activation ordering/failure and partial native failures. Installed-package verification compiles and runs the interface and concrete XML examples and checks argument layouts using managed native stand-ins. Live native mutations, engineering units and version-specific behavior remain unverified for these additions.
 
 ## Pending reference overloads
 
 The following inventory was compared by method name, generic arity and parameter types. It lists source signatures, including supporting types that may themselves need porting. A name already present here can still appear when a different overload is pending.
 
-- `IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads)`
-- `IOSLoad AddMemberLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> grouped)`
-- `IOSLoad AddNodalLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> grouped)`
 - `IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)`
 - `IOSLoad AddSelfweightInXYZTo(int loadCaseId, LoadCaseType lcType, IEnumerable<int> entities, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)`
 - `IOSLoad CreateLoadCombinations(IEnumerable<EditorLoadCombination> loadCombinations)`

@@ -1,5 +1,14 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261013 - 13 October 2026 (prepared)
+
+- Added `AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads)` with the reference signature and one scalar temperature assignment per entity. Validated all inputs before checked primary-case activation. Kept COM calls on the caller's thread instead of the reference worker dispatch; positive `nThreads` is retained for compatibility and does not control concurrency.
+- Added `AddMemberLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> grouped)`, preserving member-tuple skipping and delegation to the existing member assignment helper.
+- Added `AddNodalLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> grouped)`, preserving delegation to the existing six-component nodal helper and its null/empty behavior.
+- Preserved grouped case-key routing, concrete member-load mapping, raw values and managed-object ownership. Documented legacy activation-status handling, native exception propagation and partial changes without rollback.
+- Added matching expanded interface/concrete IntelliSense and executable examples. Updated load coverage to 60 overloads, including 55 reference matches and five repository-specific conveniences; 60 reference load overloads remain pending.
+- Passed 470 offline tests and a Release build with no warnings/errors. Extended installed-package verification to restore a fresh consumer and compile/run all 69 XML examples, including the three new APIs. Native live mutation, engineering-unit and STAAD-version validation remain pending. This package is prepared for manual upload and has not been published to NuGet.org.
+
 ## 1.0.0-preview.20261012.3 - 12 October 2026 (prepared)
 
 - Added `CreateMultipleBeamsExtended(IOSRoot openStaad, IEnumerable<Beam> beamCollection)` with the original signature and ordered native `CreateBeam` calls. Replaced the reference's non-working bulk implementation; validated all incidences before mutation and documented partial failure without rollback.

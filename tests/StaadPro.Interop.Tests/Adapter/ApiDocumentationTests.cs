@@ -80,8 +80,8 @@ namespace StaadPro.Interop.Tests.Adapter
         {
             var xml = XDocument.Load(Path.ChangeExtension(contractType.Assembly.Location, ".xml"));
             var entries = xml.Descendants("member").ToDictionary(m => (string)m.Attribute("name"));
-            var contractMethod = contractType.GetMethod(name);
-            var adapterMethod = adapterType.GetMethod(name);
+            var contractMethod = contractType.GetMethods().Single(m => m.Name == name && (name != "AddAxialThermalGradientTo" || m.GetParameters().Length == 3));
+            var adapterMethod = adapterType.GetMethods().Single(m => m.Name == name && (name != "AddAxialThermalGradientTo" || m.GetParameters().Length == 3));
             Assert.That(adapterMethod.GetParameters().Select(p => (p.Name, p.ParameterType, p.DefaultValue)),
                 Is.EqualTo(contractMethod.GetParameters().Select(p => (p.Name, p.ParameterType, p.DefaultValue))));
             var contract = entries[MethodId(contractMethod)];
@@ -90,6 +90,25 @@ namespace StaadPro.Interop.Tests.Adapter
             Assert.That(contract.Element("remarks").Value, Does.Contain(nativeName));
             Assert.That(contract.Element("example")?.Element("code")?.Value, Does.Contain("." + name + "("));
             Assert.That(contract.Elements("exception").Count(), Is.GreaterThanOrEqualTo(3));
+        }
+
+        [TestCase("AddAxialThermalGradientTo", 4, "AddTemperatureLoad")]
+        [TestCase("AddMemberLoadsFromGroupsByLoadCase", 1, "ApplyTo")]
+        [TestCase("AddNodalLoadsFromGroupsByLoadCase", 1, "Fx, Fy, Fz, Mx, My, Mz")]
+        public void NextLoadFunctionsHaveMatchingInterfaceAndConcreteContracts(string name, int parameterCount, string mapping)
+        {
+            var xml = XDocument.Load(Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml"));
+            var entries = xml.Descendants("member").ToDictionary(m => (string)m.Attribute("name"));
+            var contractMethod = typeof(IOSLoad).GetMethods().Single(m => m.Name == name && m.GetParameters().Length == parameterCount);
+            var adapterMethod = typeof(OSLoadAdapter).GetMethods().Single(m => m.Name == name && m.GetParameters().Length == parameterCount);
+            var contract = entries[MethodId(contractMethod)];
+            var adapter = entries[MethodId(adapterMethod)];
+            Assert.That(adapter.Elements().Select(e => e.ToString()), Is.EqualTo(contract.Elements().Select(e => e.ToString())));
+            Assert.That(adapterMethod.GetParameters().Select(p => (p.Name, p.ParameterType, p.DefaultValue)),
+                Is.EqualTo(contractMethod.GetParameters().Select(p => (p.Name, p.ParameterType, p.DefaultValue))));
+            Assert.That(contract.Element("remarks").Value, Does.Contain(mapping));
+            Assert.That(contract.Element("example")?.Element("code")?.Value, Does.Contain("load." + name + "("));
+            if (parameterCount == 4) Assert.That(contract.Elements("param").Single(p => (string)p.Attribute("name") == "nThreads").Value, Does.Contain("does not launch worker threads"));
         }
 
         private static string MethodId(MethodInfo method)
