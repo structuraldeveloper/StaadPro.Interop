@@ -385,6 +385,9 @@ namespace StaadPro.Interop.Tests.Adapter
             public string GetOpenedStaadFilename() => throw new NotSupportedException();
             public bool IsTarget(string staadFileFullPath) => throw new NotSupportedException();
             public bool ModelIsOpen(string fileFullPath) => throw new NotSupportedException();
+            public StaadPro.Interop.Models.ShortJobInfo GetShortJobInfo() => throw new NotSupportedException();
+            public StaadPro.Interop.Models.FullJobInfo GetFullJobInfo() => throw new NotSupportedException();
+            public IOSRoot SetInputUnitsEx(StaadPro.Interop.Enums.LengthInputUnit lengthUnit, StaadPro.Interop.Enums.ForceInputUnit forceUnit) => throw new NotSupportedException();
         }
 
         private sealed class Once<T> : IEnumerable<T>

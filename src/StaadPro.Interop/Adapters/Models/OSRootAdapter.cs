@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using StaadPro.Interop.Enums;
+using StaadPro.Interop.Models;
 using StaadPro.Interop.Adapters.Interfaces;
 
 namespace StaadPro.Interop.Adapters.Models
@@ -193,6 +195,117 @@ namespace StaadPro.Interop.Adapters.Models
         public bool ModelIsOpen(string fileFullPath)
         {
             return MatchesOpenedModel(fileFullPath, nameof(fileFullPath));
+        }
+
+        /// <summary>Reads the current model's job name, client and originating engineer.</summary>
+        /// <returns>A fresh ShortJobInfo snapshot whose three properties contain exact native strings, including empty text, whitespace and Unicode.</returns>
+        /// <remarks>
+        /// <para>Calls the void GetShortJobInfo API once with three BSTR-initialized reference outputs
+        /// in name/client/originator order. Every output must be explicitly written as a string.
+        /// Unwritten or non-string responses throw; a failed read never returns a partial record.</para>
+        /// <para>Edits to the returned property-notifying model affect managed data only.
+        /// No model opening, saving, unit changes or analysis occurs. This is job metadata rather
+        /// than readiness or result data. Coordinate the calling thread's COM session access.</para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">A native output is unwritten or is not a string.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native call fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed root lacks the required native signature.</exception>
+        /// <example>
+        /// With a connected IOSRoot named root:
+        /// <code>
+        /// var job = root.GetShortJobInfo();
+        /// Console.WriteLine(job.Name + ": " + job.Client + " / " + job.Originator);
+        /// </code>
+        /// </example>
+        public ShortJobInfo GetShortJobInfo()
+        {
+            string sentinel = CreateJobSentinel();
+            object name = sentinel, client = sentinel, originator = sentinel;
+            ComObject.GetShortJobInfo(ref name, ref client, ref originator);
+            return ShortJobInfo.From(ReadJobText(name, "name", sentinel), ReadJobText(client, "client", sentinel), ReadJobText(originator, "originator", sentinel));
+        }
+
+        /// <summary>Reads all thirteen job-information fields and converts the three date fields.</summary>
+        /// <returns>A fresh FullJobInfo snapshot. Unspecified native dates map to DateTime.MinValue; text fields preserve their native contents.</returns>
+        /// <remarks>
+        /// <para>Calls void GetFullJobInfo once with BSTR-initialized reference outputs in native order:
+        /// name, client, engineer, engineer date, number, revision, part, reference, checker,
+        /// checked date, approver, approved date and comments. All thirteen must be written strings
+        /// before mapping into FullJobInfo; invalid output or parsing failure returns no partial model.</para>
+        /// <para>Empty/whitespace dates mean unspecified. Nonempty dates follow DateTime.Parse with
+        /// the calling thread's CurrentCulture and DateTimeStyles.None, preserving reference culture
+        /// behavior; ambiguous dates are not guessed using alternative cultures. Original date text
+        /// is not retained by the DateTime properties.</para>
+        /// <para>Results own their managed property storage, raise change notifications and perform no
+        /// native writes when edited. No file lookup, saving, activation, unit conversion or analysis
+        /// occurs. Use the correct COM thread; a metadata snapshot does not certify model readiness.</para>
+        /// </remarks>
+        /// <exception cref="FormatException">A nonempty native date cannot be parsed using the current culture.</exception>
+        /// <exception cref="InvalidOperationException">A native output is unwritten or is not a string.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native call fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed root lacks the required native signature.</exception>
+        /// <example>
+        /// With a connected IOSRoot named root:
+        /// <code>
+        /// var job = root.GetFullJobInfo();
+        /// Console.WriteLine(job.Number + ": " + job.Checker + " / " + job.Comments);
+        /// </code>
+        /// </example>
+        public FullJobInfo GetFullJobInfo()
+        {
+            string sentinel = CreateJobSentinel();
+            object name = sentinel, client = sentinel, originator = sentinel, originated = sentinel;
+            object number = sentinel, revision = sentinel, part = sentinel, reference = sentinel;
+            object checker = sentinel, dateChecked = sentinel, approver = sentinel, approved = sentinel, comments = sentinel;
+            ComObject.GetFullJobInfo(ref name, ref client, ref originator, ref originated, ref number, ref revision, ref part,
+                ref reference, ref checker, ref dateChecked, ref approver, ref approved, ref comments);
+            // Validate every native string before any date parsing or model construction.
+            string[] fields = { ReadJobText(name, "name", sentinel), ReadJobText(client, "client", sentinel), ReadJobText(originator, "originator", sentinel),
+                ReadJobText(originated, "originated", sentinel), ReadJobText(number, "number", sentinel), ReadJobText(revision, "revision", sentinel),
+                ReadJobText(part, "part", sentinel), ReadJobText(reference, "reference", sentinel), ReadJobText(checker, "checker", sentinel),
+                ReadJobText(dateChecked, "dateChecked", sentinel), ReadJobText(approver, "approver", sentinel), ReadJobText(approved, "approved", sentinel), ReadJobText(comments, "comments", sentinel) };
+            return FullJobInfo.From(fields[0], fields[1], fields[2], fields[3], fields[8], fields[9], fields[10], fields[11],
+                fields[4], fields[5], fields[6], fields[7], fields[12]);
+        }
+
+        /// <summary>Sets the current model's input length and force units using existing enum codes.</summary>
+        /// <param name="lengthUnit">Defined LengthInputUnit value: Inch=0, Feet=2, CentiMeter=3, Meter=4, MilliMeter=5, DeciMeter=6 or KiloMeter=7.</param>
+        /// <param name="forceUnit">Defined ForceInputUnit value 0 through 7: KiloPound, Pound, KiloGram, MetricTon, Newton, KiloNewton, MegaNewton or DecaNewton.</param>
+        /// <returns>This root adapter after the native void call returns without an exception.</returns>
+        /// <remarks>
+        /// <para>Validates both enums before one SetInputUnits call, sending integer length then
+        /// force codes unchanged. The native API is void; no Boolean/numeric status is interpreted
+        /// and no read-back is performed. Undefined enum values, including the unnamed length code 1,
+        /// are rejected even though the installed vendor documentation lists 1 as another Feet code.</para>
+        /// <para>This changes native input-unit state used by subsequent input operations. It does
+        /// not rescale existing managed values, convert already-stored results, change the base
+        /// unit system, save the model or restore previous units. A native failure may have partial
+        /// effects; no rollback is supplied. Coordinate session access on the appropriate COM thread.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException">Either unit value is not defined by its public enum; rejected before native access.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native unit change fails; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed root lacks a compatible SetInputUnits signature.</exception>
+        /// <example>
+        /// With a connected IOSRoot named root:
+        /// <code>
+        /// root.SetInputUnitsEx(LengthInputUnit.Meter, ForceInputUnit.KiloNewton);
+        /// </code>
+        /// </example>
+        public IOSRoot SetInputUnitsEx(LengthInputUnit lengthUnit, ForceInputUnit forceUnit)
+        {
+            if (!Enum.IsDefined(typeof(LengthInputUnit), lengthUnit)) throw new ArgumentOutOfRangeException(nameof(lengthUnit));
+            if (!Enum.IsDefined(typeof(ForceInputUnit), forceUnit)) throw new ArgumentOutOfRangeException(nameof(forceUnit));
+            ComObject.SetInputUnits((int)lengthUnit, (int)forceUnit);
+            return this;
+        }
+
+        private static string CreateJobSentinel() => "<StaadPro.Interop.UnwrittenJobInfo." + Guid.NewGuid().ToString("N") + ">";
+
+        private static string ReadJobText(object value, string field, string sentinel)
+        {
+            if (!(value is string text) || text == sentinel)
+                throw new InvalidOperationException("OpenSTAAD returned unwritten or non-string job information: " + field + ".");
+            return text;
         }
 
         private bool MatchesOpenedModel(string requestedPath, string parameterName)

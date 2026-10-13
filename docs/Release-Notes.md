@@ -1,5 +1,14 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261013.4 - 13 October 2026 (prepared)
+
+- Added root `GetShortJobInfo()`, `GetFullJobInfo()` and `SetInputUnitsEx(LengthInputUnit lengthUnit, ForceInputUnit forceUnit)` with reference signatures and complete matching interface/concrete XML IntelliSense. Implementations stay in the existing non-partial root adapter.
+- Added standalone property-notifying `ShortJobInfo` and `FullJobInfo` models with reference property/factory signatures. Native metadata reads use per-call BSTR sentinels, validate every output before model/date mapping and return independent snapshots. Empty dates map to DateTime.MinValue; nonempty dates preserve CurrentCulture parsing and invalid dates throw.
+- Validate unit enums before a single native void SetInputUnits call, preserving length/force codes and fluent return semantics. Document input-state mutation, no automatic conversion/save/rollback and the unnamed length-code alias excluded by the current enum.
+- Root coverage is **9 of 23 methods**, with **14 pending**. Load coverage remains 66 overloads, with 54 reference overloads pending. Custom IOSRoot implementations must implement the new members.
+- Passed **694 offline tests**, including 90 new cases for all field mappings, malformed/unwritten output, date behavior, model ownership/notifications, all 56 defined unit pairs and compiled IntelliSense. Release build passed with zero warnings/errors; isolated installed-package verification compiled/executed **99 XML examples**.
+- Read-only native job queries on STAAD.Pro Advanced 2026's unnamed session left outputs unwritten and were rejected as documented. Native named-model metadata/date conventions and live unit switching remain pending. This increment has not published a new version publicly.
+
 ## 1.0.0-preview.20261013.3 - 13 October 2026 (prepared)
 
 - Added root `GetOpenedStaadFilename()`, `IsTarget(string staadFileFullPath)` and `ModelIsOpen(string fileFullPath)` with the main project's signatures, complete matching interface/concrete XML IntelliSense and executable examples. Implementations remain in the existing non-partial root adapter.

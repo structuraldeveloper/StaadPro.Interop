@@ -180,5 +180,8 @@ Inputs are snapshotted and validated before native access. The first two mutatio
 | `string GetOpenedStaadFilename()` | Normalized absolute opened-model path from one native read; empty text remains empty. |
 | `bool IsTarget(string staadFileFullPath)` | Checks complete normalized path identity with ordinal case-insensitive comparison. |
 | `bool ModelIsOpen(string fileFullPath)` | The same full-path identity check; equal basenames in different folders do not match. |
+| `ShortJobInfo GetShortJobInfo()` | Fresh name/client/originator metadata; all native BSTR outputs must be written strings. |
+| `FullJobInfo GetFullJobInfo()` | Fresh thirteen-field metadata with culture-aware dates and DateTime.MinValue for unspecified dates. |
+| `IOSRoot SetInputUnitsEx(LengthInputUnit lengthUnit, ForceInputUnit forceUnit)` | Validates enum values, sends length/force integer codes to native SetInputUnits and returns this adapter. |
 
-Empty native filenames return empty strings, and the identity predicates return false for a valid named target. Null/blank requested paths fail before native access. Unwritten/non-string outputs throw; native COM/binding errors propagate. The shared filename output is initialized as a BSTR string sentinel for native compatibility. Windows Path APIs normalize identities without checking file existence or resolving links. No model writes or analysis occur. See [Root-Porting.md](Root-Porting.md) for complete contracts, examples and the remaining 17 reference methods.
+Filename/identity queries preserve empty native filenames and perform no native writes. The job getters validate all outputs and return editable managed snapshots; malformed dates throw. The unit setter changes native input-unit state and does not rescale managed values, save or roll back. See [Root-Porting.md](Root-Porting.md) for complete native mappings, date/empty/error behavior, examples and the remaining 14 reference methods.

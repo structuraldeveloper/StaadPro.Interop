@@ -1,12 +1,12 @@
 # Root adapter implementation and porting progress
 
-The main project's `IOSRoot` exposes 23 methods. This repository now implements **six**, with **17 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
+The main project's `IOSRoot` exposes 23 methods. This repository now implements **nine**, with **14 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
 ## Ported functions
 
-| Signature | Native/managed implementation | Empty native filename |
+| Signature | Native/managed implementation | Empty/unnamed-session behavior |
 | --- | --- | --- |
 | `string GetStaadFileFullPath()` | One `GetSTAADFile(ref object, true)` call; returns the exact native string | Empty string |
 | `string GetStaadFileNameOnly()` | One full-path read, then Windows `Path.GetFileName` | Empty string |
@@ -14,8 +14,11 @@ Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` a
 | `string GetOpenedStaadFilename()` | One full-path read, normalized with Windows `Path.GetFullPath` | Empty string |
 | `bool IsTarget(string staadFileFullPath)` | Validate/normalize requested path, read native path once, compare complete normalized paths with ordinal case-insensitive comparison | False for a valid requested path |
 | `bool ModelIsOpen(string fileFullPath)` | Same complete-path identity contract as `IsTarget`; not a Geometry/Load readiness check | False for a valid requested path |
+| `ShortJobInfo GetShortJobInfo()` | One void native three-field metadata read; fresh standalone record | Explicit strings required; unwritten fields throw |
+| `FullJobInfo GetFullJobInfo()` | One void native thirteen-field read; three dates mapped with CurrentCulture | Unwritten fields throw; explicitly empty dates map to DateTime.MinValue |
+| `IOSRoot SetInputUnitsEx(LengthInputUnit lengthUnit, ForceInputUnit forceUnit)` | Validate enums, then one native input-unit mutation using integer codes | Native handling applies; no readiness check/read-back |
 
-All six are eager, read-only session queries. They do not launch STAAD, open/close/save a model, change activation or load lists, read analysis contents, create files, perform filesystem existence checks or start analysis. A licensed STAAD installation and a valid native root/session are required for real calls. Coordinate COM access on the session's appropriate thread; a managed binding does not establish readiness or thread safety.
+The six filename/identity methods are eager, read-only session queries. They do not launch STAAD, open/close/save a model, change activation or load lists, read analysis contents, create files, perform filesystem existence checks or start analysis. A licensed STAAD installation and a valid native root/session are required for real calls. Coordinate COM access on the session's appropriate thread; a managed binding does not establish readiness or thread safety.
 
 ### Native contract and error handling
 
@@ -55,6 +58,72 @@ Both interface and concrete methods include matching expanded XML summaries, ret
 
 Offline coverage checks local/UNC/relative and Unicode paths, multiple periods, empty input, no filesystem assumptions, malformed/unwritten outputs, native exceptions, missing signatures, invalid path syntax, one-call derivation and isolation between wrapper sessions. Isolated package verification compiles/runs all twelve root XML examples and checks all six root methods. Native root path reads should still be checked against the connected STAAD session before claiming version-specific support.
 
+## Job information and input units
+
+The next batch preserves these main-project signatures:
+
+```csharp
+ShortJobInfo GetShortJobInfo();
+FullJobInfo GetFullJobInfo();
+IOSRoot SetInputUnitsEx(LengthInputUnit lengthUnit, ForceInputUnit forceUnit);
+```
+
+### Short and full job snapshots
+
+Both getters make one native **void** call with BSTR-initialized reference outputs; no status is interpreted. A fresh per-call string sentinel detects unwritten fields without confusing ordinary marker-like user text with an old fixed sentinel. Every output must be explicitly written as a string. Null/non-string/unwritten responses throw `InvalidOperationException`; COM and missing-signature binding failures propagate unchanged. All full-job strings are validated before parsing dates or constructing a result, so failures return no partial metadata object.
+
+`GetShortJobInfo` maps name, client and engineer to `ShortJobInfo.Name`, `Client` and `Originator`. `GetFullJobInfo` uses this exact thirteen-slot native order:
+
+| Native output | Managed property |
+| --- | --- |
+| jobName | `Name` |
+| jobClient | `Client` |
+| enggName | `Originator` |
+| eDate | `Originated` |
+| jobNumber | `Number` |
+| revision | `Revision` |
+| part | `Part` |
+| reference | `Reference` |
+| checkerName | `Checker` |
+| cDate | `Checked` |
+| approverName | `Approver` |
+| aDate | `Approved` |
+| comments | `Comments` |
+
+Standalone `ShortJobInfo` and `FullJobInfo` live in `StaadPro.Interop.Models`, retaining the main model inheritance, property names/types and factory signatures while using the repository's property store. Both are editable snapshots with `PropertyChanged`; edits perform no native writes. Successive calls return independent records. Text preserves empty strings, whitespace, Unicode and line breaks; manual factory callers may also supply null text.
+
+The three full-job date properties retain the reference's `DateTime` type. Null/empty/whitespace factory date input means unspecified and maps to `DateTime.MinValue`; native null output is rejected earlier by the adapter. Nonempty dates use `DateTime.Parse` with the calling thread's `CurrentCulture` and `DateTimeStyles.None`. Invalid dates throw `FormatException`; ambiguous date strings follow that culture without trying alternatives. This preserves the reference's culture behavior while handling unspecified dates explicitly. Original date strings are not retained. Consumers must distinguish unspecified dates before displaying them as real dates.
+
+The getters query job metadata associated with the current `.STD` model. They do not open/save models, change units, certify readiness or read analysis results. An unnamed application session is not guaranteed to supply job metadata: read-only checks on STAAD.Pro Advanced 2026's unnamed session left the outputs unwritten, and both getters rejected that response rather than inventing a blank record. Named-model native metadata and date formats remain a live-validation gate.
+
+### Input-unit selection
+
+`SetInputUnitsEx` validates both public enums before one **void** `SetInputUnits` call, passing integer length then force codes unchanged. It returns this adapter once the native call completes without exception. No status parsing or read-back occurs. Undefined values throw `ArgumentOutOfRangeException` naming `lengthUnit` or `forceUnit` before native mutation; COM/binding exceptions propagate. Native failures may have partial effects, and the wrapper supplies no rollback or automatic save.
+
+| LengthInputUnit | Code |
+| --- | --- |
+| Inch | 0 |
+| Feet | 2 |
+| CentiMeter | 3 |
+| Meter | 4 |
+| MilliMeter | 5 |
+| DeciMeter | 6 |
+| KiloMeter | 7 |
+
+Force codes 0–7 are `KiloPound`, `Pound`, `KiloGram`, `MetricTon`, `Newton`, `KiloNewton`, `MegaNewton` and `DecaNewton`. The installed vendor reference also lists length code 1 as Feet, but it has no named member in the existing public enum and is rejected. The port preserves the published enum rather than introducing an undocumented cast-only alias.
+
+This changes native input-unit state for subsequent operations. It does not convert existing managed data/results, change the base unit system, restore previous units or save the model. Use the correct COM thread and coordinate session mutations. Offline coverage checks every defined length/force pair and invalid enums; live unit switching has not been performed by this increment.
+
+```csharp
+var shortJob = root.GetShortJobInfo();
+Console.WriteLine(shortJob.Name + ": " + shortJob.Client);
+var fullJob = root.GetFullJobInfo();
+if (fullJob.Originated != DateTime.MinValue) Console.WriteLine(fullJob.Originated);
+root.SetInputUnitsEx(LengthInputUnit.Meter, ForceInputUnit.KiloNewton);
+```
+
+All new interface/concrete methods and model types, constructors, factories and properties ship expanded XML IntelliSense. The installed-package consumer now compiles/runs **99 XML examples**, including all eighteen root examples, and checks field mapping, date handling, typed model availability and unit-call arguments. Vendor source: installed Bentley STAAD.Pro 2025 `OSAPP_Help/group___root.html`. Main-project provenance remains the commit and source paths listed above, plus `Models/ShortJobInfo.cs` and `Models/FullJobInfo.cs`.
+
 ## Pending reference methods
 
 This batch adds normalized-path, complete-path comparison and BSTR-buffer regression coverage. Read-only native checks on the running **STAAD.Pro Advanced 2026 unnamed session** succeeded for all six root methods: the four string queries returned empty text, and both identity predicates returned false for a valid named target. No model was opened or modified. Named/UNC comparisons are covered offline; broader native-version and named-model validation remains pending.
@@ -64,14 +133,11 @@ These source signatures describe future ports; their supporting enums/models/ser
 - `bool AwaitModelHandle(string fileFullPath, double timeoutDurationInSeconds = 60, double sleepIntervalInSeconds = 0.1)`
 - `void CloseCurrentStaadModel()`
 - `bool CloseWriteReopenStaadFile(string filePath, List<string> fileContents, int sleepTimeMilliseconds = 200, int maxTimeMilliseconds = 5000)`
-- `FullJobInfo GetFullJobInfo()`
-- `ShortJobInfo GetShortJobInfo()`
 - `void MaximizeStaadMainWindow()`
 - `void MinimizeStaadMainWindow()`
 - `bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600)`
 - `void RestoreStaadMainWindow()`
 - `HashSet<MemberForces> RetrieveMemberForces(IEnumerable<int> beams, IEnumerable<int> loadCases)`
-- `IOSRoot SetInputUnitsEx(LengthInputUnit lengthUnit, ForceInputUnit forceUnit)`
 - `bool SetSilentMode(SilentMode silentMode)`
 - `IOSRoot SaveModel(SilentMode silentMode)`
 - `IOSRoot CloseSTAADFile()`
@@ -81,4 +147,4 @@ These source signatures describe future ports; their supporting enums/models/ser
 
 ## Suggested next sequence
 
-Port input-unit/job metadata and silent/save operations next. Follow with open/close/wait handling, window control through a standalone helper, and analysis/results retrieval with their required models. Each batch should include matching interface/adapter XML, input/native-contract tests and installed-package examples before making public compatibility claims.
+Port silent/save operations next. Follow with open/close/wait handling, window control through a standalone helper, and analysis/results retrieval with their required models. Each batch should include matching interface/adapter XML, input/native-contract tests and installed-package examples before making public compatibility claims.

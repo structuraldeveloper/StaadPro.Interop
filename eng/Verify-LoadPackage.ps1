@@ -108,8 +108,8 @@ try {
         }
     }
     foreach ($owner in @('Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
-        foreach ($method in @('GetStaadFileFullPath', 'GetStaadFileNameOnly', 'GetAnlFileFullPath', 'GetOpenedStaadFilename', 'IsTarget', 'ModelIsOpen')) {
-            $signature = if ($method -in @('IsTarget','ModelIsOpen')) { '(System.String)' } else { '' }
+        foreach ($method in @('GetStaadFileFullPath', 'GetStaadFileNameOnly', 'GetAnlFileFullPath', 'GetOpenedStaadFilename', 'IsTarget', 'ModelIsOpen', 'GetShortJobInfo', 'GetFullJobInfo', 'SetInputUnitsEx')) {
+            $signature = if ($method -in @('IsTarget','ModelIsOpen')) { '(System.String)' } elseif ($method -eq 'SetInputUnitsEx') { '(StaadPro.Interop.Enums.LengthInputUnit,StaadPro.Interop.Enums.ForceInputUnit)' } else { '' }
             $entry = @($xml.doc.members.member | Where-Object name -eq "M:StaadPro.Interop.$owner.$method$signature")
             if ($entry.Count -ne 1) { throw "Missing root IntelliSense: $owner.$method" }
             foreach ($tag in @('summary','returns','remarks','example/code')) {
@@ -122,7 +122,7 @@ try {
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 6 } else { 66 }
+        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 9 } else { 66 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -132,7 +132,7 @@ try {
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 93) { throw "Expected 93 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 99) { throw "Expected 99 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -177,6 +177,12 @@ public static class Program
             nativeRoot.Filename = string.Empty;
             Check(wrapper.Root.GetOpenedStaadFilename() == string.Empty && !wrapper.Root.IsTarget(@"C:\Models\Frame.v2.STD") && !wrapper.Root.ModelIsOpen(@"C:\Models\Frame.v2.STD"), "unnamed native session identity");
             nativeRoot.Filename = @"C:\Models\Frame.v2.STD";
+            var shortJob = wrapper.Root.GetShortJobInfo();
+            var fullJob = wrapper.Root.GetFullJobInfo();
+            Check(shortJob.Name == "JOB" && shortJob.Client == "CLIENT" && shortJob.Originator == "ENGINEER", "short job field mapping");
+            Check(fullJob.Number == "NUMBER" && fullJob.Reference == "REFERENCE" && fullJob.Checker == "CHECKER" && fullJob.Approver == "APPROVER" && fullJob.Comments == "COMMENTS", "full job thirteen-field mapping");
+            Check(fullJob.Originated == new DateTime(2026, 10, 13) && fullJob.Checked == new DateTime(2026, 10, 12) && fullJob.Approved == DateTime.MinValue, "full job date parsing and unspecified date");
+            Check(ReferenceEquals(wrapper.Root.SetInputUnitsEx(LengthInputUnit.MilliMeter, ForceInputUnit.Newton), wrapper.Root) && nativeRoot.LengthCode == 5 && nativeRoot.ForceCode == 4, "native unit codes and fluent result");
             load.AddSelfweightInXYZTo(17, LoadCaseType.ReferenceLoad, new[] { 101, 102 }, SelfWeightDirection.GlobalZ, -1.25);
             Check(fake.Assignment == "selfweight" && fake.AssignedIds.SequenceEqual(new[] { 101, 102 }) && fake.AssignedValues[0] == -1.25 && fake.Reference && fake.Direction == 3, "self-weight native arguments and family");
             load.CreateLoadEnvelopExt(7, LoadEnvelopType.Strength, new[] { 17, 41 });
@@ -354,7 +360,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: ninety-three packaged XML examples, twenty-four load queries, six root queries, three geometry grouping APIs, twelve mutation overloads, and envelope/load models.");
+        Console.WriteLine("PASS: ninety-nine packaged XML examples, twenty-four load queries, eight root queries, root unit selection, retained mutations and standalone job models.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -367,6 +373,23 @@ __EXAMPLES__
         public FakeLoad Load { get; }
         public FakeGeometry Geometry { get; } = new FakeGeometry();
         public string Filename { get; set; } = @"C:\Models\Frame.v2.STD";
+        public int LengthCode { get; private set; }
+        public int ForceCode { get; private set; }
+        public void SetInputUnits(int length, int force) { LengthCode = length; ForceCode = force; }
+        public void GetShortJobInfo(ref object name, ref object client, ref object engineer)
+        {
+            if (!(name is string) || !(client is string) || !(engineer is string)) throw new Exception("Expected BSTR job outputs.");
+            name = "JOB"; client = "CLIENT"; engineer = "ENGINEER";
+        }
+        public void GetFullJobInfo(ref object name, ref object client, ref object engineer, ref object eDate,
+            ref object number, ref object revision, ref object part, ref object reference, ref object checker,
+            ref object cDate, ref object approver, ref object aDate, ref object comments)
+        {
+            if (!(name is string) || !(client is string) || !(engineer is string) || !(eDate is string) || !(number is string) || !(revision is string) || !(part is string) || !(reference is string) || !(checker is string) || !(cDate is string) || !(approver is string) || !(aDate is string) || !(comments is string)) throw new Exception("Expected thirteen BSTR job outputs.");
+            name = "JOB"; client = "CLIENT"; engineer = "ENGINEER"; eDate = "2026-10-13";
+            number = "NUMBER"; revision = "REVISION"; part = "PART"; reference = "REFERENCE";
+            checker = "CHECKER"; cDate = "2026-10-12"; approver = "APPROVER"; aDate = ""; comments = "COMMENTS";
+        }
         public void GetSTAADFile(ref object name, bool fullPath)
         {
             if (!fullPath) throw new Exception("Expected full-path native flag.");
