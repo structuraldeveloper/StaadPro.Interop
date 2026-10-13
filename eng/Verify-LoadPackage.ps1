@@ -108,8 +108,9 @@ try {
         }
     }
     foreach ($owner in @('Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
-        foreach ($method in @('GetStaadFileFullPath', 'GetStaadFileNameOnly', 'GetAnlFileFullPath')) {
-            $entry = @($xml.doc.members.member | Where-Object name -eq "M:StaadPro.Interop.$owner.$method")
+        foreach ($method in @('GetStaadFileFullPath', 'GetStaadFileNameOnly', 'GetAnlFileFullPath', 'GetOpenedStaadFilename', 'IsTarget', 'ModelIsOpen')) {
+            $signature = if ($method -in @('IsTarget','ModelIsOpen')) { '(System.String)' } else { '' }
+            $entry = @($xml.doc.members.member | Where-Object name -eq "M:StaadPro.Interop.$owner.$method$signature")
             if ($entry.Count -ne 1) { throw "Missing root IntelliSense: $owner.$method" }
             foreach ($tag in @('summary','returns','remarks','example/code')) {
                 $node = $entry[0].SelectSingleNode($tag)
@@ -121,7 +122,7 @@ try {
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 3 } else { 66 }
+        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 6 } else { 66 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -131,7 +132,7 @@ try {
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 87) { throw "Expected 87 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 93) { throw "Expected 93 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -169,6 +170,13 @@ public static class Program
             IOSLoad load = wrapper.Load;
             RunDocumentationExamples(load, wrapper.Geometry, wrapper.Root);
             Check(wrapper.Root.GetStaadFileFullPath() == @"C:\Models\Frame.v2.STD" && wrapper.Root.GetStaadFileNameOnly() == "Frame.v2.STD" && wrapper.Root.GetAnlFileFullPath() == @"C:\Models\Frame.v2.ANL", "root paths from installed package");
+            Check(wrapper.Root.GetOpenedStaadFilename() == @"C:\Models\Frame.v2.STD", "normalized native model path");
+            Check(wrapper.Root.IsTarget(@"c:\Models\sub\..\frame.v2.std") && wrapper.Root.ModelIsOpen(@"C:\Models\Frame.v2.STD"), "normalized full-path model identity");
+            Check(!wrapper.Root.ModelIsOpen(@"D:\Models\Frame.v2.STD"), "same basename in different folder is not identity");
+            var nativeRoot = (FakeRoot)wrapper.RawOpenStaad;
+            nativeRoot.Filename = string.Empty;
+            Check(wrapper.Root.GetOpenedStaadFilename() == string.Empty && !wrapper.Root.IsTarget(@"C:\Models\Frame.v2.STD") && !wrapper.Root.ModelIsOpen(@"C:\Models\Frame.v2.STD"), "unnamed native session identity");
+            nativeRoot.Filename = @"C:\Models\Frame.v2.STD";
             load.AddSelfweightInXYZTo(17, LoadCaseType.ReferenceLoad, new[] { 101, 102 }, SelfWeightDirection.GlobalZ, -1.25);
             Check(fake.Assignment == "selfweight" && fake.AssignedIds.SequenceEqual(new[] { 101, 102 }) && fake.AssignedValues[0] == -1.25 && fake.Reference && fake.Direction == 3, "self-weight native arguments and family");
             load.CreateLoadEnvelopExt(7, LoadEnvelopType.Strength, new[] { 17, 41 });
@@ -346,7 +354,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: eighty-seven packaged XML examples, twenty-four load queries, three root queries, three geometry grouping APIs, twelve mutation overloads, and envelope/load models.");
+        Console.WriteLine("PASS: ninety-three packaged XML examples, twenty-four load queries, six root queries, three geometry grouping APIs, twelve mutation overloads, and envelope/load models.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -358,10 +366,12 @@ __EXAMPLES__
         public FakeRoot(FakeLoad load) { Load = load; }
         public FakeLoad Load { get; }
         public FakeGeometry Geometry { get; } = new FakeGeometry();
+        public string Filename { get; set; } = @"C:\Models\Frame.v2.STD";
         public void GetSTAADFile(ref object name, bool fullPath)
         {
             if (!fullPath) throw new Exception("Expected full-path native flag.");
-            name = @"C:\Models\Frame.v2.STD";
+            if (!(name is string)) throw new Exception("Expected a BSTR output buffer for native GetSTAADFile.");
+            name = Filename;
         }
     }
     public class FakeGeometry

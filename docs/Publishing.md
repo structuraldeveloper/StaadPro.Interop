@@ -5,12 +5,12 @@
 | Item | Value |
 | --- | --- |
 | Package ID | `StaadPro.Interop` |
-| Preview version | `1.0.0-preview.20261013.2` |
+| Preview version | `1.0.0-preview.20261013.3` |
 | Author | Srinivasa Rao Masanam |
 | Copyright | Copyright (c) 2026 StaadDev |
 | Release notes | [Release-Notes.md](Release-Notes.md), also included in package metadata and the archive |
 | Target | .NET Framework 4.8.1 (`net481`), Windows |
-| Upload artifact | `artifacts/release/StaadPro.Interop.1.0.0-preview.20261013.2.nupkg` |
+| Upload artifact | `artifacts/release/StaadPro.Interop.1.0.0-preview.20261013.3.nupkg` |
 | Public feed | `https://api.nuget.org/v3/index.json` |
 | Source | [structuraldeveloper/StaadPro.Interop](https://github.com/structuraldeveloper/StaadPro.Interop) |
 
@@ -28,7 +28,7 @@ dotnet build StaadPro.Interop.sln -c Release --no-restore
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release --no-build --logger "trx;LogFileName=load-port.trx" --results-directory artifacts/load-port/tests
 dotnet list src/StaadPro.Interop/StaadPro.Interop.csproj package --vulnerable --include-transitive
 
-$releaseVersion = '1.0.0-preview.20261013.2'
+$releaseVersion = '1.0.0-preview.20261013.3'
 $releaseCommit = git rev-parse HEAD
 dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=$releaseVersion -p:RepositoryCommit=$releaseCommit -o artifacts/release
 ./eng/Verify-LoadPackage.ps1 -PackagePath "artifacts/release/StaadPro.Interop.$releaseVersion.nupkg"
@@ -37,13 +37,13 @@ Get-FileHash "artifacts/release/StaadPro.Interop.$releaseVersion.nupkg" -Algorit
 
 Stop if a command fails. Publish the exact archive that passed verification. Keep its version, source commit, SHA256 and test results together. When preparing an ordinary release, commit the implementation and documentation before packing so repository metadata identifies the matching source. The project retains its default `1.0.0` version; always override it with the intended preview version until the stable-release gates are closed.
 
-The verifier restores through a fresh temporary PackageReference-only consumer/cache, checks the restored archive hash, validates package metadata and shipped documentation, and compiles/runs all 87 XML examples plus the 24 ported queries. It uses a managed stand-in and does not modify a STAAD model or contact NuGet.org to upload anything.
+The verifier restores through a fresh temporary PackageReference-only consumer/cache, checks the restored archive hash, validates package metadata and shipped documentation, and compiles/runs all 93 XML examples plus the 24 ported queries. It uses a managed stand-in and does not modify a STAAD model or contact NuGet.org to upload anything.
 
 ## 2. Publish through the signed-in NuGet.org browser
 
 This is the selected route for this release. Open [NuGet.org](https://www.nuget.org/) in the browser where you signed in:
 
-1. Choose **Upload** and select `StaadPro.Interop.1.0.0-preview.20261013.2.nupkg` from `artifacts/release`.
+1. Choose **Upload** and select `StaadPro.Interop.1.0.0-preview.20261013.3.nupkg` from `artifacts/release`.
 2. Review the package ID, exact version, author **Srinivasa Rao Masanam**, copyright, release notes, `net481` target, MIT license, repository link, dependency and README preview. Choose the intended owner account/organization if the page offers that selection. Leave the version listed for public discovery.
 3. Choose **Submit** after the metadata matches the verified artifact.
 4. Inspect the resulting package status, wait for validation/indexing, then perform the public-feed checks below.
@@ -58,12 +58,12 @@ If Upload reports an unavailable ID, ownership problem, or rejected metadata, re
 
 The expected public page, once accepted, is:
 
-`https://www.nuget.org/packages/StaadPro.Interop/1.0.0-preview.20261013.2`
+`https://www.nuget.org/packages/StaadPro.Interop/1.0.0-preview.20261013.3`
 
 Check the exact version in the public feed:
 
 ```powershell
-$releaseVersion = '1.0.0-preview.20261013.2'
+$releaseVersion = '1.0.0-preview.20261013.3'
 $index = Invoke-RestMethod 'https://api.nuget.org/v3-flatcontainer/staadpro.interop/index.json'
 if ($index.versions -notcontains $releaseVersion) {
     throw 'The exact preview version is not available from the public flat-container feed yet.'
@@ -75,7 +75,7 @@ Also inspect the NuGet.org page and search with prerelease results enabled. An e
 For a download check:
 
 ```powershell
-$releaseVersion = '1.0.0-preview.20261013.2'
+$releaseVersion = '1.0.0-preview.20261013.3'
 $downloadDirectory = Join-Path ([IO.Path]::GetTempPath()) ('StaadPublicPackage-' + [Guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $downloadDirectory | Out-Null
 $downloadPath = Join-Path $downloadDirectory "StaadPro.Interop.$releaseVersion.nupkg"
@@ -90,7 +90,7 @@ The verifier checks a downloaded archive using its temporary local feed. To prov
 Web upload needs no API key. For later CLI publication, create a scoped Push key in your NuGet.org account for `StaadPro.Interop`, allowing new packages/versions as needed. Configure it locally as `NUGET_API_KEY`, never in source files or chat. Pass the value explicitly for compatibility with SDKs that do not read it from the environment:
 
 ```powershell
-$releaseVersion = '1.0.0-preview.20261013.2'
+$releaseVersion = '1.0.0-preview.20261013.3'
 if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) {
     throw 'Configure a scoped NUGET_API_KEY in this local terminal first.'
 }
@@ -130,7 +130,7 @@ This is a fragment, not an installed publication workflow. `NUGET_USER` must be 
 
 ## 6. Version updates and stable release
 
-Use a new version for each different public build, for example `1.0.0-preview.20261014` for a release on the following day, or `1.0.0-preview.20261013.3` for a subsequent release on the same day. Never treat `--skip-duplicate` as permission to replace an existing version. Keep the version pinned in release commands, installation examples and release notes; this preview uses a date-based version without a load-increment suffix.
+Use a new version for each different public build, for example `1.0.0-preview.20261014` for a release on the following day, or `1.0.0-preview.20261013.4` for a subsequent release on the same day. Never treat `--skip-duplicate` as permission to replace an existing version. Keep the version pinned in release commands, installation examples and release notes; this preview uses a date-based version without a load-increment suffix.
 
 After a successful preview publication, keep validation evidence and optionally create a matching Git tag from the source commit. Publish stable `1.0.0` only after the live compatibility/unit and inherited API gates in [NuGet-Readiness.md](NuGet-Readiness.md) are closed for the advertised scope. Source Link/symbol packages can improve debugging later; they are not bundled in this preview.
 

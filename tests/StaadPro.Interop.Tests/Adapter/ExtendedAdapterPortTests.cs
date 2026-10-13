@@ -382,6 +382,9 @@ namespace StaadPro.Interop.Tests.Adapter
             public string GetStaadFileFullPath() => throw new NotSupportedException();
             public string GetStaadFileNameOnly() => throw new NotSupportedException();
             public string GetAnlFileFullPath() => throw new NotSupportedException();
+            public string GetOpenedStaadFilename() => throw new NotSupportedException();
+            public bool IsTarget(string staadFileFullPath) => throw new NotSupportedException();
+            public bool ModelIsOpen(string fileFullPath) => throw new NotSupportedException();
         }
 
         private sealed class Once<T> : IEnumerable<T>

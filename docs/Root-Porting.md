@@ -1,6 +1,6 @@
 # Root adapter implementation and porting progress
 
-The main project's `IOSRoot` exposes 23 methods. This repository now implements **three**, with **20 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
+The main project's `IOSRoot` exposes 23 methods. This repository now implements **six**, with **17 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
@@ -11,12 +11,15 @@ Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` a
 | `string GetStaadFileFullPath()` | One `GetSTAADFile(ref object, true)` call; returns the exact native string | Empty string |
 | `string GetStaadFileNameOnly()` | One full-path read, then Windows `Path.GetFileName` | Empty string |
 | `string GetAnlFileFullPath()` | One full-path read; same directory and filename stem plus uppercase `.ANL` | Empty string |
+| `string GetOpenedStaadFilename()` | One full-path read, normalized with Windows `Path.GetFullPath` | Empty string |
+| `bool IsTarget(string staadFileFullPath)` | Validate/normalize requested path, read native path once, compare complete normalized paths with ordinal case-insensitive comparison | False for a valid requested path |
+| `bool ModelIsOpen(string fileFullPath)` | Same complete-path identity contract as `IsTarget`; not a Geometry/Load readiness check | False for a valid requested path |
 
-All three are eager, read-only session queries. They do not launch STAAD, open/close/save a model, change activation or load lists, read analysis contents, create files, perform filesystem existence checks or start analysis. A licensed STAAD installation and a valid native root/session are required for real calls. Coordinate COM access on the session's appropriate thread; a managed binding does not establish readiness or thread safety.
+All six are eager, read-only session queries. They do not launch STAAD, open/close/save a model, change activation or load lists, read analysis contents, create files, perform filesystem existence checks or start analysis. A licensed STAAD installation and a valid native root/session are required for real calls. Coordinate COM access on the session's appropriate thread; a managed binding does not establish readiness or thread safety.
 
 ### Native contract and error handling
 
-The installed Bentley STAAD.Pro 2025 reference `OSAPP_Help/group___root.html` documents `GetSTAADFile` as **void**, with a VARIANT string output and a Boolean full-path flag. The port sends Boolean `true` rather than the main reference's string `"TRUE"`; no numeric return status is expected or interpreted. The output starts as null to detect an unwritten response. Only an explicitly written string is accepted.
+The installed Bentley STAAD.Pro 2025 reference `OSAPP_Help/group___root.html` documents `GetSTAADFile` as **void**, with a VARIANT string output and a Boolean full-path flag. The port sends Boolean `true` rather than the main reference's string `"TRUE"`; no numeric return status is expected or interpreted. The output is initialized with a string sentinel, so it marshals as BSTR while detecting unwritten responses. A null initializer caused native `DISP_E_BADVARTYPE` (0x80020008) and is corrected in this increment. Only an explicitly written string other than the sentinel is accepted.
 
 Null, non-string and unwritten output throw `InvalidOperationException`. A genuinely empty native string is preserved. Full-path retrieval retains the original case, whitespace, Unicode and relative/absolute form; it does not normalize or certify the path. COM exceptions and missing-signature `RuntimeBinderException` propagate unchanged.
 
@@ -25,6 +28,14 @@ The two derived queries use .NET Framework's Windows `Path` APIs. Invalid path s
 ### Improvement over the main implementation
 
 The main `GetAnlFileFullPath` reads the native model path twice: directly and through `GetStaadFileNameOnly`. If the native session changes between reads, it can mix one model's directory with another model's name. This port derives both parts from **one native read**. It returns an empty string for empty native input instead of attempting to combine a missing directory with `.ANL`. Native model changes after the read remain possible.
+
+### Normalized model identity
+
+`GetOpenedStaadFilename` normalizes a single native read with Windows `Path.GetFullPath`. Empty native text stays empty; relative text is resolved against the process working directory. It does not check file existence, resolve symlinks/junctions or certify model readiness.
+
+`IsTarget` and `ModelIsOpen` validate their requested path before native access. Null throws `ArgumentNullException` with the respective public parameter name; empty/whitespace throws `ArgumentException`. Malformed, unsupported or excessively long paths propagate the Windows Path API's exceptions. Each predicate then reads the native path once and compares complete normalized paths using `StringComparison.OrdinalIgnoreCase`. Case and dot-segment differences can match; equal basenames in different folders cannot. An explicitly unnamed session returns false for a valid requested path. Native failures throw rather than returning false.
+
+The reference `ModelIsOpen` passes the filename as the API's Boolean full-path flag and compares only basenames. This port corrects both behaviors. The reference `GetOpenedStaadFilename` attempts to normalize empty text; this port returns an empty string for that legitimate native output. No model switching, launching, saving or native mutation is introduced.
 
 ### Usage and IntelliSense
 
@@ -35,13 +46,18 @@ IOSRoot root = wrapper.Root;
 Console.WriteLine(root.GetStaadFileFullPath());
 Console.WriteLine(root.GetStaadFileNameOnly());
 Console.WriteLine(root.GetAnlFileFullPath());
+Console.WriteLine(root.GetOpenedStaadFilename());
+Console.WriteLine(root.IsTarget(@"C:\Models\Frame.v2.STD"));
+Console.WriteLine(root.ModelIsOpen(@"C:\Models\Frame.v2.STD"));
 ```
 
 Both interface and concrete methods include matching expanded XML summaries, returns, usage remarks, exception contracts and examples. The compiled XML ships next to the `net481` DLL, so IntelliSense works from an installed NuGet package without source files. Constructor and root-binding properties also retain their documentation.
 
-Offline coverage checks local/UNC/relative and Unicode paths, multiple periods, empty input, no filesystem assumptions, malformed/unwritten outputs, native exceptions, missing signatures, invalid path syntax, one-call derivation and isolation between wrapper sessions. Isolated package verification compiles/runs all six root XML examples and checks all three root methods. Native root path reads should still be checked against the connected STAAD session before claiming version-specific support.
+Offline coverage checks local/UNC/relative and Unicode paths, multiple periods, empty input, no filesystem assumptions, malformed/unwritten outputs, native exceptions, missing signatures, invalid path syntax, one-call derivation and isolation between wrapper sessions. Isolated package verification compiles/runs all twelve root XML examples and checks all six root methods. Native root path reads should still be checked against the connected STAAD session before claiming version-specific support.
 
 ## Pending reference methods
+
+This batch adds normalized-path, complete-path comparison and BSTR-buffer regression coverage. Read-only native checks on the running **STAAD.Pro Advanced 2026 unnamed session** succeeded for all six root methods: the four string queries returned empty text, and both identity predicates returned false for a valid named target. No model was opened or modified. Named/UNC comparisons are covered offline; broader native-version and named-model validation remains pending.
 
 These source signatures describe future ports; their supporting enums/models/services are not implied to be available already:
 
@@ -49,12 +65,9 @@ These source signatures describe future ports; their supporting enums/models/ser
 - `void CloseCurrentStaadModel()`
 - `bool CloseWriteReopenStaadFile(string filePath, List<string> fileContents, int sleepTimeMilliseconds = 200, int maxTimeMilliseconds = 5000)`
 - `FullJobInfo GetFullJobInfo()`
-- `string GetOpenedStaadFilename()`
 - `ShortJobInfo GetShortJobInfo()`
-- `bool IsTarget(string staadFileFullPath)`
 - `void MaximizeStaadMainWindow()`
 - `void MinimizeStaadMainWindow()`
-- `bool ModelIsOpen(string fileFullPath)`
 - `bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600)`
 - `void RestoreStaadMainWindow()`
 - `HashSet<MemberForces> RetrieveMemberForces(IEnumerable<int> beams, IEnumerable<int> loadCases)`
@@ -68,4 +81,4 @@ These source signatures describe future ports; their supporting enums/models/ser
 
 ## Suggested next sequence
 
-Port the remaining path/identity predicates first, then input-unit/job metadata and silent/save operations. Follow with open/close/wait handling, window control through a standalone helper, and analysis/results retrieval with their required models. Each batch should include matching interface/adapter XML, input/native-contract tests and installed-package examples before making public compatibility claims.
+Port input-unit/job metadata and silent/save operations next. Follow with open/close/wait handling, window control through a standalone helper, and analysis/results retrieval with their required models. Each batch should include matching interface/adapter XML, input/native-contract tests and installed-package examples before making public compatibility claims.

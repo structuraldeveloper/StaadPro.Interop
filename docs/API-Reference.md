@@ -177,5 +177,8 @@ Inputs are snapshotted and validated before native access. The first two mutatio
 | `string GetStaadFileFullPath()` | Exact current model path from one void `GetSTAADFile` output read. |
 | `string GetStaadFileNameOnly()` | Windows filename including its extension, derived from one path read. |
 | `string GetAnlFileFullPath()` | Same directory and model stem with uppercase `.ANL`, derived from one path read. |
+| `string GetOpenedStaadFilename()` | Normalized absolute opened-model path from one native read; empty text remains empty. |
+| `bool IsTarget(string staadFileFullPath)` | Checks complete normalized path identity with ordinal case-insensitive comparison. |
+| `bool ModelIsOpen(string fileFullPath)` | The same full-path identity check; equal basenames in different folders do not match. |
 
-Empty native filenames return empty strings. Unwritten/non-string outputs throw; native COM/binding errors propagate. Derived filenames use Windows Path APIs and do not check file existence. No model writes or analysis occur. See [Root-Porting.md](Root-Porting.md) for complete contracts, examples and the remaining 20 reference methods.
+Empty native filenames return empty strings, and the identity predicates return false for a valid named target. Null/blank requested paths fail before native access. Unwritten/non-string outputs throw; native COM/binding errors propagate. The shared filename output is initialized as a BSTR string sentinel for native compatibility. Windows Path APIs normalize identities without checking file existence or resolving links. No model writes or analysis occur. See [Root-Porting.md](Root-Porting.md) for complete contracts, examples and the remaining 17 reference methods.

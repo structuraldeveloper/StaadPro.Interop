@@ -25,7 +25,8 @@ namespace StaadPro.Interop.Tests.Adapter
             {
                 Calls++;
                 Assert.That(fullPath, Is.True);
-                Assert.That(name, Is.Null, "Unwritten output must not look like an empty native filename.");
+                Assert.That(name, Is.TypeOf<string>(), "The native output VARIANT must already be typed as BSTR.");
+                Assert.That((string)name, Does.Contain("UnwrittenFilename"), "Unwritten output must not look like an empty native filename.");
                 if (Failure != null) throw Failure;
                 if (WriteOutput) name = Paths != null ? Paths.Dequeue() : Path;
             }

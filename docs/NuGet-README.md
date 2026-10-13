@@ -26,7 +26,7 @@ Envelope metadata queries `GetEnvelopeIds()`, `GetLoadEnvelopeDetail(int envId)`
 
 New load mutations include `AddSelfweightInXYZTo(int, LoadCaseType, IEnumerable<int>, SelfWeightDirection, double)`, `CreateLoadEnvelopExt(int, LoadEnvelopType, IEnumerable<int>)` and `CreateLoadList(LoadListType, IEnumerable<int>)`. They snapshot/validate inputs before native calls and check each API's distinct success contract. Self-weight activates a primary/reference target; envelope creation and load-list selection do not activate a case. These are native mutations with no automatic save or rollback; see `docs/Load-Porting.md` for full contracts.
 
-`wrapper.Root` now exposes `GetStaadFileFullPath()`, `GetStaadFileNameOnly()` and `GetAnlFileFullPath()`. Each uses one native model-path read. The derived `.ANL` path does not prove file existence or current results. Matching interface/concrete IntelliSense and the shipped `docs/Root-Porting.md` explain empty/error behavior and all 20 pending root methods.
+`wrapper.Root` exposes `GetStaadFileFullPath()`, `GetStaadFileNameOnly()`, `GetAnlFileFullPath()`, `GetOpenedStaadFilename()`, `IsTarget(string)` and `ModelIsOpen(string)`. Each uses one native model-path read. Identity predicates validate and compare complete normalized paths with case-insensitive matching; equal basenames in different directories do not match. An explicitly unnamed session yields empty filename text and false identity results. The `.ANL` path does not prove file existence/current results. Matching interface/concrete IntelliSense and shipped `docs/Root-Porting.md` cover all six methods and 17 pending reference root methods.
 
 The package exposes seven assignment read-back methods through `IOSLoad` and `OSLoadAdapter`:
 

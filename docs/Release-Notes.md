@@ -1,5 +1,14 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261013.3 - 13 October 2026 (prepared)
+
+- Added root `GetOpenedStaadFilename()`, `IsTarget(string staadFileFullPath)` and `ModelIsOpen(string fileFullPath)` with the main project's signatures, complete matching interface/concrete XML IntelliSense and executable examples. Implementations remain in the existing non-partial root adapter.
+- Normalize complete model paths and compare them case-insensitively. Validate requested paths before COM access, accept relative paths using the process working directory, return false for explicitly unnamed sessions and propagate native/path failures. Each function reads the native model filename once.
+- Corrected the reference's `ModelIsOpen` full-path-flag/basename behavior and empty-filename normalization. Corrected shared root output initialization to a string sentinel so native `GetSTAADFile` receives BSTR rather than null/VT_EMPTY, while unwritten output is still detected.
+- Root coverage is now **6 of 23 methods**, with **17 pending**. Custom `IOSRoot` implementations must implement the added members. Load coverage remains 66 overloads with 54 pending reference overloads.
+- Passed **604 offline tests**, including 21 new cases, and a Release build with zero warnings/errors. Isolated package verification compiles/runs **93 XML examples**, including all twelve root examples, and checks normalized identities, distinct-directory basenames and unnamed sessions.
+- Read-only live checks on STAAD.Pro Advanced 2026's unnamed session passed for all six root methods with the corrected string output buffer. Native named-model and broader-version validation remain pending. This increment does not change provider acquisition behavior or publish a package publicly.
+
 ## 1.0.0-preview.20261013.2 - 13 October 2026 (prepared)
 
 - Added OSLoad `AddSelfweightInXYZTo(int, LoadCaseType, IEnumerable<int>, SelfWeightDirection, double)`, `CreateLoadEnvelopExt(int, LoadEnvelopType, IEnumerable<int>)` and `CreateLoadList(LoadListType, IEnumerable<int>)` with matching main-project signatures. Added documented native-code enums and checked activation/status handling, input snapshots and independent ID arrays.
