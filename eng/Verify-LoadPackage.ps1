@@ -114,6 +114,7 @@ try {
             $entry = @($rootEntry)
             if ($entry.Count -ne 1) { throw "Missing root IntelliSense: $owner.$method" }
             foreach ($tag in @('summary','returns','remarks','example/code')) {
+                if ($tag -eq 'returns' -and $method -eq 'CloseCurrentStaadModel') { continue }
                 $node = $entry[0].SelectSingleNode($tag)
                 if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $owner.$method" }
             }
@@ -123,17 +124,18 @@ try {
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 16 } else { 78 }
+        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 18 } else { 78 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
+                if ($tag -eq 'returns' -and $entry.name -match '\.CloseCurrentStaadModel$') { continue }
                 $node = $entry.SelectSingleNode($tag)
                 if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $($entry.name)" }
             }
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 137) { throw "Expected 137 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 141) { throw "Expected 141 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -170,6 +172,7 @@ public static class Program
         {
             IOSLoad load = wrapper.Load;
             RunDocumentationExamples(load, wrapper.Geometry, wrapper.Root);
+            ((FakeRoot)wrapper.RawOpenStaad).Filename = @"C:\Models\Frame.v2.STD";
             Check(wrapper.Root.GetStaadFileFullPath() == @"C:\Models\Frame.v2.STD" && wrapper.Root.GetStaadFileNameOnly() == "Frame.v2.STD" && wrapper.Root.GetAnlFileFullPath() == @"C:\Models\Frame.v2.ANL", "root paths from installed package");
             Check(wrapper.Root.GetOpenedStaadFilename() == @"C:\Models\Frame.v2.STD", "normalized native model path");
             Check(wrapper.Root.IsTarget(@"c:\Models\sub\..\frame.v2.std") && wrapper.Root.ModelIsOpen(@"C:\Models\Frame.v2.STD"), "normalized full-path model identity");
@@ -188,6 +191,15 @@ public static class Program
             Check(wrapper.Root.SetSilentMode(SilentMode.Enable) && nativeRoot.SilentFlag == 1, "silent-mode previous zero is not failure");
             Check(ReferenceEquals(wrapper.Root.SaveModel(SilentMode.Disable), wrapper.Root) && nativeRoot.SaveFlag == 0, "save integer code and fluent result");
             Check(ReferenceEquals(wrapper.Root.CloseSTAADFile(), wrapper.Root) && nativeRoot.CloseCount > 0, "native close and fluent result");
+            string rewritePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "StaadRootConsumer-" + Guid.NewGuid().ToString("N") + ".std");
+            try
+            {
+                System.IO.File.WriteAllText(rewritePath, "original");
+                nativeRoot.Filename = rewritePath;
+                Check(wrapper.Root.CloseWriteReopenStaadFile(rewritePath, new System.Collections.Generic.List<string> { "STAAD SPACE", "FINISH" }), "controlled file rewrite and reopen request");
+                Check(System.IO.File.ReadAllLines(rewritePath).SequenceEqual(new[] { "STAAD SPACE", "FINISH" }) && nativeRoot.Filename == rewritePath, "rewritten contents and requested target");
+            }
+            finally { System.IO.File.Delete(rewritePath); nativeRoot.Filename = @"C:\Models\Frame.v2.STD"; }
             load.AddSelfweightInXYZTo(17, LoadCaseType.ReferenceLoad, new[] { 101, 102 }, SelfWeightDirection.GlobalZ, -1.25);
             Check(fake.Assignment == "selfweight" && fake.AssignedIds.SequenceEqual(new[] { 101, 102 }) && fake.AssignedValues[0] == -1.25 && fake.Reference && fake.Direction == 3, "self-weight native arguments and family");
             load.CreateLoadEnvelopExt(7, LoadEnvelopType.Strength, new[] { 17, 41 });
@@ -365,7 +377,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: 137 packaged XML examples and complete geometry/load/root IntelliSense.");
+        Console.WriteLine("PASS: 141 packaged XML examples and complete geometry/load/root IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -386,7 +398,7 @@ __EXAMPLES__
         public int CloseCount { get; private set; }
         public object SetSilentMode(int flag) { int previous = SilentFlag; SilentFlag = flag; return previous; }
         public void SaveModel(int flag) { SaveFlag = flag; }
-        public void CloseSTAADFile() { CloseCount++; }
+        public void CloseSTAADFile() { CloseCount++; Filename = string.Empty; }
         public void OpenSTAADFile(string path) { Filename = path; }
         public void ShowApplication() { }
         public void GetShortJobInfo(ref object name, ref object client, ref object engineer)

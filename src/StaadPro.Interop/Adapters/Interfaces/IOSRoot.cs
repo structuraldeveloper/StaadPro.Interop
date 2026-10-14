@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Models;
 
@@ -403,5 +404,62 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// Console.WriteLine(identified);
         /// </code></example>
         bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600);
+
+        /// <summary>Requests a silent close only when this root reports a non-whitespace current model filename.</summary>
+        /// <remarks>
+        /// <para>Reads one full native filename. Explicit empty/whitespace text causes no mutation.
+        /// Otherwise calls native SetSilentMode with integer 1, then CloseSTAADFile once. Corrects
+        /// the reference's null full-path flag. The previous silent setting is ignored and not restored.</para>
+        /// <para>Does not explicitly save unsaved work, verify closing, terminate STAAD or dispose
+        /// the wrapper. Native dialogs can block despite silent mode, and captured model interfaces
+        /// can become unusable after closing. A filename can change after the read; callers must
+        /// coordinate UI/session access on the correct COM thread. Native failures propagate,
+        /// and a failure after setting silent mode can leave that setting changed.</para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">Native filename output is unwritten or non-string.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Filename, silent-mode or close dispatch fails; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible filename, silent-mode or close API.</exception>
+        /// <example><code>
+        /// root.CloseCurrentStaadModel(); // explicitly requests closing; does not auto-save
+        /// </code></example>
+        void CloseCurrentStaadModel();
+
+        /// <summary>Closes the matching current model, replaces its existing file contents and requests reopening after bounded close/lock-release waiting.</summary>
+        /// <param name="filePath">Non-null, non-whitespace Windows path to the existing current model; normalized before dispatch.</param>
+        /// <param name="fileContents">Non-null list snapshotted before mutation. Lines are written as UTF-8 without BOM using platform newlines; null entries become empty lines.</param>
+        /// <param name="sleepTimeMilliseconds">Positive retry interval in milliseconds; capped by the remaining close/lock-release budget. Default 200.</param>
+        /// <param name="maxTimeMilliseconds">Nonnegative close/lock-release wait limit in milliseconds after the close request. Default 5000; zero permits only an immediate check.</param>
+        /// <returns>True when replacement completed and the target was identified or its reopen request returned; false for a nonmatching model, wait expiry or an intervening model switch. False can follow native side effects or a completed file replacement.</returns>
+        /// <remarks>
+        /// <para>Validates input, snapshots lines and requires the current normalized path to match
+        /// the target before closing. Rejects missing, directory or read-only targets before mutation.
+        /// Sets native silent mode to 1 without restoring it, requests closing, then waits for an
+        /// explicitly empty filename and exclusive read/write availability. Only Windows sharing/
+        /// lock violations are retried; other filesystem errors propagate.</para>
+        /// <para>Publishes a complete exclusively created sibling temporary file using File.Replace,
+        /// without truncation fallback. Only owned temporary cleanup is attempted. Rechecks blank
+        /// identity before writing and avoids reopening over a different intervening model. The
+        /// exclusive probe is a snapshot, not a transaction with external writers or the STAAD UI.
+        /// Native and filesystem races remain possible; replacement does not preserve original encoding.</para>
+        /// <para>The budget does not bound close/write/open native calls or force-abort COM. No
+        /// explicit save, backup, rollback, directory creation, process launch or reopen-readiness
+        /// verification occurs. Errors propagate; a failure can leave silent mode enabled, the model
+        /// closed or the replacement published. Serialize access on the correct session COM thread.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">filePath or fileContents is null.</exception>
+        /// <exception cref="ArgumentException">A requested path is empty/whitespace, or requested/native path syntax is invalid.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">sleepTimeMilliseconds is nonpositive or maxTimeMilliseconds is negative.</exception>
+        /// <exception cref="NotSupportedException">A path or filesystem operation is unsupported.</exception>
+        /// <exception cref="System.IO.IOException">The target is missing/a directory or a non-lock filesystem operation fails; original failures propagate.</exception>
+        /// <exception cref="UnauthorizedAccessException">The target is read-only or permissions prevent required access.</exception>
+        /// <exception cref="InvalidOperationException">Native filename output is unwritten or non-string.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native identity, silent-mode, close or open dispatch fails.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a required native signature.</exception>
+        /// <example><code>
+        /// var editedLines = new System.Collections.Generic.List&lt;string&gt; { "STAAD SPACE", "UNIT METER KN", "FINISH" };
+        /// bool requested = root.CloseWriteReopenStaadFile(@"C:\Models\Frame.v2.STD", editedLines);
+        /// Console.WriteLine(requested); // explicit file replacement; no reopen-readiness guarantee
+        /// </code></example>
+        bool CloseWriteReopenStaadFile(string filePath, List<string> fileContents, int sleepTimeMilliseconds = 200, int maxTimeMilliseconds = 5000);
     }
 }

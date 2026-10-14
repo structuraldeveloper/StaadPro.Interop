@@ -1,5 +1,11 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261014.4 - 14 October 2026 (prepared)
+
+Added CloseCurrentStaadModel and CloseWriteReopenStaadFile with matching signatures and detailed IntelliSense. Conditional close skips explicit blank filenames and propagates errors. Rewrite validates/snapshots inputs, requires the current target, waits for blank identity and released locks, replaces complete UTF-8 contents atomically and avoids reopening over an intervening model. No save, backup, silent-state restoration, rollback or hard native deadline is supplied; false can follow native/file side effects.
+
+Root coverage is **18 of 23 methods**, with **5 pending**. Custom `IOSRoot` implementations must implement the new members. Validated **841 offline tests** and **141 installed-package XML examples**. Live native mutation/version validation remains pending; no public upload is claimed.
+
 ## 1.0.0-preview.20261014.3 - 14 October 2026 (prepared)
 
 Added AwaitModelHandle and OpenStaadModel with matching signatures, explicit duration validation and complete IntelliSense. Poll full normalized paths using a monotonic budget, distinguish matching models from similarly named files, check immediately and cap waits to remaining time. Open requests occur once and count toward the documented seconds limit. Native errors propagate; logical timeouts cannot interrupt synchronous COM calls, and a path match does not certify Geometry/Load readiness.

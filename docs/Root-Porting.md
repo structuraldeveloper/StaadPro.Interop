@@ -1,6 +1,6 @@
 # Root adapter implementation and porting progress
 
-The main project's `IOSRoot` exposes 23 methods. This repository now implements **16**, with **7 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
+The main project's `IOSRoot` exposes 23 methods. This repository now implements **18**, with **5 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
@@ -26,6 +26,9 @@ Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` a
 
 | `bool AwaitModelHandle(string fileFullPath, double timeoutDurationInSeconds = 60, double sleepIntervalInSeconds = 0.1)` | Poll exact normalized path with monotonic timeout | Blank is a nonmatch; no model opening |
 | `bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600)` | One open request then full-path polling; milliseconds interval, seconds limit | Timeout does not undo native opening |
+
+| `void CloseCurrentStaadModel()` | Read filename; if non-whitespace, enable silent mode and request close | Blank/whitespace skips mutation; no close verification |
+| `bool CloseWriteReopenStaadFile(string filePath, List<string> fileContents, int sleepTimeMilliseconds = 200, int maxTimeMilliseconds = 5000)` | Close matching target, await blank/unlocked state, atomically replace then request reopen | False for mismatch, wait expiry or intervening switch; partial effects possible |
 
 The six filename/identity methods are eager, read-only session queries. They do not launch STAAD, open/close/save a model, change activation or load lists, read analysis contents, create files, perform filesystem existence checks or start analysis. A licensed STAAD installation and a valid native root/session are required for real calls. Coordinate COM access on the session's appropriate thread; a managed binding does not establish readiness or thread safety.
 
@@ -196,14 +199,35 @@ Deterministic managed clocks cover immediate/later matches, blanks, same-name/di
 
 Validation: **808 offline tests** passed. Installed-package verification executes **137 XML examples**. Native mutation/version checks remain pending.
 
+## Conditional closing and close/write/reopen coordination
+
+`CloseCurrentStaadModel()` reads one full native filename, skips mutation for explicitly empty/whitespace text, otherwise calls native SetSilentMode(1) then CloseSTAADFile once. It corrects the reference's null full-path flag. Failures propagate in order; this operation does not explicitly save, verify closing, close the application, dispose the wrapper or restore silent mode. Unreadable/unwritten output is an error rather than an invented blank. Captured model interfaces can become unusable after closing and the filename can change after the read.
+
+`CloseWriteReopenStaadFile` preserves the main signature and defaults. It validates the requested Windows path, non-null List<string>, positive sleep interval and nonnegative wait limit, and snapshots lines before mutation. A different/blank current model returns false before filesystem validation or native changes. A matching existing target is validated for missing/directory/read-only errors, then native silent mode is enabled and closing requested without saving.
+
+The monotonic limit applies to close completion/file-lock release after the close request. The method awaits an explicitly empty native filename and exclusive read/write availability. Zero permits an immediate check without sleeping. Windows sharing/lock violations are retryable; other errors propagate rather than becoming lock timeouts. Sleeps are capped by the remaining budget. A different intervening model prevents writing; blank identity is rechecked before publishing. After writing, a different model prevents reopen and returns false, although replacement has already occurred.
+
+A complete UTF-8 file without BOM is written to an exclusively created sibling temporary path, with platform newlines and null entries as empty lines. File.Replace publishes it over the existing target without truncation fallback, backup or directory creation. Only owned temporary cleanup is attempted; cleanup failure can leave that temporary file. Original encoding/metadata preservation is not promised. Availability probes do not lock out external writers or the STAAD UI through publication; external races can still cause failure or changes. A successful rewrite is intentional replacement, not an append or managed snapshot edit.
+
+True means replacement completed and the requested target was already identified or a reopen request returned; it does not verify reopen readiness. False can leave the model closed or the replacement published. Native/IO failures propagate, with no rollback or silent-mode restoration. Synchronous close/write/open calls are outside forced timeout control. Serialize all access on the appropriate COM thread and keep the supplied list stable during snapshotting.
+
+```csharp
+root.CloseCurrentStaadModel(); // explicit close without an automatic save
+// Rewrite applies only if this path is still the current model.
+var lines = new List<string> { "STAAD SPACE", "UNIT METER KN", "FINISH" };
+bool requested = root.CloseWriteReopenStaadFile(@"C:\Models\Frame.v2.STD", lines);
+```
+
+Tests cover call ordering, blank/nonmatching models, argument validation, line snapshots, partial native/file effects, bounded waits, intervening switches and original failures. Owned temporary files additionally verify sharing locks, read-only/missing targets, complete UTF-8 publication, failed-replacement byte preservation and cleanup. Installed-package validation rewrites an owned file through a managed native stand-in; it never closes a customer model.
+
+Validation: **841 offline tests** passed. Installed-package verification executes **141 XML examples**. Native mutation/version checks remain pending.
+
 ## Pending reference methods
 
 This batch adds normalized-path, complete-path comparison and BSTR-buffer regression coverage. Read-only native checks on the running **STAAD.Pro Advanced 2026 unnamed session** succeeded for all six root methods: the four string queries returned empty text, and both identity predicates returned false for a valid named target. No model was opened or modified. Named/UNC comparisons are covered offline; broader native-version and named-model validation remains pending.
 
 These source signatures describe future ports; their supporting enums/models/services are not implied to be available already:
 
-- `void CloseCurrentStaadModel()`
-- `bool CloseWriteReopenStaadFile(string filePath, List<string> fileContents, int sleepTimeMilliseconds = 200, int maxTimeMilliseconds = 5000)`
 - `void MaximizeStaadMainWindow()`
 - `void MinimizeStaadMainWindow()`
 - `void RestoreStaadMainWindow()`

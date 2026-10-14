@@ -187,10 +187,13 @@ Inputs are snapshotted and validated before native access. The first two mutatio
 | `IOSRoot SaveModel(SilentMode silentMode)` | Sends validated code 0/1 to the native void save API and returns this adapter; no file-persistence verification. |
 | `IOSRoot CloseSTAADFile()` | Requests native model close once and returns this adapter; no explicit save, silent-mode change, application termination or close verification. |
 
-| `IOSRoot OpenSTAADFile(string filePath)` | Validated absolute path to one native open request; returns this adapter | Native dialogs apply; no readiness verification |
-| `IOSRoot ShowApplication()` | One native visibility request; returns this adapter | No model or visibility verification |
+| `IOSRoot OpenSTAADFile(string filePath)` | Validated absolute path to one native open request; returns this adapter; Native dialogs apply; no readiness verification |
+| `IOSRoot ShowApplication()` | One native visibility request; returns this adapter; No model or visibility verification |
 
-| `bool AwaitModelHandle(string fileFullPath, double timeoutDurationInSeconds = 60, double sleepIntervalInSeconds = 0.1)` | Poll exact normalized path with monotonic timeout | Blank is a nonmatch; no model opening |
-| `bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600)` | One open request then full-path polling; milliseconds interval, seconds limit | Timeout does not undo native opening |
+| `bool AwaitModelHandle(string fileFullPath, double timeoutDurationInSeconds = 60, double sleepIntervalInSeconds = 0.1)` | Poll exact normalized path with monotonic timeout; Blank is a nonmatch; no model opening |
+| `bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600)` | One open request then full-path polling; milliseconds interval, seconds limit; Timeout does not undo native opening |
 
-Filename/identity queries preserve empty native filenames and perform no native writes. The job getters validate all outputs and return editable managed snapshots; malformed dates throw. The unit setter changes native input-unit state and does not rescale managed values, save or roll back. Silent/save/close operations can mutate native state, write files or display dialogs; no rollback or verified unattended completion is provided. See [Root-Porting.md](Root-Porting.md) for complete native mappings, date/empty/error behavior, examples and the remaining 7 reference methods. Root coverage is 16 of 23 methods. Custom `IOSRoot` implementations must implement the added members.
+| `void CloseCurrentStaadModel()` | Read filename; if non-whitespace, enable silent mode and request close; Blank/whitespace skips mutation; no close verification |
+| `bool CloseWriteReopenStaadFile(string filePath, List<string> fileContents, int sleepTimeMilliseconds = 200, int maxTimeMilliseconds = 5000)` | Close matching target, await blank/unlocked state, atomically replace then request reopen; False for mismatch, wait expiry or intervening switch; partial effects possible |
+
+Filename/identity queries preserve empty native filenames and perform no native writes. The job getters validate all outputs and return editable managed snapshots; malformed dates throw. The unit setter changes native input-unit state and does not rescale managed values, save or roll back. Silent/save/close operations can mutate native state, write files or display dialogs; no rollback or verified unattended completion is provided. See [Root-Porting.md](Root-Porting.md) for complete native mappings, date/empty/error behavior, examples and the remaining 5 reference methods. Root coverage is 18 of 23 methods. Custom `IOSRoot` implementations must implement the added members.
