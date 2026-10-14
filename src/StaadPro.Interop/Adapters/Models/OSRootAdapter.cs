@@ -390,6 +390,62 @@ namespace StaadPro.Interop.Adapters.Models
             return this;
         }
 
+        /// <summary>Requests that the captured STAAD application open the specified model file.</summary>
+        /// <param name="filePath">Non-null, non-whitespace Windows model path, resolved to an absolute path before dispatch. Relative paths use the process working directory.</param>
+        /// <returns>This adapter after the native void OpenSTAADFile call returns without throwing; the return does not verify model identity or readiness.</returns>
+        /// <remarks>
+        /// <para>Validates and normalizes the path, then sends that full path as a string to exactly
+        /// one native call. Does not check file existence, create files, start another STAAD process,
+        /// query Geometry/Load, or wait for the requested model to become available.</para>
+        /// <para>The call can switch the current model and display native dialogs concerning unsaved
+        /// work or inaccessible files. No automatic save or rollback is supplied. Captured interfaces
+        /// can change validity after a model switch. Serialize access on the session's COM thread;
+        /// native calls can block on dialogs. Use a separate identity/readiness check when required.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">filePath is null; no native call occurs.</exception>
+        /// <exception cref="ArgumentException">filePath is empty, whitespace or invalid Windows path syntax.</exception>
+        /// <exception cref="NotSupportedException">The path uses an unsupported Windows format.</exception>
+        /// <exception cref="System.IO.PathTooLongException">The runtime rejects the path length.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native open fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible OpenSTAADFile signature.</exception>
+        /// <example><code>
+        /// root.OpenSTAADFile(@"C:\Models\Frame.v2.STD"); // native model-switch request
+        /// </code></example>
+        public IOSRoot OpenSTAADFile(string filePath)
+        {
+            string normalized = NormalizeRequestedModelPath(filePath, nameof(filePath));
+            ComObject.OpenSTAADFile(normalized);
+            return this;
+        }
+
+        /// <summary>Requests that the captured STAAD application become visible.</summary>
+        /// <returns>This root adapter after the native ShowApplication call returns without throwing; visibility and foreground focus are not independently verified.</returns>
+        /// <remarks>
+        /// <para>Calls ShowApplication once with no arguments and ignores any native return.
+        /// Does not launch another application, open/save/close a model, start analysis, or
+        /// explicitly maximize, restore or activate a window through Windows APIs.</para>
+        /// <para>Call on the session's appropriate COM thread and coordinate shared access.
+        /// Native failures propagate unchanged; no retry, timeout or rollback is supplied.
+        /// A successful dispatch does not certify that a model is ready for subsequent operations.</para>
+        /// </remarks>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native visibility request fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible ShowApplication signature.</exception>
+        /// <example><code>
+        /// root.ShowApplication();
+        /// </code></example>
+        public IOSRoot ShowApplication()
+        {
+            ComObject.ShowApplication();
+            return this;
+        }
+
+        private static string NormalizeRequestedModelPath(string path, string parameterName)
+        {
+            if (path == null) throw new ArgumentNullException(parameterName);
+            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("The model path must contain text.", parameterName);
+            return Path.GetFullPath(path);
+        }
+
         private static string CreateJobSentinel() => "<StaadPro.Interop.UnwrittenJobInfo." + Guid.NewGuid().ToString("N") + ">";
 
         private static string ReadJobText(object value, string field, string sentinel)

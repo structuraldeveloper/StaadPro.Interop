@@ -391,6 +391,8 @@ namespace StaadPro.Interop.Tests.Adapter
             public bool SetSilentMode(StaadPro.Interop.Enums.SilentMode silentMode) => throw new NotSupportedException();
             public IOSRoot SaveModel(StaadPro.Interop.Enums.SilentMode silentMode) => throw new NotSupportedException();
             public IOSRoot CloseSTAADFile() => throw new NotSupportedException();
+            public IOSRoot OpenSTAADFile(string filePath) => throw new NotSupportedException();
+            public IOSRoot ShowApplication() => throw new NotSupportedException();
         }
 
         private sealed class Once<T> : IEnumerable<T>

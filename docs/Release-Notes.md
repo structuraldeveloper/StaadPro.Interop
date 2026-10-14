@@ -1,5 +1,11 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261014.2 - 14 October 2026 (prepared)
+
+Added OpenSTAADFile and ShowApplication with matching main-project signatures and expanded IntelliSense. Open validates and resolves the requested path before one native model-switch request; show dispatches once without opening a model. Both return the original root after native dispatch and propagate exceptions, without readiness/visibility verification, automatic saves, retries or rollback.
+
+Root coverage is **14 of 23 methods**, with **9 pending**. Custom `IOSRoot` implementations must implement the new members. Validated **774 offline tests** and **133 installed-package XML examples**. Live native mutation/version validation remains pending; no public upload is claimed.
+
 ## 1.0.0-preview.20261014.1 - 14 October 2026 (root save/close batch, prepared)
 
 - Added main-project `SetSilentMode(SilentMode)`, `SaveModel(SilentMode)` and `CloseSTAADFile()` in the existing non-partial `IOSRoot`/`OSRootAdapter`, with matching complete XML IntelliSense and executable examples. Added documented `SilentMode.Disable=0` and `Enable=1`; reject undefined values before dispatch and pass native integer codes.

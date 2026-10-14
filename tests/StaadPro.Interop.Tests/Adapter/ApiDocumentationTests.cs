@@ -128,6 +128,8 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SetSilentMode", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SaveModel", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "CloseSTAADFile", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "OpenSTAADFile", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "ShowApplication", "root")]
         public void LoadAndRootPortHasMatchingCompleteExecutableIntelliSense(Type contractType, Type adapterType, string name, string receiver)
         {
             var xml = XDocument.Load(Path.ChangeExtension(contractType.Assembly.Location, ".xml"));
@@ -144,6 +146,7 @@ namespace StaadPro.Interop.Tests.Adapter
             Assert.That(contract.Elements("exception").All(e => !string.IsNullOrWhiteSpace(e.Value)), Is.True);
             if (name == "SetSilentMode") Assert.That(contract.Elements("exception").Count(), Is.EqualTo(1));
             else if (name == "CloseSTAADFile") Assert.That(contract.Elements("exception").Count(), Is.EqualTo(2));
+            else if (name == "ShowApplication") Assert.That(contract.Elements("exception").Count(), Is.EqualTo(2));
             else Assert.That(contract.Elements("exception").Count(), Is.GreaterThanOrEqualTo(3));
             }
         }

@@ -1,6 +1,6 @@
 # Root adapter implementation and porting progress
 
-The main project's `IOSRoot` exposes 23 methods. This repository now implements **twelve**, with **11 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
+The main project's `IOSRoot` exposes 23 methods. This repository now implements **14**, with **9 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
@@ -20,6 +20,9 @@ Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` a
 | `bool SetSilentMode(SilentMode silentMode)` | Validate code 0/1, then one native call; discard previous-state VARIANT | True for call completion, false for dispatch exception; no readiness check |
 | `IOSRoot SaveModel(SilentMode silentMode)` | Validate code 0/1, then one void native save call; return this adapter | Native handling/dialogs apply; no persistence verification |
 | `IOSRoot CloseSTAADFile()` | One void native close call; return this adapter | Native handling/dialogs apply; no close verification |
+
+| `IOSRoot OpenSTAADFile(string filePath)` | Validated absolute path to one native open request; returns this adapter | Native dialogs apply; no readiness verification |
+| `IOSRoot ShowApplication()` | One native visibility request; returns this adapter | No model or visibility verification |
 
 The six filename/identity methods are eager, read-only session queries. They do not launch STAAD, open/close/save a model, change activation or load lists, read analysis contents, create files, perform filesystem existence checks or start analysis. A licensed STAAD installation and a valid native root/session are required for real calls. Coordinate COM access on the session's appropriate thread; a managed binding does not establish readiness or thread safety.
 
@@ -158,6 +161,21 @@ root.CloseSTAADFile();
 
 Offline tests cover both codes, validation before dispatch, previous zero/one/null/Boolean results, native side effects on failure, exception/binder handling, exact single-call dispatch, fluent return identity, explicit save-then-close order and isolation between bindings. All **760 tests** pass, including 27 new cases. Matching interface/concrete XML documents all parameters, returns, side effects, exceptions and examples. The isolated installed-package verifier compiles and executes **129 XML examples**, including six additional examples for this batch and all 24 root examples, using managed native stand-ins; it does not save or close a customer STAAD model. Live native save/close and broader-version validation remain pending. Custom `IOSRoot` implementations must add these three methods, and consumers must rebuild.
 
+## Model opening and application visibility
+
+`OpenSTAADFile(string filePath)` preserves the main signature and delegates to one native void OpenSTAADFile call. Null throws `ArgumentNullException` naming `filePath`; empty/whitespace and invalid Windows syntax throw before native access. Relative paths are resolved with `Path.GetFullPath` once before dispatch, so native working-directory changes do not reinterpret the original relative input. File existence is not checked; no file or application process is created by the adapter. Native dialogs, model switching and unsaved work are STAAD's responsibility. No automatic save, retry or rollback is supplied. The fluent return does not establish identity or readiness, and captured model interfaces can become unusable after switching.
+
+`ShowApplication()` calls the captured root's visibility method once without arguments and returns the same adapter. It does not explicitly maximize/restore/focus the window, open a model or start STAAD. The native return is ignored; dispatch completion does not independently verify visibility. COM and missing-signature errors propagate for both methods. Serialize access on the correct COM thread; synchronous calls can block on dialogs.
+
+```csharp
+root.OpenSTAADFile(@"C:\Models\Frame.v2.STD");
+root.ShowApplication();
+```
+
+Tests cover full/relative/UNC/Unicode paths, input rejection before calls, exact dispatch, native exception identity, missing signatures and fluent return identity. Main-project signatures remain unchanged; path validation/normalization is an explicit improvement over unchecked input. The installed STAAD.Pro 2026 root reference documents OpenSTAADFile as void; ShowApplication remains late-bound to the reference's no-argument call.
+
+Validation: **774 offline tests** passed. Installed-package verification executes **133 XML examples**. Native mutation/version checks remain pending.
+
 ## Pending reference methods
 
 This batch adds normalized-path, complete-path comparison and BSTR-buffer regression coverage. Read-only native checks on the running **STAAD.Pro Advanced 2026 unnamed session** succeeded for all six root methods: the four string queries returned empty text, and both identity predicates returned false for a valid named target. No model was opened or modified. Named/UNC comparisons are covered offline; broader native-version and named-model validation remains pending.
@@ -172,8 +190,6 @@ These source signatures describe future ports; their supporting enums/models/ser
 - `bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600)`
 - `void RestoreStaadMainWindow()`
 - `HashSet<MemberForces> RetrieveMemberForces(IEnumerable<int> beams, IEnumerable<int> loadCases)`
-- `IOSRoot OpenSTAADFile(string filePath)`
-- `IOSRoot ShowApplication()`
 - `AnalysisResult AnalyzeEx(SilentMode silentMode, HiddenMode hiddenMode, WaitAnalysisMode waitMode)`
 
 ## Suggested next sequence

@@ -108,9 +108,10 @@ try {
         }
     }
     foreach ($owner in @('Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
-        foreach ($method in @('GetStaadFileFullPath', 'GetStaadFileNameOnly', 'GetAnlFileFullPath', 'GetOpenedStaadFilename', 'IsTarget', 'ModelIsOpen', 'GetShortJobInfo', 'GetFullJobInfo', 'SetInputUnitsEx', 'SetSilentMode', 'SaveModel', 'CloseSTAADFile')) {
-            $signature = if ($method -in @('IsTarget','ModelIsOpen')) { '(System.String)' } elseif ($method -eq 'SetInputUnitsEx') { '(StaadPro.Interop.Enums.LengthInputUnit,StaadPro.Interop.Enums.ForceInputUnit)' } elseif ($method -in @('SetSilentMode','SaveModel')) { '(StaadPro.Interop.Enums.SilentMode)' } else { '' }
-            $entry = @($xml.doc.members.member | Where-Object name -eq "M:StaadPro.Interop.$owner.$method$signature")
+        $rootEntries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+        foreach ($rootEntry in $rootEntries) {
+            $method = ($rootEntry.name.Split('(')[0]).Substring(("M:StaadPro.Interop.$owner.").Length)
+            $entry = @($rootEntry)
             if ($entry.Count -ne 1) { throw "Missing root IntelliSense: $owner.$method" }
             foreach ($tag in @('summary','returns','remarks','example/code')) {
                 $node = $entry[0].SelectSingleNode($tag)
@@ -122,7 +123,7 @@ try {
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 12 } else { 78 }
+        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 14 } else { 78 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -132,7 +133,7 @@ try {
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 129) { throw "Expected 129 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 133) { throw "Expected 133 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -364,7 +365,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: 129 packaged XML examples and complete geometry/load/root IntelliSense.");
+        Console.WriteLine("PASS: 133 packaged XML examples and complete geometry/load/root IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -386,6 +387,8 @@ __EXAMPLES__
         public object SetSilentMode(int flag) { int previous = SilentFlag; SilentFlag = flag; return previous; }
         public void SaveModel(int flag) { SaveFlag = flag; }
         public void CloseSTAADFile() { CloseCount++; }
+        public void OpenSTAADFile(string path) { Filename = path; }
+        public void ShowApplication() { }
         public void GetShortJobInfo(ref object name, ref object client, ref object engineer)
         {
             if (!(name is string) || !(client is string) || !(engineer is string)) throw new Exception("Expected BSTR job outputs.");
