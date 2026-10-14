@@ -1,5 +1,9 @@
 # StaadPro.Interop
 
+## Root main-window minimization and maximization
+
+Added MinimizeStaadMainWindow and MaximizeStaadMainWindow with matching void signatures and complete IntelliSense. Read supported integral native handle/process values, reject malformed or foreign windows and post the correct Windows state request. Accepted posting does not prove the final state or focus; identity checks are snapshots and handle-recycling races remain possible. No model mutation, process launch, retry or rollback occurs.
+
 ## Root conditional closing and controlled file replacement
 
 Added CloseCurrentStaadModel and CloseWriteReopenStaadFile with matching signatures and detailed IntelliSense. Conditional close skips explicit blank filenames and propagates errors. Rewrite validates/snapshots inputs, requires the current target, waits for blank identity and released locks, replaces complete UTF-8 contents atomically and avoids reopening over an intervening model. No save, backup, silent-state restoration, rollback or hard native deadline is supplied; false can follow native/file side effects.
@@ -52,13 +56,13 @@ Added append-only linear-varying and trapezoidal member population methods. Adde
 
 ## Load assignment queries
 
-The root port also includes `GetShortJobInfo()`, `GetFullJobInfo()` and `SetInputUnitsEx(LengthInputUnit, ForceInputUnit)`. The getters return standalone, editable `ShortJobInfo`/`FullJobInfo` snapshots, validating all native outputs and parsing dates using CurrentCulture; unspecified dates use DateTime.MinValue. The unit setter validates enum codes before changing native input-unit state. Full mappings, side effects, error contracts and examples are shipped in `docs/Root-Porting.md`. Root coverage is 18 methods, with 5 pending.
+The root port also includes `GetShortJobInfo()`, `GetFullJobInfo()` and `SetInputUnitsEx(LengthInputUnit, ForceInputUnit)`. The getters return standalone, editable `ShortJobInfo`/`FullJobInfo` snapshots, validating all native outputs and parsing dates using CurrentCulture; unspecified dates use DateTime.MinValue. The unit setter validates enum codes before changing native input-unit state. Full mappings, side effects, error contracts and examples are shipped in `docs/Root-Porting.md`. Root coverage is 20 methods, with 3 pending.
 
 `SetSilentMode(SilentMode)` sets application warning suppression: true means the native call completed, false means dispatch threw. It does not return the native previous setting. `SilentMode.Disable=0` and `Enable=1`; invalid casts throw before native access. `SaveModel(SilentMode)` and `CloseSTAADFile()` return the same root after native void calls and propagate native failures. They do not verify persistence/closing, provide rollback or guarantee dialog-free execution; close does not explicitly save changes or terminate STAAD. Both interface and adapter ship complete XML contracts and examples.
 
 New load mutations include `AddSelfweightInXYZTo(int, LoadCaseType, IEnumerable<int>, SelfWeightDirection, double)`, `CreateLoadEnvelopExt(int, LoadEnvelopType, IEnumerable<int>)` and `CreateLoadList(LoadListType, IEnumerable<int>)`. They snapshot/validate inputs before native calls and check each API's distinct success contract. Self-weight activates a primary/reference target; envelope creation and load-list selection do not activate a case. These are native mutations with no automatic save or rollback; see `docs/Load-Porting.md` for full contracts.
 
-`wrapper.Root` exposes `GetStaadFileFullPath()`, `GetStaadFileNameOnly()`, `GetAnlFileFullPath()`, `GetOpenedStaadFilename()`, `IsTarget(string)` and `ModelIsOpen(string)`. Each uses one native model-path read. Identity predicates validate and compare complete normalized paths with case-insensitive matching; equal basenames in different directories do not match. An explicitly unnamed session yields empty filename text and false identity results. The `.ANL` path does not prove file existence/current results. Matching interface/concrete IntelliSense and shipped `docs/Root-Porting.md` cover the six filename/identity methods and 5 pending reference root methods.
+`wrapper.Root` exposes `GetStaadFileFullPath()`, `GetStaadFileNameOnly()`, `GetAnlFileFullPath()`, `GetOpenedStaadFilename()`, `IsTarget(string)` and `ModelIsOpen(string)`. Each uses one native model-path read. Identity predicates validate and compare complete normalized paths with case-insensitive matching; equal basenames in different directories do not match. An explicitly unnamed session yields empty filename text and false identity results. The `.ANL` path does not prove file existence/current results. Matching interface/concrete IntelliSense and shipped `docs/Root-Porting.md` cover the six filename/identity methods and 3 pending reference root methods.
 
 The package exposes seven assignment read-back methods through `IOSLoad` and `OSLoadAdapter`:
 

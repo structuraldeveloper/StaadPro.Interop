@@ -14,6 +14,7 @@ namespace StaadPro.Interop.Adapters.Models
         private const string UnwrittenFileName = "<StaadPro.Interop.UnwrittenFilename>";
         private readonly Func<IRootPollingClock> pollingClockFactory;
         private readonly IRootModelFiles modelFiles;
+        private readonly IRootWindowApi windowApi;
         /// <summary>Initializes a root binding for the supplied OpenSTAAD automation object.</summary>
         /// <param name="openStaad">The non-null raw root object from the model session.</param>
         /// <remarks>The constructor captures the object and does not launch STAAD or validate model readiness.</remarks>
@@ -23,6 +24,7 @@ namespace StaadPro.Interop.Adapters.Models
             ComObject = openStaad ?? throw new ArgumentNullException(nameof(openStaad));
             pollingClockFactory = () => new RootPollingClock();
             modelFiles = new RootModelFiles();
+            windowApi = new RootWindowApi();
         }
 
         internal OSRootAdapter(object openStaad, Func<IRootPollingClock> clockFactory) : this(openStaad)
@@ -33,6 +35,11 @@ namespace StaadPro.Interop.Adapters.Models
         internal OSRootAdapter(object openStaad, Func<IRootPollingClock> clockFactory, IRootModelFiles files) : this(openStaad, clockFactory)
         {
             modelFiles = files ?? throw new ArgumentNullException(nameof(files));
+        }
+
+        internal OSRootAdapter(object openStaad, IRootWindowApi windows) : this(openStaad)
+        {
+            windowApi = windows ?? throw new ArgumentNullException(nameof(windows));
         }
 
         /// <summary>Gets the captured root OpenSTAAD automation object.</summary>
@@ -621,6 +628,56 @@ namespace StaadPro.Interop.Adapters.Models
             if (afterWrite.Length == 0) ComObject.OpenSTAADFile(target);
             else if (!string.Equals(afterWrite, target, StringComparison.OrdinalIgnoreCase)) return false;
             return true;
+        }
+
+        /// <summary>Requests minimizing the main window reported by this OpenSTAAD root after validating its process association.</summary>
+        /// <remarks>
+        /// <para>Reads GetMainWindowHandle and GetProcessId once each, accepts supported integral
+        /// native values, checks a nonzero pointer-sized handle, existing window and matching process,
+        /// then posts Windows ShowWindowAsync command 6. Rejects malformed, unavailable or foreign
+        /// windows before posting. No model opening/saving/closing or application launch occurs.</para>
+        /// <para>The void return means the state request was accepted, not that the final window
+        /// state, visibility or focus was observed. Uses asynchronous posting rather than blocking
+        /// ShowWindow. HWND/process identity checks are snapshots: windows can be destroyed/recycled
+        /// after validation. Native COM reads can still block. Use the correct COM thread and
+        /// coordinate UI/session access; no retries, rollback or completion timeout are provided.</para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">Native handle/process output is malformed, the window is absent/foreign or Windows does not accept the request.</exception>
+        /// <exception cref="PlatformNotSupportedException">The default window API is invoked outside Windows.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native handle or process lookup fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible handle/process API.</exception>
+        /// <example><code>
+        /// bool changeWindowState = false; // set true when an actual STAAD window should be changed
+        /// if (changeWindowState) root.MinimizeStaadMainWindow();
+        /// </code></example>
+        public void MinimizeStaadMainWindow()
+        {
+            RootWindowControl.Request(ComObject.GetMainWindowHandle(), ComObject.GetProcessId(), 6, windowApi);
+        }
+
+        /// <summary>Requests maximizing the main window reported by this OpenSTAAD root after validating its process association.</summary>
+        /// <remarks>
+        /// <para>Reads GetMainWindowHandle and GetProcessId once each, accepts supported integral
+        /// native values, checks a nonzero pointer-sized handle, existing window and matching process,
+        /// then posts Windows ShowWindowAsync command 3. Rejects malformed, unavailable or foreign
+        /// windows before posting. No model opening/saving/closing or application launch occurs.</para>
+        /// <para>The void return means the state request was accepted, not that the final window
+        /// state, visibility or focus was observed. Uses asynchronous posting rather than blocking
+        /// ShowWindow. HWND/process identity checks are snapshots: windows can be destroyed/recycled
+        /// after validation. Native COM reads can still block. Use the correct COM thread and
+        /// coordinate UI/session access; no retries, rollback or completion timeout are provided.</para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">Native handle/process output is malformed, the window is absent/foreign or Windows does not accept the request.</exception>
+        /// <exception cref="PlatformNotSupportedException">The default window API is invoked outside Windows.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native handle or process lookup fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible handle/process API.</exception>
+        /// <example><code>
+        /// bool changeWindowState = false; // set true when an actual STAAD window should be changed
+        /// if (changeWindowState) root.MaximizeStaadMainWindow();
+        /// </code></example>
+        public void MaximizeStaadMainWindow()
+        {
+            RootWindowControl.Request(ComObject.GetMainWindowHandle(), ComObject.GetProcessId(), 3, windowApi);
         }
 
         private static string NormalizeRequestedModelPath(string path, string parameterName)

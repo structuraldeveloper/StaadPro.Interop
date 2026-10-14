@@ -397,6 +397,8 @@ namespace StaadPro.Interop.Tests.Adapter
             public bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600) => throw new NotSupportedException();
             public void CloseCurrentStaadModel() => throw new NotSupportedException();
             public bool CloseWriteReopenStaadFile(string filePath, List<string> fileContents, int sleepTimeMilliseconds = 200, int maxTimeMilliseconds = 5000) => throw new NotSupportedException();
+            public void MinimizeStaadMainWindow() => throw new NotSupportedException();
+            public void MaximizeStaadMainWindow() => throw new NotSupportedException();
         }
 
         private sealed class Once<T> : IEnumerable<T>

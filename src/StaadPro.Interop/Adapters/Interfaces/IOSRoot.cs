@@ -5,8 +5,8 @@ using StaadPro.Interop.Models;
 
 namespace StaadPro.Interop.Adapters.Interfaces
 {
-    /// <summary>Exposes the model-specific OpenSTAAD root binding, filenames, identity, job metadata, input units and save/close operations.</summary>
-    /// <remarks>The root port includes read-only filename/identity/job queries and native input-unit, silent-mode, save and close operations. Other IOSRoot operations are ported separately.
+    /// <summary>Exposes OpenSTAAD model identity, metadata, units, file lifecycle, polling and application-window operations.</summary>
+    /// <remarks>Combines read-only queries with explicit native model/file and window mutations. Other IOSRoot operations are ported separately.
     /// Native access uses runtime dispatch and requires an undisposed connection on the correct COM thread.</remarks>
     public interface IOSRoot
     {
@@ -461,5 +461,49 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// Console.WriteLine(requested); // explicit file replacement; no reopen-readiness guarantee
         /// </code></example>
         bool CloseWriteReopenStaadFile(string filePath, List<string> fileContents, int sleepTimeMilliseconds = 200, int maxTimeMilliseconds = 5000);
+
+        /// <summary>Requests minimizing the main window reported by this OpenSTAAD root after validating its process association.</summary>
+        /// <remarks>
+        /// <para>Reads GetMainWindowHandle and GetProcessId once each, accepts supported integral
+        /// native values, checks a nonzero pointer-sized handle, existing window and matching process,
+        /// then posts Windows ShowWindowAsync command 6. Rejects malformed, unavailable or foreign
+        /// windows before posting. No model opening/saving/closing or application launch occurs.</para>
+        /// <para>The void return means the state request was accepted, not that the final window
+        /// state, visibility or focus was observed. Uses asynchronous posting rather than blocking
+        /// ShowWindow. HWND/process identity checks are snapshots: windows can be destroyed/recycled
+        /// after validation. Native COM reads can still block. Use the correct COM thread and
+        /// coordinate UI/session access; no retries, rollback or completion timeout are provided.</para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">Native handle/process output is malformed, the window is absent/foreign or Windows does not accept the request.</exception>
+        /// <exception cref="PlatformNotSupportedException">The default window API is invoked outside Windows.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native handle or process lookup fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible handle/process API.</exception>
+        /// <example><code>
+        /// bool changeWindowState = false; // set true when an actual STAAD window should be changed
+        /// if (changeWindowState) root.MinimizeStaadMainWindow();
+        /// </code></example>
+        void MinimizeStaadMainWindow();
+
+        /// <summary>Requests maximizing the main window reported by this OpenSTAAD root after validating its process association.</summary>
+        /// <remarks>
+        /// <para>Reads GetMainWindowHandle and GetProcessId once each, accepts supported integral
+        /// native values, checks a nonzero pointer-sized handle, existing window and matching process,
+        /// then posts Windows ShowWindowAsync command 3. Rejects malformed, unavailable or foreign
+        /// windows before posting. No model opening/saving/closing or application launch occurs.</para>
+        /// <para>The void return means the state request was accepted, not that the final window
+        /// state, visibility or focus was observed. Uses asynchronous posting rather than blocking
+        /// ShowWindow. HWND/process identity checks are snapshots: windows can be destroyed/recycled
+        /// after validation. Native COM reads can still block. Use the correct COM thread and
+        /// coordinate UI/session access; no retries, rollback or completion timeout are provided.</para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">Native handle/process output is malformed, the window is absent/foreign or Windows does not accept the request.</exception>
+        /// <exception cref="PlatformNotSupportedException">The default window API is invoked outside Windows.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native handle or process lookup fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible handle/process API.</exception>
+        /// <example><code>
+        /// bool changeWindowState = false; // set true when an actual STAAD window should be changed
+        /// if (changeWindowState) root.MaximizeStaadMainWindow();
+        /// </code></example>
+        void MaximizeStaadMainWindow();
     }
 }

@@ -1,6 +1,6 @@
 # Root adapter implementation and porting progress
 
-The main project's `IOSRoot` exposes 23 methods. This repository now implements **18**, with **5 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
+The main project's `IOSRoot` exposes 23 methods. This repository now implements **20**, with **3 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
@@ -29,6 +29,9 @@ Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` a
 
 | `void CloseCurrentStaadModel()` | Read filename; if non-whitespace, enable silent mode and request close | Blank/whitespace skips mutation; no close verification |
 | `bool CloseWriteReopenStaadFile(string filePath, List<string> fileContents, int sleepTimeMilliseconds = 200, int maxTimeMilliseconds = 5000)` | Close matching target, await blank/unlocked state, atomically replace then request reopen | False for mismatch, wait expiry or intervening switch; partial effects possible |
+
+| `void MinimizeStaadMainWindow()` | Validate native window/PID then post ShowWindowAsync command 6 | No model mutation or final-state verification |
+| `void MaximizeStaadMainWindow()` | Validate native window/PID then post ShowWindowAsync command 3 | No model mutation or final-state verification |
 
 The six filename/identity methods are eager, read-only session queries. They do not launch STAAD, open/close/save a model, change activation or load lists, read analysis contents, create files, perform filesystem existence checks or start analysis. A licensed STAAD installation and a valid native root/session are required for real calls. Coordinate COM access on the session's appropriate thread; a managed binding does not establish readiness or thread safety.
 
@@ -222,14 +225,29 @@ Tests cover call ordering, blank/nonmatching models, argument validation, line s
 
 Validation: **841 offline tests** passed. Installed-package verification executes **141 XML examples**. Native mutation/version checks remain pending.
 
+## Main-window minimization and maximization
+
+`MinimizeStaadMainWindow()` and `MaximizeStaadMainWindow()` preserve the reference's no-argument void signatures. Both read the captured root's native GetMainWindowHandle and GetProcessId once. Supported signed/unsigned CLR integer values and IntPtr handles are accepted within pointer-size limits; null, Boolean, floating-point/string, zero/sentinel handle and invalid process outputs throw InvalidOperationException. No model path or Geometry/Load query is issued.
+
+A standalone internal window service checks that the window exists and its owning process matches the root-reported PID, then posts ShowWindowAsync command 6 (minimize) or 3 (maximize). A rejected request throws without inventing a last-error value. Accepted posting means the operation started, not that the final state or focus was observed. Unlike the main helper's blocking ShowWindow call, asynchronous posting avoids waiting for another application's show-state processing. Native COM identity reads can still block. No retry, rollback, model mutation, application launch or completion wait is provided. See Microsoft's [ShowWindowAsync contract](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindowasync).
+
+Identity checks are snapshots, not a permanent ownership guarantee. Windows handles can be destroyed and recycled after validation, so UI/session coordination is still required; see Microsoft's [IsWindow race guidance](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindow). Calls must use the appropriate COM thread. Windows APIs require an interactive Windows session with appropriate privileges; accepted posting does not override native UI restrictions.
+
+```csharp
+root.MinimizeStaadMainWindow();
+root.MaximizeStaadMainWindow();
+```
+
+Managed tests inject a fake window API to verify codes, handle representations, PID association, absent/foreign/malformed windows, rejected posts and original COM/binding failures. Tests do not change customer windows. The four new installed-package XML examples are compiled with window mutations guarded off; their real UI branches are deliberately not invoked by package verification. Live window-state and broader-version validation remain pending.
+
+Validation: **868 offline tests** passed. Installed-package verification checks **145 XML example blocks**. Native mutation/version checks remain pending.
+
 ## Pending reference methods
 
 This batch adds normalized-path, complete-path comparison and BSTR-buffer regression coverage. Read-only native checks on the running **STAAD.Pro Advanced 2026 unnamed session** succeeded for all six root methods: the four string queries returned empty text, and both identity predicates returned false for a valid named target. No model was opened or modified. Named/UNC comparisons are covered offline; broader native-version and named-model validation remains pending.
 
 These source signatures describe future ports; their supporting enums/models/services are not implied to be available already:
 
-- `void MaximizeStaadMainWindow()`
-- `void MinimizeStaadMainWindow()`
 - `void RestoreStaadMainWindow()`
 - `HashSet<MemberForces> RetrieveMemberForces(IEnumerable<int> beams, IEnumerable<int> loadCases)`
 - `AnalysisResult AnalyzeEx(SilentMode silentMode, HiddenMode hiddenMode, WaitAnalysisMode waitMode)`

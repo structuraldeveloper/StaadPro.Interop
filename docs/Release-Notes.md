@@ -1,5 +1,11 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261014.5 - 14 October 2026 (prepared)
+
+Added MinimizeStaadMainWindow and MaximizeStaadMainWindow with matching void signatures and complete IntelliSense. Read supported integral native handle/process values, reject malformed or foreign windows and post the correct Windows state request. Accepted posting does not prove the final state or focus; identity checks are snapshots and handle-recycling races remain possible. No model mutation, process launch, retry or rollback occurs.
+
+Root coverage is **20 of 23 methods**, with **3 pending**. Custom `IOSRoot` implementations must implement the new members. Validated **868 offline tests** and **145 installed-package XML examples**. Live native mutation/version validation remains pending; no public upload is claimed.
+
 ## 1.0.0-preview.20261014.4 - 14 October 2026 (prepared)
 
 Added CloseCurrentStaadModel and CloseWriteReopenStaadFile with matching signatures and detailed IntelliSense. Conditional close skips explicit blank filenames and propagates errors. Rewrite validates/snapshots inputs, requires the current target, waits for blank identity and released locks, replaces complete UTF-8 contents atomically and avoids reopening over an intervening model. No save, backup, silent-state restoration, rollback or hard native deadline is supplied; false can follow native/file side effects.
