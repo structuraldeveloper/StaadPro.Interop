@@ -136,6 +136,8 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "CloseWriteReopenStaadFile", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "MinimizeStaadMainWindow", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "MaximizeStaadMainWindow", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "RestoreStaadMainWindow", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "AnalyzeEx", "root")]
         public void LoadAndRootPortHasMatchingCompleteExecutableIntelliSense(Type contractType, Type adapterType, string name, string receiver)
         {
             var xml = XDocument.Load(Path.ChangeExtension(contractType.Assembly.Location, ".xml"));
@@ -160,6 +162,9 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("SelfWeightDirection", 4)]
         [TestCase("LoadListType", 3)]
         [TestCase("SilentMode", 3)]
+        [TestCase("HiddenMode", 3)]
+        [TestCase("WaitAnalysisMode", 3)]
+        [TestCase("AnalysisResult", 8)]
         public void NativeSelectionEnumsHaveDocumentedTypesAndAllValues(string typeName, int count)
         {
             var xml = XDocument.Load(Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml"));

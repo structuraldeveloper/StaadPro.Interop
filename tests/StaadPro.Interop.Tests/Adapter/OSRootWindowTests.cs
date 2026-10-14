@@ -99,5 +99,29 @@ namespace StaadPro.Interop.Tests.Adapter
         {
             if (minimize) root.MinimizeStaadMainWindow(); else root.MaximizeStaadMainWindow();
         }
+
+        [Test]
+        public void RestorePostsCommandNineAfterMatchingWindowIdentity()
+        {
+            var native = new NativeRoot(); var windows = new Windows();
+            new OSRootAdapter(native, windows).RestoreStaadMainWindow();
+            Assert.That(native.Calls, Is.EqualTo(new[] { "handle", "process" }));
+            Assert.That(windows.Calls, Is.EqualTo(new[] { "validate", "owner", "post" }));
+            Assert.That(windows.Command, Is.EqualTo(9));
+        }
+        [Test]
+        public void RestoreRejectsForeignWindowBeforePosting()
+        {
+            var windows = new Windows { Process = 77 };
+            Assert.Throws<InvalidOperationException>(() => new OSRootAdapter(new NativeRoot(), windows).RestoreStaadMainWindow());
+            Assert.That(windows.Calls, Does.Not.Contain("post"));
+        }
+        [Test]
+        public void RestorePropagatesNativeLookupFailureWithoutChangingWindow()
+        {
+            var native = new NativeRoot { FailAt = "handle" }; var windows = new Windows();
+            Assert.That(Assert.Throws<COMException>(() => new OSRootAdapter(native, windows).RestoreStaadMainWindow()), Is.SameAs(native.Failure));
+            Assert.That(windows.Calls, Is.Empty);
+        }
     }
 }

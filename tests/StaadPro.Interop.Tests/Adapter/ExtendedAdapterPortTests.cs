@@ -399,6 +399,8 @@ namespace StaadPro.Interop.Tests.Adapter
             public bool CloseWriteReopenStaadFile(string filePath, List<string> fileContents, int sleepTimeMilliseconds = 200, int maxTimeMilliseconds = 5000) => throw new NotSupportedException();
             public void MinimizeStaadMainWindow() => throw new NotSupportedException();
             public void MaximizeStaadMainWindow() => throw new NotSupportedException();
+            public void RestoreStaadMainWindow() => throw new NotSupportedException();
+            public StaadPro.Interop.Enums.AnalysisResult AnalyzeEx(StaadPro.Interop.Enums.SilentMode silentMode, StaadPro.Interop.Enums.HiddenMode hiddenMode, StaadPro.Interop.Enums.WaitAnalysisMode waitMode) => throw new NotSupportedException();
         }
 
         private sealed class Once<T> : IEnumerable<T>

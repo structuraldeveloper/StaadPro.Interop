@@ -1,6 +1,6 @@
 # Root adapter implementation and porting progress
 
-The main project's `IOSRoot` exposes 23 methods. This repository now implements **20**, with **3 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
+The main project's `IOSRoot` exposes 23 methods. This repository now implements **22**, with **1 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
@@ -32,6 +32,9 @@ Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` a
 
 | `void MinimizeStaadMainWindow()` | Validate native window/PID then post ShowWindowAsync command 6 | No model mutation or final-state verification |
 | `void MaximizeStaadMainWindow()` | Validate native window/PID then post ShowWindowAsync command 3 | No model mutation or final-state verification |
+
+| `void RestoreStaadMainWindow()` | Validate native window/PID and post ShowWindowAsync command 9 | Accepted request does not verify final state |
+| `AnalysisResult AnalyzeEx(SilentMode silentMode, HiddenMode hiddenMode, WaitAnalysisMode waitMode)` | Validate/send native silent, hidden, wait codes; preserve integer analysis status | Starts native analysis; wait mode can block |
 
 The six filename/identity methods are eager, read-only session queries. They do not launch STAAD, open/close/save a model, change activation or load lists, read analysis contents, create files, perform filesystem existence checks or start analysis. A licensed STAAD installation and a valid native root/session are required for real calls. Coordinate COM access on the session's appropriate thread; a managed binding does not establish readiness or thread safety.
 
@@ -242,16 +245,51 @@ Managed tests inject a fake window API to verify codes, handle representations, 
 
 Validation: **868 offline tests** passed. Installed-package verification checks **145 XML example blocks**. Native mutation/version checks remain pending.
 
+## Window restoration and native analysis requests
+
+`RestoreStaadMainWindow()` uses the same validated internal window service as minimize/maximize, posting ShowWindowAsync command 9 after one native handle/PID read and a matching owner check. It preserves the main project's void signature. Accepted posting does not certify restored state or focus, and handle-recycling/UI races remain possible. Native/window failures propagate; there is no model mutation, process launch or completion wait. The same [Microsoft show-state contract](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindowasync) and [handle-lifetime caveat](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindow) apply.
+
+`AnalyzeEx(SilentMode, HiddenMode, WaitAnalysisMode)` validates all enum values before one native AnalyzeEx call, passing integer silent, hidden and wait codes in that exact order. No pre-save, filename/readiness query, extra application SetSilentMode call, result-file retrieval, retry, rollback or managed timeout/cancellation is supplied. It requests real analysis of the current model and can generate/change output files or display native dialogs. Hidden and silent options are not a guarantee of unattended execution. Wait mode can block until the engine completes; Return mode does not mean analysis finished. Coordinate all operations on the correct COM thread.
+
+| Enum | Codes |
+| --- | --- |
+| SilentMode | Disable=0, Enable=1 |
+| HiddenMode | Disable=0 displays engine dialog, Enable=1 requests hiding it |
+| WaitAnalysisMode | Return=0 requests returning without completion waiting, Wait=1 requests native waiting |
+
+The installed STAAD.Pro 2026 root reference documents a native LONG analysis result:
+
+| AnalysisResult | Code |
+| --- | --- |
+| Terminated | -1 |
+| GeneralError | 0 |
+| InProgress | 1 |
+| CompletedSuccessfully | 2 |
+| CompletedWithWarnings | 3 |
+| CompletedWithErrors | 4 |
+| NotPerformed | 5 |
+
+These statuses are returned without turning native error/in-progress codes into exceptions. Unknown Int32 codes are preserved as undefined enum values, retaining the reference's numeric information; callers must inspect them rather than assume success. Only supported CLR integer values within Int32 range are accepted. Null, Boolean, floating-point, decimal/string responses or oversized integers throw InvalidOperationException after the request; the analysis side effect is not undone. Undefined input flags throw ArgumentOutOfRangeException before dispatch. COM and missing-signature exceptions propagate unchanged.
+
+```csharp
+root.RestoreStaadMainWindow(); // explicit UI-state request
+AnalysisResult status = root.AnalyzeEx(SilentMode.Enable, HiddenMode.Enable, WaitAnalysisMode.Wait);
+if (status == AnalysisResult.CompletedSuccessfully) Console.WriteLine("Analysis reported success");
+else Console.WriteLine("Inspect native status: " + status);
+```
+
+Managed tests cover all eight flag combinations, every documented status, unknown integers, supported integer representations, rejected types/ranges, invalid inputs and original native failures. Restore tests verify command 9, foreign-window rejection and lookup-error propagation. The installed consumer uses a managed AnalyzeEx stand-in; all six window-example UI branches are guarded off. No customer analysis or window change is performed. Live engine/file/window behavior and broader-version validation remain pending.
+
+Validation: **914 offline tests** passed. Installed-package verification checks **149 XML example blocks**. Native mutation/version checks remain pending.
+
 ## Pending reference methods
 
-This batch adds normalized-path, complete-path comparison and BSTR-buffer regression coverage. Read-only native checks on the running **STAAD.Pro Advanced 2026 unnamed session** succeeded for all six root methods: the four string queries returned empty text, and both identity predicates returned false for a valid named target. No model was opened or modified. Named/UNC comparisons are covered offline; broader native-version and named-model validation remains pending.
+Earlier filename/identity work added normalized-path, complete-path comparison and BSTR-buffer regression coverage. Its read-only native checks on the running **STAAD.Pro Advanced 2026 unnamed session** succeeded for all six filename/identity methods: the four string queries returned empty text, and both identity predicates returned false for a valid named target. No model was opened or modified. These observations do not certify native save/open/close, window or analysis operations. Broader native-version validation remains pending.
 
 These source signatures describe future ports; their supporting enums/models/services are not implied to be available already:
 
-- `void RestoreStaadMainWindow()`
 - `HashSet<MemberForces> RetrieveMemberForces(IEnumerable<int> beams, IEnumerable<int> loadCases)`
-- `AnalysisResult AnalyzeEx(SilentMode silentMode, HiddenMode hiddenMode, WaitAnalysisMode waitMode)`
 
 ## Suggested next sequence
 
-Port open/wait handling next, followed by higher-level close/write/reopen coordination, window control through a standalone helper, and analysis/results retrieval with their required models. Each batch should include matching interface/adapter XML, input/native-contract tests and installed-package examples before making public compatibility claims.
+Port `RetrieveMemberForces` after establishing the required output adapter contracts and standalone member-force models. Keep result availability, end-force mapping, load titles, enumerable validation and native-unit conventions explicit. Validate native mutation/window/analysis behavior on controlled models before making broader version or production-readiness claims.

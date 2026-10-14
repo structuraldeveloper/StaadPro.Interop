@@ -1,5 +1,11 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261014.6 - 14 October 2026 (prepared)
+
+Added RestoreStaadMainWindow and AnalyzeEx with matching signatures and complete IntelliSense. Restore validates the reported window/PID before posting command 9. Analysis validates three native flags before one call, preserves documented error/in-progress/completion codes and unknown Int32 codes, and rejects unsupported status types or ranges. Added HiddenMode, WaitAnalysisMode and AnalysisResult; no pre-save, extra silent-mode mutation, result-file retrieval, retry, rollback or managed analysis timeout occurs.
+
+Root coverage is **22 of 23 methods**, with **1 pending**. Custom `IOSRoot` implementations must implement the new members. Validated **914 offline tests** and **149 installed-package XML examples**. Live native mutation/version validation remains pending; no public upload is claimed.
+
 ## 1.0.0-preview.20261014.5 - 14 October 2026 (prepared)
 
 Added MinimizeStaadMainWindow and MaximizeStaadMainWindow with matching void signatures and complete IntelliSense. Read supported integral native handle/process values, reject malformed or foreign windows and post the correct Windows state request. Accepted posting does not prove the final state or focus; identity checks are snapshots and handle-recycling races remain possible. No model mutation, process launch, retry or rollback occurs.

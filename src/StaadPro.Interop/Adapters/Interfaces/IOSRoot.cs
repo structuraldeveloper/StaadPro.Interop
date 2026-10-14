@@ -5,7 +5,7 @@ using StaadPro.Interop.Models;
 
 namespace StaadPro.Interop.Adapters.Interfaces
 {
-    /// <summary>Exposes OpenSTAAD model identity, metadata, units, file lifecycle, polling and application-window operations.</summary>
+    /// <summary>Exposes OpenSTAAD model identity, metadata, units, file lifecycle, polling, application-window control and analysis requests.</summary>
     /// <remarks>Combines read-only queries with explicit native model/file and window mutations. Other IOSRoot operations are ported separately.
     /// Native access uses runtime dispatch and requires an undisposed connection on the correct COM thread.</remarks>
     public interface IOSRoot
@@ -505,5 +505,51 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// if (changeWindowState) root.MaximizeStaadMainWindow();
         /// </code></example>
         void MaximizeStaadMainWindow();
+
+        /// <summary>Requests restoring the main window reported by this root after validating its process association.</summary>
+        /// <remarks>
+        /// <para>Reads native GetMainWindowHandle and GetProcessId once each, validates supported
+        /// integral/pointer values and matching window ownership, then posts ShowWindowAsync command
+        /// 9. An absent, malformed or foreign window is rejected before posting. No model is changed.</para>
+        /// <para>The void return means the restore request was accepted, not that normal window state
+        /// or focus was observed. HWND/PID checks are snapshots and handles can be destroyed/recycled
+        /// after checking. Native identity reads may block. Coordinate UI/session access on the correct
+        /// COM thread; no launch, retry, rollback or completion timeout is provided.</para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">Handle/process output is malformed, the window is absent/foreign or Windows rejects the request.</exception>
+        /// <exception cref="PlatformNotSupportedException">The default window API is invoked outside Windows.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native window/process lookup fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible handle/process API.</exception>
+        /// <example><code>
+        /// bool changeWindowState = false; // set true when an actual STAAD window should be changed
+        /// if (changeWindowState) root.RestoreStaadMainWindow();
+        /// </code></example>
+        void RestoreStaadMainWindow();
+
+        /// <summary>Requests analysis of the currently opened STAAD model with explicit engine-dialog and waiting options.</summary>
+        /// <param name="silentMode">Defined SilentMode code 0/1 controlling supported engine warnings; no separate application SetSilentMode call is made.</param>
+        /// <param name="hiddenMode">Defined HiddenMode code 0/1 controlling the analysis-engine dialog.</param>
+        /// <param name="waitMode">Defined WaitAnalysisMode: Return=0 requests immediate return; Wait=1 requests native completion waiting.</param>
+        /// <returns>The native integer analysis status as AnalysisResult: -1 terminated, 0 general error, 1 in progress, 2 completed successfully, 3 warnings, 4 errors or 5 not performed. Unrecognized Int32 codes are preserved as undefined enum values.</returns>
+        /// <remarks>
+        /// <para>Validates all flags before one AnalyzeEx call with integer silent/hidden/wait codes
+        /// in that order. Accepts only supported CLR integer status values within Int32 range; null,
+        /// Boolean, floating-point, decimal and string responses throw rather than being coerced
+        /// into success. Defined native failure/in-progress codes are returned, not converted to exceptions.</para>
+        /// <para>This starts native analysis and may generate/change analysis output files and display
+        /// dialogs. No managed pre-save, target/readiness check, extra SetSilentMode call, result-file
+        /// retrieval, retry, cancellation, timeout or rollback is supplied. Return mode does not mean
+        /// completion; wait mode can block. Silent/hidden flags do not guarantee unattended execution.
+        /// Serialize calls on the correct COM thread and explicitly inspect the returned status.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException">Any flag is undefined; rejected before analysis dispatch.</exception>
+        /// <exception cref="InvalidOperationException">Native status is not a supported integer or cannot fit Int32.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native analysis dispatch fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible AnalyzeEx signature.</exception>
+        /// <example><code>
+        /// AnalysisResult status = root.AnalyzeEx(SilentMode.Enable, HiddenMode.Enable, WaitAnalysisMode.Wait);
+        /// Console.WriteLine(status); // inspect errors/warnings; this requests real analysis
+        /// </code></example>
+        AnalysisResult AnalyzeEx(SilentMode silentMode, HiddenMode hiddenMode, WaitAnalysisMode waitMode);
     }
 }
