@@ -41,9 +41,13 @@ try {
     if ($metadata.repository.url -ne 'https://github.com/structuraldeveloper/StaadPro.Interop') { throw 'Missing repository metadata.' }
     if ([string]$metadata.authors -ne 'Srinivasa Rao Masanam') { throw 'Incorrect package author.' }
     if ([string]$metadata.copyright -ne 'Copyright (c) 2026 StaadDev') { throw 'Incorrect package copyright.' }
-    if ([string]::IsNullOrWhiteSpace([string]$metadata.releaseNotes) -or [string]$metadata.releaseNotes -notmatch 'GetLoadCases|inclusive ID ranges') { throw 'Missing load-query release notes in package metadata.' }
+    if ([string]$metadata.description -ne 'A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD') { throw 'Incorrect package description.' }
+    if ([string]::IsNullOrWhiteSpace([string]$metadata.releaseNotes)) { throw 'Missing release notes in package metadata.' }
     if ($releaseNotes -notmatch '1.0.0-preview.20261012' -or $releaseNotes -notmatch 'Srinivasa Rao Masanam' -or $releaseNotes -notmatch 'GetLoadCasesFromIds') { throw 'Incomplete packaged release notes.' }
     $version = [string]$metadata.version
+    $readmeVersion = [regex]::Match($readme, '(?m)^## Version ([^\r\n]+)').Groups[1].Value.Trim()
+    $releaseVersion = [regex]::Match($releaseNotes, '(?m)^## ([^ \r\n]+)').Groups[1].Value
+    if ($readmeVersion -ne $version -or $releaseVersion -ne $version) { throw 'Packaged README/release-note versions do not match the archive.' }
     $snippets = @()
     foreach ($owner in @('Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         foreach ($method in $queryMethods) {

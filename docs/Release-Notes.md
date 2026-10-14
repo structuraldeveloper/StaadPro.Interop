@@ -1,5 +1,17 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261014.7 - 14 October 2026 (preview)
+
+This maintenance release improves the package metadata and documentation. The runtime API is unchanged from `1.0.0-preview.20261014.6`.
+
+- Set the package description to **A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD**.
+- Reorganized the package README into a current product overview, installation instructions, API reference links and operating guidance. Removed internal implementation-history headings and corrected the documented preview version.
+- Synchronized the package release notes, README and publishing instructions. Added version checks during packaging so distribution archives require a matching, reviewed documentation entry; automated CI previews receive their actual version in the packaged documents.
+
+The package includes geometry and load operations, model identity and lifecycle functions, application-window controls, and typed native analysis requests. Expanded XML IntelliSense accompanies the library. The existing implementation passed **914 offline tests**; installed-package verification checks **149 XML example blocks**, including managed runtime checks and guarded window examples.
+
+Targets Windows and .NET Framework 4.8.1 (`net481`). Native save/open/close, analysis-engine behavior and compatibility across STAAD releases require further validation before a stable release. This entry describes the prepared archive; public availability depends on NuGet.org acceptance and validation.
+
 ## 1.0.0-preview.20261014.6 - 14 October 2026 (prepared)
 
 Added RestoreStaadMainWindow and AnalyzeEx with matching signatures and complete IntelliSense. Restore validates the reported window/PID before posting command 9. Analysis validates three native flags before one call, preserves documented error/in-progress/completion codes and unknown Int32 codes, and rejects unsupported status types or ranges. Added HiddenMode, WaitAnalysisMode and AnalysisResult; no pre-save, extra silent-mode mutation, result-file retrieval, retry, rollback or managed analysis timeout occurs.

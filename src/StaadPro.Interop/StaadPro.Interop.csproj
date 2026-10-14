@@ -12,10 +12,12 @@
     <RootNamespace>StaadPro.Interop</RootNamespace>
     <PackageId>StaadPro.Interop</PackageId>
     <Version>1.0.0</Version>
+    <ReleaseDocumentationVersion>1.0.0-preview.20261014.7</ReleaseDocumentationVersion>
+    <PackageVersion>$(ReleaseDocumentationVersion)</PackageVersion>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 StaadDev</Copyright>
-    <PackageReleaseNotes>Added RestoreStaadMainWindow and AnalyzeEx with matching signatures and complete IntelliSense. Restore validates the reported window/PID before posting command 9. Analysis validates three native flags before one call, preserves documented error/in-progress/completion codes and unknown Int32 codes, and rejects unsupported status types or ranges. Added HiddenMode, WaitAnalysisMode and AnalysisResult; no pre-save, extra silent-mode mutation, result-file retrieval, retry, rollback or managed analysis timeout occurs. Root coverage is 22 of 23 methods. Retains GetLoadCases and existing geometry/load APIs. Validated offline tests and installed-package examples; live native mutation/version validation remains pending. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
-    <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD geometry and load operations.</Description>
+    <PackageReleaseNotes>Updated the package description and publication documentation. Reorganized the README with current installation instructions, API coverage, runtime requirements and usage guidance. Retained geometry and load APIs, including GetLoadCases, together with model lifecycle, window control and typed analysis operations. Included XML IntelliSense and shipped API guides. The runtime API is unchanged from 1.0.0-preview.20261014.6. Validated the existing 914-test implementation and 149 installed-package XML example blocks; native compatibility validation remains in progress. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
     <RepositoryType>git</RepositoryType>
@@ -42,14 +44,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\docs\NuGet-README.md" Pack="true" PackagePath="README.md" />
+    <None Include="$(BaseIntermediateOutputPath)package-docs\README.md" Pack="true" PackagePath="README.md" />
     <None Include="..\..\docs\Load-Queries.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Geometry-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Load-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Installation.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Publishing.md" Pack="true" PackagePath="docs\" />
-    <None Include="..\..\docs\Release-Notes.md" Pack="true" PackagePath="docs\" />
+    <None Include="$(BaseIntermediateOutputPath)package-docs\Release-Notes.md" Pack="true" PackagePath="docs\" />
   </ItemGroup>
+
+  <Target Name="PreparePackageDocumentation" BeforeTargets="_GetPackageFiles">
+    <Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(PackageVersion)', '^[0-9A-Za-z][0-9A-Za-z.+-]*$'))" Text="The package version contains unsupported characters." />
+    <Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(ReleaseDocumentationVersion)', '^[0-9A-Za-z][0-9A-Za-z.+-]*$'))" Text="The release documentation version contains unsupported characters." />
+    <Exec Command="powershell -NoProfile -NonInteractive -File &quot;$(MSBuildProjectDirectory)\..\..\eng\Prepare-PackageDocumentation.ps1&quot; -PackageVersion &quot;$(PackageVersion)&quot; -DocumentedVersion &quot;$(ReleaseDocumentationVersion)&quot; -ReadmeSource &quot;$(MSBuildProjectDirectory)\..\..\docs\NuGet-README.md&quot; -ReleaseNotesSource &quot;$(MSBuildProjectDirectory)\..\..\docs\Release-Notes.md&quot; -OutputDirectory &quot;$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)package-docs&quot;" />
+  </Target>
 
 </Project>
