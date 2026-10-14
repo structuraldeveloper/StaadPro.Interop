@@ -4,8 +4,8 @@ using StaadPro.Interop.Models;
 
 namespace StaadPro.Interop.Adapters.Interfaces
 {
-    /// <summary>Exposes the model-specific OpenSTAAD root binding, filenames, identity, job metadata and input units.</summary>
-    /// <remarks>The root port includes read-only filename/identity/job queries and native input-unit selection. Other IOSRoot operations are ported separately.
+    /// <summary>Exposes the model-specific OpenSTAAD root binding, filenames, identity, job metadata, input units and save/close operations.</summary>
+    /// <remarks>The root port includes read-only filename/identity/job queries and native input-unit, silent-mode, save and close operations. Other IOSRoot operations are ported separately.
     /// Native access uses runtime dispatch and requires an undisposed connection on the correct COM thread.</remarks>
     public interface IOSRoot
     {
@@ -235,5 +235,75 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// </code>
         /// </example>
         IOSRoot SetInputUnitsEx(LengthInputUnit lengthUnit, ForceInputUnit forceUnit);
+
+        /// <summary>Sets the STAAD application's silent-mode flag and reports whether the native call completed without throwing.</summary>
+        /// <param name="silentMode">Defined SilentMode value: Disable=0 or Enable=1. Invalid values are rejected before native access.</param>
+        /// <returns>True if the native call returns without an exception; false if native dispatch throws. This is not the previous flag, proof of the resulting setting, or a general readiness check.</returns>
+        /// <remarks>
+        /// <para>Validates the enum, then calls SetSilentMode once with its integer code. OpenSTAAD's
+        /// native VARIANT return is the previous silent-mode value; this method deliberately ignores
+        /// that value and preserves the main project's Boolean call-completion contract. A native
+        /// previous value of zero is not a failure. No read-back or diagnostic exception is returned.</para>
+        /// <para>This changes application-level warning suppression, which can affect later analysis
+        /// and saves. Licence, inaccessible-folder and other error dialogs may still appear. The flag
+        /// is not automatically restored. No model is saved or closed and no analysis is started.
+        /// Dispatch exceptions, including missing signatures, are caught and return false; a failure
+        /// can still have native side effects. Serialize access on the session's appropriate COM thread.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException">silentMode is not a defined enum value; no native call is made.</exception>
+        /// <example>
+        /// With a connected IOSRoot named root:
+        /// <code>
+        /// bool completed = root.SetSilentMode(SilentMode.Enable);
+        /// Console.WriteLine(completed);
+        /// </code>
+        /// </example>
+        bool SetSilentMode(SilentMode silentMode);
+
+        /// <summary>Requests a native save of the current STAAD model using the specified warning-suppression option.</summary>
+        /// <param name="silentMode">Defined SilentMode value: Disable=0 or Enable=1, passed as the native integer save option.</param>
+        /// <returns>This root adapter after the native void call returns without throwing. This does not independently verify file persistence or that a user completed a native prompt.</returns>
+        /// <remarks>
+        /// <para>Validates the enum before one SaveModel call. The native API is void, so no Boolean
+        /// or numeric status is interpreted. It saves the current structure through STAAD rather
+        /// than writing managed file contents. No separate SetSilentMode call, path query or
+        /// automatic analysis is performed; this method does not restore application settings.</para>
+        /// <para>The native call can write the model file or display dialogs, particularly for an
+        /// unnamed model or an error. Silent mode is not a guarantee of unattended operation.
+        /// Exceptions propagate unchanged; a failed call may have partial native effects and no
+        /// rollback is provided. Call on the correct COM thread and coordinate shared-session access.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException">silentMode is not a defined enum value; rejected before native access.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native save fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible SaveModel signature.</exception>
+        /// <example>
+        /// With a connected IOSRoot named root; this writes through STAAD:
+        /// <code>
+        /// root.SaveModel(SilentMode.Enable);
+        /// </code>
+        /// </example>
+        IOSRoot SaveModel(SilentMode silentMode);
+
+        /// <summary>Requests that STAAD close the model currently associated with this root session.</summary>
+        /// <returns>This root adapter after the native void call returns without throwing. The return does not certify that the model is closed or that the root remains ready for further operations.</returns>
+        /// <remarks>
+        /// <para>Calls CloseSTAADFile once without arguments. No Boolean/numeric status is interpreted,
+        /// and no filename/readiness check is performed. The request concerns the current .STD file;
+        /// it does not terminate the STAAD application, dispose this adapter or create another model.</para>
+        /// <para>This method does not explicitly save unsaved changes or set/restore silent mode.
+        /// Native dialogs or user decisions may affect closing and may block the call. Save first
+        /// when persistence is required. Previously captured model interfaces can become unusable
+        /// after closing; the unchanged adapter reference does not prove their validity. Exceptions
+        /// propagate unchanged and no rollback occurs. Serialize calls on the session's COM thread.</para>
+        /// </remarks>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native close fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible CloseSTAADFile signature.</exception>
+        /// <example>
+        /// With a connected IOSRoot named root and any required saving already completed:
+        /// <code>
+        /// root.CloseSTAADFile();
+        /// </code>
+        /// </example>
+        IOSRoot CloseSTAADFile();
     }
 }

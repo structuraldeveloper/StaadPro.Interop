@@ -125,6 +125,9 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetShortJobInfo", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetFullJobInfo", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SetInputUnitsEx", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SetSilentMode", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SaveModel", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "CloseSTAADFile", "root")]
         public void LoadAndRootPortHasMatchingCompleteExecutableIntelliSense(Type contractType, Type adapterType, string name, string receiver)
         {
             var xml = XDocument.Load(Path.ChangeExtension(contractType.Assembly.Location, ".xml"));
@@ -139,12 +142,15 @@ namespace StaadPro.Interop.Tests.Adapter
             Assert.That(adapterMethod.GetParameters().Select(p => (p.Name, p.ParameterType, p.DefaultValue)), Is.EqualTo(method.GetParameters().Select(p => (p.Name, p.ParameterType, p.DefaultValue))));
             Assert.That(contract.Element("example")?.Element("code")?.Value, Does.Contain(receiver + "." + name + "("));
             Assert.That(contract.Elements("exception").All(e => !string.IsNullOrWhiteSpace(e.Value)), Is.True);
-            Assert.That(contract.Elements("exception").Count(), Is.GreaterThanOrEqualTo(3));
+            if (name == "SetSilentMode") Assert.That(contract.Elements("exception").Count(), Is.EqualTo(1));
+            else if (name == "CloseSTAADFile") Assert.That(contract.Elements("exception").Count(), Is.EqualTo(2));
+            else Assert.That(contract.Elements("exception").Count(), Is.GreaterThanOrEqualTo(3));
             }
         }
 
         [TestCase("SelfWeightDirection", 4)]
         [TestCase("LoadListType", 3)]
+        [TestCase("SilentMode", 3)]
         public void NativeSelectionEnumsHaveDocumentedTypesAndAllValues(string typeName, int count)
         {
             var xml = XDocument.Load(Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml"));

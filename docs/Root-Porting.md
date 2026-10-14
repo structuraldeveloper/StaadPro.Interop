@@ -1,6 +1,6 @@
 # Root adapter implementation and porting progress
 
-The main project's `IOSRoot` exposes 23 methods. This repository now implements **nine**, with **14 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
+The main project's `IOSRoot` exposes 23 methods. This repository now implements **twelve**, with **11 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
@@ -17,6 +17,9 @@ Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` a
 | `ShortJobInfo GetShortJobInfo()` | One void native three-field metadata read; fresh standalone record | Explicit strings required; unwritten fields throw |
 | `FullJobInfo GetFullJobInfo()` | One void native thirteen-field read; three dates mapped with CurrentCulture | Unwritten fields throw; explicitly empty dates map to DateTime.MinValue |
 | `IOSRoot SetInputUnitsEx(LengthInputUnit lengthUnit, ForceInputUnit forceUnit)` | Validate enums, then one native input-unit mutation using integer codes | Native handling applies; no readiness check/read-back |
+| `bool SetSilentMode(SilentMode silentMode)` | Validate code 0/1, then one native call; discard previous-state VARIANT | True for call completion, false for dispatch exception; no readiness check |
+| `IOSRoot SaveModel(SilentMode silentMode)` | Validate code 0/1, then one void native save call; return this adapter | Native handling/dialogs apply; no persistence verification |
+| `IOSRoot CloseSTAADFile()` | One void native close call; return this adapter | Native handling/dialogs apply; no close verification |
 
 The six filename/identity methods are eager, read-only session queries. They do not launch STAAD, open/close/save a model, change activation or load lists, read analysis contents, create files, perform filesystem existence checks or start analysis. A licensed STAAD installation and a valid native root/session are required for real calls. Coordinate COM access on the session's appropriate thread; a managed binding does not establish readiness or thread safety.
 
@@ -122,7 +125,38 @@ if (fullJob.Originated != DateTime.MinValue) Console.WriteLine(fullJob.Originate
 root.SetInputUnitsEx(LengthInputUnit.Meter, ForceInputUnit.KiloNewton);
 ```
 
-All new interface/concrete methods and model types, constructors, factories and properties ship expanded XML IntelliSense. The installed-package consumer now compiles/runs **99 XML examples**, including all eighteen root examples, and checks field mapping, date handling, typed model availability and unit-call arguments. Vendor source: installed Bentley STAAD.Pro 2025 `OSAPP_Help/group___root.html`. Main-project provenance remains the commit and source paths listed above, plus `Models/ShortJobInfo.cs` and `Models/FullJobInfo.cs`.
+All new interface/concrete methods and model types, constructors, factories and properties ship expanded XML IntelliSense. The job/unit batch's installed-package consumer compiled/ran **99 XML examples**, including all eighteen root examples, and checked field mapping, date handling, typed model availability and unit-call arguments. Vendor source: installed Bentley STAAD.Pro 2025 `OSAPP_Help/group___root.html`. Main-project provenance remains the commit and source paths listed above, plus `Models/ShortJobInfo.cs` and `Models/FullJobInfo.cs`.
+
+## Silent mode, saving and closing
+
+This batch ports `SetSilentMode(SilentMode)`, `SaveModel(SilentMode)` and `CloseSTAADFile()` from the main project, with the same parameter names and return types. `SilentMode` is a standalone public enum with `Disable=0` and `Enable=1`. Both enum-accepting methods reject undefined values with `ArgumentOutOfRangeException` naming `silentMode` before native access; the main project previously passed unchecked values. Native arguments are integers, without requiring Bentley interop types at build time.
+
+### Silent-mode return contract
+
+The installed STAAD.Pro 2026 `OSAPP_Help/group___root.html` documents native `SetSilentMode` as a VARIANT-returning method whose result is the **previous** mode. This port preserves the main project's Boolean **call-completion** meaning: true if the call returns without an exception, false if native dispatch throws, including a missing signature. It does not convert the previous flag to Boolean, so a previous zero remains a successful call. It does not validate or expose that native return, verify the resulting state, or return the caught exception. Argument-validation failures throw instead of returning false.
+
+The flag changes application-level warning suppression for later analysis and saving. Enabling it can suppress supported warning boxes such as empty loads and repeat-load expansion; licensing and inaccessible-folder errors can still display dialogs. It is not a headless-operation guarantee, is not automatically restored, and does not itself save, close or analyze a model. A false result does not prove that no native state changed before the exception.
+
+### Save and close contracts
+
+Native `SaveModel` and `CloseSTAADFile` are **void**. The adapter calls each once and returns the same `IOSRoot` reference after the call returns without throwing. It interprets no success status and performs no filename/readiness/read-back checks. Native COM and missing-signature errors propagate unchanged; no retries or rollback are supplied.
+
+`SaveModel` passes the caller's validated silent option directly to the native save function, without a separate `SetSilentMode` call. It may write the current model's file or display native prompts, especially for unnamed models or errors. Returning the adapter does not independently establish durable persistence or whether a user completed a dialog.
+
+`CloseSTAADFile` requests closing the current `.STD` model. It does not explicitly save, set or restore silent mode, terminate STAAD, dispose the adapter, or open a replacement model. Native dialogs and user decisions can affect completion. Previously captured model interfaces can become unusable after closing; the returned root reference does not certify that it or the old wrapper adapters remain ready.
+
+Call and serialize all three methods on the correct session COM thread. Synchronous native calls can block on dialogs. The adapter does not supply cancellation, forced close, dirty-state detection or timeout control. Native failure may have partial effects.
+
+```csharp
+bool completed = root.SetSilentMode(SilentMode.Enable);
+Console.WriteLine(completed); // call completion, not the previous mode
+
+// Explicit native mutations; perform only when the application intends to save/close.
+root.SaveModel(SilentMode.Enable);
+root.CloseSTAADFile();
+```
+
+Offline tests cover both codes, validation before dispatch, previous zero/one/null/Boolean results, native side effects on failure, exception/binder handling, exact single-call dispatch, fluent return identity, explicit save-then-close order and isolation between bindings. All **760 tests** pass, including 27 new cases. Matching interface/concrete XML documents all parameters, returns, side effects, exceptions and examples. The isolated installed-package verifier compiles and executes **129 XML examples**, including six additional examples for this batch and all 24 root examples, using managed native stand-ins; it does not save or close a customer STAAD model. Live native save/close and broader-version validation remain pending. Custom `IOSRoot` implementations must add these three methods, and consumers must rebuild.
 
 ## Pending reference methods
 
@@ -138,13 +172,10 @@ These source signatures describe future ports; their supporting enums/models/ser
 - `bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600)`
 - `void RestoreStaadMainWindow()`
 - `HashSet<MemberForces> RetrieveMemberForces(IEnumerable<int> beams, IEnumerable<int> loadCases)`
-- `bool SetSilentMode(SilentMode silentMode)`
-- `IOSRoot SaveModel(SilentMode silentMode)`
-- `IOSRoot CloseSTAADFile()`
 - `IOSRoot OpenSTAADFile(string filePath)`
 - `IOSRoot ShowApplication()`
 - `AnalysisResult AnalyzeEx(SilentMode silentMode, HiddenMode hiddenMode, WaitAnalysisMode waitMode)`
 
 ## Suggested next sequence
 
-Port silent/save operations next. Follow with open/close/wait handling, window control through a standalone helper, and analysis/results retrieval with their required models. Each batch should include matching interface/adapter XML, input/native-contract tests and installed-package examples before making public compatibility claims.
+Port open/wait handling next, followed by higher-level close/write/reopen coordination, window control through a standalone helper, and analysis/results retrieval with their required models. Each batch should include matching interface/adapter XML, input/native-contract tests and installed-package examples before making public compatibility claims.

@@ -388,6 +388,9 @@ namespace StaadPro.Interop.Tests.Adapter
             public StaadPro.Interop.Models.ShortJobInfo GetShortJobInfo() => throw new NotSupportedException();
             public StaadPro.Interop.Models.FullJobInfo GetFullJobInfo() => throw new NotSupportedException();
             public IOSRoot SetInputUnitsEx(StaadPro.Interop.Enums.LengthInputUnit lengthUnit, StaadPro.Interop.Enums.ForceInputUnit forceUnit) => throw new NotSupportedException();
+            public bool SetSilentMode(StaadPro.Interop.Enums.SilentMode silentMode) => throw new NotSupportedException();
+            public IOSRoot SaveModel(StaadPro.Interop.Enums.SilentMode silentMode) => throw new NotSupportedException();
+            public IOSRoot CloseSTAADFile() => throw new NotSupportedException();
         }
 
         private sealed class Once<T> : IEnumerable<T>

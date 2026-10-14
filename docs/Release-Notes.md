@@ -1,5 +1,12 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261014.1 - 14 October 2026 (root save/close batch, prepared)
+
+- Added main-project `SetSilentMode(SilentMode)`, `SaveModel(SilentMode)` and `CloseSTAADFile()` in the existing non-partial `IOSRoot`/`OSRootAdapter`, with matching complete XML IntelliSense and executable examples. Added documented `SilentMode.Disable=0` and `Enable=1`; reject undefined values before dispatch and pass native integer codes.
+- Preserve `SetSilentMode`'s Boolean call-completion contract: ignore the native previous-state VARIANT, return true on completion and false on dispatch exceptions. Save/close remain one-call void native mutations with fluent adapter returns and unchanged exception propagation; no read-back, automatic save-on-close, rollback, application termination or unattended-operation guarantee.
+- Root coverage is **12 of 23 methods**, with **11 pending**. Geometry remains 140 overloads and load remains 78, with 42 pending reference load overloads. Custom `IOSRoot` implementations must implement the three new members and consumers must rebuild.
+- Passed **760 offline tests**, including 27 new cases covering enum codes, input validation, previous-state semantics, errors/partial effects, call isolation, fluent identity and matching IntelliSense. Expanded installed-package verification to **129 executable XML examples**, including all 24 root examples. Live native save/close and broader-version validation remain pending; no customer model is saved or closed by offline verification. This preview is prepared locally, not publicly published.
+
 ## 1.0.0-preview.20261013.10 - 13 October 2026 (load batch 4, prepared)
 
 Added PopulateMemberLinearVaryingLoads, PopulateMemberLoads and PopulateMemberTrapezoidalLoads with matching signatures and detailed IntelliSense. Individual-family calls append; full population replaces managed lists with all six supported families in reference order and returns an eager snapshot of original beam objects. Preserved raw fields and supplied case identity with input validation before updates and documented partial failure behavior.

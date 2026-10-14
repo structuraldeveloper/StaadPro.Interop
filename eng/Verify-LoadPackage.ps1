@@ -108,8 +108,8 @@ try {
         }
     }
     foreach ($owner in @('Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
-        foreach ($method in @('GetStaadFileFullPath', 'GetStaadFileNameOnly', 'GetAnlFileFullPath', 'GetOpenedStaadFilename', 'IsTarget', 'ModelIsOpen', 'GetShortJobInfo', 'GetFullJobInfo', 'SetInputUnitsEx')) {
-            $signature = if ($method -in @('IsTarget','ModelIsOpen')) { '(System.String)' } elseif ($method -eq 'SetInputUnitsEx') { '(StaadPro.Interop.Enums.LengthInputUnit,StaadPro.Interop.Enums.ForceInputUnit)' } else { '' }
+        foreach ($method in @('GetStaadFileFullPath', 'GetStaadFileNameOnly', 'GetAnlFileFullPath', 'GetOpenedStaadFilename', 'IsTarget', 'ModelIsOpen', 'GetShortJobInfo', 'GetFullJobInfo', 'SetInputUnitsEx', 'SetSilentMode', 'SaveModel', 'CloseSTAADFile')) {
+            $signature = if ($method -in @('IsTarget','ModelIsOpen')) { '(System.String)' } elseif ($method -eq 'SetInputUnitsEx') { '(StaadPro.Interop.Enums.LengthInputUnit,StaadPro.Interop.Enums.ForceInputUnit)' } elseif ($method -in @('SetSilentMode','SaveModel')) { '(StaadPro.Interop.Enums.SilentMode)' } else { '' }
             $entry = @($xml.doc.members.member | Where-Object name -eq "M:StaadPro.Interop.$owner.$method$signature")
             if ($entry.Count -ne 1) { throw "Missing root IntelliSense: $owner.$method" }
             foreach ($tag in @('summary','returns','remarks','example/code')) {
@@ -122,7 +122,7 @@ try {
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 9 } else { 78 }
+        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 12 } else { 78 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -132,7 +132,7 @@ try {
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 123) { throw "Expected 123 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 129) { throw "Expected 129 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -183,6 +183,10 @@ public static class Program
             Check(fullJob.Number == "NUMBER" && fullJob.Reference == "REFERENCE" && fullJob.Checker == "CHECKER" && fullJob.Approver == "APPROVER" && fullJob.Comments == "COMMENTS", "full job thirteen-field mapping");
             Check(fullJob.Originated == new DateTime(2026, 10, 13) && fullJob.Checked == new DateTime(2026, 10, 12) && fullJob.Approved == DateTime.MinValue, "full job date parsing and unspecified date");
             Check(ReferenceEquals(wrapper.Root.SetInputUnitsEx(LengthInputUnit.MilliMeter, ForceInputUnit.Newton), wrapper.Root) && nativeRoot.LengthCode == 5 && nativeRoot.ForceCode == 4, "native unit codes and fluent result");
+            nativeRoot.SetSilentMode(0);
+            Check(wrapper.Root.SetSilentMode(SilentMode.Enable) && nativeRoot.SilentFlag == 1, "silent-mode previous zero is not failure");
+            Check(ReferenceEquals(wrapper.Root.SaveModel(SilentMode.Disable), wrapper.Root) && nativeRoot.SaveFlag == 0, "save integer code and fluent result");
+            Check(ReferenceEquals(wrapper.Root.CloseSTAADFile(), wrapper.Root) && nativeRoot.CloseCount > 0, "native close and fluent result");
             load.AddSelfweightInXYZTo(17, LoadCaseType.ReferenceLoad, new[] { 101, 102 }, SelfWeightDirection.GlobalZ, -1.25);
             Check(fake.Assignment == "selfweight" && fake.AssignedIds.SequenceEqual(new[] { 101, 102 }) && fake.AssignedValues[0] == -1.25 && fake.Reference && fake.Direction == 3, "self-weight native arguments and family");
             load.CreateLoadEnvelopExt(7, LoadEnvelopType.Strength, new[] { 17, 41 });
@@ -360,7 +364,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: 123 packaged XML examples and complete geometry/load IntelliSense.");
+        Console.WriteLine("PASS: 129 packaged XML examples and complete geometry/load/root IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -376,6 +380,12 @@ __EXAMPLES__
         public int LengthCode { get; private set; }
         public int ForceCode { get; private set; }
         public void SetInputUnits(int length, int force) { LengthCode = length; ForceCode = force; }
+        public int SilentFlag { get; private set; }
+        public int SaveFlag { get; private set; }
+        public int CloseCount { get; private set; }
+        public object SetSilentMode(int flag) { int previous = SilentFlag; SilentFlag = flag; return previous; }
+        public void SaveModel(int flag) { SaveFlag = flag; }
+        public void CloseSTAADFile() { CloseCount++; }
         public void GetShortJobInfo(ref object name, ref object client, ref object engineer)
         {
             if (!(name is string) || !(client is string) || !(engineer is string)) throw new Exception("Expected BSTR job outputs.");
