@@ -393,6 +393,8 @@ namespace StaadPro.Interop.Tests.Adapter
             public IOSRoot CloseSTAADFile() => throw new NotSupportedException();
             public IOSRoot OpenSTAADFile(string filePath) => throw new NotSupportedException();
             public IOSRoot ShowApplication() => throw new NotSupportedException();
+            public bool AwaitModelHandle(string fileFullPath, double timeoutDurationInSeconds = 60, double sleepIntervalInSeconds = 0.1) => throw new NotSupportedException();
+            public bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600) => throw new NotSupportedException();
         }
 
         private sealed class Once<T> : IEnumerable<T>

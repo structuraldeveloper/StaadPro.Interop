@@ -3,6 +3,7 @@ using System.IO;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Models;
 using StaadPro.Interop.Adapters.Interfaces;
+using StaadPro.Interop.Services;
 
 namespace StaadPro.Interop.Adapters.Models
 {
@@ -10,6 +11,7 @@ namespace StaadPro.Interop.Adapters.Models
     public sealed class OSRootAdapter : IOSRoot
     {
         private const string UnwrittenFileName = "<StaadPro.Interop.UnwrittenFilename>";
+        private readonly Func<IRootPollingClock> pollingClockFactory;
         /// <summary>Initializes a root binding for the supplied OpenSTAAD automation object.</summary>
         /// <param name="openStaad">The non-null raw root object from the model session.</param>
         /// <remarks>The constructor captures the object and does not launch STAAD or validate model readiness.</remarks>
@@ -17,6 +19,12 @@ namespace StaadPro.Interop.Adapters.Models
         public OSRootAdapter(object openStaad)
         {
             ComObject = openStaad ?? throw new ArgumentNullException(nameof(openStaad));
+            pollingClockFactory = () => new RootPollingClock();
+        }
+
+        internal OSRootAdapter(object openStaad, Func<IRootPollingClock> clockFactory) : this(openStaad)
+        {
+            pollingClockFactory = clockFactory ?? throw new ArgumentNullException(nameof(clockFactory));
         }
 
         /// <summary>Gets the captured root OpenSTAAD automation object.</summary>
@@ -437,6 +445,80 @@ namespace StaadPro.Interop.Adapters.Models
         {
             ComObject.ShowApplication();
             return this;
+        }
+
+        /// <summary>Polls this root until its reported full model path matches the requested path or the elapsed-time limit expires.</summary>
+        /// <param name="fileFullPath">Non-null, non-whitespace Windows model path, normalized before polling; relative input uses the process working directory.</param>
+        /// <param name="timeoutDurationInSeconds">Finite positive timeout in seconds within TimeSpan limits; default 60. Counts native polling time.</param>
+        /// <param name="sleepIntervalInSeconds">Finite positive polling interval in seconds within TimeSpan limits; default 0.1. Sleeps are capped by the remaining budget.</param>
+        /// <returns>True when a matching path is observed within the logical budget; false on timeout. This does not verify Geometry/Load readiness or analysis results.</returns>
+        /// <remarks>
+        /// <para>Checks immediately, then reads one native filename per poll with ordinal
+        /// case-insensitive full-path comparison. An explicitly blank filename is a nonmatch.
+        /// No open/save/close or application launch is performed. Native/read/path errors throw
+        /// instead of being treated as a blank session or timeout.</para>
+        /// <para>Uses a monotonic elapsed-time budget and synchronous waits on the caller's COM
+        /// thread. It does not pump UI messages, offer cancellation or prevent native model changes
+        /// after a match. A synchronous native call can exceed the timeout; the budget cannot abort it.
+        /// Thread.Sleep resolution can exceed the last remaining interval. Serialize session access.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">fileFullPath is null.</exception>
+        /// <exception cref="ArgumentException">The requested path is empty/whitespace, or requested/native text has invalid Windows syntax.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">A duration is nonpositive, NaN, infinite or outside supported limits; rejected before native access.</exception>
+        /// <exception cref="NotSupportedException">A path format is unsupported.</exception>
+        /// <exception cref="System.IO.PathTooLongException">A path exceeds runtime limits.</exception>
+        /// <exception cref="InvalidOperationException">Native filename output is unwritten or non-string.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native polling fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible filename API.</exception>
+        /// <example><code>
+        /// bool identified = root.AwaitModelHandle(@"C:\Models\Frame.v2.STD", 1, 0.01);
+        /// Console.WriteLine(identified);
+        /// </code></example>
+        public bool AwaitModelHandle(string fileFullPath, double timeoutDurationInSeconds = 60, double sleepIntervalInSeconds = 0.1)
+        {
+            string target = NormalizeRequestedModelPath(fileFullPath, nameof(fileFullPath));
+            RootModelPolling.ValidateSeconds(timeoutDurationInSeconds, nameof(timeoutDurationInSeconds));
+            RootModelPolling.ValidateSeconds(sleepIntervalInSeconds, nameof(sleepIntervalInSeconds));
+            return RootModelPolling.Wait(() => string.Equals(GetOpenedStaadFilename(), target, StringComparison.OrdinalIgnoreCase),
+                timeoutDurationInSeconds, sleepIntervalInSeconds, pollingClockFactory());
+        }
+
+        /// <summary>Requests opening a model once, then waits for this root to report that exact normalized model path.</summary>
+        /// <param name="staadFileFullPath">Non-null, non-whitespace Windows model path, normalized before the native request.</param>
+        /// <param name="sleepInterval">Positive polling interval in milliseconds, capped by the remaining budget.</param>
+        /// <param name="maxWaitTime">Positive total logical limit in seconds, including the native open call; default 600.</param>
+        /// <returns>True when the exact normalized path is observed within the budget; false on timeout. A false result does not undo the open request or prove that the model stayed closed.</returns>
+        /// <remarks>
+        /// <para>Validates all input before one OpenSTAADFile request, then checks immediately and
+        /// polls native full paths with ordinal case-insensitive comparison. Corrects the reference's
+        /// basename substring comparison and iteration-count timeout. A similarly named model in
+        /// another folder is not a match. It requests opening even if the target was already open.</para>
+        /// <para>Model switching can affect unsaved work and captured interfaces; native dialogs may
+        /// block. No auto-save, rollback, new process creation or Geometry/Load readiness check occurs.
+        /// Uses synchronous caller-thread sleeps without UI pumping or cancellation. A monotonic
+        /// budget cannot interrupt a blocked COM call. Native and path failures propagate unchanged.</para>
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">staadFileFullPath is null.</exception>
+        /// <exception cref="ArgumentException">The requested path is empty/whitespace, or requested/native text has invalid Windows syntax.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">sleepInterval or maxWaitTime is nonpositive; no native call occurs.</exception>
+        /// <exception cref="NotSupportedException">A path format is unsupported.</exception>
+        /// <exception cref="System.IO.PathTooLongException">A path exceeds runtime limits.</exception>
+        /// <exception cref="InvalidOperationException">Native filename output is unwritten or non-string.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native open or polling fails; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible open or filename API.</exception>
+        /// <example><code>
+        /// bool identified = root.OpenStaadModel(@"C:\Models\Frame.v2.STD", 10, 1);
+        /// Console.WriteLine(identified);
+        /// </code></example>
+        public bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600)
+        {
+            string target = NormalizeRequestedModelPath(staadFileFullPath, nameof(staadFileFullPath));
+            if (sleepInterval <= 0) throw new ArgumentOutOfRangeException(nameof(sleepInterval));
+            if (maxWaitTime <= 0) throw new ArgumentOutOfRangeException(nameof(maxWaitTime));
+            var clock = pollingClockFactory();
+            ComObject.OpenSTAADFile(target);
+            return RootModelPolling.Wait(() => string.Equals(GetOpenedStaadFilename(), target, StringComparison.OrdinalIgnoreCase),
+                maxWaitTime, sleepInterval / 1000d, clock);
         }
 
         private static string NormalizeRequestedModelPath(string path, string parameterName)

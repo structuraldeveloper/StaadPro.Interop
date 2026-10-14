@@ -1,5 +1,11 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261014.3 - 14 October 2026 (prepared)
+
+Added AwaitModelHandle and OpenStaadModel with matching signatures, explicit duration validation and complete IntelliSense. Poll full normalized paths using a monotonic budget, distinguish matching models from similarly named files, check immediately and cap waits to remaining time. Open requests occur once and count toward the documented seconds limit. Native errors propagate; logical timeouts cannot interrupt synchronous COM calls, and a path match does not certify Geometry/Load readiness.
+
+Root coverage is **16 of 23 methods**, with **7 pending**. Custom `IOSRoot` implementations must implement the new members. Validated **808 offline tests** and **137 installed-package XML examples**. Live native mutation/version validation remains pending; no public upload is claimed.
+
 ## 1.0.0-preview.20261014.2 - 14 October 2026 (prepared)
 
 Added OpenSTAADFile and ShowApplication with matching main-project signatures and expanded IntelliSense. Open validates and resolves the requested path before one native model-switch request; show dispatches once without opening a model. Both return the original root after native dispatch and propagate exceptions, without readiness/visibility verification, automatic saves, retries or rollback.

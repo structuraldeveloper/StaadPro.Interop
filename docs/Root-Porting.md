@@ -1,6 +1,6 @@
 # Root adapter implementation and porting progress
 
-The main project's `IOSRoot` exposes 23 methods. This repository now implements **14**, with **9 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
+The main project's `IOSRoot` exposes 23 methods. This repository now implements **16**, with **7 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
@@ -23,6 +23,9 @@ Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` a
 
 | `IOSRoot OpenSTAADFile(string filePath)` | Validated absolute path to one native open request; returns this adapter | Native dialogs apply; no readiness verification |
 | `IOSRoot ShowApplication()` | One native visibility request; returns this adapter | No model or visibility verification |
+
+| `bool AwaitModelHandle(string fileFullPath, double timeoutDurationInSeconds = 60, double sleepIntervalInSeconds = 0.1)` | Poll exact normalized path with monotonic timeout | Blank is a nonmatch; no model opening |
+| `bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600)` | One open request then full-path polling; milliseconds interval, seconds limit | Timeout does not undo native opening |
 
 The six filename/identity methods are eager, read-only session queries. They do not launch STAAD, open/close/save a model, change activation or load lists, read analysis contents, create files, perform filesystem existence checks or start analysis. A licensed STAAD installation and a valid native root/session are required for real calls. Coordinate COM access on the session's appropriate thread; a managed binding does not establish readiness or thread safety.
 
@@ -176,18 +179,33 @@ Tests cover full/relative/UNC/Unicode paths, input rejection before calls, exact
 
 Validation: **774 offline tests** passed. Installed-package verification executes **133 XML examples**. Native mutation/version checks remain pending.
 
+## Waiting for model identity and opening with a deadline
+
+`AwaitModelHandle` is an attachment/identity poll only. It normalizes the requested path before native access and validates finite positive timeout/interval values within TimeSpan limits. It checks immediately and reads one native filename per poll, comparing full normalized paths case-insensitively. Explicit blank filenames are nonmatches; unreadable/unwritten/malformed native output and COM/binding failures throw. It does not launch, open, save or close a model.
+
+`OpenStaadModel` validates its path, positive millisecond `sleepInterval` and positive second `maxWaitTime`, starts its monotonic budget, requests native OpenSTAADFile once, then polls the same exact identity predicate. It requests opening even if that model was already open; callers should explicitly select this mutation. Unlike the main reference, it uses elapsed seconds instead of a count of loop iterations and never matches a basename substring from another path. The open call counts toward the budget. A timeout does not undo native effects or establish that the model stayed closed.
+
+Both methods cap each sleep to remaining time, use caller-thread synchronous waits without message pumping/cancellation, and return true only when the match is observed within the logical budget. Thread.Sleep may overshoot, and blocked COM calls cannot be forcibly interrupted. The result establishes filename identity rather than Geometry/Load readiness, analysis availability, durable file state or permanent session identity. Serialize operations on the correct COM thread. Native dialogs, unsaved work and captured-interface invalidation remain relevant to opening.
+
+```csharp
+bool matches = root.AwaitModelHandle(@"C:\Models\Frame.v2.STD", 1, 0.01);
+bool opened = root.OpenStaadModel(@"C:\Models\Frame.v2.STD", 10, 1);
+```
+
+Deterministic managed clocks cover immediate/later matches, blanks, same-name/different-folder mismatches, capped final sleeps, expiry during open/read, invalid paths/durations and native failures without real-time waits. The original public default values and parameter names are preserved. An internal per-call clock factory supports tests without adding public members or partial adapters.
+
+Validation: **808 offline tests** passed. Installed-package verification executes **137 XML examples**. Native mutation/version checks remain pending.
+
 ## Pending reference methods
 
 This batch adds normalized-path, complete-path comparison and BSTR-buffer regression coverage. Read-only native checks on the running **STAAD.Pro Advanced 2026 unnamed session** succeeded for all six root methods: the four string queries returned empty text, and both identity predicates returned false for a valid named target. No model was opened or modified. Named/UNC comparisons are covered offline; broader native-version and named-model validation remains pending.
 
 These source signatures describe future ports; their supporting enums/models/services are not implied to be available already:
 
-- `bool AwaitModelHandle(string fileFullPath, double timeoutDurationInSeconds = 60, double sleepIntervalInSeconds = 0.1)`
 - `void CloseCurrentStaadModel()`
 - `bool CloseWriteReopenStaadFile(string filePath, List<string> fileContents, int sleepTimeMilliseconds = 200, int maxTimeMilliseconds = 5000)`
 - `void MaximizeStaadMainWindow()`
 - `void MinimizeStaadMainWindow()`
-- `bool OpenStaadModel(string staadFileFullPath, int sleepInterval, int maxWaitTime = 600)`
 - `void RestoreStaadMainWindow()`
 - `HashSet<MemberForces> RetrieveMemberForces(IEnumerable<int> beams, IEnumerable<int> loadCases)`
 - `AnalysisResult AnalyzeEx(SilentMode silentMode, HiddenMode hiddenMode, WaitAnalysisMode waitMode)`

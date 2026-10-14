@@ -130,6 +130,8 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "CloseSTAADFile", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "OpenSTAADFile", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "ShowApplication", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "AwaitModelHandle", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "OpenStaadModel", "root")]
         public void LoadAndRootPortHasMatchingCompleteExecutableIntelliSense(Type contractType, Type adapterType, string name, string receiver)
         {
             var xml = XDocument.Load(Path.ChangeExtension(contractType.Assembly.Location, ".xml"));
