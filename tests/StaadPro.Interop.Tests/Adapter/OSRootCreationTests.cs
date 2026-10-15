@@ -142,13 +142,19 @@ namespace StaadPro.Interop.Tests.Adapter
         [Test]
         public void RelativePathIsResolvedAgainstCurrentProcessDirectory()
         {
-            var currentDirectory = new Uri(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar);
-            string supplied = Uri.UnescapeDataString(currentDirectory.MakeRelativeUri(new Uri(Target)).ToString())
-                .Replace('/', Path.DirectorySeparatorChar);
+            // A temporary directory can be on a different drive from the checkout.
+            // Use an absent relative filename in the existing current directory;
+            // the native stand-in records the request without creating a file.
+            string filename = "StaadRootRelative-" + Guid.NewGuid().ToString("N") + " New model.std";
+            string supplied = "." + Path.DirectorySeparatorChar + filename;
+            string expectedPath = Path.Combine(Directory.GetCurrentDirectory(), filename);
             Assert.That(Path.IsPathRooted(supplied), Is.False);
+            Assert.That(File.Exists(expectedPath), Is.False);
             var native = new NativeRoot();
             Create(native, supplied);
-            Assert.That(native.CreatedPath, Is.EqualTo(Path.GetFullPath(supplied)));
+            Assert.That(native.CreatedPath, Is.EqualTo(expectedPath));
+            Assert.That(native.Calls, Is.EqualTo(new[] { "filename", "create" }));
+            Assert.That(File.Exists(expectedPath), Is.False);
         }
 
         [TestCase(false)] [TestCase(true)]
