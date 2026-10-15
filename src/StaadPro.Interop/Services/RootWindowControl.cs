@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using StaadPro.Interop.Services.Interop;
 
 namespace StaadPro.Interop.Services
 {
@@ -34,31 +35,15 @@ namespace StaadPro.Interop.Services
     {
         internal static void Request(object rawHandle, object rawProcessId, int command, IRootWindowApi api)
         {
-            long handleValue = rawHandle is IntPtr pointer ? pointer.ToInt64() : ReadInteger(rawHandle, "window handle");
+            long handleValue = rawHandle is IntPtr pointer ? pointer.ToInt64() : NativeValues.ReadInt64(rawHandle, "window handle");
             if (handleValue == 0 || handleValue == -1 || (IntPtr.Size == 4 && (handleValue < int.MinValue || handleValue > uint.MaxValue)))
                 throw new InvalidOperationException("OpenSTAAD did not supply a valid pointer-sized window handle.");
             var window = IntPtr.Size == 4 ? new IntPtr(unchecked((int)handleValue)) : new IntPtr(handleValue);
-            long processValue = ReadInteger(rawProcessId, "process ID");
-            if (processValue <= 0 || processValue > uint.MaxValue) throw new InvalidOperationException("OpenSTAAD supplied an invalid process ID.");
-            if (!api.IsWindow(window) || api.GetProcessId(window) != (uint)processValue)
+            uint processId = NativeValues.ReadProcessId(rawProcessId);
+            if (!api.IsWindow(window) || api.GetProcessId(window) != processId)
                 throw new InvalidOperationException("The reported window is unavailable or belongs to another process.");
             if (!api.PostShowState(window, command)) throw new InvalidOperationException("Windows did not accept the window-state request.");
         }
 
-        private static long ReadInteger(object value, string name)
-        {
-            switch (value)
-            {
-                case sbyte n: return n;
-                case byte n: return n;
-                case short n: return n;
-                case ushort n: return n;
-                case int n: return n;
-                case uint n: return n;
-                case long n: return n;
-                case ulong n when n <= long.MaxValue: return (long)n;
-                default: throw new InvalidOperationException("OpenSTAAD supplied an unsupported " + name + " value.");
-            }
-        }
     }
 }

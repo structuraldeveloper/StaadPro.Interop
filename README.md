@@ -14,7 +14,7 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ## Current source development
 
-The source now includes the completed wrapper surface and five additional Root metadata queries. These changes are not in the existing NuGet archive. See [wrapper scope](docs/Wrapper-Porting.md), [Root API coverage](docs/reports/OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md) and the [managed API design rules](docs/Root-Managed-API-Design.md) for implemented behavior and the remaining plan.
+The source now includes the completed wrapper surface, five additional Root metadata queries, live `IsAnalyzing()` and typed `GetAnalysisStatus()` / `GetAnalysisStatus(string modelFilePath)` queries. The next common queries are also implemented: `GetStaadFileFolder()`, `IsPhysicalModel()` and `GetErrorMessage()`. The current source also includes `GetProcessId()`, `SetInputUnitForLength(LengthInputUnit)`, `SetInputUnitForForce(ForceInputUnit)`, `SetShortJobInfo(...)` (including a ShortJobInfo overload) and `UpdateStructure()`. See the [model setup guide](docs/Root-Model-Setup.md) and [analysis query guide](docs/Root-Analysis-Queries.md) and [common query guide](docs/Root-Common-Queries.md) for their contracts. These changes are not in the existing NuGet archive. See [wrapper scope](docs/Wrapper-Porting.md), [Root API coverage](docs/reports/OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md) and the [managed API design rules](docs/Root-Managed-API-Design.md) for implemented behavior and the remaining plan.
 
 ## Highlights
 

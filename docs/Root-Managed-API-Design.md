@@ -31,7 +31,7 @@ The existing wrapper's unit fallback may provide a useful enum when a native uni
 
 | Class | Data and status contract |
 | --- | --- |
-| `AnalysisStatusResult` | Raw native status, nullable recognized analysis state, explicitly defined query success, and nullable warning count, error count and CPU time. Output validity is checked against the verified native status contract. |
+| `AnalysisStatusResult` (implemented) | Immutable native/typed status, query success distinct from analysis success, completion state and nullable diagnostic counts/CPU seconds. See the [implemented output policy](Root-Analysis-Queries.md#result-data-and-validity); native runtime validation remains pending. |
 | `AnalysisMessagesResult` | Raw native status, nullable recognized retrieval status, `IsSuccessful`, read-only `Messages` and queried model path. Native 1 and 0 represent retrieved messages and successful absence respectively; expected native failures expose no valid messages. Allocate and marshal arrays internally. |
 | `ConnectedProjectResult` | Verified native success flag, `IsSuccessful` and a `ConnectedProjectInfo` only on success. Preserve supplied project ID/name text. |
 | `NamedViewResult` | Raw error code and verified recognized status/success semantics. Release remains gated on flag/error documentation and native validation. |
@@ -71,3 +71,15 @@ The five metadata queries are implemented: `GetApplicationVersion`, `GetBaseUnit
 Wrapper-owned adapters project cached wrapper properties without additional native reads. Standalone adapters retain a capture-only constructor and use the same internal readers against their supplied root on each query. Standalone unit queries read version and base system before the selected unit; standalone window queries read version and then the handle only for the source-compatible Connect family. Reads are sequential on the caller's COM thread and are not an atomic model snapshot. Metadata methods captured from a disposed wrapper throw `ObjectDisposedException`.
 
 These additions do not implement the remaining native operations or the version-profile/capability engine. Their tests establish managed behavior with stand-ins; actual 2024/2025/2026 compatibility still requires native validation. No NuGet package has been rebuilt for this increment.
+
+## Analysis observation increment
+
+IsAnalyzing and both GetAnalysisStatus overloads are implemented through a shared internal service. The named result class and documented status enum follow the organization above; no public reference parameters, tuples or mutable output buffers were added. See the [complete guide](Root-Analysis-Queries.md) for status/data semantics and limits. The remaining optional message functions and other planned Root functions remain pending.
+
+## Common query increment
+
+GetStaadFileFolder, IsPhysicalModel and GetErrorMessage are implemented as direct typed reads with matching XML. Internal native reference buffers remain hidden. Shared integer conversion was consolidated under Services/Interop/NativeValues, alongside strict Boolean-flag and string validation. See the [common query guide](Root-Common-Queries.md). No speculative public result types or overloads were added for these single-value queries.
+
+## Process identity and model setup increment
+
+GetProcessId and the independent length/force setters, SetShortJobInfo and UpdateStructure are implemented. The ShortJobInfo-object overload reuses the source model, snapshots its three short fields and validates before dispatch. Native void mutations retain void semantics; no artificial result flags are introduced. Unit arguments and enum members have expanded XML, including the new length-setter policy for unnamed feet alias 1. PID conversion is shared with window validation. See the [model setup guide](Root-Model-Setup.md).

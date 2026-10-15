@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Microsoft.CSharp.RuntimeBinder;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Models;
+using StaadPro.Interop.Services.Interop;
 
 namespace StaadPro.Interop.Services.Wrapper
 {
@@ -16,7 +17,7 @@ namespace StaadPro.Interop.Services.Wrapper
             catch (RuntimeBinderException) { return BaseUnitSystem.Unknown; }
             catch (COMException ex) when (BoundStaadModelServices.IsMissingMember(ex)) { return BaseUnitSystem.Unknown; }
             if (value == null || value == DBNull.Value) return BaseUnitSystem.Unknown;
-            int code = WrapperNativeValues.ReadInt32(value, "base-unit code");
+            int code = NativeValues.ReadInt32(value, "base-unit code");
             return (BaseUnitSystem)code;
         }
 
@@ -74,7 +75,7 @@ namespace StaadPro.Interop.Services.Wrapper
             {
                 for (int i = 0; i < parts.Length; i++)
                 {
-                    int actual = WrapperNativeValues.ReadInt32(parts[i], "version component");
+                    int actual = NativeValues.ReadInt32(parts[i], "version component");
                     if (actual != expected[i]) throw new InvalidOperationException("OpenSTAAD version text and numeric outputs disagree.");
                 }
             }

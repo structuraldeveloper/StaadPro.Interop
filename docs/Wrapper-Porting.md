@@ -18,7 +18,7 @@ The source's Bentley COM types are represented by object/dynamic, matching this 
 | `InputLengthUnit` | Cached source-compatible parsed/fallback length unit. |
 | `IsDedicated` | Caller-supplied dedication flag; no process ownership. |
 | `RawOpenStaad` | Original acquired root as object; null after disposal. |
-| `Root` | Root binding with 27 methods: the original 22 plus five typed metadata queries in the subsequent increment. |
+| `Root` | Root binding with 39 managed methods: the original 22 and subsequent metadata, analysis, common-query and model-setup additions. |
 | `RawGeometry` | Captures native Geometry interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `Geometry` | Existing implemented Geometry adapter. |
 | `RawLoad` | Captures native Load interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
@@ -54,7 +54,7 @@ The source's Bentley COM types are represented by object/dynamic, matching this 
 | `RefreshUnits()` | Refreshes only base/force/length snapshots. Does not replace adapters, reread versions/handles, save or mutate the model. |
 | `Dispose()` | Clears all raw and managed bindings, including placeholders, and prevents refresh resurrection. Does not close STAAD, save a model or final-release shared RCWs. Repeated disposal is harmless. |
 
-Source private initialization/version/unit helpers are ported either directly or into the isolated internal Wrapper helpers. SetPrivateProperties, SetUnmanagedObjects, SetManagedObjects, GetBaseUnitSystem, GetInputForceUnit, GetInputLengthUnit, GetStaadApplicationVersion, GetApplicationVersion and GetStaadApplicationEdition remain wrapper methods. The three conversion/parsing helpers live in WrapperUnitParser; strict native numeric validation lives in WrapperNativeValues. The source's private model-service field is retained.
+Source private helpers are ported directly or extracted into internal services. SetPrivateProperties, SetUnmanagedObjects, SetManagedObjects and host-version/edition helpers remain wrapper methods. Native base-unit, input-unit and STAAD-version reads now live in WrapperMetadataReader and serve both wrapper caches and standalone Root adapters. Unit conversion/parsing helpers live in WrapperUnitParser; shared strict native integer validation lives under Services/Interop/NativeValues. The source's private model-service field is retained.
 
 ### Placeholder boundary
 
@@ -141,10 +141,10 @@ Construction and refresh do not show host UI or launch/close STAAD. The default 
 ## 5. Validation and release boundary
 
 - Release net481 build succeeds, with compiled XML for the new members.
-- **1,001 offline tests pass**, including source-property parity, two constructors, all raw bindings/placeholders, native versus host version, cache/refresh behavior, service injection, unit aliases/fallbacks, malformed values, bound-instance handles and disposal. The explicit live-provider test is not run by the normal suite.
+- **1,190 offline tests pass**, including source-property parity, two constructors, all raw bindings/placeholders, native versus host version, cache/refresh behavior, service injection, unit aliases/fallbacks, malformed values, bound-instance handles and disposal. The explicit live-provider test is not run by the normal suite.
 - All 30 source property names and the three source public method names are present. The legacy single-constructor test was updated to require the source's two constructor forms.
 - The source wrapper fingerprint was compared before/after the port and is unchanged. The main project was never built or modified.
-- No native STAAD compatibility test, additional domain-function port, version-profile engine, capability implementation, NuGet package rebuild or publication was performed. A subsequent increment added five Root metadata queries and 22 behavioral tests.
+- No native STAAD compatibility test, additional domain-function port, version-profile engine, capability implementation, NuGet package rebuild or publication was performed. Subsequent increments added five Root metadata queries and two common analysis observation functions with a current-model overload; see the [analysis guide](Root-Analysis-Queries.md). Three common model/error reads were added next; shared strict native conversion now lives under Services/Interop/NativeValues. The next model-setup increment added process identity and four explicit native mutation operations with a ShortJobInfo overload.
 
 Source wrapper SHA-256: `83737733D57A672313385F99EA0CA8FFA10F1917FB6A33B89E43CE27E3F37B14`.
 

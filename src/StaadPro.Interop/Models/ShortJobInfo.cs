@@ -4,7 +4,9 @@ namespace StaadPro.Interop.Models
 {
     /// <summary>Editable managed snapshot of a STAAD model's short job information.</summary>
     /// <remarks>Changes raise property notifications but do not write to STAAD. Text is stored unchanged;
-    /// factory callers may store null, while successful native queries return string values.</remarks>
+    /// factory callers may store null, while successful native queries return string values.
+    /// Submit initialized short fields explicitly with
+    /// <see cref="StaadPro.Interop.Adapters.Interfaces.IOSRoot.SetShortJobInfo(ShortJobInfo)"/> to request a native update.</remarks>
     public class ShortJobInfo : ValidatablePropertyStore
     {
         /// <summary>Creates an uninitialized managed job record; text properties initially contain null.</summary>

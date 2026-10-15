@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Models;
+using StaadPro.Interop.Models.Root;
 using StaadPro.Interop.Adapters.Interfaces;
 using StaadPro.Interop.Services;
 using StaadPro.Interop.Services.Root.Metadata;
+using StaadPro.Interop.Services.Root.Analysis;
+using StaadPro.Interop.Services.Root.Common;
 
 namespace StaadPro.Interop.Adapters.Models
 {
@@ -812,6 +815,293 @@ namespace StaadPro.Interop.Adapters.Models
             if (!Enum.IsDefined(typeof(WaitAnalysisMode), waitMode)) throw new ArgumentOutOfRangeException(nameof(waitMode));
             object status = ComObject.AnalyzeEx((int)silentMode, (int)hiddenMode, (int)waitMode);
             return RootAnalysisStatus.Read(status);
+        }
+
+        /// <summary>Reads whether analysis is currently running in the bound STAAD application.</summary>
+        /// <returns>True for native Boolean true or integral one; false for Boolean false or integral zero.</returns>
+        /// <remarks><para>Calls native IsAnalyzing once. Other integers, null, strings, fractional numbers and unsupported shapes
+        /// are rejected rather than interpreted as flags. A false value does not mean an analysis completed or succeeded;
+        /// use GetAnalysisStatus to obtain the state of a particular model.</para>
+        /// <para>This live predicate is separate from the wrapper metadata cache. It does not start or wait for analysis,
+        /// query a filename, read result files, save, change silent mode or launch STAAD. Use the bound session's COM thread
+        /// and coordinate shared access. The returned value is a snapshot; a native call may block.</para></remarks>
+        /// <exception cref="InvalidOperationException">The native response is neither a Boolean nor an integral zero/one flag.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native predicate fails; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured root lacks a compatible IsAnalyzing member.</exception>
+        /// <example><code>
+        /// bool isRunning = root.IsAnalyzing();
+        /// Console.WriteLine(isRunning);
+        /// </code></example>
+        public bool IsAnalyzing()
+        {
+            return RootAnalysisQueryService.IsAnalyzing(ComObject);
+        }
+
+        /// <summary>Reads native analysis state, diagnostic counts and CPU time for the specified model.</summary>
+        /// <param name="modelFilePath">Non-null, non-whitespace model path. Relative paths are resolved against the caller process's current directory before native access. No file existence or extension check is performed.</param>
+        /// <returns>An immutable result containing the absolute queried path, exact native status, nullable recognized status,
+        /// query success, completion state, and available warning count, error count and CPU time in seconds.</returns>
+        /// <remarks><para>Calls GetAnalysisStatus once on the captured root, using internal Int32 reference buffers for warning/error
+        /// counts and Double for CPU time. No reference parameters or native output buffers are exposed to callers.
+        /// Native codes are -2 invalid path, -1 terminated, 0 general error, 1 running, 2 completed cleanly,
+        /// 3 completed with warnings, 4 completed with errors and 5 not performed. Unknown signed Int32 codes remain inspectable.</para>
+        /// <para>IsSuccessful means a recognized analysis state was retrieved (-1 or 1 through 5), not that analysis succeeded.
+        /// Invalid-path, general-error and unknown-status results expose no output data. Counts and CPU time are required,
+        /// nonnegative and finite for completed states 2 through 4. In other recognized states, written valid fields are retained
+        /// independently; initial Int32.MinValue count buffers and a NaN time buffer represent unavailable fields. An unwritten
+        /// time and an explicitly written NaN cannot be distinguished for these noncompleted states. Other malformed outputs throw.
+        /// Numeric zero is valid data. Count/status consistency beyond these shape/range checks is not inferred.</para>
+        /// <para>The model need not be the currently open model. No filename read, file opening, analysis, polling, save,
+        /// result-file parsing or filesystem mutation occurs. Use the session's COM thread; serialize shared access.
+        /// This is a live, sequential native observation, not a transaction or proof of current result freshness. No automatic retry
+        /// or time limit is imposed; a native call may block.</para></remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="modelFilePath"/> is null; rejected before native access.</exception>
+        /// <exception cref="ArgumentException"><paramref name="modelFilePath"/> is blank or contains invalid Windows path characters.</exception>
+        /// <exception cref="NotSupportedException">The requested path format is unsupported by the Windows Path API.</exception>
+        /// <exception cref="System.IO.PathTooLongException">The requested path exceeds the limits enforced by the runtime.</exception>
+        /// <exception cref="InvalidOperationException">The native status is not an integral Int32-range value, or a recognized-state output is invalid or a completed-state output is unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native query fails; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible native signature, including the required reference argument types.</exception>
+        /// <example><code>
+        /// var status = root.GetAnalysisStatus(@"C:\Models\Frame.STD");
+        /// Console.WriteLine(status.NativeStatus);
+        /// if (status.IsCompleted) Console.WriteLine(status.ErrorCount);
+        /// </code></example>
+        public AnalysisStatusResult GetAnalysisStatus(string modelFilePath)
+        {
+            string normalizedPath = NormalizeRequestedModelPath(modelFilePath, nameof(modelFilePath));
+            return RootAnalysisQueryService.GetAnalysisStatus(ComObject, normalizedPath);
+        }
+
+        /// <summary>Reads analysis status for the model path currently reported by this root session.</summary>
+        /// <returns>The same immutable status/data contract as GetAnalysisStatus(string), for the path captured by one native filename read.</returns>
+        /// <remarks><para>Reads GetStaadFileFullPath once, rejects an empty or whitespace-only filename, then delegates to
+        /// the explicit-path overload. An unnamed session throws before any analysis-status query; use the explicit-path overload
+        /// to query a known model without relying on an open filename. Relative native paths are normalized by the delegated overload.</para>
+        /// <para>Uses live native reads rather than the wrapper metadata cache. The model can change between the filename and status
+        /// reads; the result identifies the path actually queried and does not guarantee that it remains the open model.
+        /// Does not start analysis, open/save/close models, poll or launch STAAD. Use the bound session's COM thread and serialize
+        /// shared access. No retries or bounded native-call completion are provided. IsSuccessful indicates state retrieval,
+        /// including terminated, running, completed-with-errors and not-performed states; inspect Status for the analysis outcome.</para></remarks>
+        /// <exception cref="InvalidOperationException">No named model is available, the filename/status response is malformed, or a required completed-state output is missing or invalid.</exception>
+        /// <exception cref="ArgumentException">The reported model path contains invalid Windows path characters.</exception>
+        /// <exception cref="NotSupportedException">The reported model path format is unsupported by the Windows Path API.</exception>
+        /// <exception cref="System.IO.PathTooLongException">The reported path exceeds the limits enforced by the runtime.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">A native filename or status query fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured root lacks a compatible filename or analysis-status member.</exception>
+        /// <example><code>
+        /// var status = root.GetAnalysisStatus();
+        /// Console.WriteLine(status.ModelFilePath);
+        /// Console.WriteLine(status.Status);
+        /// </code></example>
+        public AnalysisStatusResult GetAnalysisStatus()
+        {
+            string modelFilePath = GetStaadFileFullPath();
+            if (string.IsNullOrWhiteSpace(modelFilePath))
+                throw new InvalidOperationException("The bound STAAD session has no named model to query. Supply a model path explicitly.");
+            return GetAnalysisStatus(modelFilePath);
+        }
+
+        /// <summary>Reads the current model's folder directly from the bound OpenSTAAD root.</summary>
+        /// <returns>The exact directory string written by native GetSTAADFileFolder, including its original spelling,
+        /// whitespace, separator style and any trailing separator. An explicitly written empty string remains empty.</returns>
+        /// <remarks><para>Calls the native void GetSTAADFileFolder operation once with an internally initialized string VARIANT
+        /// reference. Rejects an unwritten buffer, null or any non-string value. The public API has no reference parameters
+        /// and does not invent a success flag for a native void query.</para>
+        /// <para>Does not read the model filename or derive a directory using Path.GetDirectoryName. No path normalization,
+        /// filesystem lookup, folder creation, model opening or wrapper cache refresh occurs. Empty output is preserved as reported;
+        /// it does not establish why a folder is unavailable or prove a blank/unnamed model.</para>
+        /// <para>Uses the captured root on the caller's COM thread. Serialize shared-session access. This live read is a snapshot,
+        /// not a readiness check or a guarantee that the directory exists. A native call can block; no retry is performed.</para></remarks>
+        /// <exception cref="InvalidOperationException">The native folder output is unwritten, null or not a string.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native folder query fails; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible GetSTAADFileFolder reference-output signature.</exception>
+        /// <example><code>
+        /// string modelFolder = root.GetStaadFileFolder();
+        /// Console.WriteLine(modelFolder);
+        /// </code></example>
+        public string GetStaadFileFolder()
+        {
+            return RootCommonQueryService.GetStaadFileFolder(ComObject);
+        }
+
+        /// <summary>Reads whether the model bound to this OpenSTAAD root is a physical model.</summary>
+        /// <returns>True for a native Boolean true or integral one; false for Boolean false or integral zero.</returns>
+        /// <remarks><para>Calls native IsPhysicalModel once and validates its flag. Other integer values, null, strings,
+        /// floating-point and decimal values are rejected instead of being coerced into a model classification.
+        /// A false result reports the native predicate only; it is not a guarantee that an analytical model is loaded or ready.
+        /// Native behavior for blank or unsupported sessions is not inferred.</para>
+        /// <para>Does not convert the model between physical and analytical representations, start analysis, open/save models,
+        /// query a filename or refresh metadata. Uses the captured root and calling COM thread; coordinate shared access.
+        /// The returned classification is a live snapshot and can change after the read. No retry or native-call timeout is imposed.</para></remarks>
+        /// <exception cref="InvalidOperationException">The native response is neither a Boolean nor an integral zero/one flag.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native classification query fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible IsPhysicalModel member.</exception>
+        /// <example><code>
+        /// bool isPhysical = root.IsPhysicalModel();
+        /// Console.WriteLine(isPhysical);
+        /// </code></example>
+        public bool IsPhysicalModel()
+        {
+            return RootCommonQueryService.IsPhysicalModel(ComObject);
+        }
+
+        /// <summary>Reads the error-message text currently reported by the bound OpenSTAAD root.</summary>
+        /// <returns>The exact native string, preserving Unicode, line breaks and whitespace; an explicitly returned empty string remains empty.</returns>
+        /// <remarks><para>Calls native GetErrorMessage once when explicitly requested. Rejects null and non-string responses;
+        /// does not substitute a managed exception message or manufacture an error from other session state.
+        /// An empty message does not establish that every prior operation succeeded.</para>
+        /// <para>The vendor help does not specify whether reading consumes or clears the native error state. Native semantics
+        /// therefore apply; this method does not promise a nondestructive peek, stable repeated reads or error history.
+        /// It is not automatically called from another operation's failure handler, so it cannot replace that operation's original exception.</para>
+        /// <para>Uses the captured root on the caller's COM thread. Coordinate access so other operations do not replace the native error
+        /// before it is read. No model opening/saving, error-triggering probe, analysis, retry or wrapper cache refresh is performed.
+        /// Native calls may block. Availability and licensing errors remain the server's responsibility.</para></remarks>
+        /// <exception cref="InvalidOperationException">The native error-message response is null or not a string.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native message query fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible GetErrorMessage member.</exception>
+        /// <example><code>
+        /// string nativeMessage = root.GetErrorMessage();
+        /// Console.WriteLine(nativeMessage);
+        /// </code></example>
+        public string GetErrorMessage()
+        {
+            return RootCommonQueryService.GetErrorMessage(ComObject);
+        }
+
+        /// <summary>Reads the process identifier reported by this acquired OpenSTAAD root.</summary>
+        /// <returns>A positive UInt32 process identifier from the bound native root.</returns>
+        /// <remarks><para>Calls native GetProcessId once and accepts integral CLR representations only, within 1 through UInt32.MaxValue.
+        /// Rejects zero, negative, overflowing, Boolean, string, floating-point, decimal and pointer-shaped values.
+        /// Shares validation with the existing window-control operations.</para>
+        /// <para>Does not enumerate processes, consult a global active object, read a window handle, acquire another session,
+        /// launch STAAD or construct a Process object. A PID is an identifier, not an owning process handle. It may become stale
+        /// or be recycled after this snapshot; no process liveness or model-readiness guarantee is made.
+        /// Use the bound session's COM thread and coordinate access. No retry or bounded native-call completion is provided.</para></remarks>
+        /// <exception cref="InvalidOperationException">The native process identifier is not a supported positive UInt32-range integral value.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native query fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible GetProcessId member.</exception>
+        /// <example><code>
+        /// uint processId = root.GetProcessId();
+        /// Console.WriteLine(processId);
+        /// </code></example>
+        public uint GetProcessId()
+        {
+            return RootCommonQueryService.GetProcessId(ComObject);
+        }
+
+        /// <summary>Requests changing only the current model's input length unit.</summary>
+        /// <param name="lengthUnit">LengthInputUnit identifying native code 0 through 7. Named values are Inch=0, Feet=2, CentiMeter=3, Meter=4, MilliMeter=5, DeciMeter=6 and KiloMeter=7. The documented feet alias (LengthInputUnit)1 is also accepted and dispatched unchanged.</param>
+        /// <remarks><para>Validates the complete unit argument before one native SetInputUnitForLength call with an Int32 code.
+        /// Does not route through the combined unit setter, read or set force units, or change the managed unit cache.
+        /// Unlike this method, the existing SetInputUnitsEx retains its named-enum validation and still rejects unnamed code 1.</para>
+        /// <para>The native operation is void: normal return means dispatch completed, not verified read-back or persistence.
+        /// No save, analysis, structure update, value rescaling, base-system change or rollback is promised or added by this library.
+        /// On a wrapper-owned connection, explicitly call wrapper.RefreshUnits when fresh cached unit values are needed.
+        /// Use the session's COM thread and serialize native mutations and refresh. No automatic retry occurs after an uncertain failure;
+        /// the request may have taken effect before an exception. Native calls may block or display server UI.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="lengthUnit"/> is outside native codes 0 through 7; rejected before native access.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native unit request fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible SetInputUnitForLength member.</exception>
+        /// <example><code>
+        /// bool changeLengthUnit = false; // enable only when the model should be changed
+        /// if (changeLengthUnit) root.SetInputUnitForLength(LengthInputUnit.Meter);
+        /// </code></example>
+        public void SetInputUnitForLength(LengthInputUnit lengthUnit)
+        {
+            RootModelEditService.SetInputUnitForLength(ComObject, lengthUnit);
+        }
+
+        /// <summary>Requests changing only the current model's input force unit.</summary>
+        /// <param name="forceUnit">Defined ForceInputUnit: KiloPound=0, Pound=1, KiloGram=2, MetricTon=3, Newton=4, KiloNewton=5, MegaNewton=6 or DecaNewton=7.</param>
+        /// <remarks><para>Validates the enum before one native SetInputUnitForForce call with its Int32 code.
+        /// Does not read or set length units, invoke the combined unit setter or refresh cached wrapper properties.
+        /// Explicitly call wrapper.RefreshUnits after the request when fresh cached unit information is needed.</para>
+        /// <para>Native void completion does not verify the resulting unit or file persistence. The library adds no save,
+        /// analysis, structure update, value rescaling, base-system change or transaction. Native failures may follow partial effects;
+        /// no retry or rollback occurs. Use the session's COM thread and coordinate mutations and refresh.
+        /// Native calls may block or display server UI.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="forceUnit"/> is not defined; rejected before native access.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native unit request fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible SetInputUnitForForce member.</exception>
+        /// <example><code>
+        /// bool changeForceUnit = false; // enable only when the model should be changed
+        /// if (changeForceUnit) root.SetInputUnitForForce(ForceInputUnit.KiloNewton);
+        /// </code></example>
+        public void SetInputUnitForForce(ForceInputUnit forceUnit)
+        {
+            RootModelEditService.SetInputUnitForForce(ComObject, forceUnit);
+        }
+
+        /// <summary>Requests updating the current model's job name, client and originating engineer.</summary>
+        /// <param name="jobName">Non-null job name text, sent unchanged. Empty or whitespace text is permitted.</param>
+        /// <param name="jobClient">Non-null client text, sent unchanged. Empty or whitespace text is permitted.</param>
+        /// <param name="engineerName">Non-null originating engineer name, sent unchanged in the native engineer position.</param>
+        /// <remarks><para>Validates all three inputs before one native SetShortJobInfo call in job-name, client, engineer order.
+        /// Preserves supplied Unicode, spaces and line breaks; native text limits and interpretation still apply.
+        /// Empty input is sent as supplied, not replaced with another value. This does not establish the server's clearing or storage behavior.</para>
+        /// <para>The native function is void: return indicates dispatch completion, not verified storage or persistence.
+        /// No full-job metadata update, save, model opening/closing, analysis or read-back is added. Use GetShortJobInfo explicitly
+        /// when read-back is required. Serialize shared model access on the session's COM thread.
+        /// Native calls may block or display UI. Exceptions propagate without retry or rollback; side effects may already have occurred.</para></remarks>
+        /// <exception cref="ArgumentNullException">One of the three strings is null; all input validation precedes native access.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native metadata request fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible three-input SetShortJobInfo member.</exception>
+        /// <example><code>
+        /// bool updateJobMetadata = false; // enable only when the model should be changed
+        /// if (updateJobMetadata) root.SetShortJobInfo("Frame study", "Client", "Engineer");
+        /// </code></example>
+        public void SetShortJobInfo(string jobName, string jobClient, string engineerName)
+        {
+            RootModelEditService.SetShortJobInfo(ComObject, jobName, jobClient, engineerName);
+        }
+
+        /// <summary>Requests updating short job metadata from an existing managed job-information object.</summary>
+        /// <param name="jobInfo">Non-null ShortJobInfo with non-null Name, Client and Originator. Empty strings are permitted. A FullJobInfo is accepted through its inherited short fields; its other fields are not submitted.</param>
+        /// <remarks><para>Reads each of the three mutable properties once into local string snapshots, validates them before native access,
+        /// then delegates to the three-string overload. Reuses the existing model class without creating a parallel write-options type.
+        /// Editing the managed object alone does not update STAAD. Coordinate concurrent edits to obtain a coherent snapshot;
+        /// these property reads are not an atomic transaction.</para>
+        /// <para>Preserves text and native argument order. Normal void return indicates native dispatch completion only.
+        /// No full-job update, date conversion, save, read-back, structure update or analysis occurs. Use the appropriate session COM thread;
+        /// native failures propagate without automatic retry or rollback and may follow native side effects.</para></remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="jobInfo"/> is null; rejected before native access.</exception>
+        /// <exception cref="ArgumentException">Name, Client or Originator is null; the exception identifies jobInfo and no native call is made.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native metadata request fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible SetShortJobInfo member.</exception>
+        /// <example><code>
+        /// var jobInfo = ShortJobInfo.From("Frame study", "Client", "Engineer");
+        /// bool applyJobInfo = false; // enable only when the model should be changed
+        /// if (applyJobInfo) root.SetShortJobInfo(jobInfo);
+        /// </code></example>
+        public void SetShortJobInfo(ShortJobInfo jobInfo)
+        {
+            if (jobInfo == null) throw new ArgumentNullException(nameof(jobInfo));
+            string jobName = jobInfo.Name;
+            string jobClient = jobInfo.Client;
+            string engineerName = jobInfo.Originator;
+            if (jobName == null || jobClient == null || engineerName == null)
+                throw new ArgumentException("Job name, client and originating engineer must all be initialized.", nameof(jobInfo));
+            SetShortJobInfo(jobName, jobClient, engineerName);
+        }
+
+        /// <summary>Requests a native update of the current STAAD structure.</summary>
+        /// <remarks><para>Invokes native UpdateStructure once with no arguments. The vendor reference describes a structure update
+        /// but specifies no returned status, completion/readiness protocol, save behavior or detailed rebuild guarantees.
+        /// A normal void return establishes dispatch completion only; it does not certify that pending edits are persisted or results are current.</para>
+        /// <para>The library adds no analysis, save, model opening/closing, wrapper refresh, unit refresh, wait or read-back.
+        /// This explicit native mutation may affect the current model; use the connected session's COM thread and coordinate edits.
+        /// Native UI or a blocking call remains possible. Failures propagate without retry or rollback and can follow partial native effects.</para></remarks>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native update request fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible UpdateStructure member.</exception>
+        /// <exception cref="System.Runtime.InteropServices.InvalidComObjectException">The captured COM wrapper is no longer associated with a usable native object.</exception>
+        /// <example><code>
+        /// bool updateCurrentStructure = false; // enable only when a native update should be requested
+        /// if (updateCurrentStructure) root.UpdateStructure();
+        /// </code></example>
+        public void UpdateStructure()
+        {
+            RootModelEditService.UpdateStructure(ComObject);
         }
 
         private static string NormalizeRequestedModelPath(string path, string parameterName)

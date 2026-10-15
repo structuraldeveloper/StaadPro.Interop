@@ -143,6 +143,16 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetInputUnitForForce", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetInputUnitForLength", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetMainWindowHandle", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "IsAnalyzing", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetStaadFileFolder", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "IsPhysicalModel", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetErrorMessage", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetProcessId", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SetInputUnitForLength", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SetInputUnitForForce", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SetShortJobInfo", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "UpdateStructure", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetAnalysisStatus", "root")]
         public void LoadAndRootPortHasMatchingCompleteExecutableIntelliSense(Type contractType, Type adapterType, string name, string receiver)
         {
             var xml = XDocument.Load(Path.ChangeExtension(contractType.Assembly.Location, ".xml"));
@@ -170,6 +180,8 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase("HiddenMode", 3)]
         [TestCase("WaitAnalysisMode", 3)]
         [TestCase("AnalysisResult", 8)]
+        [TestCase("LengthInputUnit", 8)]
+        [TestCase("ForceInputUnit", 9)]
         public void NativeSelectionEnumsHaveDocumentedTypesAndAllValues(string typeName, int count)
         {
             var xml = XDocument.Load(Path.ChangeExtension(typeof(IOSLoad).Assembly.Location, ".xml"));

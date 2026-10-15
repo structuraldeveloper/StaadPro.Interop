@@ -23,7 +23,7 @@ All 30 main-source wrapper properties, both constructor forms, RefreshComObjects
 - `RefreshComObjects()`: rebinds adapters and rereads metadata after model reopening/database initialization; callers reacquire adapter properties.
 - `Dispose()`: clears all bindings without saving/closing STAAD; refresh methods reject further use.
 
-Construction/refresh read native metadata on the session’s COM thread. Five typed Root metadata queries now reuse wrapper snapshots. Root profile selection, other pending operations and optional capabilities remain separate work.
+Construction/refresh read native metadata on the session’s COM thread. Five typed Root metadata queries now reuse wrapper snapshots. Common live analysis observation is also implemented. Root profile selection, other pending operations and optional capabilities remain separate work.
 
 ## `IOSGeometry` Members
 - `CreateMultipleNodesExtended(IOSRoot openStaad, IEnumerable<Node> nodeCollection)`: Creates explicit node IDs using an XYZ coordinate matrix in model input units.
@@ -192,6 +192,18 @@ The metadata queries below reuse cached wrapper values. RefreshUnits updates uni
 
 | Method | Result |
 | --- | --- |
+| `string GetStaadFileFolder()` | One native directory read; exact text and explicitly written empty output preserved. |
+| `bool IsPhysicalModel()` | One live native classification predicate; Boolean or integral 0/1 only. |
+| `string GetErrorMessage()` | One explicit exact-text native message read; no promise that reading preserves the server error state. |
+| `uint GetProcessId()` | Same-root positive UInt32 PID query; shared strict validation, no process enumeration or liveness guarantee. |
+| `void SetInputUnitForLength(LengthInputUnit lengthUnit)` | Independent length request; codes 0–7 including unnamed feet alias 1; explicit wrapper refresh required for fresh caches. |
+| `void SetInputUnitForForce(ForceInputUnit forceUnit)` | Independent validated force request; no automatic length request, save or cache refresh. |
+| `void SetShortJobInfo(string jobName, string jobClient, string engineerName)` | Submit three non-null strings in native order; preserve text, no automatic save. |
+| `void SetShortJobInfo(ShortJobInfo jobInfo)` | Snapshot Name/Client/Originator from the existing model, validate, then delegate. |
+| `void UpdateStructure()` | One explicit native update request; no added save, analysis, refresh or completion verification. |
+| `bool IsAnalyzing()` | One live native running-state read; Boolean or integral 0/1 only. False does not indicate analysis success. |
+| `AnalysisStatusResult GetAnalysisStatus(string modelFilePath)` | Normalized explicit-path query; immutable native/typed status, success, completion and nullable diagnostic counts/CPU seconds. |
+| `AnalysisStatusResult GetAnalysisStatus()` | One current filename read, then delegates; unnamed models throw before status access. |
 | `string GetStaadFileFullPath()` | Exact current model path from one void `GetSTAADFile` output read. |
 | `string GetStaadFileNameOnly()` | Windows filename including its extension, derived from one path read. |
 | `string GetAnlFileFullPath()` | Same directory and model stem with uppercase `.ANL`, derived from one path read. |
@@ -220,4 +232,4 @@ The metadata queries below reuse cached wrapper values. RefreshUnits updates uni
 | `void RestoreStaadMainWindow()` | Validate native window/PID and post ShowWindowAsync command 9; Accepted request does not verify final state |
 | `AnalysisResult AnalyzeEx(SilentMode silentMode, HiddenMode hiddenMode, WaitAnalysisMode waitMode)` | Validate/send native silent, hidden, wait codes; preserve integer analysis status; Starts native analysis; wait mode can block |
 
-Filename/identity queries preserve empty native filenames and perform no native writes. The job getters validate all outputs and return editable managed snapshots; malformed dates throw. The unit setter changes native input-unit state and does not rescale managed values, save or roll back. Silent/save/close operations can mutate native state, write files or display dialogs; no rollback or verified unattended completion is provided. See [Root-Porting.md](Root-Porting.md) for complete native mappings, date/empty/error behavior, examples and the remaining 1 reference methods. Private-source coverage remains 22 of 23 methods, with five additional vendor metadata queries (27 public Root methods total). See the [managed API rules](Root-Managed-API-Design.md) for pending result-object contracts. Custom `IOSRoot` implementations must implement the added members.
+Filename/identity queries preserve empty native filenames and perform no native writes. The job getters validate all outputs and return editable managed snapshots; malformed dates throw. The unit setter changes native input-unit state and does not rescale managed values, save or roll back. Silent/save/close operations can mutate native state, write files or display dialogs; no rollback or verified unattended completion is provided. See [Root-Porting.md](Root-Porting.md) for complete native mappings, date/empty/error behavior, examples and the one remaining private-reference method. Private-source coverage remains 22 of 23 methods. Additional vendor mappings and overloads bring IOSRoot to 39 managed methods, covering 24 of the 39 documented native functions. See the [analysis query guide](Root-Analysis-Queries.md), [common query guide](Root-Common-Queries.md), [model setup guide](Root-Model-Setup.md) and [managed API rules](Root-Managed-API-Design.md). Custom `IOSRoot` implementations must implement the added members.

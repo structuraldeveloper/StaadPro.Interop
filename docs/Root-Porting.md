@@ -2,15 +2,27 @@
 
 For coverage against Bentley's installed OpenSTAAD 2026 reference (39 native Root functions), see the [Root API coverage and implementation plan](reports/OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md). The counts below describe parity with the private main project, not coverage of Bentley's full Root API.
 
-For the proposed 2024-2026 internal service selection and capability access, see the [multi-version Root architecture plan](reports/OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md). This is architecture and planning documentation only; implementation remains pending approval.
+For the proposed 2024-2026 internal service selection and capability access, see the [multi-version Root architecture plan](reports/OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md). Metadata access and common analysis observation are implemented; profile selection and optional capability infrastructure remain planned.
 
-The [complete wrapper foundation](Wrapper-Porting.md) is now ported with raw bindings, cached application metadata, refresh methods and explicitly limited domain placeholders. The next Root metadata methods will reuse its properties; no new IOSRoot function is added by this wrapper change.
+The [complete wrapper foundation](Wrapper-Porting.md) is now ported with raw bindings, cached application metadata, refresh methods and explicitly limited domain placeholders. Five Root metadata methods now reuse its properties; common analysis queries use a separate live native service.
 
 The main project's `IOSRoot` exposes 23 methods. This repository now implements **22**, with **1 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
-The next Root increment adds five vendor metadata queries beyond the private interface: GetApplicationVersion, GetBaseUnit, GetInputUnitForForce, GetInputUnitForLength and GetMainWindowHandle. IOSRoot now has 27 methods. Wrapper-bound calls reuse snapshots; standalone bindings read the same supplied native root through shared helpers. See the [managed API design rules](Root-Managed-API-Design.md) and [API reference](API-Reference.md#root-adapter). These additions do not change the private-interface parity count below.
+The first Root increment added five vendor metadata queries beyond the private interface: GetApplicationVersion, GetBaseUnit, GetInputUnitForForce, GetInputUnitForLength and GetMainWindowHandle. IOSRoot now has 39 managed methods after the metadata, analysis, common-query and model-setup increments. Wrapper-bound calls reuse snapshots; standalone bindings read the same supplied native root through shared helpers. See the [managed API design rules](Root-Managed-API-Design.md) and [API reference](API-Reference.md#root-adapter). These additions do not change the private-interface parity count below.
+
+## Analysis observation
+
+`IsAnalyzing()`, `GetAnalysisStatus(string modelFilePath)` and the current-model `GetAnalysisStatus()` overload are implemented. The immutable AnalysisStatusResult includes native/typed status, query success, completion state and nullable counts/time. Signatures, status mappings, validation policy, examples and compatibility evidence are covered in the [analysis query guide](Root-Analysis-Queries.md). These two native functions and one convenience overload are additional to the private-source parity count.
+
+## Common model and error queries
+
+GetStaadFileFolder, IsPhysicalModel and GetErrorMessage are now implemented with full XML and shared strict native validation. They perform live same-root reads and preserve explicit native empty strings; no public reference parameters are introduced. See the [common query guide](Root-Common-Queries.md). These vendor additions do not change the private-source parity count below.
+
+## Process identity and model setup
+
+GetProcessId, SetInputUnitForLength, SetInputUnitForForce, SetShortJobInfo and UpdateStructure are implemented. SetShortJobInfo also accepts the existing ShortJobInfo model. Native mutations return void and add no save, retry or cache refresh; PID reads share strict validation with window control. See the [model setup guide](Root-Model-Setup.md). These are five additional native mappings and six managed signatures, distinct from private-source parity.
 
 ## Ported functions
 
