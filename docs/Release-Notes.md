@@ -1,8 +1,18 @@
 # StaadPro.Interop release notes
 
-### Unreleased source development
+## 1.0.0-preview.20261015 - 15 October 2026 (prepared preview)
 
-Completed the reviewed Root API mappings and the private-source member-force helper. Added independently acquired export/message interfaces with exact candidate-build policy, native signature inspection, bounded message retrieval and named status/data results. Expanded XML IntelliSense, regression tests and usage guidance. Native STAAD runtime validation and a new NuGet archive remain pending; this source work is not included in the preview archives below. See the [Root completion guide](Root-Completion-and-Capabilities.md).
+Completed the reviewed Root API port and expanded the wrapper surface. This preview includes all 39 reviewed native Root function mappings and all 23 private-source Root method mappings, exposed through 53 common managed operations and three separately acquired optional operations.
+
+- Added the complete approved wrapper surface, raw native object bindings, application metadata and adapter placeholders for domains whose operations will be ported separately.
+- Added wrapper-backed metadata queries, analysis state and status results, model information, input-unit selection, job metadata, CONNECTED project information and explicit analysis requests.
+- Added guarded model creation, named-view creation, saving, removal and modification, opaque process-handle values, explicit application shutdown and qualified member-end force results.
+- Added optional ADINA export and analysis error/warning retrieval through capability interfaces. Availability requires an exact candidate-build policy and compatible native member metadata. Candidate profiles cover export on 25.0.1.424 and export/messages on 26.0.0.340; these declarations do not certify live native behavior.
+- Added descriptive managed parameters, named status/data results, typed options, bounded message retrieval and complete XML IntelliSense for the new operations. Expanded the packaged Root and wrapper usage guides.
+
+Release validation covers 1,547 offline tests, a Release solution build, and isolated installation of the archive with compilation and execution of 217 selected XML examples against managed stand-ins. Mutating examples remain guarded; these checks do not run native STAAD operations. See the [Root completion guide](Root-Completion-and-Capabilities.md) for contracts and remaining validation gates.
+
+Targets Windows and .NET Framework 4.8.1 (net481). This package does not contain a .NET Core library asset. New interface members require updates to custom interface implementations. Existing geometry and load APIs remain included. Live STAAD compatibility, native flag meanings, result-unit conventions and file side effects require validation before a stable release. This entry describes a prepared archive; public availability requires a separate NuGet.org upload and verification.
 
 ## 1.0.0-preview.20261014.7 - 14 October 2026 (preview)
 

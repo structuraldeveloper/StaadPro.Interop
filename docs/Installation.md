@@ -2,7 +2,7 @@
 
 ## Package and runtime
 
-The current source also prepares `1.0.0-preview.20261013.4`, adding self-weight/envelope/load-list mutations and root path queries, plus the prior envelope queries and standalone types. This version has passed local package verification but has not been published by this work. To use its new functions now, install the verified archive through the local-feed instructions with that version. The public-feed examples below retain the already verified `1.0.0-preview.20261012.1`; that older package does not contain these additions. Current-source packages ship 66 documented load overloads, 24 load queries and nine documented root functions. See [Load-Porting.md](Load-Porting.md) and [Root-Porting.md](Root-Porting.md) for usage.
+The locally prepared preview is `1.0.0-preview.20261015`, including the completed reviewed Root mappings, wrapper bindings, 140 geometry methods and 78 load overloads. It exposes 53 common Root operations plus three optional capability operations. Install this archive through the local-feed instructions using that version. Public-feed examples below retain the previously verified `1.0.0-preview.20261012.1`; they do not imply that the new preview has been uploaded. See [Load-Porting.md](Load-Porting.md), [Root-Porting.md](Root-Porting.md) and [Root capabilities](Root-Completion-and-Capabilities.md) for usage.
 
 This guide uses preview version `1.0.0-preview.20261012.1` of package `StaadPro.Interop`. Public-feed commands apply after that exact version is accepted and available on NuGet.org; [Publishing.md](Publishing.md) explains upload and verification. The same verified archive can be installed immediately through a local feed.
 

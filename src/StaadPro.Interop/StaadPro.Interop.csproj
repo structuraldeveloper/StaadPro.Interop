@@ -12,11 +12,11 @@
     <RootNamespace>StaadPro.Interop</RootNamespace>
     <PackageId>StaadPro.Interop</PackageId>
     <Version>1.0.0</Version>
-    <ReleaseDocumentationVersion>1.0.0-preview.20261014.7</ReleaseDocumentationVersion>
+    <ReleaseDocumentationVersion>1.0.0-preview.20261015</ReleaseDocumentationVersion>
     <PackageVersion>$(ReleaseDocumentationVersion)</PackageVersion>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 StaadDev</Copyright>
-    <PackageReleaseNotes>Updated the package description and publication documentation. Reorganized the README with current installation instructions, API coverage, runtime requirements and usage guidance. Retained geometry and load APIs, including GetLoadCases, together with model lifecycle, window control and typed analysis operations. Included XML IntelliSense and shipped API guides. The runtime API is unchanged from 1.0.0-preview.20261014.6. Validated the existing 914-test implementation and 149 installed-package XML example blocks; native compatibility validation remains in progress. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Completed the reviewed Root API port and approved wrapper surface. Included 53 common Root operations and three optional capability operations for ADINA export and analysis messages, with exact candidate-build policies and native signature checks. Added named results, typed options, bounded retrieval, XML IntelliSense and packaged usage guides. Validated 1,547 offline tests and 217 installed-package XML examples against managed stand-ins. Targets Windows and .NET Framework 4.8.1; live STAAD compatibility validation remains pending. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>

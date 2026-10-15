@@ -1,6 +1,14 @@
 # NuGet readiness assessment
 
-## Current source update - 13 October 2026
+## Prepared preview - 15 October 2026
+
+The locally prepared package is `1.0.0-preview.20261015`, targeting Windows and .NET Framework 4.8.1. It includes the approved wrapper surface and all 39 reviewed native Root mappings: 53 common managed operations plus three optional operations. All 23 private-source Root method names are covered. Geometry and load adapters expose 140 methods and 78 overloads respectively.
+
+Release verification comprises 1,547 offline tests, a Release solution build with zero warnings/errors, archive metadata and documentation checks, and a fresh PackageReference consumer compiling and running 217 selected XML examples against managed stand-ins. Native STAAD mutations are not exercised. The archive and test evidence are under `artifacts/release`.
+
+This preview has not been uploaded as part of this work. Optional capability profiles require exact candidate-build and native signature checks; they are not live compatibility certification. Native behavior, engineering-unit conventions, file effects and broader version compatibility remain stable-release gates. See [Root completion and capabilities](Root-Completion-and-Capabilities.md) and [Publishing.md](Publishing.md).
+
+## Historical source update - 13 October 2026
 
 The current source includes envelope queries and self-weight, envelope creation and load-list mutations. Load coverage is **66 overloads**, including 61 matching reference signatures; **54 reference overloads remain pending**. Root coverage is **9 of 23 methods implemented, 14 pending**, including filenames/identity, job metadata and input-unit selection. See [Load-Porting.md](Load-Porting.md), [Root-Porting.md](Root-Porting.md) and the [envelope query guide](Load-Queries.md#load-envelope-queries).
 

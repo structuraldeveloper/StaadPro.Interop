@@ -12,15 +12,17 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Current source development
+## Current preview: 1.0.0-preview.20261015
 
-The source now includes the completed wrapper surface, five additional Root metadata queries, live `IsAnalyzing()` and typed `GetAnalysisStatus()` / `GetAnalysisStatus(string modelFilePath)` queries. The next common queries are also implemented: `GetStaadFileFolder()`, `IsPhysicalModel()` and `GetErrorMessage()`. The current source also includes `GetProcessId()`, `SetInputUnitForLength(LengthInputUnit)`, `SetInputUnitForForce(ForceInputUnit)`, `SetShortJobInfo(...)` (including a ShortJobInfo overload) and `UpdateStructure()`. See the [model setup guide](docs/Root-Model-Setup.md) and [analysis query guide](docs/Root-Analysis-Queries.md) and [common query guide](docs/Root-Common-Queries.md) for their contracts. These changes are not in the existing NuGet archive. See [wrapper scope](docs/Wrapper-Porting.md), [Root API coverage](docs/reports/OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md) and the [managed API design rules](docs/Root-Managed-API-Design.md) for implemented behavior and the remaining plan.
+This preview includes the completed wrapper bindings and five additional Root metadata queries: `GetApplicationVersion`, `GetBaseUnit`, `GetInputUnitForForce`, `GetInputUnitForLength` and `GetMainWindowHandle`. Wrapper-owned queries reuse cached properties; directly constructed Root adapters read their supplied native root. Unit compatibility fallbacks are documented in the [Root guide](docs/Root-Porting.md). Analysis observation also adds `IsAnalyzing()`, `GetAnalysisStatus()` and `GetAnalysisStatus(string modelFilePath)`, with immutable status/data results and no public reference outputs. See the [analysis guide](docs/Root-Analysis-Queries.md). Common reads also add `GetStaadFileFolder()`, `IsPhysicalModel()` and `GetErrorMessage()`; see the [common query guide](docs/Root-Common-Queries.md). This preview also includes `GetProcessId()`, `SetInputUnitForLength(LengthInputUnit)`, `SetInputUnitForForce(ForceInputUnit)`, `SetShortJobInfo(...)` (including a ShortJobInfo overload) and `UpdateStructure()`. See the [model setup guide](docs/Root-Model-Setup.md). These APIs are included in this preview archive.
 
-The latest source additions are `SetFullJobInfo(...)`, `Analyze()`, `AnalyzeModel(AnalysisEngine)`, `GetConnectedProjectInfo()` and `SetConnectedProjectInfo(...)`, including a project-data overload. They provide literal native date text, a typed analysis-engine selector and immutable project query results with no public reference outputs. Complete contracts, examples and native-validation limits are in the [job/analysis/project guide](docs/Root-Job-Analysis-Projects.md). These additions remain unreleased.
+Additional operations are `SetFullJobInfo(...)`, `Analyze()`, `AnalyzeModel(AnalysisEngine)`, `GetConnectedProjectInfo()` and `SetConnectedProjectInfo(...)`, including a project-data overload. They provide literal native date text, a typed analysis-engine selector and immutable project query results with no public reference outputs. Complete contracts, examples and native-validation limits are in the [job/analysis/project guide](docs/Root-Job-Analysis-Projects.md). These APIs are included in this preview archive.
 
-Source development also adds `NewSTAADFile(...)`, `CreateNamedView(string, int)`, `SaveNamedView(string)`, `GetProcessHandle()` and explicit `Quit()`. These include guarded native creation, inspected view signatures and opaque handle data. See the [creation/view/lifecycle guide](docs/Root-Creation-Views-and-Lifecycle.md) for concurrency limits, native signature discrepancies, raw flag policy and shutdown behavior. They are not included in the existing NuGet archive.
+This preview also adds `NewSTAADFile(...)`, `CreateNamedView(string, int)`, `SaveNamedView(string)`, `GetProcessHandle()` and explicit `Quit()`. These include guarded native creation, inspected view signatures and opaque handle data. See the [creation/view/lifecycle guide](docs/Root-Creation-Views-and-Lifecycle.md) for concurrency limits, native signature discrepancies, raw flag policy and shutdown behavior. These APIs are included in this preview archive.
 
-Root source porting is complete: all 39 reviewed native Root functions and all 23 private-source Root methods have managed mappings. The final additions include `RemoveNamedView`, `ModifyNamedView`, `RetrieveMemberForces`, and separately acquired `ExportModelToAdina`, `GetAnalysisErrorMessages` and `GetAnalysisWarningMessages`. Access optional operations through `Capabilities.GetAdinaExport()`, `GetAnalysisErrorMessages()` and `GetAnalysisWarningMessages()`. Exact candidate profiles and compatible member metadata are required. See the [completion and capability guide](docs/Root-Completion-and-Capabilities.md) for usage, named results, limits and native validation gates. These source additions remain unreleased.
+The reviewed Root port is complete: all 39 reviewed native Root functions and all 23 private-source Root methods have managed mappings. The final additions include `RemoveNamedView`, `ModifyNamedView`, `RetrieveMemberForces`, and separately acquired `ExportModelToAdina`, `GetAnalysisErrorMessages` and `GetAnalysisWarningMessages`. Access optional operations through `Capabilities.GetAdinaExport()`, `GetAnalysisErrorMessages()` and `GetAnalysisWarningMessages()`. Exact candidate profiles and compatible member metadata are required. See the [completion and capability guide](docs/Root-Completion-and-Capabilities.md) for usage, named results, limits and native validation gates. The package exposes 53 common Root operations and three optional operations. Native runtime validation remains pending; capability availability is not runtime certification.
+
+This archive is prepared locally; publication to NuGet.org is a separate step. See the [release notes](docs/Release-Notes.md).
 
 ## Highlights
 
@@ -156,9 +158,9 @@ StaadPro.Interop/
 
 ## Building and Testing
 
-The current load port exposes 66 overloads, with 54 reference overloads pending. The latest additions assign self-weight, create envelopes and select native load lists, alongside the envelope metadata queries. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
+The current adapters expose 140 geometry methods and 78 load overloads. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
 
-The root adapter now implements nine of the reference's 23 methods: filenames/identity checks, short/full job metadata and input-unit selection. Access them through `wrapper.Root`; see [root porting progress and examples](docs/Root-Porting.md).
+The Root port maps all 39 reviewed native functions and all 23 private-source Root methods through 53 common operations and three optional capability operations. Access them through `wrapper.Root`; see [root porting progress and examples](docs/Root-Porting.md).
 
 ```powershell
 # Restore & Build
@@ -168,8 +170,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261013.4 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261013.4.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261015 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261015.nupkg
 ```
 
 ---
