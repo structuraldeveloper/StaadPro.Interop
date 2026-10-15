@@ -20,8 +20,8 @@ namespace StaadPro.Interop.Tests.Models
             public MockLoadCom Load { get; }
 
             public int GetBaseUnit() => 2; // Metric
-            public int GetInputUnitForForce(string key) => 5; // KiloNewton
-            public int GetInputUnitForLength(string key) => 4; // Meter
+            public int GetInputUnitForForce(ref object key) { key = "kN"; return 5; }
+            public int GetInputUnitForLength(ref object key) { key = "m"; return 4; }
         }
 
         public class MockGeometryCom
@@ -41,10 +41,11 @@ namespace StaadPro.Interop.Tests.Models
         }
 
         [Test]
-        public void OpenStaadWrapper_SingleConstructorOnly_Enforced()
+        public void OpenStaadWrapper_OffersDefaultAndInjectedSourceConstructorForms()
         {
             var constructors = typeof(OpenStaadWrapper).GetConstructors();
-            Assert.AreEqual(1, constructors.Length, "OpenStaadWrapper must only expose a single constructor taking the root OpenSTAAD object.");
+            Assert.AreEqual(2, constructors.Length);
+            Assert.That(Array.ConvertAll(constructors, constructor => constructor.GetParameters().Length), Is.EquivalentTo(new[] { 2, 4 }));
         }
 
         [Test]

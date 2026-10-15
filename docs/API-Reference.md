@@ -5,17 +5,25 @@
 - `GetRunning()`: Attaches to an existing active STAAD session without launching or modifying model state.
 
 ## `OpenStaadWrapper` Members
-- `Geometry`: Managed `IOSGeometry` interface.
-- `Load`: Managed `IOSLoad` interface.
-- `RawOpenStaad`: Root OpenSTAAD COM object.
-- `Root`: Minimal `IOSRoot` binding for extended geometry methods; cleared on disposal.
-- `RawGeometry`: OpenSTAAD Geometry COM object.
-- `RawLoad`: OpenSTAAD Load COM object.
-- `IsDedicated`: Indicates if the instance is dedicated to the caller.
-- `IsConnected`: Indicates whether a valid STAAD COM instance is attached.
-- `BaseUnitSystem`: Active model base unit system (`Imperial`, `Metric`, `Unknown`).
-- `InputForceUnit`: Active force unit.
-- `InputLengthUnit`: Active length unit.
+
+All 30 main-source wrapper properties, both constructor forms, RefreshComObjects, RefreshUnits and Dispose are ported. See [Wrapper-Porting](Wrapper-Porting.md) for complete member parity, examples and limits.
+
+- `Root`, `Geometry`, `Load`: existing implemented adapters.
+- `RawOpenStaad`, `RawGeometry`, `RawLoad`, `RawOutput`, `RawProperty`, `RawSupport`, `RawDesign`, `RawCommands`, `RawTable`, `RawView`: native bindings; RawCommands reads the native singular Command property.
+- `Output`, `Property`, `Support`, `Design`, `Commands`, `Table`, `View`: binding-only placeholders; their domain functions are not ported.
+- `IdeaStatiCa`: integration placeholder when Geometry/Load/Output exist; no transformation, verification or export functions are available.
+- `StaadVersion`: cached native STAAD version; each access returns a copy, null when unavailable. This is the source for native version selection.
+- `ApplicationVersion`: entry/calling host assembly version; it is not the STAAD version.
+- `StaadEdition`: None/V8i/Connect using the source major-version rule; not a feature-support guarantee.
+- `StaadApplicationWindowHandle`: cached non-owning Connect-family window handle, using the same root by default.
+- `BaseUnitSystem`, `InputForceUnit`, `InputLengthUnit`: cached unit snapshots, with documented source-compatible unit fallback.
+- `IsDedicated`: caller-supplied dedication flag; no process ownership. `IsConnected`: managed binding-state check, not native readiness.
+- `StaadInteropInteractionService`: captured host interaction service; default is noninteractive.
+- `RefreshUnits()`: rereads only base/force/length units after native unit changes.
+- `RefreshComObjects()`: rebinds adapters and rereads metadata after model reopening/database initialization; callers reacquire adapter properties.
+- `Dispose()`: clears all bindings without saving/closing STAAD; refresh methods reject further use.
+
+Construction/refresh read native metadata on the session’s COM thread. Root profile selection and new Root/capability functions remain pending approval.
 
 ## `IOSGeometry` Members
 - `CreateMultipleNodesExtended(IOSRoot openStaad, IEnumerable<Node> nodeCollection)`: Creates explicit node IDs using an XYZ coordinate matrix in model input units.

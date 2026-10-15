@@ -25,8 +25,8 @@ namespace StaadPro.Interop.Tests.Adapter
             public MockStaadLoadCom Load { get; }
 
             public int GetBaseUnit() => 2;
-            public int GetInputUnitForForce(string key) => 5;
-            public int GetInputUnitForLength(string key) => 4;
+            public int GetInputUnitForForce(ref object key) { key = "kN"; return 5; }
+            public int GetInputUnitForLength(ref object key) { key = "m"; return 4; }
         }
 
         public class MockStaadGeomCom

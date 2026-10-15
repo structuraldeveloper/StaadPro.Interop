@@ -49,6 +49,7 @@
     <None Include="..\..\docs\Geometry-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Load-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Porting.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Wrapper-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Installation.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Publishing.md" Pack="true" PackagePath="docs\" />
     <None Include="$(BaseIntermediateOutputPath)package-docs\Release-Notes.md" Pack="true" PackagePath="docs\" />

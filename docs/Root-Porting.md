@@ -1,5 +1,11 @@
 # Root adapter implementation and porting progress
 
+For coverage against Bentley's installed OpenSTAAD 2026 reference (39 native Root functions), see the [Root API coverage and implementation plan](reports/OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md). The counts below describe parity with the private main project, not coverage of Bentley's full Root API.
+
+For the proposed 2024-2026 internal service selection and capability access, see the [multi-version Root architecture plan](reports/OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md). This is architecture and planning documentation only; implementation remains pending approval.
+
+The [complete wrapper foundation](Wrapper-Porting.md) is now ported with raw bindings, cached application metadata, refresh methods and explicitly limited domain placeholders. The next Root metadata methods will reuse its properties; no new IOSRoot function is added by this wrapper change.
+
 The main project's `IOSRoot` exposes 23 methods. This repository now implements **22**, with **1 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
