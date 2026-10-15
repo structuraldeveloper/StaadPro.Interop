@@ -8,16 +8,26 @@ namespace StaadPro.Interop.Services.Root.Common
     {
         internal static void SetInputUnitForLength(object root, LengthInputUnit lengthUnit)
         {
-            int code = (int)lengthUnit;
-            if (code < 0 || code > 7) throw new ArgumentOutOfRangeException(nameof(lengthUnit));
-            ((dynamic)root).SetInputUnitForLength(code);
+            ((dynamic)root).SetInputUnitForLength(ValidateLengthUnit(lengthUnit));
         }
 
         internal static void SetInputUnitForForce(object root, ForceInputUnit forceUnit)
         {
+            ((dynamic)root).SetInputUnitForForce(ValidateForceUnit(forceUnit));
+        }
+
+        internal static int ValidateLengthUnit(LengthInputUnit lengthUnit)
+        {
+            int code = (int)lengthUnit;
+            if (code < 0 || code > 7) throw new ArgumentOutOfRangeException(nameof(lengthUnit));
+            return code;
+        }
+
+        internal static int ValidateForceUnit(ForceInputUnit forceUnit)
+        {
             if (!Enum.IsDefined(typeof(ForceInputUnit), forceUnit))
                 throw new ArgumentOutOfRangeException(nameof(forceUnit));
-            ((dynamic)root).SetInputUnitForForce((int)forceUnit);
+            return (int)forceUnit;
         }
 
         internal static void SetShortJobInfo(object root, string jobName, string jobClient, string engineerName)

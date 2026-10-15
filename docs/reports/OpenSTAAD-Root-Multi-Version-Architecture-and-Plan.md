@@ -2,11 +2,11 @@
 
 **Review date:** 15 October 2026  
 **Versions reviewed:** STAAD.Pro 2024, 2025 and 2026 installed OpenSTAAD help.  
-**Status:** The approved wrapper foundation is now implemented, with raw bindings, metadata and adapter placeholders. Five Root metadata methods are implemented through internal wrapper/raw accessors and shared native readers. Common analysis observation adds IsAnalyzing and two GetAnalysisStatus overloads, an immutable result class and a typed status enum. Common reads GetStaadFileFolder, IsPhysicalModel and GetErrorMessage are implemented. Process identity, independent length/force setters, short-job metadata and structure update are implemented. The latest five additions are full-job metadata, Analyze, AnalyzeModel and CONNECTED project retrieval/assignment, including a project-value overload. Remaining Root operations and optional capabilities follow the [managed API design rules](../Root-Managed-API-Design.md); the version-profile engine remains proposed. Domain adapter functions remain outside the current scope.
+**Status:** The wrapper foundation, all 39 reviewed native Root mappings and all 23 private-source Root methods are implemented. IOSRoot has 53 common methods and an optional capability gateway; three separate interfaces expose version-specific operations. Exact candidate profiles, non-mutating signature inspection and internal polymorphic adapters are implemented. Native runtime compatibility, broader servicing-build evidence and new-package validation remain separate release work. See the [completion guide](../Root-Completion-and-Capabilities.md).
 
 ## 1. Conclusions and proposed direction
 
-Use the fully ported wrapper as the owner of cached application/model metadata. Implemented Root metadata methods project its properties; version selection uses **wrapper.StaadVersion**, not wrapper.ApplicationVersion. Use common Root services for unchanged native operations and separately acquired capability interfaces for newer optional functions. Any verified unit-query interpretation strategies belong beneath the wrapper metadata reader, not in a duplicate Root query implementation.
+Use the fully ported wrapper as the owner of cached application/model metadata. Implemented Root metadata methods project its properties; version selection uses **wrapper.StaadVersion**, not wrapper.ApplicationVersion. Use common Root services for unchanged native operations and separately acquired capability interfaces for newer optional functions. Any future runtime-verified unit-query interpretation change belongs beneath the shared wrapper metadata reader, not in a duplicate Root query implementation.
 
 | Finding | Result |
 | --- | --- |
@@ -51,7 +51,7 @@ All summary entries and all detailed member sections were inventoried: 36/36 in 
 
 The 2025 and 2026 contract sections for their 37 shared functions match after normalization. Among the 36 functions shared with 2024, all native signatures match; two documented return/output contracts differ. Generated examples/source references changed in several places, but no additional behavioral difference was established from them.
 
-The original review baseline was `main` at `36e9f811f28cf6c4594045b31b7bd374a565187e`, with 22 public `IOSRoot` methods and a net481 target. The current working tree exposes 45 managed Root methods; section 3 records its updated implementation status. The existing [2026 coverage report and per-function plans](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md) contain the source/assembly comparison, native parameter details, proposed signatures and existing implementation findings. This document adds cross-version evidence and overrides any assumption that all proposed APIs can use the 2026 contract on older versions.
+The original review baseline was `main` at `36e9f811f28cf6c4594045b31b7bd374a565187e`, with 22 public `IOSRoot` methods and a net481 target. The current working tree exposes 53 common Root methods plus three optional operations; section 3 records its updated implementation status. The existing [2026 coverage report and per-function plans](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md) contain the source/assembly comparison, native parameter details, proposed signatures and existing implementation findings. This document adds cross-version evidence and overrides any assumption that all proposed APIs can use the 2026 contract on older versions.
 
 The source wrapper was ported after the initial documentation comparison and has been built/tested offline. No live STAAD COM calls, direct native typelib inspection, model mutation, native tests, NuGet package build or publication was performed. The analysis increments subsequently inspected installed 2025/2026 managed interop signatures without activating COM; see the [analysis query evidence](../Root-Analysis-Queries.md#evidence-and-verification) and [job/analysis/project evidence](../Root-Job-Analysis-Projects.md#reuse-evidence-and-validation). [Wrapper-Porting](../Wrapper-Porting.md) records the implemented scope, source parity and current validation.
 
@@ -59,7 +59,7 @@ The source wrapper was ported after the initial documentation comparison and has
 
 **Shared:** unchanged documented contract across all three references. **Unit strategy:** same native signature, different documented interpretation. **Optional export/messages:** functions listed only in the indicated references. A dash means **not listed in that reference**, not proven absent from every server of that product year.
 
-**Implementation status updated: 15 October 2026.** Status reflects the current source working tree, including metadata, observation, common-query, process/model-setup and job/analysis/project additions. **Implemented** means a managed adapter mapping exists; it does not certify complete native parity, runtime compatibility across all three versions, or availability in the existing NuGet archive. **Pending** entries have no implemented native operation. The previously internal-only PID query now has a dedicated public getter. Plan links remain available for both completed and pending entries; the contract-strategy column does not itself indicate implementation progress.
+**Implementation status updated: 15 October 2026.** Status reflects the current source working tree, including metadata, observation, queries, model setup, job/project and creation/view/lifecycle additions. **Implemented** means a managed adapter mapping exists; it does not certify complete native parity, runtime compatibility across all three versions, or availability in the existing NuGet archive. **Pending** entries have no implemented native operation. The previously internal-only PID query now has a dedicated public getter. All reviewed functions are now marked Implemented; plan links remain for provenance and validation details; the contract-strategy column does not itself indicate implementation progress.
 
 | Root function | 2024 | 2025 | 2026 | Contract strategy | Implementation status | Current managed API / implementation plan |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -67,11 +67,11 @@ The source wrapper was ported after the initial documentation comparison and has
 | `AnalyzeEx` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga46f03d1be3c56877f5af4359764df907) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga46f03d1be3c56877f5af4359764df907) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga46f03d1be3c56877f5af4359764df907) | Shared | **Implemented** | `AnalyzeEx(SilentMode, HiddenMode, WaitAnalysisMode)` returns AnalysisResult; existing native request behavior and limitations retained. |
 | `AnalyzeModel` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gadaa1e36df7e6b4fe5c056ede8270987c) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gadaa1e36df7e6b4fe5c056ede8270987c) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadaa1e36df7e6b4fe5c056ede8270987c) | Shared | **Implemented** | `void AnalyzeModel(AnalysisEngine engine = AnalysisEngine.StaadPro)`; validates and sends documented -1, preserving verified void semantics. [P22](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p22-analyzemodel). |
 | `CloseSTAADFile` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gaf249dc19ac760422e78351546918e65d) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gaf249dc19ac760422e78351546918e65d) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaf249dc19ac760422e78351546918e65d) | Shared | **Implemented** | `CloseSTAADFile()` and close helpers; native close request, with no completion or save guarantee. |
-| `CreateNamedView` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gaf331e2b24c0e4f4e57c2951594423b2d) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gaf331e2b24c0e4f4e57c2951594423b2d) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaf331e2b24c0e4f4e57c2951594423b2d) | Shared | **Pending** | Not implemented; creation flags and output error-code meanings require verification. [P25](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p25-createnamedview). |
-| `ExportModelToADINA` | — | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga212f15a4b5984734985d197b67de4199) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga212f15a4b5984734985d197b67de4199) | Optional export | **Pending** | Not implemented; optional export capability, typed result, member/contract evidence and destination/overwrite validation remain pending. [P29](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p29-exportmodeltoadina). |
-| `GetAnalysisErrorMessages` | — | — | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga405205f5768fd9b1d16b8a35b72e86f4) | Optional messages | **Pending** | Not implemented; separate optional capability and internally allocated BSTR message buffers remain pending. [P13](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p13-getanalysiserrormessages). |
+| `CreateNamedView` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gaf331e2b24c0e4f4e57c2951594423b2d) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gaf331e2b24c0e4f4e57c2951594423b2d) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaf331e2b24c0e4f4e57c2951594423b2d) | Shared | **Implemented** | void CreateNamedView(string viewName, int creationFlag); follows inspected two-input signature; required caller-established raw flag, no fabricated error output. [Plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p25-createnamedview). |
+| `ExportModelToADINA` | — | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga212f15a4b5984734985d197b67de4199) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga212f15a4b5984734985d197b67de4199) | Optional export | **Implemented** | `IOSRootAdinaExport.ExportModelToAdina(AdinaAxisSystem, AdinaLoadCaseHandling)` through Capabilities; typed options, native status and warning-success preservation. [Plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p29-exportmodeltoadina). |
+| `GetAnalysisErrorMessages` | — | — | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga405205f5768fd9b1d16b8a35b72e86f4) | Optional messages | **Implemented** | `IOSRootAnalysisErrorMessages.GetAnalysisErrorMessages(string modelFilePath)` through Capabilities; typed outcome/data, bounded BSTR allocation and one explicit-capacity retry. [Plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p13-getanalysiserrormessages). |
 | `GetAnalysisStatus` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga731f741a97cb618d7409544055b8a2bb) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga731f741a97cb618d7409544055b8a2bb) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga731f741a97cb618d7409544055b8a2bb) | Shared | **Implemented** | `GetAnalysisStatus(string modelFilePath)` and `GetAnalysisStatus()` return immutable AnalysisStatusResult; typed/native status and nullable counts/CPU time. [P12](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p12-getanalysisstatus). |
-| `GetAnalysisWarningMessages` | — | — | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gae891bbde4b6fd5e7f3e56dbf0644386f) | Optional messages | **Pending** | Not implemented; separate optional capability and internally allocated BSTR message buffers remain pending. [P14](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p14-getanalysiswarningmessages). |
+| `GetAnalysisWarningMessages` | — | — | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gae891bbde4b6fd5e7f3e56dbf0644386f) | Optional messages | **Implemented** | `IOSRootAnalysisWarningMessages.GetAnalysisWarningMessages(string modelFilePath)` through Capabilities; independent grant, ANL messages and qualified read-only text. [Plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p14-getanalysiswarningmessages). |
 | `GetApplicationVersion` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga658ee126cc9aa9c5e35866e35f60260e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga658ee126cc9aa9c5e35866e35f60260e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga658ee126cc9aa9c5e35866e35f60260e) | Shared | **Implemented** | `GetApplicationVersion()` returns a defensive copy of wrapper.StaadVersion; standalone bindings use the shared same-root reader. This is the native STAAD version. [P06](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p06-getapplicationversion). |
 | `GetBaseUnit` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga7b1d941b62f317a0bdf104d2d4436ae1) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga7b1d941b62f317a0bdf104d2d4436ae1) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga7b1d941b62f317a0bdf104d2d4436ae1) | Shared | **Implemented** | `GetBaseUnit()` projects wrapper.BaseUnitSystem; standalone bindings use the shared native reader. Cache/Unknown semantics documented. [P02](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p02-getbaseunit). |
 | `GetCONNECTEDProjectInfo` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gab92e524c05abdf5e59e54adc95e0c9b0) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gab92e524c05abdf5e59e54adc95e0c9b0) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gab92e524c05abdf5e59e54adc95e0c9b0) | Shared | **Implemented** | `ConnectedProjectResult GetConnectedProjectInfo()`; native success and qualified immutable project data, with internal reference buffers. [P23](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p23-getconnectedprojectinfo). |
@@ -80,20 +80,20 @@ The source wrapper was ported after the initial documentation comparison and has
 | `GetInputUnitForForce` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gabcc3db5863da3b119b2c5bd4a740f0cd) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gabcc3db5863da3b119b2c5bd4a740f0cd) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gabcc3db5863da3b119b2c5bd4a740f0cd) | Unit strategy | **Implemented** | `GetInputUnitForForce()` projects wrapper.InputForceUnit; standalone reads share normalization. Compatibility fallback and unresolved native version interpretation documented. [P04](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p04-getinputunitforforce). |
 | `GetInputUnitForLength` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga8a846a4f4597cbb6cbed46e86442431c) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga8a846a4f4597cbb6cbed46e86442431c) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga8a846a4f4597cbb6cbed46e86442431c) | Unit strategy | **Implemented** | `GetInputUnitForLength()` projects wrapper.InputLengthUnit; standalone reads share normalization. Feet aliases, compatibility fallback and unresolved native version interpretation documented. [P03](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p03-getinputunitforlength). |
 | `GetMainWindowHandle` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga0c0b0f425cd8588f0df3c40ea08a05da) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga0c0b0f425cd8588f0df3c40ea08a05da) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga0c0b0f425cd8588f0df3c40ea08a05da) | Shared | **Implemented** | `GetMainWindowHandle()` projects wrapper.StaadApplicationWindowHandle or uses a standalone same-root read. Non-owning, source-family-gated handle; no live-window guarantee. [P09](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p09-getmainwindowhandle). |
-| `GetProcessHandle` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga275b4bdab39a0afb0764d4d2e0b2f13e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga275b4bdab39a0afb0764d4d2e0b2f13e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga275b4bdab39a0afb0764d4d2e0b2f13e) | Shared | **Pending** | Not implemented; native handle width, ownership and client-process validity remain an implementation gate. [P10](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p10-getprocesshandle). |
+| `GetProcessHandle` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga275b4bdab39a0afb0764d4d2e0b2f13e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga275b4bdab39a0afb0764d4d2e0b2f13e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga275b4bdab39a0afb0764d4d2e0b2f13e) | Shared | **Implemented** | NativeProcessHandleValue GetProcessHandle(); opaque UInt64 data only, without ownership or caller-process HANDLE validity. [Plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p10-getprocesshandle). |
 | `GetProcessId` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gac7c8010c34e57ab1443b8efacc3235a0) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gac7c8010c34e57ab1443b8efacc3235a0) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gac7c8010c34e57ab1443b8efacc3235a0) | Shared | **Implemented** | `uint GetProcessId()`; positive UInt32 snapshot with strict integral validation shared with window-control operations. [P08](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p08-getprocessid). |
 | `GetSTAADFile` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga2d0ebfc91441ee3b2331bcd2d0ad07d7) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga2d0ebfc91441ee3b2331bcd2d0ad07d7) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga2d0ebfc91441ee3b2331bcd2d0ad07d7) | Shared | **Implemented** | `GetStaadFileFullPath()` and derived filename/identity helpers. Native full-path branch implemented; filename-only mode is derived in managed code. |
 | `GetSTAADFileFolder` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gaefa222ce265399686a53eb2a59d2e947) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gaefa222ce265399686a53eb2a59d2e947) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaefa222ce265399686a53eb2a59d2e947) | Shared | **Implemented** | `string GetStaadFileFolder()`; direct native reference-output read, with exact text and explicit empty output preserved. [P01](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p01-getstaadfilefolder). |
 | `GetShortJobInfo` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga6d209f7c0ed0aaddfe84c6603078e5a2) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga6d209f7c0ed0aaddfe84c6603078e5a2) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga6d209f7c0ed0aaddfe84c6603078e5a2) | Shared | **Implemented** | `GetShortJobInfo()` returns ShortJobInfo from three validated native string outputs. |
 | `IsAnalyzing` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga47cec0d70a609f2de2dd2e5214b7fa28) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga47cec0d70a609f2de2dd2e5214b7fa28) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga47cec0d70a609f2de2dd2e5214b7fa28) | Shared | **Implemented** | `IsAnalyzing()` reads the live native running flag; accepts Boolean or integral 0/1. Does not start or wait for analysis. [P11](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p11-isanalyzing). |
 | `IsPhysicalModel` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga95c33fb64a10923e179bf067fd006a7b) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga95c33fb64a10923e179bf067fd006a7b) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga95c33fb64a10923e179bf067fd006a7b) | Shared | **Implemented** | `bool IsPhysicalModel()`; strict live Boolean/integral 0/1 native predicate. [P05](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p05-isphysicalmodel). |
-| `ModifyNamedView` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gadfb2385ac03c7bf740e24eb24fcca286) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gadfb2385ac03c7bf740e24eb24fcca286) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadfb2385ac03c7bf740e24eb24fcca286) | Shared | **Pending** | Not implemented; modification flags, entity array shape and output error-code semantics require verification. [P28](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p28-modifynamedview). |
-| `NewSTAADFile` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gacdd64b11752dc29f03537526d46553b4) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gacdd64b11752dc29f03537526d46553b4) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gacdd64b11752dc29f03537526d46553b4) | Shared | **Pending** | Native model creation not implemented; overwrite, loaded-model and unit policies remain pending. [P17](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p17-newstaadfile). |
+| `ModifyNamedView` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gadfb2385ac03c7bf740e24eb24fcca286) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gadfb2385ac03c7bf740e24eb24fcca286) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadfb2385ac03c7bf740e24eb24fcca286) | Shared | **Implemented** | `void ModifyNamedView(string viewName, IEnumerable<int> entityIds, NamedViewEntityType entityType, int modificationFlag)`; validated private Int32 array and inspected four-input dispatch. [Plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p28-modifynamedview). |
+| `NewSTAADFile` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gacdd64b11752dc29f03537526d46553b4) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gacdd64b11752dc29f03537526d46553b4) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gacdd64b11752dc29f03537526d46553b4) | Shared | **Implemented** | void NewSTAADFile(string filePath, LengthInputUnit lengthUnit, ForceInputUnit forceUnit); validates units/destination/unnamed session, without atomic no-overwrite or completion guarantees. [Plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p17-newstaadfile). |
 | `OpenSTAADFile` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga4ba715d4c1e519ed6f4645ca91db9f99) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga4ba715d4c1e519ed6f4645ca91db9f99) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga4ba715d4c1e519ed6f4645ca91db9f99) | Shared | **Implemented** | `OpenSTAADFile(string filePath)` and higher-level polling/rewrite helpers; direct request does not verify readiness. |
-| `Quit` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gadd624b0b5b4f45cf4ed97f9557cc88af) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gadd624b0b5b4f45cf4ed97f9557cc88af) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadd624b0b5b4f45cf4ed97f9557cc88af) | Shared | **Pending** | Explicit native application shutdown not implemented; keep separate from wrapper disposal. [P30](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p30-quit). |
-| `RemoveNamedView` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gacd98d0159150ffada6b7e62f2e1687d4) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gacd98d0159150ffada6b7e62f2e1687d4) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gacd98d0159150ffada6b7e62f2e1687d4) | Shared | **Pending** | Not implemented; output error codes, missing-view behavior and persistence require verification. [P27](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p27-removenamedview). |
+| `Quit` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gadd624b0b5b4f45cf4ed97f9557cc88af) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gadd624b0b5b4f45cf4ed97f9557cc88af) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadd624b0b5b4f45cf4ed97f9557cc88af) | Shared | **Implemented** | void Quit(); explicit same-root application request, with no automatic save, process kill, retry or disposal change. [Plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p30-quit). |
+| `RemoveNamedView` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gacd98d0159150ffada6b7e62f2e1687d4) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gacd98d0159150ffada6b7e62f2e1687d4) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gacd98d0159150ffada6b7e62f2e1687d4) | Shared | **Implemented** | `void RemoveNamedView(string viewName)`; inspected two-input native call initializes the by-value error slot to zero without inventing an output status. [Plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p27-removenamedview). |
 | `SaveModel` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga2984f37b5dde4651ffa18deacf441645) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga2984f37b5dde4651ffa18deacf441645) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga2984f37b5dde4651ffa18deacf441645) | Shared | **Implemented** | `SaveModel(SilentMode)` dispatches native save and returns the adapter; no persistence verification. |
-| `SaveNamedView` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gaeca040a52040da606a81af5407aa464e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gaeca040a52040da606a81af5407aa464e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaeca040a52040da606a81af5407aa464e) | Shared | **Pending** | Not implemented; output error codes and save/overwrite behavior require verification. [P26](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p26-savenamedview). |
+| `SaveNamedView` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gaeca040a52040da606a81af5407aa464e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gaeca040a52040da606a81af5407aa464e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaeca040a52040da606a81af5407aa464e) | Shared | **Implemented** | void SaveNamedView(string viewName); follows inspected one-input void signature, without fabricated native success. [Plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p26-savenamedview). |
 | `SetCONNECTEDProjectInfo` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga61d5d3fc321d74be1ede4c318426b9f6) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga61d5d3fc321d74be1ede4c318426b9f6) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga61d5d3fc321d74be1ede4c318426b9f6) | Shared | **Implemented** | `bool SetConnectedProjectInfo(string projectId, string projectName)` and value-object overload; validates nonblank fields and preserves native flag. [P24](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p24-setconnectedprojectinfo). |
 | `SetFullJobInfo` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga519b55d96da3c901a6b4149a77480c9b) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga519b55d96da3c901a6b4149a77480c9b) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga519b55d96da3c901a6b4149a77480c9b) | Shared | **Implemented** | `void SetFullJobInfo(...)`; validates thirteen non-null native text fields, preserving date strings without formatting. [P19](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p19-setfulljobinfo). |
 | `SetInputUnitForForce` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga0d92e92cebdffc1dbf951d07f8d29f1e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga0d92e92cebdffc1dbf951d07f8d29f1e) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga0d92e92cebdffc1dbf951d07f8d29f1e) | Shared | **Implemented** | `void SetInputUnitForForce(ForceInputUnit forceUnit)`; independent native request with defined-enum validation. [P16](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p16-setinputunitforforce). |
@@ -103,9 +103,11 @@ The source wrapper was ported after the initial documentation comparison and has
 | `SetSilentMode` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#ga21f063c7c8882dc7af286e5b18db11e0) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#ga21f063c7c8882dc7af286e5b18db11e0) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga21f063c7c8882dc7af286e5b18db11e0) | Shared | **Implemented** | `SetSilentMode(SilentMode)` reports managed call completion, catches dispatch failures and discards the native previous-mode value. |
 | `UpdateStructure` | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___root.html#gaaf431f1bfbee142cd7d55d454d56d995) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___root.html#gaaf431f1bfbee142cd7d55d454d56d995) | [Listed](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaaf431f1bfbee142cd7d55d454d56d995) | Shared | **Implemented** | `void UpdateStructure()`; one explicit native update request, with no added save/analysis/refresh. [P20](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md#p20-updatestructure). |
 
-**Coverage:** 29 of 39 documented native functions have public adapter mappings; 10 dedicated functions remain pending; all lack production native implementations. The pending set contains 7 common functions and 3 optional export/message functions. IOSRoot has 45 managed methods because conveniences and overloads are counted separately from native-function coverage.
+**Coverage:** All 39 reviewed native functions have public managed mappings: 36 common and three separately acquired optional operations. No reviewed vendor function remains unimplemented. IOSRoot exposes 53 common methods, including the completed private-source RetrieveMemberForces helper; three optional operations bring the total to 56 managed operation methods. The gateway property and three acquisition methods are additional infrastructure. All 23 private-source Root function names are covered, with the batch helper's return refined under the approved result-object rules.
 
-The five metadata queries, IsAnalyzing/GetAnalysisStatus observation functions and GetStaadFileFolder/IsPhysicalModel/GetErrorMessage common queries plus the five process/model-setup functions are implemented with XML documentation and offline tests. See the [metadata/API guide](../API-Reference.md#root-adapter), [analysis query guide](../Root-Analysis-Queries.md), [common query guide](../Root-Common-Queries.md), [model setup guide](../Root-Model-Setup.md) [job/analysis/project guide](../Root-Job-Analysis-Projects.md) and [per-function coverage plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md). Version-profile selection and optional capability infrastructure remain pending.
+The five metadata queries, IsAnalyzing/GetAnalysisStatus observation functions and GetStaadFileFolder/IsPhysicalModel/GetErrorMessage common queries plus the five process/model-setup functions are implemented with XML documentation and offline tests. See the [metadata/API guide](../API-Reference.md#root-adapter), [analysis query guide](../Root-Analysis-Queries.md), [common query guide](../Root-Common-Queries.md), [model setup guide](../Root-Model-Setup.md) [job/analysis/project guide](../Root-Job-Analysis-Projects.md) and [per-function coverage plan](OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md). Exact candidate profiles and optional capability inspection/adapters are now implemented; native runtime evidence and broader servicing-build coverage remain release gates.
+
+The [creation/view/lifecycle guide](../Root-Creation-Views-and-Lifecycle.md) records the installed named-view signature discrepancies, opaque handle representation and creation race boundaries. The final removal/modification mappings use inspected declarations; native flag meanings and runtime behavior remain validation gates.
 
 ## 4. Detailed differences and consequences
 
@@ -154,7 +156,7 @@ long OpenSTAADUI::ExportModelToADINA(int flagAxisSystem, int flagLCHandler);
 
 Use one shared export service for verified 2025/2026 profiles. There is no evidence supporting duplicate year-specific export implementations. The 2024 profile does not grant the export capability by default. An undocumented native member found there is recorded as an observation and remains disabled until its contract is verified and the compatibility policy is approved.
 
-P29's planned operation moves from the common interface to `IOSRootAdinaExport`. Its signature remains status-oriented; use existing or approved public enums, or primitive integer options until those enum contracts are approved. Native Windows long status is proposed as managed int, subject to typelib verification.
+P29 is implemented on IOSRootAdinaExport with AdinaAxisSystem/AdinaLoadCaseHandling enums and AdinaExportResult. Installed declarations confirm the Int32 native return. The candidate policy and metadata evidence are described in section 8; runtime file effects remain unverified.
 
 ### 4.3 Analysis messages: additional documentation in 2026
 
@@ -199,7 +201,7 @@ The authoritative source is the user's read-only ReInvented.StaadPro.Interop pro
 
 The seven additional native domains and IDEA StatiCa have explicit binding placeholders, as approved. Their presence is not a claim that their typed domain functions are implemented. Existing Geometry, Load and Root implementations are retained. The default window service is bound to this wrapper's root, replacing the source's global process-name scan.
 
-### 5.1 Properties that planned Root methods will reuse
+### 5.1 Properties reused by the implemented Root methods
 
 | Planned Root operation / internal need | Wrapper property | Planned behavior / limitations |
 | --- | --- | --- |
@@ -242,9 +244,9 @@ The current public OSRootAdapter constructor accepts a raw object. Preserve that
 
 The internal IRootMetadataAccess seam has wrapper-owned and raw-root implementations. Wrapper-bound projections reuse the properties with zero extra native queries, include configured window services, and reject an owner disposed after the adapter was captured. No recursive wrapper or public service locator is created.
 
-For callers who construct OSRootAdapter directly from a raw root, RawRootMetadataAccess uses the extracted WrapperMetadataReader on each query. Unit getters read version, base system and the selected unit; handle lookup reads version then the same-root handle for major > 20. Reads are sequential rather than atomic. No other process is acquired and no wrapper is created. Existing 22 operations remain unchanged; IOSRoot now exposes 45 methods, including subsequent analysis, common-query, model-setup and CONNECTED additions.
+For callers who construct OSRootAdapter directly from a raw root, RawRootMetadataAccess uses the extracted WrapperMetadataReader on each query. Unit getters read version, base system and the selected unit; handle lookup reads version then the same-root handle for major > 20. Reads are sequential rather than atomic. No other process is acquired and no wrapper is created. Existing 22 operations remain unchanged; IOSRoot now exposes 53 common methods, including the private-source force helper; three optional operations are acquired separately.
 
-## 6. Proposed internal services and folder organization
+## 6. Implemented internal services and folder organization
 
 Keep signatures in interfaces, implementations in non-partial adapters, and selection/calling services internal. Metadata ownership belongs to the wrapper; Root adds projection, version policy and actual operation services around it.
 
@@ -254,79 +256,52 @@ Keep signatures in interfaces, implementations in non-partial adapters, and sele
 | Seven new native-domain adapters/interfaces and IDEA placeholder | Public, implemented placeholders | Capture correct bindings only; no unported domain functions. |
 | Services/Wrapper helpers | Implemented; normalization/bound-window helpers internal | Source-derived unit parsing, shared metadata reads and acquired-root window lookup. The injected model/interaction contracts are public source-compatible dependencies. |
 | Services/Interop/NativeValues | Internal, implemented | Shared strict native integer, Boolean-flag and text validation; wrapper and Root services reuse it. |
-| IOSRoot / OSRootAdapter | Public, metadata and analysis queries added | Preserve existing operations; metadata delegates to its accessor and live analysis queries to a common internal service. |
+| IOSRoot / OSRootAdapter | Public, complete common Root surface | 53 methods, metadata projections, shared operations and a capture-only optional gateway. |
 | IRootMetadataAccess and accessors | Internal, implemented | Property-backed wrapper projection or standalone same-root reader fallback. |
-| RootSessionContext / RootVersionResolver | Internal, proposed | Own the same raw identity and consume wrapper.StaadVersion/accessor evidence; no duplicate wrapper-bound native bootstrap. |
-| Profiles / RootProfileSelector / RootServiceFactory | Internal, proposed | Immutable per-build contract rules and polymorphic composition; no global selected version. |
-| RootDispatchInspector / RootComInvoker | Internal, proposed | Non-mutating member/signature inspection and bound dispatch with precise error handling. |
-| Shared domain services | Internal, proposed | One implementation for unchanged contracts, including metadata projection where appropriate. |
-| Optional export/message adapters and services | Specialized public interfaces, internal implementations; proposed | Return only granted operations; no public service implementations. |
+| RootCapabilityBinding | Internal, implemented | Capture raw identity and immutable native version; guard lifetime without duplicate wrapper-bound bootstrap. |
+| RootCapabilityProfiles / internal gateway | Internal, implemented | Exact candidate builds and polymorphic interface construction; no global selected version. |
+| RootDispatchInspector / RootNativeContract | Internal, implemented | Non-mutating signature evidence; same-root services dispatch verified shapes and preserve errors. |
+| Shared Root services | Internal, implemented | One implementation for unchanged contracts, including metadata, queries and native mutations. |
+| Optional export/message adapters and services | Specialized public interfaces, internal implementations; implemented | Return only independently granted operations; no public service implementations. |
 | Verified unit interpretation strategies | Internal under Wrapper metadata, only if evidence requires; proposed | Resolve actual build differences where native data is captured. Root does not repeat unit interpretation over a second native call. |
 
 ```text
 src/StaadPro.Interop/
-  Models/
-    OpenStaadWrapper.cs                 implemented wrapper
-    ApplicationVersion.cs              implemented value model
-    Root/                              AnalysisStatusResult, ConnectedProjectInfo and ConnectedProjectResult implemented; other results planned
-  Enums/
-    ApplicationEdition.cs              implemented source family rule
-    Root/                              AnalysisStatus and AnalysisEngine implemented; other documented statuses/options planned
-  Adapters/
-    Interfaces/
-      IOSRoot.cs                       existing; planned common additions
-      IOSOutput.cs ... IOSView.cs       implemented binding placeholders
-      IOpenStaadIdeaStatiCaAdapter.cs   implemented integration placeholder
-      Capabilities/                    planned specialized interfaces
-      Information/                     planned session/availability interfaces
-    Models/
-      OSRootAdapter.cs                 existing, single non-partial class
-      OSOutputAdapter.cs ... OSViewAdapter.cs   implemented placeholders
-      OpenStaadIdeaStatiCaAdapter.cs    implemented placeholder
-      Capabilities/                    planned internal specialized adapters
-  Interfaces/
-    IStaadInteropInteractionService.cs  implemented host interaction contract
-  Services/
-    StaadInteropHostServices.cs         implemented noninteractive default/capture
-    Interop/
-      NativeValues.cs                  implemented shared strict integer/PID/flag/text validation
-    Wrapper/
-      IStaadModelServices.cs            implemented wrapper-required window contract
-      BoundStaadModelServices.cs        implemented same-root lookup
-      WrapperUnitParser.cs             implemented source-derived normalization
-      WrapperMetadataReader.cs         implemented shared native reads
-      Versioning/                      planned verified strategies only if needed
-    Root/                              Metadata, Analysis and Common queries implemented; other entries below remain planned
-      Analysis/
-        RootAnalysisQueryService.cs     implemented shared observation calls
-        RootAnalysisRequestService.cs   implemented Analyze/typed AnalyzeModel requests
-      Abstractions/
-      Context/
-      Selection/
-      Profiles/
-      Metadata/
-        WrapperRootMetadataAccess.cs      implemented
-        RawRootMetadataAccess.cs          implemented
-      Common/
-        RootCommonQueryService.cs       implemented folder/classification/error/PID reads
-        RootModelEditService.cs         implemented units/full-short-job/update requests
-        RootConnectedProjectService.cs  implemented project query/assignment
-        RootFileService.cs
-        RootJobInfoService.cs
-        RootApplicationService.cs
-        RootAnalysisService.cs
-        RootUnitWriteService.cs
-        RootNamedViewService.cs
-        RootAdinaExportService.cs
-      Versions/
-        V2026/
-          RootAnalysisMessageService.cs
-      Interop/
-      Diagnostics/
-      Infrastructure/                  future isolated home for existing root helpers
+  Adapters/Interfaces/IOSRoot.cs             common contract and gateway
+  Adapters/Interfaces/Capabilities/          gateway + three optional contracts
+  Adapters/Models/OSRootAdapter.cs           single non-partial common adapter
+  Adapters/Models/Capabilities/              internal gateway/operation adapters
+  Entities/MemberForces.cs                   source-compatible force record
+  Enums/MemberEnd.cs                         source-compatible end qualifier
+  Enums/Root/                               typed options, statuses and outcomes
+  Models/OpenStaadWrapper.cs                 approved wrapper foundation
+  Models/ApplicationVersion.cs               native/host version value model
+  Models/Root/                              status/data and capability results
+  Services/Interop/NativeValues.cs           shared strict native values
+  Services/Wrapper/                         shared metadata/unit/window readers
+  Services/Root/
+    Metadata/                               wrapper/raw metadata accessors
+    Capabilities/
+      RootCapabilityBinding.cs              root/version guard + exact profiles
+      RootNativeContract.cs                 expected signature contracts
+      RootDispatchInspector.cs              non-mutating metadata inspection
+    Analysis/
+      RootAnalysisQueryService.cs           common observation/count reads
+      RootAnalysisRequestService.cs         native analysis requests
+      RootAnalysisMessagesService.cs        bounded BSTR retrieval
+      RootMemberForcesService.cs             private-source batch helper
+    Common/
+      RootCommonQueryService.cs             common scalar/opaque reads
+      RootModelEditService.cs               units/job/update requests
+      RootModelCreationService.cs           guarded native creation
+      RootApplicationRequestService.cs      explicit shutdown
+      RootConnectedProjectService.cs        project query/assignment
+      RootNamedViewService.cs               inspected view requests
+      RootAdinaExportService.cs             typed native export
+      RootModelPaths.cs                     shared path normalization
 ```
 
-The tree distinguishes implemented wrapper files from proposed Root infrastructure. No partial adapter classes are introduced. Public data/service dependencies required by the source wrapper are explicit; no version-selector, profile, invoker or internal strategy is exported. Domain placeholder types must not expand their APIs until those functions are separately ported and tested.
+The tree lists implemented Root infrastructure without empty per-version service trees. Domain placeholders remain capture-only; the private Root force helper uses internal native Output reads without expanding their public contracts. Verified unit-strategy changes and general domain porting remain separate work.
 
 ### 6.1 Dispatch flow
 
@@ -346,84 +321,72 @@ flowchart TD
 
 For the 34 unchanged documented contracts, share implementation. Five of their getters are wrapper projections; their underlying native capture stays owned by the wrapper. The two unit getters have a documented interpretation discrepancy that may require an internal wrapper-reader strategy after native evidence. Export has one shared implementation for verified 2025/2026 candidates. The two 2026 message calls can share array utilities but have independent grants.
 
-## 7. Proposed API access and IntelliSense
+## 7. Implemented API access and IntelliSense
 
-A runtime version cannot remove members from one C# interface or change its assembly metadata. Keep the three optional functions off common IOSRoot and acquire their interfaces only when support is established. This follows the distinction between [C# compile-time and runtime types](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/) and [interface member access](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/interfaces).
+The version-specific operations are not common IOSRoot members and cannot be acquired by casting OSRootAdapter. IOSRoot.Capabilities exposes IOSRootCapabilities; each acquisition returns a named result and a specialized interface only when its exact candidate build and member metadata permit it.
 
 ```csharp
-// Proposed, not implemented:
-IOSRootSessionInfo SessionInfo { get; }
-IOSRootCapabilities Capabilities { get; }
+// Common gateway; capture-only property access.
+IOSRootCapabilities gateway = root.Capabilities;
 
-// IOSRootCapabilities:
-IOSRootFeatureAvailability AdinaExportAvailability { get; }
-IOSRootFeatureAvailability ErrorMessagesAvailability { get; }
-IOSRootFeatureAvailability WarningMessagesAvailability { get; }
-RootCapabilityResult<IOSRootAdinaExport> GetAdinaExport();
-RootCapabilityResult<IOSRootAnalysisErrorMessages> GetAnalysisErrorMessages();
-RootCapabilityResult<IOSRootAnalysisWarningMessages> GetAnalysisWarningMessages();
-
-// Specialized interfaces, acquired separately:
-AdinaExportResult ExportModelToAdina(AdinaAxisSystem axisSystem, AdinaLoadCaseHandling loadCaseHandling);
-AnalysisMessagesResult GetAnalysisErrorMessages(string modelFilePath);
-AnalysisMessagesResult GetAnalysisWarningMessages(string modelFilePath);
+// Independent acquisition; no optional operation is executed here.
+RootCapabilityResult<IOSRootAdinaExport> export = gateway.GetAdinaExport();
+RootCapabilityResult<IOSRootAnalysisErrorMessages> errors = gateway.GetAnalysisErrorMessages();
+RootCapabilityResult<IOSRootAnalysisWarningMessages> warnings = gateway.GetAnalysisWarningMessages();
 ```
 
-Each operation belongs only to its respective interface. A successful discovery result contains a non-null specialized adapter bound to the same context; unavailable results contain no adapter and include an availability reason. No public output parameters are exposed. Message buffers are allocated internally and status/data are returned together in named classes. Native connection, wrong-thread and transient discovery failures are exceptions, not ordinary unsupported results. Check the two message methods independently.
+RootCapabilityResult exposes Availability, IsAvailable, Capability, Reason and a defensive NativeVersion snapshot. Capability is non-null exactly when Available. Availability describes policy/metadata compatibility, not native runtime certification, licensing or model readiness. Busy/disconnected/locale failures propagate rather than becoming unsupported results.
 
-SessionInfo should expose observed native version components or a copied value, its normalized display, contract profile and verification state. Reuse StaadVersion for these values. The wrapper does not retain original native version text or unit-output provenance, so do not label a formatted display as original native text.
+Specialized interfaces expose ExportModelToAdina, GetAnalysisErrorMessages(string modelFilePath) and GetAnalysisWarningMessages(string modelFilePath). Their concrete adapters and constructors are internal. Message status and read-only data are returned together in AnalysisMessagesResult; no public buffers or ref/out parameters are exposed. See the [completion guide](../Root-Completion-and-Capabilities.md) for complete examples and status contracts.
 
-Availability states may distinguish Available, DisabledByVersionPolicy, NativeMemberAbsent, ContractUnverified and UnknownVersion. A known year alone does not grant a function. Optional concrete adapters/constructors remain internal. OSRootAdapter must not implement every optional interface, even explicitly, because consumers could then cast unsupported instances.
-
-This is a typed access boundary. Public interface declarations remain inspectable in the assembly, and existing ComObject/RawOpenStaad allow deliberate raw dispatch. It is not a security barrier. Strict compile-time exclusion would require separate version-specific assemblies/packages and still would not eliminate runtime checks; that is not proposed for this adaptive wrapper.
+The assembly cannot remove C# declarations after runtime version discovery. This is a typed access boundary; public interfaces remain inspectable, and deliberate ComObject/RawOpenStaad access remains possible. A separate speculative SessionInfo API was unnecessary: acquisition results already provide the observed native version without confusing it with the host ApplicationVersion.
 
 ## 8. Version identification, capability evidence and failure policy
 
 ### 8.1 Identification and selection sequence
 
-1. Acquire the intended native root using the existing provider, then construct the wrapper. The implemented wrapper captures its own native version and metadata. No provider redesign is part of this task.
-2. Future wrapper-bound Root services receive the owning wrapper/accessor internally. During binding, defer profile resolution until initialization has finished; avoid Root-to-wrapper-to-Root recursion.
-3. On a version-sensitive request, read a copy of wrapper.StaadVersion. A null value remains unknown. Never classify the server from wrapper.ApplicationVersion, the NuGet/DLL version, a registry entry, the latest installed folder or a global active object.
-4. Select an immutable verified full-version contract profile. The help build identifies the documentation snapshot, not a tested server. Numeric major/update/revision/build and verified runtime evidence determine the profile range.
-5. Inspect each optional native member without invoking it. Combine documented candidate status, verified contract evidence and actual member/signature evidence into an independent grant.
-6. Create an internal specialized adapter only after its grant. All calls remain bound to the same root. A positive grant does not establish model readiness, current results, licensing or success.
-7. RefreshComObjects constructs new wrapper adapters and updates metadata. Future contexts/grants must account for that generation; old retained adapters must never silently retarget another process.
+1. Acquire the intended root through the existing provider. Wrapper-bound access reuses the native StaadVersion snapshot; standalone adapters use the same-root shared reader.
+2. Property access creates a capture-only gateway; no profile resolution occurs while the wrapper is initializing.
+3. At acquisition, freeze all four native version components. Null/incomplete values return UnknownVersion. Host/package/installed-folder versions are never substituted.
+4. Apply exact candidate profiles: 25.0.1.424 for export; 26.0.0.340 for export and both message functions. Other candidate-year builds return ContractUnverified; older/future families outside policy return DisabledByVersionPolicy.
+5. Inspect the requested member non-mutatingly and, for messages, the GetAnalysisStatus dependency. Compatible return, arity, function kind and argument/reference metadata are required; member-name resolution alone is insufficient.
+6. Return an internal specialized adapter bound to the same root only on a grant. It checks the native-version snapshot before each operation; disposal or a changed snapshot invalidates use.
+7. RefreshComObjects creates new common adapters. Captured gateways/grants retain their original root, not a PID or filename target. Same-root refresh with unchanged version does not turn the grant into a model lease; explicit reacquisition performs fresh metadata checks.
 
-No duplicate native version query is needed for the normal wrapper-bound path. A standalone raw-root accessor uses a shared metadata reader as described in section 5.3, with explicit freshness/error behavior.
+No native runtime-verified profile registry is claimed. Current profiles reflect installed declaration/help evidence and compatible metadata; actual behavior remains a controlled validation/release gate.
 
-### 8.2 Initial conservative policy
+### 8.2 Implemented conservative policy
 
-| Observed/verified profile | Cached Root metadata projections | Additional unit-reader strategy | Export candidate | Error/warning candidates |
-| --- | --- | --- | --- | --- |
-| Verified 2024 | Reuse wrapper properties with documented fallback limits | Legacy-success only if native evidence confirms; otherwise corrected shared strategy or unresolved | Not granted by default | Not granted by default |
-| Verified 2025 | Reuse wrapper properties | Verified enum-code interpretation | Yes, independently verified | Not granted by default |
-| Verified 2026 | Reuse wrapper properties | Same enum-code strategy | Yes, shared export implementation | Yes, independent grants |
-| Known year, unverified servicing build | Metadata remains a wrapper snapshot, not a contract guarantee | No guessed strategy | Disabled when contract evidence is insufficient | Disabled when evidence is insufficient |
-| Unknown/missing/future native version | Cached values/fallbacks retain their wrapper meaning; native selection remains unknown | Do not infer return meaning from 0/1 alone | Disabled under initial policy | Disabled under initial policy |
+| Observed native version | Export acquisition | Error/warning acquisition |
+| --- | --- | --- |
+| 24.x or older noncandidate family | DisabledByVersionPolicy | DisabledByVersionPolicy |
+| 25.0.1.424 | Inspect and grant only a compatible export member | DisabledByVersionPolicy |
+| 26.0.0.340 | Inspect independently | Inspect each member and its count-query dependency independently |
+| Other builds in a feature's candidate year | ContractUnverified | ContractUnverified |
+| Missing/incomplete version | UnknownVersion | UnknownVersion |
+| Future/noncandidate family | DisabledByVersionPolicy | DisabledByVersionPolicy |
 
-The wrapper's implemented conservative 2024 return guard is not a populated verified profile registry. Native testing may establish a different real contract. If 2024 documentation is merely wrong and the native contract is identical, reuse the same internal reader rather than keeping an artificial year branch.
+Available means these metadata checks passed under an exact candidate profile. It is not proof of native operation behavior or a supported-build runtime certificate. Expanded build coverage requires evidence and an explicit profile update. The existing conservative 2024 unit-return guard remains unchanged and does not establish a runtime unit strategy.
 
-### 8.3 Inspection and caching
+### 8.3 Inspection and lifetime
 
-Use an internal tested IDispatch inspection layer. GetIDsOfNames establishes name resolution, not a compatible signature or successful operation; its DISPIDs belong to that object/interface lifetime. [Microsoft GetIDsOfNames](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-getidsofnames).
+The implemented RootDispatchInspector uses the acquired object's IDispatch name/type information and the current caller LCID. [GetIDsOfNames](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-getidsofnames) establishes presence, while [GetTypeInfo](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo) supplies signature evidence. Unknown names are distinct from unavailable type information. Exact managed reflection is used for non-COM automation stand-ins without invoking their functions.
 
-Use GetTypeInfoCount/GetTypeInfo where available to inspect signatures. Zero type-info count is not proof of absent dispatch functionality, and VARIANT metadata cannot settle legacy success versus unit-code semantics. [Microsoft GetTypeInfoCount](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfocount), [GetTypeInfo](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo).
+The inspector recognizes equivalent Unicode string/by-reference VARIANT shapes and normalizes an HRESULT with a single out retval. Optional arguments, ambiguous declarations, unresolved aliases, wrong function kinds or incompatible return/reference types do not grant access. It releases only inspection-owned descriptors/type-info references; it never final-releases the caller's root.
 
-Distinguish an unknown member from an unknown LCID, disconnected/busy/rejected call, access failure or unavailable metadata. Preserve transient HRESULTs; do not cache them as absence. Member probing must never export, create/open/close a model, analyze, mutate a view/project or quit. Release only inspection-owned references; never final-release the caller's root RCW.
+No optional grant is cached globally or keyed by PID, path, year or installed directory. Each acquisition performs fresh inspection. Busy, disconnected, wrong-thread, locale and unexpected metadata errors propagate and cannot poison a negative cache. No export, analysis, message retrieval, model mutation or shutdown is performed as a feature probe.
 
-Cache profiles/grants per bound COM identity, wrapper generation, full observed version and LCID. Do not use a global selected year, PID alone or filename. Simultaneous different-version roots remain independent. Unit/model/status values require their own refresh semantics, not permanent application-wide caching.
-
-Use the connected session's appropriate COM thread. No automatic Task.Run, silent migration to another STA, or lock advertised as COM thread safety. Do not hold a global lock across COM calls. A managed timeout cannot guarantee interruption of a blocked native invocation.
+The operation adapter captures the root and frozen version with its metadata accessor. It revalidates the version snapshot before work; wrapper disposal throws. A wrapper-bound guard reads cached native metadata without a duplicate version dispatch; standalone guards read their same captured root. The implementation adds no Task.Run, thread migration, global COM lock or interruptible-call promise.
 
 ### 8.4 Acquisition flow
 
 ```mermaid
 flowchart TD
     A[Request one capability] --> B[Read wrapper native-version snapshot]
-    B --> C{Verified profile permits candidate?}
+    B --> C{Exact candidate profile permits feature?}
     C -->|No| D[Return false with precise policy reason]
     C -->|Yes| E[Inspect that native member]
-    E --> F{Presence and compatible contract established?}
+    E --> F{Presence and compatible signature established?}
     F -->|Yes| G[Return granted specialized adapter]
     F -->|Absent or unresolved| H[Return false with availability reason]
     E -->|Transient or connection failure| I[Propagate original failure]
@@ -481,16 +444,16 @@ No live STAAD compatibility result is inferred from the current offline tests. N
 | Phase | Work | Exit criteria |
 | --- | --- | --- |
 | 0 — Completed wrapper foundation | Raw objects, all source properties/methods/constructors, metadata, refresh, service hooks and approved domain placeholders. | Member parity, XML and offline regression tests; main source stays read-only. No domain-function or Root-engine completion claim. |
-| 1 — Managed API rules / metadata complete | Five typed metadata projections, wrapper/raw accessors and shared readers implemented; result-object and no-public-reference rules recorded. Capability contracts remain proposed. | Existing behavior preserved; new interface members, XML and offline tests validated. |
+| 1 — Managed API rules / metadata complete | Five typed metadata projections, wrapper/raw accessors and shared readers implemented; result-object and no-public-reference rules recorded. Capability contracts are also implemented. | Existing behavior preserved; new interface members, XML and offline tests validated. |
 | 2 — Native evidence | Verify actual version responses, unit interpretations and optional members in each supported build; record full-version ranges. | No runtime-verified registry entries from help alone. Resolve/defer ambiguous cases. |
 | 3 — Internal plumbing | Wrapper metadata accessor, shared-reader extraction for raw-only bindings, immutable profiles, inspector/context/factory. Preserve Root constructor behavior and existing 22 methods. | No duplicated wrapper-bound version/unit/window reads; same-instance tests pass. |
 | 4 — Metadata projections / common reads (complete) | P06 native version from StaadVersion; P02/P03/P04/P09 property reuse; P01 folder; P05 physical; P07 errors; P08 PID; P11/P12 analysis queries (complete). Common reads P01/P05/P07/P08 are complete. | Correct snapshots, no host-version routing, live-only queries remain explicit. |
-| 5 — Common mutations/lifecycle (partly complete) | P15/P16 unit writes, P18 short job with model overload and P20 update complete; P19 full-job write and P21/P22 analysis entry points complete; P17 creation pending; P10 process handle only after ownership evidence. | Validated inputs, explicit refresh/persistence policy, no uncertain mutation retries. |
-| 6 — Optional capabilities | P29 export; P13/P14 independent message adapters; shared utilities only where contracts match. | Positive/negative access, profile, member and native tests pass. |
-| 7 — Remaining common domains (partly complete) | P23/P24 CONNECTED project complete; P25/P26/P28/P27 named views pending. | Verified flags/arrays/error contracts; no artificial per-year copies. |
-| 8 — Explicit shutdown | P30 Quit last, only in disposable dedicated processes. | Correct-instance behavior; no implicit disposal shutdown. |
+| 5 — Common mutations/lifecycle (partly complete) | P15/P16 unit writes, P18 short job with model overload and P20 update complete; P19 full-job write and P21/P22 analysis entry points complete; P17 creation complete with non-atomic prechecks; P10 returns opaque data without handle ownership/usability claims. | Validated inputs, explicit refresh/persistence policy, no uncertain mutation retries. |
+| 6 — Optional capabilities (implemented; native validation pending) | P29 export and independent P13/P14 message adapters, exact candidate profiles, metadata inspection and lifetime guards. | Offline positive/negative access, marshaling and status tests pass; runtime evidence remains required. |
+| 7 — Remaining common domains (partly complete) | P23/P24 CONNECTED project complete; P25/P26 named-view requests complete using inspected void signatures; P28/P27 also implemented using inspected signatures and explicit raw-mode/initial-error policies. | Verified flags/arrays/error contracts; no artificial per-year copies. |
+| 8 — Explicit shutdown (API complete; native validation pending) | P30 Quit implemented explicitly; native-test last, only in disposable dedicated processes. | Correct-instance behavior; no implicit disposal shutdown. |
 | 9 — Documentation/release | Root XML/examples, matrix, migration/installation guidance and package validation. Update README/release notes for every new NuGet build. | Actual packaged API/docs match; net481 consumer checks and recorded native compatibility evidence. |
 
-Metadata methods P02/P03/P04/P06/P09 and common analysis queries P11/P12 are complete. P12 also has a current-model overload. Common queries P01/P05/P07 are also complete. P08/P15/P16/P18/P20 are also complete; P18 includes the model overload. P19/P21/P22/P23/P24 are also complete, including a project-value assignment overload. The remaining 10 functions comprise 7 common and three optional operations. Current coverage is **29 adapter mappings (including five wrapper-backed projections), no internal-only coverage items and 10 functions without production native calls**. IOSRoot exposes 45 methods. The suite passes 1,266 offline tests; native runtime compatibility remains unverified.
+Metadata methods P02/P03/P04/P06/P09 and common analysis queries P11/P12 are complete. P12 also has a current-model overload. Common queries P01/P05/P07 are also complete. P08/P15/P16/P18/P20 are also complete; P18 includes the model overload. P19/P21/P22/P23/P24 are also complete, including a project-value assignment overload. P10/P17/P25/P26/P30 are also implemented. P13/P14/P27/P28/P29 now complete all 39 native mappings. RetrieveMemberForces completes all 23 private-source Root methods. IOSRoot has 53 common methods plus three separately acquired optional operation methods. The suite passes 1,547 tests; native STAAD runtime compatibility remains unverified.
 
-The source project remains strictly read-only. The wrapper foundation and review documents were committed and pushed. The subsequent increments added five Root metadata methods, common analysis observation, three common model/error reads and five process/model-setup functions, with shared native validation and an existing ShortJobInfo overload. Other domain functions, profile engine, capability adapters and a new package build remain separate work.
+The source project remains strictly read-only. The wrapper foundation and review documents were committed and pushed. The subsequent increments added five Root metadata methods, common analysis observation, three common model/error reads and five process/model-setup functions, with shared native validation and an existing ShortJobInfo overload. The final increment completes candidate profile selection, capability inspection/adapters, the two remaining view mappings and the private-source force helper. Other domain adapter expansion, broader runtime evidence and a new package build remain separate work.

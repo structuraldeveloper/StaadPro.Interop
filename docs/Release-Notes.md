@@ -1,5 +1,9 @@
 # StaadPro.Interop release notes
 
+### Unreleased source development
+
+Completed the reviewed Root API mappings and the private-source member-force helper. Added independently acquired export/message interfaces with exact candidate-build policy, native signature inspection, bounded message retrieval and named status/data results. Expanded XML IntelliSense, regression tests and usage guidance. Native STAAD runtime validation and a new NuGet archive remain pending; this source work is not included in the preview archives below. See the [Root completion guide](Root-Completion-and-Capabilities.md).
+
 ## 1.0.0-preview.20261014.7 - 14 October 2026 (preview)
 
 This maintenance release improves the package metadata and documentation. The runtime API is unchanged from `1.0.0-preview.20261014.6`.

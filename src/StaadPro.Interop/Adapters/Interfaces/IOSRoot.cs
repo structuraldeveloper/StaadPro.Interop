@@ -1,4 +1,5 @@
 using System;
+using StaadPro.Interop.Adapters.Interfaces.Capabilities;
 using System.Collections.Generic;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Enums.Root;
@@ -454,6 +455,214 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// if (reuseProject &amp;&amp; projectInfo != null) Console.WriteLine(root.SetConnectedProjectInfo(projectInfo));
         /// </code></example>
         bool SetConnectedProjectInfo(ConnectedProjectInfo projectInfo);
+
+        /// <summary>Reads an opaque numeric process-handle value from the acquired OpenSTAAD root.</summary>
+        /// <returns>A fresh immutable NativeProcessHandleValue containing the native bit pattern, without resource ownership or a Windows-handle usability guarantee.</returns>
+        /// <remarks><para>Calls native GetProcessHandle once on this captured root. Accepts integral CLR values and IntPtr/UIntPtr
+        /// representations only. Unsigned values are retained; signed negatives are sign-extended to an unsigned 64-bit bit pattern.
+        /// Zero and all-one values are preserved without inventing validity or pseudo-handle semantics. The representation
+        /// does not establish the server's actual handle width, lifetime, access rights or process context.</para>
+        /// <para>This is diagnostic data, not an owning SafeHandle, PID, main-window handle or verified caller-process HANDLE.
+        /// Do not close it or pass its numeric value to operating-system handle APIs. No process is opened, duplicated,
+        /// enumerated or terminated. Use GetProcessId for process identification. Use the acquired COM thread and coordinate
+        /// access; the snapshot does not prove connection liveness. There is no retry or global active-object lookup.</para></remarks>
+        /// <exception cref="InvalidOperationException">The native response is null or has a nonintegral, Boolean, string, fractional or unsupported representation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native query fails; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible GetProcessHandle member.</exception>
+        /// <example><code>
+        /// var handleValue = root.GetProcessHandle();
+        /// Console.WriteLine(handleValue.RawValue); // diagnostic value only; do not close or use as a Windows HANDLE
+        /// </code></example>
+        NativeProcessHandleValue GetProcessHandle();
+
+        /// <summary>Requests native creation of a new STD model in an unnamed STAAD session.</summary>
+        /// <param name="filePath">Non-null, non-whitespace new .std model path. Relative input is resolved against the process working directory. The parent directory must exist; an existing file or directory at the target is rejected.</param>
+        /// <param name="lengthUnit">Native length code 0 through 7, including the documented feet alias (LengthInputUnit)1. Codes are sent unchanged.</param>
+        /// <param name="forceUnit">Defined ForceInputUnit value 0 through 7. Validated before filesystem or native access.</param>
+        /// <remarks><para>Normalizes the path, validates units and the .std filename, and checks the existing parent and absent target.
+        /// Rejects Windows device names. Reads GetSTAADFile once and requires empty/whitespace filename text, then rechecks
+        /// target absence before one NewSTAADFile call with the absolute path and Int32 length/force codes. Access and path
+        /// errors propagate; the library does not hide them behind File.Exists. A blank filename is not proof that the
+        /// application has no unsaved work or is ready for creation.</para>
+        /// <para>Prechecks are not atomic with the native creation request. Another process can create the target or switch the
+        /// session after validation; native overwrite and loaded-model behavior are unspecified. Coordinate exclusive session
+        /// and destination use. This method is not an atomic no-overwrite guarantee. It creates no placeholder file, parent
+        /// directory, process or managed STD contents, and does not close or save another model.</para>
+        /// <para>The native function returns void. Normal return means dispatch completed, not file persistence, requested units,
+        /// active-model identity or readiness. No polling, read-back, cache refresh, save, retry or rollback is added.
+        /// Refresh wrapper metadata explicitly when needed. Call on the session's COM thread; native UI may block the request.</para></remarks>
+        /// <exception cref="ArgumentNullException">filePath is null; rejected before native access.</exception>
+        /// <exception cref="ArgumentException">The path is blank, has invalid syntax, lacks a .std extension or names a Windows device.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">A unit code is unsupported; rejected before filesystem or native access.</exception>
+        /// <exception cref="InvalidOperationException">The bound session reports a nonblank model path or malformed/unwritten filename output.</exception>
+        /// <exception cref="System.IO.IOException">The target exists, its parent is unavailable or a filesystem/path check fails.</exception>
+        /// <exception cref="UnauthorizedAccessException">The caller cannot inspect the destination or its parent.</exception>
+        /// <exception cref="NotSupportedException">The runtime rejects the path format.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The filename query or native creation request fails; partial native effects are possible.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible filename or three-input NewSTAADFile member.</exception>
+        /// <example><code>
+        /// bool createNewModel = false; // enable only in an intended unnamed session with an exclusively controlled destination
+        /// if (createNewModel)
+        ///     root.NewSTAADFile(@"C:\Models\NewFrame.std", LengthInputUnit.Meter, ForceInputUnit.KiloNewton);
+        /// </code></example>
+        void NewSTAADFile(string filePath, LengthInputUnit lengthUnit, ForceInputUnit forceUnit);
+
+        /// <summary>Requests creating a named view using an explicitly supplied native creation flag.</summary>
+        /// <param name="viewName">Non-null, non-whitespace view name, sent literally without trimming; Unicode and surrounding whitespace are retained.</param>
+        /// <param name="creationFlag">Native Int32 creation flag whose meaning the caller has established for the connected build. All Int32 values are forwarded; the reviewed help does not define a valid domain, enum or default.</param>
+        /// <remarks><para>Validates the name, then calls native CreateNamedView once with name and Int32 flag.
+        /// Installed 2025/2026 managed interop declares two inputs and void return, unlike the help's additional nError
+        /// parameter. This API follows that inspected signature and does not add an error buffer, guessed success result,
+        /// default flag or retry with an alternate signature. Confirm the flag and signature on the actual target build.</para>
+        /// <para>Normal return establishes dispatch completion only. Duplicate-name, overwrite, view contents, empty-model,
+        /// persistence and flag semantics remain native decisions. No geometry is explicitly edited and no separate SaveModel,
+        /// selection change, Create/Save substitution, refresh or rollback is added. Use the acquired session's COM thread;
+        /// native calls may block, display UI or fail after effects. A raw flag is exposed because authoritative meanings
+        /// are unavailable; no enum values or supported range are invented.</para></remarks>
+        /// <exception cref="ArgumentNullException">viewName is null; rejected before native access.</exception>
+        /// <exception cref="ArgumentException">viewName is empty or whitespace-only; rejected before native access.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native creation fails; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible two-input CreateNamedView member.</exception>
+        /// <example><code>
+        /// bool createView = false; // enable only after establishing the creation flag for this build
+        /// int confirmedCreationFlag = 0; // replace with the verified flag; zero is not asserted to be a valid/default mode
+        /// if (createView) root.CreateNamedView("Frame view", confirmedCreationFlag);
+        /// </code></example>
+        void CreateNamedView(string viewName, int creationFlag);
+
+        /// <summary>Requests saving the current view under the supplied name through the native SaveNamedView entry point.</summary>
+        /// <param name="viewName">Non-null, non-whitespace name, preserved exactly including Unicode and surrounding whitespace.</param>
+        /// <remarks><para>Validates the name and calls native SaveNamedView once with that string. Installed 2025/2026
+        /// managed interop declares a single input and void return; the help's additional nError parameter is inconsistent.
+        /// This API follows the inspected one-input signature, without an error buffer, inferred success flag,
+        /// alternate-signature retry or substitution through CreateNamedView. Verify actual native behavior per target build.</para>
+        /// <para>Normal return does not certify that a view was saved, persisted to disk or had particular contents.
+        /// Existing-name/overwrite, no-model and view-state behavior remain native decisions. This method is not SaveModel
+        /// and adds no model-file save, selection changes, refresh, read-back or rollback. Use the bound COM thread
+        /// and coordinate shared view/model operations; native calls may block, show UI or fail after effects.</para></remarks>
+        /// <exception cref="ArgumentNullException">viewName is null; rejected before native access.</exception>
+        /// <exception cref="ArgumentException">viewName is empty or whitespace-only; rejected before native access.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native view saving fails; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible one-input SaveNamedView member.</exception>
+        /// <example><code>
+        /// bool saveCurrentView = false; // enable only when this native view change is intended
+        /// if (saveCurrentView) root.SaveNamedView("Frame view");
+        /// </code></example>
+        void SaveNamedView(string viewName);
+
+        /// <summary>Explicitly requests termination of the STAAD application represented by this acquired root.</summary>
+        /// <remarks><para>Calls native Quit once with no arguments. This targets the captured application instance and
+        /// can affect unsaved work, every model/interface hosted by that instance and other clients sharing it.
+        /// Save or discard work explicitly under the caller's policy before invoking this method. No silent-mode change,
+        /// pre-save, model close, process kill, global lookup or other application-instance shutdown is added.</para>
+        /// <para>The native return is void: normal return does not verify process exit. Native prompts or running analysis
+        /// can delay or prevent termination. An exception can follow effects; no retry or rollback is attempted.
+        /// Captured native interfaces may become unusable, but the managed wrapper is not automatically disposed or retargeted.
+        /// OpenStaadWrapper.Dispose does not call this operation. Use the bound COM thread and coordinate all clients.</para></remarks>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native shutdown request fails; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible no-argument Quit member.</exception>
+        /// <exception cref="System.Runtime.InteropServices.InvalidComObjectException">The captured COM wrapper no longer represents a usable native object.</exception>
+        /// <example><code>
+        /// bool quitOwnedApplication = false; // enable only for an application whose shutdown the caller intends
+        /// if (quitOwnedApplication) root.Quit();
+        /// </code></example>
+        void Quit();
+
+        /// <summary>Gets a capture-only gateway for acquiring optional Root operation interfaces.</summary>
+        /// <value>A gateway bound to this root and native metadata accessor; property access does not inspect or invoke native features.</value>
+        /// <remarks>Obtain export/error/warning interfaces independently through this gateway. Exact candidate-build
+        /// profiles and compatible native signatures are required. Unknown versions, uncovered builds and missing
+        /// metadata grant no interface. Wrapper bindings reuse StaadVersion; standalone bindings read their captured
+        /// root. The gateway does not acquire another process or certify native runtime compatibility.</remarks>
+        /// <example><code>
+        /// var exportGrant = root.Capabilities.GetAdinaExport();
+        /// Console.WriteLine(exportGrant.Availability);
+        /// </code></example>
+        IOSRootCapabilities Capabilities { get; }
+
+        /// <summary>Requests removal of a named view through the inspected native entry point.</summary>
+        /// <param name="viewName">Non-null, non-whitespace view name, preserved exactly without trimming.</param>
+        /// <remarks><para>Validates the name, then calls RemoveNamedView once with the name and an Int32 zero in the
+        /// required nError position. Installed 2025/2026 interop passes that parameter by value, unlike the help's reference
+        /// output. Zero initializes this native slot; it is not interpreted as success. No output error code is observable
+        /// through the inspected signature, so this managed method returns void rather than fabricating a result.</para>
+        /// <para>Normal return means dispatch completed, not verified removal or disk persistence. Missing-name, current-view,
+        /// prompts and native error behavior remain server decisions. No geometry deletion, SaveModel, read-back, alternate
+        /// signature, retry or rollback is added. Use the bound COM thread and coordinate changes; effects may precede exceptions.
+        /// The actual 2024 signature and native view behavior still require controlled verification.</para></remarks>
+        /// <exception cref="ArgumentNullException">viewName is null; rejected before dispatch.</exception>
+        /// <exception cref="ArgumentException">viewName is empty or whitespace-only; rejected before dispatch.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native request fails; the original failure propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible two-input RemoveNamedView member.</exception>
+        /// <example><code>
+        /// bool removeView = false; // enable only for an intended native view removal
+        /// if (removeView) root.RemoveNamedView("Frame view");
+        /// </code></example>
+        void RemoveNamedView(string viewName);
+
+        /// <summary>Requests modifying named-view membership using an owned snapshot of entity identifiers.</summary>
+        /// <param name="viewName">Non-null, non-whitespace view name; text is preserved exactly.</param>
+        /// <param name="entityIds">Non-null sequence of positive Int32 entity identifiers, enumerated once into a private zero-based Int32 array before native mutation. Order and duplicates are preserved; an empty array is forwarded rather than silently treated as a no-op.</param>
+        /// <param name="entityType">Documented qualifier: Node=0, Beam=1, Plate=2, Solid=3 or Surface=4. Undefined values are rejected before enumeration/native access.</param>
+        /// <param name="modificationFlag">Required native Int32 mode established by the caller for this build. The reviewed help supplies no meanings or valid range; every Int32 is sent unchanged, without a guessed enum or default.</param>
+        /// <remarks><para>Validates name, sequence, qualifier and every identifier before one ModifyNamedView call.
+        /// The inspected 2025/2026 signature has four inputs: name, Int32 array, qualifier and flag. It has no separate count
+        /// or reference error output, unlike the help. The array carries its own length; no inconsistent caller count is accepted.
+        /// Native return is void and no error/success result is fabricated. Input enumerator failures propagate before dispatch.</para>
+        /// <para>The caller must establish mode and empty-array behavior on the actual build. Native entity existence,
+        /// duplicate handling, membership rules and persistence are not inferred. No geometry mutation is explicitly requested,
+        /// selection changes, SaveModel, read-back, rollback, signature fallback or retries are added. Native view effects may
+        /// precede exceptions. Use the session's COM thread and coordinate changes; calls may block or display UI.
+        /// Array marshaling, flag semantics and the 2024 signature still require controlled native validation.</para></remarks>
+        /// <exception cref="ArgumentNullException">viewName or entityIds is null.</exception>
+        /// <exception cref="ArgumentException">The name is blank or a supplied identifier is nonpositive; rejected before mutation.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">entityType is undefined; rejected before enumeration or native access.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native request fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible four-input ModifyNamedView member.</exception>
+        /// <example><code>
+        /// bool modifyView = false; // enable only after establishing mode and array semantics for the actual build
+        /// int confirmedMode = 0; // replace with a verified value; zero is not asserted to be a supported default
+        /// if (modifyView) root.ModifyNamedView("Frame view", new[] { 1, 2 },
+        ///     StaadPro.Interop.Enums.Root.NamedViewEntityType.Beam, confirmedMode);
+        /// </code></example>
+        void ModifyNamedView(string viewName, IEnumerable<int> entityIds, NamedViewEntityType entityType, int modificationFlag);
+
+        /// <summary>Retrieves local forces at both ends of each requested member/load-case pair.</summary>
+        /// <param name="beamIds">Non-null positive member identifiers, enumerated once and deduplicated in first-seen order before native access.</param>
+        /// <param name="loadCaseIds">Non-null positive load-case identifiers, enumerated once and deduplicated in first-seen order before native access.</param>
+        /// <returns>A named batch result with native availability, per-end success/data and a read-only collection of qualified force records. Native false never exposes partial buffer data.</returns>
+        /// <remarks><para>Completes the main project's Root helper without expanding the public Output placeholder.
+        /// Validates and snapshots both sequences, limits the Cartesian batch to 100,000 end queries, then reads
+        /// the bound root's raw Output.AreResultsAvailable once. An empty input makes no native calls: availability
+        /// is null and the empty request succeeds. Native false availability returns an unsuccessful empty batch.</para>
+        /// <para>For available results, reads each distinct case title once through the same root's raw Load.GetLoadCaseTitle,
+        /// then requests start/end forces with native Int32 member/end/case values and local-coordinate flag zero.
+        /// Internal ref object buffers carry six Double values in Fx,Fy,Fz,Mx,My,Mz order. Native true requires every
+        /// value written and finite; native false is retained per query with null force data and does not stop other queries.
+        /// Unknown/malformed flags and malformed successful buffers remain exceptions, not ordinary failure results.</para>
+        /// <para>Ported MemberForces records remain editable managed models backed by the existing Forces class.
+        /// Collections preserve distinct member/end/load identities even when components are identical; they are not
+        /// collapsed through component-based HashSet equality. No unit conversion, global transform or member-offset
+        /// transfer is applied. Values use native result-unit conventions; cached input-unit metadata does not certify them.</para>
+        /// <para>No analysis, case activation, selection edit, save, UI warning, provider lookup, background task or retry
+        /// is added. Reads are sequential snapshots rather than a transaction or result-freshness guarantee. Use the
+        /// session's COM thread and coordinate edits/analysis. Exceptions return no partial batch; expected native false
+        /// flags do return qualified per-query outcomes. Full runtime validation remains required.</para></remarks>
+        /// <exception cref="ArgumentNullException">Either sequence is null.</exception>
+        /// <exception cref="ArgumentException">An identifier is nonpositive or the deduplicated request exceeds 100,000 end queries; rejected before native access.</exception>
+        /// <exception cref="InvalidOperationException">A required raw object is absent, a flag/title is malformed or a successful force buffer is unwritten, nonfinite or incorrectly shaped.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">A native read fails; its original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The bound root/Output/Load lacks a compatible member.</exception>
+        /// <example><code>
+        /// bool retrieveForces = false; // enable for an intended query of existing native results
+        /// if (retrieveForces)
+        /// {
+        ///     var result = root.RetrieveMemberForces(new[] { 1, 2 }, new[] { 1 });
+        ///     foreach (var query in result.Queries)
+        ///         if (query.IsSuccessful) Console.WriteLine(query.Forces.ToString());
+        /// }
+        /// </code></example>
+        MemberForcesResult RetrieveMemberForces(IEnumerable<int> beamIds, IEnumerable<int> loadCaseIds);
 
         /// <summary>Reads the current model's native STAAD file path from this root session.</summary>
         /// <returns>The exact string reported by OpenSTAAD, including original case, whitespace and Unicode; an empty string when the native API reports no open filename.</returns>

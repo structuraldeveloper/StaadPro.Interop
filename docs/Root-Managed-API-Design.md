@@ -27,16 +27,16 @@ These rules apply to new Root APIs and refine the [coverage plan](reports/OpenST
 
 The existing wrapper's unit fallback may provide a useful enum when a native unit read fails. The new projection methods preserve that compatibility contract and explicitly document it; their enum return does not certify an observed unit. A later diagnostic API would need to capture provenance during the original native read rather than reconstruct it from a cached value.
 
-## Planned result classes
+## Result classes and superseded proposals
 
 | Class | Data and status contract |
 | --- | --- |
 | `AnalysisStatusResult` (implemented) | Immutable native/typed status, query success distinct from analysis success, completion state and nullable diagnostic counts/CPU seconds. See the [implemented output policy](Root-Analysis-Queries.md#result-data-and-validity); native runtime validation remains pending. |
-| `AnalysisMessagesResult` | Raw native status, nullable recognized retrieval status, `IsSuccessful`, read-only `Messages` and queried model path. Native 1 and 0 represent retrieved messages and successful absence respectively; expected native failures expose no valid messages. Allocate and marshal arrays internally. |
+| `AnalysisMessagesResult` (implemented) | Nullable native status, separate managed Outcome, nullable recognized retrieval status, `IsSuccessful`, read-only `Messages` and an AnalysisState carrying the queried model path. Native 1 and 0 represent retrieved messages and successful absence respectively; expected native failures expose no valid messages. Allocate and marshal arrays internally. |
 | `ConnectedProjectResult` (implemented) | Verified native success flag, `IsSuccessful` and immutable `ConnectedProjectInfo` only on success. Preserve exact project ID/name text; false returns no partial data. See the [job/analysis/project guide](Root-Job-Analysis-Projects.md). |
-| `NamedViewResult` | Raw error code and verified recognized status/success semantics. Release remains gated on flag/error documentation and native validation. |
-| `AdinaExportResult` | Raw status, nullable recognized export status, `IsSuccessful` including documented warning success, and a separate warning indication. Do not fabricate an output path absent from the native response. |
-| `RootCapabilityResult<TCapability>` | Availability status/reason and a non-null bound interface only when granted. Unsupported capabilities return no interface; discovery/connection failures retain their explicit exception contract. No public output parameter. |
+| `NamedViewResult` (superseded) | Inspected view signatures return void and provide no observable error outputs. Remove initializes the required by-value numeric slot; Modify uses four inputs. No fabricated status class or enum is exposed. |
+| `AdinaExportResult` (implemented) | Raw status, nullable recognized export status, `IsSuccessful` including documented warning success, and a separate warning indication. Do not fabricate an output path absent from the native response. |
+| `RootCapabilityResult<TCapability>` (implemented) | Availability status/reason and a non-null bound interface only when granted. Unsupported capabilities return no interface; discovery/connection failures retain their explicit exception contract. No public output parameter. |
 
 Keep operation-specific result classes where statuses differ. A single generic result with an arbitrary Boolean and an untyped payload would lose useful contract information. Reuse a small generic capability result only for the same discovery semantics.
 
@@ -44,7 +44,7 @@ Keep operation-specific result classes where statuses differ. A single generic r
 
 - Analysis status and message retrieval can offer `(string modelFilePath)` and parameterless overloads for the currently bound model. The parameterless form obtains the current path once and delegates to the explicit-path implementation; an unnamed model needs a documented unavailable-result or argument policy before release.
 - Short/full job updates can offer a named information-object overload alongside explicit arguments. Snapshot editable object properties before validation; map the native order internally. Reuse suitable existing job information types after checking their field/date semantics.
-- Named-view modification should accept entity IDs and a typed entity kind, derive the count internally, and expose a typed modification mode only after its values are established.
+- Named-view modification should accept entity IDs and a typed entity kind, let the owned array carry its count, and expose a typed modification mode only after its values are established. The inspected declaration does not take a separate native count.
 - Do not add Boolean freshness overloads to the five metadata projections. Refresh the owning wrapper explicitly. Constructors and method XML explain the standalone native-read path.
 - Add overloads with their operation, tests and XML only when they provide a concrete caller benefit. Do not create unused overloads or speculative source files.
 
@@ -70,11 +70,11 @@ The five metadata queries are implemented: `GetApplicationVersion`, `GetBaseUnit
 
 Wrapper-owned adapters project cached wrapper properties without additional native reads. Standalone adapters retain a capture-only constructor and use the same internal readers against their supplied root on each query. Standalone unit queries read version and base system before the selected unit; standalone window queries read version and then the handle only for the source-compatible Connect family. Reads are sequential on the caller's COM thread and are not an atomic model snapshot. Metadata methods captured from a disposed wrapper throw `ObjectDisposedException`.
 
-These additions do not implement the remaining native operations or the version-profile/capability engine. Their tests establish managed behavior with stand-ins; actual 2024/2025/2026 compatibility still requires native validation. No NuGet package has been rebuilt for this increment.
+This initial metadata increment established managed behavior with stand-ins. The later completion increment implements all reviewed native operations and the capability gateway; actual 2024/2025/2026 compatibility still requires native validation. No NuGet archive has been rebuilt for this source work.
 
 ## Analysis observation increment
 
-IsAnalyzing and both GetAnalysisStatus overloads are implemented through a shared internal service. The named result class and documented status enum follow the organization above; no public reference parameters, tuples or mutable output buffers were added. See the [complete guide](Root-Analysis-Queries.md) for status/data semantics and limits. The remaining optional message functions and other planned Root functions remain pending.
+IsAnalyzing and both GetAnalysisStatus overloads are implemented through a shared internal service. The named result class and documented status enum follow the organization above; no public reference parameters, tuples or mutable output buffers were added. See the [complete guide](Root-Analysis-Queries.md) for status/data semantics and limits. The optional message functions and other reviewed Root functions are now implemented; their current contracts are in the [completion guide](Root-Completion-and-Capabilities.md).
 
 ## Common query increment
 
@@ -87,3 +87,11 @@ GetProcessId and the independent length/force setters, SetShortJobInfo and Updat
 ## Full job, analysis request and project increment
 
 SetFullJobInfo accepts thirteen non-null strings in native order, including literal date text. The existing FullJobInfo stores DateTime values, so a write overload is deferred until native date serialization is verified. Analyze and AnalyzeModel retain the verified void contract; AnalysisEngine exposes only the documented -1 selector. CONNECTED retrieval returns immutable ConnectedProjectResult/ConnectedProjectInfo snapshots, while assignment returns the native Boolean flag and accepts either two strings or the same project data class. All assignment inputs are validated before native access. Services share unchanged contracts across the reviewed versions. No capability engine or public reference outputs were introduced. See the [complete guide](Root-Job-Analysis-Projects.md).
+
+## Creation, view and lifecycle increment
+
+NewSTAADFile adds explicit destination/unit/session validation with a documented non-atomic race boundary. Existing unit validation is shared with independent setters. CreateNamedView and SaveNamedView use the inspected two-input/one-input void signatures rather than fabricating the help's error outputs. Creation flags remain required Int32 inputs with caller-established meanings, not invented enums/defaults. GetProcessHandle adopts the plan's opaque-value fallback as immutable NativeProcessHandleValue; it exposes no ownership, conversion or verified client pointer. Quit remains an explicit application request and does not alter disposal. See the [complete guide](Root-Creation-Views-and-Lifecycle.md).
+
+## Completed Root surface
+
+All 39 reviewed native Root mappings and all 23 private-source Root methods are implemented. The common interface has 53 methods plus a capability gateway; three separately acquired operation interfaces provide the version-specific functions. Exact candidate profiles and non-mutating member metadata gate acquisition, without claiming runtime certification. Message retrieval uses separate managed/native outcomes and bounded BSTR allocations. The final source helper returns MemberForcesResult with per-end success/data and reuses source MemberForces/MemberEnd rather than collapsing identities through component equality. See the [completion guide](Root-Completion-and-Capabilities.md).

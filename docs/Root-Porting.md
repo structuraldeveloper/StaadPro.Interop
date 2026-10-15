@@ -2,15 +2,15 @@
 
 For coverage against Bentley's installed OpenSTAAD 2026 reference (39 native Root functions), see the [Root API coverage and implementation plan](reports/OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md). The counts below describe parity with the private main project, not coverage of Bentley's full Root API.
 
-For the proposed 2024-2026 internal service selection and capability access, see the [multi-version Root architecture plan](reports/OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md). Metadata access and common analysis observation are implemented; profile selection and optional capability infrastructure remain planned.
+For the implemented 2024-2026 candidate selection and capability access, see the [multi-version Root architecture plan](reports/OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md). Metadata/common operations, exact candidate profiles and optional capability infrastructure are implemented. Native runtime compatibility is not inferred from source coverage.
 
 The [complete wrapper foundation](Wrapper-Porting.md) is now ported with raw bindings, cached application metadata, refresh methods and explicitly limited domain placeholders. Five Root metadata methods now reuse its properties; common analysis queries use a separate live native service.
 
-The main project's `IOSRoot` exposes 23 methods. This repository now implements **22**, with **1 pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
+The main project's `IOSRoot` exposes 23 methods. This repository now covers **all 23**, with **no private-source Root method pending**. The existing late-bound root binding is retained: signatures belong to `Adapters/Interfaces/IOSRoot.cs`, implementations belong to the single non-partial `Adapters/Models/OSRootAdapter.cs`, and the connected `OpenStaadWrapper.Root` exposes that adapter.
 
-Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
+Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. The original 22 signatures are preserved. RetrieveMemberForces retains the source function name but uses descriptive parameters and a named status/data result under the approved managed API rules. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
-The first Root increment added five vendor metadata queries beyond the private interface: GetApplicationVersion, GetBaseUnit, GetInputUnitForForce, GetInputUnitForLength and GetMainWindowHandle. IOSRoot now has 45 managed methods after the metadata, analysis, common-query, model-setup and job/project increments. Wrapper-bound calls reuse snapshots; standalone bindings read the same supplied native root through shared helpers. See the [managed API design rules](Root-Managed-API-Design.md) and [API reference](API-Reference.md#root-adapter). These additions do not change the private-interface parity count below.
+The first Root increment added five vendor metadata queries beyond the private interface: GetApplicationVersion, GetBaseUnit, GetInputUnitForForce, GetInputUnitForLength and GetMainWindowHandle. IOSRoot now has 53 common methods. Three optional operation interfaces complete all 39 reviewed native Root mappings; capability acquisition methods are counted separately. Wrapper-bound calls reuse snapshots; standalone bindings read the same supplied native root through shared helpers. See the [managed API design rules](Root-Managed-API-Design.md) and [API reference](API-Reference.md#root-adapter). These additions do not change the private-interface parity count below.
 
 ## Analysis observation
 
@@ -27,6 +27,14 @@ GetProcessId, SetInputUnitForLength, SetInputUnitForForce, SetShortJobInfo and U
 ## Full job metadata, analysis requests and CONNECTED projects
 
 SetFullJobInfo, Analyze, AnalyzeModel, GetConnectedProjectInfo and SetConnectedProjectInfo are implemented. The project setter also accepts ConnectedProjectInfo. Full-job fields preserve native text and date strings; analysis requests retain verified void semantics, with a typed AnalysisEngine selector. Project retrieval returns immutable status/data with no public reference parameters. See the [job/analysis/project guide](Root-Job-Analysis-Projects.md) for inputs, flags, exceptions, examples and verification limits. These five native mappings and six managed signatures do not change private-source parity.
+
+## Creation, views, process-handle data and shutdown
+
+NewSTAADFile, CreateNamedView, SaveNamedView, GetProcessHandle and Quit are implemented. Native model creation validates an absent target and unnamed session without promising atomic no-overwrite. View requests follow the inspected two-input create and one-input save signatures, preserving required raw creation flags without guessed meanings. Process-handle data is an opaque NativeProcessHandleValue, not an owning or verified caller-process handle. Quit is explicit and does not change disposal. See the [creation/view/lifecycle guide](Root-Creation-Views-and-Lifecycle.md). These five native mappings add five managed signatures; private-interface parity is unchanged.
+
+## Completed final functions and capabilities
+
+RemoveNamedView and ModifyNamedView use the inspected by-value/four-input signatures. GetAnalysisErrorMessages, GetAnalysisWarningMessages and ExportModelToAdina are available through independent typed acquisitions on Capabilities (GetAnalysisErrorMessages, GetAnalysisWarningMessages and GetAdinaExport). Exact candidate profiles and compatible metadata are required; these checks are not runtime certification. RetrieveMemberForces completes the private helper with MemberForcesResult and source-compatible models. See the [completion guide](Root-Completion-and-Capabilities.md) for all statuses, arrays, lifetime rules and limits.
 
 ## Ported functions
 
@@ -306,14 +314,8 @@ Managed tests cover all eight flag combinations, every documented status, unknow
 
 Validation: **914 offline tests** passed. Installed-package verification checks **149 XML example blocks**. Native mutation/version checks remain pending.
 
-## Pending reference methods
+## Completed private-source helper
 
-Earlier filename/identity work added normalized-path, complete-path comparison and BSTR-buffer regression coverage. Its read-only native checks on the running **STAAD.Pro Advanced 2026 unnamed session** succeeded for all six filename/identity methods: the four string queries returned empty text, and both identity predicates returned false for a valid named target. No model was opened or modified. These observations do not certify native save/open/close, window or analysis operations. Broader native-version validation remains pending.
+`MemberForcesResult RetrieveMemberForces(IEnumerable<int> beamIds, IEnumerable<int> loadCaseIds)` completes the final private Root function. It reuses the ported MemberForces/MemberEnd models, validates and snapshots IDs, preserves native availability and per-end success/data, and retains local native units. The public Output adapter remains a placeholder; dependency calls are internal. See the [completion guide](Root-Completion-and-Capabilities.md#completed-private-source-helper).
 
-These source signatures describe future ports; their supporting enums/models/services are not implied to be available already:
-
-- `HashSet<MemberForces> RetrieveMemberForces(IEnumerable<int> beams, IEnumerable<int> loadCases)`
-
-## Suggested next sequence
-
-Port `RetrieveMemberForces` after establishing the required output adapter contracts and standalone member-force models. Keep result availability, end-force mapping, load titles, enumerable validation and native-unit conventions explicit. Validate native mutation/window/analysis behavior on controlled models before making broader version or production-readiness claims.
+Current source verification passes **1,547 tests**. Native behavior across actual STAAD builds, named-view modes, result units, file effects and shutdown still requires controlled validation. No NuGet archive was rebuilt; the historical installed-package checks above describe older archives.

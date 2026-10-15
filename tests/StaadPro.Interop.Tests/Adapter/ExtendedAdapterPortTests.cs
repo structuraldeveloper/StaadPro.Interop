@@ -388,6 +388,15 @@ namespace StaadPro.Interop.Tests.Adapter
             public string GetStaadFileFolder() => throw new NotSupportedException();
             public bool IsPhysicalModel() => throw new NotSupportedException();
             public string GetErrorMessage() => throw new NotSupportedException();
+            public StaadPro.Interop.Models.Root.NativeProcessHandleValue GetProcessHandle() => throw new NotSupportedException();
+            public void NewSTAADFile(string filePath, StaadPro.Interop.Enums.LengthInputUnit lengthUnit, StaadPro.Interop.Enums.ForceInputUnit forceUnit) => throw new NotSupportedException();
+            public void CreateNamedView(string viewName, int creationFlag) => throw new NotSupportedException();
+            public void SaveNamedView(string viewName) => throw new NotSupportedException();
+            public void Quit() => throw new NotSupportedException();
+            public StaadPro.Interop.Adapters.Interfaces.Capabilities.IOSRootCapabilities Capabilities => throw new NotSupportedException();
+            public void RemoveNamedView(string viewName) => throw new NotSupportedException();
+            public void ModifyNamedView(string viewName, IEnumerable<int> entityIds, StaadPro.Interop.Enums.Root.NamedViewEntityType entityType, int modificationFlag) => throw new NotSupportedException();
+            public StaadPro.Interop.Models.Root.MemberForcesResult RetrieveMemberForces(IEnumerable<int> beamIds, IEnumerable<int> loadCaseIds) => throw new NotSupportedException();
             public uint GetProcessId() => throw new NotSupportedException();
             public void SetInputUnitForLength(StaadPro.Interop.Enums.LengthInputUnit lengthUnit) => throw new NotSupportedException();
             public void SetInputUnitForForce(StaadPro.Interop.Enums.ForceInputUnit forceUnit) => throw new NotSupportedException();

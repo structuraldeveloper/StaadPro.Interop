@@ -2,25 +2,25 @@
 
 **Review date:** 15 October 2026  
 **Scope:** Installed Bentley OpenSTAAD 2026 Root reference versus the current `main` branch and its built .NET Framework assembly.  
-**Status:** The wrapper foundation and 29 documented native Root mappings are implemented. Ten native Root functions and version-aware capability dispatch remain pending. New contracts follow the [managed API design rules](../Root-Managed-API-Design.md); see [Wrapper-Porting](../Wrapper-Porting.md) for wrapper scope.
+**Status:** All 39 documented native Root functions and all 23 private-source Root methods are implemented. The assembly exposes 53 common IOSRoot methods, three separately acquired optional operations and a capability gateway. Metadata candidate profiles and native runtime/release validation have distinct limits; see the [completion guide](../Root-Completion-and-Capabilities.md).
 
 For the 2024/2025 comparison, internal service architecture and version-specific API access, see the [multi-version architecture and implementation plan](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md). Its capability-interface and unit-query interpretation proposals refine this report’s 2026-only implementation plan; the wrapper foundation, metadata projections, observation, common queries, model setup and job/analysis/project operations are implemented.
 
 ## 1. Findings
 
-The supplied Root page documents **39 distinct functions**. The repository exposes **45 public methods on `IOSRoot`**, but those numbers measure different things: many adapter methods combine native operations or provide managed conveniences.
+The supplied Root page documents **39 distinct functions**. The repository exposes **53 public methods on `IOSRoot` plus three optional operation methods**, but those numbers measure different things: many adapter methods combine native operations or provide managed conveniences.
 
 | Coverage category | Documented functions | Meaning |
 | --- | ---: | --- |
-| Public `IOSRoot` operations backed by the documented native function | 29 | Available through the adapter, with the qualifications below; native and managed signatures are intentionally different in several places. |
+| Public Root operations backed by the documented native function | 39 | Available through the adapter, with the qualifications below; native and managed signatures are intentionally different in several places. |
 | Wrapper-property projections absent from `IOSRoot` | 0 | All five now have dedicated typed Root methods; their wrapper-bound path preserves snapshot and fallback semantics. |
 | Native calls used internally, absent as public query methods | 0 | GetProcessId now has a dedicated public getter sharing the window-control PID validator. |
-| No implementation call found in current production source | 10 | Not ported, even if callers could invoke them manually through the raw COM object. |
+| No implementation call found in current production source | 0 | All reviewed native functions now have managed mappings; optional acquisition can still be denied by policy/metadata. |
 | **Total documented Root functions** | **39** | Every function occurs once in the coverage matrix. |
 
-Consequently, **10 documented functions have no dedicated public `IOSRoot` method**; all 10 lack a production native implementation. Section 7 retains the original 30 plan entries, with P01/P02/P03/P04/P05/P06/P07/P08/P09/P11/P12/P15/P16/P18/P19/P20/P21/P22/P23/P24 marked implemented. Existing public coverage also has contract limitations that need separate treatment; calling a native function is not proof of complete parity or live compatibility.
+All 39 reviewed native functions have production mappings: 36 on IOSRoot and three on separately acquired version-aware interfaces. No vendor function remains unimplemented. Implemented plan entries cover P01 through P30; native compatibility and release validation remain separate from API coverage.
 
-The older **22 of 23** figure in [Root-Porting.md](../Root-Porting.md) compares this repository with the private main project's interface. It is not coverage of Bentley's 39-function reference. That private interface's remaining `RetrieveMemberForces` helper is not one of these 39 Root functions and is outside this plan.
+The older **22 of 23** figure in [Root-Porting.md](../Root-Porting.md) compares this repository with the private main project's interface. It is not coverage of Bentley's 39-function reference. The additional `RetrieveMemberForces` helper is now ported with a named status/data result and source-compatible force models; it is not one of Bentley's 39 Root functions. Private-source function coverage is now 23 of 23.
 
 ## 2. Evidence and review boundaries
 
@@ -57,11 +57,11 @@ Links to Bentley help target the local installed reference; their relative targe
 | [AnalyzeEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga46f03d1be3c56877f5af4359764df907) | `long` | A | `AnalysisResult AnalyzeEx(SilentMode, HiddenMode, WaitAnalysisMode)`. |
 | [AnalyzeModel](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadaa1e36df7e6b4fe5c056ede8270987c) | `void` | A | `void AnalyzeModel(AnalysisEngine engine = AnalysisEngine.StaadPro)`; validates and sends documented -1, preserving verified void semantics. Implemented; [Plan P22](#p22-analyzemodel). |
 | [CloseSTAADFile](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaf249dc19ac760422e78351546918e65d) | `void` | A | `IOSRoot CloseSTAADFile()` and higher-level close helpers. |
-| [CreateNamedView](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaf331e2b24c0e4f4e57c2951594423b2d) | `void` | N | Missing. [Plan P25](#p25-createnamedview). |
-| [ExportModelToADINA](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga212f15a4b5984734985d197b67de4199) | `long` | N | Missing. [Plan P29](#p29-exportmodeltoadina). |
-| [GetAnalysisErrorMessages](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga405205f5768fd9b1d16b8a35b72e86f4) | `long` | N | Missing. [Plan P13](#p13-getanalysiserrormessages). |
+| [CreateNamedView](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaf331e2b24c0e4f4e57c2951594423b2d) | `void` | A | void CreateNamedView(string viewName, int creationFlag); follows inspected two-input signature; required caller-established raw flag, no fabricated error output. [Plan](#p25-createnamedview). |
+| [ExportModelToADINA](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga212f15a4b5984734985d197b67de4199) | `long` | A | `IOSRootAdinaExport.ExportModelToAdina(AdinaAxisSystem, AdinaLoadCaseHandling)` through Capabilities; typed options, native status and warning-success preservation. [Plan](#p29-exportmodeltoadina). |
+| [GetAnalysisErrorMessages](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga405205f5768fd9b1d16b8a35b72e86f4) | `long` | A | `IOSRootAnalysisErrorMessages.GetAnalysisErrorMessages(string modelFilePath)` through Capabilities; typed outcome/data, bounded BSTR allocation and one explicit-capacity retry. [Plan](#p13-getanalysiserrormessages). |
 | [GetAnalysisStatus](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga731f741a97cb618d7409544055b8a2bb) | `long` | A | `AnalysisStatusResult GetAnalysisStatus(string modelFilePath)` plus current-model overload; implemented. [Plan P12](#p12-getanalysisstatus). |
-| [GetAnalysisWarningMessages](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gae891bbde4b6fd5e7f3e56dbf0644386f) | `long` | N | Missing. [Plan P14](#p14-getanalysiswarningmessages). |
+| [GetAnalysisWarningMessages](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gae891bbde4b6fd5e7f3e56dbf0644386f) | `long` | A | `IOSRootAnalysisWarningMessages.GetAnalysisWarningMessages(string modelFilePath)` through Capabilities; independent grant, ANL messages and qualified read-only text. [Plan](#p14-getanalysiswarningmessages). |
 | [GetApplicationVersion](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga658ee126cc9aa9c5e35866e35f60260e) | `VARIANT` | A | `OpenStaadWrapper.StaadVersion` is the cached native version; `ApplicationVersion` is the host version. Implemented; [P06](#p06-getapplicationversion). |
 | [GetBaseUnit](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga7b1d941b62f317a0bdf104d2d4436ae1) | `VARIANT` | A | `OpenStaadWrapper.BaseUnitSystem`; cached, refreshed by RefreshUnits/RefreshComObjects. Implemented; [P02](#p02-getbaseunit). |
 | [GetCONNECTEDProjectInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gab92e524c05abdf5e59e54adc95e0c9b0) | `VARIANT` | A | `ConnectedProjectResult GetConnectedProjectInfo()`; native success and qualified immutable project data, with internal reference buffers. Implemented; [Plan P23](#p23-getconnectedprojectinfo). |
@@ -70,20 +70,20 @@ Links to Bentley help target the local installed reference; their relative targe
 | [GetInputUnitForForce](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gabcc3db5863da3b119b2c5bd4a740f0cd) | `VARIANT` | A | `OpenStaadWrapper.InputForceUnit`; ref-output parsing and documented base-system fallback. Implemented; [P04](#p04-getinputunitforforce). |
 | [GetInputUnitForLength](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga8a846a4f4597cbb6cbed46e86442431c) | `VARIANT` | A | `OpenStaadWrapper.InputLengthUnit`; ref-output parsing, feet alias and documented fallback. Implemented; [P03](#p03-getinputunitforlength). |
 | [GetMainWindowHandle](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga0c0b0f425cd8588f0df3c40ea08a05da) | `VARIANT` | A | `OpenStaadWrapper.StaadApplicationWindowHandle`; bound-root default service, Connect-only cached lookup. Implemented; [P09](#p09-getmainwindowhandle). |
-| [GetProcessHandle](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga275b4bdab39a0afb0764d4d2e0b2f13e) | `VARIANT` | N | Missing. [Plan P10](#p10-getprocesshandle). |
+| [GetProcessHandle](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga275b4bdab39a0afb0764d4d2e0b2f13e) | `VARIANT` | A | NativeProcessHandleValue GetProcessHandle(); opaque UInt64 data only, without ownership or caller-process HANDLE validity. [Plan](#p10-getprocesshandle). |
 | [GetProcessId](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gac7c8010c34e57ab1443b8efacc3235a0) | `VARIANT` | A | `uint GetProcessId()`; positive UInt32 snapshot with strict integral validation shared with window-control operations. Implemented; [Plan P08](#p08-getprocessid). |
 | [GetShortJobInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga6d209f7c0ed0aaddfe84c6603078e5a2) | `void` | A | `ShortJobInfo GetShortJobInfo()`; three BSTR outputs. |
 | [GetSTAADFile](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga2d0ebfc91441ee3b2331bcd2d0ad07d7) | `void` | A | `GetStaadFileFullPath()` and derived filename/identity helpers; native `false` flag not dispatched. |
 | [GetSTAADFileFolder](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaefa222ce265399686a53eb2a59d2e947) | `void` | A | `string GetStaadFileFolder()`; direct native reference-output read, with exact text and explicit empty output preserved. Implemented; [Plan P01](#p01-getstaadfilefolder). |
 | [IsAnalyzing](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga47cec0d70a609f2de2dd2e5214b7fa28) | `VARIANT` | A | `bool IsAnalyzing()`; live native predicate, implemented. [Plan P11](#p11-isanalyzing). |
 | [IsPhysicalModel](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga95c33fb64a10923e179bf067fd006a7b) | `VARIANT` | A | `bool IsPhysicalModel()`; strict live Boolean/integral 0/1 native predicate. Implemented; [Plan P05](#p05-isphysicalmodel). |
-| [ModifyNamedView](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadfb2385ac03c7bf740e24eb24fcca286) | `void` | N | Missing. [Plan P28](#p28-modifynamedview). |
-| [NewSTAADFile](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gacdd64b11752dc29f03537526d46553b4) | `void` | N | Missing. [Plan P17](#p17-newstaadfile). |
+| [ModifyNamedView](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadfb2385ac03c7bf740e24eb24fcca286) | `void` | A | `void ModifyNamedView(string viewName, IEnumerable<int> entityIds, NamedViewEntityType entityType, int modificationFlag)`; validated private Int32 array and inspected four-input dispatch. [Plan](#p28-modifynamedview). |
+| [NewSTAADFile](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gacdd64b11752dc29f03537526d46553b4) | `void` | A | void NewSTAADFile(string filePath, LengthInputUnit lengthUnit, ForceInputUnit forceUnit); validates units/destination/unnamed session, without atomic no-overwrite or completion guarantees. [Plan](#p17-newstaadfile). |
 | [OpenSTAADFile](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga4ba715d4c1e519ed6f4645ca91db9f99) | `void` | A | `IOSRoot OpenSTAADFile(string)` and polling/rewrite helpers. |
-| [Quit](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadd624b0b5b4f45cf4ed97f9557cc88af) | `void` | N | Missing. [Plan P30](#p30-quit). |
-| [RemoveNamedView](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gacd98d0159150ffada6b7e62f2e1687d4) | `void` | N | Missing. [Plan P27](#p27-removenamedview). |
+| [Quit](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadd624b0b5b4f45cf4ed97f9557cc88af) | `void` | A | void Quit(); explicit same-root application request, with no automatic save, process kill, retry or disposal change. [Plan](#p30-quit). |
+| [RemoveNamedView](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gacd98d0159150ffada6b7e62f2e1687d4) | `void` | A | `void RemoveNamedView(string viewName)`; inspected two-input native call initializes the by-value error slot to zero without inventing an output status. [Plan](#p27-removenamedview). |
 | [SaveModel](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga2984f37b5dde4651ffa18deacf441645) | `void` | A | `IOSRoot SaveModel(SilentMode)`; request, no persistence verification. |
-| [SaveNamedView](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaeca040a52040da606a81af5407aa464e) | `void` | N | Missing. [Plan P26](#p26-savenamedview). |
+| [SaveNamedView](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaeca040a52040da606a81af5407aa464e) | `void` | A | void SaveNamedView(string viewName); follows inspected one-input void signature, without fabricated native success. [Plan](#p26-savenamedview). |
 | [SetCONNECTEDProjectInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga61d5d3fc321d74be1ede4c318426b9f6) | `VARIANT` | A | `bool SetConnectedProjectInfo(string projectId, string projectName)` and value-object overload; validates nonblank fields and preserves native flag. Implemented; [Plan P24](#p24-setconnectedprojectinfo). |
 | [SetFullJobInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga519b55d96da3c901a6b4149a77480c9b) | `void` | A | `void SetFullJobInfo(...)`; validates thirteen non-null native text fields, preserving date strings without formatting. Implemented; [Plan P19](#p19-setfulljobinfo). |
 | [SetInputUnitForForce](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga0d92e92cebdffc1dbf951d07f8d29f1e) | `void` | A | `void SetInputUnitForForce(ForceInputUnit forceUnit)`; independent native request with defined-enum validation. Implemented; [Plan P16](#p16-setinputunitforforce). |
@@ -93,7 +93,7 @@ Links to Bentley help target the local installed reference; their relative targe
 | [SetSilentMode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga21f063c7c8882dc7af286e5b18db11e0) | `VARIANT` | A | `bool SetSilentMode(SilentMode)`; previous native state discarded. |
 | [UpdateStructure](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaaf431f1bfbee142cd7d55d454d56d995) | `void` | A | `void UpdateStructure()`; one explicit native update request, with no added save/analysis/refresh. Implemented; [Plan P20](#p20-updatestructure). |
 
-## 4. What the current 45 adapter methods implement
+## 4. Current managed Root API: 53 common methods and three optional operations
 
 | Current public signature | Implementation and limits |
 | --- | --- |
@@ -111,6 +111,14 @@ Links to Bentley help target the local installed reference; their relative targe
 | `ConnectedProjectResult GetConnectedProjectInfo()` | One query returning native success plus qualified project data; no public reference parameters. |
 | `bool SetConnectedProjectInfo(string projectId, string projectName)` | One validated ID/name assignment, returning the native flag. |
 | `bool SetConnectedProjectInfo(ConnectedProjectInfo projectInfo)` | Reuse immutable query data and delegate; no additional query. |
+| `NativeProcessHandleValue GetProcessHandle()` | opaque UInt64 data only, without ownership or caller-process HANDLE validity. |
+| `void NewSTAADFile(string filePath, LengthInputUnit lengthUnit, ForceInputUnit forceUnit)` | validates units/destination/unnamed session, without atomic no-overwrite or completion guarantees. |
+| `void CreateNamedView(string viewName, int creationFlag)` | follows inspected two-input signature; required caller-established raw flag, no fabricated error output. |
+| `void SaveNamedView(string viewName)` | follows inspected one-input void signature, without fabricated native success. |
+| `void Quit()` | explicit same-root application request, with no automatic save, process kill, retry or disposal change. |
+| `void RemoveNamedView(string viewName)` | Validated name and by-value zero initialization slot; native void with no fabricated error result. |
+| `void ModifyNamedView(string viewName, IEnumerable<int> entityIds, NamedViewEntityType entityType, int modificationFlag)` | One owned positive-ID Int32 array; qualifier validation; four native inputs, no separate count/error buffer. |
+| `MemberForcesResult RetrieveMemberForces(IEnumerable<int> beamIds, IEnumerable<int> loadCaseIds)` | Completes private-source parity; native availability plus per-end success/data, local units and bounded distinct inputs. |
 | `uint GetProcessId()` | One live same-root PID query; shares strict positive UInt32 validation with window control. |
 | `void SetInputUnitForLength(LengthInputUnit lengthUnit)` | Validate codes 0–7 including feet alias 1, then one independent native length request. |
 | `void SetInputUnitForForce(ForceInputUnit forceUnit)` | Validate the enum, then one independent native force request. |
@@ -143,7 +151,15 @@ Links to Bentley help target the local installed reference; their relative targe
 | `void RestoreStaadMainWindow()` | Same validation, posts command 9. Window-state requests do not prove final UI state. |
 | `AnalysisResult AnalyzeEx(SilentMode silentMode, HiddenMode hiddenMode, WaitAnalysisMode waitMode)` | Sends three integer 0/1 flags, validates integer response and preserves unrecognized in-range status values. Wait mode can block. |
 
-The original 13 convenience/extra operations are five derived filename/identity queries, ShowApplication, both polling/open helpers, both close/rewrite helpers and three window-state operations. The current-model analysis-status, ShortJobInfo-object and ConnectedProjectInfo-object overloads add three convenience signatures. Together with 29 native-backed mappings, these give 45 public methods; this does not mean all 39 native functions are implemented. Constructors and ComObject are not counted as functions.
+Optional operations are acquired through `IOSRoot.Capabilities`; gateway acquisition itself is not a native operation:
+
+| Optional interface | Operation |
+| --- | --- |
+| IOSRootAdinaExport | ExportModelToAdina |
+| IOSRootAnalysisErrorMessages | GetAnalysisErrorMessages |
+| IOSRootAnalysisWarningMessages | GetAnalysisWarningMessages |
+
+The original 13 convenience/extra operations are five derived filename/identity queries, ShowApplication, both polling/open helpers, both close/rewrite helpers and three window-state operations. The current-model analysis-status, ShortJobInfo-object and ConnectedProjectInfo-object overloads add three convenience signatures. RetrieveMemberForces adds another managed helper. Together with 36 common native-backed mappings, these give 53 IOSRoot methods. Three separate optional operations complete all 39 native mappings: 56 managed operation methods in total. The gateway property and its three acquisition methods are counted separately as infrastructure. Constructors and ComObject are not counted as functions.
 
 ## 5. Contract gaps and ambiguities found during the review
 
@@ -185,7 +201,7 @@ The [managed API design rules](../Root-Managed-API-Design.md) govern new public 
 - A `void` native operation has no native success code. Planned managed mutators below use `void` to preserve that fact; matching the existing fluent style is possible but would still mean only that the request returned.
 - Use the bound session's appropriate COM thread. No automatic `Task.Run` wrapper or assumption that a timeout can interrupt a blocked native call. Serialize coordinated operations as needed; an identity precheck does not prevent an external session change afterward.
 - Native mutations remain explicit: no implicit file creation, opening, saving, closing, unit conversion, analysis, connection-project update or named-view overwrite from a query.
-- All proposed signatures/DTOs below are **design proposals, not available APIs**. The exact return shape may be refined when the listed native-contract gates are resolved. Each native function remains one coverage item regardless of overloads or convenience wrappers.
+- Entries marked **implemented** describe current source APIs; the remaining proposed signatures/DTOs are **design proposals, not available APIs**. Their return shape may be refined when the listed native-contract gates are resolved. Each native function remains one coverage item regardless of overloads or convenience wrappers.
 
 ### Supporting type policy
 
@@ -424,6 +440,8 @@ VARIANT OpenSTAADUI::GetMainWindowHandle ( );
 
 ### P10 — GetProcessHandle
 
+**Implementation status:** Implemented with matching XML and offline tests. See the [creation/view/lifecycle guide](../Root-Creation-Views-and-Lifecycle.md).
+
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga275b4bdab39a0afb0764d4d2e0b2f13e)
 
 ```cpp
@@ -434,9 +452,9 @@ VARIANT OpenSTAADUI::GetProcessHandle ( );
 
 **Return contract:** Native VARIANT described only as the STAAD process handle. Usability in the client process, ownership and width are not specified.
 
-**Proposed managed signature:** `IntPtr GetProcessHandle()`.
+**Implemented managed signature:** `NativeProcessHandleValue GetProcessHandle()`.
 
-**Implementation:** Gate public implementation on inspecting the typelib and establishing the returned handle's validity context and ownership. IntPtr is a provisional opaque representation, not permission to use or close it. Do not wrap it in an owning SafeHandle, call CloseHandle, or assume it is interchangeable with a PID. If client usability cannot be established, defer this method or expose an explicitly opaque value with that limitation.
+**Implementation:** Uses the explicitly opaque-value fallback. One native read returns an immutable unsigned 64-bit bit pattern; signed negative values are sign-extended. Integral and pointer-shaped CLR representations are accepted, without inferring native width, lifetime, ownership or caller-process usability. No owning SafeHandle, IDisposable, conversion or native pointer is exposed. Do not close the value or pass it to Windows handle APIs.
 
 **Verification:** Check integral/pointer marshaling and architecture boundaries with stand-ins. In controlled native validation establish what the value represents, when it expires and whether any supported client use exists. Do not add tests that close an unowned handle.
 
@@ -493,7 +511,9 @@ long OpenSTAADUI::GetAnalysisStatus ( LPCTSTR szModelNameWithPath , long FAR * N
 
 ### P13 — GetAnalysisErrorMessages
 
-**Cross-version refinement:** This operation is proposed on a separately acquired [capability interface](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md#7-proposed-api-access-and-intellisense), subject to the acquired version and verified native support; it is not proposed as a universally available IOSRoot member.
+**Implementation status:** Implemented with typed contracts, XML and tests. See the [completion guide](../Root-Completion-and-Capabilities.md).
+
+**Cross-version refinement:** This operation is implemented on a separately acquired [capability interface](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md#7-implemented-api-access-and-intellisense), subject to the acquired version and verified native support; it is not a universally available IOSRoot member.
 
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga405205f5768fd9b1d16b8a35b72e86f4)
 
@@ -508,9 +528,11 @@ long OpenSTAADUI::GetAnalysisErrorMessages ( LPCTSTR szModelNameWithPath , VARIA
 
 **Return contract:** Native long status: 1 messages retrieved; 0 no messages; -1 general error; -2 invalid path; -107 not an array; -119 wrong array type; -108 insufficient capacity; -1001 log missing; -10004 analysis running.
 
-**Proposed managed signature:** `AnalysisMessagesResult GetAnalysisErrorMessages(string modelFilePath)`.
+**Implemented managed signature:** `AnalysisMessagesResult GetAnalysisErrorMessages(string modelFilePath)`.
 
-**Implementation:** Obtain the required count through P12 and allocate the native BSTR array internally. Validate the path and preserve native retrieval status in AnalysisMessagesResult alongside a recognized status, IsSuccessful and materialized read-only Messages. Native status 0 is successful absence, distinct from an expected failure. Verify internal ref string[] versus ref object dispatch and SAFEARRAY shape; validate contents before publishing a successful result. Count/read races permit only a documented bounded requery after -108, with a bounded allocation policy and explicit failure when unresolved. Callers never allocate an output buffer. No automatic analysis, file deletion or invented success status.
+**Implementation plan retained for provenance:** Obtain the required count through P12 and allocate the native BSTR array internally. Validate the path and preserve native retrieval status in AnalysisMessagesResult alongside a recognized status, IsSuccessful and materialized read-only Messages. Native status 0 is successful absence, distinct from an expected failure. Verify internal ref string[] versus ref object dispatch and SAFEARRAY shape; validate contents before publishing a successful result. Count/read races permit only a documented bounded requery after -108, with a bounded allocation policy and explicit failure when unresolved. Callers never allocate an output buffer. No automatic analysis, file deletion or invented success status.
+
+**Implemented policy:** Independent exact-build/member grants; strict ref object BSTR buffers; GetAnalysisStatus supplies the selected count. AnalysisMessagesResult has nullable NativeStatus and a separate managed Outcome, preserving unavailable counts and 100,000-element limits without invented native codes. Zero counts still invoke retrieval. Only native -108 permits one fresh count and one additional attempt. Successful arrays require written strings and are copied read-only; malformed success throws. See the completion guide for statuses, lower bounds, replacement arrays and failed retry preflight.
 
 **Verification:** Check BSTR rather than object/numeric arrays; zero/exact/oversized/undersized capacities, overwritten arrays, all listed statuses, unknown codes and COM failure. Live-check log source, Unicode/multiline text and count changes. The native failures caught by managed validation should be tested at the lower dispatch boundary where applicable.
 
@@ -518,7 +540,9 @@ long OpenSTAADUI::GetAnalysisErrorMessages ( LPCTSTR szModelNameWithPath , VARIA
 
 ### P14 — GetAnalysisWarningMessages
 
-**Cross-version refinement:** This operation is proposed on a separately acquired [capability interface](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md#7-proposed-api-access-and-intellisense), subject to the acquired version and verified native support; it is not proposed as a universally available IOSRoot member.
+**Implementation status:** Implemented with typed contracts, XML and tests. See the [completion guide](../Root-Completion-and-Capabilities.md).
+
+**Cross-version refinement:** This operation is implemented on a separately acquired [capability interface](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md#7-implemented-api-access-and-intellisense), subject to the acquired version and verified native support; it is not a universally available IOSRoot member.
 
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gae891bbde4b6fd5e7f3e56dbf0644386f)
 
@@ -533,9 +557,11 @@ long OpenSTAADUI::GetAnalysisWarningMessages ( LPCTSTR szModelNameWithPath , VAR
 
 **Return contract:** Native long status: 1 messages retrieved; 0 no messages; -1 general error; -2 invalid path; -107 not an array; -119 wrong array type; -108 insufficient capacity; -1001 ANL missing; -10004 analysis running.
 
-**Proposed managed signature:** `AnalysisMessagesResult GetAnalysisWarningMessages(string modelFilePath)`.
+**Implemented managed signature:** `AnalysisMessagesResult GetAnalysisWarningMessages(string modelFilePath)`.
 
-**Implementation:** Use the same validated marshaling/status helper as P13 while retaining the distinct native method and warning buffer. The page describes warning retrieval from the ANL file; do not substitute error-log parsing. Allocate buffers internally and return the same named result contract as P13. Count/read races use the documented bounded internal requery policy, not indefinite allocation growth. Preserve native text and status.
+**Implementation plan retained for provenance:** Use the same validated marshaling/status helper as P13 while retaining the distinct native method and warning buffer. The page describes warning retrieval from the ANL file; do not substitute error-log parsing. Allocate buffers internally and return the same named result contract as P13. Count/read races use the documented bounded internal requery policy, not indefinite allocation growth. Preserve native text and status.
+
+**Implemented policy:** Independent exact-build/member grants; strict ref object BSTR buffers; GetAnalysisStatus supplies the selected count. AnalysisMessagesResult has nullable NativeStatus and a separate managed Outcome, preserving unavailable counts and 100,000-element limits without invented native codes. Zero counts still invoke retrieval. Only native -108 permits one fresh count and one additional attempt. Successful arrays require written strings and are copied read-only; malformed success throws. See the completion guide for statuses, lower bounds, replacement arrays and failed retry preflight.
 
 **Verification:** Check all documented and unknown statuses, ref BSTR array shape, empty/exact/oversized/undersized arrays, missing ANL, malformed successful output and native failures. Live-test actual warnings and an in-progress analysis.
 
@@ -591,6 +617,8 @@ void OpenSTAADUI::SetInputUnitForForce ( const VARIANT FAR & iUnit );
 
 ### P17 — NewSTAADFile
 
+**Implementation status:** Implemented with matching XML and offline tests. See the [creation/view/lifecycle guide](../Root-Creation-Views-and-Lifecycle.md).
+
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gacdd64b11752dc29f03537526d46553b4)
 
 ```cpp
@@ -605,9 +633,9 @@ void OpenSTAADUI::NewSTAADFile ( const VARIANT FAR & bstrFileName , const VARIAN
 
 **Return contract:** Native void. The page promises file creation with selected input units; it does not specify completion/readiness, overwrite behavior or what happens to an existing model.
 
-**Proposed managed signature:** `void NewSTAADFile(string filePath, LengthInputUnit lengthUnit, ForceInputUnit forceUnit)`.
+**Implemented managed signature:** `void NewSTAADFile(string filePath, LengthInputUnit lengthUnit, ForceInputUnit forceUnit)`.
 
-**Implementation:** Validate/normalize target path and both unit codes before any mutation. Establish overwrite and loaded-model behavior first using disposable files. Proposed default policy rejects an existing target and a nonblank bound session, without claiming that prechecks eliminate races. Do not fabricate an empty STD file, launch another process, close an unrelated model, overwrite files, or retry uncertain creation. If strict no-overwrite cannot be guaranteed through this native API, document the boundary and require a separately designed safe creation workflow rather than claiming atomic safety.
+**Implementation:** Normalizes the path and validates both unit codes before filesystem/native access; requires a non-device .std filename, existing parent and absent target. Requires one explicit native filename read to report blank/whitespace text, then rechecks target absence before one native creation request. This is a managed precondition policy, not atomic no-overwrite or protection against concurrent model switching. No placeholder file, managed STD writing, implicit close/save, polling, refresh, retry or rollback is added. Native overwrite/loaded-model behavior remains unverified.
 
 **Verification:** Check argument order/types, all units including length code 1, existing file/directory, invalid/UNC/Unicode paths and validation before dispatch. Live-check file contents, requested units, active-model identity, startup/blank states, dialogs, read-only/inaccessible destinations and concurrent target creation.
 
@@ -795,7 +823,11 @@ VARIANT OpenSTAADUI::SetCONNECTEDProjectInfo ( const VARIANT FAR & szProjID , co
 
 ### P25 — CreateNamedView
 
+**Implementation status:** Implemented with matching XML and offline tests. See the [creation/view/lifecycle guide](../Root-Creation-Views-and-Lifecycle.md).
+
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaf331e2b24c0e4f4e57c2951594423b2d)
+
+**Help declaration (conflicts with the inspected managed interfaces):**
 
 ```cpp
 void OpenSTAADUI::CreateNamedView ( const VARIANT FAR & strName , const VARIANT FAR & nFlag , VARIANT FAR & nError );
@@ -807,19 +839,23 @@ void OpenSTAADUI::CreateNamedView ( const VARIANT FAR & strName , const VARIANT 
 | `nFlag` | Input | const VARIANT reference; integer creation flag. Allowed values and meanings are not provided. |
 | `nError` | Output, inferred | VARIANT reference; integer error code. Prose marks input, but says the method writes the error number. |
 
-**Return contract:** Native void; the managed result retains the verified nError output, not a fabricated native return value. No success/error-code meanings are documented on this page.
+**Implemented return contract:** Void with no error/status output in the inspected 2025/2026 interfaces. The help-only nError entry above is not part of the implemented dispatch.
 
-**Proposed managed signature:** `NamedViewResult CreateNamedView(string viewName, int creationFlag)`.
+**Implemented managed signature:** `void CreateNamedView(string viewName, int creationFlag)`.
 
-**Implementation:** Resolve creationFlag domain, nError direction and code meanings before implementing/releasing. Validate the view name and established flag range, then issue one call with a numeric ref output. Keep the raw output code visible, including unknown values; do not assume zero success or overwrite behavior. Replace int creationFlag with an enum only after authoritative values are established.
+**Implementation refinement:** Separate read-only inspections of both installed 2025/2026 managed interop assemblies show `Void CreateNamedView(Object, Object)`, with no reference error output. The implementation uses that two-input void contract rather than the help declaration above. A required raw Int32 flag is forwarded unchanged; valid meanings/ranges remain undocumented, so callers must establish a flag for their build. No enum, default, guessed error result, success flag or alternate-signature retry is added. Names are validated before one native call.
 
-**Verification:** Check name/flag validation, exact argument order and ref output, missing/wrong-type outputs and native exceptions. Live-check new/duplicate/empty/Unicode names and each verified flag in a disposable model.
+**Verification:** Offline tests verify name validation, exact two-input argument shape and order, raw flag preservation, exception identity and no fallback. Live-check new/duplicate/empty/Unicode names and each verified flag in a disposable model.
 
 <a id="p26-savenamedview"></a>
 
 ### P26 — SaveNamedView
 
+**Implementation status:** Implemented with matching XML and offline tests. See the [creation/view/lifecycle guide](../Root-Creation-Views-and-Lifecycle.md).
+
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaeca040a52040da606a81af5407aa464e)
+
+**Help declaration (conflicts with the inspected managed interfaces):**
 
 ```cpp
 void OpenSTAADUI::SaveNamedView ( const VARIANT FAR & strName , VARIANT FAR & nError );
@@ -830,17 +866,21 @@ void OpenSTAADUI::SaveNamedView ( const VARIANT FAR & strName , VARIANT FAR & nE
 | `strName` | Input | const VARIANT(text) reference; name under which to save the current view. |
 | `nError` | Output, inferred | VARIANT reference carrying the native integer error result; direction requires verification. |
 
-**Return contract:** Native void; the proposed NamedViewResult retains nError; status/success interpretation remains gated on verified meanings.
+**Implemented return contract:** Void with no error/status output in the inspected 2025/2026 interfaces. The help-only nError entry above is not part of the implemented dispatch.
 
-**Proposed managed signature:** `NamedViewResult SaveNamedView(string viewName)`.
+**Implemented managed signature:** `void SaveNamedView(string viewName)`.
 
-**Implementation:** Validate the name, call the distinct SaveNamedView API and read the verified error output. Establish whether the view must already exist and what is stored. Do not silently substitute CreateNamedView, overwrite an unrelated view or interpret an undocumented code as success.
+**Implementation refinement:** Both installed 2025/2026 managed interop assemblies show `Void SaveNamedView(Object)`, without the help's reference error output. The implementation validates the name and uses that one-input void contract. No NamedViewResult or success inference is fabricated. No CreateNamedView substitution, SaveModel, read-back, refresh or retry is added. Native persistence, existing-name behavior and 2024 runtime signatures remain unverified.
 
-**Verification:** Check output/reference behavior, malformed outputs, argument validation and exceptions. Live-check existing/missing/duplicate names, stored view contents and persistence after save/reopen.
+**Verification:** Offline tests verify name validation, one-input dispatch, unchanged exceptions and no alternate-signature fallback. Live-check existing/missing/duplicate names, stored view contents and persistence after save/reopen.
 
 <a id="p27-removenamedview"></a>
 
 ### P27 — RemoveNamedView
+
+**Implementation status:** Implemented with typed contracts, XML and tests. See the [completion guide](../Root-Completion-and-Capabilities.md).
+
+**Resolved managed contract:** Installed 2025/2026 metadata has two by-value Object inputs. The native error slot is initialized with Int32 zero; no error output is observable. The helper does not fabricate status or retry a reference-output signature. Native runtime behavior remains unverified.
 
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gacd98d0159150ffada6b7e62f2e1687d4)
 
@@ -853,17 +893,21 @@ void OpenSTAADUI::RemoveNamedView ( const VARIANT FAR & strName , VARIANT FAR & 
 | `strName` | Input | const VARIANT(text) reference; name of the view to remove. |
 | `nError` | Output, inferred | VARIANT reference carrying the native integer error result; documentation direction is inconsistent. |
 
-**Return contract:** Native void; the proposed NamedViewResult retains the observed nError output with verified status interpretation.
+**Implemented return contract:** Native void with no observable error output through the inspected by-value declaration. The help-based nError table above is retained as conflicting documentation.
 
-**Proposed managed signature:** `NamedViewResult RemoveNamedView(string viewName)`.
+**Implemented managed signature:** `void RemoveNamedView(string viewName)`.
 
-**Implementation:** Validate the name and request removal once. Establish code meanings and missing-name behavior; preserve failure codes. Do not delete model entities, retry a response-lost removal automatically, or claim that the view is removed from the file before persistence is verified.
+**Implementation:** Validate the literal name before one two-input request with the initial numeric slot zero. No success meaning is assigned to that input, and no removal/persistence claim follows normal return. No save, geometry deletion, fallback or retry is added.
 
 **Verification:** Check reference output, malformed/error responses, one-call behavior and exceptions. Live-check existing and missing views, a currently displayed view, Unicode names, and absence of geometry deletion.
 
 <a id="p28-modifynamedview"></a>
 
 ### P28 — ModifyNamedView
+
+**Implementation status:** Implemented with typed contracts, XML and tests. See the [completion guide](../Root-Completion-and-Capabilities.md).
+
+**Resolved managed contract:** Installed 2025/2026 metadata has four inputs: name, entity array, qualifier and modification flag. The help's count/reference-error arguments are not dispatched. The original help table below is retained for provenance.
 
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadfb2385ac03c7bf740e24eb24fcca286)
 
@@ -880,11 +924,11 @@ void OpenSTAADUI::ModifyNamedView ( const VARIANT FAR & strName , const VARIANT 
 | `nModifyFlag` | Input | const VARIANT integer; modification mode. Values and meanings are not documented. |
 | `nError` | Output, inferred | VARIANT reference; native integer error result. |
 
-**Return contract:** Native void; the proposed NamedViewResult retains nError. The operation's modification flags and error-code semantics are unresolved.
+**Implemented return contract:** Native void, without a count or reference-error output in the inspected declaration. No NamedViewResult or success flag is fabricated.
 
-**Proposed managed signature:** `NamedViewResult ModifyNamedView(string viewName, IEnumerable<int> entityIds, NamedViewEntityType entityType, int modificationFlag)`.
+**Implemented managed signature:** `void ModifyNamedView(string viewName, IEnumerable<int> entityIds, NamedViewEntityType entityType, int modificationFlag)`.
 
-**Implementation:** Gate on verified array and flag contracts. Snapshot entityIds once into a fixed int[] and derive nEntities from that snapshot; do not accept a separately inconsistent count. Validate qualifier 0–4 and entity IDs under the verified native numbering rules. Decide empty-array/duplicate behavior from evidence rather than pruning or inventing semantics. Send all six native arguments in exact order and preserve error code.
+**Implementation:** Snapshot entityIds once into a private positive-ID Int32 array, validate qualifier 0-4 and preserve order/duplicates. Empty arrays and the required raw Int32 mode are forwarded explicitly; the caller must establish their semantics. The array carries its length, with no public count. Invoke four native arguments once without save, alternate signature or retry.
 
 **Verification:** Check all five qualifiers, array subtype/rank/bounds, count consistency under mutable input, ID validation, empty/duplicate inputs, flags and ref error output. Live-check each supported entity class and modification mode; compare before/after view membership without changing geometry.
 
@@ -892,7 +936,9 @@ void OpenSTAADUI::ModifyNamedView ( const VARIANT FAR & strName , const VARIANT 
 
 ### P29 — ExportModelToADINA
 
-**Cross-version refinement:** This operation is proposed on a separately acquired [capability interface](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md#7-proposed-api-access-and-intellisense), subject to the acquired version and verified native support; it is not proposed as a universally available IOSRoot member.
+**Implementation status:** Implemented with typed contracts, XML and tests. See the [completion guide](../Root-Completion-and-Capabilities.md).
+
+**Cross-version refinement:** This operation is implemented on a separately acquired [capability interface](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md#7-implemented-api-access-and-intellisense), subject to the acquired version and verified native support; it is not a universally available IOSRoot member.
 
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga212f15a4b5984734985d197b67de4199)
 
@@ -907,15 +953,17 @@ long OpenSTAADUI::ExportModelToADINA ( int flagAxisSystem , int flagLCHandler );
 
 **Return contract:** Native long status: 0 successful export; -14501 successful with warnings; -14502 failed; -101 no open model. AdinaExportResult retains every raw status, a nullable recognized status and IsSuccessful including warning success.
 
-**Proposed managed signature:** `AdinaExportResult ExportModelToAdina(AdinaAxisSystem axisSystem, AdinaLoadCaseHandling loadCaseHandling)`.
+**Implemented managed signature:** `AdinaExportResult ExportModelToAdina(AdinaAxisSystem axisSystem, AdinaLoadCaseHandling loadCaseHandling)`.
 
-**Implementation:** Validate the two enum domains and call once. Document that it writes an ADINA .in file and a .ADINA.log companion. The page does not define destination selection or overwrite rules: establish both in a disposable directory before release. Do not add an output-path argument that the native signature does not accept, hide warning success behind a generic bool, or infer overall success from call completion.
+**Implementation:** Validate typed axis/load enums, guard the captured version and invoke ExportModelToADINA once. Exact candidate profiles cover 25.0.1.424 and 26.0.0.340 only when member metadata matches. AdinaExportResult retains native/recognized status and warning success. No output path, overwrite protection, implicit save, retry or rollback is fabricated. Native destination/file behavior remains a runtime/release gate.
 
 **Verification:** Check all six valid argument combinations, invalid casts rejected before dispatch, exact integer args, every documented/unknown status and exceptions. Live-check output locations, file contents, logs, warnings, existing outputs, inaccessible folders and no-model state.
 
 <a id="p30-quit"></a>
 
 ### P30 — Quit
+
+**Implementation status:** Implemented with matching XML and offline tests. See the [creation/view/lifecycle guide](../Root-Creation-Views-and-Lifecycle.md).
 
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadd624b0b5b4f45cf4ed97f9557cc88af)
 
@@ -927,7 +975,7 @@ void OpenSTAADUI::Quit ( );
 
 **Return contract:** Native void; closes the STAAD.Pro application environment. No completion or save-status value is returned.
 
-**Proposed managed signature:** `void Quit()`.
+**Implemented managed signature:** `void Quit()`.
 
 **Implementation:** Expose only an explicit destructive application request, not implicit disposal behavior. Document potential impact on unsaved work and that the bound session can become unusable after dispatch. Do not change OpenStaadWrapper.Dispose, kill processes, auto-save, auto-retry, or close any other STAAD instance. Native prompt/analysis-running behavior must be verified; the method cannot promise bounded termination.
 
@@ -945,10 +993,10 @@ Do not start by copying all missing methods mechanically. First settle the contr
 | 3 — Unit and model-information mutations | P15 SetInputUnitForLength; P16 SetInputUnitForForce; P18 SetShortJobInfo; P19 SetFullJobInfo; P20 UpdateStructure. | Use stage-1 readers for verification. Validate complete arguments before mutation. Establish date-text handling and update semantics; verify persistence separately from native completion. |
 | 4 — Creation and analysis requests | P17 NewSTAADFile; P21 Analyze; P22 AnalyzeModel. | Creation needs stage-0 overwrite/current-model decisions and stage-1 identity/unit checks. Analysis requests use stage-2 observation for test verification, not implicit retry. Analyze/AnalyzeModel are implemented; the void/example inconsistency was resolved using installed managed interop signatures. Native runtime validation remains pending. |
 | 5 — Project integration and export | P23 GetCONNECTEDProjectInfo; P24 SetCONNECTEDProjectInfo; P29 ExportModelToADINA. | Getter before setter; use explicit disposable project/model fixtures. Resolve export destinations and overwrite behavior. Preserve return codes and model-only versus cloud effects. |
-| 6 — Named views | P25 CreateNamedView; P26 SaveNamedView; P28 ModifyNamedView; P27 RemoveNamedView. | Creation/modification flags, error directions/codes and entity array shape must be established before this stage. Creation before modification/removal provides test fixtures; cover every supported entity qualifier. |
+| 6 — Named views | P25 CreateNamedView; P26 SaveNamedView; P28 ModifyNamedView; P27 RemoveNamedView. | P25/P26 are implemented using inspected void signatures; creation flags remain explicit caller-established integers. Native flag semantics, remaining signature discrepancies and entity array shape require validation before release. Creation before modification/removal provides controlled fixtures. |
 | 7 — Opaque native handles and shutdown | P10 GetProcessHandle; P30 Quit. | Handle API stays deferred if client validity/ownership cannot be established. Test shutdown only in a disposable dedicated process, after all non-destructive validation. Never alter disposal behavior. |
 
-Five metadata methods P02/P03/P04/P06/P09 and analysis observation functions P11/P12 are implemented with public contracts, XML and tests. P12 also has a current-model overload. Common queries P01/P05/P07 are now implemented. P08 process identity and P15/P16/P18/P20 model-setup operations are now implemented, including a ShortJobInfo overload. P19/P21/P22/P23/P24 are now implemented, including a project-value assignment overload. The remaining plan follows the managed result-object design rules.
+Five metadata methods P02/P03/P04/P06/P09 and analysis observation functions P11/P12 are implemented with public contracts, XML and tests. P12 also has a current-model overload. Common queries P01/P05/P07 are now implemented. P08 process identity and P15/P16/P18/P20 model-setup operations are now implemented, including a ShortJobInfo overload. P19/P21/P22/P23/P24 are now implemented, including a project-value assignment overload. P10/P17/P25/P26/P30 are also implemented; named-view calls follow inspected void signatures and process-handle data stays opaque. P13/P14/P27/P28/P29 now complete all vendor mappings. RetrieveMemberForces additionally completes private-source parity. Native verification and release work follow the managed result-object design rules; no reviewed vendor function remains unimplemented.
 
 Optional follow-up work on already covered native functions is separate: expose the native filename flag if needed, expose previous silent mode under a new name if needed, and decide how to extend existing unit setters without changing established behavior unexpectedly. None of these changes is authorized by this review alone.
 
@@ -966,7 +1014,7 @@ For every new method:
 6. For collection outputs/inputs, test element type, rank, lower bounds where relevant, empty values, capacity/count consistency and caller mutations during snapshotting. Check unsupported array forms at the dispatch helper boundary if the public managed type cannot express them.
 7. For uncertain outcomes, verify that the wrapper does not retry a creation, analysis, export, removal or shutdown mutation automatically.
 
-Add focused tests to the existing root test area, for example `OSRootUnitTests`, `OSRootApplicationInfoTests`, `OSRootAnalysisStatusTests`, `OSRootAnalysisMessageTests`, `OSRootJobInfoSetterTests`, `OSRootNamedViewTests` and `OSRootExportTests`. These are proposed test files, not files created by this review. Keep shared stand-ins faithful to the verified native contract.
+Add focused tests to the existing root test area, for example `OSRootUnitTests`, `OSRootApplicationInfoTests`, `OSRootAnalysisStatusTests`, `OSRootAnalysisMessageTests`, `OSRootJobInfoSetterTests`, `OSRootNamedViewTests` and `OSRootExportTests`. The implemented suite uses OSRootOptionalOperationTests, OSRootRemainingViewTests, OSRootMemberForcesTests, OSRootCapabilityTests, RootDispatchInspectorTests and RootCompletionDocumentationTests alongside the earlier tests. Keep shared stand-ins faithful to inspected contracts.
 
 ### Controlled native integration tests
 
@@ -998,17 +1046,17 @@ Each new member must carry matching, substantive documentation on **both** `IOSR
 - At least one usable example with required imports, a connected root, valid inputs and appropriate status handling. Mutating examples must make their effects explicit.
 - Cross-links to complementary functions such as status-before-message allocation and setters followed by readback/save where appropriate.
 
-DTO properties and new enums also need complete XML. Compile examples against the installed package rather than assuming source snippets are sufficient. Update package verification to check the new public signatures, interface/concrete XML and examples; the current verifier's 22-method expectation must be revised only when actual implementation is added.
+DTO properties and new enums also need complete XML. Compile examples against the installed package rather than assuming source snippets are sufficient. Update package verification to check the new public signatures, interface/concrete XML and examples; the verifier now checks 53 common Root methods, the separate optional/gateway interfaces and 217 selected XML examples.
 
 ## 10. Release readiness after the planned work
 
-This review does not certify the missing methods or a future release. Before publishing a version containing them:
+Complete source coverage does not certify native STAAD runtime compatibility or a future NuGet release. Before publishing a version containing these mappings:
 
-1. Complete each method's verified native contract, implementation, focused offline tests, XML and controlled native checks; record unsupported/unresolved methods as deferred instead of claiming full Root coverage.
+1. Complete each method's verified native contract, implementation, focused offline tests, XML and controlled native checks; record unsupported or unverified runtime/build/flag combinations explicitly rather than equating source coverage with runtime support.
 2. Check public API compatibility, especially the added interface members, new DTOs/enums and any deliberately separate extensions to existing methods.
 3. Run the relevant root tests and the repository's required build/package validation. Expand validation when a helper affects existing behavior; do not treat previously passing tests as coverage of new functions.
 4. Update API reference, this coverage report and root-porting documentation to distinguish private-project parity from Bentley API coverage. Record exact supported STAAD versions and known limitations.
 5. For every new NuGet build, update the README and release notes in professional language, as required by the project's publication policy. Build the intended package version and verify its DLL, XML, documentation and metadata from the archive.
 6. Validate the package in a clean net481 consumer. Do not advertise .NET Core/.NET 8 support from this branch unless a separately authorized target/runtime implementation has actually been built and verified.
 
-The wrapper foundation and its documented placeholders are implemented and tested. No pending Root method, optional capability or version-dispatch engine has been implemented. This report remains the Root function plan for approval.
+The wrapper foundation, all 39 reviewed native Root mappings, the additional private-source force helper and version-aware capability infrastructure are implemented and tested. All 23 private-source Root function names are covered. Candidate profile/member metadata checks do not certify native runtime behavior. This report now records implementation status and the remaining controlled validation/release work.

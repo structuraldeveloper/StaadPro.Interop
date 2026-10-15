@@ -1,5 +1,6 @@
 using System;
 using StaadPro.Interop.Services.Interop;
+using StaadPro.Interop.Models.Root;
 
 namespace StaadPro.Interop.Services.Root.Common
 {
@@ -28,6 +29,17 @@ namespace StaadPro.Interop.Services.Root.Common
         {
             object returned = ((dynamic)root).GetErrorMessage();
             return NativeValues.ReadText(returned, "error message");
+        }
+
+        internal static NativeProcessHandleValue GetProcessHandle(object root)
+        {
+            object returned = ((dynamic)root).GetProcessHandle();
+            ulong raw;
+            if (returned is ulong unsigned) raw = unsigned;
+            else if (returned is UIntPtr unsignedPointer) raw = unsignedPointer.ToUInt64();
+            else if (returned is IntPtr signedPointer) raw = unchecked((ulong)signedPointer.ToInt64());
+            else raw = unchecked((ulong)NativeValues.ReadInt64(returned, "process handle"));
+            return new NativeProcessHandleValue(raw);
         }
 
         internal static uint GetProcessId(object root)
