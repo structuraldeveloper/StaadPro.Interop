@@ -2,11 +2,11 @@
 
 **Review date:** 15 October 2026  
 **Versions reviewed:** STAAD.Pro 2024, 2025 and 2026 installed OpenSTAAD help.  
-**Status:** The approved wrapper foundation is now implemented, with raw bindings, metadata and adapter placeholders. The Root version-aware architecture, new Root methods and optional capabilities remain proposed, pending approval. Domain adapter functions remain outside the current scope.
+**Status:** The approved wrapper foundation is now implemented, with raw bindings, metadata and adapter placeholders. Five Root metadata methods are now implemented through internal wrapper/raw accessors and shared native readers. Remaining Root operations and optional capabilities follow the [managed API design rules](../Root-Managed-API-Design.md); the version-profile engine remains proposed. Domain adapter functions remain outside the current scope.
 
 ## 1. Conclusions and proposed direction
 
-Use the fully ported wrapper as the owner of cached application/model metadata. Planned Root metadata methods project its properties; version selection uses **wrapper.StaadVersion**, not wrapper.ApplicationVersion. Use common Root services for unchanged native operations and separately acquired capability interfaces for newer optional functions. Any verified unit-query interpretation strategies belong beneath the wrapper metadata reader, not in a duplicate Root query implementation.
+Use the fully ported wrapper as the owner of cached application/model metadata. Implemented Root metadata methods project its properties; version selection uses **wrapper.StaadVersion**, not wrapper.ApplicationVersion. Use common Root services for unchanged native operations and separately acquired capability interfaces for newer optional functions. Any verified unit-query interpretation strategies belong beneath the wrapper metadata reader, not in a duplicate Root query implementation.
 
 | Finding | Result |
 | --- | --- |
@@ -210,7 +210,7 @@ The seven additional native domains and IDEA StatiCa have explicit binding place
 | Bound root / managed domains | `Root`, `Geometry`, `Load`, and the new placeholders | Preserve the owning wrapper and correct raw identity; do not infer native member or feature support from a placeholder's presence. |
 | GetProcessId | No corresponding wrapper property | Keep the existing live native PID query; no fabricated process ID from a cached window/process-name search. |
 
-The five direct projection signatures proposed for the future IOSRoot expansion are:
+The five implemented typed metadata signatures on IOSRoot are:
 
 ```csharp
 ApplicationVersion GetApplicationVersion(); // wrapper.StaadVersion, not wrapper.ApplicationVersion
@@ -220,7 +220,7 @@ LengthInputUnit GetInputUnitForLength();
 IntPtr GetMainWindowHandle();
 ```
 
-These are still proposed Root members. No new function has been added to IOSRoot/OSRootAdapter by the wrapper port. The earlier unit/version DTO proposals are superseded for these projections. If full native output text/ref fields are needed, design an explicit diagnostic/native-query API; do not reconstruct original values from a normalized cache.
+These five Root members are now implemented. They have no separate native operation status to wrap. The earlier unit/version DTO proposals are superseded for these projections. If full native output text/ref fields are needed, design an explicit diagnostic/native-query API; do not reconstruct original values from a normalized cache.
 
 ### 5.2 Refresh, ownership and freshness
 
@@ -234,11 +234,11 @@ Refresh is in place, following the source wrapper: a propagated failure can leav
 
 ### 5.3 Wrapper-bound versus raw-root-only adapters
 
-The current public OSRootAdapter constructor accepts a raw object. Preserve that signature and its capture-only behavior. The current wrapper still constructs Root through that existing path; no unapproved Root refactor was added.
+The current public OSRootAdapter constructor accepts a raw object. Preserve that signature and its capture-only behavior. The wrapper now supplies an internal property-backed metadata accessor, while the public raw-root constructor remains capture-only.
 
-The next approved Root refactor should add an internal metadata-access seam and have the wrapper provide its own property-backed accessor. It must not construct another wrapper recursively or expose a public service locator. For a wrapper-bound Root, all five projections above reuse the properties with zero extra native queries.
+The internal IRootMetadataAccess seam has wrapper-owned and raw-root implementations. Wrapper-bound projections reuse the properties with zero extra native queries, include configured window services, and reject an owner disposed after the adapter was captured. No recursive wrapper or public service locator is created.
 
-For callers who construct OSRootAdapter directly from a raw root, the future implementation needs an explicit fallback. Recommended policy: a raw-root metadata accessor uses the same internal reader/normalizer used by the wrapper, with documented native-read freshness for that standalone binding. It never acquires another process or creates a wrapper. Extracting that shared reader is future approved work; do not duplicate parsing or silently return another instance's metadata. Test both access paths and document their differing freshness. Existing 22 methods continue to work without metadata resolution.
+For callers who construct OSRootAdapter directly from a raw root, RawRootMetadataAccess uses the extracted WrapperMetadataReader on each query. Unit getters read version, base system and the selected unit; handle lookup reads version then the same-root handle for major > 20. Reads are sequential rather than atomic. No other process is acquired and no wrapper is created. Existing 22 operations remain unchanged; IOSRoot now exposes 27 methods.
 
 ## 6. Proposed internal services and folder organization
 
@@ -249,8 +249,8 @@ Keep signatures in interfaces, implementations in non-partial adapters, and sele
 | OpenStaadWrapper / ApplicationVersion / ApplicationEdition | Public, implemented | Complete approved wrapper surface, cached metadata and source-compatible version/family values. |
 | Seven new native-domain adapters/interfaces and IDEA placeholder | Public, implemented placeholders | Capture correct bindings only; no unported domain functions. |
 | Services/Wrapper helpers | Implemented; normalization/bound-window helpers internal | Source-derived unit parsing, strict numeric reads and acquired-root window lookup. The injected model/interaction contracts are public source-compatible dependencies. |
-| IOSRoot / OSRootAdapter | Existing public, expansion proposed | Preserve existing operations; future metadata methods delegate to the owning wrapper/accessor. |
-| IRootMetadataAccess and accessors | Internal, proposed | Property-backed wrapper projection or standalone same-root reader fallback. |
+| IOSRoot / OSRootAdapter | Public, five metadata queries added | Preserve existing operations; metadata methods delegate to the owning wrapper/accessor. |
+| IRootMetadataAccess and accessors | Internal, implemented | Property-backed wrapper projection or standalone same-root reader fallback. |
 | RootSessionContext / RootVersionResolver | Internal, proposed | Own the same raw identity and consume wrapper.StaadVersion/accessor evidence; no duplicate wrapper-bound native bootstrap. |
 | Profiles / RootProfileSelector / RootServiceFactory | Internal, proposed | Immutable per-build contract rules and polymorphic composition; no global selected version. |
 | RootDispatchInspector / RootComInvoker | Internal, proposed | Non-mutating member/signature inspection and bound dispatch with precise error handling. |
@@ -263,8 +263,10 @@ src/StaadPro.Interop/
   Models/
     OpenStaadWrapper.cs                 implemented wrapper
     ApplicationVersion.cs              implemented value model
+    Root/                              planned operation result classes, created with their functions
   Enums/
     ApplicationEdition.cs              implemented source family rule
+    Root/                              planned documented operation statuses/options
   Adapters/
     Interfaces/
       IOSRoot.cs                       existing; planned common additions
@@ -286,16 +288,16 @@ src/StaadPro.Interop/
       BoundStaadModelServices.cs        implemented same-root lookup
       WrapperUnitParser.cs             implemented source-derived normalization
       WrapperNativeValues.cs           implemented strict integer reads
-      Metadata/                        planned shared reader extraction
+      WrapperMetadataReader.cs         implemented shared native reads
       Versioning/                      planned verified strategies only if needed
-    Root/                              planned; no placeholder source tree created
+    Root/                              metadata implemented; other folders below remain planned
       Abstractions/
       Context/
       Selection/
       Profiles/
       Metadata/
-        WrapperRootMetadataAccess.cs
-        RawRootMetadataAccess.cs
+        WrapperRootMetadataAccess.cs      implemented
+        RawRootMetadataAccess.cs          implemented
       Common/
         RootFileService.cs
         RootJobInfoService.cs
@@ -346,17 +348,17 @@ IOSRootCapabilities Capabilities { get; }
 IOSRootFeatureAvailability AdinaExportAvailability { get; }
 IOSRootFeatureAvailability ErrorMessagesAvailability { get; }
 IOSRootFeatureAvailability WarningMessagesAvailability { get; }
-bool TryGetAdinaExport(out IOSRootAdinaExport export);
-bool TryGetAnalysisErrorMessages(out IOSRootAnalysisErrorMessages errors);
-bool TryGetAnalysisWarningMessages(out IOSRootAnalysisWarningMessages warnings);
+RootCapabilityResult<IOSRootAdinaExport> GetAdinaExport();
+RootCapabilityResult<IOSRootAnalysisErrorMessages> GetAnalysisErrorMessages();
+RootCapabilityResult<IOSRootAnalysisWarningMessages> GetAnalysisWarningMessages();
 
 // Specialized interfaces, acquired separately:
-int ExportModelToADINA(int axisSystem, int loadCaseHandling);
-int GetAnalysisErrorMessages(string modelFilePath, ref string[] errorMessages);
-int GetAnalysisWarningMessages(string modelFilePath, ref string[] warningMessages);
+AdinaExportResult ExportModelToAdina(AdinaAxisSystem axisSystem, AdinaLoadCaseHandling loadCaseHandling);
+AnalysisMessagesResult GetAnalysisErrorMessages(string modelFilePath);
+AnalysisMessagesResult GetAnalysisWarningMessages(string modelFilePath);
 ```
 
-Each operation belongs only to its respective interface. A successful TryGet returns a non-null specialized adapter bound to the same context; false returns null plus an availability reason. Native connection, wrong-thread and transient discovery failures are exceptions, not ordinary unsupported results. Check the two message methods independently.
+Each operation belongs only to its respective interface. A successful discovery result contains a non-null specialized adapter bound to the same context; unavailable results contain no adapter and include an availability reason. No public output parameters are exposed. Message buffers are allocated internally and status/data are returned together in named classes. Native connection, wrong-thread and transient discovery failures are exceptions, not ordinary unsupported results. Check the two message methods independently.
 
 SessionInfo should expose observed native version components or a copied value, its normalized display, contract profile and verification state. Reuse StaadVersion for these values. The wrapper does not retain original native version text or unit-output provenance, so do not label a formatted display as original native text.
 
@@ -447,27 +449,27 @@ The implemented wrapper has XML for every public property, both constructors, re
 
 Future Root XML must state the wrapper property used, cached versus fresh behavior, refresh requirement, fallback/unknown/null values, ownership/thread limits and exact native-versus-normalized distinction. GetApplicationVersion must explicitly name StaadVersion and distinguish host ApplicationVersion. Do not advertise an enum snapshot as a lossless native output record.
 
-All new approved Root functions require matching interface/adapter summaries, parameters, returns/status tables, exceptions, examples and availability notes. Specialized interfaces explain successful acquisition, false/null behavior, discovery errors and model effects. Internal service types must not appear in public signatures. Extend compiled XML/package validation; global suppression of missing-doc warnings is not proof of coverage.
+All new approved Root functions require matching interface/adapter summaries, parameters, returns/status tables, exceptions, examples and availability notes. Specialized interfaces explain successful acquisition, unavailable-result behavior, discovery errors and model effects. Internal service types must not appear in public signatures. Extend compiled XML/package validation; global suppression of missing-doc warnings is not proof of coverage.
 
 | Test family | Required coverage |
 | --- | --- |
 | Implemented wrapper parity | All 30 source properties, two constructors, three public methods, nine raw bindings, Command spelling, placeholders, host/native version distinction and disposal. |
 | Implemented cache/refresh tests | No native query on property reads; RefreshUnits only updates units; RefreshComObjects replaces bindings and rereads metadata; disposed refresh rejects. |
 | Implemented normalization tests | Unit names/codes/aliases, zero codes, Boolean/fractional rejection, 2024 success ambiguity, source fallbacks, version validation and pointer conversions. |
-| Future Root projection tests | Each of five methods uses the exact wrapper value with no duplicate COM call; standalone raw-root path uses the shared reader and documented freshness. |
+| Implemented Root projection tests | Each of five methods uses the exact wrapper value with no duplicate COM call; standalone raw-root path uses the shared reader and documented freshness. |
 | Future profile/inspection tests | Exact/build-range boundaries, overlapping range rejection, unknown/future versions, member versus signature evidence, absent type info and transient failures. |
-| Future capability/access tests | No optional methods on common IOSRoot; no unconditional cast; independent grants; internal implementations; true/non-null and false/null guarantees. |
+| Future capability/access tests | No optional methods on common IOSRoot; no unconditional cast; independent grants; internal implementations; granted/non-null and unavailable/null guarantees. |
 | Future isolation/lifetime tests | Two product versions/processes, identical filenames/recycled PIDs, wrapper refresh generation, cache ownership, disconnection and correct thread behavior. |
 | Future native matrix | Actual 2024/2025/2026 builds: all units/subtypes/labels, shared operations, optional presence, blank/named models, export destinations, BSTR arrays and controlled failures. |
 
 No live STAAD compatibility result is inferred from the current offline tests. Native mutations must use disposable test models/directories/processes, never users' active work. Preserve all relevant existing tests when extracting shared readers or moving helpers.
 
-## 11. Implementation sequence after the next approval
+## 11. Implementation sequence and current status
 
 | Phase | Work | Exit criteria |
 | --- | --- | --- |
 | 0 — Completed wrapper foundation | Raw objects, all source properties/methods/constructors, metadata, refresh, service hooks and approved domain placeholders. | Member parity, XML and offline regression tests; main source stays read-only. No domain-function or Root-engine completion claim. |
-| 1 — Approve refined Root API | Five cached metadata projections, capability access, standalone raw-root policy and build/version compatibility policy. | Approved contracts reflecting this update. |
+| 1 — Managed API rules / metadata complete | Five typed metadata projections, wrapper/raw accessors and shared readers implemented; result-object and no-public-reference rules recorded. Capability contracts remain proposed. | Existing behavior preserved; new interface members, XML and offline tests validated. |
 | 2 — Native evidence | Verify actual version responses, unit interpretations and optional members in each supported build; record full-version ranges. | No runtime-verified registry entries from help alone. Resolve/defer ambiguous cases. |
 | 3 — Internal plumbing | Wrapper metadata accessor, shared-reader extraction for raw-only bindings, immutable profiles, inspector/context/factory. Preserve Root constructor behavior and existing 22 methods. | No duplicated wrapper-bound version/unit/window reads; same-instance tests pass. |
 | 4 — Metadata projections / common reads | P06 native version from StaadVersion; P02/P03/P04/P09 property reuse; P01 folder; P05 physical; P07 errors; P08 PID; P11/P12 analysis queries. | Correct snapshots, no host-version routing, live-only queries remain explicit. |
@@ -477,6 +479,6 @@ No live STAAD compatibility result is inferred from the current offline tests. N
 | 8 — Explicit shutdown | P30 Quit last, only in disposable dedicated processes. | Correct-instance behavior; no implicit disposal shutdown. |
 | 9 — Documentation/release | Root XML/examples, matrix, migration/installation guidance and package validation. Update README/release notes for every new NuGet build. | Actual packaged API/docs match; net481 consumer checks and recorded native compatibility evidence. |
 
-The 30 pending dedicated Root functions remain pending: 27 common functions (including wrapper projections) and three optional functions. The wrapper port changes available building blocks and native-call coverage, not the number of implemented IOSRoot functions. Current coverage is **9 adapter mappings, 5 wrapper projections, 1 internal-only query and 24 functions without production native calls**.
+Five dedicated metadata methods P02/P03/P04/P06/P09 are complete. The remaining 25 functions comprise 22 common and three optional operations. Current coverage is **14 adapter mappings (including five wrapper-backed projections), 1 internal-only query and 24 functions without production native calls**. The suite passes 1,001 offline tests; native compatibility remains unverified.
 
-The source project remains strictly read-only. No domain-function ports, new Root methods, profile engine, capability adapters, package rebuild, commit or push are part of this wrapper-stage completion. Those implementation steps await the user's next approval.
+The source project remains strictly read-only. The wrapper foundation and review documents were committed and pushed. This next increment adds only the five Root metadata methods and their helpers/tests/documentation. Other domain functions, profile engine, capability adapters and a new package build remain separate work.

@@ -2,23 +2,23 @@
 
 **Review date:** 15 October 2026  
 **Scope:** Installed Bentley OpenSTAAD 2026 Root reference versus the current `main` branch and its built .NET Framework assembly.  
-**Status:** The wrapper foundation has now been ported, with domain placeholders as approved. Root function implementation and version-aware dispatch remain planned, pending approval. See [Wrapper-Porting](../Wrapper-Porting.md) for the completed wrapper scope.
+**Status:** The wrapper foundation and five typed Root metadata queries are implemented. Twenty-five dedicated Root functions and version-aware capability dispatch remain pending. New public API contracts follow the [managed API design rules](../Root-Managed-API-Design.md). See [Wrapper-Porting](../Wrapper-Porting.md) for wrapper scope.
 
-For the 2024/2025 comparison, internal service architecture and version-specific API access, see the [multi-version architecture and implementation plan](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md). Its capability-interface and unit-query interpretation proposals refine this report’s 2026-only implementation plan; the wrapper foundation is implemented; no new Root methods have been added.
+For the 2024/2025 comparison, internal service architecture and version-specific API access, see the [multi-version architecture and implementation plan](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md). Its capability-interface and unit-query interpretation proposals refine this report’s 2026-only implementation plan; the wrapper foundation and five metadata projection methods are implemented.
 
 ## 1. Findings
 
-The supplied Root page documents **39 distinct functions**. The repository exposes **22 public methods on `IOSRoot`**, but those numbers measure different things: many adapter methods combine native operations or provide managed conveniences.
+The supplied Root page documents **39 distinct functions**. The repository exposes **27 public methods on `IOSRoot`**, but those numbers measure different things: many adapter methods combine native operations or provide managed conveniences.
 
 | Coverage category | Documented functions | Meaning |
 | --- | ---: | --- |
-| Public `IOSRoot` operations backed by the documented native function | 9 | Available through the adapter, with the qualifications below; native and managed signatures are intentionally different in several places. |
-| Projections through `OpenStaadWrapper` properties, absent from `IOSRoot` | 5 | Base units, force/length input units, native application version and the main-window handle. These are cached wrapper values with explicit refresh/fallback semantics. |
+| Public `IOSRoot` operations backed by the documented native function | 14 | Available through the adapter, with the qualifications below; native and managed signatures are intentionally different in several places. |
+| Wrapper-property projections absent from `IOSRoot` | 0 | All five now have dedicated typed Root methods; their wrapper-bound path preserves snapshot and fallback semantics. |
 | Native calls used internally, absent as public query methods | 1 | Process ID remains internal to the existing window-control operations. |
 | No implementation call found in current production source | 24 | Not ported, even if callers could invoke them manually through the raw COM object. |
 | **Total documented Root functions** | **39** | Every function occurs once in the coverage matrix. |
 
-Consequently, **30 documented functions have no dedicated public `IOSRoot` method**: 24 have no production native implementation call and 6 have wrapper/internal support to expose deliberately. Five of those six can reuse wrapper properties directly; GetProcessId remains a native internal query. Section 7 provides a separate plan entry for each of these 30 functions. Existing public coverage also has contract limitations that need separate treatment; calling a native function is not proof of complete parity or live compatibility.
+Consequently, **25 documented functions have no dedicated public `IOSRoot` method**: 24 have no production native implementation call and GetProcessId remains a native internal query. Section 7 retains the original 30 plan entries, with P02/P03/P04/P06/P09 marked implemented. Existing public coverage also has contract limitations that need separate treatment; calling a native function is not proof of complete parity or live compatibility.
 
 The older **22 of 23** figure in [Root-Porting.md](../Root-Porting.md) compares this repository with the private main project's interface. It is not coverage of Bentley's 39-function reference. That private interface's remaining `RetrieveMemberForces` helper is not one of these 39 Root functions and is outside this plan.
 
@@ -49,7 +49,7 @@ Links to Bentley help target the local installed reference; their relative targe
 
 ## 3. Complete coverage matrix
 
-**A:** adapter API exists. **W:** wrapper-property projection only. **I:** internal use only. **N:** no production implementation call found. A plan ID identifies a missing dedicated adapter method.
+**A:** adapter API exists. **W:** wrapper-property projection only (none remain without a Root method). **I:** internal use only. **N:** no production implementation call found. A plan ID identifies a missing dedicated adapter method.
 
 | Bentley function | Native return | Coverage | Current exposure / plan |
 | --- | --- | --- | --- |
@@ -62,14 +62,14 @@ Links to Bentley help target the local installed reference; their relative targe
 | [GetAnalysisErrorMessages](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga405205f5768fd9b1d16b8a35b72e86f4) | `long` | N | Missing. [Plan P13](#p13-getanalysiserrormessages). |
 | [GetAnalysisStatus](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga731f741a97cb618d7409544055b8a2bb) | `long` | N | Missing. [Plan P12](#p12-getanalysisstatus). |
 | [GetAnalysisWarningMessages](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gae891bbde4b6fd5e7f3e56dbf0644386f) | `long` | N | Missing. [Plan P14](#p14-getanalysiswarningmessages). |
-| [GetApplicationVersion](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga658ee126cc9aa9c5e35866e35f60260e) | `VARIANT` | W | `OpenStaadWrapper.StaadVersion` is the cached native version; `ApplicationVersion` is the host version. [Plan P06](#p06-getapplicationversion). |
-| [GetBaseUnit](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga7b1d941b62f317a0bdf104d2d4436ae1) | `VARIANT` | W | `OpenStaadWrapper.BaseUnitSystem`; cached, refreshed by RefreshUnits/RefreshComObjects. [Plan P02](#p02-getbaseunit). |
+| [GetApplicationVersion](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga658ee126cc9aa9c5e35866e35f60260e) | `VARIANT` | A | `OpenStaadWrapper.StaadVersion` is the cached native version; `ApplicationVersion` is the host version. Implemented; [P06](#p06-getapplicationversion). |
+| [GetBaseUnit](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga7b1d941b62f317a0bdf104d2d4436ae1) | `VARIANT` | A | `OpenStaadWrapper.BaseUnitSystem`; cached, refreshed by RefreshUnits/RefreshComObjects. Implemented; [P02](#p02-getbaseunit). |
 | [GetCONNECTEDProjectInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gab92e524c05abdf5e59e54adc95e0c9b0) | `VARIANT` | N | Missing. [Plan P23](#p23-getconnectedprojectinfo). |
 | [GetErrorMessage](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gab804cd4718b6a369ce6fb396c2df560d) | `VARIANT` | N | Missing. [Plan P07](#p07-geterrormessage). |
 | [GetFullJobInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga558ddaf8c6aa1913ed2ca06fd22beddd) | `void` | A | `FullJobInfo GetFullJobInfo()`; dates parsed with current culture. |
-| [GetInputUnitForForce](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gabcc3db5863da3b119b2c5bd4a740f0cd) | `VARIANT` | W | `OpenStaadWrapper.InputForceUnit`; ref-output parsing and documented base-system fallback. [Plan P04](#p04-getinputunitforforce). |
-| [GetInputUnitForLength](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga8a846a4f4597cbb6cbed46e86442431c) | `VARIANT` | W | `OpenStaadWrapper.InputLengthUnit`; ref-output parsing, feet alias and documented fallback. [Plan P03](#p03-getinputunitforlength). |
-| [GetMainWindowHandle](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga0c0b0f425cd8588f0df3c40ea08a05da) | `VARIANT` | W | `OpenStaadWrapper.StaadApplicationWindowHandle`; bound-root default service, Connect-only cached lookup. [Plan P09](#p09-getmainwindowhandle). |
+| [GetInputUnitForForce](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gabcc3db5863da3b119b2c5bd4a740f0cd) | `VARIANT` | A | `OpenStaadWrapper.InputForceUnit`; ref-output parsing and documented base-system fallback. Implemented; [P04](#p04-getinputunitforforce). |
+| [GetInputUnitForLength](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga8a846a4f4597cbb6cbed46e86442431c) | `VARIANT` | A | `OpenStaadWrapper.InputLengthUnit`; ref-output parsing, feet alias and documented fallback. Implemented; [P03](#p03-getinputunitforlength). |
+| [GetMainWindowHandle](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga0c0b0f425cd8588f0df3c40ea08a05da) | `VARIANT` | A | `OpenStaadWrapper.StaadApplicationWindowHandle`; bound-root default service, Connect-only cached lookup. Implemented; [P09](#p09-getmainwindowhandle). |
 | [GetProcessHandle](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga275b4bdab39a0afb0764d4d2e0b2f13e) | `VARIANT` | N | Missing. [Plan P10](#p10-getprocesshandle). |
 | [GetProcessId](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gac7c8010c34e57ab1443b8efacc3235a0) | `VARIANT` | I | Window-state helper calls; no public PID getter. [Plan P08](#p08-getprocessid). |
 | [GetShortJobInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga6d209f7c0ed0aaddfe84c6603078e5a2) | `void` | A | `ShortJobInfo GetShortJobInfo()`; three BSTR outputs. |
@@ -150,13 +150,15 @@ The wrapper-specific correction in item 1 is implemented; the other Root follow-
 
 ## 6. Design rules for the planned work
 
+The [managed API design rules](../Root-Managed-API-Design.md) govern new public contracts, result classes, collections, overloads and folder organization. No new public method uses `ref`, `out` or tuples. Native reference outputs are marshaled internally only.
+
 - Add signatures to `Adapters/Interfaces/IOSRoot.cs` and implementations to the existing **single, non-partial** `Adapters/Models/OSRootAdapter.cs`. Helpers, DTOs and enums may have their own files. Do not create adapter partial classes.
-- Reuse the now-ported wrapper as the metadata owner. Planned P02/P03/P04/P06/P09 return its cached properties without duplicate native reads. Pass the owning wrapper internally to future Root services while preserving the existing raw-root constructor. Providers are unchanged.
+- Reuse the now-ported wrapper as the metadata owner. Implemented P02/P03/P04/P06/P09 return its cached properties without duplicate native reads. Pass the owning wrapper through the internal metadata accessor while preserving the existing raw-root constructor. Providers are unchanged.
 - Keep the late-bound integration and avoid a redistributable dependency on Bentley assemblies. Typelib inspection can establish contracts during development without requiring consumers to reference Bentley's interop DLL.
 - Preserve existing method behavior. Adding members to public `IOSRoot` affects third-party implementations/mocks: record this API compatibility impact and choose an appropriate release/version policy before publishing. Existing compiled consumers that only call old members are a different compatibility case from consumers implementing the interface.
 - Validate complete inputs before the first native mutation. Require valid strings, ranges, enums, counts and pointer conversions; do not coerce bool, floating-point numbers or numeric text into native integer statuses accidentally.
 - Preserve native statuses rather than collapsing unrelated APIs into a generic bool. Unknown integer values must remain inspectable. Expected native failure codes are different from dispatch exceptions and malformed outputs.
-- For new methods, let COM/binder exceptions propagate unless a specifically documented result contract requires otherwise. No retry of an uncertain mutation merely because its response was lost. Never convert connection failure into an ordinary unit or false predicate.
+- For new methods, let COM/binder exceptions propagate unless a specifically documented result contract requires otherwise. The implemented unit projections retain the wrapper's explicit compatibility fallback and optional-member handling; they do not claim an observed native unit. No retry of an uncertain mutation merely because its response was lost. Never convert connection failure into an ordinary unit or false predicate.
 - A `void` native operation has no native success code. Planned managed mutators below use `void` to preserve that fact; matching the existing fluent style is possible but would still mean only that the request returned.
 - Use the bound session's appropriate COM thread. No automatic `Task.Run` wrapper or assumption that a timeout can interrupt a blocked native call. Serialize coordinated operations as needed; an identity precheck does not prevent an external session change afterward.
 - Native mutations remain explicit: no implicit file creation, opening, saving, closing, unit conversion, analysis, connection-project update or named-view overwrite from a query.
@@ -170,7 +172,7 @@ The completed wrapper now supplies the source-compatible `ApplicationVersion` mo
 
 | Proposed type | Intended fields / semantics |
 | --- | --- |
-| `AnalysisStatusInfo` | `int NativeStatus`, optional recognized `AnalysisResult`, nullable `int WarningCount`, nullable `int ErrorCount`, nullable `double CpuTimeSeconds`; distinguish invalid path/unwritten fields from real zero values. |
+| `AnalysisStatusResult` | `int NativeStatus`, nullable recognized analysis state (including invalid path), explicitly defined query success, nullable `int WarningCount`, nullable `int ErrorCount`, nullable `double CpuTimeSeconds`; distinguish failed retrieval, analysis outcome and unavailable fields from real zero values. |
 | `ConnectedProjectInfo` | `string ProjectId`, `string Name`; returned only for a successful native query. Project ID remains text until its accepted format is verified. |
 | `NamedViewEntityType` | Documented values only: Node 0, Beam 1, Plate 2, Solid 3, Surface 4. |
 | `AdinaAxisSystem` | Preserve 0, YUp 1, ZUp 2; names describe the documented export convention. |
@@ -198,7 +200,7 @@ void OpenSTAADUI::GetSTAADFileFolder ( VARIANT FAR & fileFolder );
 
 **Return contract:** Native void; managed result is the explicitly written directory string.
 
-**Proposed managed signature:** `string GetSTAADFileFolder()`.
+**Proposed managed signature:** `string GetStaadFileFolder()`.
 
 **Implementation:** Call the native folder getter once with a string-initialized ref object. Preserve native spelling and trailing separator behavior. Accept an explicitly empty output for an unnamed model only if confirmed; reject null, non-string or unwritten values. Do not replace this API with Path.GetDirectoryName, which would hide the native contract.
 
@@ -207,6 +209,8 @@ void OpenSTAADUI::GetSTAADFileFolder ( VARIANT FAR & fileFolder );
 <a id="p02-getbaseunit"></a>
 
 ### P02 — GetBaseUnit
+
+**Implementation status:** Implemented with shared internal metadata readers, wrapper-backed snapshots, standalone same-root reads and matching XML documentation.
 
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga7b1d941b62f317a0bdf104d2d4436ae1)
 
@@ -218,7 +222,7 @@ VARIANT OpenSTAADUI::GetBaseUnit ( );
 
 **Native return contract (the managed projection is cached and normalized):** Native VARIANT integer: 1 = Imperial/English, 2 = Metric. English base quantities use inches and kip; metric uses metres and kN.
 
-**Proposed managed signature:** `BaseUnitSystem GetBaseUnit()`.
+**Implemented managed signature:** `BaseUnitSystem GetBaseUnit()`.
 
 **Implementation:** Return the owning wrapper’s BaseUnitSystem snapshot. Do not dispatch GetBaseUnit again. Document cache freshness and Unknown behavior; callers explicitly refresh wrapper units after a model/unit change. A raw-root-only adapter needs a defined non-wrapper fallback, not silent attachment to another instance.
 
@@ -227,6 +231,8 @@ VARIANT OpenSTAADUI::GetBaseUnit ( );
 <a id="p03-getinputunitforlength"></a>
 
 ### P03 — GetInputUnitForLength
+
+**Implementation status:** Implemented with shared internal metadata readers, wrapper-backed snapshots, standalone same-root reads and matching XML documentation.
 
 **Cross-version refinement:** See the [multi-version unit-query design](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md#41-input-unit-getters-same-signature-conflicting-documented-semantics) before applying this 2026 return contract to older STAAD versions.
 
@@ -242,7 +248,7 @@ VARIANT OpenSTAADUI::GetInputUnitForLength ( VARIANT FAR & strUnit );
 
 **Native return contract (the managed projection is cached and normalized):** Native VARIANT integer: 0 Inch, 1 Feet, 2 Foot, 3 CentiMeter, 4 Meter, 5 MilliMeter, 6 DeciMeter, 7 KiloMeter. Proposed DTO preserves code and label.
 
-**Proposed managed signature:** `LengthInputUnit GetInputUnitForLength()`.
+**Implemented managed signature:** `LengthInputUnit GetInputUnitForLength()`.
 
 **Implementation:** Return the owning wrapper’s InputLengthUnit snapshot. Reuse its ref-output parsing, feet normalization and explicit fallback; do not create a second unit-query implementation in Root. Document that the value may be a base-system fallback and contains no original output string or native code provenance.
 
@@ -251,6 +257,8 @@ VARIANT OpenSTAADUI::GetInputUnitForLength ( VARIANT FAR & strUnit );
 <a id="p04-getinputunitforforce"></a>
 
 ### P04 — GetInputUnitForForce
+
+**Implementation status:** Implemented with shared internal metadata readers, wrapper-backed snapshots, standalone same-root reads and matching XML documentation.
 
 **Cross-version refinement:** See the [multi-version unit-query design](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md#41-input-unit-getters-same-signature-conflicting-documented-semantics) before applying this 2026 return contract to older STAAD versions.
 
@@ -266,7 +274,7 @@ VARIANT OpenSTAADUI::GetInputUnitForForce ( VARIANT FAR & strUnit );
 
 **Native return contract (the managed projection is cached and normalized):** Native VARIANT integer: 0 Kilopound, 1 Pound, 2 Kilogram, 3 Metric Ton, 4 Newton, 5 KiloNewton, 6 MegaNewton, 7 DecaNewton.
 
-**Proposed managed signature:** `ForceInputUnit GetInputUnitForForce()`.
+**Implemented managed signature:** `ForceInputUnit GetInputUnitForForce()`.
 
 **Implementation:** Return the owning wrapper’s InputForceUnit snapshot without another native read. Its source-compatible fallback is Kip for Imperial and kN otherwise; document this and require explicit refresh for fresh model values. No native-unit text or raw return code can be recovered from this enum property.
 
@@ -296,6 +304,8 @@ VARIANT OpenSTAADUI::IsPhysicalModel ( );
 
 ### P06 — GetApplicationVersion
 
+**Implementation status:** Implemented with shared internal metadata readers, wrapper-backed snapshots, standalone same-root reads and matching XML documentation.
+
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga658ee126cc9aa9c5e35866e35f60260e)
 
 ```cpp
@@ -311,7 +321,7 @@ VARIANT OpenSTAADUI::GetApplicationVersion ( VARIANT FAR & MajorA , VARIANT FAR 
 
 **Native return contract (the managed projection is cached and normalized):** Native VARIANT text containing the complete version, in addition to four numeric reference outputs.
 
-**Proposed managed signature:** `ApplicationVersion GetApplicationVersion()`.
+**Implemented managed signature:** `ApplicationVersion GetApplicationVersion()`.
 
 **Implementation:** Return a copy of the owning wrapper’s StaadVersion, which records native STAAD.Pro. Never return wrapper.ApplicationVersion: that is the host/client assembly version. The source wrapper already performs the native version query during initialization/RefreshComObjects. Missing version remains null; no duplicate Root bootstrap COM query is needed.
 
@@ -361,6 +371,8 @@ VARIANT OpenSTAADUI::GetProcessId ( );
 
 ### P09 — GetMainWindowHandle
 
+**Implementation status:** Implemented with shared internal metadata readers, wrapper-backed snapshots, standalone same-root reads and matching XML documentation.
+
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga0c0b0f425cd8588f0df3c40ea08a05da)
 
 ```cpp
@@ -371,7 +383,7 @@ VARIANT OpenSTAADUI::GetMainWindowHandle ( );
 
 **Native return contract (the managed projection is cached and normalized):** Native VARIANT holding the main HWND. The reference does not declare the exact VARIANT numeric subtype or pointer width.
 
-**Proposed managed signature:** `IntPtr GetMainWindowHandle()`.
+**Implemented managed signature:** `IntPtr GetMainWindowHandle()`.
 
 **Implementation:** Return the wrapper’s cached StaadApplicationWindowHandle. The default service reads the same root; injected services must target that instance. The source-family rule queries it only for Connect, otherwise zero. This is a non-owning cached snapshot, not IsWindow/readiness verification. Existing window mutations keep their fresh native handle/PID checks.
 
@@ -436,7 +448,7 @@ long OpenSTAADUI::GetAnalysisStatus ( LPCTSTR szModelNameWithPath , long FAR * N
 
 **Return contract:** Native long status: -2 invalid path; -1 terminated; 0 general error; 1 running; 2 completed cleanly; 3 completed with warnings; 4 completed with errors; 5 not performed.
 
-**Proposed managed signature:** `AnalysisStatusInfo GetAnalysisStatus(string modelFilePath)`.
+**Proposed managed signature:** `AnalysisStatusResult GetAnalysisStatus(string modelFilePath)`.
 
 **Implementation:** Use verified ref Int32 counts and ref double time in one call; do not pass ref Int64 because a C# example used long. Preserve NativeStatus, including -2 and unknown future values. Existing AnalysisResult lacks -2, so avoid unchecked assumptions based on that enum alone. Validate nonnegative counts and finite nonnegative CPU time only where the server contract says outputs are valid; otherwise retain null/unavailable fields. This query can target a named file, not only the bound open model.
 
@@ -461,9 +473,9 @@ long OpenSTAADUI::GetAnalysisErrorMessages ( LPCTSTR szModelNameWithPath , VARIA
 
 **Return contract:** Native long status: 1 messages retrieved; 0 no messages; -1 general error; -2 invalid path; -107 not an array; -119 wrong array type; -108 insufficient capacity; -1001 log missing; -10004 analysis running.
 
-**Proposed managed signature:** `int GetAnalysisErrorMessages(string modelFilePath, ref string[] errorMessages)`.
+**Proposed managed signature:** `AnalysisMessagesResult GetAnalysisErrorMessages(string modelFilePath)`.
 
-**Implementation:** Expose a native-shaped status-returning API first. Caller obtains ErrorCount from P12 and allocates string[count]. Reject null arrays and invalid paths locally; preserve native status codes. Verify ref string[] versus ref object dispatch and SAFEARRAY shape; validate returned contents on success. Document count/read races: on -108 the caller may requery and retry a bounded number of read-only calls. No automatic analysis, file deletion or invented success status.
+**Implementation:** Obtain the required count through P12 and allocate the native BSTR array internally. Validate the path and preserve native retrieval status in AnalysisMessagesResult alongside a recognized status, IsSuccessful and materialized read-only Messages. Native status 0 is successful absence, distinct from an expected failure. Verify internal ref string[] versus ref object dispatch and SAFEARRAY shape; validate contents before publishing a successful result. Count/read races permit only a documented bounded requery after -108, with a bounded allocation policy and explicit failure when unresolved. Callers never allocate an output buffer. No automatic analysis, file deletion or invented success status.
 
 **Verification:** Check BSTR rather than object/numeric arrays; zero/exact/oversized/undersized capacities, overwritten arrays, all listed statuses, unknown codes and COM failure. Live-check log source, Unicode/multiline text and count changes. The native failures caught by managed validation should be tested at the lower dispatch boundary where applicable.
 
@@ -486,9 +498,9 @@ long OpenSTAADUI::GetAnalysisWarningMessages ( LPCTSTR szModelNameWithPath , VAR
 
 **Return contract:** Native long status: 1 messages retrieved; 0 no messages; -1 general error; -2 invalid path; -107 not an array; -119 wrong array type; -108 insufficient capacity; -1001 ANL missing; -10004 analysis running.
 
-**Proposed managed signature:** `int GetAnalysisWarningMessages(string modelFilePath, ref string[] warningMessages)`.
+**Proposed managed signature:** `AnalysisMessagesResult GetAnalysisWarningMessages(string modelFilePath)`.
 
-**Implementation:** Use the same validated marshaling/status helper as P13 while retaining the distinct native method and warning buffer. The page describes warning retrieval from the ANL file; do not substitute error-log parsing. Count/read races need bounded caller-driven requery, not indefinite allocation growth. Preserve native text and status.
+**Implementation:** Use the same validated marshaling/status helper as P13 while retaining the distinct native method and warning buffer. The page describes warning retrieval from the ANL file; do not substitute error-log parsing. Allocate buffers internally and return the same named result contract as P13. Count/read races use the documented bounded internal requery policy, not indefinite allocation growth. Preserve native text and status.
 
 **Verification:** Check all documented and unknown statuses, ref BSTR array shape, empty/exact/oversized/undersized arrays, missing ANL, malformed successful output and native failures. Live-test actual warnings and an in-progress analysis.
 
@@ -695,9 +707,9 @@ VARIANT OpenSTAADUI::GetCONNECTEDProjectInfo ( VARIANT FAR & szProjID , VARIANT 
 | `szProjID` | Output | VARIANT(text) reference; CONNECTED project ID. |
 | `szName` | Output | VARIANT(text) reference; CONNECTED project name. |
 
-**Return contract:** Native VARIANT 1 = true, 0 = false. Proposed Try method returns the verified flag and sets project to null on native false.
+**Return contract:** Native VARIANT 1 = true, 0 = false. The result class retains the verified flag and exposes project data only on native success.
 
-**Proposed managed signature:** `bool TryGetCONNECTEDProjectInfo(out ConnectedProjectInfo project)`.
+**Proposed managed signature:** `ConnectedProjectResult GetConnectedProjectInfo()`.
 
 **Implementation:** Initialize reference string outputs, call once, and strictly validate the status. On true, require valid string outputs before returning a DTO; on false, do not present partial/unwritten text as valid project information. Preserve ID and name as supplied; do not force GUID formatting without evidence. Native false is not the same as a COM exception. No account login, assignment or network retry is implied.
 
@@ -720,7 +732,7 @@ VARIANT OpenSTAADUI::SetCONNECTEDProjectInfo ( const VARIANT FAR & szProjID , co
 
 **Return contract:** Native VARIANT 1 = true, 0 = false; proposed bool reports that documented native result, not an independently verified cloud synchronization outcome.
 
-**Proposed managed signature:** `bool SetCONNECTEDProjectInfo(string projectId, string name)`.
+**Proposed managed signature:** `bool SetConnectedProjectInfo(string projectId, string projectName)`.
 
 **Implementation:** Validate both strings and native flag shape. Proposed policy rejects null; determine whether empty values clear the association before permitting/documenting that operation. Keep ID as text, do not claim the API creates a project or updates cloud membership, and do not silently save the model. Document credentials/network dependencies established by native validation.
 
@@ -742,9 +754,9 @@ void OpenSTAADUI::CreateNamedView ( const VARIANT FAR & strName , const VARIANT 
 | `nFlag` | Input | const VARIANT reference; integer creation flag. Allowed values and meanings are not provided. |
 | `nError` | Output, inferred | VARIANT reference; integer error code. Prose marks input, but says the method writes the error number. |
 
-**Return contract:** Native void; proposed managed int is the verified nError output, not a native return value. No success/error-code meanings are documented on this page.
+**Return contract:** Native void; the managed result retains the verified nError output, not a fabricated native return value. No success/error-code meanings are documented on this page.
 
-**Proposed managed signature:** `int CreateNamedView(string name, int creationFlag)`.
+**Proposed managed signature:** `NamedViewResult CreateNamedView(string viewName, int creationFlag)`.
 
 **Implementation:** Resolve creationFlag domain, nError direction and code meanings before implementing/releasing. Validate the view name and established flag range, then issue one call with a numeric ref output. Keep the raw output code visible, including unknown values; do not assume zero success or overwrite behavior. Replace int creationFlag with an enum only after authoritative values are established.
 
@@ -765,9 +777,9 @@ void OpenSTAADUI::SaveNamedView ( const VARIANT FAR & strName , VARIANT FAR & nE
 | `strName` | Input | const VARIANT(text) reference; name under which to save the current view. |
 | `nError` | Output, inferred | VARIANT reference carrying the native integer error result; direction requires verification. |
 
-**Return contract:** Native void; proposed int surfaces nError without inventing its meaning.
+**Return contract:** Native void; the proposed NamedViewResult retains nError; status/success interpretation remains gated on verified meanings.
 
-**Proposed managed signature:** `int SaveNamedView(string name)`.
+**Proposed managed signature:** `NamedViewResult SaveNamedView(string viewName)`.
 
 **Implementation:** Validate the name, call the distinct SaveNamedView API and read the verified error output. Establish whether the view must already exist and what is stored. Do not silently substitute CreateNamedView, overwrite an unrelated view or interpret an undocumented code as success.
 
@@ -788,9 +800,9 @@ void OpenSTAADUI::RemoveNamedView ( const VARIANT FAR & strName , VARIANT FAR & 
 | `strName` | Input | const VARIANT(text) reference; name of the view to remove. |
 | `nError` | Output, inferred | VARIANT reference carrying the native integer error result; documentation direction is inconsistent. |
 
-**Return contract:** Native void; proposed managed int returns the observed nError output.
+**Return contract:** Native void; the proposed NamedViewResult retains the observed nError output with verified status interpretation.
 
-**Proposed managed signature:** `int RemoveNamedView(string name)`.
+**Proposed managed signature:** `NamedViewResult RemoveNamedView(string viewName)`.
 
 **Implementation:** Validate the name and request removal once. Establish code meanings and missing-name behavior; preserve failure codes. Do not delete model entities, retry a response-lost removal automatically, or claim that the view is removed from the file before persistence is verified.
 
@@ -815,9 +827,9 @@ void OpenSTAADUI::ModifyNamedView ( const VARIANT FAR & strName , const VARIANT 
 | `nModifyFlag` | Input | const VARIANT integer; modification mode. Values and meanings are not documented. |
 | `nError` | Output, inferred | VARIANT reference; native integer error result. |
 
-**Return contract:** Native void; proposed managed int exposes nError. The operation's modification flags and error-code semantics are unresolved.
+**Return contract:** Native void; the proposed NamedViewResult retains nError. The operation's modification flags and error-code semantics are unresolved.
 
-**Proposed managed signature:** `int ModifyNamedView(string name, IReadOnlyList<int> entityIds, NamedViewEntityType entityType, int modificationFlag)`.
+**Proposed managed signature:** `NamedViewResult ModifyNamedView(string viewName, IEnumerable<int> entityIds, NamedViewEntityType entityType, int modificationFlag)`.
 
 **Implementation:** Gate on verified array and flag contracts. Snapshot entityIds once into a fixed int[] and derive nEntities from that snapshot; do not accept a separately inconsistent count. Validate qualifier 0–4 and entity IDs under the verified native numbering rules. Decide empty-array/duplicate behavior from evidence rather than pruning or inventing semantics. Send all six native arguments in exact order and preserve error code.
 
@@ -840,9 +852,9 @@ long OpenSTAADUI::ExportModelToADINA ( int flagAxisSystem , int flagLCHandler );
 | `flagAxisSystem` | Input | Native int: 0 keep the axis convention, 1 Y-Up, 2 Z-Up. |
 | `flagLCHandler` | Input | Native int: 0 multiple load cases, 1 time-history values. |
 
-**Return contract:** Native long status: 0 successful export; -14501 successful with warnings; -14502 failed; -101 no open model. Proposed int retains all statuses, including unknown codes.
+**Return contract:** Native long status: 0 successful export; -14501 successful with warnings; -14502 failed; -101 no open model. AdinaExportResult retains every raw status, a nullable recognized status and IsSuccessful including warning success.
 
-**Proposed managed signature:** `int ExportModelToADINA(AdinaAxisSystem axisSystem, AdinaLoadCaseHandling loadCaseHandling)`.
+**Proposed managed signature:** `AdinaExportResult ExportModelToAdina(AdinaAxisSystem axisSystem, AdinaLoadCaseHandling loadCaseHandling)`.
 
 **Implementation:** Validate the two enum domains and call once. Document that it writes an ADINA .in file and a .ADINA.log companion. The page does not define destination selection or overwrite rules: establish both in a disposable directory before release. Do not add an output-path argument that the native signature does not accept, hide warning success behind a generic bool, or infer overall success from call completion.
 
@@ -883,7 +895,7 @@ Do not start by copying all missing methods mechanically. First settle the contr
 | 6 — Named views | P25 CreateNamedView; P26 SaveNamedView; P28 ModifyNamedView; P27 RemoveNamedView. | Creation/modification flags, error directions/codes and entity array shape must be established before this stage. Creation before modification/removal provides test fixtures; cover every supported entity qualifier. |
 | 7 — Opaque native handles and shutdown | P10 GetProcessHandle; P30 Quit. | Handle API stays deferred if client validity/ownership cannot be established. Test shutdown only in a disposable dedicated process, after all non-destructive validation. Never alter disposal behavior. |
 
-Six pending Root methods already have wrapper/internal support: P02/P03/P04/P06/P09 will project wrapper metadata; P08 still needs a dedicated process-ID query over its existing internal native support. All need explicit public contracts, XML and tests.
+Five metadata methods P02/P03/P04/P06/P09 are implemented with public contracts, XML and tests. P08 still needs a dedicated process-ID query over its existing internal native support. The remaining plan follows the managed result-object design rules.
 
 Optional follow-up work on already covered native functions is separate: expose the native filename flag if needed, expose previous silent mode under a new name if needed, and decide how to extend existing unit setters without changing established behavior unexpectedly. None of these changes is authorized by this review alone.
 

@@ -12,6 +12,10 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
+## Current source development
+
+The source now includes the completed wrapper surface and five additional Root metadata queries. These changes are not in the existing NuGet archive. See [wrapper scope](docs/Wrapper-Porting.md), [Root API coverage](docs/reports/OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md) and the [managed API design rules](docs/Root-Managed-API-Design.md) for implemented behavior and the remaining plan.
+
 ## Highlights
 
 - **OpenStaadWrapper & Provider**: Flexible acquisition via `OpenStaadWrapperProvider.Get()` and `GetRunning()` using Windows Running Object Table (ROT) lookup, active instance attachment, or automated background launching.

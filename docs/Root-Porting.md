@@ -10,6 +10,8 @@ The main project's `IOSRoot` exposes 23 methods. This repository now implements 
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
+The next Root increment adds five vendor metadata queries beyond the private interface: GetApplicationVersion, GetBaseUnit, GetInputUnitForForce, GetInputUnitForLength and GetMainWindowHandle. IOSRoot now has 27 methods. Wrapper-bound calls reuse snapshots; standalone bindings read the same supplied native root through shared helpers. See the [managed API design rules](Root-Managed-API-Design.md) and [API reference](API-Reference.md#root-adapter). These additions do not change the private-interface parity count below.
+
 ## Ported functions
 
 | Signature | Native/managed implementation | Empty/unnamed-session behavior |

@@ -18,7 +18,7 @@ The source's Bentley COM types are represented by object/dynamic, matching this 
 | `InputLengthUnit` | Cached source-compatible parsed/fallback length unit. |
 | `IsDedicated` | Caller-supplied dedication flag; no process ownership. |
 | `RawOpenStaad` | Original acquired root as object; null after disposal. |
-| `Root` | Existing fully implemented root binding (22 methods); no new Root methods in this change. |
+| `Root` | Root binding with 27 methods: the original 22 plus five typed metadata queries in the subsequent increment. |
 | `RawGeometry` | Captures native Geometry interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `Geometry` | Existing implemented Geometry adapter. |
 | `RawLoad` | Captures native Load interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
@@ -96,9 +96,9 @@ Both refresh methods reject a disposed wrapper. Disposal clears managed bindings
 
 For compatibility, missing Geometry/Load properties retain the repository's existing direct-root dispatch fallback. Other missing native domains remain null. Unexpected native interface/metadata failures propagate rather than masquerading as missing optional members. Missing metadata on legacy/test roots is tolerated; it is not evidence of version-specific support.
 
-## 3. Root properties to reuse after approval
+## 3. Root property reuse (implemented)
 
-| Planned Root function | Implemented wrapper value | Important meaning |
+| Implemented Root function | Implemented wrapper value | Important meaning |
 | --- | --- | --- |
 | GetApplicationVersion | `StaadVersion` | Native STAAD version, defensive copy, not host ApplicationVersion. |
 | GetBaseUnit | `BaseUnitSystem` | Cached normalized base-system value. |
@@ -107,7 +107,7 @@ For compatibility, missing Geometry/Load properties retain the repository's exis
 | GetMainWindowHandle | `StaadApplicationWindowHandle` | Cached, non-owning, Connect-family lookup. |
 | Version/family metadata | `StaadVersion`, `StaadEdition` | Select native policy from the observed version; edition alone is insufficient. |
 
-Wrapper-bound projections should not repeat native version/unit/window reads. Native text, raw-code aliases and output provenance are not retained by these public cache properties; do not fabricate them. GetProcessId has no wrapper property and remains a separate native query. Standalone raw-root adapter support and the future internal metadata-access seam are described in the architecture plan.
+Wrapper-bound projections now reuse the internal metadata accessor without native version/unit/window reads. Native text, raw-code aliases and output provenance are not retained by these public cache properties; do not fabricate them. GetProcessId has no wrapper property and remains a separate native query. Standalone raw-root adapters use the shared WrapperMetadataReader. The implemented metadata-access seam is described in the architecture plan.
 
 ## 4. Usage
 
@@ -141,10 +141,10 @@ Construction and refresh do not show host UI or launch/close STAAD. The default 
 ## 5. Validation and release boundary
 
 - Release net481 build succeeds, with compiled XML for the new members.
-- **974 offline tests pass**, including source-property parity, two constructors, all raw bindings/placeholders, native versus host version, cache/refresh behavior, service injection, unit aliases/fallbacks, malformed values, bound-instance handles and disposal. The explicit live-provider test is not run by the normal suite.
+- **1,001 offline tests pass**, including source-property parity, two constructors, all raw bindings/placeholders, native versus host version, cache/refresh behavior, service injection, unit aliases/fallbacks, malformed values, bound-instance handles and disposal. The explicit live-provider test is not run by the normal suite.
 - All 30 source property names and the three source public method names are present. The legacy single-constructor test was updated to require the source's two constructor forms.
 - The source wrapper fingerprint was compared before/after the port and is unchanged. The main project was never built or modified.
-- No native STAAD compatibility test, domain-function port, new Root method, version-profile engine, capability implementation, NuGet package rebuild or publication was performed.
+- No native STAAD compatibility test, additional domain-function port, version-profile engine, capability implementation, NuGet package rebuild or publication was performed. A subsequent increment added five Root metadata queries and 22 behavioral tests.
 
 Source wrapper SHA-256: `83737733D57A672313385F99EA0CA8FFA10F1917FB6A33B89E43CE27E3F37B14`.
 

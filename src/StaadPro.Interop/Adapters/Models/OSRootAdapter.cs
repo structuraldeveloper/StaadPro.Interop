@@ -5,6 +5,7 @@ using StaadPro.Interop.Enums;
 using StaadPro.Interop.Models;
 using StaadPro.Interop.Adapters.Interfaces;
 using StaadPro.Interop.Services;
+using StaadPro.Interop.Services.Root.Metadata;
 
 namespace StaadPro.Interop.Adapters.Models
 {
@@ -15,6 +16,7 @@ namespace StaadPro.Interop.Adapters.Models
         private readonly Func<IRootPollingClock> pollingClockFactory;
         private readonly IRootModelFiles modelFiles;
         private readonly IRootWindowApi windowApi;
+        private readonly IRootMetadataAccess metadataAccess;
         /// <summary>Initializes a root binding for the supplied OpenSTAAD automation object.</summary>
         /// <param name="openStaad">The non-null raw root object from the model session.</param>
         /// <remarks>The constructor captures the object and does not launch STAAD or validate model readiness.</remarks>
@@ -25,6 +27,12 @@ namespace StaadPro.Interop.Adapters.Models
             pollingClockFactory = () => new RootPollingClock();
             modelFiles = new RootModelFiles();
             windowApi = new RootWindowApi();
+            metadataAccess = new RawRootMetadataAccess(openStaad);
+        }
+
+        internal OSRootAdapter(object openStaad, IRootMetadataAccess metadataAccess) : this(openStaad)
+        {
+            this.metadataAccess = metadataAccess ?? throw new ArgumentNullException(nameof(metadataAccess));
         }
 
         internal OSRootAdapter(object openStaad, Func<IRootPollingClock> clockFactory) : this(openStaad)
@@ -45,6 +53,76 @@ namespace StaadPro.Interop.Adapters.Models
         /// <summary>Gets the captured root OpenSTAAD automation object.</summary>
         /// <value>The original object supplied to the constructor, used for late-bound native access.</value>
         public dynamic ComObject { get; }
+
+        /// <summary>Gets the native STAAD.Pro version associated with this root binding.</summary>
+        /// <returns>An independent four-part native version, or null when the optional native version member is absent.</returns>
+        /// <remarks><para>For a wrapper-owned Root, returns the owning wrapper's cached StaadVersion without native dispatch. This is the STAAD version, not the client assembly ApplicationVersion. RefreshComObjects updates the snapshot. For a directly constructed adapter, queries the captured root on each call and validates returned text against any written numeric outputs. Does not acquire another session or establish feature availability.</para>
+        /// <para>Use the bound session's COM thread and serialize refresh and access. These reads do not certify connection liveness or make a native call interruptible.</para></remarks>
+        /// <exception cref="ObjectDisposedException">The owning wrapper has been disposed; applies to wrapper-owned bindings.</exception>
+        /// <exception cref="InvalidOperationException">Malformed or contradictory native version data was returned.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">A native version, base-unit or handle request fails; non-missing-member failures propagate.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A native dispatch has an incompatible signature that is not handled as an absent optional member.</exception>
+        /// <example>With a connected IOSRoot named root:<code>
+        /// ApplicationVersion version = root.GetApplicationVersion();
+        /// Console.WriteLine(version?.Display ?? "Unavailable");
+        /// </code></example>
+        public ApplicationVersion GetApplicationVersion() => metadataAccess.GetApplicationVersion();
+
+        /// <summary>Gets the model base unit system associated with this root binding.</summary>
+        /// <returns>The normalized base-system value; Unknown for an absent member, null or DBNull. Unrecognized integral native codes are preserved as enum values.</returns>
+        /// <remarks><para>For a wrapper-owned Root, returns the BaseUnitSystem snapshot without native dispatch; call RefreshUnits or RefreshComObjects on the wrapper to update it. A directly constructed adapter queries its captured native root on each call. Does not convert model data, change units or infer a base system from the input units.</para>
+        /// <para>Use the bound session's COM thread and serialize refresh and access. These reads do not certify connection liveness or make a native call interruptible.</para></remarks>
+        /// <exception cref="ObjectDisposedException">The owning wrapper has been disposed; applies to wrapper-owned bindings.</exception>
+        /// <exception cref="InvalidOperationException">The native base-unit value has a nonintegral or out-of-range representation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">A native version, base-unit or handle request fails; non-missing-member failures propagate.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A native dispatch has an incompatible signature that is not handled as an absent optional member.</exception>
+        /// <example>With a connected IOSRoot named root:<code>
+        /// BaseUnitSystem baseSystem = root.GetBaseUnit();
+        /// Console.WriteLine(baseSystem);
+        /// </code></example>
+        public BaseUnitSystem GetBaseUnit() => metadataAccess.GetBaseUnit();
+
+        /// <summary>Gets the model input force unit associated with this root binding.</summary>
+        /// <returns>The wrapper-compatible force-unit enum. If no usable unit is reported, the compatibility fallback is KiloPound for Imperial base units and KiloNewton otherwise; that fallback is not a measured unit.</returns>
+        /// <remarks><para>For a wrapper-owned Root, returns InputForceUnit without native dispatch; refresh the wrapper units explicitly after external changes. A directly constructed adapter rereads version, base system and force unit from the same captured root on every call. Internal native reference output takes precedence over an eligible numeric return. Version 24 success flags are not interpreted as unit codes. Native unit-query failures retain a usable written output or use the documented fallback; version/base-unit failures still propagate. No model mutation or implicit save occurs.</para>
+        /// <para>Use the bound session's COM thread and serialize refresh and access. These reads do not certify connection liveness or make a native call interruptible.</para></remarks>
+        /// <exception cref="ObjectDisposedException">The owning wrapper has been disposed; applies to wrapper-owned bindings.</exception>
+        /// <exception cref="InvalidOperationException">Native version or base-unit metadata is malformed.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">A native version, base-unit or handle request fails; non-missing-member failures propagate.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A native dispatch has an incompatible signature that is not handled as an absent optional member.</exception>
+        /// <example>With a connected IOSRoot named root:<code>
+        /// ForceInputUnit forceUnit = root.GetInputUnitForForce();
+        /// Console.WriteLine(forceUnit);
+        /// </code></example>
+        public ForceInputUnit GetInputUnitForForce() => metadataAccess.GetInputUnitForForce();
+
+        /// <summary>Gets the model input length unit associated with this root binding.</summary>
+        /// <returns>The wrapper-compatible length-unit enum, with native feet aliases normalized to Feet. If no usable unit is reported, the fallback is Feet for Imperial base units and Meter otherwise; that fallback is not a measured unit.</returns>
+        /// <remarks><para>For a wrapper-owned Root, returns InputLengthUnit without native dispatch; refresh the wrapper units explicitly after external changes. A directly constructed adapter rereads version, base system and length unit from the same captured root on every call. Internal native reference output takes precedence over an eligible numeric return. Version 24 success flags are not interpreted as unit codes. Native unit-query failures retain a usable written output or use the documented fallback; version/base-unit failures still propagate. No model mutation or implicit save occurs.</para>
+        /// <para>Use the bound session's COM thread and serialize refresh and access. These reads do not certify connection liveness or make a native call interruptible.</para></remarks>
+        /// <exception cref="ObjectDisposedException">The owning wrapper has been disposed; applies to wrapper-owned bindings.</exception>
+        /// <exception cref="InvalidOperationException">Native version or base-unit metadata is malformed.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">A native version, base-unit or handle request fails; non-missing-member failures propagate.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A native dispatch has an incompatible signature that is not handled as an absent optional member.</exception>
+        /// <example>With a connected IOSRoot named root:<code>
+        /// LengthInputUnit lengthUnit = root.GetInputUnitForLength();
+        /// Console.WriteLine(lengthUnit);
+        /// </code></example>
+        public LengthInputUnit GetInputUnitForLength() => metadataAccess.GetInputUnitForLength();
+
+        /// <summary>Gets the non-owning STAAD main-window handle associated with this root binding.</summary>
+        /// <returns>The cached wrapper handle or a standalone same-root native handle. Zero when the native version is unavailable, its major version is 20 or earlier, or the optional window member is absent. Zero can also be returned by the native API or a configured wrapper window service.</returns>
+        /// <remarks><para>For a wrapper-owned Root, reuses StaadApplicationWindowHandle, including its configured model service; RefreshComObjects updates the cache. A directly constructed adapter rereads native version and, for major versions greater than 20, the handle from the captured root. Does not inspect global active objects or choose a process by name. The handle is borrowed: do not close it. A cached handle can expire and does not establish live-window validity, PID ownership or model readiness. Existing window-control methods perform their own live validation.</para>
+        /// <para>Use the bound session's COM thread and serialize refresh and access. These reads do not certify connection liveness or make a native call interruptible.</para></remarks>
+        /// <exception cref="ObjectDisposedException">The owning wrapper has been disposed; applies to wrapper-owned bindings.</exception>
+        /// <exception cref="InvalidOperationException">Native version metadata or the default native window-handle representation is invalid.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">A native version, base-unit or handle request fails; non-missing-member failures propagate.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A native dispatch has an incompatible signature that is not handled as an absent optional member.</exception>
+        /// <example>With a connected IOSRoot named root:<code>
+        /// IntPtr windowHandle = root.GetMainWindowHandle();
+        /// Console.WriteLine(windowHandle);
+        /// </code></example>
+        public IntPtr GetMainWindowHandle() => metadataAccess.GetMainWindowHandle();
 
         /// <summary>Reads the current model's native STAAD file path from this root session.</summary>
         /// <returns>The exact string reported by OpenSTAAD, including original case, whitespace and Unicode; an empty string when the native API reports no open filename.</returns>

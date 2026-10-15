@@ -379,6 +379,11 @@ namespace StaadPro.Interop.Tests.Adapter
         {
             public int Reads { get; private set; }
             public dynamic ComObject { get { Reads++; return null; } }
+            public StaadPro.Interop.Models.ApplicationVersion GetApplicationVersion() => throw new NotSupportedException();
+            public StaadPro.Interop.Enums.BaseUnitSystem GetBaseUnit() => throw new NotSupportedException();
+            public StaadPro.Interop.Enums.ForceInputUnit GetInputUnitForForce() => throw new NotSupportedException();
+            public StaadPro.Interop.Enums.LengthInputUnit GetInputUnitForLength() => throw new NotSupportedException();
+            public IntPtr GetMainWindowHandle() => throw new NotSupportedException();
             public string GetStaadFileFullPath() => throw new NotSupportedException();
             public string GetStaadFileNameOnly() => throw new NotSupportedException();
             public string GetAnlFileFullPath() => throw new NotSupportedException();

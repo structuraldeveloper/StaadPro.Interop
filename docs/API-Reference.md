@@ -23,7 +23,7 @@ All 30 main-source wrapper properties, both constructor forms, RefreshComObjects
 - `RefreshComObjects()`: rebinds adapters and rereads metadata after model reopening/database initialization; callers reacquire adapter properties.
 - `Dispose()`: clears all bindings without saving/closing STAAD; refresh methods reject further use.
 
-Construction/refresh read native metadata on the session’s COM thread. Root profile selection and new Root/capability functions remain pending approval.
+Construction/refresh read native metadata on the session’s COM thread. Five typed Root metadata queries now reuse wrapper snapshots. Root profile selection, other pending operations and optional capabilities remain separate work.
 
 ## `IOSGeometry` Members
 - `CreateMultipleNodesExtended(IOSRoot openStaad, IEnumerable<Node> nodeCollection)`: Creates explicit node IDs using an XYZ coordinate matrix in model input units.
@@ -180,6 +180,16 @@ Inputs are snapshotted and validated before native access. The first two mutatio
 
 `OpenStaadWrapper.Root` exposes `IOSRoot`, implemented by the existing non-partial `OSRootAdapter`.
 
+The metadata queries below reuse cached wrapper values. RefreshUnits updates unit snapshots; RefreshComObjects updates native version and handle snapshots. Standalone OSRootAdapter bindings read their supplied native root on each call through shared internal readers. Native unit failures can use the documented compatibility fallback; these enums do not certify measured units. Metadata access through an adapter captured from a disposed wrapper throws ObjectDisposedException.
+
+| Metadata query | Return / meaning |
+| --- | --- |
+| `GetApplicationVersion()` | `ApplicationVersion`: defensive copy of native StaadVersion; null when absent, distinct from the host ApplicationVersion. |
+| `GetBaseUnit()` | `BaseUnitSystem`: Unknown for unavailable values; unrecognized integral codes remain inspectable. |
+| `GetInputUnitForForce()` | `ForceInputUnit`: cached normalized value; fallback KiloPound for Imperial, KiloNewton otherwise. |
+| `GetInputUnitForLength()` | `LengthInputUnit`: cached normalized value; fallback Feet for Imperial, Meter otherwise. |
+| `GetMainWindowHandle()` | `IntPtr`: borrowed handle, possibly zero, with the source-family rule and configured wrapper service; no live-window guarantee. |
+
 | Method | Result |
 | --- | --- |
 | `string GetStaadFileFullPath()` | Exact current model path from one void `GetSTAADFile` output read. |
@@ -210,4 +220,4 @@ Inputs are snapshotted and validated before native access. The first two mutatio
 | `void RestoreStaadMainWindow()` | Validate native window/PID and post ShowWindowAsync command 9; Accepted request does not verify final state |
 | `AnalysisResult AnalyzeEx(SilentMode silentMode, HiddenMode hiddenMode, WaitAnalysisMode waitMode)` | Validate/send native silent, hidden, wait codes; preserve integer analysis status; Starts native analysis; wait mode can block |
 
-Filename/identity queries preserve empty native filenames and perform no native writes. The job getters validate all outputs and return editable managed snapshots; malformed dates throw. The unit setter changes native input-unit state and does not rescale managed values, save or roll back. Silent/save/close operations can mutate native state, write files or display dialogs; no rollback or verified unattended completion is provided. See [Root-Porting.md](Root-Porting.md) for complete native mappings, date/empty/error behavior, examples and the remaining 1 reference methods. Root coverage is 22 of 23 methods. Custom `IOSRoot` implementations must implement the added members.
+Filename/identity queries preserve empty native filenames and perform no native writes. The job getters validate all outputs and return editable managed snapshots; malformed dates throw. The unit setter changes native input-unit state and does not rescale managed values, save or roll back. Silent/save/close operations can mutate native state, write files or display dialogs; no rollback or verified unattended completion is provided. See [Root-Porting.md](Root-Porting.md) for complete native mappings, date/empty/error behavior, examples and the remaining 1 reference methods. Private-source coverage remains 22 of 23 methods, with five additional vendor metadata queries (27 public Root methods total). See the [managed API rules](Root-Managed-API-Design.md) for pending result-object contracts. Custom `IOSRoot` implementations must implement the added members.

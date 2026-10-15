@@ -8,6 +8,10 @@ StaadPro.Interop provides typed adapters and managed models for working with an 
 
 This preview updates package metadata and documentation. Its runtime API is unchanged from `1.0.0-preview.20261014.6`. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
 
+## Unreleased source additions
+
+The current source includes the completed wrapper bindings and five additional Root metadata queries: `GetApplicationVersion`, `GetBaseUnit`, `GetInputUnitForForce`, `GetInputUnitForLength` and `GetMainWindowHandle`. Wrapper-owned queries reuse cached properties; directly constructed Root adapters read their supplied native root. Unit compatibility fallbacks are documented in the [Root guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Porting.md). These additions are not included in the package version described above; a subsequent release requires new package metadata and release notes.
+
 ## Requirements
 
 - Windows and **.NET Framework 4.8.1** (`net481`).

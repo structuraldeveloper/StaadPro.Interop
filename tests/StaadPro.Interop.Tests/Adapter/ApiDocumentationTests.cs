@@ -138,6 +138,11 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "MaximizeStaadMainWindow", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "RestoreStaadMainWindow", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "AnalyzeEx", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetApplicationVersion", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetBaseUnit", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetInputUnitForForce", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetInputUnitForLength", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetMainWindowHandle", "root")]
         public void LoadAndRootPortHasMatchingCompleteExecutableIntelliSense(Type contractType, Type adapterType, string name, string receiver)
         {
             var xml = XDocument.Load(Path.ChangeExtension(contractType.Assembly.Location, ".xml"));
