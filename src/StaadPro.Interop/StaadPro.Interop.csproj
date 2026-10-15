@@ -52,6 +52,7 @@
     <None Include="..\..\docs\Root-Analysis-Queries.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Common-Queries.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Model-Setup.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Root-Job-Analysis-Projects.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Wrapper-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Installation.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Publishing.md" Pack="true" PackagePath="docs\" />

@@ -118,28 +118,30 @@ try {
             $entry = @($rootEntry)
             if ($entry.Count -ne 1) { throw "Missing root IntelliSense: $owner.$method" }
             foreach ($tag in @('summary','returns','remarks','example/code')) {
-                if ($tag -eq 'returns' -and $method -in @('CloseCurrentStaadModel','MinimizeStaadMainWindow','MaximizeStaadMainWindow','RestoreStaadMainWindow','SetInputUnitForLength','SetInputUnitForForce','SetShortJobInfo','UpdateStructure')) { continue }
+                if ($tag -eq 'returns' -and $method -in @('CloseCurrentStaadModel','MinimizeStaadMainWindow','MaximizeStaadMainWindow','RestoreStaadMainWindow','SetInputUnitForLength','SetInputUnitForForce','SetShortJobInfo','UpdateStructure','SetFullJobInfo','Analyze','AnalyzeModel')) { continue }
                 $node = $entry[0].SelectSingleNode($tag)
                 if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $owner.$method" }
             }
-            $snippets += "{`n" + $entry[0].SelectSingleNode('example/code').InnerText + "`n}"
+            # A current-model status example requires a named fixture after earlier close examples.
+            $exampleSetup = if ($method -eq 'GetAnalysisStatus') { "((FakeRoot)(object)root.ComObject).Filename = @`"C:\Models\Frame.v2.STD`";`n" } else { '' }
+            $snippets += "{`n" + $exampleSetup + $entry[0].SelectSingleNode('example/code').InnerText + "`n}"
             if ($rootPorting -notmatch $method -or $readme -notmatch $method) { throw "Missing packaged root guidance for $method" }
         }
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 39 } else { 78 }
+        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 45 } else { 78 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
-                if ($tag -eq 'returns' -and $entry.name -match '\.(CloseCurrentStaadModel|MinimizeStaadMainWindow|MaximizeStaadMainWindow|RestoreStaadMainWindow|SetInputUnitForLength|SetInputUnitForForce|SetShortJobInfo|UpdateStructure)(\(|$)') { continue }
+                if ($tag -eq 'returns' -and $entry.name -match '\.(CloseCurrentStaadModel|MinimizeStaadMainWindow|MaximizeStaadMainWindow|RestoreStaadMainWindow|SetInputUnitForLength|SetInputUnitForForce|SetShortJobInfo|UpdateStructure|SetFullJobInfo|Analyze|AnalyzeModel)(\(|$)') { continue }
                 $node = $entry.SelectSingleNode($tag)
                 if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $($entry.name)" }
             }
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 183) { throw "Expected 183 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 195) { throw "Expected 195 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -381,7 +383,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: 149 packaged XML examples and complete geometry/load/root IntelliSense.");
+        Console.WriteLine("PASS: 195 packaged XML examples and complete geometry/load/root IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -406,6 +408,22 @@ __EXAMPLES__
         public void OpenSTAADFile(string path) { Filename = path; }
         public void ShowApplication() { }
         public int AnalyzeEx(int silent, int hidden, int wait) { return 2; }
+        public bool IsAnalyzing() { return false; }
+        public int GetAnalysisStatus(string path, ref int warnings, ref int errors, ref double cpuSeconds)
+        {
+            warnings = 0; errors = 0; cpuSeconds = 0;
+            return 2;
+        }
+        public void GetSTAADFileFolder(ref object folder) { folder = @"C:\Models\"; }
+        public bool IsPhysicalModel() { return false; }
+        public string GetErrorMessage() { return string.Empty; }
+        public int GetProcessId() { return 1234; }
+        public object GetCONNECTEDProjectInfo(ref object projectId, ref object projectName)
+        {
+            if (!(projectId is string) || !(projectName is string)) throw new Exception("Expected BSTR project outputs.");
+            projectId = "test-project-id"; projectName = "Test project";
+            return true;
+        }
         public void GetShortJobInfo(ref object name, ref object client, ref object engineer)
         {
             if (!(name is string) || !(client is string) || !(engineer is string)) throw new Exception("Expected BSTR job outputs.");

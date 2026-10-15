@@ -111,6 +111,6 @@ Both inspected files have assembly identity `StaadPro.Interop, Version=1.0.0.0, 
 
 </details>
 
-The Release suite passes **1,190 offline tests**. New tests cover every documented/unknown status, strict native value shapes, reference argument types and order, field availability/validation, immutable snapshots, both overloads, path handling, blank sessions, instance isolation, exception propagation and matching compiled XML documentation. The Release solution build passes with zero warnings or errors.
+The Release suite passes **1,266 offline tests**. New tests cover every documented/unknown status, strict native value shapes, reference argument types and order, field availability/validation, immutable snapshots, both overloads, path handling, blank sessions, instance isolation, exception propagation and matching compiled XML documentation. The Release solution build passes with zero warnings or errors.
 
 No live STAAD model was opened, analyzed or changed. Native validation, optional version-specific analysis-message retrieval and the broader capability/version-profile engine remain pending. No NuGet package was rebuilt or published for this increment.

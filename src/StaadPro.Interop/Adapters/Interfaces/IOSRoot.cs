@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using StaadPro.Interop.Enums;
+using StaadPro.Interop.Enums.Root;
 using StaadPro.Interop.Models;
 using StaadPro.Interop.Models.Root;
 
@@ -325,6 +326,134 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// if (updateCurrentStructure) root.UpdateStructure();
         /// </code></example>
         void UpdateStructure();
+
+        /// <summary>Requests updating all thirteen job-information fields on the currently bound model.</summary>
+        /// <param name="jobName">Non-null job name, sent unchanged; empty text is permitted.</param>
+        /// <param name="jobClient">Non-null client text, sent unchanged; empty text is permitted.</param>
+        /// <param name="engineerName">Non-null originating engineer name, sent in the native engineer-name position.</param>
+        /// <param name="engineerDate">Non-null engineer date text in a format accepted by the connected STAAD instance. Sent literally; no DateTime conversion or parsing is performed.</param>
+        /// <param name="jobNumber">Non-null job number text, sent unchanged.</param>
+        /// <param name="revision">Non-null revision text, sent unchanged.</param>
+        /// <param name="part">Non-null job-part text, sent unchanged.</param>
+        /// <param name="reference">Non-null job-reference text, sent unchanged.</param>
+        /// <param name="checkerName">Non-null checker name, sent unchanged.</param>
+        /// <param name="checkerDate">Non-null checker date text accepted by the native server; empty text is sent literally.</param>
+        /// <param name="approverName">Non-null approver name, sent unchanged.</param>
+        /// <param name="approverDate">Non-null approval date text accepted by the native server; empty text is sent literally.</param>
+        /// <param name="comments">Non-null comment text, preserving Unicode, whitespace and line breaks.</param>
+        /// <remarks><para>Validates every input for null before one native SetFullJobInfo call in documented order:
+        /// name, client, engineer, engineer date, number, revision, part, reference, checker, checker date, approver, approval date, comments.
+        /// Empty and whitespace strings are permitted and sent unchanged; native field limits and clearing behavior still apply.</para>
+        /// <para>All dates are native text, not DATE values. No culture-dependent formatting, date guessing or model-factory reordering occurs.
+        /// The existing FullJobInfo DateTime-based model is not automatically serialized; callers provide native date strings explicitly.
+        /// Native acceptance of a date format and storage/persistence remain the server's responsibility.</para>
+        /// <para>The native function returns void: normal return means dispatch completed, not verified storage or save.
+        /// No automatic SaveModel, read-back, analysis, refresh, retry or rollback is added. A native error can occur after side effects.
+        /// Use the session's COM thread and serialize shared edits. Native calls can block or display dialogs.</para></remarks>
+        /// <exception cref="ArgumentNullException">Any text input is null; identifies that parameter and prevents native access.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native metadata update fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible thirteen-input SetFullJobInfo member.</exception>
+        /// <example><code>
+        /// bool updateFullJob = false; // enable only for an intended native model change
+        /// if (updateFullJob)
+        ///     root.SetFullJobInfo("Frame", "Client", "Engineer", "", "J-1", "A", "Part", "Ref", "Checker", "", "Approver", "", "Notes");
+        /// </code></example>
+        void SetFullJobInfo(string jobName, string jobClient, string engineerName, string engineerDate, string jobNumber, string revision, string part, string reference, string checkerName, string checkerDate, string approverName, string approverDate, string comments);
+
+        /// <summary>Requests analysis through the native Analyze entry point for the current model.</summary>
+        /// <remarks><para>Calls native Analyze once with no arguments. This is the documented UI-equivalent analysis request;
+        /// it is not substituted with AnalyzeEx or AnalyzeModel and no guessed analysis flags are applied.
+        /// Application silent-mode, license and native dialog behavior still apply.</para>
+        /// <para>The native return is void. Normal return does not report analysis success, completion, result availability or persistence.
+        /// Use IsAnalyzing/GetAnalysisStatus explicitly to observe state, or AnalyzeEx when its documented controls are needed.
+        /// No save, polling, timeout, wrapper refresh, retry or rollback is added. The call may block or display UI.
+        /// Use the acquired session's COM thread and serialize analysis and edits; an exception may follow a started analysis.</para></remarks>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native analysis request fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible Analyze member.</exception>
+        /// <exception cref="System.Runtime.InteropServices.InvalidComObjectException">The captured COM wrapper is no longer associated with a usable native object.</exception>
+        /// <example><code>
+        /// bool runAnalysis = false; // enable only when analysis should actually be requested
+        /// if (runAnalysis) root.Analyze();
+        /// </code></example>
+        void Analyze();
+
+        /// <summary>Requests analysis using the documented native engine selector.</summary>
+        /// <param name="engine">AnalysisEngine.StaadPro, native code -1. It is the only documented supported value and the managed default; other values are rejected before dispatch.</param>
+        /// <remarks><para>Invokes native AnalyzeModel once with an Int32 -1 engine code. The optional managed default still sends that
+        /// argument explicitly. The native void signature is confirmed by installed 2025/2026 interop metadata despite a help example
+        /// assigning a return value. No success code is fabricated or interpreted.</para>
+        /// <para>This operation is distinct from Analyze and AnalyzeEx. Normal return does not guarantee analysis completion or valid results.
+        /// No automatic save, silent-mode change, analysis-state query, polling, wrapper refresh, retry or rollback occurs.
+        /// Calls may block or display native UI. Use the session's COM thread; coordinate analysis and edits.
+        /// A failure can follow native effects, including a launched analysis.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="engine"/> is not the documented STAAD.Pro engine; rejected before native access.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native engine request fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible AnalyzeModel member.</exception>
+        /// <example><code>
+        /// bool runEngine = false; // enable only when the engine should actually be requested
+        /// if (runEngine) root.AnalyzeModel(); // sends the documented -1 engine argument
+        /// </code></example>
+        void AnalyzeModel(AnalysisEngine engine = AnalysisEngine.StaadPro);
+
+        /// <summary>Reads the native success flag and qualified CONNECTED project information from this root.</summary>
+        /// <returns>An immutable result containing IsSuccessful and project data. Project is non-null only after native success and validated string outputs; native false returns a result with null Project.</returns>
+        /// <remarks><para>Calls GetCONNECTEDProjectInfo once with two internal VARIANT references initialized as distinguishable string buffers.
+        /// Native Boolean values or integral 0/1 flags are accepted. On success, both outputs must be written strings;
+        /// text, whitespace, Unicode and explicit empty strings are preserved without GUID coercion. Other flag/output shapes throw.
+        /// On native false, partial, malformed or unwritten output buffers are not exposed as project data.</para>
+        /// <para>No public reference parameters, tuples, login prompts, project assignment, network retries or automatic save are added.
+        /// Native false does not prove why retrieval failed or that no association exists. Native exceptions remain exceptions.
+        /// Successful retrieval does not verify cloud synchronization, membership, account credentials or continued association.
+        /// Use the captured root on its COM thread and coordinate shared operations; calls may block or show server UI.</para></remarks>
+        /// <exception cref="InvalidOperationException">The native flag is malformed or a successful response contains unwritten/non-string outputs.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native project query fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible two-output GetCONNECTEDProjectInfo signature.</exception>
+        /// <example><code>
+        /// var projectResult = root.GetConnectedProjectInfo();
+        /// if (projectResult.IsSuccessful) Console.WriteLine(projectResult.Project.Name);
+        /// </code></example>
+        ConnectedProjectResult GetConnectedProjectInfo();
+
+        /// <summary>Requests assigning the supplied CONNECTED project identity to the bound model.</summary>
+        /// <param name="projectId">Non-null, non-whitespace project identifier. Preserved exactly; no GUID parsing or trimming occurs.</param>
+        /// <param name="projectName">Non-null, non-whitespace project name. Preserved exactly, including surrounding spaces and Unicode.</param>
+        /// <returns>The documented native success flag: true for Boolean true/integral one, false for Boolean false/integral zero.</returns>
+        /// <remarks><para>Validates both inputs before one SetCONNECTEDProjectInfo call in ID/name order. Native unknown or malformed
+        /// flags throw rather than becoming a successful assignment. Empty/whitespace values are intentionally rejected because
+        /// clearing/unassigning semantics are not established; this API does not provide an implicit clearing operation.</para>
+        /// <para>A true result is the native response, not verified cloud synchronization or read-back. No project creation, login,
+        /// membership change, SaveModel, project query, retry or rollback is added. Native credential/network/licensing behavior still applies;
+        /// calls may block or show server UI. Exceptions can follow native effects. Use the session's COM thread and serialize edits.</para></remarks>
+        /// <exception cref="ArgumentNullException">Either input is null; identifies the parameter and prevents native access.</exception>
+        /// <exception cref="ArgumentException">Either input is empty or whitespace-only; rejected before native access.</exception>
+        /// <exception cref="InvalidOperationException">The native return is not a Boolean or integral zero/one flag.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native assignment fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible SetCONNECTEDProjectInfo member.</exception>
+        /// <example><code>
+        /// bool assignProject = false; // enable only with an intended project identity
+        /// if (assignProject) Console.WriteLine(root.SetConnectedProjectInfo("project-id", "Project name"));
+        /// </code></example>
+        bool SetConnectedProjectInfo(string projectId, string projectName);
+
+        /// <summary>Requests assigning CONNECTED project information from an immutable managed value.</summary>
+        /// <param name="projectInfo">Non-null ConnectedProjectInfo whose ProjectId and Name contain non-whitespace text. Values obtained from a successful query can be reused after validation.</param>
+        /// <returns>The native assignment flag, with the same meaning as the two-string overload.</returns>
+        /// <remarks><para>Reuses the same data model returned by GetConnectedProjectInfo. Checks the object and fields before native access,
+        /// then delegates to the string overload. The model itself permits empty query snapshots, but assignment rejects those fields.
+        /// Does not mutate the supplied value, trim text, force GUID syntax or infer an unassignment.</para>
+        /// <para>The native response does not certify cloud synchronization or persistence. No save, read-back, login, retry or rollback is added.
+        /// Coordinate access on the session's COM thread; native calls may block, show UI or fail after effects.</para></remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="projectInfo"/> is null.</exception>
+        /// <exception cref="ArgumentException">The supplied identity or name is blank; identifies projectInfo and prevents native access.</exception>
+        /// <exception cref="InvalidOperationException">The native return flag has an unsupported shape or value.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native assignment fails; its original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The root lacks a compatible native assignment member.</exception>
+        /// <example><code>
+        /// var projectInfo = root.GetConnectedProjectInfo().Project;
+        /// bool reuseProject = false; // enable only when reassignment is intended
+        /// if (reuseProject &amp;&amp; projectInfo != null) Console.WriteLine(root.SetConnectedProjectInfo(projectInfo));
+        /// </code></example>
+        bool SetConnectedProjectInfo(ConnectedProjectInfo projectInfo);
 
         /// <summary>Reads the current model's native STAAD file path from this root session.</summary>
         /// <returns>The exact string reported by OpenSTAAD, including original case, whitespace and Unicode; an empty string when the native API reports no open filename.</returns>

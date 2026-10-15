@@ -2,23 +2,23 @@
 
 **Review date:** 15 October 2026  
 **Scope:** Installed Bentley OpenSTAAD 2026 Root reference versus the current `main` branch and its built .NET Framework assembly.  
-**Status:** The wrapper foundation and 24 documented native Root mappings are implemented. Fifteen native Root functions and version-aware capability dispatch remain pending. New contracts follow the [managed API design rules](../Root-Managed-API-Design.md); see [Wrapper-Porting](../Wrapper-Porting.md) for wrapper scope.
+**Status:** The wrapper foundation and 29 documented native Root mappings are implemented. Ten native Root functions and version-aware capability dispatch remain pending. New contracts follow the [managed API design rules](../Root-Managed-API-Design.md); see [Wrapper-Porting](../Wrapper-Porting.md) for wrapper scope.
 
-For the 2024/2025 comparison, internal service architecture and version-specific API access, see the [multi-version architecture and implementation plan](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md). Its capability-interface and unit-query interpretation proposals refine this report’s 2026-only implementation plan; the wrapper foundation, five metadata projections, common analysis observation and three model/error queries are implemented.
+For the 2024/2025 comparison, internal service architecture and version-specific API access, see the [multi-version architecture and implementation plan](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md). Its capability-interface and unit-query interpretation proposals refine this report’s 2026-only implementation plan; the wrapper foundation, metadata projections, observation, common queries, model setup and job/analysis/project operations are implemented.
 
 ## 1. Findings
 
-The supplied Root page documents **39 distinct functions**. The repository exposes **39 public methods on `IOSRoot`**, but those numbers measure different things: many adapter methods combine native operations or provide managed conveniences.
+The supplied Root page documents **39 distinct functions**. The repository exposes **45 public methods on `IOSRoot`**, but those numbers measure different things: many adapter methods combine native operations or provide managed conveniences.
 
 | Coverage category | Documented functions | Meaning |
 | --- | ---: | --- |
-| Public `IOSRoot` operations backed by the documented native function | 24 | Available through the adapter, with the qualifications below; native and managed signatures are intentionally different in several places. |
+| Public `IOSRoot` operations backed by the documented native function | 29 | Available through the adapter, with the qualifications below; native and managed signatures are intentionally different in several places. |
 | Wrapper-property projections absent from `IOSRoot` | 0 | All five now have dedicated typed Root methods; their wrapper-bound path preserves snapshot and fallback semantics. |
 | Native calls used internally, absent as public query methods | 0 | GetProcessId now has a dedicated public getter sharing the window-control PID validator. |
-| No implementation call found in current production source | 15 | Not ported, even if callers could invoke them manually through the raw COM object. |
+| No implementation call found in current production source | 10 | Not ported, even if callers could invoke them manually through the raw COM object. |
 | **Total documented Root functions** | **39** | Every function occurs once in the coverage matrix. |
 
-Consequently, **15 documented functions have no dedicated public `IOSRoot` method**; all 15 lack a production native implementation. Section 7 retains the original 30 plan entries, with P01/P02/P03/P04/P05/P06/P07/P08/P09/P11/P12/P15/P16/P18/P20 marked implemented. Existing public coverage also has contract limitations that need separate treatment; calling a native function is not proof of complete parity or live compatibility.
+Consequently, **10 documented functions have no dedicated public `IOSRoot` method**; all 10 lack a production native implementation. Section 7 retains the original 30 plan entries, with P01/P02/P03/P04/P05/P06/P07/P08/P09/P11/P12/P15/P16/P18/P19/P20/P21/P22/P23/P24 marked implemented. Existing public coverage also has contract limitations that need separate treatment; calling a native function is not proof of complete parity or live compatibility.
 
 The older **22 of 23** figure in [Root-Porting.md](../Root-Porting.md) compares this repository with the private main project's interface. It is not coverage of Bentley's 39-function reference. That private interface's remaining `RetrieveMemberForces` helper is not one of these 39 Root functions and is outside this plan.
 
@@ -53,9 +53,9 @@ Links to Bentley help target the local installed reference; their relative targe
 
 | Bentley function | Native return | Coverage | Current exposure / plan |
 | --- | --- | --- | --- |
-| [Analyze](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga646f2f0b6983135b4b3a8ded877475d7) | `void` | N | Missing. [Plan P21](#p21-analyze). |
+| [Analyze](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga646f2f0b6983135b4b3a8ded877475d7) | `void` | A | `void Analyze()`; direct native UI-equivalent analysis request, no inferred result or automatic polling. Implemented; [Plan P21](#p21-analyze). |
 | [AnalyzeEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga46f03d1be3c56877f5af4359764df907) | `long` | A | `AnalysisResult AnalyzeEx(SilentMode, HiddenMode, WaitAnalysisMode)`. |
-| [AnalyzeModel](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadaa1e36df7e6b4fe5c056ede8270987c) | `void` | N | Missing. [Plan P22](#p22-analyzemodel). |
+| [AnalyzeModel](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadaa1e36df7e6b4fe5c056ede8270987c) | `void` | A | `void AnalyzeModel(AnalysisEngine engine = AnalysisEngine.StaadPro)`; validates and sends documented -1, preserving verified void semantics. Implemented; [Plan P22](#p22-analyzemodel). |
 | [CloseSTAADFile](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaf249dc19ac760422e78351546918e65d) | `void` | A | `IOSRoot CloseSTAADFile()` and higher-level close helpers. |
 | [CreateNamedView](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaf331e2b24c0e4f4e57c2951594423b2d) | `void` | N | Missing. [Plan P25](#p25-createnamedview). |
 | [ExportModelToADINA](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga212f15a4b5984734985d197b67de4199) | `long` | N | Missing. [Plan P29](#p29-exportmodeltoadina). |
@@ -64,7 +64,7 @@ Links to Bentley help target the local installed reference; their relative targe
 | [GetAnalysisWarningMessages](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gae891bbde4b6fd5e7f3e56dbf0644386f) | `long` | N | Missing. [Plan P14](#p14-getanalysiswarningmessages). |
 | [GetApplicationVersion](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga658ee126cc9aa9c5e35866e35f60260e) | `VARIANT` | A | `OpenStaadWrapper.StaadVersion` is the cached native version; `ApplicationVersion` is the host version. Implemented; [P06](#p06-getapplicationversion). |
 | [GetBaseUnit](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga7b1d941b62f317a0bdf104d2d4436ae1) | `VARIANT` | A | `OpenStaadWrapper.BaseUnitSystem`; cached, refreshed by RefreshUnits/RefreshComObjects. Implemented; [P02](#p02-getbaseunit). |
-| [GetCONNECTEDProjectInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gab92e524c05abdf5e59e54adc95e0c9b0) | `VARIANT` | N | Missing. [Plan P23](#p23-getconnectedprojectinfo). |
+| [GetCONNECTEDProjectInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gab92e524c05abdf5e59e54adc95e0c9b0) | `VARIANT` | A | `ConnectedProjectResult GetConnectedProjectInfo()`; native success and qualified immutable project data, with internal reference buffers. Implemented; [Plan P23](#p23-getconnectedprojectinfo). |
 | [GetErrorMessage](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gab804cd4718b6a369ce6fb396c2df560d) | `VARIANT` | A | `string GetErrorMessage()`; exact native message read, with explicit empty text preserved and native error-state behavior documented. Implemented; [Plan P07](#p07-geterrormessage). |
 | [GetFullJobInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga558ddaf8c6aa1913ed2ca06fd22beddd) | `void` | A | `FullJobInfo GetFullJobInfo()`; dates parsed with current culture. |
 | [GetInputUnitForForce](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gabcc3db5863da3b119b2c5bd4a740f0cd) | `VARIANT` | A | `OpenStaadWrapper.InputForceUnit`; ref-output parsing and documented base-system fallback. Implemented; [P04](#p04-getinputunitforforce). |
@@ -84,8 +84,8 @@ Links to Bentley help target the local installed reference; their relative targe
 | [RemoveNamedView](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gacd98d0159150ffada6b7e62f2e1687d4) | `void` | N | Missing. [Plan P27](#p27-removenamedview). |
 | [SaveModel](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga2984f37b5dde4651ffa18deacf441645) | `void` | A | `IOSRoot SaveModel(SilentMode)`; request, no persistence verification. |
 | [SaveNamedView](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaeca040a52040da606a81af5407aa464e) | `void` | N | Missing. [Plan P26](#p26-savenamedview). |
-| [SetCONNECTEDProjectInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga61d5d3fc321d74be1ede4c318426b9f6) | `VARIANT` | N | Missing. [Plan P24](#p24-setconnectedprojectinfo). |
-| [SetFullJobInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga519b55d96da3c901a6b4149a77480c9b) | `void` | N | Missing. [Plan P19](#p19-setfulljobinfo). |
+| [SetCONNECTEDProjectInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga61d5d3fc321d74be1ede4c318426b9f6) | `VARIANT` | A | `bool SetConnectedProjectInfo(string projectId, string projectName)` and value-object overload; validates nonblank fields and preserves native flag. Implemented; [Plan P24](#p24-setconnectedprojectinfo). |
+| [SetFullJobInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga519b55d96da3c901a6b4149a77480c9b) | `void` | A | `void SetFullJobInfo(...)`; validates thirteen non-null native text fields, preserving date strings without formatting. Implemented; [Plan P19](#p19-setfulljobinfo). |
 | [SetInputUnitForForce](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga0d92e92cebdffc1dbf951d07f8d29f1e) | `void` | A | `void SetInputUnitForForce(ForceInputUnit forceUnit)`; independent native request with defined-enum validation. Implemented; [Plan P16](#p16-setinputunitforforce). |
 | [SetInputUnitForLength](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga6bc9354604b80ca54912ec586c4ff931) | `void` | A | `void SetInputUnitForLength(LengthInputUnit lengthUnit)`; independent native request, including documented feet alias code 1. Implemented; [Plan P15](#p15-setinputunitforlength). |
 | [SetInputUnits](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga287a24364161a41879432ebc256faea6) | `void` | A | `SetInputUnitsEx(LengthInputUnit, ForceInputUnit)`; code 1 length alias absent. |
@@ -93,7 +93,7 @@ Links to Bentley help target the local installed reference; their relative targe
 | [SetSilentMode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga21f063c7c8882dc7af286e5b18db11e0) | `VARIANT` | A | `bool SetSilentMode(SilentMode)`; previous native state discarded. |
 | [UpdateStructure](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gaaf431f1bfbee142cd7d55d454d56d995) | `void` | A | `void UpdateStructure()`; one explicit native update request, with no added save/analysis/refresh. Implemented; [Plan P20](#p20-updatestructure). |
 
-## 4. What the current 39 adapter methods implement
+## 4. What the current 45 adapter methods implement
 
 | Current public signature | Implementation and limits |
 | --- | --- |
@@ -105,6 +105,12 @@ Links to Bentley help target the local installed reference; their relative targe
 | `string GetStaadFileFolder()` | One native void reference-output read; exact directory text, no derivation/normalization/filesystem check. |
 | `bool IsPhysicalModel()` | One native predicate with strict Boolean or integral 0/1 validation. |
 | `string GetErrorMessage()` | One explicit native message read; native error-state consumption remains unspecified. |
+| `void SetFullJobInfo(...)` | Thirteen validated native strings in exact order; no date formatting, save or read-back. |
+| `void Analyze()` | One direct native analysis request; no substituted flags or completion inference. |
+| `void AnalyzeModel(AnalysisEngine engine = AnalysisEngine.StaadPro)` | One native -1 engine request; typed selector, void completion contract. |
+| `ConnectedProjectResult GetConnectedProjectInfo()` | One query returning native success plus qualified project data; no public reference parameters. |
+| `bool SetConnectedProjectInfo(string projectId, string projectName)` | One validated ID/name assignment, returning the native flag. |
+| `bool SetConnectedProjectInfo(ConnectedProjectInfo projectInfo)` | Reuse immutable query data and delegate; no additional query. |
 | `uint GetProcessId()` | One live same-root PID query; shares strict positive UInt32 validation with window control. |
 | `void SetInputUnitForLength(LengthInputUnit lengthUnit)` | Validate codes 0–7 including feet alias 1, then one independent native length request. |
 | `void SetInputUnitForForce(ForceInputUnit forceUnit)` | Validate the enum, then one independent native force request. |
@@ -137,7 +143,7 @@ Links to Bentley help target the local installed reference; their relative targe
 | `void RestoreStaadMainWindow()` | Same validation, posts command 9. Window-state requests do not prove final UI state. |
 | `AnalysisResult AnalyzeEx(SilentMode silentMode, HiddenMode hiddenMode, WaitAnalysisMode waitMode)` | Sends three integer 0/1 flags, validates integer response and preserves unrecognized in-range status values. Wait mode can block. |
 
-The original 13 convenience/extra operations are five derived filename/identity queries, ShowApplication, both polling/open helpers, both close/rewrite helpers and three window-state operations. The current-model analysis-status and ShortJobInfo-object overloads add two convenience signatures. Together with 24 native-backed mappings, these give 39 public methods; this does not mean all 39 native functions are implemented. Constructors and ComObject are not counted as functions.
+The original 13 convenience/extra operations are five derived filename/identity queries, ShowApplication, both polling/open helpers, both close/rewrite helpers and three window-state operations. The current-model analysis-status, ShortJobInfo-object and ConnectedProjectInfo-object overloads add three convenience signatures. Together with 29 native-backed mappings, these give 45 public methods; this does not mean all 39 native functions are implemented. Constructors and ComObject are not counted as functions.
 
 ## 5. Contract gaps and ambiguities found during the review
 
@@ -190,7 +196,7 @@ The completed wrapper now supplies the source-compatible `ApplicationVersion` mo
 | Proposed type | Intended fields / semantics |
 | --- | --- |
 | `AnalysisStatusResult` | `int NativeStatus`, nullable recognized analysis state (including invalid path), explicitly defined query success, nullable `int WarningCount`, nullable `int ErrorCount`, nullable `double CpuTimeSeconds`; distinguish failed retrieval, analysis outcome and unavailable fields from real zero values. |
-| `ConnectedProjectInfo` | `string ProjectId`, `string Name`; returned only for a successful native query. Project ID remains text until its accepted format is verified. |
+| `ConnectedProjectInfo` (implemented) | Immutable `string ProjectId` and `string Name`; query data is returned only on success. The assignment overload reuses this type. Project ID remains exact text rather than a guessed GUID contract. |
 | `NamedViewEntityType` | Documented values only: Node 0, Beam 1, Plate 2, Solid 3, Surface 4. |
 | `AdinaAxisSystem` | Preserve 0, YUp 1, ZUp 2; names describe the documented export convention. |
 | `AdinaLoadCaseHandling` | MultipleCases 0, TimeHistory 1. |
@@ -635,6 +641,8 @@ void OpenSTAADUI::SetShortJobInfo ( const VARIANT FAR & jobName , const VARIANT 
 
 ### P19 — SetFullJobInfo
 
+**Implementation status:** Implemented with matching interface/adapter XML and offline tests. See the [job/analysis/project guide](../Root-Job-Analysis-Projects.md).
+
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga519b55d96da3c901a6b4149a77480c9b)
 
 ```cpp
@@ -659,9 +667,9 @@ void OpenSTAADUI::SetFullJobInfo ( const VARIANT FAR & jobName , const VARIANT F
 
 **Return contract:** Native void. All thirteen inputs are const VARIANT references carrying strings, including the three dates.
 
-**Proposed managed signature:** `void SetFullJobInfo(string jobName, string jobClient, string engineerName, string engineerDate, string jobNumber, string revision, string part, string reference, string checkerName, string checkerDate, string approverName, string approverDate, string comments)`.
+**Implemented managed signature:** `void SetFullJobInfo(string jobName, string jobClient, string engineerName, string engineerDate, string jobNumber, string revision, string part, string reference, string checkerName, string checkerDate, string approverName, string approverDate, string comments)`.
 
-**Implementation:** Validate and snapshot all thirteen inputs before one dispatch. Proposed policy rejects null, allows explicit empty text and preserves supplied date strings without culture-dependent formatting. Parameter order must follow this table, not FullJobInfo.From, whose parameter order is different. The public engineerName/engineerDate aliases map to native enggName/eDate. Do not add a DateTime-based DTO overload until accepted native date formats and unspecified-date behavior are verified. No implicit save or rollback promise.
+**Implementation:** Validate all thirteen immutable string inputs before one dispatch. The implemented policy rejects null, allows explicit empty text and preserves supplied date strings without culture-dependent formatting. Parameter order must follow this table, not FullJobInfo.From, whose parameter order is different. The public engineerName/engineerDate aliases map to native enggName/eDate. Do not add a DateTime-based DTO overload until accepted native date formats and unspecified-date behavior are verified. No implicit save or rollback promise.
 
 **Verification:** Use thirteen distinct marker strings to prove order, including all three dates; reject each invalid/null input before dispatch. Test empty dates, Unicode/multiline comments and exceptions. Live-roundtrip valid dates under multiple cultures; inspect raw native fields when the existing date-parsing getter cannot preserve their original text.
 
@@ -691,6 +699,8 @@ void OpenSTAADUI::UpdateStructure ( );
 
 ### P21 — Analyze
 
+**Implementation status:** Implemented with matching interface/adapter XML and offline tests. See the [job/analysis/project guide](../Root-Job-Analysis-Projects.md).
+
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga646f2f0b6983135b4b3a8ded877475d7)
 
 ```cpp
@@ -701,7 +711,7 @@ void OpenSTAADUI::Analyze ( );
 
 **Return contract:** Native void; analyzes the currently open .STD model, corresponding to the UI analysis operation. No status is returned by this method.
 
-**Proposed managed signature:** `void Analyze()`.
+**Implemented managed signature:** `void Analyze()`.
 
 **Implementation:** Call native Analyze once rather than silently routing to AnalyzeEx with guessed defaults. Do not assume blocking, result availability or clean completion. Document interaction with application silent mode and link to AnalyzeEx/IsAnalyzing/GetAnalysisStatus for callers needing control and observation. Never start analysis from a query or retry a request of uncertain completion.
 
@@ -710,6 +720,8 @@ void OpenSTAADUI::Analyze ( );
 <a id="p22-analyzemodel"></a>
 
 ### P22 — AnalyzeModel
+
+**Implementation status:** Implemented with matching interface/adapter XML and offline tests. See the [job/analysis/project guide](../Root-Job-Analysis-Projects.md).
 
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gadaa1e36df7e6b4fe5c056ede8270987c)
 
@@ -721,17 +733,19 @@ void OpenSTAADUI::AnalyzeModel ( const VARIANT FAR & varEngine );
 | --- | --- | --- |
 | `varEngine` | Input | const VARIANT reference; the only documented engine value is -1, launching the STAAD.Pro engine. |
 
-**Return contract:** Native declaration is void despite an inconsistent C# example assigning a result. Proposed managed return is void until typelib/live evidence says otherwise.
+**Return contract:** Native declaration is void despite an inconsistent C# example assigning a result. Managed return is void, confirmed by read-only inspection of installed 2025/2026 interop signatures.
 
-**Proposed managed signature:** `void AnalyzeModel(int engine = -1)`.
+**Implemented managed signature:** `void AnalyzeModel(AnalysisEngine engine = AnalysisEngine.StaadPro)`.
 
-**Implementation:** Validate engine == -1 before a single integer dispatch. Keep the optional managed default explicit in XML; it is a proposal, not evidence of a native optional argument. Do not invent alternate engine IDs or equate this operation's behavior to AnalyzeEx. Resolve the signature discrepancy before release.
+**Implementation:** Validate the only documented AnalysisEngine.StaadPro value (-1) before a single integer dispatch. The managed optional default is explicit in XML and still sends a required native argument. Do not invent alternate engine IDs or equate this operation's behavior to AnalyzeEx. The managed interop signature resolves the return-type discrepancy in favor of void; native timing/UI behavior remains unverified.
 
 **Verification:** Check accepted -1, invalid 0/positive/other-negative inputs rejected before dispatch, argument type/order and native failures. Live-confirm return contract, dialogs and behavior on valid, invalid and blank models.
 
 <a id="p23-getconnectedprojectinfo"></a>
 
 ### P23 — GetCONNECTEDProjectInfo
+
+**Implementation status:** Implemented with matching interface/adapter XML and offline tests. See the [job/analysis/project guide](../Root-Job-Analysis-Projects.md).
 
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#gab92e524c05abdf5e59e54adc95e0c9b0)
 
@@ -746,15 +760,17 @@ VARIANT OpenSTAADUI::GetCONNECTEDProjectInfo ( VARIANT FAR & szProjID , VARIANT 
 
 **Return contract:** Native VARIANT 1 = true, 0 = false. The result class retains the verified flag and exposes project data only on native success.
 
-**Proposed managed signature:** `ConnectedProjectResult GetConnectedProjectInfo()`.
+**Implemented managed signature:** `ConnectedProjectResult GetConnectedProjectInfo()`.
 
-**Implementation:** Initialize reference string outputs, call once, and strictly validate the status. On true, require valid string outputs before returning a DTO; on false, do not present partial/unwritten text as valid project information. Preserve ID and name as supplied; do not force GUID formatting without evidence. Native false is not the same as a COM exception. No account login, assignment or network retry is implied.
+**Implementation:** Initialize reference string outputs, call once, and strictly validate the status. On true, require valid string outputs before returning immutable project data; on false, do not present partial/unwritten text as valid project information. Preserve ID and name as supplied; do not force GUID formatting without evidence. Native false is not the same as a COM exception. No account login, assignment or network retry is implied.
 
 **Verification:** Check true/false/unknown/malformed flags, correct output order, unwritten outputs on success, false with partial outputs, Unicode and exceptions. Live-check assigned/unassigned projects and signed-out/offline conditions without modifying account settings.
 
 <a id="p24-setconnectedprojectinfo"></a>
 
 ### P24 — SetCONNECTEDProjectInfo
+
+**Implementation status:** Implemented with matching interface/adapter XML and offline tests. See the [job/analysis/project guide](../Root-Job-Analysis-Projects.md).
 
 [Native reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___root.html#ga61d5d3fc321d74be1ede4c318426b9f6)
 
@@ -767,11 +783,11 @@ VARIANT OpenSTAADUI::SetCONNECTEDProjectInfo ( const VARIANT FAR & szProjID , co
 | `szProjID` | Input | const VARIANT(text) reference; CONNECTED project ID. |
 | `szName` | Input | const VARIANT(text) reference; CONNECTED project name. |
 
-**Return contract:** Native VARIANT 1 = true, 0 = false; proposed bool reports that documented native result, not an independently verified cloud synchronization outcome.
+**Return contract:** Native VARIANT 1 = true, 0 = false; managed bool reports that documented native result, not an independently verified cloud synchronization outcome.
 
-**Proposed managed signature:** `bool SetConnectedProjectInfo(string projectId, string projectName)`.
+**Implemented managed signature:** `bool SetConnectedProjectInfo(string projectId, string projectName)` and `bool SetConnectedProjectInfo(ConnectedProjectInfo projectInfo)`.
 
-**Implementation:** Validate both strings and native flag shape. Proposed policy rejects null; determine whether empty values clear the association before permitting/documenting that operation. Keep ID as text, do not claim the API creates a project or updates cloud membership, and do not silently save the model. Document credentials/network dependencies established by native validation.
+**Implementation:** Validate both strings and native flag shape. Managed policy rejects null and whitespace-only fields before dispatch; empty-value clearing/unassignment remains unverified and is not exposed implicitly. Keep ID as text, do not claim the API creates a project or updates cloud membership, and do not silently save the model. Document credentials/network dependencies established by native validation.
 
 **Verification:** Check argument order, null rejection, empty-value policy, true/false/invalid flags and exceptions. Live-roundtrip a test association and restore it with explicit test setup/teardown; test unavailable project and offline behavior.
 
@@ -927,12 +943,12 @@ Do not start by copying all missing methods mechanically. First settle the contr
 | 1 — Model/application queries | P01 GetSTAADFileFolder; P02 GetBaseUnit; P03 GetInputUnitForLength; P04 GetInputUnitForForce; P05 IsPhysicalModel; P06 GetApplicationVersion; P07 GetErrorMessage; P08 GetProcessId; P09 GetMainWindowHandle. | Implement reusable strict string/integer/flag/pointer conversion helpers and query DTOs. Exercise named/blank models and independent sessions. Handle GetErrorMessage state behavior explicitly. |
 | 2 — Analysis observation | P11 IsAnalyzing; P12 GetAnalysisStatus; P13 GetAnalysisErrorMessages; P14 GetAnalysisWarningMessages. | P12 precedes message allocation. Establish per-status output validity, BSTR SAFEARRAY behavior and bounded handling of count/read races. Queries must not start analysis. |
 | 3 — Unit and model-information mutations | P15 SetInputUnitForLength; P16 SetInputUnitForForce; P18 SetShortJobInfo; P19 SetFullJobInfo; P20 UpdateStructure. | Use stage-1 readers for verification. Validate complete arguments before mutation. Establish date-text handling and update semantics; verify persistence separately from native completion. |
-| 4 — Creation and analysis requests | P17 NewSTAADFile; P21 Analyze; P22 AnalyzeModel. | Creation needs stage-0 overwrite/current-model decisions and stage-1 identity/unit checks. Analysis requests use stage-2 observation for test verification, not implicit retry. Resolve AnalyzeModel void/example inconsistency. |
+| 4 — Creation and analysis requests | P17 NewSTAADFile; P21 Analyze; P22 AnalyzeModel. | Creation needs stage-0 overwrite/current-model decisions and stage-1 identity/unit checks. Analysis requests use stage-2 observation for test verification, not implicit retry. Analyze/AnalyzeModel are implemented; the void/example inconsistency was resolved using installed managed interop signatures. Native runtime validation remains pending. |
 | 5 — Project integration and export | P23 GetCONNECTEDProjectInfo; P24 SetCONNECTEDProjectInfo; P29 ExportModelToADINA. | Getter before setter; use explicit disposable project/model fixtures. Resolve export destinations and overwrite behavior. Preserve return codes and model-only versus cloud effects. |
 | 6 — Named views | P25 CreateNamedView; P26 SaveNamedView; P28 ModifyNamedView; P27 RemoveNamedView. | Creation/modification flags, error directions/codes and entity array shape must be established before this stage. Creation before modification/removal provides test fixtures; cover every supported entity qualifier. |
 | 7 — Opaque native handles and shutdown | P10 GetProcessHandle; P30 Quit. | Handle API stays deferred if client validity/ownership cannot be established. Test shutdown only in a disposable dedicated process, after all non-destructive validation. Never alter disposal behavior. |
 
-Five metadata methods P02/P03/P04/P06/P09 and analysis observation functions P11/P12 are implemented with public contracts, XML and tests. P12 also has a current-model overload. Common queries P01/P05/P07 are now implemented. P08 process identity and P15/P16/P18/P20 model-setup operations are now implemented, including a ShortJobInfo overload. The remaining plan follows the managed result-object design rules.
+Five metadata methods P02/P03/P04/P06/P09 and analysis observation functions P11/P12 are implemented with public contracts, XML and tests. P12 also has a current-model overload. Common queries P01/P05/P07 are now implemented. P08 process identity and P15/P16/P18/P20 model-setup operations are now implemented, including a ShortJobInfo overload. P19/P21/P22/P23/P24 are now implemented, including a project-value assignment overload. The remaining plan follows the managed result-object design rules.
 
 Optional follow-up work on already covered native functions is separate: expose the native filename flag if needed, expose previous silent mode under a new name if needed, and decide how to extend existing unit setters without changing established behavior unexpectedly. None of these changes is authorized by this review alone.
 

@@ -10,7 +10,7 @@ The main project's `IOSRoot` exposes 23 methods. This repository now implements 
 
 Reference source: `ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSRoot.cs` and `Adapters/Models/OSRootAdapter.cs`, main-project commit `3f930d742f972c27d961f0e8eff9f1e11c520ff2`. Function names and signatures are preserved. The constructor accepts the raw root as an object and `ComObject` remains dynamic so no proprietary Bentley assembly is needed to build/install this package. The main project was not changed.
 
-The first Root increment added five vendor metadata queries beyond the private interface: GetApplicationVersion, GetBaseUnit, GetInputUnitForForce, GetInputUnitForLength and GetMainWindowHandle. IOSRoot now has 39 managed methods after the metadata, analysis, common-query and model-setup increments. Wrapper-bound calls reuse snapshots; standalone bindings read the same supplied native root through shared helpers. See the [managed API design rules](Root-Managed-API-Design.md) and [API reference](API-Reference.md#root-adapter). These additions do not change the private-interface parity count below.
+The first Root increment added five vendor metadata queries beyond the private interface: GetApplicationVersion, GetBaseUnit, GetInputUnitForForce, GetInputUnitForLength and GetMainWindowHandle. IOSRoot now has 45 managed methods after the metadata, analysis, common-query, model-setup and job/project increments. Wrapper-bound calls reuse snapshots; standalone bindings read the same supplied native root through shared helpers. See the [managed API design rules](Root-Managed-API-Design.md) and [API reference](API-Reference.md#root-adapter). These additions do not change the private-interface parity count below.
 
 ## Analysis observation
 
@@ -23,6 +23,10 @@ GetStaadFileFolder, IsPhysicalModel and GetErrorMessage are now implemented with
 ## Process identity and model setup
 
 GetProcessId, SetInputUnitForLength, SetInputUnitForForce, SetShortJobInfo and UpdateStructure are implemented. SetShortJobInfo also accepts the existing ShortJobInfo model. Native mutations return void and add no save, retry or cache refresh; PID reads share strict validation with window control. See the [model setup guide](Root-Model-Setup.md). These are five additional native mappings and six managed signatures, distinct from private-source parity.
+
+## Full job metadata, analysis requests and CONNECTED projects
+
+SetFullJobInfo, Analyze, AnalyzeModel, GetConnectedProjectInfo and SetConnectedProjectInfo are implemented. The project setter also accepts ConnectedProjectInfo. Full-job fields preserve native text and date strings; analysis requests retain verified void semantics, with a typed AnalysisEngine selector. Project retrieval returns immutable status/data with no public reference parameters. See the [job/analysis/project guide](Root-Job-Analysis-Projects.md) for inputs, flags, exceptions, examples and verification limits. These five native mappings and six managed signatures do not change private-source parity.
 
 ## Ported functions
 

@@ -394,6 +394,12 @@ namespace StaadPro.Interop.Tests.Adapter
             public void SetShortJobInfo(string jobName, string jobClient, string engineerName) => throw new NotSupportedException();
             public void SetShortJobInfo(StaadPro.Interop.Models.ShortJobInfo jobInfo) => throw new NotSupportedException();
             public void UpdateStructure() => throw new NotSupportedException();
+            public void SetFullJobInfo(string jobName, string jobClient, string engineerName, string engineerDate, string jobNumber, string revision, string part, string reference, string checkerName, string checkerDate, string approverName, string approverDate, string comments) => throw new NotSupportedException();
+            public void Analyze() => throw new NotSupportedException();
+            public void AnalyzeModel(StaadPro.Interop.Enums.Root.AnalysisEngine engine = StaadPro.Interop.Enums.Root.AnalysisEngine.StaadPro) => throw new NotSupportedException();
+            public StaadPro.Interop.Models.Root.ConnectedProjectResult GetConnectedProjectInfo() => throw new NotSupportedException();
+            public bool SetConnectedProjectInfo(string projectId, string projectName) => throw new NotSupportedException();
+            public bool SetConnectedProjectInfo(StaadPro.Interop.Models.Root.ConnectedProjectInfo projectInfo) => throw new NotSupportedException();
             public StaadPro.Interop.Models.Root.AnalysisStatusResult GetAnalysisStatus() => throw new NotSupportedException();
             public StaadPro.Interop.Models.Root.AnalysisStatusResult GetAnalysisStatus(string modelFilePath) => throw new NotSupportedException();
             public string GetStaadFileFullPath() => throw new NotSupportedException();

@@ -152,6 +152,11 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SetInputUnitForForce", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SetShortJobInfo", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "UpdateStructure", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SetFullJobInfo", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "Analyze", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "AnalyzeModel", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetConnectedProjectInfo", "root")]
+        [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "SetConnectedProjectInfo", "root")]
         [TestCase(typeof(IOSRoot), typeof(OSRootAdapter), "GetAnalysisStatus", "root")]
         public void LoadAndRootPortHasMatchingCompleteExecutableIntelliSense(Type contractType, Type adapterType, string name, string receiver)
         {

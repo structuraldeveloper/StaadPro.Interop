@@ -33,7 +33,7 @@ The existing wrapper's unit fallback may provide a useful enum when a native uni
 | --- | --- |
 | `AnalysisStatusResult` (implemented) | Immutable native/typed status, query success distinct from analysis success, completion state and nullable diagnostic counts/CPU seconds. See the [implemented output policy](Root-Analysis-Queries.md#result-data-and-validity); native runtime validation remains pending. |
 | `AnalysisMessagesResult` | Raw native status, nullable recognized retrieval status, `IsSuccessful`, read-only `Messages` and queried model path. Native 1 and 0 represent retrieved messages and successful absence respectively; expected native failures expose no valid messages. Allocate and marshal arrays internally. |
-| `ConnectedProjectResult` | Verified native success flag, `IsSuccessful` and a `ConnectedProjectInfo` only on success. Preserve supplied project ID/name text. |
+| `ConnectedProjectResult` (implemented) | Verified native success flag, `IsSuccessful` and immutable `ConnectedProjectInfo` only on success. Preserve exact project ID/name text; false returns no partial data. See the [job/analysis/project guide](Root-Job-Analysis-Projects.md). |
 | `NamedViewResult` | Raw error code and verified recognized status/success semantics. Release remains gated on flag/error documentation and native validation. |
 | `AdinaExportResult` | Raw status, nullable recognized export status, `IsSuccessful` including documented warning success, and a separate warning indication. Do not fabricate an output path absent from the native response. |
 | `RootCapabilityResult<TCapability>` | Availability status/reason and a non-null bound interface only when granted. Unsupported capabilities return no interface; discovery/connection failures retain their explicit exception contract. No public output parameter. |
@@ -83,3 +83,7 @@ GetStaadFileFolder, IsPhysicalModel and GetErrorMessage are implemented as direc
 ## Process identity and model setup increment
 
 GetProcessId and the independent length/force setters, SetShortJobInfo and UpdateStructure are implemented. The ShortJobInfo-object overload reuses the source model, snapshots its three short fields and validates before dispatch. Native void mutations retain void semantics; no artificial result flags are introduced. Unit arguments and enum members have expanded XML, including the new length-setter policy for unnamed feet alias 1. PID conversion is shared with window validation. See the [model setup guide](Root-Model-Setup.md).
+
+## Full job, analysis request and project increment
+
+SetFullJobInfo accepts thirteen non-null strings in native order, including literal date text. The existing FullJobInfo stores DateTime values, so a write overload is deferred until native date serialization is verified. Analyze and AnalyzeModel retain the verified void contract; AnalysisEngine exposes only the documented -1 selector. CONNECTED retrieval returns immutable ConnectedProjectResult/ConnectedProjectInfo snapshots, while assignment returns the native Boolean flag and accepts either two strings or the same project data class. All assignment inputs are validated before native access. Services share unchanged contracts across the reviewed versions. No capability engine or public reference outputs were introduced. See the [complete guide](Root-Job-Analysis-Projects.md).

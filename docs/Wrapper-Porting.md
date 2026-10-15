@@ -18,7 +18,7 @@ The source's Bentley COM types are represented by object/dynamic, matching this 
 | `InputLengthUnit` | Cached source-compatible parsed/fallback length unit. |
 | `IsDedicated` | Caller-supplied dedication flag; no process ownership. |
 | `RawOpenStaad` | Original acquired root as object; null after disposal. |
-| `Root` | Root binding with 39 managed methods: the original 22 and subsequent metadata, analysis, common-query and model-setup additions. |
+| `Root` | Root binding with 45 managed methods: the original 22 and subsequent metadata, observation, query, model-setup, analysis-request and project additions. |
 | `RawGeometry` | Captures native Geometry interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `Geometry` | Existing implemented Geometry adapter. |
 | `RawLoad` | Captures native Load interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
@@ -141,7 +141,7 @@ Construction and refresh do not show host UI or launch/close STAAD. The default 
 ## 5. Validation and release boundary
 
 - Release net481 build succeeds, with compiled XML for the new members.
-- **1,190 offline tests pass**, including source-property parity, two constructors, all raw bindings/placeholders, native versus host version, cache/refresh behavior, service injection, unit aliases/fallbacks, malformed values, bound-instance handles and disposal. The explicit live-provider test is not run by the normal suite.
+- **1,266 offline tests pass**, including source-property parity, two constructors, all raw bindings/placeholders, native versus host version, cache/refresh behavior, service injection, unit aliases/fallbacks, malformed values, bound-instance handles and disposal. The explicit live-provider test is not run by the normal suite.
 - All 30 source property names and the three source public method names are present. The legacy single-constructor test was updated to require the source's two constructor forms.
 - The source wrapper fingerprint was compared before/after the port and is unchanged. The main project was never built or modified.
 - No native STAAD compatibility test, additional domain-function port, version-profile engine, capability implementation, NuGet package rebuild or publication was performed. Subsequent increments added five Root metadata queries and two common analysis observation functions with a current-model overload; see the [analysis guide](Root-Analysis-Queries.md). Three common model/error reads were added next; shared strict native conversion now lives under Services/Interop/NativeValues. The next model-setup increment added process identity and four explicit native mutation operations with a ShortJobInfo overload.
