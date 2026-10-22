@@ -106,11 +106,11 @@ try {
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         $methods = if ($owner -match 'Geometry') {
             @('CreateMultipleBeamsExtended', 'CreateMultipleNodesExtended', 'MergeNodesExtended')
-        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo', 'AddMemberLoadsFromGroupsByLoadCase', 'AddNodalLoadsFromGroupsByLoadCase', 'AddSelfweightInXYZTo', 'CreateLoadEnvelopExt', 'CreateLoadList', 'CreateLoadCombinations', 'GetLoadCombination', 'GetMemberLoadsGroupedByLoadCase', 'GetNodalLoadsGroupedByLoadCase', 'GetRepeatLoadCases', 'PopulateMemberConcentratedLoads', 'PopulateMemberConcentratedMoments', 'PopulateMemberLinearVaryingLoads', 'PopulateMemberLoads', 'PopulateMemberTrapezoidalLoads', 'PopulateMemberUniformlyDistributedLoads', 'PopulateMemberUniformMoments', 'PopulateNodalLoads', 'AddWindDefinition', 'AddWindExposure', 'AddWindIntensity', 'DeleteWindDefinition', 'DeleteAllWindDefinitions', 'AddWindDefinitionASCE7Parameters', 'ComputeWallWindPressureProfile', 'ComputeWallWindPressureProfileASCE72016', 'AddSeismicDefinition', 'ModifySeismicDefinitionParam', 'ModifySeismicDefinitionParams', 'AddSeismicDefSelfWeight', 'AddSeismicDefJointWeight', 'AddSeismicDefMemberWeight') }
+        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo', 'AddMemberLoadsFromGroupsByLoadCase', 'AddNodalLoadsFromGroupsByLoadCase', 'AddSelfweightInXYZTo', 'CreateLoadEnvelopExt', 'CreateLoadList', 'CreateLoadCombinations', 'GetLoadCombination', 'GetMemberLoadsGroupedByLoadCase', 'GetNodalLoadsGroupedByLoadCase', 'GetRepeatLoadCases', 'PopulateMemberConcentratedLoads', 'PopulateMemberConcentratedMoments', 'PopulateMemberLinearVaryingLoads', 'PopulateMemberLoads', 'PopulateMemberTrapezoidalLoads', 'PopulateMemberUniformlyDistributedLoads', 'PopulateMemberUniformMoments', 'PopulateNodalLoads', 'AddWindDefinition', 'AddWindExposure', 'AddWindIntensity', 'DeleteWindDefinition', 'DeleteAllWindDefinitions', 'AddWindDefinitionASCE7Parameters', 'ComputeWallWindPressureProfile', 'ComputeWallWindPressureProfileASCE72016', 'AddSeismicDefinition', 'ModifySeismicDefinitionParam', 'ModifySeismicDefinitionParams', 'AddSeismicDefSelfWeight', 'AddSeismicDefJointWeight', 'AddSeismicDefMemberWeight', 'AddSeismicDefMemberUniformWeight', 'AddSeismicDefMemberConcentratedWeight', 'AddSeismicDefWallArea', 'AddResponseSpectrumLoadEx', 'AddDirectAnalysisDefinitionParameter', 'AddDirectAnalysisFlexParameter', 'AddDirectAnalysisAxialParameter', 'DeleteDirectAnalysisDefinitionParameter', 'DeleteDirectAnalysisDefinition', 'AddRSLoad') }
         foreach ($method in $methods) {
             $prefix = "M:StaadPro.Interop.$owner.$method"
             $member = @($xml.doc.members.member | Where-Object { $_.name -eq $prefix -or $_.name.StartsWith($prefix + "(") })
-            $expectedOverloads = if ($method -eq 'ModifySeismicDefinitionParams') { 4 } elseif ($method -eq 'AddSeismicDefinition') { 2 } elseif ($method -in @('AddWindExposure','AddWindIntensity','AddSeismicDefJointWeight')) { 3 } elseif ($method -in @('AddAxialThermalGradientTo','AddSelfweightInXYZTo','CreateLoadEnvelopExt')) { 2 } else { 1 }
+            $expectedOverloads = if ($method -eq 'ModifySeismicDefinitionParams') { 4 } elseif ($method -eq 'AddDirectAnalysisDefinitionParameter') { 3 } elseif ($method -in @('AddSeismicDefMemberWeight', 'AddSeismicDefWallArea', 'AddResponseSpectrumLoadEx')) { 2 } elseif ($method -eq 'AddSeismicDefinition') { 2 } elseif ($method -in @('AddWindExposure','AddWindIntensity','AddSeismicDefJointWeight')) { 3 } elseif ($method -in @('AddAxialThermalGradientTo','AddSelfweightInXYZTo','CreateLoadEnvelopExt')) { 2 } else { 1 }
             if ($member.Count -ne $expectedOverloads) { throw "Missing new mutation IntelliSense: $owner.$method" }
             foreach ($entry in $member) {
                 foreach ($tag in @('summary','returns','remarks','example/code')) {
@@ -142,7 +142,7 @@ try {
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 143 } elseif ($owner -match 'Root') { 53 } else { 105 }
+        $expectedCount = if ($owner -match 'Geometry') { 143 } elseif ($owner -match 'Root') { 53 } else { 120 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -168,7 +168,7 @@ try {
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 280) { throw "Expected 280 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 310) { throw "Expected 310 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -410,7 +410,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: 280 packaged XML examples and complete geometry/load/root IntelliSense.");
+        Console.WriteLine("PASS: 310 packaged XML examples and complete geometry/load/root IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)

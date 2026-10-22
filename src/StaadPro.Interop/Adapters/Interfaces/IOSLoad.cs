@@ -13,6 +13,51 @@ namespace StaadPro.Interop.Adapters.Interfaces
     /// </summary>
     public interface IOSLoad : IOSBase
     {
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.1']/*" />
+        bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<Beam> members);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.2']/*" />
+        bool AddSeismicDefMemberUniformWeight(double weight, IEnumerable<int> memberIds, double startDistance = 0, double endDistance = 0, int seismicCode = 0);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.3']/*" />
+        bool AddSeismicDefMemberConcentratedWeight(double weight, double distance, IEnumerable<int> memberIds, int seismicCode = 0);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.4']/*" />
+        int AddSeismicDefWallArea(int seismicCode, string direction, IEnumerable<double> dimensions);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.5']/*" />
+        int AddSeismicDefWallArea(int seismicCode, SeismicWallDirection direction, IEnumerable<SeismicWallDimension> walls);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.6']/*" />
+        bool AddResponseSpectrumLoadEx(ResponseSpectrumLoadExParameters parameters);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.7']/*" />
+        bool AddResponseSpectrumLoadEx(int spectrumCode, int combinationMethod, string[] primaryParameterNames, double[] primaryParameterValues, string[] generationParameterNames = null, double[] generationParameterValues = null, double[] customDataPairs = null);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.8']/*" />
+        bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<int> memberIds, double parameterValue = 0.0);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.9']/*" />
+        bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<Beam> members, double parameterValue = 0.0);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.10']/*" />
+        bool AddDirectAnalysisFlexParameter(double flexFactor, IEnumerable<int> memberIds);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.11']/*" />
+        bool AddDirectAnalysisAxialParameter(IEnumerable<int> memberIds);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.12']/*" />
+        bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameters parameters);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.13']/*" />
+        bool DeleteDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.14']/*" />
+        bool DeleteDirectAnalysisDefinition();
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.15']/*" />
+        bool AddRSLoad(ResponseSpectrumLoadParameters parameters);
+
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.1']/*" />
         int AddWindDefinitionASCE7Parameters(ASCE7WindDefinitionParameters parameters);
 

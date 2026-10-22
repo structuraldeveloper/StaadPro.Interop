@@ -54,7 +54,7 @@ namespace StaadPro.Interop.Tests.Adapter
         public void LoadInterfaceAndAdapterExposeMatchingOverloadsAndDeletionDefaultIsExplicit()
         {
             var methods = typeof(IOSLoad).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(method => !method.IsSpecialName).ToList();
-            Assert.That(methods.Count, Is.EqualTo(105));
+            Assert.That(methods.Count, Is.EqualTo(120));
             foreach (var method in methods)
                 Assert.That(typeof(OSLoadAdapter).GetMethod(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray()), Is.Not.Null);
             Assert.That(typeof(IOSLoad).GetMethod("DeleteWindDefinition").GetParameters()[0].DefaultValue, Is.EqualTo(0));

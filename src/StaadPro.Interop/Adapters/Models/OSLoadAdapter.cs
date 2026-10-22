@@ -30,6 +30,148 @@ namespace StaadPro.Interop.Adapters.Models
         public dynamic ComObject { get; }
 
 
+        #region Remaining Seismic, Spectrum and Direct Analysis Reference Operations
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.1']/*" />
+        public bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight,
+            double startDistance, double endDistance, IEnumerable<Beam> members)
+        {
+            if (members == null) throw new ArgumentNullException(nameof(members));
+            var snapshot = members.ToArray();
+            if (snapshot.Any(member => member == null)) throw new ArgumentException("Members cannot contain null.", nameof(members));
+            return AddSeismicDefMemberWeight(seismicCode, loadType, weight, startDistance, endDistance, snapshot.Select(member => member.Id));
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.2']/*" />
+        public bool AddSeismicDefMemberUniformWeight(double weight, IEnumerable<int> memberIds,
+            double startDistance = 0, double endDistance = 0, int seismicCode = 0) =>
+            AddSeismicDefMemberWeight(seismicCode, SeismicMemberLoadType.Uniform, weight, startDistance, endDistance, memberIds);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.3']/*" />
+        public bool AddSeismicDefMemberConcentratedWeight(double weight, double distance, IEnumerable<int> memberIds, int seismicCode = 0) =>
+            AddSeismicDefMemberWeight(seismicCode, SeismicMemberLoadType.Concentrated, weight, distance, 0, memberIds);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.4']/*" />
+        public int AddSeismicDefWallArea(int seismicCode, string direction, IEnumerable<double> dimensions)
+        {
+            if (seismicCode != 15) throw new ArgumentOutOfRangeException(nameof(seismicCode), "The reviewed wall-area table uses IS1893-2016 wall code 15, not definition code 12.");
+            if (direction == null) throw new ArgumentNullException(nameof(direction));
+            string nativeDirection = direction.Trim().ToUpperInvariant();
+            if (nativeDirection != "X" && nativeDirection != "Z") throw new ArgumentException("Choose global X or Z.", nameof(direction));
+            if (dimensions == null) throw new ArgumentNullException(nameof(dimensions));
+            var values = dimensions.ToArray();
+            if (values.Length % 2 != 0) throw new ArgumentException("Supply length/thickness pairs.", nameof(dimensions));
+            foreach (double value in values)
+            {
+                LoadArguments.Finite(value, nameof(dimensions));
+                if (value <= 0) throw new ArgumentOutOfRangeException(nameof(dimensions), "Wall lengths and thicknesses must be positive.");
+            }
+            if (values.Length == 0) return 0;
+            return NativeValues.ReadInt32((object)ComObject.AddSeismicDefWallArea(seismicCode, nativeDirection, values), "AddSeismicDefWallArea status");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.5']/*" />
+        public int AddSeismicDefWallArea(int seismicCode, SeismicWallDirection direction, IEnumerable<SeismicWallDimension> walls)
+        {
+            LoadArguments.Defined(direction, nameof(direction));
+            if (walls == null) throw new ArgumentNullException(nameof(walls));
+            var snapshot = walls.ToArray();
+            var dimensions = new double[checked(snapshot.Length * 2)];
+            for (int i = 0; i < snapshot.Length; i++)
+            {
+                if (snapshot[i] == null) throw new ArgumentException("Walls cannot contain null.", nameof(walls));
+                dimensions[2 * i] = snapshot[i].Length;
+                dimensions[2 * i + 1] = snapshot[i].Thickness;
+            }
+            return AddSeismicDefWallArea(seismicCode, direction == SeismicWallDirection.X ? "X" : "Z", dimensions);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.6']/*" />
+        public bool AddResponseSpectrumLoadEx(ResponseSpectrumLoadExParameters parameters)
+        {
+            var packet = SpectrumNativePacket.Extended(parameters);
+            return SubmitExtendedSpectrum(packet);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.7']/*" />
+        public bool AddResponseSpectrumLoadEx(int spectrumCode, int combinationMethod, string[] primaryParameterNames,
+            double[] primaryParameterValues, string[] generationParameterNames = null, double[] generationParameterValues = null,
+            double[] customDataPairs = null)
+        {
+            var packet = SpectrumNativePacket.Extended(spectrumCode, combinationMethod, primaryParameterNames,
+                primaryParameterValues, generationParameterNames, generationParameterValues, customDataPairs);
+            return SubmitExtendedSpectrum(packet);
+        }
+
+        private bool SubmitExtendedSpectrum(SpectrumNativePacket packet) =>
+            LoadArguments.ReadBoolean((object)ComObject.AddResponseSpectrumLoadEx(packet.Code, packet.Combination,
+                packet.PrimaryNames, packet.PrimaryValues, packet.GenerationNames, packet.GenerationValues, packet.CustomPairs),
+                "AddResponseSpectrumLoadEx");
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.8']/*" />
+        public bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<int> memberIds, double parameterValue = 0.0)
+        {
+            LoadArguments.Defined(parameterType, nameof(parameterType));
+            LoadArguments.Finite(parameterValue, nameof(parameterValue));
+            if (parameterType == DirectAnalysisParameterType.Axial && parameterValue != 0)
+                throw new ArgumentException("AXIAL requires a zero unused scalar.", nameof(parameterValue));
+            int[] ids = SnapshotPositiveLoadIds(memberIds, nameof(memberIds));
+            if (ids.Length == 0) return true;
+            return LoadArguments.ReadBoolean((object)ComObject.AddDirectAnalysisDefinitionParameter((int)parameterType, ids, parameterValue),
+                "AddDirectAnalysisDefinitionParameter");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.9']/*" />
+        public bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<Beam> members, double parameterValue = 0.0)
+        {
+            if (members == null) throw new ArgumentNullException(nameof(members));
+            var snapshot = members.ToArray();
+            if (snapshot.Any(member => member == null)) throw new ArgumentException("Members cannot contain null.", nameof(members));
+            return AddDirectAnalysisDefinitionParameter(parameterType, snapshot.Select(member => member.Id), parameterValue);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.10']/*" />
+        public bool AddDirectAnalysisFlexParameter(double flexFactor, IEnumerable<int> memberIds) =>
+            AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType.Flex, memberIds, flexFactor);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.11']/*" />
+        public bool AddDirectAnalysisAxialParameter(IEnumerable<int> memberIds) =>
+            AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType.Axial, memberIds, 0.0);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.12']/*" />
+        public bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameters parameters)
+        {
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            if (parameters.MemberIds == null) throw new ArgumentNullException(nameof(parameters.MemberIds));
+            if (parameters.MemberIds.Count == 0) throw new ArgumentException("A model request requires at least one member ID.", nameof(parameters));
+            return AddDirectAnalysisDefinitionParameter(parameters.ParameterType, parameters.MemberIds, parameters.ParameterValue);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.13']/*" />
+        public bool DeleteDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType)
+        {
+            LoadArguments.Defined(parameterType, nameof(parameterType));
+            return LoadArguments.ReadBoolean((object)ComObject.DeleteDirectAnalysisDefinitionParameter((int)parameterType),
+                "DeleteDirectAnalysisDefinitionParameter");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.14']/*" />
+        public bool DeleteDirectAnalysisDefinition() =>
+            LoadArguments.ReadBoolean((object)ComObject.DeleteDirectAnalysisDefinition(), "DeleteDirectAnalysisDefinition");
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadCompletion15.15']/*" />
+        public bool AddRSLoad(ResponseSpectrumLoadParameters parameters)
+        {
+            var packet = SpectrumNativePacket.Legacy(parameters);
+            // All nineteen slots are by value in both inspected 2025/2026 vendor interfaces.
+            return LoadArguments.ReadBoolean((object)ComObject.AddRSLoad(packet.Code, packet.DirectionFactors, packet.Quantity,
+                packet.Scale, packet.DampingType, packet.Damping, packet.Interpolation, packet.MissingMass,
+                packet.MissingMassFactor, packet.Zpa, packet.ZpaFactor, packet.Ff1, packet.Ff1Factor, packet.Ff2,
+                packet.Ff2Factor, packet.Save, packet.Periods.Length, packet.Periods, packet.Ordinates), "AddRSLoad");
+        }
+
+        #endregion
+
         #region ASCE Wind and Seismic Definitions
 
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.1']/*" />

@@ -1,12 +1,12 @@
 # Load API porting and new assignments
 
-The private main project’s reference `IOSLoad` contains 115 method overloads. This repository now exposes 105: 100 matching reference overloads plus five repository-specific convenience overloads. There are 15 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
+The private main project’s reference `IOSLoad` contains 115 method overloads. This repository now exposes 120: 115 matching reference overloads plus five repository-specific convenience overloads. There are no main-interface reference overloads pending. Counts treat overloads separately and compare both interface and adapter method signatures.
 
-The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 105 from 115 does not give the pending reference count.
+The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 120 from 115 does not give the pending reference count.
 
 ## Cross-version native coverage review — 22 October 2026
 
-Private-source overload parity is separate from Bentley native API coverage. The installed 2024/2025/2026 Load references each document 129 functions across 24 pages. The current source dispatches 67 of those names: 61 directly in OSLoadAdapter and six through member-load entity implementations. Sixty-two documented names have no current dispatch. The inspected 2025/2026 vendor interfaces each declare another three names outside those help sections.
+Private-source overload parity is separate from Bentley native API coverage. The installed 2024/2025/2026 Load references each document 129 functions across 24 pages. The current source dispatches 73 of those names: 67 directly in OSLoadAdapter and six through member-load entity implementations. Fifty-six documented names have no current dispatch. The inspected 2025/2026 vendor interfaces each declare another three names outside those help sections.
 
 See the [Load multi-version comparison and architecture plan](reports/OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md) and [complete native contract and managed coverage inventory](reports/OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md). They include the complete matrix, version-sensitive seismic code mapping, status differences, per-function proposals, private-reference backlog and release verification gates. This review changes documentation only; its architecture and API proposals are not implemented.
 
@@ -260,22 +260,83 @@ if (definitionCreated)
 // Each call is a separate native mutation; no save or transaction is implied.
 ```
 
-## Pending reference overloads
+<a id="load-reference-completion"></a>
 
-The following inventory was compared by method name, generic arity and parameter types. It lists source signatures, including supporting types that may themselves need porting. A name already present here can still appear when a different overload is pending.
+## Completed reference port: spectrum, walls and direct analysis — 22 October 2026
 
-- `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<Beam> members)`
-- `bool AddSeismicDefMemberUniformWeight(double weight, IEnumerable<int> memberIds, double startDistance = 0, double endDistance = 0, int seismicCode = 0)`
-- `bool AddSeismicDefMemberConcentratedWeight(double weight, double distance, IEnumerable<int> memberIds, int seismicCode = 0)`
-- `int AddSeismicDefWallArea(int typeNo, string direction, IEnumerable<double> dimensions)`
-- `int AddSeismicDefWallArea(int typeNo, SeismicWallDirection direction, IEnumerable<SeismicWallDimension> walls)`
-- `bool AddResponseSpectrumLoadEx(ResponseSpectrumLoadExParameters parameters)`
-- `bool AddResponseSpectrumLoadEx(int rsaCode, int rsaCombination, string[] set1Names, double[] set1Vals, string[] set2Names = null, double[] set2Vals = null, double[] customDataPairs = null)`
-- `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType paramType, IEnumerable<int> memberIds, double param = 0.0)`
-- `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType paramType, IEnumerable<Beam> members, double param = 0.0)`
-- `bool AddDirectAnalysisFlexParameter(double flexFactor, IEnumerable<int> memberIds)`
-- `bool AddDirectAnalysisAxialParameter(IEnumerable<int> memberIds)`
-- `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameters parameters)`
-- `bool DeleteDirectAnalysisDefinitionParameter(DirectAnalysisParameterType paramType)`
-- `bool DeleteDirectAnalysisDefinition()`
-- `bool AddRSLoad(ResponseSpectrumLoadParameters parameters)`
+Ported the final **15 main-interface reference overloads**, completing **115 of 115 reference signatures**. IOSLoad and the existing non-partial OSLoadAdapter each expose **120 method overloads**, including five repository conveniences. No reference overload remains pending. This measures private-source interface parity, not complete coverage of the Bentley native manual or all adapter-only conveniences in the private project. Current native dispatch coverage is **73 of 129 documented names** (67 direct adapter targets and six delegated member-load mutations); **56 native names remain without a current dispatch**.
+
+| Function | Added overloads | Managed behavior |
+| --- | ---: | --- |
+| AddSeismicDefMemberWeight | 1 | Beam-selection overload; reuses existing checked ID path and version-sensitive code validation. |
+| AddSeismicDefMemberUniformWeight | 1 | Uniform=1; defaults start/end to 0 and native code to auto-detect 0. |
+| AddSeismicDefMemberConcentratedWeight | 1 | Concentrated=2; forwards location and zero unused end distance. |
+| AddSeismicDefWallArea | 2 | Positive length/thickness pairs, raw or typed, global X/Z; native integer status. |
+| AddResponseSpectrumLoadEx | 2 | Typed request or explicit paired arrays, Double precision, seven native arguments. |
+| AddDirectAnalysisDefinitionParameter | 3 | IDs, Beams or typed model; documented FLEX/AXIAL modes only. |
+| AddDirectAnalysisFlexParameter | 1 | Finite FLEX value and member IDs; no analysis request. |
+| AddDirectAnalysisAxialParameter | 1 | AXIAL=2 and exact zero unused scalar. |
+| DeleteDirectAnalysisDefinitionParameter | 1 | Explicit removal of FLEX=0 or AXIAL=2 parameters. |
+| DeleteDirectAnalysisDefinition | 1 | Explicit whole-definition deletion. |
+| AddRSLoad | 1 | Source request model, nineteen native slots and checked Single conversion. |
+
+New public parameters use descriptive names while preserving reference parameter types, order, return types and optional defaults. Implementations remain in the single adapter; packet capture/validation is isolated internally. OpenStaadWrapper and its properties are unchanged. Native calls stay on the caller’s COM thread; no task fan-out, case activation, save, analysis, retry or rollback is added. The main source project remained read-only.
+
+### Seismic member and wall contracts
+
+The Beam member-weight overload snapshots once, rejects null/invalid IDs, preserves ordering and duplicates, and uses IDs without reading coordinates. Both convenience methods reuse the existing ID implementation and its acquired-profile safeguards. Empty member selections retain the successful no-op behavior.
+
+The wall-area code is **15 for IS1893-2016 in the reviewed wall-area table**. It is a separate native domain from SeismicCode.IS1893_2016=12 and member-weight code values. Both wall overloads require 15, validate global X/Z, and supply ordered length/thickness pairs in current native model length units. The string direction is trimmed and uppercased invariantly. Dimensions must be finite and positive, with even array length; empty input returns integer zero without native dispatch.
+
+Wall data follows the main source’s Double-array convention. Help examples mention float arrays while the -107 error text mentions long arrays, so the managed source convention is recorded explicitly and **live native type acceptance remains unverified**. Native integer statuses are preserved, including -1, -107, -8034, -8038 and unknown codes. They are never converted to Boolean success.
+
+### Extended response spectrum
+
+Reused ResponseSpectrumLoadExParameters, SpectrumCurvePoint and the separate ResponseSpectrumCode/ModalCombinationMethod enums. Both overloads capture owned keyword/value/data arrays before one native call. Primary names and values must be non-null, nonempty and equal length. Names must be unique uppercase ASCII keywords containing letters/digits and starting with a letter. Values must be finite. Keyword syntax is checked; code-specific keyword meaning, physical suitability and the intended active case remain caller/native responsibilities.
+
+Generation names/values must both be null or both supplied with equal length. Paired empty arrays become native null. Nonempty generation data and custom spectrum data are mutually exclusive. Custom data is an even-length Double array of period/value pairs; periods are nonnegative and all values finite. Null/empty custom data is omitted. Typed dictionaries preserve key/value association through a single entry snapshot, rather than separate mutable key/value enumeration. Point order and duplicate periods remain unchanged; no sorting, interpolation, aggregation or unit conversion occurs.
+
+Extended modal codes are SRSS=0, ABS=1, CQC=2, ASCE=3, TEN=4, CSM=5 and GRP=6. These differ from the legacy AddRSLoad modal codes. Request-builder helpers retain main-source update rules: WithDirection skips magnitudes at most 1e-9 without removing an earlier factor; WithDamping and WithScale replace their named entries. Nonfinite builder inputs are rejected before updates. Mutable models must remain stable during capture.
+
+### Legacy AddRSLoad
+
+Reused ResponseSpectrumLoadParameters and its modal, quantity, damping and interpolation enums. The request must have exactly three direction factors and at least one non-null curve point. Its six float-valued scalar fields and direction/point arrays are checked before conversion from Double to native Single. Nonfinite inputs, Single overflow and nonzero values that would underflow to zero are rejected before mutation. Ordinary Single rounding is inherent; extended-spectrum inputs retain Double precision.
+
+The native call contains exactly nineteen arguments. Factors, periods and ordinates are independent Single arrays with a matching point count. Modal codes are Srss=1, Cqc=2, Absolute=3, Asce=4, Ten=5 and Csm=6. Integer flags retain explicit 0/1 values. Periods must be nonnegative; order and duplicate entries are preserved, including zero where supplied. Disabled option factors are still validated because their scalar slots are always passed.
+
+All nineteen slots are by value in the inspected 2025/2026 vendor interop metadata, despite FAR-reference notation in the C++ help. Public APIs expose no ref/out. Owned arrays prevent native in-place updates from mutating caller models. The current active load case and native quantity/scale units must be appropriate; these methods do not select or create a load case or certify spectrum engineering results.
+
+### Direct-analysis definitions
+
+Reused DirectAnalysisParameters and DirectAnalysisParameterType. Only **Flex=0** and **Axial=2** are admitted. Metadata also contains FYLD=1, but the reviewed function contract documents only FLEX and AXIAL, so FYLD is not exposed as a supported choice.
+
+IDs are snapshotted once, validated positive and kept in original order with duplicates. Beam overloads use IDs only. FLEX scalars are finite Double values with no engineering range normalization. AXIAL must pass exactly zero for the unused scalar. Raw selection overloads allow empty successful no-ops; typed model requests require a nonempty member list, matching the main model contract. Factories copy source IDs; the AXIAL constructor retains the source rule that canonicalizes its unused value to zero.
+
+The add APIs define parameters only; they do not run direct analysis. The two deletion APIs mutate the definition explicitly, without existence probing, member deletion, saving or fallback operations. Boolean families return native true/false and accept evidenced integral 0/1/-1 forms; other values/types throw rather than treating unknown errors as true. Native failures/exceptions may leave effects and are not retried.
+
+### Verification and publication boundary
+
+Passed **2,185 offline tests**, including **161 new cases**, and a Release solution build with zero warnings/errors. XML contracts cover every new interface/adapter overload, model, constructor, helper and enum member. All **310 selected source-reference XML examples compiled and executed**, with native mutations guarded. The reusable package verifier was updated for the same inventory.
+
+These are source additions after the published 1.0.0-preview.20261015 archive. No new NuGet archive was built or published. Native marshaling, numerical behavior, engineering-code applicability and licensed feature behavior remain live validation gates. Broader named-result APIs and semantic/polymorphic Load capability architecture remain separate planned work.
+
+### Usage
+
+```csharp
+// On the connected session's COM thread, with the intended case active:
+var spectrum = new StaadPro.Interop.Models.Loads.Seismic.ResponseSpectrumLoadExParameters()
+    .WithDirection(x: 1)
+    .WithDamping(0.05)
+    .WithScale(9.80665);
+spectrum.CustomSpectrumData.Add(
+    new StaadPro.Interop.Models.Loads.Seismic.SpectrumCurvePoint(0.1, 0.2));
+spectrum.CustomSpectrumData.Add(
+    new StaadPro.Interop.Models.Loads.Seismic.SpectrumCurvePoint(1.0, 0.5));
+bool added = wrapper.Load.AddResponseSpectrumLoadEx(spectrum);
+Console.WriteLine(added);
+// Native engineering/units validation and saving remain the caller's responsibility.
+```
+
+## Reference coverage status
+
+All 115 method signatures in the main project’s IOSLoad interface are implemented, plus the repository’s five convenience overloads. No reference interface overload remains pending. Additional native functions, adapter-only conveniences and broader version-aware managed API design remain separate work; see the [cross-version coverage report](reports/OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md).

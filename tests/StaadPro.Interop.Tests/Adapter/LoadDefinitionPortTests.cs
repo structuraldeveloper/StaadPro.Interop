@@ -389,7 +389,7 @@ namespace StaadPro.Interop.Tests.Adapter
             yield return new TestCaseData(new Action<IOSLoad>(l => l.AddSeismicDefMemberWeight(0, (SeismicMemberLoadType)0, 1, 0, 0, new[] { 101 })));
             yield return new TestCaseData(new Action<IOSLoad>(l => l.AddSeismicDefMemberWeight(0, SeismicMemberLoadType.Uniform, 1, -1, 0, new[] { 101 })));
             yield return new TestCaseData(new Action<IOSLoad>(l => l.AddSeismicDefMemberWeight(0, SeismicMemberLoadType.Uniform, 1, 3, 2, new[] { 101 })));
-            yield return new TestCaseData(new Action<IOSLoad>(l => l.AddSeismicDefMemberWeight(0, SeismicMemberLoadType.Uniform, 1, 0, 0, null)));
+            yield return new TestCaseData(new Action<IOSLoad>(l => l.AddSeismicDefMemberWeight(0, SeismicMemberLoadType.Uniform, 1, 0, 0, (IEnumerable<int>)null)));
             yield return new TestCaseData(new Action<IOSLoad>(l => l.AddSeismicDefMemberWeight(0, SeismicMemberLoadType.Uniform, 1, 0, 0, new[] { 101, 0 })));
         }
         [TestCaseSource(nameof(InvalidRequests))]

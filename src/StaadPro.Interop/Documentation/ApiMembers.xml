@@ -4935,5 +4935,347 @@ if (submitDefinition)
 }
       </code></example>
     </member>
+    <member name="LoadCompletion15.1">
+      <summary>Adds member seismic weight using the IDs of the supplied Beam objects.</summary>
+      <param name="seismicCode">Native code in the operation-specific domain. Member helpers default to 0 for auto-detection and reuse acquired-profile code validation; wall-area APIs require exactly 15 (IS1893-2016 wall code). Do not cast definition enums across domains.</param>
+      <param name="loadType">Defined Uniform=1 or Concentrated=2 seismic member-weight distribution.</param>
+      <param name="weight">Finite signed weight, in native force-per-length units for uniform weight and force units for concentrated weight.</param>
+      <param name="startDistance">Finite nonnegative distance from member start to weight start, in native model length units; default 0.</param>
+      <param name="endDistance">Finite nonnegative end distance from member start in native model length units; nonzero end must not precede start. Default 0.</param>
+      <param name="members">Non-null sequence of non-null Beam instances with positive IDs, snapshotted once; order and duplicates are retained. Beam coordinates are not read.</param>
+      <returns>True/false native outcome; an empty selection returns true without dispatch.</returns>
+      <remarks><para>Snapshots the Beam sequence once, rejects null entries and uses IDs only. Reuses the existing ID overload’s validation and reviewed-build restriction for explicit member codes. Code zero requests native auto-detection. A member-weight code is not a SeismicCode definition enum; integer 5 has different meanings in the reviewed 2024 versus 2025/2026 member tables.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefMemberWeight(0, StaadPro.Interop.Models.Loads.Seismic.SeismicMemberLoadType.Uniform, 2.5, 0, 0, new[] { new StaadPro.Interop.Entities.Beam(101, new StaadPro.Interop.Entities.Node(1, 0, 0, 0), new StaadPro.Interop.Entities.Node(2, 1, 0, 0)) });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.2">
+      <summary>Adds uniformly distributed member weight to the native seismic definition.</summary>
+      <param name="weight">Finite signed weight, in native force-per-length units for uniform weight and force units for concentrated weight.</param>
+      <param name="memberIds">Non-null positive member-ID sequence, snapshotted once; order and duplicates are retained. Raw sequence overloads permit empty successful no-ops.</param>
+      <param name="startDistance">Finite nonnegative distance from member start to weight start, in native model length units; default 0.</param>
+      <param name="endDistance">Finite nonnegative end distance from member start in native model length units; nonzero end must not precede start. Default 0.</param>
+      <param name="seismicCode">Native code in the operation-specific domain. Member helpers default to 0 for auto-detection and reuse acquired-profile code validation; wall-area APIs require exactly 15 (IS1893-2016 wall code). Do not cast definition enums across domains.</param>
+      <returns>True/false native result; an empty ID sequence returns true without dispatch.</returns>
+      <remarks><para>Delegates to the checked member-weight implementation with Uniform=1. Defaults startDistance=endDistance=0 describe full length and seismicCode=0 requests auto-detection. Order/duplicates are retained; signed finite weight is forwarded in native force-per-length units.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefMemberUniformWeight(2.5, new[] { 101, 102 });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.3">
+      <summary>Adds concentrated member weight to the native seismic definition.</summary>
+      <param name="weight">Finite signed weight, in native force-per-length units for uniform weight and force units for concentrated weight.</param>
+      <param name="distance">Finite nonnegative concentrated-weight location from the member start, in native model length units.</param>
+      <param name="memberIds">Non-null positive member-ID sequence, snapshotted once; order and duplicates are retained. Raw sequence overloads permit empty successful no-ops.</param>
+      <param name="seismicCode">Native code in the operation-specific domain. Member helpers default to 0 for auto-detection and reuse acquired-profile code validation; wall-area APIs require exactly 15 (IS1893-2016 wall code). Do not cast definition enums across domains.</param>
+      <returns>True/false native result; an empty ID sequence returns true without dispatch.</returns>
+      <remarks><para>Delegates with Concentrated=2, the supplied distance and a zero unused end-distance slot. Weight uses native force units; distance uses native model length units. The default seismic code zero requests auto-detection.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefMemberConcentratedWeight(2.5, 1.25, new[] { 101, 102 });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.4">
+      <summary>Adds length/thickness wall-area data in the selected global direction to an existing seismic definition.</summary>
+      <param name="seismicCode">Native code in the operation-specific domain. Member helpers default to 0 for auto-detection and reuse acquired-profile code validation; wall-area APIs require exactly 15 (IS1893-2016 wall code). Do not cast definition enums across domains.</param>
+      <param name="direction">Global X or Z: a defined SeismicWallDirection or case-insensitive string trimmed and uppercased invariantly.</param>
+      <param name="dimensions">Non-null finite positive length/thickness pairs in current model length units; even element count required. Empty means a no-op.</param>
+      <returns>Original native integer status: 0 success; nonzero codes (including unknown ones) are returned unchanged. Empty data returns 0 without native dispatch.</returns>
+      <remarks><para>The reviewed wall-area table identifies IS1893-2016 with wall code 15. This differs from definition code 12 and member-weight code domains; other codes are rejected before dispatch. Direction is trimmed and uppercased invariantly, then must be X or Z. Dimensions are snapshotted once as positive finite length/thickness pairs, in native model length units, with order/duplicates preserved. Sends a Double array following the source implementation; native help examples mention float and its -107 error mentions long arrays inconsistently, so native type acceptance remains a verification requirement. No engineering-code substitution is attempted.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefWallArea(15, &quot;X&quot;, new[] { 4.0, 0.25 });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.5">
+      <summary>Adds typed wall dimension pairs in global X or Z to an existing seismic definition.</summary>
+      <param name="seismicCode">Native code in the operation-specific domain. Member helpers default to 0 for auto-detection and reuse acquired-profile code validation; wall-area APIs require exactly 15 (IS1893-2016 wall code). Do not cast definition enums across domains.</param>
+      <param name="direction">Global X or Z: a defined SeismicWallDirection or case-insensitive string trimmed and uppercased invariantly.</param>
+      <param name="walls">Non-null sequence of non-null wall dimension models with positive finite length and thickness. Snapshotted once; empty means a no-op.</param>
+      <returns>Native Int32 status unchanged, or 0 for a successful empty no-op.</returns>
+      <remarks><para>Validates a defined direction enum and snapshots the non-null wall sequence once. Flattens each non-null model to length then thickness, then delegates to the scalar-array overload. Both dimensions must be finite and positive at submission. The required wall-area code is 15, not the SeismicCode.IS1893_2016 definition value.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefWallArea(15, StaadPro.Interop.Models.Loads.Seismic.SeismicWallDirection.Z, new[] { new StaadPro.Interop.Models.Loads.Seismic.SeismicWallDimension(4, 0.25) });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.6">
+      <summary>Adds an extended response-spectrum load from a typed parameter model.</summary>
+      <param name="parameters">Non-null source-compatible request model. Mutable fields must remain stable during validation/capture. See remarks for packet, unit and empty-request rules.</param>
+      <returns>True on native Boolean success; false on native Boolean failure.</returns>
+      <remarks><para>Uses independent paired keyword/value arrays from dictionary entries, preserving enumeration order and key/value association. Captures custom points as interleaved Double period/value pairs. Spectrum-generation parameters and custom points are mutually exclusive. Null/empty optional collections become native null. The primary set must be nonempty; enums, uppercase alphanumeric keyword syntax, duplicate keywords, equal array lengths, finite values and nonnegative periods are checked. Code-specific keyword meaning, engineering suitability and matching active-case context remain the caller/native responsibility.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddResponseSpectrumLoadEx(new StaadPro.Interop.Models.Loads.Seismic.ResponseSpectrumLoadExParameters().WithDirection(x: 1).WithDamping(0.05));
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.7">
+      <summary>Adds an extended response-spectrum load from explicit paired keyword and data arrays.</summary>
+      <param name="spectrumCode">Defined ResponseSpectrumCode integer in the extended spectrum domain (0,1,2,4,5,6,7,8,10,11,12,13,14); unsupported values are rejected.</param>
+      <param name="combinationMethod">Defined ModalCombinationMethod integer, SRSS=0 through GRP=6. Not the AddRSLoad response-spectrum-load-type domain.</param>
+      <param name="primaryParameterNames">Non-null, nonempty, unique uppercase native keyword array; paired by index with primaryParameterValues.</param>
+      <param name="primaryParameterValues">Non-null finite Double array with exactly the same length as primaryParameterNames.</param>
+      <param name="generationParameterNames">Optional keyword array paired with generationParameterValues. Both must be null or both supplied; paired empties mean omitted generation data.</param>
+      <param name="generationParameterValues">Optional finite Double values paired by index with generationParameterNames. Nonempty generation data excludes customDataPairs.</param>
+      <param name="customDataPairs">Optional interleaved Double period/value pairs. Periods must be nonnegative; all values finite; even length required. Null/empty means omitted; nonempty excludes generation data.</param>
+      <returns>Native Boolean outcome; malformed return values throw after invocation.</returns>
+      <remarks><para>Clones every supplied array before dispatch. Primary arrays must be non-null, nonempty and equal length. Generation names/values must both be null or both be supplied with equal length; paired empty generation arrays become null. Custom data must have even length (period,value pairs), finite values and nonnegative periods. A nonempty generation set cannot coexist with nonempty custom data. Keywords are uppercase ASCII letters/digits starting with a letter and unique within each set. Arrays retain order; periods are not sorted/deduplicated. This API retains Double precision and uses ModalCombinationMethod codes 0–6, which differ from AddRSLoad’s combination domain.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddResponseSpectrumLoadEx(0, 2, new[] { &quot;X&quot;, &quot;DAM&quot; }, new[] { 1.0, 0.05 }, customDataPairs: new[] { 0.1, 0.2, 1.0, 0.5 });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.8">
+      <summary>Assigns a FLEX or AXIAL direct-analysis definition parameter to member IDs.</summary>
+      <param name="parameterType">Documented Flex=0 or Axial=2. FYLD and undefined enum values are rejected.</param>
+      <param name="memberIds">Non-null positive member-ID sequence, snapshotted once; order and duplicates are retained. Raw sequence overloads permit empty successful no-ops.</param>
+      <param name="parameterValue">Finite native Double parameter, default 0.0. For AXIAL this unused value must be exactly zero.</param>
+      <returns>Native Boolean result, or true for a successful empty selection without dispatch.</returns>
+      <remarks><para>Only documented Flex=0 and Axial=2 are accepted; vendor metadata’s FYLD=1 is deliberately excluded. The scalar is a finite Double; AXIAL requires exactly zero in its unused scalar slot. Snapshots positive member IDs once and preserves order/duplicates. FLEX values are forwarded without engineering range normalization; native acceptance does not certify stiffness-design suitability. This defines parameters only and does not run analysis.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddDirectAnalysisDefinitionParameter(StaadPro.Interop.Models.Loads.Seismic.DirectAnalysisParameterType.Flex, new[] { 101, 102 }, 0.8);
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.9">
+      <summary>Assigns a direct-analysis definition parameter using Beam identities.</summary>
+      <param name="parameterType">Documented Flex=0 or Axial=2. FYLD and undefined enum values are rejected.</param>
+      <param name="members">Non-null sequence of non-null Beam instances with positive IDs, snapshotted once; order and duplicates are retained. Beam coordinates are not read.</param>
+      <param name="parameterValue">Finite native Double parameter, default 0.0. For AXIAL this unused value must be exactly zero.</param>
+      <returns>Native Boolean result, or true for an empty selection without dispatch.</returns>
+      <remarks><para>Snapshots the Beam sequence once, rejects null members and delegates IDs to the common checked ID implementation. Geometry and managed load collections are unchanged. Flex=0 and Axial=2 only; AXIAL requires a zero unused value.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddDirectAnalysisDefinitionParameter(StaadPro.Interop.Models.Loads.Seismic.DirectAnalysisParameterType.Axial, new[] { new StaadPro.Interop.Entities.Beam(101, new StaadPro.Interop.Entities.Node(1, 0, 0, 0), new StaadPro.Interop.Entities.Node(2, 1, 0, 0)) }, 0);
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.10">
+      <summary>Assigns a FLEX stiffness parameter to the supplied member IDs.</summary>
+      <param name="flexFactor">Finite FLEX scalar forwarded as Double without range normalization. No stiffness/engineering certification is implied.</param>
+      <param name="memberIds">Non-null positive member-ID sequence, snapshotted once; order and duplicates are retained. Raw sequence overloads permit empty successful no-ops.</param>
+      <returns>Native Boolean outcome, or true for empty input without dispatch.</returns>
+      <remarks><para>Delegates to the single direct-analysis ID implementation with Flex=0 and the finite supplied value. No analysis request, automatic save or implicit seismic-definition mutation is performed.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddDirectAnalysisFlexParameter(0.8, new[] { 101, 102 });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.11">
+      <summary>Assigns the AXIAL direct-analysis parameter to the supplied member IDs.</summary>
+      <param name="memberIds">Non-null positive member-ID sequence, snapshotted once; order and duplicates are retained. Raw sequence overloads permit empty successful no-ops.</param>
+      <returns>Native Boolean outcome, or true for empty input without dispatch.</returns>
+      <remarks><para>Delegates with Axial=2 and an exact Double zero for the unused scalar. Snapshots/validates member identities before native use. Does not run analysis.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddDirectAnalysisAxialParameter(new[] { 101, 102 });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.12">
+      <summary>Assigns a direct-analysis definition from a typed request.</summary>
+      <param name="parameters">Non-null source-compatible request model. Mutable fields must remain stable during validation/capture. See remarks for packet, unit and empty-request rules.</param>
+      <returns>Native Boolean outcome; an empty typed request is rejected before dispatch.</returns>
+      <remarks><para>The request is non-null and must contain at least one positive member ID, matching the main model’s nonempty-request contract. The raw ID/Beam overloads intentionally retain their empty no-op behavior. Delegates validation, enum/status handling and native invocation to the common ID implementation without re-enumerating the original model selection.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddDirectAnalysisDefinitionParameter(StaadPro.Interop.Models.Loads.Seismic.DirectAnalysisParameters.CreateFlex(0.8, new[] { 101, 102 }));
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.13">
+      <summary>Deletes all native direct-analysis parameters of the specified documented type.</summary>
+      <param name="parameterType">Documented Flex=0 or Axial=2. FYLD and undefined enum values are rejected.</param>
+      <returns>Native Boolean deletion outcome.</returns>
+      <remarks><para>Accepts Flex=0 or Axial=2 only. This mutates the direct-analysis definition; it does not delete model members or execute analysis. Uses one native call and does not infer that the parameter previously existed.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.DeleteDirectAnalysisDefinitionParameter(StaadPro.Interop.Models.Loads.Seismic.DirectAnalysisParameterType.Flex);
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.14">
+      <summary>Deletes the entire native direct-analysis definition.</summary>
+
+      <returns>Native Boolean deletion outcome.</returns>
+      <remarks><para>Explicitly removes the whole direct-analysis definition in one native call. No existence probe, fallback deletion, save or rollback is performed. It does not close the model, delete members or run analysis.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.DeleteDirectAnalysisDefinition();
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadCompletion15.15">
+      <summary>Adds a legacy response-spectrum load using checked Single-precision native inputs.</summary>
+      <param name="parameters">Non-null source-compatible request model. Mutable fields must remain stable during validation/capture. See remarks for packet, unit and empty-request rules.</param>
+      <returns>Native Boolean result from AddRSLoad.</returns>
+      <remarks><para>Uses exactly nineteen native arguments. Direction factors are exactly three Singles; point abscissae and ordinates are separate Single arrays with a matching count. Scalars required as float in native help are converted to Single only after checking finite Double input; conversion overflow and nonzero-to-zero underflow are rejected. Ordinary Single rounding is inherent and documented. Modal type uses ResponseSpectrumLoadType codes 1–6, not ModalCombinationMethod codes 0–6. Validates enums and at least one non-null point with nonnegative period; preserves point order and duplicates without interpolation or unit conversion. All nineteen slots are by value in both inspected 2025/2026 vendor interfaces despite FAR-reference notation in the C++ help. The owned arrays shield caller data from native in-place mutation.</para><para>All operations execute on the caller’s COM thread; serialize use of the acquired session and keep mutable inputs stable during the call. No case activation, definition selection, save, analysis, retry or rollback is added. Spectrum operations act on the currently active load case. Native failures may leave effects. Boolean-returning reference APIs accept actual bool or integral 0/1/-1 only; other result types/codes throw after invocation. Wall-area status is a strict native Int32 (0 success), with unknown codes preserved. Native COM/binding exceptions propagate. This preserves the main interface’s return types while keeping every native array and any reference mechanics internal. Native marshaling, engineering semantics and licensing still require live verification.</para></remarks>
+      <exception cref="ArgumentNullException">A required input is null.</exception>
+      <exception cref="ArgumentException">An input packet, keyword, mode or required selection is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">An ID, classification, distance, dimension, scalar or Single conversion is invalid.</exception>
+      <exception cref="NotSupportedException">An explicit member-weight request lacks a reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native result type, range or Boolean representation is unsupported.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The native operation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load, on the session COM thread:<code>
+bool submitDefinition = false; // Enable only for an intended native definition/load mutation.
+if (submitDefinition)
+{
+    var result = load.AddRSLoad(new StaadPro.Interop.Models.Loads.Seismic.ResponseSpectrumLoadParameters { SpectrumPoints = new System.Collections.Generic.List&lt;StaadPro.Interop.Models.Loads.Seismic.SpectrumCurvePoint&gt; { new StaadPro.Interop.Models.Loads.Seismic.SpectrumCurvePoint(0.1, 0.2), new StaadPro.Interop.Models.Loads.Seismic.SpectrumCurvePoint(1.0, 0.5) } });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
 </members>
 </doc>

@@ -2,7 +2,7 @@
 
 **Review date:** 22 October 2026
 **Baseline:** main at 1483c9c
-**Status:** Original native evidence and API design proposals, updated with the next 15 reference-overload implementations. Broader named-result architecture remains proposed.
+**Status:** Original native evidence and API design proposals, updated with all 30 originally pending reference-overload implementations. Broader named-result architecture remains proposed.
 
 This annex supports the [Load multi-version architecture and plan](OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md). It inventories every detailed Load function from the installed 2024/2025/2026 help and distinguishes current native dispatches from planned additions.
 
@@ -12,7 +12,7 @@ There are **129 distinct native functions in each year**, all with detailed entr
 
 Each entry includes the common native declaration, positional parameters, documented directions, inspected 2025/2026 CLR shape, return/error information and current source callers. C++ FAR/const reference notation must not be mechanically translated into public C# ref parameters. IsIn/IsOut flags in inspected metadata are often both false; Object& still records a CLR by-reference parameter.
 
-**D:** direct adapter dispatch. **E:** member-load entity dispatch reached through AddMemberLoad. **N:** neither. The 67 dispatch-covered names include unresolved shape/status concerns described in the primary report. The remaining 62 N entries include a proposed managed signature and a function-specific implementation consideration; these signatures are design proposals, not compiled APIs. All named request/result classes in those proposals that are absent today are pending.
+**D:** direct adapter dispatch. **E:** member-load entity dispatch reached through AddMemberLoad. **N:** neither. The 73 dispatch-covered names include unresolved shape/status concerns described in the primary report. The remaining 56 N entries include a proposed managed signature and a function-specific implementation consideration; these signatures are design proposals, not compiled APIs. All named request/result classes in those proposals that are absent today are pending.
 
 Return tables below preserve functional error labels and short native explanations. A missing return table does not imply void: some entries describe the return in prose. Follow the linked reference and the declared return type. Native counts, IDs, Boolean values and zero/one success codes must not share a universal converter.
 
@@ -24,7 +24,7 @@ Parameter detail excerpts identify meaning and link back to full code/array tabl
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___load_group.html#ga1b938bf65248e91a620868453a458b9d) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___load_group.html#ga1b938bf65248e91a620868453a458b9d) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___load_group.html#ga1b938bf65248e91a620868453a458b9d)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L4.
+**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
 
 ```cpp
 VARIANT OSLoadUI::AddRSLoad(
@@ -101,13 +101,18 @@ VARIANT OSLoadUI::AddRSLoad(
 | `1(TRUE)` | Add Response Spectrum Load8 Successful. |
 | `0(FALSE)` | Generate Error. |
 
-**Proposed managed entry:**
+**Further named-result API proposal (not implemented by the reference-signature port):**
 
 ```csharp
 LoadOperationResult AddResponseSpectrumLoad(ResponseSpectrumLoadParameters parameters);
 ```
 
 **Implementation consideration:** Keep 19 native slots internal; snapshot all arrays, validate spectrum pair count and distinguish input buffers from returned/replaced buffers.
+
+
+**Ported reference overloads:** `bool AddRSLoad(ResponseSpectrumLoadParameters parameters)`.
+
+**Current call sites:** [AddRSLoad](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L167).
 
 #### SplitLoadsOnBeam
 
@@ -168,7 +173,7 @@ No native parameters.
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Current call sites:** [ReadAllLoadCases — line 2207](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2207).
+**Current call sites:** [ReadAllLoadCases — line 2349](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2349).
 
 #### SetLoadActive
 
@@ -197,7 +202,7 @@ VARIANT OSLoadUI::SetLoadActive(
 | `TRUE` | OK. |
 | `FALSE` | General error. |
 
-**Current call sites:** [SetLoadCaseActive — line 1711](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1711); [ActivateQueryCase — line 2291](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2291).
+**Current call sites:** [SetLoadCaseActive — line 1853](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1853); [ActivateQueryCase — line 2433](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2433).
 
 ### Load: Load Envelopes
 
@@ -234,7 +239,7 @@ VARIANT OSLoadUI::CreateLoadEnvelop(
 | `1/True` | OK. |
 | `0/False` | General error. |
 
-**Current call sites:** [CreateLoadEnvelopExt — line 2123](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2123).
+**Current call sites:** [CreateLoadEnvelopExt — line 2265](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2265).
 
 #### AddLoadCasesToEnvelop
 
@@ -365,7 +370,7 @@ No native parameters.
 | --- | --- |
 | `Long/Integer` | Total Number of load Envelopes present. |
 
-**Current call sites:** [GetEnvelopeIds — line 1958](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1958).
+**Current call sites:** [GetEnvelopeIds — line 2100](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2100).
 
 #### GetLoadEnvelopeDetails
 
@@ -402,7 +407,7 @@ long OSLoadUI::GetLoadEnvelopeDetails(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetLoadEnvelopeDetail — line 2002](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2002).
+**Current call sites:** [GetLoadEnvelopeDetail — line 2144](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2144).
 
 #### GetLoadListfromLoadEnvelope
 
@@ -434,7 +439,7 @@ long OSLoadUI::GetLoadListfromLoadEnvelope(
 | `1` | Successful. |
 | `-1` | Unsuccessful. |
 
-**Current call sites:** [GetLoadEnvelopeDetail — line 2010](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2010).
+**Current call sites:** [GetLoadEnvelopeDetail — line 2152](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2152).
 
 #### GetEnvelopeIDs
 
@@ -463,7 +468,7 @@ long OSLoadUI::GetEnvelopeIDs(
 | `1` | OK. |
 | `-1` | Unsuccessful. |
 
-**Current call sites:** [GetEnvelopeIds — line 1962](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1962).
+**Current call sites:** [GetEnvelopeIds — line 2104](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2104).
 
 ### Load Definition: Wind
 
@@ -497,7 +502,7 @@ VARIANT OSLoadUI::AddWindDefinition(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddWindDefinition — line 228](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L228).
+**Current call sites:** [AddWindDefinition — line 370](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L370).
 
 #### AddWindIntensity
 
@@ -532,7 +537,7 @@ VARIANT OSLoadUI::AddWindIntensity(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddWindIntensity — line 271](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L271); [AddWindIntensity — line 286](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L286).
+**Current call sites:** [AddWindIntensity — line 413](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L413); [AddWindIntensity — line 428](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L428).
 
 #### ComputeWallWindPressureProfile
 
@@ -597,7 +602,7 @@ WindProfileComputationResult ComputeWallWindPressureProfile(WallWindPressureProf
 
 **Ported reference overloads:** `int ComputeWallWindPressureProfile(WallWindPressureProfileParameters parameters)`.
 
-**Current call sites:** [ComputeWallWindPressureProfile](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L57).
+**Current call sites:** [ComputeWallWindPressureProfile](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L199).
 
 
 #### ComputeWallWindPressureProfileASCE72016
@@ -664,7 +669,7 @@ WindProfileComputationResult ComputeWallWindPressureProfile(ASCE72016WallWindPre
 
 **Ported reference overloads:** `int ComputeWallWindPressureProfileASCE72016(ASCE72016WallWindPressureProfileParameters parameters)`.
 
-**Current call sites:** [ComputeWallWindPressureProfileASCE72016](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L70).
+**Current call sites:** [ComputeWallWindPressureProfileASCE72016](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L212).
 
 
 #### AddWindDefinitionASCE7Parameters
@@ -740,7 +745,7 @@ LoadOperationResult ConfigureWindDefinition(ASCE7WindDefinitionParameters parame
 
 **Ported reference overloads:** `int AddWindDefinitionASCE7Parameters(ASCE7WindDefinitionParameters parameters)`.
 
-**Current call sites:** [AddWindDefinitionASCE7Parameters](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L43).
+**Current call sites:** [AddWindDefinitionASCE7Parameters](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L185).
 
 
 #### AddWindExposure
@@ -776,7 +781,7 @@ VARIANT OSLoadUI::AddWindExposure(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddWindExposure — line 240](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L240).
+**Current call sites:** [AddWindExposure — line 382](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L382).
 
 #### DeleteWindDefinition
 
@@ -805,7 +810,7 @@ VARIANT OSLoadUI::DeleteWindDefinition(
 | `0` | OK. |
 | `-8039` | Invalid load definition. |
 
-**Current call sites:** [DeleteWindDefinition — line 302](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L302).
+**Current call sites:** [DeleteWindDefinition — line 444](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L444).
 
 ### Load Definition: Seismic
 
@@ -849,7 +854,7 @@ LoadOperationResult CreateSeismicDefinition(SeismicCode seismicCode, bool includ
 
 **Ported reference overloads:** `bool AddSeismicDefinition(SeismicCode code, bool considerAccidentalTorsion = false)`; `bool AddSeismicDefinition(int code, int accidentalTorsion = 0)`.
 
-**Current call sites:** [AddSeismicDefinition](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L91).
+**Current call sites:** [AddSeismicDefinition](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L233).
 
 
 #### ModifySeismicDefinitionParams
@@ -892,7 +897,7 @@ LoadOperationResult SetSeismicParameters(SeismicDefinitionParameters parameters)
 
 **Ported reference overloads:** `int ModifySeismicDefinitionParam(string parameterName, double value)`; `int ModifySeismicDefinitionParams(IDictionary<string, double> parameters)`; `int ModifySeismicDefinitionParams(IS1893_2016SeismicParameters parameters)`; `int ModifySeismicDefinitionParams(IS1893_2002SeismicParameters parameters)`; `int ModifySeismicDefinitionParams(IBCSeismicParameters parameters)`.
 
-**Current call sites:** [ModifySeismicDefinitionParam](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L99).
+**Current call sites:** [ModifySeismicDefinitionParam](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L241).
 
 
 #### AddSeismicDefSelfWeight
@@ -932,7 +937,7 @@ LoadOperationResult AddSeismicSelfWeight(double weightFactor = 1.0);
 
 **Ported reference overloads:** `bool AddSeismicDefSelfWeight(double weightFactor = 1.0)`.
 
-**Current call sites:** [AddSeismicDefSelfWeight](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L145).
+**Current call sites:** [AddSeismicDefSelfWeight](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L287).
 
 
 #### AddSeismicDefMemberWeight
@@ -987,7 +992,7 @@ LoadOperationResult AddSeismicMemberWeight(SeismicMemberWeightDefinition definit
 
 **Ported reference overloads:** `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<int> memberIds)`.
 
-**Current call sites:** [AddSeismicDefMemberWeight](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L183).
+**Current call sites:** [AddSeismicDefMemberWeight](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L325).
 
 
 #### AddSeismicDefJointWeight
@@ -1037,14 +1042,14 @@ LoadOperationResult AddSeismicJointWeight(double weight, IEnumerable<int> nodeId
 
 **Ported reference overloads:** `int AddSeismicDefJointWeight(double weight, IEnumerable<int> nodeIds)`; `int AddSeismicDefJointWeight(double weight, IEnumerable<Node> nodes)`; `int AddSeismicDefJointWeight(double weight, int nodeId)`.
 
-**Current call sites:** [AddSeismicDefJointWeight](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L154).
+**Current call sites:** [AddSeismicDefJointWeight](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L296).
 
 
 #### AddSeismicDefWallArea
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_seismic.html#gad481a21e57f2ee6b953d5e1d111c34c7) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_seismic.html#gad481a21e57f2ee6b953d5e1d111c34c7) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_seismic.html#gad481a21e57f2ee6b953d5e1d111c34c7)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L2.
+**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
 
 ```cpp
 VARIANT OSLoadUI::AddSeismicDefWallArea(
@@ -1076,7 +1081,7 @@ VARIANT OSLoadUI::AddSeismicDefWallArea(
 | `-8034` | Invalid seismic code. |
 | `-8038` | Invalid Direction. |
 
-**Proposed managed entry:**
+**Further named-result API proposal (not implemented by the reference-signature port):**
 
 ```csharp
 LoadOperationResult AddSeismicWallArea(int definitionId, SeismicWallDirection direction, IEnumerable<SeismicWallDimension> walls);
@@ -1084,11 +1089,16 @@ LoadOperationResult AddSeismicWallArea(int definitionId, SeismicWallDirection di
 
 **Implementation consideration:** IS 1893-2016 engineering-code constraint; validate flattened dimension layout, not an arbitrary member-ID array.
 
+
+**Ported reference overloads:** `int AddSeismicDefWallArea(int seismicCode, string direction, IEnumerable<double> dimensions)`; `int AddSeismicDefWallArea(int seismicCode, SeismicWallDirection direction, IEnumerable<SeismicWallDimension> walls)`.
+
+**Current call sites:** [AddSeismicDefWallArea](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L70).
+
 #### AddResponseSpectrumLoadEx
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_seismic.html#gac24b840992cf7f15558b3c6844857f5a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_seismic.html#gac24b840992cf7f15558b3c6844857f5a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_seismic.html#gac24b840992cf7f15558b3c6844857f5a)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L4.
+**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
 
 ```cpp
 VARIANT OSLoadUI::AddResponseSpectrumLoadEx(
@@ -1129,13 +1139,18 @@ VARIANT OSLoadUI::AddResponseSpectrumLoadEx(
 | `0` | FALSE. |
 | `1` | TRUE. |
 
-**Proposed managed entry:**
+**Further named-result API proposal (not implemented by the reference-signature port):**
 
 ```csharp
 LoadOperationResult AddResponseSpectrumLoad(ResponseSpectrumLoadExParameters parameters);
 ```
 
 **Implementation consideration:** Validate code-specific keywords, modal rule and paired arrays; generated-spectrum settings and custom data pairs are mutually exclusive.
+
+
+**Ported reference overloads:** `bool AddResponseSpectrumLoadEx(ResponseSpectrumLoadExParameters parameters)`; `bool AddResponseSpectrumLoadEx(int spectrumCode, int combinationMethod, string[] primaryParameterNames, double[] primaryParameterValues, string[] generationParameterNames = null, double[] generationParameterValues = null, double[] customDataPairs = null)`.
+
+**Current call sites:** [SubmitExtendedSpectrum](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L107).
 
 ### Load Definition: Time History
 
@@ -1166,7 +1181,7 @@ No native parameters.
 | `<Val>` | The number of reference load case. |
 | `-1` | General error. |
 
-**Current call sites:** [ReadAllLoadCases — line 2207](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2207).
+**Current call sites:** [ReadAllLoadCases — line 2349](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2349).
 
 #### GetReferenceLoadCaseNumbers
 
@@ -1197,7 +1212,7 @@ long OSLoadUI::GetReferenceLoadCaseNumbers(
 | `-106` | 1 dimensional array of long expected. |
 | `-114` | OLE Exception Occurred. |
 
-**Current call sites:** [ReadAllLoadCases — line 2215](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2215).
+**Current call sites:** [ReadAllLoadCases — line 2357](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2357).
 
 #### CreateNewReferenceLoad
 
@@ -1233,7 +1248,7 @@ long OSLoadUI::CreateNewReferenceLoad(
 | `-1` | General error. |
 | `-8004` | Fail to create load. |
 
-**Current call sites:** [CreateNewReferenceLoad — line 1680](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1680).
+**Current call sites:** [CreateNewReferenceLoad — line 1822](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1822).
 
 #### SetReferenceLoadActive
 
@@ -1263,7 +1278,7 @@ long OSLoadUI::SetReferenceLoadActive(
 | `-1` | General error. |
 | `-8002` | Load Case nLoadCaseNo not found. |
 
-**Current call sites:** [SetLoadCaseActive — line 1707](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1707); [ActivateQueryCase — line 2285](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2285).
+**Current call sites:** [SetLoadCaseActive — line 1849](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1849); [ActivateQueryCase — line 2427](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2427).
 
 ### Load Definition: Direct Analysis
 
@@ -1271,7 +1286,7 @@ long OSLoadUI::SetReferenceLoadActive(
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_direct_analysis.html#gac8fe142a3657334769e6cbe960e40d1f) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_direct_analysis.html#gac8fe142a3657334769e6cbe960e40d1f) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_direct_analysis.html#gac8fe142a3657334769e6cbe960e40d1f)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L4.
+**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
 
 ```cpp
 VARIANT OSLoadUI::AddDirectAnalysisDefinitionParameter(
@@ -1300,7 +1315,7 @@ VARIANT OSLoadUI::AddDirectAnalysisDefinitionParameter(
 | `TRUE/1` | OK. |
 | `FALSE/0` | ERROR |
 
-**Proposed managed entry:**
+**Further named-result API proposal (not implemented by the reference-signature port):**
 
 ```csharp
 LoadOperationResult SetDirectAnalysisParameter(DirectAnalysisParameters parameters);
@@ -1308,11 +1323,16 @@ LoadOperationResult SetDirectAnalysisParameter(DirectAnalysisParameters paramete
 
 **Implementation consideration:** Reuse FLEX/AXIAL model; native codes FLEX=0, AXIAL=2; AXIAL scalar must be zero.
 
+
+**Ported reference overloads:** `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<int> memberIds, double parameterValue = 0.0)`; `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<Beam> members, double parameterValue = 0.0)`; `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameters parameters)`.
+
+**Current call sites:** [AddDirectAnalysisDefinitionParameter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L120).
+
 #### DeleteDirectAnalysisDefinitionParameter
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_direct_analysis.html#gacfb6b7aa2b317a90aced0bb8df579237) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_direct_analysis.html#gacfb6b7aa2b317a90aced0bb8df579237) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_direct_analysis.html#gacfb6b7aa2b317a90aced0bb8df579237)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L4.
+**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
 
 ```cpp
 VARIANT OSLoadUI::DeleteDirectAnalysisDefinitionParameter(
@@ -1335,7 +1355,7 @@ VARIANT OSLoadUI::DeleteDirectAnalysisDefinitionParameter(
 | `TRUE/1` | OK. |
 | `FALSE/0` | ERROR |
 
-**Proposed managed entry:**
+**Further named-result API proposal (not implemented by the reference-signature port):**
 
 ```csharp
 LoadOperationResult DeleteDirectAnalysisParameter(DirectAnalysisParameterType parameterType);
@@ -1343,11 +1363,16 @@ LoadOperationResult DeleteDirectAnalysisParameter(DirectAnalysisParameterType pa
 
 **Implementation consideration:** Verify supported parameter code and preserve Boolean native result.
 
+
+**Ported reference overloads:** `bool DeleteDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType)`.
+
+**Current call sites:** [DeleteDirectAnalysisDefinitionParameter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L154).
+
 #### DeleteDirectAnalysisDefinition
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_direct_analysis.html#ga5577e10064596d7933dc30e5b68a66fd) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_direct_analysis.html#ga5577e10064596d7933dc30e5b68a66fd) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_direct_analysis.html#ga5577e10064596d7933dc30e5b68a66fd)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L4.
+**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
 
 ```cpp
 VARIANT OSLoadUI::DeleteDirectAnalysisDefinition();
@@ -1362,13 +1387,18 @@ No native parameters.
 | `TRUE/1` | OK. |
 | `FALSE/0` | ERROR |
 
-**Proposed managed entry:**
+**Further named-result API proposal (not implemented by the reference-signature port):**
 
 ```csharp
 LoadOperationResult DeleteDirectAnalysisDefinition();
 ```
 
 **Implementation consideration:** Explicit whole-definition deletion; no synthetic rollback.
+
+
+**Ported reference overloads:** `bool DeleteDirectAnalysisDefinition()`.
+
+**Current call sites:** [DeleteDirectAnalysisDefinition](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L160).
 
 ### Load Case Details: Load Items
 
@@ -1392,7 +1422,7 @@ No native parameters.
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Current call sites:** [ReadCombinationCaseIds — line 2243](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2243).
+**Current call sites:** [ReadCombinationCaseIds — line 2385](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2385).
 
 #### GetLoadCombinationCaseNumbers
 
@@ -1423,7 +1453,7 @@ VARIANT OSLoadUI::GetLoadCombinationCaseNumbers(
 | `-106` | 1 dimensional array of long expected. |
 | `-114` | OLE Exception Occurred. |
 
-**Current call sites:** [ReadCombinationCaseIds — line 2246](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2246).
+**Current call sites:** [ReadCombinationCaseIds — line 2388](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2388).
 
 #### CreateNewLoadCombination
 
@@ -1455,7 +1485,7 @@ VARIANT OSLoadUI::CreateNewLoadCombination(
 | `<Val>` | Number ID, assigned to new load combination. |
 | `-1` | General error. |
 
-**Current call sites:** [CreateLoadCombinations — line 596](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L596).
+**Current call sites:** [CreateLoadCombinations — line 738](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L738).
 
 #### AddLoadAndFactorToCombination
 
@@ -1490,7 +1520,7 @@ VARIANT OSLoadUI::AddLoadAndFactorToCombination(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [CreateLoadCombinations — line 598](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L598).
+**Current call sites:** [CreateLoadCombinations — line 740](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L740).
 
 #### GetNoOfLoadAndFactorPairsForCombination
 
@@ -1516,7 +1546,7 @@ VARIANT OSLoadUI::GetNoOfLoadAndFactorPairsForCombination(
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Current call sites:** [GetLoadCombination — line 480](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L480).
+**Current call sites:** [GetLoadCombination — line 622](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L622).
 
 #### GetLoadAndFactorForCombination
 
@@ -1551,7 +1581,7 @@ VARIANT OSLoadUI::GetLoadAndFactorForCombination(
 | `True` | if the method is successful. |
 | `False` | if the method is unsuccessful. |
 
-**Current call sites:** [GetLoadCombination — line 486](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L486).
+**Current call sites:** [GetLoadCombination — line 628](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L628).
 
 #### IsCombinationCase
 
@@ -1742,7 +1772,7 @@ VARIANT OSLoadUI::GetPrimaryLoadCaseNumbers(
 | `-106` | 1 dimensional array of VARIANT expected. |
 | `-114` | OLE Exception Occurred. |
 
-**Current call sites:** [ReadAllLoadCases — line 2214](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2214).
+**Current call sites:** [ReadAllLoadCases — line 2356](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2356).
 
 #### CreateNewPrimaryLoad
 
@@ -1836,7 +1866,7 @@ VARIANT OSLoadUI::GetLoadCaseTitle(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetLoadCombination — line 483](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L483); [GetLoadCaseTitle — line 1695](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1695); [ReadLoadCaseMetadata — line 2231](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2231); [ReadCombinationCaseMetadata — line 2259](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2259).
+**Current call sites:** [GetLoadCombination — line 625](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L625); [GetLoadCaseTitle — line 1837](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1837); [ReadLoadCaseMetadata — line 2373](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2373); [ReadCombinationCaseMetadata — line 2401](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2401).
 
 #### SetLoadType
 
@@ -1907,7 +1937,7 @@ VARIANT OSLoadUI::CreateNewPrimaryLoadEx(
 | `-1` | General error. |
 | `-8004` | Fail to create load. |
 
-**Current call sites:** [CreateNewPrimaryLoad — line 1648](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1648).
+**Current call sites:** [CreateNewPrimaryLoad — line 1790](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1790).
 
 #### GetLoadType
 
@@ -1959,7 +1989,7 @@ VARIANT OSLoadUI::GetLoadType(
 | `23` | None. |
 | `-1` | General error. |
 
-**Current call sites:** [ReadLoadCaseMetadata — line 2234](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2234).
+**Current call sites:** [ReadLoadCaseMetadata — line 2376](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2376).
 
 #### CreateLoadList
 
@@ -1993,7 +2023,7 @@ VARIANT OSLoadUI::CreateLoadList(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [CreateLoadList — line 2158](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2158).
+**Current call sites:** [CreateLoadList — line 2300](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2300).
 
 #### GetLoadListCount
 
@@ -2495,7 +2525,7 @@ VARIANT OSLoadUI::ClearPrimaryLoadCase(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [ClearPrimaryLoadCases — line 1589](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1589); [ClearPrimaryLoadCases — line 1612](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1612).
+**Current call sites:** [ClearPrimaryLoadCases — line 1731](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1731); [ClearPrimaryLoadCases — line 1754](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1754).
 
 #### ClearReferenceLoadCase
 
@@ -2524,7 +2554,7 @@ VARIANT OSLoadUI::ClearReferenceLoadCase(
 | `1` | OK. |
 | `0` | Failed to delete load(s) |
 
-**Current call sites:** [ClearReferenceLoadCases — line 1635](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1635).
+**Current call sites:** [ClearReferenceLoadCases — line 1777](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1777).
 
 #### CreateNewPrimaryLoadEx2
 
@@ -2559,7 +2589,7 @@ VARIANT OSLoadUI::CreateNewPrimaryLoadEx2(
 | `<Val>` | nLoadNo . |
 | `0` | Failed to create load. |
 
-**Current call sites:** [CreateNewPrimaryLoad — line 1657](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1657).
+**Current call sites:** [CreateNewPrimaryLoad — line 1799](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1799).
 
 **Priority verification:** The inspected Ex2 declaration has by-reference title/type slots; the current call passes both by value. See the primary report; no implementation was changed.
 
@@ -2707,7 +2737,7 @@ VARIANT OSLoadUI::AddSelfWeightInXYZToGeometry(
 | `true` | OK. |
 | `false` | General error. |
 
-**Current call sites:** [AddSelfweightInXYZTo — line 2088](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2088).
+**Current call sites:** [AddSelfweightInXYZTo — line 2230](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2230).
 
 ### Load Items: Nodal
 
@@ -2761,7 +2791,7 @@ VARIANT OSLoadUI::AddNodalLoad(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [AddNodalLoad — line 1863](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1863).
+**Current call sites:** [AddNodalLoad — line 2005](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2005).
 
 #### AddSupportDisplacement
 
@@ -2796,7 +2826,7 @@ VARIANT OSLoadUI::AddSupportDisplacement(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddSupportSettlement — line 1780](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1780).
+**Current call sites:** [AddSupportSettlement — line 1922](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1922).
 
 #### GetNodalLoadCount
 
@@ -2825,7 +2855,7 @@ VARIANT OSLoadUI::GetNodalLoadCount(
 | `<Val>` | The number of node(s). |
 | `-1` | General error (perhaps load case not found). |
 
-**Current call sites:** [GetNodalLoads — line 646](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L646).
+**Current call sites:** [GetNodalLoads — line 788](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L788).
 
 #### GetNodalLoads
 
@@ -2872,7 +2902,7 @@ VARIANT OSLoadUI::GetNodalLoads(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [GetNodalLoads — line 652](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L652).
+**Current call sites:** [GetNodalLoads — line 794](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L794).
 
 #### GetNodalLoadInfo
 
@@ -3276,7 +3306,7 @@ VARIANT OSLoadUI::GetUDLLoadCount(
 | `<Val>` | The number of uniformly distributed load item(s) applied. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberUniformlyDistributedLoads — line 704](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L704).
+**Current call sites:** [GetMemberUniformlyDistributedLoads — line 846](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L846).
 
 #### GetUDLLoads
 
@@ -3320,7 +3350,7 @@ VARIANT OSLoadUI::GetUDLLoads(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberUniformlyDistributedLoads — line 710](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L710).
+**Current call sites:** [GetMemberUniformlyDistributedLoads — line 852](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L852).
 
 #### GetUNIMomentCount
 
@@ -3349,7 +3379,7 @@ VARIANT OSLoadUI::GetUNIMomentCount(
 | `<Val>` | The number of uniformly distributed (UNI) moment item(s) applied. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberUniformMoments — line 1006](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1006).
+**Current call sites:** [GetMemberUniformMoments — line 1148](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1148).
 
 #### GetUNIMoments
 
@@ -3393,7 +3423,7 @@ VARIANT OSLoadUI::GetUNIMoments(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberUniformMoments — line 1012](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1012).
+**Current call sites:** [GetMemberUniformMoments — line 1154](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1154).
 
 #### GetTrapLoadCount
 
@@ -3422,7 +3452,7 @@ VARIANT OSLoadUI::GetTrapLoadCount(
 | `<Val>` | The number of trapezoidal load item(s) applied. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberTrapezoidalLoads — line 945](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L945).
+**Current call sites:** [GetMemberTrapezoidalLoads — line 1087](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1087).
 
 #### GetTrapLoads
 
@@ -3466,7 +3496,7 @@ VARIANT OSLoadUI::GetTrapLoads(
 | `0` | OK |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberTrapezoidalLoads — line 951](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L951).
+**Current call sites:** [GetMemberTrapezoidalLoads — line 1093](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1093).
 
 #### GetLinearVaryingLoadCount
 
@@ -3495,7 +3525,7 @@ long OSLoadUI::GetLinearVaryingLoadCount(
 | `<Val>` | The number of linear varying load item(s) applied. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberLinearVaryingLoads — line 885](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L885).
+**Current call sites:** [GetMemberLinearVaryingLoads — line 1027](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1027).
 
 #### GetLinearVaryingLoads
 
@@ -3536,7 +3566,7 @@ VARIANT OSLoadUI::GetLinearVaryingLoads(
 | `0` | OK |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberLinearVaryingLoads — line 892](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L892).
+**Current call sites:** [GetMemberLinearVaryingLoads — line 1034](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1034).
 
 #### GetConcForceCount
 
@@ -3567,7 +3597,7 @@ VARIANT OSLoadUI::GetConcForceCount(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetMemberConcentratedLoads — line 763](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L763).
+**Current call sites:** [GetMemberConcentratedLoads — line 905](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L905).
 
 #### GetConcForces
 
@@ -3610,7 +3640,7 @@ VARIANT OSLoadUI::GetConcForces(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetMemberConcentratedLoads — line 769](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L769).
+**Current call sites:** [GetMemberConcentratedLoads — line 911](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L911).
 
 #### GetConcMomentCount
 
@@ -3641,7 +3671,7 @@ VARIANT OSLoadUI::GetConcMomentCount(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetMemberConcentratedMoments — line 826](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L826).
+**Current call sites:** [GetMemberConcentratedMoments — line 968](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L968).
 
 #### GetConcMoments
 
@@ -3684,7 +3714,7 @@ VARIANT OSLoadUI::GetConcMoments(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetMemberConcentratedMoments — line 832](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L832).
+**Current call sites:** [GetMemberConcentratedMoments — line 974](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L974).
 
 #### GetMemberLoadInfo
 
@@ -3784,7 +3814,7 @@ VARIANT OSLoadUI::AddElementPressure(
 | `-1` | General error. |
 | `-8001` | Load direction is invalid. |
 
-**Current call sites:** [AddPlateUniformPressure — line 1919](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1919).
+**Current call sites:** [AddPlateUniformPressure — line 2061](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2061).
 
 **Priority verification:** Current call supplies three arguments; the inspected declaration requires seven. See the primary report; no implementation was changed.
 
@@ -4376,7 +4406,7 @@ VARIANT OSLoadUI::AddTemperatureLoad(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddAxialThermalGradientTo — line 360](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L360); [AddAxialThermalGradientTo — line 378](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L378).
+**Current call sites:** [AddAxialThermalGradientTo — line 502](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L502); [AddAxialThermalGradientTo — line 520](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L520).
 
 #### AddStrainLoad
 
@@ -4592,7 +4622,7 @@ VARIANT OSLoadUI::AddRepeatLoad(
 | --- | --- |
 | `1` | If Load Case is added successfully, 0 otherwise. |
 
-**Current call sites:** [AddRepeatLoadsTo — line 345](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L345).
+**Current call sites:** [AddRepeatLoadsTo — line 487](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L487).
 
 #### AddNotionalLoad
 
@@ -4663,7 +4693,7 @@ No native parameters.
 | `<Val>` | The number of repeat load commands in the active load case.To set the active load case use: - VARIANT OSLoadUI::SetLoadActive(const VARIANT FAR & varLoadNo) . To get the active load case use:- VARIANT OSLoadUI::GetActiveLoad() |
 | `0` | General error. |
 
-**Current call sites:** [GetRepeatLoadCases — line 458](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L458).
+**Current call sites:** [GetRepeatLoadCases — line 600](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L600).
 
 #### GetNoLoadFactorInRepeatLoad
 
@@ -4879,7 +4909,7 @@ long OSLoadUI::AddReferenceLoad(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [AddReferenceLoadsTo — line 335](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L335).
+**Current call sites:** [AddReferenceLoadsTo — line 477](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L477).
 
 #### GetReferenceLoadCount
 
@@ -5011,7 +5041,7 @@ VARIANT OSLoadUI::GetReferenceLoadType(
 | `-1` | General error. |
 | `Others` | (value can be 0 to 23) Reference load Type, please ref OSLoadUI::CreateNewPrimaryLoad . |
 
-**Current call sites:** [ReadLoadCaseMetadata — line 2234](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2234).
+**Current call sites:** [ReadLoadCaseMetadata — line 2376](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2376).
 
 #### GetReferenceLoadCaseTitle
 
@@ -5041,7 +5071,7 @@ VARIANT OSLoadUI::GetReferenceLoadCaseTitle(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [ReadLoadCaseMetadata — line 2231](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2231).
+**Current call sites:** [ReadLoadCaseMetadata — line 2373](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2373).
 
 #### BeginLoadMerging
 
@@ -5148,150 +5178,149 @@ System.Object MergeLoadsOnBeam(System.Object, System.Object)
 
 ## 3. Existing managed interface and adapter surface
 
-These **105 interface method overloads** have matching public adapter signatures. The table lists direct native calls present in that public method body only; a blank direct-call cell does not mean the managed method is unimplemented. Many overloads delegate to private helpers or other overloads. AddMemberLoad reaches six native mutations through member-load entity ApplyTo implementations; the complete native inventory above includes those dispatches.
+These **120 interface method overloads** have matching public adapter signatures. The table lists direct native calls present in that public method body only; a blank direct-call cell does not mean the managed method is unimplemented. Many overloads delegate to private helpers or other overloads. AddMemberLoad reaches six native mutations through member-load entity ApplyTo implementations; the complete native inventory above includes those dispatches.
 
-The separate public ComObject property is an escape hatch, not a method overload. Interface/base properties are outside the 105-method count.
+The separate public ComObject property is an escape hatch, not a method overload. Interface/base properties are outside the 120-method count.
 
 | # | Current managed signature | Interface / adapter | Direct native calls in method body |
 | ---: | --- | --- | --- |
-| 1 | `int AddWindDefinitionASCE7Parameters(ASCE7WindDefinitionParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L17) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L36) | [AddWindDefinitionASCE7Parameters](#addwinddefinitionasce7parameters) |
-| 2 | `int ComputeWallWindPressureProfile(WallWindPressureProfileParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L20) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L51) | [ComputeWallWindPressureProfile](#computewallwindpressureprofile) |
-| 3 | `int ComputeWallWindPressureProfileASCE72016(ASCE72016WallWindPressureProfileParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L23) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L64) | [ComputeWallWindPressureProfileASCE72016](#computewallwindpressureprofileasce72016) |
-| 4 | `bool AddSeismicDefinition(SeismicCode code, bool considerAccidentalTorsion = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L26) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L77) | Delegates / composes managed operations |
-| 5 | `bool AddSeismicDefinition(int code, int accidentalTorsion = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L29) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L81) | [AddSeismicDefinition](#addseismicdefinition) |
-| 6 | `int ModifySeismicDefinitionParam(string parameterName, double value)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L32) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L95) | [ModifySeismicDefinitionParams](#modifyseismicdefinitionparams) |
-| 7 | `int ModifySeismicDefinitionParams(IDictionary<string, double> parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L35) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L103) | Delegates / composes managed operations |
-| 8 | `int ModifySeismicDefinitionParams(IS1893_2016SeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L38) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L121) | Delegates / composes managed operations |
-| 9 | `int ModifySeismicDefinitionParams(IS1893_2002SeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L41) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L128) | Delegates / composes managed operations |
-| 10 | `int ModifySeismicDefinitionParams(IBCSeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L44) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L135) | Delegates / composes managed operations |
-| 11 | `bool AddSeismicDefSelfWeight(double weightFactor = 1.0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L47) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L142) | [AddSeismicDefSelfWeight](#addseismicdefselfweight) |
-| 12 | `int AddSeismicDefJointWeight(double weight, IEnumerable<int> nodeIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L50) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L149) | [AddSeismicDefJointWeight](#addseismicdefjointweight) |
-| 13 | `int AddSeismicDefJointWeight(double weight, IEnumerable<Node> nodes)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L53) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L158) | Delegates / composes managed operations |
-| 14 | `int AddSeismicDefJointWeight(double weight, int nodeId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L56) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L167) | Delegates / composes managed operations |
-| 15 | `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<int> memberIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L59) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L170) | [AddSeismicDefMemberWeight](#addseismicdefmemberweight) |
-| 16 | `void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L62) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L192) | Delegates / composes managed operations |
-| 17 | `void PopulateMemberUniformMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L65) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L199) | Delegates / composes managed operations |
-| 18 | `IEnumerable<Node> PopulateNodalLoads(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L68) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L206) | Delegates / composes managed operations |
-| 19 | `int AddWindDefinition(int windDefinitionId, string definitionName)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L71) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L222) | [AddWindDefinition](#addwinddefinition) |
-| 20 | `int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<int> nodeIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L74) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L232) | [AddWindExposure](#addwindexposure) |
-| 21 | `int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<Node> nodes)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L77) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L244) | Delegates / composes managed operations |
-| 22 | `int AddWindExposure(int windDefinitionId, double exposureFactor, int nodeId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L80) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L257) | Delegates / composes managed operations |
-| 23 | `int AddWindIntensity(int windDefinitionId, double intensity, double height)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L83) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L266) | [AddWindIntensity](#addwindintensity) |
-| 24 | `int AddWindIntensity(int windDefinitionId, IEnumerable<double> intensities, IEnumerable<double> heights)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L86) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L275) | [AddWindIntensity](#addwindintensity) |
-| 25 | `int AddWindIntensity(int windDefinitionId, IEnumerable<WindIntensityPair> pairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L89) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L290) | Delegates / composes managed operations |
-| 26 | `int DeleteWindDefinition(int windDefinitionId = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L92) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L299) | [DeleteWindDefinition](#deletewinddefinition) |
-| 27 | `int DeleteAllWindDefinitions()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L95) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L306) | Delegates / composes managed operations |
-| 28 | `IOSLoad AddReferenceLoadsTo(int loadCaseId, Dictionary<int, double> loadCaseNumberFactorPairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L98) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L330) | [AddReferenceLoad](#addreferenceload) |
-| 29 | `IOSLoad AddRepeatLoadsTo(int loadCaseId, IDictionary<int, double> loadCaseNumberFactorPairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L101) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L340) | [AddRepeatLoad](#addrepeatload) |
-| 30 | `IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L104) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L350) | [AddTemperatureLoad](#addtemperatureload) |
-| 31 | `IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L107) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L365) | [AddTemperatureLoad](#addtemperatureload) |
-| 32 | `IOSLoad AddMemberLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> grouped)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L110) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L399) | Delegates / composes managed operations |
-| 33 | `IOSLoad AddNodalLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> grouped)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L113) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L415) | Delegates / composes managed operations |
-| 34 | `void PopulateMemberLinearVaryingLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L118) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L431) | Delegates / composes managed operations |
-| 35 | `IEnumerable<Beam> PopulateMemberLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L120) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L437) | Delegates / composes managed operations |
-| 36 | `void PopulateMemberTrapezoidalLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L122) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L446) | Delegates / composes managed operations |
-| 37 | `HashSet<ILoadCase> GetRepeatLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L125) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L452) | [GetRepeatLoadCount](#getrepeatloadcount) |
-| 38 | `void PopulateMemberConcentratedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L127) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L465) | Delegates / composes managed operations |
-| 39 | `void PopulateMemberConcentratedMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L129) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L471) | Delegates / composes managed operations |
-| 40 | `StaadLoadCombination GetLoadCombination(int id)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L132) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L477) | [GetNoOfLoadAndFactorPairsForCombination](#getnoofloadandfactorpairsforcombination), [GetLoadCaseTitle](#getloadcasetitle), [GetLoadAndFactorForCombination](#getloadandfactorforcombination) |
-| 41 | `Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> GetMemberLoadsGroupedByLoadCase(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L134) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L509) | Delegates / composes managed operations |
-| 42 | `Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> GetNodalLoadsGroupedByLoadCase(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L136) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L521) | Delegates / composes managed operations |
-| 43 | `IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L139) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L566) | Delegates / composes managed operations |
-| 44 | `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<EditorLoadCombination> loadCombinations)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L141) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L574) | Delegates / composes managed operations |
-| 45 | `IOSLoad CreateLoadCombinations(IEnumerable<EditorLoadCombination> loadCombinations)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L143) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L582) | [CreateNewLoadCombination](#createnewloadcombination), [AddLoadAndFactorToCombination](#addloadandfactortocombination) |
-| 46 | `List<NodalLoad> GetNodalLoads(ILoadCase lc, int nId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L184) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L642) | [GetNodalLoadCount](#getnodalloadcount), [GetNodalLoads](#getnodalloads) |
-| 47 | `List<MemberUniformlyDistributedLoad> GetMemberUniformlyDistributedLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L225) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L700) | [GetUDLLoadCount](#getudlloadcount), [GetUDLLoads](#getudlloads) |
-| 48 | `List<MemberConcentratedLoad> GetMemberConcentratedLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L266) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L759) | [GetConcForceCount](#getconcforcecount), [GetConcForces](#getconcforces) |
-| 49 | `List<MemberConcentratedMoment> GetMemberConcentratedMoments(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L307) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L822) | [GetConcMomentCount](#getconcmomentcount), [GetConcMoments](#getconcmoments) |
-| 50 | `List<MemberLinearVaryingLoad> GetMemberLinearVaryingLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L348) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L881) | [GetLinearVaryingLoadCount](#getlinearvaryingloadcount), [GetLinearVaryingLoads](#getlinearvaryingloads) |
-| 51 | `List<MemberTrapezoidalLoad> GetMemberTrapezoidalLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L389) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L941) | [GetTrapLoadCount](#gettraploadcount), [GetTrapLoads](#gettraploads) |
-| 52 | `bool ClearPrimaryLoadCase(ILoadCase loadCase, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L396) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1571) | Delegates / composes managed operations |
-| 53 | `bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L399) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1575) | Delegates / composes managed operations |
-| 54 | `bool ClearPrimaryLoadCases(IEnumerable<int> lcIds, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L402) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1583) | [ClearPrimaryLoadCase](#clearprimaryloadcase) |
-| 55 | `bool ClearPrimaryLoadCase(ILoadCase loadCase)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L405) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1594) | Delegates / composes managed operations |
-| 56 | `bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L408) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1598) | Delegates / composes managed operations |
-| 57 | `bool ClearPrimaryLoadCases(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L411) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1606) | [ClearPrimaryLoadCase](#clearprimaryloadcase) |
-| 58 | `bool ClearReferenceLoadCase(ILoadCase loadCase)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L414) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1617) | Delegates / composes managed operations |
-| 59 | `bool ClearReferenceLoadCases(IEnumerable<ILoadCase> loadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L417) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1621) | Delegates / composes managed operations |
-| 60 | `bool ClearReferenceLoadCases(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L420) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1629) | [ClearReferenceLoadCase](#clearreferenceloadcase) |
-| 61 | `int CreateNewPrimaryLoad(string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L427) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1644) | [CreateNewPrimaryLoadEx](#createnewprimaryloadex) |
-| 62 | `int CreateNewPrimaryLoad(int lcId, string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L430) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1653) | [CreateNewPrimaryLoadEx2](#createnewprimaryloadex2) |
-| 63 | `int CreateNewPrimaryLoadEx(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L433) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1662) | Delegates / composes managed operations |
-| 64 | `int CreateNewPrimaryLoadEx2(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L436) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1669) | Delegates / composes managed operations |
-| 65 | `int CreateNewReferenceLoad(int lcId, string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L439) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1676) | [CreateNewReferenceLoad](#createnewreferenceload) |
-| 66 | `int CreateNewReferenceLoad(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L442) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1685) | Delegates / composes managed operations |
-| 67 | `string GetLoadCaseTitle(int id)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L445) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1692) | [GetLoadCaseTitle](#getloadcasetitle) |
-| 68 | `IOSLoad SetLoadCaseActive(ILoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L448) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1700) | [SetReferenceLoadActive](#setreferenceloadactive), [SetLoadActive](#setloadactive) |
-| 69 | `IOSLoad CreateNewLoadCase(ILoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L451) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1718) | Delegates / composes managed operations |
-| 70 | `IOSLoad AddSupportSettlement(ILoadCase lc, int nodeId, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L458) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1751) | Delegates / composes managed operations |
-| 71 | `IOSLoad AddSupportSettlement(ILoadCase lc, Node node, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L461) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1757) | Delegates / composes managed operations |
-| 72 | `IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<Node> nodes, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L464) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1764) | Delegates / composes managed operations |
-| 73 | `IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<int> nodeIds, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L467) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1771) | [AddSupportDisplacement](#addsupportdisplacement) |
-| 74 | `IOSLoad CreatePrimaryLoadCases(HashSet<ILoadCase> primaryLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L474) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1791) | Delegates / composes managed operations |
-| 75 | `IOSLoad CreatePrimaryLoadCases(IEnumerable<ILoadCase> primaryLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L477) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1795) | Delegates / composes managed operations |
-| 76 | `IOSLoad CreateReferenceLoadCases(HashSet<ILoadCase> referenceLoads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L480) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1816) | Delegates / composes managed operations |
-| 77 | `IOSLoad CreateReferenceLoadCases(IEnumerable<ILoadCase> referenceLoads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L483) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1820) | Delegates / composes managed operations |
-| 78 | `IOSLoad AddNodalLoad(ILoadCase lc, Node node, NodalLoad nl)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L490) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1845) | Delegates / composes managed operations |
-| 79 | `IOSLoad AddNodalLoad(ILoadCase lc, IEnumerable<Node> nodes, NodalLoad nl)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L493) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1852) | [AddNodalLoad](#addnodalload) |
-| 80 | `IOSLoad AddMemberLoad(ILoadCase lc, Beam beam, MemberLoad ml)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L500) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1874) | Delegates / composes managed operations |
-| 81 | `IOSLoad AddMemberLoad(ILoadCase lc, IEnumerable<Beam> beams, MemberLoad ml)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L503) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1881) | Delegates / composes managed operations |
-| 82 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, int plateId, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L510) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1903) | Delegates / composes managed operations |
-| 83 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<int> plateIds, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L513) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1909) | [AddElementPressure](#addelementpressure) |
-| 84 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<Plate> plates, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L516) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1926) | Delegates / composes managed operations |
-| 85 | `List<MemberUniformMoment> GetMemberUniformMoments(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L558) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1002) | [GetUNIMomentCount](#getunimomentcount), [GetUNIMoments](#getunimoments) |
-| 86 | `HashSet<ILoadCase> GetAllPrimaryLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L590) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1052) | Delegates / composes managed operations |
-| 87 | `HashSet<ILoadCase> GetAllReferenceLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L622) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1084) | Delegates / composes managed operations |
-| 88 | `ILoadCase GetPrimaryLoadCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L654) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1116) | Delegates / composes managed operations |
-| 89 | `ILoadCase GetReferenceLoadCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L686) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1151) | Delegates / composes managed operations |
-| 90 | `List<ILoadCase> GetPrimaryLoadCasesFromIds(IEnumerable<int> loadCasesIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L719) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1187) | Delegates / composes managed operations |
-| 91 | `List<ILoadCase> GetReferenceLoadCasesFromIds(IEnumerable<int> loadCasesIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L752) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1229) | Delegates / composes managed operations |
-| 92 | `HashSet<ILoadCase> GetAllLoadCombinationCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L783) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1269) | Delegates / composes managed operations |
-| 93 | `ILoadCase GetLoadCombinationCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L817) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1307) | Delegates / composes managed operations |
-| 94 | `IEnumerable<ILoadCase> GetLoadCombinationCasesFromIds(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L854) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1350) | Delegates / composes managed operations |
-| 95 | `IEnumerable<ILoadCase> GetAllLoadCasesOfType(LoadCaseType loadCaseType = LoadCaseType.PrimaryLoad)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L889) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1399) | Delegates / composes managed operations |
-| 96 | `ILoadCase GetLoadCase(int lcId, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L925) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1443) | Delegates / composes managed operations |
-| 97 | `IEnumerable<ILoadCase> GetLoadCases(int fromId, int toId, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L961) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1483) | Delegates / composes managed operations |
-| 98 | `IEnumerable<ILoadCase> GetLoadCasesFromIds(IEnumerable<int> loadCasesIds, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L999) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1526) | Delegates / composes managed operations |
-| 99 | `List<ILoadCase> GetLoadCasesOfType(LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1029) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1565) | Delegates / composes managed operations |
-| 100 | `HashSet<int> GetEnvelopeIds()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1053) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1956) | [GetEnvelopeCount](#getenvelopecount), [GetEnvelopeIDs](#getenvelopeids) |
-| 101 | `ILoadEnvelopeDetail GetLoadEnvelopeDetail(int envId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1085) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1997) | [GetLoadEnvelopeDetails](#getloadenvelopedetails), [GetLoadListfromLoadEnvelope](#getloadlistfromloadenvelope) |
-| 102 | `HashSet<ILoadEnvelopeDetail> GetAllLoadEnvelopeDetails()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1110) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2039) | Delegates / composes managed operations |
-| 103 | `IOSLoad AddSelfweightInXYZTo(int loadCaseId, LoadCaseType lcType, IEnumerable<int> entities, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1142) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2078) | [AddSelfWeightInXYZToGeometry](#addselfweightinxyztogeometry) |
-| 104 | `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<int> loadCaseList)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1170) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2118) | [CreateLoadEnvelop](#createloadenvelop) |
-| 105 | `dynamic CreateLoadList(LoadListType loadListType, IEnumerable<int> loadCaseIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1199) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2154) | [CreateLoadList](#createloadlist) |
+| 1 | `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<Beam> members)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L17) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L36) | Delegates / composes managed operations |
+| 2 | `bool AddSeismicDefMemberUniformWeight(double weight, IEnumerable<int> memberIds, double startDistance = 0, double endDistance = 0, int seismicCode = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L20) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L46) | Delegates / composes managed operations |
+| 3 | `bool AddSeismicDefMemberConcentratedWeight(double weight, double distance, IEnumerable<int> memberIds, int seismicCode = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L23) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L51) | Delegates / composes managed operations |
+| 4 | `int AddSeismicDefWallArea(int seismicCode, string direction, IEnumerable<double> dimensions)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L26) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L55) | [AddSeismicDefWallArea](#addseismicdefwallarea) |
+| 5 | `int AddSeismicDefWallArea(int seismicCode, SeismicWallDirection direction, IEnumerable<SeismicWallDimension> walls)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L29) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L74) | Delegates / composes managed operations |
+| 6 | `bool AddResponseSpectrumLoadEx(ResponseSpectrumLoadExParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L32) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L90) | Delegates / composes managed operations |
+| 7 | `bool AddResponseSpectrumLoadEx(int spectrumCode, int combinationMethod, string[] primaryParameterNames, double[] primaryParameterValues, string[] generationParameterNames = null, double[] generationParameterValues = null, double[] customDataPairs = null)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L35) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L97) | Delegates / composes managed operations |
+| 8 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<int> memberIds, double parameterValue = 0.0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L38) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L112) | [AddDirectAnalysisDefinitionParameter](#adddirectanalysisdefinitionparameter) |
+| 9 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<Beam> members, double parameterValue = 0.0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L41) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L125) | Delegates / composes managed operations |
+| 10 | `bool AddDirectAnalysisFlexParameter(double flexFactor, IEnumerable<int> memberIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L44) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L134) | Delegates / composes managed operations |
+| 11 | `bool AddDirectAnalysisAxialParameter(IEnumerable<int> memberIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L47) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L138) | Delegates / composes managed operations |
+| 12 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L50) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L142) | Delegates / composes managed operations |
+| 13 | `bool DeleteDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L53) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L151) | [DeleteDirectAnalysisDefinitionParameter](#deletedirectanalysisdefinitionparameter) |
+| 14 | `bool DeleteDirectAnalysisDefinition()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L56) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L159) | [DeleteDirectAnalysisDefinition](#deletedirectanalysisdefinition) |
+| 15 | `bool AddRSLoad(ResponseSpectrumLoadParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L59) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L163) | [AddRSLoad](#addrsload) |
+| 16 | `int AddWindDefinitionASCE7Parameters(ASCE7WindDefinitionParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L62) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L178) | [AddWindDefinitionASCE7Parameters](#addwinddefinitionasce7parameters) |
+| 17 | `int ComputeWallWindPressureProfile(WallWindPressureProfileParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L65) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L193) | [ComputeWallWindPressureProfile](#computewallwindpressureprofile) |
+| 18 | `int ComputeWallWindPressureProfileASCE72016(ASCE72016WallWindPressureProfileParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L68) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L206) | [ComputeWallWindPressureProfileASCE72016](#computewallwindpressureprofileasce72016) |
+| 19 | `bool AddSeismicDefinition(SeismicCode code, bool considerAccidentalTorsion = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L71) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L219) | Delegates / composes managed operations |
+| 20 | `bool AddSeismicDefinition(int code, int accidentalTorsion = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L74) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L223) | [AddSeismicDefinition](#addseismicdefinition) |
+| 21 | `int ModifySeismicDefinitionParam(string parameterName, double value)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L77) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L237) | [ModifySeismicDefinitionParams](#modifyseismicdefinitionparams) |
+| 22 | `int ModifySeismicDefinitionParams(IDictionary<string, double> parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L80) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L245) | Delegates / composes managed operations |
+| 23 | `int ModifySeismicDefinitionParams(IS1893_2016SeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L83) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L263) | Delegates / composes managed operations |
+| 24 | `int ModifySeismicDefinitionParams(IS1893_2002SeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L86) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L270) | Delegates / composes managed operations |
+| 25 | `int ModifySeismicDefinitionParams(IBCSeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L89) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L277) | Delegates / composes managed operations |
+| 26 | `bool AddSeismicDefSelfWeight(double weightFactor = 1.0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L92) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L284) | [AddSeismicDefSelfWeight](#addseismicdefselfweight) |
+| 27 | `int AddSeismicDefJointWeight(double weight, IEnumerable<int> nodeIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L95) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L291) | [AddSeismicDefJointWeight](#addseismicdefjointweight) |
+| 28 | `int AddSeismicDefJointWeight(double weight, IEnumerable<Node> nodes)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L98) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L300) | Delegates / composes managed operations |
+| 29 | `int AddSeismicDefJointWeight(double weight, int nodeId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L101) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L309) | Delegates / composes managed operations |
+| 30 | `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<int> memberIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L104) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L312) | [AddSeismicDefMemberWeight](#addseismicdefmemberweight) |
+| 31 | `void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L107) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L334) | Delegates / composes managed operations |
+| 32 | `void PopulateMemberUniformMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L110) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L341) | Delegates / composes managed operations |
+| 33 | `IEnumerable<Node> PopulateNodalLoads(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L113) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L348) | Delegates / composes managed operations |
+| 34 | `int AddWindDefinition(int windDefinitionId, string definitionName)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L116) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L364) | [AddWindDefinition](#addwinddefinition) |
+| 35 | `int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<int> nodeIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L119) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L374) | [AddWindExposure](#addwindexposure) |
+| 36 | `int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<Node> nodes)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L122) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L386) | Delegates / composes managed operations |
+| 37 | `int AddWindExposure(int windDefinitionId, double exposureFactor, int nodeId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L125) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L399) | Delegates / composes managed operations |
+| 38 | `int AddWindIntensity(int windDefinitionId, double intensity, double height)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L128) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L408) | [AddWindIntensity](#addwindintensity) |
+| 39 | `int AddWindIntensity(int windDefinitionId, IEnumerable<double> intensities, IEnumerable<double> heights)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L131) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L417) | [AddWindIntensity](#addwindintensity) |
+| 40 | `int AddWindIntensity(int windDefinitionId, IEnumerable<WindIntensityPair> pairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L134) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L432) | Delegates / composes managed operations |
+| 41 | `int DeleteWindDefinition(int windDefinitionId = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L137) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L441) | [DeleteWindDefinition](#deletewinddefinition) |
+| 42 | `int DeleteAllWindDefinitions()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L140) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L448) | Delegates / composes managed operations |
+| 43 | `IOSLoad AddReferenceLoadsTo(int loadCaseId, Dictionary<int, double> loadCaseNumberFactorPairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L143) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L472) | [AddReferenceLoad](#addreferenceload) |
+| 44 | `IOSLoad AddRepeatLoadsTo(int loadCaseId, IDictionary<int, double> loadCaseNumberFactorPairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L146) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L482) | [AddRepeatLoad](#addrepeatload) |
+| 45 | `IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L149) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L492) | [AddTemperatureLoad](#addtemperatureload) |
+| 46 | `IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L152) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L507) | [AddTemperatureLoad](#addtemperatureload) |
+| 47 | `IOSLoad AddMemberLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> grouped)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L155) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L541) | Delegates / composes managed operations |
+| 48 | `IOSLoad AddNodalLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> grouped)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L158) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L557) | Delegates / composes managed operations |
+| 49 | `void PopulateMemberLinearVaryingLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L163) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L573) | Delegates / composes managed operations |
+| 50 | `IEnumerable<Beam> PopulateMemberLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L165) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L579) | Delegates / composes managed operations |
+| 51 | `void PopulateMemberTrapezoidalLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L167) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L588) | Delegates / composes managed operations |
+| 52 | `HashSet<ILoadCase> GetRepeatLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L170) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L594) | [GetRepeatLoadCount](#getrepeatloadcount) |
+| 53 | `void PopulateMemberConcentratedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L172) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L607) | Delegates / composes managed operations |
+| 54 | `void PopulateMemberConcentratedMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L174) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L613) | Delegates / composes managed operations |
+| 55 | `StaadLoadCombination GetLoadCombination(int id)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L177) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L619) | [GetNoOfLoadAndFactorPairsForCombination](#getnoofloadandfactorpairsforcombination), [GetLoadCaseTitle](#getloadcasetitle), [GetLoadAndFactorForCombination](#getloadandfactorforcombination) |
+| 56 | `Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> GetMemberLoadsGroupedByLoadCase(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L179) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L651) | Delegates / composes managed operations |
+| 57 | `Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> GetNodalLoadsGroupedByLoadCase(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L181) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L663) | Delegates / composes managed operations |
+| 58 | `IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L184) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L708) | Delegates / composes managed operations |
+| 59 | `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<EditorLoadCombination> loadCombinations)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L186) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L716) | Delegates / composes managed operations |
+| 60 | `IOSLoad CreateLoadCombinations(IEnumerable<EditorLoadCombination> loadCombinations)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L188) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L724) | [CreateNewLoadCombination](#createnewloadcombination), [AddLoadAndFactorToCombination](#addloadandfactortocombination) |
+| 61 | `List<NodalLoad> GetNodalLoads(ILoadCase lc, int nId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L229) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L784) | [GetNodalLoadCount](#getnodalloadcount), [GetNodalLoads](#getnodalloads) |
+| 62 | `List<MemberUniformlyDistributedLoad> GetMemberUniformlyDistributedLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L270) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L842) | [GetUDLLoadCount](#getudlloadcount), [GetUDLLoads](#getudlloads) |
+| 63 | `List<MemberConcentratedLoad> GetMemberConcentratedLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L311) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L901) | [GetConcForceCount](#getconcforcecount), [GetConcForces](#getconcforces) |
+| 64 | `List<MemberConcentratedMoment> GetMemberConcentratedMoments(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L352) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L964) | [GetConcMomentCount](#getconcmomentcount), [GetConcMoments](#getconcmoments) |
+| 65 | `List<MemberLinearVaryingLoad> GetMemberLinearVaryingLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L393) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1023) | [GetLinearVaryingLoadCount](#getlinearvaryingloadcount), [GetLinearVaryingLoads](#getlinearvaryingloads) |
+| 66 | `List<MemberTrapezoidalLoad> GetMemberTrapezoidalLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L434) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1083) | [GetTrapLoadCount](#gettraploadcount), [GetTrapLoads](#gettraploads) |
+| 67 | `bool ClearPrimaryLoadCase(ILoadCase loadCase, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L441) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1713) | Delegates / composes managed operations |
+| 68 | `bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L444) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1717) | Delegates / composes managed operations |
+| 69 | `bool ClearPrimaryLoadCases(IEnumerable<int> lcIds, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L447) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1725) | [ClearPrimaryLoadCase](#clearprimaryloadcase) |
+| 70 | `bool ClearPrimaryLoadCase(ILoadCase loadCase)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L450) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1736) | Delegates / composes managed operations |
+| 71 | `bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L453) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1740) | Delegates / composes managed operations |
+| 72 | `bool ClearPrimaryLoadCases(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L456) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1748) | [ClearPrimaryLoadCase](#clearprimaryloadcase) |
+| 73 | `bool ClearReferenceLoadCase(ILoadCase loadCase)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L459) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1759) | Delegates / composes managed operations |
+| 74 | `bool ClearReferenceLoadCases(IEnumerable<ILoadCase> loadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L462) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1763) | Delegates / composes managed operations |
+| 75 | `bool ClearReferenceLoadCases(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L465) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1771) | [ClearReferenceLoadCase](#clearreferenceloadcase) |
+| 76 | `int CreateNewPrimaryLoad(string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L472) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1786) | [CreateNewPrimaryLoadEx](#createnewprimaryloadex) |
+| 77 | `int CreateNewPrimaryLoad(int lcId, string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L475) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1795) | [CreateNewPrimaryLoadEx2](#createnewprimaryloadex2) |
+| 78 | `int CreateNewPrimaryLoadEx(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L478) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1804) | Delegates / composes managed operations |
+| 79 | `int CreateNewPrimaryLoadEx2(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L481) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1811) | Delegates / composes managed operations |
+| 80 | `int CreateNewReferenceLoad(int lcId, string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L484) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1818) | [CreateNewReferenceLoad](#createnewreferenceload) |
+| 81 | `int CreateNewReferenceLoad(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L487) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1827) | Delegates / composes managed operations |
+| 82 | `string GetLoadCaseTitle(int id)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L490) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1834) | [GetLoadCaseTitle](#getloadcasetitle) |
+| 83 | `IOSLoad SetLoadCaseActive(ILoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L493) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1842) | [SetReferenceLoadActive](#setreferenceloadactive), [SetLoadActive](#setloadactive) |
+| 84 | `IOSLoad CreateNewLoadCase(ILoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L496) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1860) | Delegates / composes managed operations |
+| 85 | `IOSLoad AddSupportSettlement(ILoadCase lc, int nodeId, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L503) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1893) | Delegates / composes managed operations |
+| 86 | `IOSLoad AddSupportSettlement(ILoadCase lc, Node node, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L506) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1899) | Delegates / composes managed operations |
+| 87 | `IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<Node> nodes, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L509) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1906) | Delegates / composes managed operations |
+| 88 | `IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<int> nodeIds, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L512) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1913) | [AddSupportDisplacement](#addsupportdisplacement) |
+| 89 | `IOSLoad CreatePrimaryLoadCases(HashSet<ILoadCase> primaryLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L519) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1933) | Delegates / composes managed operations |
+| 90 | `IOSLoad CreatePrimaryLoadCases(IEnumerable<ILoadCase> primaryLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L522) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1937) | Delegates / composes managed operations |
+| 91 | `IOSLoad CreateReferenceLoadCases(HashSet<ILoadCase> referenceLoads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L525) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1958) | Delegates / composes managed operations |
+| 92 | `IOSLoad CreateReferenceLoadCases(IEnumerable<ILoadCase> referenceLoads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L528) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1962) | Delegates / composes managed operations |
+| 93 | `IOSLoad AddNodalLoad(ILoadCase lc, Node node, NodalLoad nl)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L535) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1987) | Delegates / composes managed operations |
+| 94 | `IOSLoad AddNodalLoad(ILoadCase lc, IEnumerable<Node> nodes, NodalLoad nl)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L538) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1994) | [AddNodalLoad](#addnodalload) |
+| 95 | `IOSLoad AddMemberLoad(ILoadCase lc, Beam beam, MemberLoad ml)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L545) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2016) | Delegates / composes managed operations |
+| 96 | `IOSLoad AddMemberLoad(ILoadCase lc, IEnumerable<Beam> beams, MemberLoad ml)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L548) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2023) | Delegates / composes managed operations |
+| 97 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, int plateId, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L555) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2045) | Delegates / composes managed operations |
+| 98 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<int> plateIds, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L558) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2051) | [AddElementPressure](#addelementpressure) |
+| 99 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<Plate> plates, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L561) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2068) | Delegates / composes managed operations |
+| 100 | `List<MemberUniformMoment> GetMemberUniformMoments(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L603) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1144) | [GetUNIMomentCount](#getunimomentcount), [GetUNIMoments](#getunimoments) |
+| 101 | `HashSet<ILoadCase> GetAllPrimaryLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L635) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1194) | Delegates / composes managed operations |
+| 102 | `HashSet<ILoadCase> GetAllReferenceLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L667) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1226) | Delegates / composes managed operations |
+| 103 | `ILoadCase GetPrimaryLoadCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L699) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1258) | Delegates / composes managed operations |
+| 104 | `ILoadCase GetReferenceLoadCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L731) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1293) | Delegates / composes managed operations |
+| 105 | `List<ILoadCase> GetPrimaryLoadCasesFromIds(IEnumerable<int> loadCasesIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L764) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1329) | Delegates / composes managed operations |
+| 106 | `List<ILoadCase> GetReferenceLoadCasesFromIds(IEnumerable<int> loadCasesIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L797) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1371) | Delegates / composes managed operations |
+| 107 | `HashSet<ILoadCase> GetAllLoadCombinationCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L828) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1411) | Delegates / composes managed operations |
+| 108 | `ILoadCase GetLoadCombinationCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L862) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1449) | Delegates / composes managed operations |
+| 109 | `IEnumerable<ILoadCase> GetLoadCombinationCasesFromIds(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L899) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1492) | Delegates / composes managed operations |
+| 110 | `IEnumerable<ILoadCase> GetAllLoadCasesOfType(LoadCaseType loadCaseType = LoadCaseType.PrimaryLoad)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L934) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1541) | Delegates / composes managed operations |
+| 111 | `ILoadCase GetLoadCase(int lcId, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L970) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1585) | Delegates / composes managed operations |
+| 112 | `IEnumerable<ILoadCase> GetLoadCases(int fromId, int toId, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1006) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1625) | Delegates / composes managed operations |
+| 113 | `IEnumerable<ILoadCase> GetLoadCasesFromIds(IEnumerable<int> loadCasesIds, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1044) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1668) | Delegates / composes managed operations |
+| 114 | `List<ILoadCase> GetLoadCasesOfType(LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1074) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1707) | Delegates / composes managed operations |
+| 115 | `HashSet<int> GetEnvelopeIds()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1098) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2098) | [GetEnvelopeCount](#getenvelopecount), [GetEnvelopeIDs](#getenvelopeids) |
+| 116 | `ILoadEnvelopeDetail GetLoadEnvelopeDetail(int envId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1130) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2139) | [GetLoadEnvelopeDetails](#getloadenvelopedetails), [GetLoadListfromLoadEnvelope](#getloadlistfromloadenvelope) |
+| 117 | `HashSet<ILoadEnvelopeDetail> GetAllLoadEnvelopeDetails()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1155) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2181) | Delegates / composes managed operations |
+| 118 | `IOSLoad AddSelfweightInXYZTo(int loadCaseId, LoadCaseType lcType, IEnumerable<int> entities, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1187) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2220) | [AddSelfWeightInXYZToGeometry](#addselfweightinxyztogeometry) |
+| 119 | `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<int> loadCaseList)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1215) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2260) | [CreateLoadEnvelop](#createloadenvelop) |
+| 120 | `dynamic CreateLoadList(LoadListType loadListType, IEnumerable<int> loadCaseIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1244) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2296) | [CreateLoadList](#createloadlist) |
 
 
-## 4. Pending private-reference overloads
+## 4. Completed private-reference coverage
 
-The read-only main project's IOSLoad declares **115 overloads**. Current signatures match **100** of them; **15** remain pending. Five additional repository convenience overloads bring the current total to 105. Source signatures below are reference evidence, not automatically approved future return types or parameter names. The primary report proposes additive named-result APIs and internal version-aware translation.
+The read-only main project declares **115 IOSLoad method overloads**. Current source matches **all 115** by method name, generic arity and parameter types; **no reference interface overload remains pending**. Five repository conveniences bring the total to **120**. New parameter names are descriptive while reference types, order, returns and defaults are retained. This does not include every adapter-only source convenience or every Bentley native function.
 
-Every listed source overload is unimplemented in the current public Load surface. Some share a native function, so this table must not be added to the 62 unmapped-native count.
+Three pre-existing clear-primary overloads additionally make isReferenceLoad optional with default false, whereas the main interface requires that Boolean argument. This existing convenience difference is unchanged; coverage compares method names, generic arity and parameter types. All newly ported overloads retain the main reference return types and optional defaults.
 
-| # | Unported main-interface signature | Read-only reference |
-| ---: | --- | --- |
-| 1 | `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<Beam> members)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L842) |
-| 2 | `bool AddSeismicDefMemberUniformWeight(double weight, IEnumerable<int> memberIds, double startDistance = 0, double endDistance = 0, int seismicCode = 0)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L853) |
-| 3 | `bool AddSeismicDefMemberConcentratedWeight(double weight, double distance, IEnumerable<int> memberIds, int seismicCode = 0)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L863) |
-| 4 | `int AddSeismicDefWallArea(int typeNo, string direction, IEnumerable<double> dimensions)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L872) |
-| 5 | `int AddSeismicDefWallArea(int typeNo, SeismicWallDirection direction, IEnumerable<SeismicWallDimension> walls)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L881) |
-| 6 | `bool AddResponseSpectrumLoadEx(ResponseSpectrumLoadExParameters parameters)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L888) |
-| 7 | `bool AddResponseSpectrumLoadEx(int rsaCode, int rsaCombination, string[] set1Names, double[] set1Vals, string[] set2Names = null, double[] set2Vals = null, double[] customDataPairs = null)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L901) |
-| 8 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType paramType, IEnumerable<int> memberIds, double param = 0.0)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L918) |
-| 9 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType paramType, IEnumerable<Beam> members, double param = 0.0)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L927) |
-| 10 | `bool AddDirectAnalysisFlexParameter(double flexFactor, IEnumerable<int> memberIds)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L935) |
-| 11 | `bool AddDirectAnalysisAxialParameter(IEnumerable<int> memberIds)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L942) |
-| 12 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameters parameters)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L949) |
-| 13 | `bool DeleteDirectAnalysisDefinitionParameter(DirectAnalysisParameterType paramType)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L956) |
-| 14 | `bool DeleteDirectAnalysisDefinition()` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L962) |
-| 15 | `bool AddRSLoad(ResponseSpectrumLoadParameters parameters)` | [source](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L977) |
+The former 30-overload backlog is complete. The original source fingerprints and baseline inventory remain in the [comparison evidence](data/OpenSTAAD-Load-2024-2026-Comparison.json). Broader named-result/semantic capability API design remains proposed and cannot be introduced by changing return types alone.
 
 **Repository convenience overloads outside that interface:**
 
-- `IOSLoad CreatePrimaryLoadCases(IEnumerable<ILoadCase> primaryLoadCases)` ([source](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L477)).
-- `IOSLoad CreateReferenceLoadCases(IEnumerable<ILoadCase> referenceLoads)` ([source](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L483)).
-- `IOSLoad AddPlateUniformPressure(ILoadCase lc, int plateId, double pressure, LoadDirection direction = LoadDirection.LocalZ)` ([source](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L510)).
-- `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<int> plateIds, double pressure, LoadDirection direction = LoadDirection.LocalZ)` ([source](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L513)).
-- `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<Plate> plates, double pressure, LoadDirection direction = LoadDirection.LocalZ)` ([source](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L516)).
+- `IOSLoad CreatePrimaryLoadCases(IEnumerable<ILoadCase> primaryLoadCases)` ([source](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L522)).
+- `IOSLoad CreateReferenceLoadCases(IEnumerable<ILoadCase> referenceLoads)` ([source](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L528)).
+- `IOSLoad AddPlateUniformPressure(ILoadCase lc, int plateId, double pressure, LoadDirection direction = LoadDirection.LocalZ)` ([source](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L555)).
+- `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<int> plateIds, double pressure, LoadDirection direction = LoadDirection.LocalZ)` ([source](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L558)).
+- `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<Plate> plates, double pressure, LoadDirection direction = LoadDirection.LocalZ)` ([source](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L561)).
 
 ## 5. Vendor enum inventory and supporting model reuse
 
@@ -5449,11 +5478,11 @@ Reuse or adapt these existing source models before introducing parallel abstract
 | Wind | [WindFactorsConfiguration.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Wind/WindFactorsConfiguration.cs) | Ported with finite-value/enum validation and documented packet contracts; native numerical validation remains pending. |
 | Wind | [WindIntensityPair.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Wind/WindIntensityPair.cs) | Already ported; reuse existing value semantics. |
 | Wind | [WindUnitsConfiguration.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Wind/WindUnitsConfiguration.cs) | Ported with finite-value/enum validation and documented packet contracts; native numerical validation remains pending. |
-| Seismic | [DirectAnalysisParameters.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Seismic/DirectAnalysisParameters.cs) | Candidate for the pending definition/spectrum implementation; audit validation, units and wire packing before porting. |
-| Seismic | [ResponseSpectrumLoadExParameters.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Seismic/ResponseSpectrumLoadExParameters.cs) | Candidate for the pending definition/spectrum implementation; audit validation, units and wire packing before porting. |
-| Seismic | [ResponseSpectrumLoadParameters.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Seismic/ResponseSpectrumLoadParameters.cs) | Candidate for the pending definition/spectrum implementation; audit validation, units and wire packing before porting. |
-| Seismic | [SeismicDefinitionParameters.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Seismic/SeismicDefinitionParameters.cs) | Ported IS1893-2016, IS1893-2002 and IBC parameter models; shear-wall dimension/assignment APIs remain pending. |
-| Seismic | [SeismicEnums.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Seismic/SeismicEnums.cs) | Ported definition and member-distribution enums. Semantic member-weight enum translation and remaining spectrum enums are still pending. |
+| Seismic | [DirectAnalysisParameters.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Seismic/DirectAnalysisParameters.cs) | Ported with checked input capture and complete XML documentation; native marshaling/engineering verification remains pending. |
+| Seismic | [ResponseSpectrumLoadExParameters.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Seismic/ResponseSpectrumLoadExParameters.cs) | Ported with checked input capture and complete XML documentation; native marshaling/engineering verification remains pending. |
+| Seismic | [ResponseSpectrumLoadParameters.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Seismic/ResponseSpectrumLoadParameters.cs) | Ported with checked input capture and complete XML documentation; native marshaling/engineering verification remains pending. |
+| Seismic | [SeismicDefinitionParameters.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Seismic/SeismicDefinitionParameters.cs) | Ported IS1893-2016, IS1893-2002, IBC and shear-wall dimension models; wall-area APIs are also implemented. |
+| Seismic | [SeismicEnums.cs](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/Loads/Seismic/SeismicEnums.cs) | Ported definition/distribution, wall, spectrum and direct-analysis enums required by the interface. Semantic member-weight enum translation remains proposed. |
 
 ## 6. Source-page fingerprints
 
@@ -5536,4 +5565,4 @@ All 24 pages were read for each year, including zero-function grouping sections.
 
 ## 7. Evidence boundaries
 
-The original review inspected production source without edits; the subsequent increment ported 15 reference overloads and updated this inventory. The main project remained read-only throughout. Native method presence, reviewed help and passive vendor metadata do not establish actual acquired-server compatibility, licensing, engineering correctness or package contents. No live STAAD mutation or package build was performed. See the primary report for verification gates and unresolved contracts.
+The original review inspected production source without edits; subsequent increments ported all 30 originally pending reference overloads and updated this inventory. The main project remained read-only throughout. Native method presence, reviewed help and passive vendor metadata do not establish actual acquired-server compatibility, licensing, engineering correctness or package contents. No live STAAD mutation or package build was performed. See the primary report for verification gates and unresolved contracts.

@@ -44,9 +44,14 @@ Construction/refresh read native metadata on the session’s COM thread. Five ty
 
 ## `IOSLoad` Members
 
+### Completed main-interface reference coverage
+
+All 115 main-interface reference signatures are now implemented; source exposes 120 overloads including five conveniences. The final 15 include AddSeismicDefMemberWeight, AddSeismicDefMemberUniformWeight, AddSeismicDefMemberConcentratedWeight, AddSeismicDefWallArea, AddResponseSpectrumLoadEx, AddDirectAnalysisDefinitionParameter, AddDirectAnalysisFlexParameter, AddDirectAnalysisAxialParameter, DeleteDirectAnalysisDefinitionParameter, DeleteDirectAnalysisDefinition, AddRSLoad. See [packet contracts, overload details, model reuse, side effects and native validation limits](Load-Porting.md#load-reference-completion). The latest additions are outside the published preview.
+
+
 ### ASCE wind and seismic definitions
 
-Current source exposes 105 Load overloads, with 15 main-interface reference overloads pending. The latest 15 include AddWindDefinitionASCE7Parameters, ComputeWallWindPressureProfile, ComputeWallWindPressureProfileASCE72016, AddSeismicDefinition, ModifySeismicDefinitionParam, ModifySeismicDefinitionParams, AddSeismicDefSelfWeight, AddSeismicDefJointWeight and AddSeismicDefMemberWeight. Signatures retain reference return types and defaults, with native ref handling kept internal. See [complete contracts, units, native-code distinctions and examples](Load-Porting.md#asce-wind-and-seismic-definitions). These are source additions after the published preview.
+The preceding source increment exposed 105 Load overloads, with 15 main-interface reference overloads then pending. The latest 15 include AddWindDefinitionASCE7Parameters, ComputeWallWindPressureProfile, ComputeWallWindPressureProfileASCE72016, AddSeismicDefinition, ModifySeismicDefinitionParam, ModifySeismicDefinitionParams, AddSeismicDefSelfWeight, AddSeismicDefJointWeight and AddSeismicDefMemberWeight. Signatures retain reference return types and defaults, with native ref handling kept internal. See [complete contracts, units, native-code distinctions and examples](Load-Porting.md#asce-wind-and-seismic-definitions). These are source additions after the published preview.
 
 
 ### Reference, Repeat and Temperature Assignments

@@ -1,6 +1,8 @@
 # NuGet readiness assessment
 
-The latest Load increment ports another 15 reference overloads for typed ASCE wind and seismic operations. Current source coverage is 105 overloads (100 reference plus five convenience), with 15 reference overloads pending. The source suite passed 2,024 offline tests; the verifier now selects 280 XML examples. No new package was built or published; native marshaling/engineering validation remains a release gate. See [Load contracts](Load-Porting.md#asce-wind-and-seismic-definitions).
+The final 15 Load reference overloads are now ported. Current source exposes 120 overloads (115 main-interface reference plus five convenience), with no reference overload pending. Passed 2,185 offline tests; the reusable verifier selects 310 XML examples. No new archive was built or published, and live native compatibility/engineering checks remain required. See [Load reference completion](Load-Porting.md#load-reference-completion).
+
+The preceding Load increment ported another 15 reference overloads for typed ASCE wind and seismic operations. That earlier increment exposed 105 overloads (100 reference plus five convenience), with 15 reference overloads pending. The source suite passed 2,024 offline tests; the verifier now selects 280 XML examples. No new package was built or published; native marshaling/engineering validation remains a release gate. See [Load contracts](Load-Porting.md#asce-wind-and-seismic-definitions).
 
 ## Source update - 22 October 2026
 
