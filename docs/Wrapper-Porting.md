@@ -24,7 +24,7 @@ The source's Bentley COM types are represented by object/dynamic, matching this 
 | `RawLoad` | Captures native Load interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `Load` | Existing implemented Load adapter. |
 | `RawOutput` | Captures native Output interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
-| `Output` | Binding-only `IOSOutput` / `OSOutputAdapter` placeholder; no domain functions ported. |
+| `Output` | Binding-only `IOSOutput` / `OSOutputAdapter` placeholder; no domain functions ported. See the [Output comparison and plan](Output-Porting.md). |
 | `RawProperty` | Captures native Property interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `Property` | Binding-only `IOSProperty` / `OSPropertyAdapter` placeholder; no domain functions ported. |
 | `RawSupport` | Captures native Support interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
