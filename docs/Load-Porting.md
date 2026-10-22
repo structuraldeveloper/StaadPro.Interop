@@ -1,8 +1,14 @@
 # Load API porting and new assignments
 
-The reference `IOSLoad` contains 115 method overloads. This repository now exposes 90: 85 matching reference overloads plus five repository-specific convenience overloads. There are 30 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
+The private main project’s reference `IOSLoad` contains 115 method overloads. This repository now exposes 90: 85 matching reference overloads plus five repository-specific convenience overloads. There are 30 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
 
 The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 90 from 115 does not give the pending reference count.
+
+## Cross-version native coverage review — 22 October 2026
+
+Private-source overload parity is separate from Bentley native API coverage. The installed 2024/2025/2026 Load references each document 129 functions across 24 pages. The current source dispatches 59 of those names: 53 directly in OSLoadAdapter and six through member-load entity implementations. Seventy documented names have no current dispatch. The inspected 2025/2026 vendor interfaces each declare another three names outside those help sections.
+
+See the [Load multi-version comparison and architecture plan](reports/OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md) and [complete native contract and managed coverage inventory](reports/OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md). They include the complete matrix, version-sensitive seismic code mapping, status differences, per-function proposals, private-reference backlog and release verification gates. This review changes documentation only; its architecture and API proposals are not implemented.
 
 ## Batch 1: AddSelfweightInXYZTo, CreateLoadCombinations, CreateLoadEnvelopExt
 

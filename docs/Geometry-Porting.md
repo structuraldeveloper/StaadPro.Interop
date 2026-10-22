@@ -1,6 +1,6 @@
 # Geometry API comparison, grouping and mutations
 
-The reference geometry interface and adapter contain 143 method overloads. All 143 are now ported, including the final physical-member identification, plan-angle grouping and managed polygon-mesh operations. The table tracks the original nine pending functions; all are complete.
+The private main project's geometry interface and adapter contain 143 method overloads. All 143 are now ported, including the final physical-member identification, plan-angle grouping and managed polygon-mesh operations. The table tracks the original nine pending functions; all are complete.
 
 | Function | Status after this update | Required supporting API |
 | --- | --- | --- |
@@ -14,7 +14,9 @@ The reference geometry interface and adapter contain 143 method overloads. All 1
 | `CreateMultipleNodesExtended(IOSRoot openStaad, IEnumerable<Node> nodeCollection)` | Ported | `IOSRoot`, exposed as `wrapper.Root` |
 | `MergeNodesExtended(IOSRoot openStaad, Node retain, IEnumerable<Node> nodesToMerge)` | Ported | `IOSRoot`, exposed as `wrapper.Root` |
 
-There are now 143 geometry overloads implemented, with no reference Geometry overload pending. The counts include generic, asynchronous and collection overloads separately. The comparison covers both `IOSGeometry` and `OSGeometryAdapter`.
+There are now 143 geometry overloads implemented, with no private-source Geometry interface overload pending. The counts include generic, asynchronous and collection overloads separately. The comparison covers both `IOSGeometry` and `OSGeometryAdapter`.
+
+For coverage against Bentley's installed native manuals, see the [2024–2026 Geometry comparison and architecture plan](reports/OpenSTAAD-Geometry-Multi-Version-Architecture-and-Plan.md) and [complete native contract/coverage inventory](reports/OpenSTAAD-Geometry-API-Coverage-and-Contract-Inventory.md). The reviewed manuals contain 135 native names per year; current code dispatches 59 of those names. The 143-overload figure measures private-source parity, not full native API coverage. The Geometry version policies in the new report are proposed, not implemented.
 
 ## Connectivity grouping
 
