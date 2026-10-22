@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
+using StaadPro.Interop.Models;
 
 namespace StaadPro.Interop.Services
 {
@@ -77,6 +78,139 @@ namespace StaadPro.Interop.Services
             }
 
             return groups;
+        }
+
+
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='GeometryCompletion.IdentifyPhysicalMembers']/*" />
+        public static PhysicalMemberIdentificationResult IdentifyPhysicalMembers(IEnumerable<Beam> beams, double angularToleranceDegrees = 0.005)
+        {
+            if (beams == null) throw new ArgumentNullException(nameof(beams));
+            ValidateAngleTolerance(angularToleranceDegrees);
+            var snapshot = beams.Where(beam => beam != null).ToList();
+            var nodeCoordinates = new Dictionary<int, Node>();
+            var byId = new Dictionary<int, Beam>();
+            foreach (Beam beam in snapshot)
+            {
+                ValidateEndpoints(beam.StartNode, beam.EndNode, nameof(beams));
+                if (beam.Id <= 0) throw new ArgumentException("Beam IDs must be positive.", nameof(beams));
+                foreach (Node node in new[] { beam.StartNode, beam.EndNode })
+                {
+                    if (nodeCoordinates.TryGetValue(node.Id, out Node previous) &&
+                        (node.X != previous.X || node.Y != previous.Y || node.Z != previous.Z))
+                        throw new ArgumentException("A node ID has inconsistent coordinates.", nameof(beams));
+                    nodeCoordinates[node.Id] = node;
+                }
+                if (byId.TryGetValue(beam.Id, out Beam existing))
+                {
+                    if (existing.StartNode.Id != beam.StartNode.Id || existing.EndNode.Id != beam.EndNode.Id)
+                        throw new ArgumentException("A beam ID has inconsistent endpoints.", nameof(beams));
+                }
+                else byId.Add(beam.Id, beam);
+            }
+            var result = new PhysicalMemberIdentificationResult();
+            var distinctBeams = byId.Values.ToList();
+            var incidence = BuildIncidentBeamsByNodeId(distinctBeams);
+            int nextMemberId = 1;
+            foreach (var component in SegregateBeamsByConnectivity(distinctBeams))
+            {
+                var ordered = component.ToList();
+                var degrees = ordered.SelectMany(beam => new[] { beam.StartNode.Id, beam.EndNode.Id })
+                    .Distinct().Select(id => incidence[id].Count).ToList();
+                // A physical run must have exactly two leaves: cycles and branches are ambiguous.
+                if (degrees.Any(degree => degree > 2) || degrees.Count(degree => degree == 1) != 2)
+                {
+                    result.DiscardedBeams.AddRange(ordered);
+                    continue;
+                }
+                var run = new List<Beam>();
+                foreach (Beam beam in ordered)
+                {
+                    if (run.Count > 0 && !AreParallel(run[run.Count - 1], beam, angularToleranceDegrees))
+                    {
+                        AddPhysicalRun(result, run, nextMemberId++);
+                        run = new List<Beam>();
+                    }
+                    run.Add(beam);
+                }
+                AddPhysicalRun(result, run, nextMemberId++);
+            }
+            return result;
+        }
+
+        /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='GeometryCompletion.GroupPhysicalMembersByPlanAngle']/*" />
+        public static IEnumerable<PhysicalMemberPlanAngleGroup> GroupPhysicalMembersByPlanAngle(IEnumerable<Member> members, double angularToleranceDegrees = 1e-3)
+        {
+            if (members == null) throw new ArgumentNullException(nameof(members));
+            ValidateAngleTolerance(angularToleranceDegrees);
+            var snapshot = members.Where(member => member != null).ToList();
+            foreach (Member member in snapshot) ValidateEndpoints(member.StartNode, member.EndNode, nameof(members));
+            var groups = new List<PhysicalMemberPlanAngleGroup>();
+            foreach (Member member in snapshot)
+            {
+                // Same XZ plan convention as Node.PlanAngleIn360DegreesOf; opposite bearings coincide.
+                double angle = Node.PlanAngleIn360DegreesOf(member.EndNode, member.StartNode) % 180.0;
+                if (angle < 0) angle += 180;
+                var group = groups.FirstOrDefault(candidate =>
+                {
+                    double difference = Math.Abs(candidate.PlanAngleInDegrees - angle);
+                    return Math.Min(difference, 180 - difference) <= angularToleranceDegrees;
+                });
+                if (group == null)
+                {
+                    group = new PhysicalMemberPlanAngleGroup { PlanAngleInDegrees = angle };
+                    groups.Add(group);
+                }
+                group.Members.Add(member);
+            }
+            return groups.OrderBy(group => group.PlanAngleInDegrees).ToList();
+        }
+
+        private static void ValidateAngleTolerance(double tolerance)
+        {
+            if (double.IsNaN(tolerance) || double.IsInfinity(tolerance) || tolerance < 0 || tolerance >= 90)
+                throw new ArgumentOutOfRangeException("angularToleranceDegrees", "Use a finite tolerance from zero up to, but not including, 90 degrees.");
+        }
+
+        private static void ValidateEndpoints(Node start, Node end, string parameterName)
+        {
+            if (start == null || end == null || start.Id <= 0 || end.Id <= 0 || start.Id == end.Id ||
+                !Finite(start.X) || !Finite(start.Y) || !Finite(start.Z) ||
+                !Finite(end.X) || !Finite(end.Y) || !Finite(end.Z))
+                throw new ArgumentException("Endpoints must have distinct positive IDs and finite coordinates.", parameterName);
+            var vector = Node.GetVector3D(start, end);
+            double scale = Math.Max(Math.Abs(vector.X), Math.Max(Math.Abs(vector.Y), Math.Abs(vector.Z)));
+            if (!Finite(scale) || scale == 0)
+                throw new ArgumentException("Endpoints must define a finite nonzero segment.", parameterName);
+        }
+
+        private static bool Finite(double value) => !double.IsNaN(value) && !double.IsInfinity(value);
+
+        private static bool AreParallel(Beam first, Beam second, double tolerance)
+        {
+            var a = first.ToVector;
+            var b = second.ToVector;
+            a /= Math.Max(Math.Abs(a.X), Math.Max(Math.Abs(a.Y), Math.Abs(a.Z)));
+            b /= Math.Max(Math.Abs(b.X), Math.Max(Math.Abs(b.Y), Math.Abs(b.Z)));
+            a.Normalize(); b.Normalize();
+            double dot = Math.Abs(System.Windows.Media.Media3D.Vector3D.DotProduct(a, b));
+            double cross = System.Windows.Media.Media3D.Vector3D.CrossProduct(a, b).Length;
+            return Math.Atan2(cross, dot) * 180.0 / Math.PI <= tolerance;
+        }
+
+        private static void AddPhysicalRun(PhysicalMemberIdentificationResult result, List<Beam> run, int memberId)
+        {
+            Node start = run[0].StartNode;
+            if (run.Count > 1 && (start.Id == run[1].StartNode.Id || start.Id == run[1].EndNode.Id))
+                start = run[0].EndNode;
+            Node end = start;
+            foreach (Beam beam in run) end = beam.StartNode.Id == end.Id ? beam.EndNode : beam.StartNode;
+            var member = new Member(memberId, start, end)
+            {
+                Beams = new HashSet<Beam>(run),
+                Nodes = new HashSet<Node>(run.SelectMany(beam => new[] { beam.StartNode, beam.EndNode }))
+            };
+            foreach (Beam beam in run) beam.Member = member;
+            result.Members.Add(member);
         }
 
         private static Dictionary<int, List<Beam>> BuildIncidentBeamsByNodeId(IEnumerable<Beam> beams)

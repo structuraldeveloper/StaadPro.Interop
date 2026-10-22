@@ -1,12 +1,18 @@
 # NuGet readiness assessment
 
+## Source update - 22 October 2026
+
+The approved wrapper surface is complete, and Geometry now covers all 143 reference overloads. The final three Geometry methods and their managed services/models passed 57 new regression cases within the 1,604-test offline suite. Nine new compiled XML example blocks passed a source-reference consumer check. These additions have not been built into a new distribution archive; the latest published preview remains 1.0.0-preview.20261015 and does not include them. The next package verifier expects 250 selected XML examples. Placeholder domain APIs remain separate work.
+
+The following Load increment ports 12 reference overloads for uniform member-load population, nodal refresh and basic wind definition operations. Current source coverage is 90 Load overloads (85 reference plus five convenience), leaving 30 reference overloads pending. The full source suite passed 1,761 offline tests, including 157 new Load cases. All 250 selected XML examples compiled and ran against a source-reference consumer; native wind mutation examples remained disabled. This is source verification, not a new package or live STAAD certification.
+
 ## Prepared preview - 15 October 2026
 
 The locally prepared package is `1.0.0-preview.20261015`, targeting Windows and .NET Framework 4.8.1. It includes the approved wrapper surface and all 39 reviewed native Root mappings: 53 common managed operations plus three optional operations. All 23 private-source Root method names are covered. Geometry and load adapters expose 140 methods and 78 overloads respectively.
 
 Release verification comprises 1,547 offline tests, a Release solution build with zero warnings/errors, archive metadata and documentation checks, and a fresh PackageReference consumer compiling and running 217 selected XML examples against managed stand-ins. Native STAAD mutations are not exercised. The archive and test evidence are under `artifacts/release`.
 
-This preview has not been uploaded as part of this work. Optional capability profiles require exact candidate-build and native signature checks; they are not live compatibility certification. Native behavior, engineering-unit conventions, file effects and broader version compatibility remain stable-release gates. See [Root completion and capabilities](Root-Completion-and-Capabilities.md) and [Publishing.md](Publishing.md).
+The 1.0.0-preview.20261015 preview is now listed in the public NuGet feed (checked on 22 October 2026). This status check does not repeat a public-package restore/runtime test. Optional capability profiles require exact candidate-build and native signature checks; they are not live compatibility certification. Native behavior, engineering-unit conventions, file effects and broader version compatibility remain stable-release gates. See [Root completion and capabilities](Root-Completion-and-Capabilities.md) and [Publishing.md](Publishing.md).
 
 ## Historical source update - 13 October 2026
 

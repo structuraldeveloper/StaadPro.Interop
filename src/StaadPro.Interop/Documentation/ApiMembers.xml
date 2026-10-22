@@ -4292,5 +4292,319 @@ var populated = load.PopulateMemberLoads(new[] { beam }, new[] { new LoadCase(17
 foreach (var item in populated) Console.WriteLine(item.MemberLoadItems.Count);
 ]]></code></example>
     </member>
-  </members>
+      <member name="GeometryCompletion.IdentifyPhysicalMembers">
+<summary>Reconstructs physical members from straight runs within the supplied analytical beam connectivity.</summary>
+<param name="beams">Beam sequence, enumerated once. Null entries are ignored. Repeated IDs retain the first instance when endpoints agree. IDs must be positive; shared node IDs must have identical finite coordinates.</param>
+<param name="angularToleranceDegrees">Finite inclusive pairwise deviation from parallel or antiparallel, in degrees, from zero to less than 90. Defaults to 0.005.</param>
+<returns>A new result containing synthetic members numbered from one, and every beam in discarded branched or cyclic components. Empty input returns empty lists.</returns>
+<remarks>Managed-only; no model queries, node creation, native physical-member creation or unit conversions. Connectivity uses endpoint IDs. Simple chains split whenever consecutive segment directions exceed the tolerance; single beams form members. The pairwise rule may permit cumulative drift. Entire branching components and closed loops are discarded. Original beam/node objects are reused; accepted beams have their Member back-reference replaced. Discarded beams retain existing back-references. Member.Nodes and Member.Beams are sets, so enumeration order is not a traversal contract. Result lists are mutable and detached from input collections. Validate all input before changes; serialize access to shared entities.</remarks>
+<exception cref="ArgumentNullException">The beam sequence is null.</exception>
+<exception cref="ArgumentException">IDs, coordinates, endpoints or duplicate-ID definitions are invalid or inconsistent.</exception>
+<exception cref="ArgumentOutOfRangeException">The angular tolerance is nonfinite, negative or at least 90 degrees.</exception>
+<example><code>
+var start = new StaadPro.Interop.Entities.Node(1, 0, 0, 0);
+var middle = new StaadPro.Interop.Entities.Node(2, 2, 0, 0);
+var end = new StaadPro.Interop.Entities.Node(3, 4, 0, 0);
+var segments = new[] {
+    new StaadPro.Interop.Entities.Beam(11, start, middle),
+    new StaadPro.Interop.Entities.Beam(12, end, middle) };
+var reconstructed = StaadPro.Interop.Services.ConnectivityService.IdentifyPhysicalMembers(segments);
+Console.WriteLine(reconstructed.Members.Count); // 1; no STAAD changes
+</code></example>
+    </member>
+    <member name="GeometryCompletion.GroupPhysicalMembersByPlanAngle">
+<summary>Groups physical members by their undirected bearing in the global XZ plane.</summary>
+<param name="members">Member sequence, enumerated once. Null entries are ignored; repeated references are retained. Every member requires distinct positive endpoint IDs and a finite nonzero three-dimensional segment.</param>
+<param name="angularToleranceDegrees">Finite inclusive circular bearing tolerance in degrees, from zero to less than 90. Defaults to 0.001.</param>
+<returns>A materialized collection of groups sorted by representative bearing. Each bearing is in [0,180); opposite directions share a group. Empty input produces no groups.</returns>
+<remarks>Managed-only; does not query the model vertical axis or change members. Uses atan2(delta Z, delta X) modulo 180, matching the source XZ convention even in a Z-up model. Vertical members with no XZ projection use zero degrees by convention. Each input joins the first existing representative within tolerance, including wraparound near zero/180; this is input-order-dependent representative grouping, not transitive clustering. Reuses original members and returns fresh mutable group lists; no entity IDs are created.</remarks>
+<exception cref="ArgumentNullException">The member sequence is null.</exception>
+<exception cref="ArgumentException">Member endpoints, IDs or coordinates do not define valid segments.</exception>
+<exception cref="ArgumentOutOfRangeException">The tolerance is nonfinite, negative or at least 90.</exception>
+<example><code>
+var first = new StaadPro.Interop.Entities.Node(1, 0, 0, 0);
+var last = new StaadPro.Interop.Entities.Node(2, 3, 0, 0);
+var membersToGroup = new[] {
+    new StaadPro.Interop.Entities.Member(1, first, last),
+    new StaadPro.Interop.Entities.Member(2, last, first) };
+var angleGroups = StaadPro.Interop.Services.ConnectivityService.GroupPhysicalMembersByPlanAngle(membersToGroup);
+Console.WriteLine(System.Linq.Enumerable.Count(angleGroups)); // 1
+</code></example>
+    </member>
+    <member name="GeometryCompletion.GeneratePolygonMesh">
+<summary>Generates a managed triangular mesh in the supplied simple polygon's own three-dimensional plane.</summary>
+<param name="boundaryNodes">Ordered open boundary of 3 to 512 nonnull nodes with unique positive IDs and distinct finite coordinates. Either winding is accepted. Omit a repeated closing node. Holes, crossings, touching nonadjacent edges and overlapping edges are unsupported. Coplanarity tolerance is 1e-9 times the maximum coordinate extent from the first node.</param>
+<param name="startingNodeId">Positive ID of the first generated node, inclusive. Subsequent IDs increase by one, must fit Int32 and must not collide with boundary IDs. Unused when no node is generated; does not reserve or query native IDs.</param>
+<param name="startingPlateId">Positive ID of the first generated plate, inclusive. Subsequent IDs increase by one and must fit Int32. The caller must prevent collisions with existing model entities.</param>
+<param name="minimumAngleDegrees">Finite target triangle angle strictly between zero and 60 degrees. Default 20. Quality is best effort and may be unattainable.</param>
+<param name="maximumEdgeLength">Finite nonnegative edge-length target in the boundary coordinate units. Zero disables it. Positive values participate in quality reporting as well as refinement.</param>
+<returns>A new mesh result preserving original boundary order and object identities, generated nodes with explicit IDs, triangular plates, measured minimum angle and a flag indicating whether both quality targets were achieved.</returns>
+<remarks>Managed-only; does not create native nodes/plates, use global entity counters, convert units or reserve IDs. Ports ear clipping, constrained edge flips and circumcenter/midpoint refinement, bounded to 256 insertions. Preserves every original boundary vertex and its position. The source-compatible InteriorNodes collection includes newly introduced boundary-segment split nodes as well as strictly interior nodes. A valid best-effort mesh may return ReachedTargetQuality=false when the budget or numerical progress limit is reached. Numerically unresolved polygons/triangles fail explicitly rather than yielding overlapping or degenerate fallback triangles. Input coordinates must be resolvable at the polygon extent; points within 1e-10 of that extent are treated as coincident. Result lists and entities are mutable; inspect quality before explicitly submitting them to STAAD.</remarks>
+<exception cref="ArgumentNullException">The boundary is null.</exception>
+<exception cref="ArgumentException">Boundary size, IDs, coordinates, topology or planarity are invalid, generated IDs collide with boundary IDs, or the polygon cannot be triangulated reliably.</exception>
+<exception cref="ArgumentOutOfRangeException">Starting IDs or quality options are outside their documented ranges.</exception>
+<exception cref="OverflowException">Generated node or plate IDs exceed Int32.MaxValue.</exception>
+<exception cref="InvalidOperationException">Refinement produces numerically unresolved geometry or nonfinite coordinates.</exception>
+<example><code>
+var outline = new[] {
+    new StaadPro.Interop.Entities.Node(1, 0, 0, 0),
+    new StaadPro.Interop.Entities.Node(2, 4, 0, 0),
+    new StaadPro.Interop.Entities.Node(3, 4, 0, 4),
+    new StaadPro.Interop.Entities.Node(4, 0, 0, 4) };
+var meshResult = StaadPro.Interop.Services.PolygonMeshGenerationService.GenerateMesh(outline, 100, 200);
+Console.WriteLine(meshResult.Plates.Count); // 2; nothing written to STAAD
+Console.WriteLine(meshResult.ReachedTargetQuality);
+</code></example>
+    </member>
+    <member name="LoadNext12.PopulateMemberUniformlyDistributedLoads">
+<summary>Appends uniformly distributed member forces read from the requested cases to each supplied beam.</summary>
+<param name="forBeams">Initialized beams with positive IDs. Enumerated once; empty input is valid. Duplicates are retained and can append repeated data.</param>
+<param name="fromLoadCases">Initialized primary/reference cases with positive IDs. Enumerated once; empty input makes no native calls and leaves existing loads unchanged.</param>
+<returns>No value; updates the existing MemberLoadItems lists by appending new query results.</returns>
+<remarks>Enumerates each input sequence once and validates both snapshots before native reads or managed list changes. Preserves entity/case order and duplicate entries, and retains the original objects and load-case identities. Supports only positive-ID primary/reference cases; combination, repeat and unknown case types are rejected before changes. Calls the existing validated count/fetch reader per case/entity on the calling thread. The last successfully activated case remains active; no restoration, save, unit conversion, model assignment, worker dispatch or rollback is performed. Already processed entities/cases remain changed when a later read fails. Returned load data uses the existing query units and directions; live engineering-unit validation remains pending. Does not clear, deduplicate or replace existing member loads. Repeated calls append again; an empty reader response adds nothing. No separate native uniform-load assignment is made.</remarks>
+<exception cref="ArgumentNullException">An input sequence or a load-case entry is null.</exception>
+<exception cref="ArgumentException">An entity is null or lacks a positive ID.</exception>
+<exception cref="ArgumentOutOfRangeException">A case ID is not positive.</exception>
+<exception cref="NotSupportedException">A requested case type is unsupported.</exception>
+<exception cref="InvalidOperationException">Native activation, count, fetch, array or value validation fails.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">A native operation fails.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native object lacks a required query member.</exception>
+<example><code>
+var beamToPopulate = new StaadPro.Interop.Entities.Beam(101,
+    new StaadPro.Interop.Entities.Node(1, 0, 0, 0),
+    new StaadPro.Interop.Entities.Node(2, 5, 0, 0));
+load.PopulateMemberUniformlyDistributedLoads(new[] { beamToPopulate },
+    new StaadPro.Interop.Entities.ILoadCase[] { new StaadPro.Interop.Entities.LoadCase(17) });
+Console.WriteLine(beamToPopulate.MemberLoadItems.Count);
+</code></example>
+    </member>
+    <member name="LoadNext12.PopulateMemberUniformMoments">
+<summary>Appends uniform member moments read from the requested cases to each supplied beam.</summary>
+<param name="forBeams">Initialized beams with positive IDs. Enumerated once; empty input is valid. Duplicates are retained and can append repeated data.</param>
+<param name="fromLoadCases">Initialized primary/reference cases with positive IDs. Enumerated once; empty input makes no native calls and leaves existing loads unchanged.</param>
+<returns>No value; updates the existing MemberLoadItems lists by appending new query results.</returns>
+<remarks>Enumerates each input sequence once and validates both snapshots before native reads or managed list changes. Preserves entity/case order and duplicate entries, and retains the original objects and load-case identities. Supports only positive-ID primary/reference cases; combination, repeat and unknown case types are rejected before changes. Calls the existing validated count/fetch reader per case/entity on the calling thread. The last successfully activated case remains active; no restoration, save, unit conversion, model assignment, worker dispatch or rollback is performed. Already processed entities/cases remain changed when a later read fails. Returned load data uses the existing query units and directions; live engineering-unit validation remains pending. Does not clear, deduplicate or replace existing member loads. Repeated calls append again; an empty reader response adds nothing. No separate native uniform-load assignment is made.</remarks>
+<exception cref="ArgumentNullException">An input sequence or a load-case entry is null.</exception>
+<exception cref="ArgumentException">An entity is null or lacks a positive ID.</exception>
+<exception cref="ArgumentOutOfRangeException">A case ID is not positive.</exception>
+<exception cref="NotSupportedException">A requested case type is unsupported.</exception>
+<exception cref="InvalidOperationException">Native activation, count, fetch, array or value validation fails.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">A native operation fails.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native object lacks a required query member.</exception>
+<example><code>
+var beamToPopulate = new StaadPro.Interop.Entities.Beam(101,
+    new StaadPro.Interop.Entities.Node(1, 0, 0, 0),
+    new StaadPro.Interop.Entities.Node(2, 5, 0, 0));
+load.PopulateMemberUniformMoments(new[] { beamToPopulate },
+    new StaadPro.Interop.Entities.ILoadCase[] { new StaadPro.Interop.Entities.LoadCase(17) });
+Console.WriteLine(beamToPopulate.MemberLoadItems.Count);
+</code></example>
+    </member>
+    <member name="LoadNext12.PopulateNodalLoads">
+<summary>Refreshes the supplied nodes' managed nodal-load collections from the requested cases.</summary>
+<param name="forNodes">Initialized positive-ID nodes, enumerated once. Returns the same node objects in a new materialized list, preserving order and duplicates.</param>
+<param name="fromLoadCases">Primary/reference cases with positive IDs, enumerated once. Empty input deliberately clears the supplied nodes' existing load lists without making native calls.</param>
+<returns>A materialized IEnumerable of the original nodes with NodalLoadItems refreshed. It is independent of deferred input enumeration; empty node input yields an empty list.</returns>
+<remarks>Enumerates each input sequence once and validates both snapshots before native reads or managed list changes. Preserves entity/case order and duplicate entries, and retains the original objects and load-case identities. Supports only positive-ID primary/reference cases; combination, repeat and unknown case types are rejected before changes. Calls the existing validated count/fetch reader per case/entity on the calling thread. The last successfully activated case remains active; no restoration, save, unit conversion, model assignment, worker dispatch or rollback is performed. Already processed entities/cases remain changed when a later read fails. Returned load data uses the existing query units and directions; live engineering-unit validation remains pending. Clears every selected node's NodalLoadItems after validation and before the first query. All prior managed loads are removed, including cases not requested. Reads append eagerly in case-major, node-minor order; duplicate node entries cause repeated reads/appends. A zero-count result leaves the node with no entries for that query. Empty nodes cause no native calls. This is read-back into managed entities, not creation/deletion of native nodal assignments.</remarks>
+<exception cref="ArgumentNullException">An input sequence or a load-case entry is null.</exception>
+<exception cref="ArgumentException">An entity is null or lacks a positive ID.</exception>
+<exception cref="ArgumentOutOfRangeException">A case ID is not positive.</exception>
+<exception cref="NotSupportedException">A requested case type is unsupported.</exception>
+<exception cref="InvalidOperationException">Native activation, count, fetch, array or value validation fails.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">A native operation fails.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native object lacks a required query member.</exception>
+<example><code>
+var nodeToRefresh = new StaadPro.Interop.Entities.Node(101, 0, 0, 0);
+var refreshedNodes = load.PopulateNodalLoads(new[] { nodeToRefresh },
+    new StaadPro.Interop.Entities.ILoadCase[] { new StaadPro.Interop.Entities.LoadCase(17) });
+foreach (var refreshedNode in refreshedNodes)
+    Console.WriteLine(refreshedNode.NodalLoadItems.Count);
+</code></example>
+    </member>
+    <member name="LoadNext12.AddWindDefinition">
+<summary>Adds a named native wind-definition type.</summary>
+<param name="windDefinitionId">Positive native wind-definition type ID. The caller must ensure it is appropriate for the current model.</param>
+<param name="definitionName">Nonblank Unicode comment/name without NUL. Whitespace around the name and its original text are preserved.</param>
+<returns>The unmodified signed Int32 OpenSTAAD status. Creation, exposure and intensity document 0 for success and -1 for general error; deletion documents 0 for success and -8039 for an invalid definition. Other integer codes are preserved. A nonzero code is not converted into an exception or success Boolean.</returns>
+<remarks>Mutates the bound model's wind definitions on the calling COM thread. Validates and snapshots inputs before the single native dispatch. Does not activate a load case, query definition existence or node membership, generate wind load cases, convert units, save, retry or roll back. Native side effects may already have occurred when a failure status, COM exception or malformed status is observed. Keep shared model access serialized. Native status must be a supported integral CLR value within Int32; null, Boolean, floating/decimal values, enums and strings are rejected instead of coerced. Dispatches AddWindDefinition once with Int32 ID and string name. Does not silently select a free ID, replace an existing definition through a managed fallback or construct ASCE parameters.</remarks>
+<exception cref="ArgumentNullException">The definition name is null.</exception><exception cref="ArgumentException">The name is blank or contains NUL.</exception>
+<exception cref="ArgumentOutOfRangeException">A numeric argument is nonfinite or outside its documented range.</exception>
+<exception cref="InvalidOperationException">The native status is malformed or outside Int32.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">Native dispatch fails; any native changes are not rolled back.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed native object lacks the required member or argument layout.</exception>
+<example><code>
+bool allowWindEdit = false; // Enable only for a controlled model with suitable definition/node IDs.
+if (allowWindEdit)
+{
+    int windStatus = load.AddWindDefinition(1, "North wind");
+    Console.WriteLine(windStatus);
+}
+</code></example>
+    </member>
+    <member name="LoadNext12.AddWindExposureIds">
+<summary>Assigns a wind exposure factor to supplied node IDs.</summary>
+<param name="windDefinitionId">Positive native wind-definition type ID. The caller must ensure it is appropriate for the current model.</param><param name="exposureFactor">Finite nonnegative exposure factor. Zero is forwarded unchanged.</param>
+<param name="nodeIds">Non-null, nonempty sequence of positive IDs. Enumerated once into an Int32 array; preserves order and duplicates.</param>
+<returns>The unmodified signed Int32 OpenSTAAD status. Creation, exposure and intensity document 0 for success and -1 for general error; deletion documents 0 for success and -8039 for an invalid definition. Other integer codes are preserved. A nonzero code is not converted into an exception or success Boolean.</returns>
+<remarks>Mutates the bound model's wind definitions on the calling COM thread. Validates and snapshots inputs before the single native dispatch. Does not activate a load case, query definition existence or node membership, generate wind load cases, convert units, save, retry or roll back. Native side effects may already have occurred when a failure status, COM exception or malformed status is observed. Keep shared model access serialized. Native status must be a supported integral CLR value within Int32; null, Boolean, floating/decimal values, enums and strings are rejected instead of coerced. Dispatches AddWindExposure once with the complete Int32 array; no per-node loop. Does not change managed node data or infer whether IDs exist.</remarks>
+<exception cref="ArgumentNullException">The node sequence is null.</exception><exception cref="ArgumentException">The node sequence is empty.</exception>
+<exception cref="ArgumentOutOfRangeException">A numeric argument is nonfinite or outside its documented range.</exception>
+<exception cref="InvalidOperationException">The native status is malformed or outside Int32.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">Native dispatch fails; any native changes are not rolled back.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed native object lacks the required member or argument layout.</exception>
+<example><code>
+bool allowWindEdit = false; // Enable only for a controlled model with suitable definition/node IDs.
+if (allowWindEdit)
+{
+    int windStatus = load.AddWindExposure(1, 1.0, new[] { 101, 102 });
+    Console.WriteLine(windStatus);
+}
+</code></example>
+    </member>
+    <member name="LoadNext12.AddWindExposureNodes">
+<summary>Assigns a wind exposure factor using managed node objects.</summary>
+<param name="windDefinitionId">Positive native wind-definition type ID. The caller must ensure it is appropriate for the current model.</param><param name="exposureFactor">Finite nonnegative exposure factor. Zero is forwarded unchanged.</param>
+<param name="nodes">Non-null, nonempty sequence of non-null positive-ID nodes. Enumerated once; only IDs are used. Order and duplicates are preserved.</param>
+<returns>The unmodified signed Int32 OpenSTAAD status. Creation, exposure and intensity document 0 for success and -1 for general error; deletion documents 0 for success and -8039 for an invalid definition. Other integer codes are preserved. A nonzero code is not converted into an exception or success Boolean.</returns>
+<remarks>Mutates the bound model's wind definitions on the calling COM thread. Validates and snapshots inputs before the single native dispatch. Does not activate a load case, query definition existence or node membership, generate wind load cases, convert units, save, retry or roll back. Native side effects may already have occurred when a failure status, COM exception or malformed status is observed. Keep shared model access serialized. Native status must be a supported integral CLR value within Int32; null, Boolean, floating/decimal values, enums and strings are rejected instead of coerced. Snapshots nodes before extracting IDs, then delegates to the ID-array overload for one native dispatch. Coordinates are not used or validated, and supplied nodes are not modified.</remarks>
+<exception cref="ArgumentNullException">The node sequence is null.</exception><exception cref="ArgumentException">The node sequence is empty or contains null/nonpositive-ID nodes.</exception>
+<exception cref="ArgumentOutOfRangeException">A numeric argument is nonfinite or outside its documented range.</exception>
+<exception cref="InvalidOperationException">The native status is malformed or outside Int32.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">Native dispatch fails; any native changes are not rolled back.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed native object lacks the required member or argument layout.</exception>
+<example><code>
+bool allowWindEdit = false; // Enable only for a controlled model with suitable definition/node IDs.
+if (allowWindEdit)
+{
+    int windStatus = load.AddWindExposure(1, 1.0,
+        new[] { new StaadPro.Interop.Entities.Node(101, 0, 0, 0) });
+    Console.WriteLine(windStatus);
+}
+</code></example>
+    </member>
+    <member name="LoadNext12.AddWindExposureNodeId">
+<summary>Assigns a wind exposure factor to a single node ID.</summary>
+<param name="windDefinitionId">Positive native wind-definition type ID. The caller must ensure it is appropriate for the current model.</param><param name="exposureFactor">Finite nonnegative exposure factor. Zero is forwarded unchanged.</param>
+<param name="nodeId">Positive node identifier; forwarded in a one-element Int32 array.</param>
+<returns>The unmodified signed Int32 OpenSTAAD status. Creation, exposure and intensity document 0 for success and -1 for general error; deletion documents 0 for success and -8039 for an invalid definition. Other integer codes are preserved. A nonzero code is not converted into an exception or success Boolean.</returns>
+<remarks>Mutates the bound model's wind definitions on the calling COM thread. Validates and snapshots inputs before the single native dispatch. Does not activate a load case, query definition existence or node membership, generate wind load cases, convert units, save, retry or roll back. Native side effects may already have occurred when a failure status, COM exception or malformed status is observed. Keep shared model access serialized. Native status must be a supported integral CLR value within Int32; null, Boolean, floating/decimal values, enums and strings are rejected instead of coerced. Delegates to the ID-array overload and dispatches once. The managed scalar overload does not send a scalar node argument to native AddWindExposure.</remarks>
+
+<exception cref="ArgumentOutOfRangeException">A numeric argument is nonfinite or outside its documented range.</exception>
+<exception cref="InvalidOperationException">The native status is malformed or outside Int32.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">Native dispatch fails; any native changes are not rolled back.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed native object lacks the required member or argument layout.</exception>
+<example><code>
+bool allowWindEdit = false; // Enable only for a controlled model with suitable definition/node IDs.
+if (allowWindEdit)
+{
+    int windStatus = load.AddWindExposure(1, 1.0, nodeId: 101);
+    Console.WriteLine(windStatus);
+}
+</code></example>
+    </member>
+    <member name="LoadNext12.AddWindIntensityScalar">
+<summary>Adds one pressure/height pair to a native wind definition.</summary>
+<param name="windDefinitionId">Positive native wind-definition type ID. The caller must ensure it is appropriate for the current model.</param>
+<param name="intensity">Finite signed intensity in current model force/length-squared units. Preserved without rounding or unit conversion.</param>
+<param name="height">Finite nonnegative height in current model length units; zero is allowed.</param>
+<returns>The unmodified signed Int32 OpenSTAAD status. Creation, exposure and intensity document 0 for success and -1 for general error; deletion documents 0 for success and -8039 for an invalid definition. Other integer codes are preserved. A nonzero code is not converted into an exception or success Boolean.</returns>
+<remarks>Mutates the bound model's wind definitions on the calling COM thread. Validates and snapshots inputs before the single native dispatch. Does not activate a load case, query definition existence or node membership, generate wind load cases, convert units, save, retry or roll back. Native side effects may already have occurred when a failure status, COM exception or malformed status is observed. Keep shared model access serialized. Native status must be a supported integral CLR value within Int32; null, Boolean, floating/decimal values, enums and strings are rejected instead of coerced. Dispatches AddWindIntensity once using two Double scalar arguments, following the documented scalar form. It does not route through or invent array parameters.</remarks>
+
+<exception cref="ArgumentOutOfRangeException">A numeric argument is nonfinite or outside its documented range.</exception>
+<exception cref="InvalidOperationException">The native status is malformed or outside Int32.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">Native dispatch fails; any native changes are not rolled back.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed native object lacks the required member or argument layout.</exception>
+<example><code>
+bool allowWindEdit = false; // Enable only for a controlled model with suitable definition/node IDs.
+if (allowWindEdit)
+{
+    int windStatus = load.AddWindIntensity(1, intensity: 1.41, height: 10);
+    Console.WriteLine(windStatus);
+}
+</code></example>
+    </member>
+    <member name="LoadNext12.AddWindIntensityArrays">
+<summary>Adds paired sequences of pressure intensities and heights to a wind definition.</summary>
+<param name="windDefinitionId">Positive native wind-definition type ID. The caller must ensure it is appropriate for the current model.</param>
+<param name="intensities">Non-null, nonempty finite signed pressure sequence in model force/length-squared units. Enumerated once.</param>
+<param name="heights">Non-null finite nonnegative height sequence in model length units. Enumerated once; must match the nonzero intensity count.</param>
+<returns>The unmodified signed Int32 OpenSTAAD status. Creation, exposure and intensity document 0 for success and -1 for general error; deletion documents 0 for success and -8039 for an invalid definition. Other integer codes are preserved. A nonzero code is not converted into an exception or success Boolean.</returns>
+<remarks>Mutates the bound model's wind definitions on the calling COM thread. Validates and snapshots inputs before the single native dispatch. Does not activate a load case, query definition existence or node membership, generate wind load cases, convert units, save, retry or roll back. Native side effects may already have occurred when a failure status, COM exception or malformed status is observed. Keep shared model access serialized. Native status must be a supported integral CLR value within Int32; null, Boolean, floating/decimal values, enums and strings are rejected instead of coerced. Dispatches AddWindIntensity once with parallel Double arrays. Preserves index pairing, order, duplicates and precision; does not sort heights, deduplicate rows or enforce an assumed monotonic profile. All input is checked before dispatch. The native API decides engineering validity of the profile.</remarks>
+<exception cref="ArgumentNullException">Either sequence is null.</exception><exception cref="ArgumentException">Sequences are empty or have different lengths.</exception>
+<exception cref="ArgumentOutOfRangeException">A numeric argument is nonfinite or outside its documented range.</exception>
+<exception cref="InvalidOperationException">The native status is malformed or outside Int32.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">Native dispatch fails; any native changes are not rolled back.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed native object lacks the required member or argument layout.</exception>
+<example><code>
+bool allowWindEdit = false; // Enable only for a controlled model with suitable definition/node IDs.
+if (allowWindEdit)
+{
+    int windStatus = load.AddWindIntensity(1, new[] { 1.24, 1.41 }, new[] { 10.0, 15.0 });
+    Console.WriteLine(windStatus);
+}
+</code></example>
+    </member>
+    <member name="LoadNext12.AddWindIntensityPairs">
+<summary>Adds immutable wind pressure/height values as one native profile.</summary>
+<param name="windDefinitionId">Positive native wind-definition type ID. The caller must ensure it is appropriate for the current model.</param>
+<param name="pairs">Non-null, nonempty sequence of WindIntensityPair values. Enumerated once; each value preserves its pressure/height pairing.</param>
+<returns>The unmodified signed Int32 OpenSTAAD status. Creation, exposure and intensity document 0 for success and -1 for general error; deletion documents 0 for success and -8039 for an invalid definition. Other integer codes are preserved. A nonzero code is not converted into an exception or success Boolean.</returns>
+<remarks>Mutates the bound model's wind definitions on the calling COM thread. Validates and snapshots inputs before the single native dispatch. Does not activate a load case, query definition existence or node membership, generate wind load cases, convert units, save, retry or roll back. Native side effects may already have occurred when a failure status, COM exception or malformed status is observed. Keep shared model access serialized. Native status must be a supported integral CLR value within Int32; null, Boolean, floating/decimal values, enums and strings are rejected instead of coerced. Snapshots the value pairs once and delegates to the parallel-array overload. A default pair (zero pressure, zero height) is valid. Preserves row order and duplicates; no tuple or public reference outputs are used.</remarks>
+<exception cref="ArgumentNullException">The pair sequence is null.</exception><exception cref="ArgumentException">The pair sequence is empty.</exception>
+<exception cref="ArgumentOutOfRangeException">A numeric argument is nonfinite or outside its documented range.</exception>
+<exception cref="InvalidOperationException">The native status is malformed or outside Int32.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">Native dispatch fails; any native changes are not rolled back.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed native object lacks the required member or argument layout.</exception>
+<example><code>
+bool allowWindEdit = false; // Enable only for a controlled model with suitable definition/node IDs.
+if (allowWindEdit)
+{
+    var profile = new[] {
+        new StaadPro.Interop.Models.Loads.Wind.WindIntensityPair(1.24, 10),
+        new StaadPro.Interop.Models.Loads.Wind.WindIntensityPair(1.41, 15) };
+    int windStatus = load.AddWindIntensity(1, profile);
+    Console.WriteLine(windStatus);
+}
+</code></example>
+    </member>
+    <member name="LoadNext12.DeleteWindDefinition">
+<summary>Deletes one wind definition, or all wind definitions when the ID is zero.</summary>
+
+<param name="windDefinitionId">Nonnegative native type ID. A positive ID selects one definition; zero, including the default omitted argument, requests deletion of all definitions.</param>
+<returns>The unmodified signed Int32 OpenSTAAD status. Creation, exposure and intensity document 0 for success and -1 for general error; deletion documents 0 for success and -8039 for an invalid definition. Other integer codes are preserved. A nonzero code is not converted into an exception or success Boolean.</returns>
+<remarks>Mutates the bound model's wind definitions on the calling COM thread. Validates and snapshots inputs before the single native dispatch. Does not activate a load case, query definition existence or node membership, generate wind load cases, convert units, save, retry or roll back. Native side effects may already have occurred when a failure status, COM exception or malformed status is observed. Keep shared model access serialized. Native status must be a supported integral CLR value within Int32; null, Boolean, floating/decimal values, enums and strings are rejected instead of coerced. Deletion is explicit and can affect the model. The default is destructive: DeleteWindDefinition() dispatches DeleteWindDefinition(0), requesting all definitions. No confirmation dialog, dependency cleanup, backup, save, retry or rollback is supplied by the managed API.</remarks>
+
+<exception cref="ArgumentOutOfRangeException">A numeric argument is nonfinite or outside its documented range.</exception>
+<exception cref="InvalidOperationException">The native status is malformed or outside Int32.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">Native dispatch fails; any native changes are not rolled back.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed native object lacks the required member or argument layout.</exception>
+<example><code>
+bool allowWindEdit = false; // Enable only for a controlled model with suitable definition/node IDs.
+if (allowWindEdit)
+{
+    int windStatus = load.DeleteWindDefinition(windDefinitionId: 1);
+    Console.WriteLine(windStatus);
+}
+</code></example>
+    </member>
+    <member name="LoadNext12.DeleteAllWindDefinitions">
+<summary>Explicitly requests deletion of every wind definition in the bound model.</summary>
+
+<returns>The unmodified signed Int32 OpenSTAAD status. Creation, exposure and intensity document 0 for success and -1 for general error; deletion documents 0 for success and -8039 for an invalid definition. Other integer codes are preserved. A nonzero code is not converted into an exception or success Boolean.</returns>
+<remarks>Mutates the bound model's wind definitions on the calling COM thread. Validates and snapshots inputs before the single native dispatch. Does not activate a load case, query definition existence or node membership, generate wind load cases, convert units, save, retry or roll back. Native side effects may already have occurred when a failure status, COM exception or malformed status is observed. Keep shared model access serialized. Native status must be a supported integral CLR value within Int32; null, Boolean, floating/decimal values, enums and strings are rejected instead of coerced. Delegates to DeleteWindDefinition(0) for one native request. This is a model-wide deletion request; dependent load-case behavior remains native-defined. It is never called automatically by another add operation.</remarks>
+
+<exception cref="ArgumentOutOfRangeException">A numeric argument is nonfinite or outside its documented range.</exception>
+<exception cref="InvalidOperationException">The native status is malformed or outside Int32.</exception>
+<exception cref="System.Runtime.InteropServices.COMException">Native dispatch fails; any native changes are not rolled back.</exception>
+<exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The installed native object lacks the required member or argument layout.</exception>
+<example><code>
+bool allowWindEdit = false; // Enable only for a controlled model with suitable definition/node IDs.
+if (allowWindEdit)
+{
+    int windStatus = load.DeleteAllWindDefinitions();
+    Console.WriteLine(windStatus);
+}
+</code></example>
+    </member>
+</members>
 </doc>

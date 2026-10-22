@@ -7,6 +7,8 @@ using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Extensions;
 using StaadPro.Interop.Models;
+using StaadPro.Interop.Models.Loads.Wind;
+using StaadPro.Interop.Services.Interop;
 
 namespace StaadPro.Interop.Adapters.Models
 {
@@ -24,6 +26,145 @@ namespace StaadPro.Interop.Adapters.Models
 
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.P:ComObject']/*" />
         public dynamic ComObject { get; }
+
+
+        #region Load Population and Wind Definitions
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.PopulateMemberUniformlyDistributedLoads']/*" />
+        public void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)
+        {
+            PopulateMemberLoadsCore(SnapshotPopulationEntities(forBeams, beam => beam.Id, nameof(forBeams)),
+                SnapshotPopulationCases(fromLoadCases), GetMemberUniformlyDistributedLoads);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.PopulateMemberUniformMoments']/*" />
+        public void PopulateMemberUniformMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)
+        {
+            PopulateMemberLoadsCore(SnapshotPopulationEntities(forBeams, beam => beam.Id, nameof(forBeams)),
+                SnapshotPopulationCases(fromLoadCases), GetMemberUniformMoments);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.PopulateNodalLoads']/*" />
+        public IEnumerable<Node> PopulateNodalLoads(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)
+        {
+            var nodes = SnapshotPopulationEntities(forNodes, node => node.Id, nameof(forNodes));
+            var cases = SnapshotPopulationCases(fromLoadCases);
+            PopulateNodalLoadsCore(nodes, cases);
+            return nodes;
+        }
+
+        private void PopulateNodalLoadsCore(List<Node> nodes, List<ILoadCase> cases)
+        {
+            foreach (var node in nodes) node.NodalLoadItems.Clear();
+            foreach (var loadCase in cases)
+                foreach (var node in nodes) node.NodalLoadItems.AddRange(GetNodalLoads(loadCase, node.Id));
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindDefinition']/*" />
+        public int AddWindDefinition(int windDefinitionId, string definitionName)
+        {
+            ValidateWindDefinitionId(windDefinitionId);
+            if (definitionName == null) throw new ArgumentNullException(nameof(definitionName));
+            if (string.IsNullOrWhiteSpace(definitionName) || definitionName.IndexOf('\0') >= 0)
+                throw new ArgumentException("A wind definition requires nonblank text without a NUL character.", nameof(definitionName));
+            return NativeValues.ReadInt32((object)ComObject.AddWindDefinition(windDefinitionId, definitionName), "AddWindDefinition status");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindExposureIds']/*" />
+        public int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<int> nodeIds)
+        {
+            ValidateWindDefinitionId(windDefinitionId);
+            ValidateWindNonnegative(exposureFactor, nameof(exposureFactor));
+            if (nodeIds == null) throw new ArgumentNullException(nameof(nodeIds));
+            var ids = nodeIds.ToArray();
+            if (ids.Length == 0) throw new ArgumentException("At least one node ID is required.", nameof(nodeIds));
+            if (ids.Any(id => id <= 0)) throw new ArgumentOutOfRangeException(nameof(nodeIds), "Node IDs must be positive.");
+            return NativeValues.ReadInt32((object)ComObject.AddWindExposure(windDefinitionId, exposureFactor, ids), "AddWindExposure status");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindExposureNodes']/*" />
+        public int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<Node> nodes)
+        {
+            ValidateWindDefinitionId(windDefinitionId);
+            ValidateWindNonnegative(exposureFactor, nameof(exposureFactor));
+            if (nodes == null) throw new ArgumentNullException(nameof(nodes));
+            var snapshot = nodes.ToList();
+            if (snapshot.Any(node => node == null || node.Id <= 0))
+                throw new ArgumentException("Nodes must be initialized with positive IDs.", nameof(nodes));
+            if (snapshot.Count == 0) throw new ArgumentException("At least one node is required.", nameof(nodes));
+            return AddWindExposure(windDefinitionId, exposureFactor, snapshot.Select(node => node.Id));
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindExposureNodeId']/*" />
+        public int AddWindExposure(int windDefinitionId, double exposureFactor, int nodeId)
+        {
+            ValidateWindDefinitionId(windDefinitionId);
+            ValidateWindNonnegative(exposureFactor, nameof(exposureFactor));
+            if (nodeId <= 0) throw new ArgumentOutOfRangeException(nameof(nodeId));
+            return AddWindExposure(windDefinitionId, exposureFactor, new[] { nodeId });
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindIntensityScalar']/*" />
+        public int AddWindIntensity(int windDefinitionId, double intensity, double height)
+        {
+            ValidateWindDefinitionId(windDefinitionId);
+            ValidateWindFinite(intensity, nameof(intensity));
+            ValidateWindNonnegative(height, nameof(height));
+            return NativeValues.ReadInt32((object)ComObject.AddWindIntensity(windDefinitionId, intensity, height), "AddWindIntensity status");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindIntensityArrays']/*" />
+        public int AddWindIntensity(int windDefinitionId, IEnumerable<double> intensities, IEnumerable<double> heights)
+        {
+            ValidateWindDefinitionId(windDefinitionId);
+            if (intensities == null) throw new ArgumentNullException(nameof(intensities));
+            if (heights == null) throw new ArgumentNullException(nameof(heights));
+            var pressureValues = intensities.ToArray();
+            var heightValues = heights.ToArray();
+            if (pressureValues.Length == 0 || pressureValues.Length != heightValues.Length)
+                throw new ArgumentException("Intensity and height sequences must have the same nonzero length.", nameof(heights));
+            foreach (double value in pressureValues) ValidateWindFinite(value, nameof(intensities));
+            foreach (double value in heightValues) ValidateWindNonnegative(value, nameof(heights));
+            return NativeValues.ReadInt32((object)ComObject.AddWindIntensity(windDefinitionId, pressureValues, heightValues), "AddWindIntensity status");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindIntensityPairs']/*" />
+        public int AddWindIntensity(int windDefinitionId, IEnumerable<WindIntensityPair> pairs)
+        {
+            ValidateWindDefinitionId(windDefinitionId);
+            if (pairs == null) throw new ArgumentNullException(nameof(pairs));
+            var snapshot = pairs.ToList();
+            return AddWindIntensity(windDefinitionId, snapshot.Select(pair => pair.Intensity), snapshot.Select(pair => pair.Height));
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.DeleteWindDefinition']/*" />
+        public int DeleteWindDefinition(int windDefinitionId = 0)
+        {
+            if (windDefinitionId < 0) throw new ArgumentOutOfRangeException(nameof(windDefinitionId));
+            return NativeValues.ReadInt32((object)ComObject.DeleteWindDefinition(windDefinitionId), "DeleteWindDefinition status");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.DeleteAllWindDefinitions']/*" />
+        public int DeleteAllWindDefinitions() => DeleteWindDefinition(0);
+
+        private static void ValidateWindDefinitionId(int windDefinitionId)
+        {
+            if (windDefinitionId <= 0) throw new ArgumentOutOfRangeException(nameof(windDefinitionId), "Wind definition IDs must be positive.");
+        }
+
+        private static void ValidateWindFinite(double value, string parameterName)
+        {
+            if (double.IsNaN(value) || double.IsInfinity(value))
+                throw new ArgumentOutOfRangeException(parameterName, "The value must be finite.");
+        }
+
+        private static void ValidateWindNonnegative(double value, string parameterName)
+        {
+            ValidateWindFinite(value, parameterName);
+            if (value < 0) throw new ArgumentOutOfRangeException(parameterName, "The value must not be negative.");
+        }
+
+        #endregion
 
         #region Reference, Repeat and Temperature Assignments
 
@@ -223,9 +364,7 @@ namespace StaadPro.Interop.Adapters.Models
         {
             var nodes = SnapshotPopulationEntities(forNodes, n => n.Id, nameof(forNodes));
             var cases = SnapshotPopulationCases(fromLoadCases);
-            foreach (var node in nodes) node.NodalLoadItems.Clear();
-            foreach (var lc in cases)
-                foreach (var node in nodes) node.NodalLoadItems.AddRange(GetNodalLoads(lc, node.Id));
+            PopulateNodalLoadsCore(nodes, cases);
             return nodes.SelectMany(n => n.NodalLoadItems.Select(load => (Node: n, Load: load)))
                 .GroupBy(x => x.Load.LoadCase)
                 .ToDictionary(g => g.Key, g => g.GroupBy(x => x.Load, new NodalLoadComparer())

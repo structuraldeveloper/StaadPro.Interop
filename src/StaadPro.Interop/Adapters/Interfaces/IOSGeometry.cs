@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using StaadPro.Interop.Common;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
+using StaadPro.Interop.Models;
 
 namespace StaadPro.Interop.Adapters.Interfaces
 {
@@ -12,6 +13,15 @@ namespace StaadPro.Interop.Adapters.Interfaces
     /// </summary>
     public interface IOSGeometry : IOSBase
     {
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='GeometryCompletion.IdentifyPhysicalMembers']/*" />
+        PhysicalMemberIdentificationResult IdentifyPhysicalMembers(IEnumerable<Beam> beams, double angularToleranceDegrees = 0.005);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='GeometryCompletion.GroupPhysicalMembersByPlanAngle']/*" />
+        IEnumerable<PhysicalMemberPlanAngleGroup> GroupPhysicalMembersByPlanAngle(IEnumerable<Member> members, double angularToleranceDegrees = 1e-3);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='GeometryCompletion.GeneratePolygonMesh']/*" />
+        PolygonMeshResult GeneratePolygonMesh(IReadOnlyList<Node> boundaryNodes, int startingNodeId, int startingPlateId, double minimumAngleDegrees = 20.0, double maximumEdgeLength = 0.0);
+
         // -------------------------------------------------------------------------
         // Core COM binding
         // -------------------------------------------------------------------------

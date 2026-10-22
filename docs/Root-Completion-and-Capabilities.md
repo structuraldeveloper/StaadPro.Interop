@@ -2,7 +2,7 @@
 
 The Root implementation now covers **all 39 functions in the reviewed Bentley reference** and **all 23 methods in the private source Root interface**. It exposes 53 common IOSRoot methods plus three optional operation methods on separately acquired interfaces. The three capability-acquisition methods and the Capabilities property are infrastructure, not additional native Root functions.
 
-Implementation coverage means the managed mapping exists. It does not certify every STAAD version/build, native flag, file effect or analysis result. These source additions are unreleased; the existing NuGet archive has not been rebuilt.
+Implementation coverage means the managed mapping exists. It does not certify every STAAD version/build, native flag, file effect or analysis result. These Root additions are included in the published 1.0.0-preview.20261015 archive. Later source additions require their own package release.
 
 ## Final public surface
 

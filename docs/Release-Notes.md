@@ -1,5 +1,11 @@
 # StaadPro.Interop release notes
 
+### Unreleased source development — 22 October 2026
+
+Added 12 reference Load overloads for uniform member-load population, nodal refresh and basic wind definitions, exposure, intensity and deletion. Reused validated population readers and strict native integer handling. Added the immutable WindIntensityPair value model, descriptive wind parameters, full XML documentation, guarded examples and regression tests. Source Load coverage is now 90 overloads with 30 reference overloads pending; the next package verifier expects 250 selected XML examples. Validated 1,761 offline tests, including 157 new Load cases, and compiled/executed all 250 selected source XML examples with guarded native mutation samples. This work is not included in the published preview.
+
+Completed the remaining three Geometry functions: IdentifyPhysicalMembers, GroupPhysicalMembersByPlanAngle and GeneratePolygonMesh. Added source-compatible result models, the Beam.Member managed back-reference, validated member reconstruction, XZ plan-bearing groups and bounded planar polygon meshing with explicit node/plate IDs and honest quality reporting. Corrected source mesh mapping, topology and generated-ID defects. Added complete interface/adapter/service XML contracts, regression tests and wrapper integration checks. Reconfirmed wrapper member parity; kept the eight placeholder domain APIs separate. Updated future package verification for 143 Geometry methods and 226 selected XML examples. These additions are not in the published 1.0.0-preview.20261015 package.
+
 ## 1.0.0-preview.20261015 - 15 October 2026 (prepared preview)
 
 Completed the reviewed Root API port and expanded the wrapper surface. This preview includes all 39 reviewed native Root function mappings and all 23 private-source Root method mappings, exposed through 53 common managed operations and three separately acquired optional operations.

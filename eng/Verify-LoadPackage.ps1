@@ -78,7 +78,7 @@ try {
         $member = @($xml.doc.members.member | Where-Object name -eq "T:StaadPro.Interop.Entities.$typeName")
         if ($member.Count -ne 1 -or [string]::IsNullOrWhiteSpace($member[0].SelectSingleNode('summary').InnerText)) { throw "Missing model documentation: $typeName" }
     }
-    $geometryMethods = @('SegregateBeamsByConnectivity', 'SegregateMembersByConnectivity', 'SegregatePlatesByConnectivity')
+    $geometryMethods = @('SegregateBeamsByConnectivity', 'SegregateMembersByConnectivity', 'SegregatePlatesByConnectivity', 'IdentifyPhysicalMembers', 'GroupPhysicalMembersByPlanAngle')
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Services.ConnectivityService')) {
         foreach ($method in $geometryMethods) {
             $prefix = "M:StaadPro.Interop.$owner.$method("
@@ -91,14 +91,26 @@ try {
             $snippets += "{`n" + $member[0].SelectSingleNode('example/code').InnerText + "`n}"
         }
     }
+
+    foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Services.PolygonMeshGenerationService')) {
+        $method = if ($owner -eq 'Services.PolygonMeshGenerationService') { 'GenerateMesh' } else { 'GeneratePolygonMesh' }
+        $prefix = "M:StaadPro.Interop.$owner.$method("
+        $member = @($xml.doc.members.member | Where-Object { $_.name.StartsWith($prefix) })
+        if ($member.Count -ne 1) { throw "Missing polygon mesh IntelliSense: $owner.$method" }
+        foreach ($tag in @('summary','returns','remarks','example/code')) {
+            $node = $member[0].SelectSingleNode($tag)
+            if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $owner.$method" }
+        }
+        $snippets += "{`n" + $member[0].SelectSingleNode('example/code').InnerText + "`n}"
+    }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
         $methods = if ($owner -match 'Geometry') {
             @('CreateMultipleBeamsExtended', 'CreateMultipleNodesExtended', 'MergeNodesExtended')
-        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo', 'AddMemberLoadsFromGroupsByLoadCase', 'AddNodalLoadsFromGroupsByLoadCase', 'AddSelfweightInXYZTo', 'CreateLoadEnvelopExt', 'CreateLoadList', 'CreateLoadCombinations', 'GetLoadCombination', 'GetMemberLoadsGroupedByLoadCase', 'GetNodalLoadsGroupedByLoadCase', 'GetRepeatLoadCases', 'PopulateMemberConcentratedLoads', 'PopulateMemberConcentratedMoments', 'PopulateMemberLinearVaryingLoads', 'PopulateMemberLoads', 'PopulateMemberTrapezoidalLoads') }
+        } else { @('AddReferenceLoadsTo', 'AddRepeatLoadsTo', 'AddAxialThermalGradientTo', 'AddMemberLoadsFromGroupsByLoadCase', 'AddNodalLoadsFromGroupsByLoadCase', 'AddSelfweightInXYZTo', 'CreateLoadEnvelopExt', 'CreateLoadList', 'CreateLoadCombinations', 'GetLoadCombination', 'GetMemberLoadsGroupedByLoadCase', 'GetNodalLoadsGroupedByLoadCase', 'GetRepeatLoadCases', 'PopulateMemberConcentratedLoads', 'PopulateMemberConcentratedMoments', 'PopulateMemberLinearVaryingLoads', 'PopulateMemberLoads', 'PopulateMemberTrapezoidalLoads', 'PopulateMemberUniformlyDistributedLoads', 'PopulateMemberUniformMoments', 'PopulateNodalLoads', 'AddWindDefinition', 'AddWindExposure', 'AddWindIntensity', 'DeleteWindDefinition', 'DeleteAllWindDefinitions') }
         foreach ($method in $methods) {
             $prefix = "M:StaadPro.Interop.$owner.$method"
             $member = @($xml.doc.members.member | Where-Object { $_.name -eq $prefix -or $_.name.StartsWith($prefix + "(") })
-            $expectedOverloads = if ($method -in @('AddAxialThermalGradientTo','AddSelfweightInXYZTo','CreateLoadEnvelopExt')) { 2 } else { 1 }
+            $expectedOverloads = if ($method -in @('AddWindExposure','AddWindIntensity')) { 3 } elseif ($method -in @('AddAxialThermalGradientTo','AddSelfweightInXYZTo','CreateLoadEnvelopExt')) { 2 } else { 1 }
             if ($member.Count -ne $expectedOverloads) { throw "Missing new mutation IntelliSense: $owner.$method" }
             foreach ($entry in $member) {
                 foreach ($tag in @('summary','returns','remarks','example/code')) {
@@ -130,7 +142,7 @@ try {
     }
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 140 } elseif ($owner -match 'Root') { 53 } else { 78 }
+        $expectedCount = if ($owner -match 'Geometry') { 143 } elseif ($owner -match 'Root') { 53 } else { 90 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -156,7 +168,7 @@ try {
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 217) { throw "Expected 217 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 250) { throw "Expected 250 packaged XML examples; found $($snippets.Count)." }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -398,7 +410,7 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: 217 packaged XML examples and complete geometry/load/root IntelliSense.");
+        Console.WriteLine("PASS: 250 packaged XML examples and complete geometry/load/root IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)

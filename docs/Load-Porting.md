@@ -1,8 +1,8 @@
 # Load API porting and new assignments
 
-The reference `IOSLoad` contains 115 method overloads. This repository now exposes 78: 73 matching reference overloads plus five repository-specific convenience overloads. There are 42 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
+The reference `IOSLoad` contains 115 method overloads. This repository now exposes 90: 85 matching reference overloads plus five repository-specific convenience overloads. There are 30 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
 
-The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 78 from 115 does not give the pending reference count.
+The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 90 from 115 does not give the pending reference count.
 
 ## Batch 1: AddSelfweightInXYZTo, CreateLoadCombinations, CreateLoadEnvelopExt
 
@@ -109,26 +109,83 @@ wrapper.Load.AddAxialThermalGradientTo(17, new[] { 101, 102 }, 15.5);
 
 ## IntelliSense and validation
 
-Each new method has identical expanded XML on `IOSLoad` and `OSLoadAdapter`, including inputs, native mapping, empty input, activation side effects, exceptions and executable examples. The XML ships beside the DLL and does not require source access. The current package includes documentation for 78 load overloads and verifies all 123 XML examples across the library, including envelope reads, both thermal signatures and the grouped methods.
+Each new method has identical expanded XML on `IOSLoad` and `OSLoadAdapter`, including inputs, native mapping, empty input, activation side effects, exceptions and executable examples. The XML ships beside the DLL and does not require source access. The published 1.0.0-preview.20261015 archive documents 78 Load overloads. The current source documents 90; the updated verifier will check 250 selected XML examples in the next package, including the new population and guarded wind examples.
 
 Offline tests check paired arrays, double precision, one thermal input snapshot, caller-thread scalar assignments, primary/reference grouped routing, member subtype dispatch, all six nodal components, skipped/null/empty group entries, unchanged managed data, activation ordering/failure and partial native failures. Installed-package verification compiles and runs the interface and concrete XML examples and checks argument layouts using managed native stand-ins. Live native mutations, engineering units and version-specific behavior remain unverified for these additions.
+
+
+## Population completion and basic wind definitions — 22 October 2026
+
+Ported the next **12 reference overloads**: two uniform member-load population methods, nodal-load refresh, wind-definition creation, three exposure overloads, three intensity overloads, definition deletion and explicit deletion of all definitions. The single non-partial adapter contains implementations; the interface contains signatures. These are source additions after the published `1.0.0-preview.20261015` archive.
+
+| Function | Result and behavior |
+| --- | --- |
+| `PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | void; appends force UDL records using the existing reader. |
+| `PopulateMemberUniformMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | void; appends uniform moment records using the existing reader. |
+| `PopulateNodalLoads(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | Materialized `IEnumerable<Node>`; clears managed nodal loads, then reads the selected cases. |
+| `AddWindDefinition(int windDefinitionId, string definitionName)` | Native Int32 status; one ID/name request. |
+| `AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<int> nodeIds)` | Native status; one Int32-array assignment. |
+| `AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<Node> nodes)` | Native status; snapshots node IDs and delegates. |
+| `AddWindExposure(int windDefinitionId, double exposureFactor, int nodeId)` | Native status; forwards a one-element Int32 array. |
+| `AddWindIntensity(int windDefinitionId, double intensity, double height)` | Native status; uses the documented scalar Double form. |
+| `AddWindIntensity(int windDefinitionId, IEnumerable<double> intensities, IEnumerable<double> heights)` | Native status; sends parallel Double arrays. |
+| `AddWindIntensity(int windDefinitionId, IEnumerable<WindIntensityPair> pairs)` | Native status; snapshots immutable value pairs and delegates. |
+| `DeleteWindDefinition(int windDefinitionId = 0)` | Native status; positive ID deletes one; **zero/default requests deletion of all**. |
+| `DeleteAllWindDefinitions()` | Native status; explicit alias for deletion with zero. |
+
+### Population contracts
+
+Both member methods are append-only, preserving existing managed member loads. Repeated calls append new records again. Nodal population is an eager refresh: after validating both sequences, it clears every supplied node's entire NodalLoadItems collection, including previously stored cases outside the requested selection. Empty case input therefore clears nodal lists, while it leaves member lists unchanged. Empty entity input makes no native reads.
+
+Each public method snapshots its entity and case sequences once before managed mutations or native reads. Null entities, nonpositive IDs, null/unsupported cases and enumeration failures stop validation before changes. Order and duplicates are preserved. Duplicate entity references trigger duplicate queries and appended records. Results retain the original structural entities and the supplied load-case identities.
+
+Reads run case-major and entity-minor on the caller's COM thread. Existing primary/reference activation and strict count/fetch/array/direction/finite-value checks are reused. No native assignments are created by these population methods. The last activated case remains active; there is no automatic restoration, save, conversion, retry or rollback. A later failure leaves earlier managed results in place. The grouped nodal read now shares the same internal population core, retaining its existing behavior.
+
+### Wind contracts and status handling
+
+Public wind parameters use descriptive names; `windDefinitionId` corresponds to the main project's type number. The parameter types, overload defaults and return types remain source-compatible. Only the three exposure signatures declared in the main interface are counted; its adapter-only single-Node convenience method is outside this increment.
+
+Creation requires a positive ID and a nonblank name without NUL. Name text, including surrounding whitespace and Unicode, is preserved. Exposure requires a finite nonnegative factor and at least one positive node ID. Managed node overloads use IDs only, without reading coordinates or changing the objects. Order and duplicate IDs remain intact.
+
+Intensity pressures must be finite; signed values are preserved because the source contract imposes no positivity rule. Heights must be finite and nonnegative. Parallel sequences must be nonempty and equal in length. Pair overloads preserve index association. Inputs are not sorted or deduplicated; no assumed monotonic profile is imposed. Pressure units are the model's force/length-squared units and heights use model length units, with no conversion.
+
+`WindIntensityPair` is the source's small immutable value-pair abstraction, retained as a readonly struct with value equality and hashing. It holds two doubles, has no identity or lifecycle, and is suitable for value semantics. Its constructor rejects nonfinite values and negative height; the default zero/zero pair is valid. It avoids tuples and mutable profile rows.
+
+The [installed Bentley wind reference](<file:///C:/Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_wind.html>) documents:
+
+| Native operation | Documented status |
+| --- | --- |
+| AddWindDefinition / AddWindExposure / AddWindIntensity | 0 success; -1 general error |
+| DeleteWindDefinition | 0 success; -8039 invalid load definition |
+
+The managed methods return these integer statuses unchanged, including unknown codes. They do not convert a nonzero code into success or throw merely because the native operation reported failure. Statuses must be supported integral CLR values fitting Int32; Boolean, null, floating/decimal values, text, enums and overflow are rejected instead of coerced. Inspect the return value explicitly. Malformed status rejection occurs **after** native dispatch and cannot undo native effects.
+
+Every wind operation makes one native request after complete input validation. Scalar intensity preserves its scalar argument form; batch intensity sends arrays. Exposure always sends an Int32 array. No case activation, definition discovery, native-ID availability query, wind-load-case generation, save, retry or rollback is added. Missing native members and COM failures propagate. Deletion defaults to all definitions to preserve the main interface contract; callers should choose the explicit positive ID or explicit all-delete method deliberately.
+
+### Usage
+
+```csharp
+// On the correct COM thread, with suitable model IDs:
+int status = wrapper.Load.AddWindDefinition(1, "North wind");
+if (status == 0)
+{
+    status = wrapper.Load.AddWindIntensity(1, new[] {
+        new StaadPro.Interop.Models.Loads.Wind.WindIntensityPair(1.24, 10),
+        new StaadPro.Interop.Models.Loads.Wind.WindIntensityPair(1.41, 15)
+    });
+    if (status == 0)
+        status = wrapper.Load.AddWindExposure(1, 1.0, new[] { 101, 102 });
+}
+Console.WriteLine(status); // Each step remains a separate native mutation.
+```
+
+The wind documentation and signatures were inspected, and argument layouts/status behavior are tested with managed stand-ins. Verification passed **1,761 offline tests**, including **157 new cases**, and a Release solution build with zero warnings/errors. All **250 selected XML examples** compiled and executed in a source-reference consumer using the production verifier selection logic; wind mutation examples remained guarded. No new distribution archive or installed-package result is claimed for this increment. This does not certify live STAAD wind commands or engineering units. The main source project remains strictly read-only.
+
 
 ## Pending reference overloads
 
 The following inventory was compared by method name, generic arity and parameter types. It lists source signatures, including supporting types that may themselves need porting. A name already present here can still appear when a different overload is pending.
 
-- `void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)`
-- `void PopulateMemberUniformMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)`
-- `IEnumerable<Node> PopulateNodalLoads(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)`
-- `int AddWindDefinition(int typeNo, string typeName)`
-- `int AddWindExposure(int typeNo, double exposureFactor, IEnumerable<int> nodeIds)`
-- `int AddWindExposure(int typeNo, double exposureFactor, IEnumerable<Node> nodes)`
-- `int AddWindExposure(int typeNo, double exposureFactor, int nodeId)`
-- `int AddWindIntensity(int typeNo, double intensity, double height)`
-- `int AddWindIntensity(int typeNo, IEnumerable<double> intensities, IEnumerable<double> heights)`
-- `int AddWindIntensity(int typeNo, IEnumerable<WindIntensityPair> pairs)`
-- `int DeleteWindDefinition(int typeNo = 0)`
-- `int DeleteAllWindDefinitions()`
 - `int AddWindDefinitionASCE7Parameters(ASCE7WindDefinitionParameters parameters)`
 - `int ComputeWallWindPressureProfile(WallWindPressureProfileParameters parameters)`
 - `int ComputeWallWindPressureProfileASCE72016(ASCE72016WallWindPressureProfileParameters parameters)`

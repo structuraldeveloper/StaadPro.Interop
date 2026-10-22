@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Models;
+using StaadPro.Interop.Models.Loads.Wind;
 
 namespace StaadPro.Interop.Adapters.Interfaces
 {
@@ -11,6 +12,42 @@ namespace StaadPro.Interop.Adapters.Interfaces
     /// </summary>
     public interface IOSLoad : IOSBase
     {
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.PopulateMemberUniformlyDistributedLoads']/*" />
+        void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.PopulateMemberUniformMoments']/*" />
+        void PopulateMemberUniformMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.PopulateNodalLoads']/*" />
+        IEnumerable<Node> PopulateNodalLoads(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindDefinition']/*" />
+        int AddWindDefinition(int windDefinitionId, string definitionName);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindExposureIds']/*" />
+        int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<int> nodeIds);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindExposureNodes']/*" />
+        int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<Node> nodes);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindExposureNodeId']/*" />
+        int AddWindExposure(int windDefinitionId, double exposureFactor, int nodeId);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindIntensityScalar']/*" />
+        int AddWindIntensity(int windDefinitionId, double intensity, double height);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindIntensityArrays']/*" />
+        int AddWindIntensity(int windDefinitionId, IEnumerable<double> intensities, IEnumerable<double> heights);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.AddWindIntensityPairs']/*" />
+        int AddWindIntensity(int windDefinitionId, IEnumerable<WindIntensityPair> pairs);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.DeleteWindDefinition']/*" />
+        int DeleteWindDefinition(int windDefinitionId = 0);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.DeleteAllWindDefinitions']/*" />
+        int DeleteAllWindDefinitions();
+
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.AddReferenceLoadsTo']/*" />
         IOSLoad AddReferenceLoadsTo(int loadCaseId, Dictionary<int, double> loadCaseNumberFactorPairs);
 

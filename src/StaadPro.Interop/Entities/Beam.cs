@@ -81,6 +81,12 @@ namespace StaadPro.Interop.Entities
             }
         }
 
+        /// <summary>Gets or sets the managed physical member reconstructed from this analytical beam.</summary>
+        /// <remarks>Null until assigned. IdentifyPhysicalMembers replaces this reference for accepted beams.
+        /// This does not assign a native STAAD physical member. Excluded from JSON to avoid the member/beam reference cycle.</remarks>
+        [JsonIgnore]
+        public Member Member { get => Get<Member>(); set => Set(value); }
+
         /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Beam.P:MemberLoadItems']/*" />
         [JsonIgnore]
         public List<MemberLoad> MemberLoadItems { get => Get<List<MemberLoad>>(); private set => Set(value); }

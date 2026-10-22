@@ -1,6 +1,6 @@
 ﻿# OpenStaadWrapper implementation and source parity
 
-**Updated:** 15 October 2026  
+**Updated:** 22 October 2026
 **Scope approved:** Complete wrapper members, raw objects, application/model metadata and adapter bindings. Unported domain adapters are placeholders; their functions will be ported separately.
 
 The [main project wrapper](<D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OpenStaadWrapper.cs>) was treated as **strictly read-only**. All implementation changes are in this open-source repository. The wrapper now includes all **30 source properties**, both constructor forms and all three public methods. The existing IsConnected property is retained as an additional convenience.
@@ -62,7 +62,7 @@ Source private helpers are ported directly or extracted into internal services. 
 | --- | --- | --- |
 | Output / Property / Support / Design / Commands / Table / View | Named public interface and sealed non-partial adapter; captured ComObject and owning Wrapper; correct native raw object. | Every domain-specific function. |
 | IDEA StatiCa | Named public placeholder interface/adapter and owning wrapper; required Geometry/Load/Output binding precondition. | Options, extraction, mapping, equilibrium checks, diagrams and export functions from the main integration. |
-| Geometry / Load / Root | Existing implementations retained, with rebuilt bindings on refresh. | Other pending domain functions and the separately proposed version-aware Root expansion. |
+| Geometry / Load / Root | Existing implementations retained, with rebuilt bindings on refresh. | Remaining Load domain functions. The reviewed Root and Geometry mappings are now complete. |
 
 No adapter partial classes were created. No Bentley DLL, private Sections/Units/Shared project reference or main-project assembly was added. The source's broad IStaadModelServices implementation was not imported: only its window-handle operation required by this wrapper is included. File creation/model coordination/editing services remain outside this approved wrapper port.
 
@@ -141,11 +141,12 @@ Construction and refresh do not show host UI or launch/close STAAD. The default 
 ## 5. Validation and release boundary
 
 - Release net481 build succeeds, with compiled XML for the new members.
-- **1,547 offline tests pass**, including source-property parity, two constructors, all raw bindings/placeholders, native versus host version, cache/refresh behavior, service injection, unit aliases/fallbacks, malformed values, bound-instance handles and disposal. The explicit live-provider test is not run by the normal suite.
+- **1,604 offline tests pass**, including source-property parity, two constructors, all raw bindings/placeholders, native versus host version, cache/refresh behavior, service injection, unit aliases/fallbacks, malformed values, bound-instance handles and disposal. The explicit live-provider test is not run by the normal suite.
+- Rechecked the current source on 22 October 2026: all 30 source property names, both constructors and the three source public methods are present. The new integration case uses all three completed Geometry functions through the wrapper without native reads and checks refreshed bindings.
 - All 30 source property names and the three source public method names are present. The legacy single-constructor test was updated to require the source's two constructor forms.
 - The source wrapper fingerprint was compared before/after the port and is unchanged. The main project was never built or modified.
-- No native STAAD compatibility test, additional domain-function port, version-profile engine, capability implementation, NuGet package rebuild or publication was performed. Subsequent increments added five Root metadata queries and two common analysis observation functions with a current-model overload; see the [analysis guide](Root-Analysis-Queries.md). Three common model/error reads were added next; shared strict native conversion now lives under Services/Interop/NativeValues. The next model-setup increment added process identity and four explicit native mutation operations with a ShortJobInfo overload.
+- The original wrapper-only increment performed no native STAAD compatibility test or additional domain-function port. Later work implemented Root version profiles/capabilities and built the published 1.0.0-preview.20261015 package. Subsequent increments added five Root metadata queries and two common analysis observation functions with a current-model overload; see the [analysis guide](Root-Analysis-Queries.md). Three common model/error reads were added next; shared strict native conversion now lives under Services/Interop/NativeValues. The next model-setup increment added process identity and four explicit native mutation operations with a ShortJobInfo overload.
 
 Source wrapper SHA-256: `83737733D57A672313385F99EA0CA8FFA10F1917FB6A33B89E43CE27E3F37B14`.
 
-The existing NuGet archive predates this source change and does not contain the new wrapper. A later requested package build must update README/release notes and run the appropriate package/XML/consumer checks. The updated [Root coverage report](reports/OpenSTAAD-Root-API-Coverage-and-Implementation-Plan.md) and [multi-version architecture plan](reports/OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md) are ready for review of the next Root implementation phase.
+The published 1.0.0-preview.20261015 package includes the approved wrapper surface and reviewed Root mappings. The final three Geometry operations were implemented later and require a new package before distribution. The wrapper has no missing approved source property, constructor or public method; this increment rechecks parity and integration rather than duplicating existing members. The eight placeholder domain APIs remain deliberately outside scope. See [Geometry completion](Geometry-Porting.md#completed-managed-geometry-operations).

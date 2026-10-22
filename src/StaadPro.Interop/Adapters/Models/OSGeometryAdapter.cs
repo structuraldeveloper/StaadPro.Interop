@@ -20,6 +20,24 @@ namespace StaadPro.Interop.Adapters.Models
     {
         private readonly object _geometryComSyncRoot = new object();
 
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='GeometryCompletion.IdentifyPhysicalMembers']/*" />
+        public PhysicalMemberIdentificationResult IdentifyPhysicalMembers(IEnumerable<Beam> beams, double angularToleranceDegrees = 0.005)
+        {
+            return ConnectivityService.IdentifyPhysicalMembers(beams, angularToleranceDegrees);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='GeometryCompletion.GroupPhysicalMembersByPlanAngle']/*" />
+        public IEnumerable<PhysicalMemberPlanAngleGroup> GroupPhysicalMembersByPlanAngle(IEnumerable<Member> members, double angularToleranceDegrees = 1e-3)
+        {
+            return ConnectivityService.GroupPhysicalMembersByPlanAngle(members, angularToleranceDegrees);
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='GeometryCompletion.GeneratePolygonMesh']/*" />
+        public PolygonMeshResult GeneratePolygonMesh(IReadOnlyList<Node> boundaryNodes, int startingNodeId, int startingPlateId, double minimumAngleDegrees = 20.0, double maximumEdgeLength = 0.0)
+        {
+            return PolygonMeshGenerationService.GenerateMesh(boundaryNodes, startingNodeId, startingPlateId, minimumAngleDegrees, maximumEdgeLength);
+        }
+
         #region Properties
 
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSGeometry.P:ComObject']/*" />

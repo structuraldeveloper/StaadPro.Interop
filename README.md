@@ -12,7 +12,13 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Current preview: 1.0.0-preview.20261015
+## Current source additions
+
+Completed all 143 reference Geometry overloads with `IdentifyPhysicalMembers`, `GroupPhysicalMembersByPlanAngle` and `GeneratePolygonMesh`. Added source models, managed services, detailed XML contracts and regression tests. The approved wrapper surface remains complete; its eight placeholder domains are intentionally separate work. These additions are not included in the published preview below. See [Geometry completion and usage](docs/Geometry-Porting.md#completed-managed-geometry-operations).
+
+Added the next 12 reference Load overloads: uniform member-load population, nodal refresh and basic wind definition/exposure/intensity/deletion. Load now exposes 90 overloads (85 reference mappings and five convenience overloads), with 30 reference overloads pending. These are source additions after the published preview. See [Load coverage and contracts](docs/Load-Porting.md).
+
+## Published preview: 1.0.0-preview.20261015
 
 This preview includes the completed wrapper bindings and five additional Root metadata queries: `GetApplicationVersion`, `GetBaseUnit`, `GetInputUnitForForce`, `GetInputUnitForLength` and `GetMainWindowHandle`. Wrapper-owned queries reuse cached properties; directly constructed Root adapters read their supplied native root. Unit compatibility fallbacks are documented in the [Root guide](docs/Root-Porting.md). Analysis observation also adds `IsAnalyzing()`, `GetAnalysisStatus()` and `GetAnalysisStatus(string modelFilePath)`, with immutable status/data results and no public reference outputs. See the [analysis guide](docs/Root-Analysis-Queries.md). Common reads also add `GetStaadFileFolder()`, `IsPhysicalModel()` and `GetErrorMessage()`; see the [common query guide](docs/Root-Common-Queries.md). This preview also includes `GetProcessId()`, `SetInputUnitForLength(LengthInputUnit)`, `SetInputUnitForForce(ForceInputUnit)`, `SetShortJobInfo(...)` (including a ShortJobInfo overload) and `UpdateStructure()`. See the [model setup guide](docs/Root-Model-Setup.md). These APIs are included in this preview archive.
 
@@ -22,13 +28,13 @@ This preview also adds `NewSTAADFile(...)`, `CreateNamedView(string, int)`, `Sav
 
 The reviewed Root port is complete: all 39 reviewed native Root functions and all 23 private-source Root methods have managed mappings. The final additions include `RemoveNamedView`, `ModifyNamedView`, `RetrieveMemberForces`, and separately acquired `ExportModelToAdina`, `GetAnalysisErrorMessages` and `GetAnalysisWarningMessages`. Access optional operations through `Capabilities.GetAdinaExport()`, `GetAnalysisErrorMessages()` and `GetAnalysisWarningMessages()`. Exact candidate profiles and compatible member metadata are required. See the [completion and capability guide](docs/Root-Completion-and-Capabilities.md) for usage, named results, limits and native validation gates. The package exposes 53 common Root operations and three optional operations. Native runtime validation remains pending; capability availability is not runtime certification.
 
-This archive is prepared locally; publication to NuGet.org is a separate step. See the [release notes](docs/Release-Notes.md).
+This preview is publicly listed on NuGet.org. It predates the final three Geometry operations. See the [release notes](docs/Release-Notes.md).
 
 ## Highlights
 
 - **OpenStaadWrapper & Provider**: Flexible acquisition via `OpenStaadWrapperProvider.Get()` and `GetRunning()` using Windows Running Object Table (ROT) lookup, active instance attachment, or automated background launching.
 - **Fluent API Design**: Chain node, beam, and plate creation operations seamlessly.
-- **Managed Connectivity Groups**: Group beams, physical members and plates with `SegregateBeamsByConnectivity`, `SegregateMembersByConnectivity` and `SegregatePlatesByConnectivity`. See [geometry API comparison and grouping](docs/Geometry-Porting.md) for scope defaults, semantics and the three remaining geometry functions.
+- **Managed Connectivity Groups**: Group beams, physical members and plates with `SegregateBeamsByConnectivity`, `SegregateMembersByConnectivity` and `SegregatePlatesByConnectivity`. See [geometry API comparison and grouping](docs/Geometry-Porting.md) for scope defaults, semantics and the completed reference Geometry coverage.
 - **Extended Geometry Mutations**: Create nodes, create beams and merge nodes with `CreateMultipleNodesExtended`, `CreateMultipleBeamsExtended` and `MergeNodesExtended`, using `wrapper.Root` and the original public signatures.
 - **Factored and Thermal Loads**: Add reference, repeat and synchronous axial thermal assignments with `AddReferenceLoadsTo`, `AddRepeatLoadsTo` and `AddAxialThermalGradientTo`. See [load porting and contracts](docs/Load-Porting.md).
 - **Grouped Load Assignments**: Apply member/nodal tuples by load case with `AddMemberLoadsFromGroupsByLoadCase` and `AddNodalLoadsFromGroupsByLoadCase`. The four-parameter thermal overload preserves per-entity calls on the caller's COM thread.
@@ -158,7 +164,7 @@ StaadPro.Interop/
 
 ## Building and Testing
 
-The current adapters expose 140 geometry methods and 78 load overloads. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
+The current source adapters expose all 143 reference geometry methods and 90 load overloads. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
 
 The Root port maps all 39 reviewed native functions and all 23 private-source Root methods through 53 common operations and three optional capability operations. Access them through `wrapper.Root`; see [root porting progress and examples](docs/Root-Porting.md).
 

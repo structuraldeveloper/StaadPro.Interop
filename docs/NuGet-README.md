@@ -18,6 +18,12 @@ This preview also adds `NewSTAADFile(...)`, `CreateNamedView(string, int)`, `Sav
 
 The reviewed Root port is complete: all 39 reviewed native Root functions and all 23 private-source Root methods have managed mappings. The final additions include `RemoveNamedView`, `ModifyNamedView`, `RetrieveMemberForces`, and separately acquired `ExportModelToAdina`, `GetAnalysisErrorMessages` and `GetAnalysisWarningMessages`. Access optional operations through `Capabilities.GetAdinaExport()`, `GetAnalysisErrorMessages()` and `GetAnalysisWarningMessages()`. Exact candidate profiles and compatible member metadata are required. See the [completion and capability guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Completion-and-Capabilities.md) for usage, named results, limits and native validation gates. The package exposes 53 common Root operations and three optional operations. Native runtime validation remains pending; capability availability is not runtime certification.
 
+## Additional source development
+
+Source after this published preview adds `IdentifyPhysicalMembers`, `GroupPhysicalMembersByPlanAngle` and `GeneratePolygonMesh`, completing all 143 reference Geometry overloads. These operations are not in the published version above. See the [Geometry guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Geometry-Porting.md) for managed behavior and limits. The wrapper already has its approved source members; the eight placeholder domain APIs remain separate work.
+
+Source development also adds `PopulateMemberUniformlyDistributedLoads`, `PopulateMemberUniformMoments`, `PopulateNodalLoads`, `AddWindDefinition`, three `AddWindExposure` overloads, three `AddWindIntensity` overloads, `DeleteWindDefinition` and `DeleteAllWindDefinitions`. This brings source coverage to 90 Load overloads with 30 reference overloads pending. These are not included in the published preview above. See the [Load guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Load-Porting.md) for complete contracts, explicit status handling and the default all-definition deletion behavior.
+
 ## Requirements
 
 - Windows and **.NET Framework 4.8.1** (`net481`).
@@ -128,7 +134,7 @@ See the [root guide](https://github.com/structuraldeveloper/StaadPro.Interop/blo
 
 ## IntelliSense and included documentation
 
-Expanded XML IntelliSense is included for **140 geometry overloads, 78 load overloads and 22 root functions**, on both interfaces and concrete adapters. Keep `StaadPro.Interop.xml` beside the library when distributing assemblies outside normal NuGet restore.
+Expanded XML IntelliSense is included for **140 geometry overloads, 78 load overloads, 53 common Root operations and three optional Root operation interfaces**, on both interfaces and concrete adapters. Keep `StaadPro.Interop.xml` beside the library when distributing assemblies outside normal NuGet restore.
 
 The archive includes geometry, load and root guides, installation and publishing instructions, and the release history. The published package metadata identifies **Srinivasa Rao Masanam** as the author.
 
