@@ -1,10 +1,12 @@
 # NuGet readiness assessment
 
+The latest Load increment ports another 15 reference overloads for typed ASCE wind and seismic operations. Current source coverage is 105 overloads (100 reference plus five convenience), with 15 reference overloads pending. The source suite passed 2,024 offline tests; the verifier now selects 280 XML examples. No new package was built or published; native marshaling/engineering validation remains a release gate. See [Load contracts](Load-Porting.md#asce-wind-and-seismic-definitions).
+
 ## Source update - 22 October 2026
 
 The approved wrapper surface is complete, and Geometry now covers all 143 reference overloads. The final three Geometry methods and their managed services/models passed 57 new regression cases within the 1,604-test offline suite. Nine new compiled XML example blocks passed a source-reference consumer check. These additions have not been built into a new distribution archive; the latest published preview remains 1.0.0-preview.20261015 and does not include them. The next package verifier expects 250 selected XML examples. Placeholder domain APIs remain separate work.
 
-The following Load increment ports 12 reference overloads for uniform member-load population, nodal refresh and basic wind definition operations. Current source coverage is 90 Load overloads (85 reference plus five convenience), leaving 30 reference overloads pending. The full source suite passed 1,761 offline tests, including 157 new Load cases. All 250 selected XML examples compiled and ran against a source-reference consumer; native wind mutation examples remained disabled. This is source verification, not a new package or live STAAD certification.
+The following Load increment ports 12 reference overloads for uniform member-load population, nodal refresh and basic wind definition operations. That earlier source increment exposed 90 Load overloads (85 reference plus five convenience), leaving 30 reference overloads pending. The full source suite passed 1,761 offline tests, including 157 new Load cases. All 250 selected XML examples compiled and ran against a source-reference consumer; native wind mutation examples remained disabled. This is source verification, not a new package or live STAAD certification.
 
 ## Prepared preview - 15 October 2026
 

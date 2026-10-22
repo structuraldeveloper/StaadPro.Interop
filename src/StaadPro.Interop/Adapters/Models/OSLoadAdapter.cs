@@ -8,6 +8,8 @@ using StaadPro.Interop.Enums;
 using StaadPro.Interop.Extensions;
 using StaadPro.Interop.Models;
 using StaadPro.Interop.Models.Loads.Wind;
+using StaadPro.Interop.Models.Loads.Seismic;
+using StaadPro.Interop.Services.Load;
 using StaadPro.Interop.Services.Interop;
 
 namespace StaadPro.Interop.Adapters.Models
@@ -27,6 +29,162 @@ namespace StaadPro.Interop.Adapters.Models
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.P:ComObject']/*" />
         public dynamic ComObject { get; }
 
+
+        #region ASCE Wind and Seismic Definitions
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.1']/*" />
+        public int AddWindDefinitionASCE7Parameters(ASCE7WindDefinitionParameters parameters)
+        {
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            parameters.Validate();
+            var packet = WindNativePacket.Capture(parameters.StructureData, parameters.Units, parameters.EscarpmentData, parameters.Publication, false);
+            int[] flags = parameters.Factors.ToUserInputFlagsArray();
+            double[] factors = parameters.Factors.ToFactorValuesArray();
+            return NativeValues.ReadInt32((object)ComObject.AddWindDefinitionASCE7Parameters(parameters.TypeNumber,
+                (int)parameters.Publication, parameters.WindSpeed, parameters.HeightAboveSeaLevel,
+                (int)parameters.BuildingClassification, packet.StructureType, (int)parameters.ExposureCategory,
+                parameters.ConsiderEscarpment ? 1 : 0, (int)parameters.WallType, parameters.IsFlexible ? 1 : 0,
+                packet.Escarpment, packet.Structure, packet.Units, flags, factors), "AddWindDefinitionASCE7Parameters status");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.2']/*" />
+        public int ComputeWallWindPressureProfile(WallWindPressureProfileParameters parameters)
+        {
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            parameters.Validate();
+            var packet = WindNativePacket.Capture(parameters.StructureData, parameters.Units, parameters.EscarpmentData,
+                ASCE7Publication.ASCE7_05_10, true);
+            return NativeValues.ReadInt32((object)ComObject.ComputeWallWindPressureProfile((int)parameters.LoadingCode,
+                parameters.WindSpeed, (int)parameters.BuildingClassification, packet.StructureType,
+                (int)parameters.ExposureCategory, parameters.ConsiderEscarpment ? 1 : 0, packet.Units, packet.Escarpment,
+                packet.Structure, (int)parameters.WallType), "ComputeWallWindPressureProfile result");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.3']/*" />
+        public int ComputeWallWindPressureProfileASCE72016(ASCE72016WallWindPressureProfileParameters parameters)
+        {
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            parameters.Validate();
+            var packet = WindNativePacket.Capture(parameters.StructureData, parameters.Units, parameters.EscarpmentData,
+                ASCE7Publication.ASCE7_16, true);
+            return NativeValues.ReadInt32((object)ComObject.ComputeWallWindPressureProfileASCE72016(parameters.WindSpeed,
+                parameters.HeightAboveSeaLevel, (int)parameters.BuildingClassification, packet.StructureType,
+                (int)parameters.ExposureCategory, parameters.ConsiderEscarpment ? 1 : 0, packet.Units, packet.Escarpment,
+                packet.Structure, (int)parameters.WallType), "ComputeWallWindPressureProfileASCE72016 result");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.4']/*" />
+        public bool AddSeismicDefinition(SeismicCode code, bool considerAccidentalTorsion = false) =>
+            AddSeismicDefinition((int)code, considerAccidentalTorsion ? 1 : 0);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.5']/*" />
+        public bool AddSeismicDefinition(int code, int accidentalTorsion = 0)
+        {
+            if (!Enum.IsDefined(typeof(SeismicCode), code)) throw new ArgumentOutOfRangeException(nameof(code));
+            if (accidentalTorsion != 0 && accidentalTorsion != 1) throw new ArgumentOutOfRangeException(nameof(accidentalTorsion));
+            if (code == (int)SeismicCode.NRC2020)
+            {
+                var version = Wrapper.StaadVersion;
+                LoadArguments.CoveredSeismicProfile(version);
+                if (version.Major == 24) throw new NotSupportedException("NRC 2020 is not listed in the reviewed STAAD.Pro 2024 seismic definition contract.");
+            }
+            return LoadArguments.ReadBoolean((object)ComObject.AddSeismicDefinition(code, accidentalTorsion), "AddSeismicDefinition");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.6']/*" />
+        public int ModifySeismicDefinitionParam(string parameterName, double value)
+        {
+            LoadArguments.Keyword(parameterName, nameof(parameterName));
+            LoadArguments.Finite(value, nameof(value));
+            return NativeValues.ReadInt32((object)ComObject.ModifySeismicDefinitionParams(parameterName, value), "ModifySeismicDefinitionParams status");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.7']/*" />
+        public int ModifySeismicDefinitionParams(IDictionary<string, double> parameters)
+        {
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            var snapshot = parameters.ToArray();
+            foreach (var parameter in snapshot)
+            {
+                LoadArguments.Keyword(parameter.Key, nameof(parameters));
+                LoadArguments.Finite(parameter.Value, nameof(parameters));
+            }
+            foreach (var parameter in snapshot)
+            {
+                int status = ModifySeismicDefinitionParam(parameter.Key, parameter.Value);
+                if (status != 0) return status;
+            }
+            return 0;
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.8']/*" />
+        public int ModifySeismicDefinitionParams(IS1893_2016SeismicParameters parameters)
+        {
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            return ModifySeismicDefinitionParams(parameters.ToParameterDictionary());
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.9']/*" />
+        public int ModifySeismicDefinitionParams(IS1893_2002SeismicParameters parameters)
+        {
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            return ModifySeismicDefinitionParams(parameters.ToParameterDictionary());
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.10']/*" />
+        public int ModifySeismicDefinitionParams(IBCSeismicParameters parameters)
+        {
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            return ModifySeismicDefinitionParams(parameters.ToParameterDictionary());
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.11']/*" />
+        public bool AddSeismicDefSelfWeight(double weightFactor = 1.0)
+        {
+            LoadArguments.Finite(weightFactor, nameof(weightFactor));
+            return LoadArguments.ReadBoolean((object)ComObject.AddSeismicDefSelfWeight(weightFactor), "AddSeismicDefSelfWeight");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.12']/*" />
+        public int AddSeismicDefJointWeight(double weight, IEnumerable<int> nodeIds)
+        {
+            LoadArguments.Finite(weight, nameof(weight));
+            int[] ids = SnapshotPositiveLoadIds(nodeIds, nameof(nodeIds));
+            if (ids.Length == 0) return 0;
+            return NativeValues.ReadInt32((object)ComObject.AddSeismicDefJointWeight(weight, ids), "AddSeismicDefJointWeight status");
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.13']/*" />
+        public int AddSeismicDefJointWeight(double weight, IEnumerable<Node> nodes)
+        {
+            if (nodes == null) throw new ArgumentNullException(nameof(nodes));
+            var snapshot = nodes.ToArray();
+            if (snapshot.Any(node => node == null)) throw new ArgumentException("Nodes cannot contain null.", nameof(nodes));
+            return AddSeismicDefJointWeight(weight, snapshot.Select(node => node.Id));
+        }
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.14']/*" />
+        public int AddSeismicDefJointWeight(double weight, int nodeId) => AddSeismicDefJointWeight(weight, new[] { nodeId });
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.15']/*" />
+        public bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight,
+            double startDistance, double endDistance, IEnumerable<int> memberIds)
+        {
+            LoadArguments.SeismicMemberCode(seismicCode, Wrapper.StaadVersion);
+            LoadArguments.Defined(loadType, nameof(loadType));
+            LoadArguments.Finite(weight, nameof(weight));
+            LoadArguments.Finite(startDistance, nameof(startDistance));
+            LoadArguments.Finite(endDistance, nameof(endDistance));
+            if (startDistance < 0) throw new ArgumentOutOfRangeException(nameof(startDistance));
+            if (endDistance < 0 || (endDistance != 0 && endDistance < startDistance))
+                throw new ArgumentOutOfRangeException(nameof(endDistance));
+            int[] ids = SnapshotPositiveLoadIds(memberIds, nameof(memberIds));
+            if (ids.Length == 0) return true;
+            return LoadArguments.ReadBoolean((object)ComObject.AddSeismicDefMemberWeight(seismicCode, (int)loadType,
+                weight, startDistance, endDistance, ids), "AddSeismicDefMemberWeight");
+        }
+
+        #endregion
 
         #region Load Population and Wind Definitions
 

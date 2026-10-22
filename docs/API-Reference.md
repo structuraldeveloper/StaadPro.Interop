@@ -44,6 +44,11 @@ Construction/refresh read native metadata on the session’s COM thread. Five ty
 
 ## `IOSLoad` Members
 
+### ASCE wind and seismic definitions
+
+Current source exposes 105 Load overloads, with 15 main-interface reference overloads pending. The latest 15 include AddWindDefinitionASCE7Parameters, ComputeWallWindPressureProfile, ComputeWallWindPressureProfileASCE72016, AddSeismicDefinition, ModifySeismicDefinitionParam, ModifySeismicDefinitionParams, AddSeismicDefSelfWeight, AddSeismicDefJointWeight and AddSeismicDefMemberWeight. Signatures retain reference return types and defaults, with native ref handling kept internal. See [complete contracts, units, native-code distinctions and examples](Load-Porting.md#asce-wind-and-seismic-definitions). These are source additions after the published preview.
+
+
 ### Reference, Repeat and Temperature Assignments
 
 - `AddReferenceLoadsTo(int loadCaseId, Dictionary<int, double> loadCaseNumberFactorPairs)`: Adds factored reference contributions to an existing primary case.

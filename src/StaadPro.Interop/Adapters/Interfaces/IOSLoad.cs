@@ -4,6 +4,7 @@ using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Models;
 using StaadPro.Interop.Models.Loads.Wind;
+using StaadPro.Interop.Models.Loads.Seismic;
 
 namespace StaadPro.Interop.Adapters.Interfaces
 {
@@ -12,6 +13,51 @@ namespace StaadPro.Interop.Adapters.Interfaces
     /// </summary>
     public interface IOSLoad : IOSBase
     {
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.1']/*" />
+        int AddWindDefinitionASCE7Parameters(ASCE7WindDefinitionParameters parameters);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.2']/*" />
+        int ComputeWallWindPressureProfile(WallWindPressureProfileParameters parameters);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.3']/*" />
+        int ComputeWallWindPressureProfileASCE72016(ASCE72016WallWindPressureProfileParameters parameters);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.4']/*" />
+        bool AddSeismicDefinition(SeismicCode code, bool considerAccidentalTorsion = false);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.5']/*" />
+        bool AddSeismicDefinition(int code, int accidentalTorsion = 0);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.6']/*" />
+        int ModifySeismicDefinitionParam(string parameterName, double value);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.7']/*" />
+        int ModifySeismicDefinitionParams(IDictionary<string, double> parameters);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.8']/*" />
+        int ModifySeismicDefinitionParams(IS1893_2016SeismicParameters parameters);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.9']/*" />
+        int ModifySeismicDefinitionParams(IS1893_2002SeismicParameters parameters);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.10']/*" />
+        int ModifySeismicDefinitionParams(IBCSeismicParameters parameters);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.11']/*" />
+        bool AddSeismicDefSelfWeight(double weightFactor = 1.0);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.12']/*" />
+        int AddSeismicDefJointWeight(double weight, IEnumerable<int> nodeIds);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.13']/*" />
+        int AddSeismicDefJointWeight(double weight, IEnumerable<Node> nodes);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.14']/*" />
+        int AddSeismicDefJointWeight(double weight, int nodeId);
+
+        /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadDefinitions15.15']/*" />
+        bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<int> memberIds);
+
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='LoadNext12.PopulateMemberUniformlyDistributedLoads']/*" />
         void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases);
 

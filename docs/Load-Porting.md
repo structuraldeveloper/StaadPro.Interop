@@ -1,12 +1,12 @@
 # Load API porting and new assignments
 
-The private main project’s reference `IOSLoad` contains 115 method overloads. This repository now exposes 90: 85 matching reference overloads plus five repository-specific convenience overloads. There are 30 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
+The private main project’s reference `IOSLoad` contains 115 method overloads. This repository now exposes 105: 100 matching reference overloads plus five repository-specific convenience overloads. There are 15 reference overloads still pending. Counts treat overloads separately and compare both interface and adapter method signatures.
 
-The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 90 from 115 does not give the pending reference count.
+The repository-specific methods are `CreatePrimaryLoadCases`, `CreateReferenceLoadCases` and three `AddPlateUniformPressure` overloads. They explain why subtracting 105 from 115 does not give the pending reference count.
 
 ## Cross-version native coverage review — 22 October 2026
 
-Private-source overload parity is separate from Bentley native API coverage. The installed 2024/2025/2026 Load references each document 129 functions across 24 pages. The current source dispatches 59 of those names: 53 directly in OSLoadAdapter and six through member-load entity implementations. Seventy documented names have no current dispatch. The inspected 2025/2026 vendor interfaces each declare another three names outside those help sections.
+Private-source overload parity is separate from Bentley native API coverage. The installed 2024/2025/2026 Load references each document 129 functions across 24 pages. The current source dispatches 67 of those names: 61 directly in OSLoadAdapter and six through member-load entity implementations. Sixty-two documented names have no current dispatch. The inspected 2025/2026 vendor interfaces each declare another three names outside those help sections.
 
 See the [Load multi-version comparison and architecture plan](reports/OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md) and [complete native contract and managed coverage inventory](reports/OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md). They include the complete matrix, version-sensitive seismic code mapping, status differences, per-function proposals, private-reference backlog and release verification gates. This review changes documentation only; its architecture and API proposals are not implemented.
 
@@ -188,25 +188,82 @@ Console.WriteLine(status); // Each step remains a separate native mutation.
 The wind documentation and signatures were inspected, and argument layouts/status behavior are tested with managed stand-ins. Verification passed **1,761 offline tests**, including **157 new cases**, and a Release solution build with zero warnings/errors. All **250 selected XML examples** compiled and executed in a source-reference consumer using the production verifier selection logic; wind mutation examples remained guarded. No new distribution archive or installed-package result is claimed for this increment. This does not certify live STAAD wind commands or engineering units. The main source project remains strictly read-only.
 
 
+<a id="asce-wind-and-seismic-definitions"></a>
+
+## ASCE wind and seismic definitions — 22 October 2026
+
+Ported the next **15 reference overloads** into IOSLoad and the existing non-partial OSLoadAdapter. Source coverage is now **105 overloads: 100 matching the main interface plus five repository conveniences**, leaving **15 reference overloads pending**. All new signatures preserve source return types and optional defaults; no public ref/out parameters or tuples were added. These source changes are not included in the published 1.0.0-preview.20261015 archive.
+
+| Managed function | Overloads | Contract |
+| --- | ---: | --- |
+| AddWindDefinitionASCE7Parameters | 1 | Complete typed ASCE wind definition request; original native Int32 status. |
+| ComputeWallWindPressureProfile | 1 | Pre-2016 engineering edition; native generated-point count/error. |
+| ComputeWallWindPressureProfileASCE72016 | 1 | ASCE 7-2016 calculation with explicit elevation; count/error only. |
+| AddSeismicDefinition | 2 | Typed definition enum or native definition code; checked Boolean result and torsion 0/1. |
+| ModifySeismicDefinitionParam | 1 | One uppercase alphanumeric keyword/value update. |
+| ModifySeismicDefinitionParams | 4 | Dictionary plus IS1893-2016, IS1893-2002/2005 and IBC model overloads. |
+| AddSeismicDefSelfWeight | 1 | Finite dimensionless factor, default 1.0; native Boolean result. |
+| AddSeismicDefJointWeight | 3 | ID sequence, Node sequence or single ID; original integer status. |
+| AddSeismicDefMemberWeight | 1 | ID-sequence overload with acquired-profile native code, distribution, weight and distances. |
+
+### Wind inputs and wire contracts
+
+Reused the main project's wind structure hierarchy (building, tank/chimney, solid sign, open sign/lattice and trussed tower), explicit velocity/length units, escarpment data and factor overrides. Enums retain their native numeric domains without proprietary assembly dependencies. Models reject nonfinite fields and undefined enum values; nested requests are validated before dispatch. Callers must keep mutable models stable during use.
+
+Definition requests send fifteen native arguments. The topography packet has four Doubles; structure data has seven Doubles; units and override flags each have eight Int32 values; factor values have eight Doubles. The eight-element forms follow source serialization and native index tables 0–7, despite inconsistent size-seven wording in help. Arrays supplied to native code are owned snapshots.
+
+Both profile calculations use ten native arguments, including the explicit unit packet and an Int32 1/0 escarpment flag, matching the inspected Win32 BOOL shape. Profile tables use a different open-sign/tower slot order from definition tables; internal packet preparation reorders these families. The calculation tables use legacy enclosure/tank classifications, including in the 2016 calculation entry. Definition serialization uses the requested publication's classification map. PartiallyOpen is rejected for a legacy packet because it has no distinct documented legacy value; it is not silently substituted with PartiallyEnclosed. These departures from the source's shared packet path are documented and tested against the installed tables; native numerical validation remains pending.
+
+Wind values use the request's explicit unit configuration. ASCE engineering edition is independent of STAAD product year. Profile calculations return a generated-point count; they do not fabricate or return pressure/height points. Referenced native profile getters are outside the inspected Load inventory. These calls can modify native calculation/definition state.
+
+### Seismic identity, validation and results
+
+SeismicCode identifies **definition codes**, not member-weight codes. Values 0–24 have common documented encodings; NRC2020=25 requires an acquired native 25.00.01.424 or 26.00.00.340 profile. The reviewed 2024 contract and unknown/unreviewed builds reject that choice before mutation. Selection uses wrapper.StaadVersion, never the host ApplicationVersion.
+
+The newly ported member-weight overload preserves the reference integer parameter as the **native member-weight code for the acquired profile**. Zero requests native auto-detection. Explicit codes require a reviewed profile and valid range: 1–25 on 24.00.02.354, 1–26 on the reviewed 2025/2026 builds. Integer 5 denotes Chinese GB50011-2001 on the reviewed 2024 table and NRC 2020 on the newer table. No semantic mapping or enum cast is inferred from an integer. A future semantic overload/version policy remains separate planned work.
+
+Distribution codes are Uniform=1 and Concentrated=2. Weight is forwarded unchanged (force for joint/concentrated weight, force per length for uniform member weight). Distances use native model length units from member start, must be finite/nonnegative, and a nonzero end cannot precede start. Both zero describe full-length uniform weight. Use zero for the unused concentrated end distance.
+
+Joint/member selections are enumerated once; positive IDs, input order and duplicates are preserved. Node overloads read only IDs. Empty joint/member selections return the source-compatible successful no-op (0/true) without native dispatch. No load case or seismic definition is implicitly created or selected.
+
+Integer-returning methods preserve native statuses/counts, including unknown integers, and reject null, Boolean, text, floating-point, enum or overflowing results. Zero is success for wind/seismic parameter/joint updates; profile counts have their own native meaning, with -1 documenting failure. Boolean families accept actual bool or integral 0/1/-1 only, and reject other statuses. This Boolean rule must not be applied to integer-status APIs.
+
+### Parameter updates and partial completion
+
+The dictionary overload snapshots and validates every entry before the first update. Keywords must start with an uppercase ASCII letter and contain only uppercase ASCII letters/digits. Their text is preserved; no case normalization or unit conversion occurs. Entries are submitted in snapshot order. The first nonzero native code stops the sequence and is returned unchanged; a later exception/malformed result also stops execution. Earlier native updates remain. Empty dictionaries return zero without dispatch.
+
+Typed seismic models produce independent keyword dictionaries, retain main-source defaults and nullable optional fields, and reject nonfinite values before mutation. They do not select or track the active engineering code. Caller must ensure that keywords, location alternatives, units and values are appropriate to the existing native seismic definition. Validation does not certify engineering suitability or atomicity.
+
+All calls stay on the caller's COM thread. No automatic save, analysis, retry, restoration or rollback is added. A native operation may have effects before reporting an error or returning an invalid value. XML IntelliSense on both interface and adapter covers these contracts, result semantics, defaults, exceptions, side effects and guarded examples.
+
+### Verification
+
+Passed 2,024 offline tests (263 new cases), a Release build and all 280 selected source-reference XML examples. Native mutations in examples remained guarded. These results validate managed contracts and stand-in dispatch, not live native marshaling or engineering calculations. No new package was built or published.
+
+### Usage
+
+```csharp
+// With a connected wrapper on its COM thread, and an appropriate existing definition:
+var load = wrapper.Load;
+bool definitionCreated = load.AddSeismicDefinition(
+    StaadPro.Interop.Models.Loads.Seismic.SeismicCode.IS1893_2016,
+    considerAccidentalTorsion: true);
+if (definitionCreated)
+{
+    int status = load.ModifySeismicDefinitionParams(
+        new StaadPro.Interop.Models.Loads.Seismic.IS1893_2016SeismicParameters
+        { Zone = 0.16, ImportanceFactor = 1.0 });
+    if (status == 0)
+        status = load.AddSeismicDefJointWeight(2.5, new[] { 101, 102 });
+    Console.WriteLine(status);
+}
+// Each call is a separate native mutation; no save or transaction is implied.
+```
+
 ## Pending reference overloads
 
 The following inventory was compared by method name, generic arity and parameter types. It lists source signatures, including supporting types that may themselves need porting. A name already present here can still appear when a different overload is pending.
 
-- `int AddWindDefinitionASCE7Parameters(ASCE7WindDefinitionParameters parameters)`
-- `int ComputeWallWindPressureProfile(WallWindPressureProfileParameters parameters)`
-- `int ComputeWallWindPressureProfileASCE72016(ASCE72016WallWindPressureProfileParameters parameters)`
-- `bool AddSeismicDefinition(SeismicCode code, bool considerAccidentalTorsion = false)`
-- `bool AddSeismicDefinition(int code, int accidentalTorsion = 0)`
-- `int ModifySeismicDefinitionParam(string parameterName, double value)`
-- `int ModifySeismicDefinitionParams(IDictionary<string, double> parameters)`
-- `int ModifySeismicDefinitionParams(IS1893_2016SeismicParameters parameters)`
-- `int ModifySeismicDefinitionParams(IS1893_2002SeismicParameters parameters)`
-- `int ModifySeismicDefinitionParams(IBCSeismicParameters parameters)`
-- `bool AddSeismicDefSelfWeight(double weightFactor = 1.0)`
-- `int AddSeismicDefJointWeight(double weight, IEnumerable<int> nodeIds)`
-- `int AddSeismicDefJointWeight(double weight, IEnumerable<Node> nodes)`
-- `int AddSeismicDefJointWeight(double weight, int nodeId)`
-- `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<int> memberIds)`
 - `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<Beam> members)`
 - `bool AddSeismicDefMemberUniformWeight(double weight, IEnumerable<int> memberIds, double startDistance = 0, double endDistance = 0, int seismicCode = 0)`
 - `bool AddSeismicDefMemberConcentratedWeight(double weight, double distance, IEnumerable<int> memberIds, int seismicCode = 0)`

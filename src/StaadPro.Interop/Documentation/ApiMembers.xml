@@ -4606,5 +4606,334 @@ if (allowWindEdit)
 }
 </code></example>
     </member>
+    <member name="LoadDefinitions15.1">
+      <summary>Submits a complete ASCE wind-definition configuration using owned native input packets.</summary>
+      <param name="parameters">Non-null, fully initialized source-compatible parameter object, or a non-null keyword/value dictionary. All numeric inputs must be finite. Model fields use their documented native code units; the adapter does not select a definition or convert units.</param>
+      <returns>The native Int32 status: zero means success; nonzero values, including unknown codes, are returned unchanged.</returns>
+      <remarks><para>Sends fifteen native arguments. Topography has four Double slots, structure data seven, units eight Int32 slots, override flags eight Int32 slots and factor values eight Double slots. The eight-slot forms follow the source packers and the native index tables (0–7), despite contradictory size-seven wording in help. These layouts still require live native validation. No unit conversion is performed; use the request's explicit wind units. Creates/configures a definition, not a wind load case.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+var request = new StaadPro.Interop.Models.Loads.Wind.ASCE7WindDefinitionParameters { StructureData = new StaadPro.Interop.Models.Loads.Wind.ASCE7BuildingData { Height = 12, LengthAlongWindDirection = 20, WidthNormalToWindDirection = 8 } };
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.AddWindDefinitionASCE7Parameters(request);
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.2">
+      <summary>Requests a wall-pressure profile calculation for a pre-2016 ASCE publication.</summary>
+      <param name="parameters">Non-null, fully initialized source-compatible parameter object, or a non-null keyword/value dictionary. All numeric inputs must be finite. Model fields use their documented native code units; the adapter does not select a definition or convert units.</param>
+      <returns>The native Int32 number of generated height/intensity points; -1 indicates a native error. This method does not return the profile points.</returns>
+      <remarks><para>Uses the request's ASCE loading edition, independently of the STAAD product year. Sends ten arguments, including the units packet and an Int32 escarpment flag (1/0, matching the inspected Win32 BOOL declaration). Computation structure slots follow the installed calculation tables, whose open-sign/tower ordering and legacy enclosure/tank codes differ from definition packets. No read-back API for the computed points is supplied by this overload.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+var request = new StaadPro.Interop.Models.Loads.Wind.WallWindPressureProfileParameters { StructureData = new StaadPro.Interop.Models.Loads.Wind.ASCE7BuildingData { Height = 12, LengthAlongWindDirection = 20, WidthNormalToWindDirection = 8 } };
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.ComputeWallWindPressureProfile(request);
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.3">
+      <summary>Requests an ASCE 7-2016 wall-pressure profile calculation.</summary>
+      <param name="parameters">Non-null, fully initialized source-compatible parameter object, or a non-null keyword/value dictionary. All numeric inputs must be finite. Model fields use their documented native code units; the adapter does not select a definition or convert units.</param>
+      <returns>The native Int32 generated point count; -1 indicates a native error. Other native integer values are preserved.</returns>
+      <remarks><para>ASCE 7-2016 is an engineering edition, not STAAD.Pro 2016. Sends ten arguments with explicit ground elevation and wind units. Uses the legacy structure classification/slot layout shown in the native computation table, including reordered open-sign/tower fields. Native help has inconsistent unit indices; the eight-slot units packet preserves the main source convention. Returns no pressure/height collections; live numerical validation remains necessary.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+var request = new StaadPro.Interop.Models.Loads.Wind.ASCE72016WallWindPressureProfileParameters { StructureData = new StaadPro.Interop.Models.Loads.Wind.ASCE7BuildingData { Height = 12, LengthAlongWindDirection = 20, WidthNormalToWindDirection = 8 } };
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.ComputeWallWindPressureProfileASCE72016(request);
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.4">
+      <summary>Adds a seismic definition with the selected definition code and accidental-torsion setting.</summary>
+      <param name="code">Defined seismic-definition code (0–25). NRC 2020=25 requires a reviewed 2025/2026 native profile. This is not a member-weight code.</param>
+      <param name="considerAccidentalTorsion">True includes accidental torsion; false (default) ignores it. Marshaled as integer 1 or 0.</param>
+      <returns>True when native Boolean success is reported; false when native Boolean failure is reported.</returns>
+      <remarks><para>Definition-code values are separate from member-weight codes. Code 25 (NRC 2020) is rejected for the reviewed 2024 contract and for unknown/unreviewed builds; it requires native 25.00.01.424 or 26.00.00.340. Other documented definition codes 0–24 retain their common numeric encoding. The enum remains visible in IntelliSense regardless of the connected version; request validation enforces availability. No seismic weights or load case are created implicitly.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefinition(StaadPro.Interop.Models.Loads.Seismic.SeismicCode.IS1893_2016, true);
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.5">
+      <summary>Adds a seismic definition with the selected definition code and accidental-torsion setting.</summary>
+      <param name="code">Defined seismic-definition code (0–25). NRC 2020=25 requires a reviewed 2025/2026 native profile. This is not a member-weight code.</param>
+      <param name="accidentalTorsion">Exactly 0 (default, ignore) or 1 (include). Other values are rejected before native dispatch.</param>
+      <returns>True when native Boolean success is reported; false when native Boolean failure is reported.</returns>
+      <remarks><para>Definition-code values are separate from member-weight codes. Code 25 (NRC 2020) is rejected for the reviewed 2024 contract and for unknown/unreviewed builds; it requires native 25.00.01.424 or 26.00.00.340. Other documented definition codes 0–24 retain their common numeric encoding. The enum remains visible in IntelliSense regardless of the connected version; request validation enforces availability. No seismic weights or load case are created implicitly.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefinition(12, 1);
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.6">
+      <summary>Sets one named parameter on the native seismic definition.</summary>
+      <param name="parameterName">Nonempty uppercase ASCII native keyword containing letters/digits and beginning with a letter, without spaces or NUL characters. It must be valid for the existing seismic definition.</param>
+      <param name="value">Finite native code-specific parameter value, forwarded as Double with no conversion.</param>
+      <returns>The original native integer status: zero means success, nonzero means failure.</returns>
+      <remarks><para>Accepts an uppercase ASCII native keyword (letters/digits, beginning with a letter) without whitespace and a finite Double. Does not trim, change case or convert units. The caller must select an appropriate existing definition and use keywords/values valid for its engineering code. Native state determines acceptance; this method does not track or infer the active seismic design code.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.ModifySeismicDefinitionParam(&quot;ZONE&quot;, 0.16);
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.7">
+      <summary>Updates the native seismic definition using a snapshot of named parameters.</summary>
+      <param name="parameters">Non-null, fully initialized source-compatible parameter object, or a non-null keyword/value dictionary. All numeric inputs must be finite. Model fields use their documented native code units; the adapter does not select a definition or convert units.</param>
+      <returns>Zero when every submitted parameter succeeds (or the request is empty); otherwise the first nonzero native status.</returns>
+      <remarks><para>The dictionary is snapshotted and every keyword/value is validated before any native update. Entries are submitted in snapshot enumeration order. Stops at the first native failure, malformed status or exception; earlier successful native updates remain. Typed models map to a fresh case-insensitive keyword dictionary without selecting a seismic code. Optional model values are included only when supplied. Caller must ensure matching existing definition, code-specific units and engineering validity. No transaction or automatic rollback is provided.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.ModifySeismicDefinitionParams(new System.Collections.Generic.Dictionary&lt;string, double&gt; { { &quot;ZONE&quot;, 0.16 }, { &quot;I&quot;, 1.0 } });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.8">
+      <summary>Updates the native seismic definition using a snapshot of named parameters.</summary>
+      <param name="parameters">Non-null, fully initialized source-compatible parameter object, or a non-null keyword/value dictionary. All numeric inputs must be finite. Model fields use their documented native code units; the adapter does not select a definition or convert units.</param>
+      <returns>Zero when every submitted parameter succeeds (or the request is empty); otherwise the first nonzero native status.</returns>
+      <remarks><para>The dictionary is snapshotted and every keyword/value is validated before any native update. Entries are submitted in snapshot enumeration order. Stops at the first native failure, malformed status or exception; earlier successful native updates remain. Typed models map to a fresh case-insensitive keyword dictionary without selecting a seismic code. Optional model values are included only when supplied. Caller must ensure matching existing definition, code-specific units and engineering validity. No transaction or automatic rollback is provided.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.ModifySeismicDefinitionParams(new StaadPro.Interop.Models.Loads.Seismic.IS1893_2016SeismicParameters());
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.9">
+      <summary>Updates the native seismic definition using a snapshot of named parameters.</summary>
+      <param name="parameters">Non-null, fully initialized source-compatible parameter object, or a non-null keyword/value dictionary. All numeric inputs must be finite. Model fields use their documented native code units; the adapter does not select a definition or convert units.</param>
+      <returns>Zero when every submitted parameter succeeds (or the request is empty); otherwise the first nonzero native status.</returns>
+      <remarks><para>The dictionary is snapshotted and every keyword/value is validated before any native update. Entries are submitted in snapshot enumeration order. Stops at the first native failure, malformed status or exception; earlier successful native updates remain. Typed models map to a fresh case-insensitive keyword dictionary without selecting a seismic code. Optional model values are included only when supplied. Caller must ensure matching existing definition, code-specific units and engineering validity. No transaction or automatic rollback is provided.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.ModifySeismicDefinitionParams(new StaadPro.Interop.Models.Loads.Seismic.IS1893_2002SeismicParameters());
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.10">
+      <summary>Updates the native seismic definition using a snapshot of named parameters.</summary>
+      <param name="parameters">Non-null, fully initialized source-compatible parameter object, or a non-null keyword/value dictionary. All numeric inputs must be finite. Model fields use their documented native code units; the adapter does not select a definition or convert units.</param>
+      <returns>Zero when every submitted parameter succeeds (or the request is empty); otherwise the first nonzero native status.</returns>
+      <remarks><para>The dictionary is snapshotted and every keyword/value is validated before any native update. Entries are submitted in snapshot enumeration order. Stops at the first native failure, malformed status or exception; earlier successful native updates remain. Typed models map to a fresh case-insensitive keyword dictionary without selecting a seismic code. Optional model values are included only when supplied. Caller must ensure matching existing definition, code-specific units and engineering validity. No transaction or automatic rollback is provided.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.ModifySeismicDefinitionParams(new StaadPro.Interop.Models.Loads.Seismic.IBCSeismicParameters());
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.11">
+      <summary>Adds a self-weight factor to the native seismic definition.</summary>
+      <param name="weightFactor">Finite dimensionless self-weight multiplier, default 1.0. Signed values and zero are preserved.</param>
+      <returns>True for native Boolean success; false for native Boolean failure.</returns>
+      <remarks><para>The default factor is 1.0. Any finite signed value, including zero, is forwarded unchanged for native acceptance. Does not create or choose a seismic definition or activate a load case.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefSelfWeight(1.0);
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.12">
+      <summary>Adds joint weight to the native seismic definition for the supplied node IDs.</summary>
+      <param name="weight">Finite signed weight in the existing definition's native force units (joint/concentrated) or force per length (uniform member); no conversion.</param>
+      <param name="nodeIds">Non-null sequence of positive node IDs; enumerated once. Empty means no-op; order and duplicates are retained.</param>
+      <returns>The native integer status unchanged: zero is success; -1 or a more specific negative code reports failure. Empty selection returns zero without a native call.</returns>
+      <remarks><para>Snapshots and validates node identities before dispatch. Order and duplicates are preserved. Node objects contribute only their IDs; coordinates are neither read nor changed. Empty selections are successful no-ops. Weight is a finite signed Double in the native definition's current force units, without conversion. Newer help lists -100, -106, -113, -2006 and -8034; unknown codes are also returned unchanged. Does not select or create a definition.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefJointWeight(2.5, new[] { 101, 102 });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.13">
+      <summary>Adds joint weight to the native seismic definition for the supplied node IDs.</summary>
+      <param name="weight">Finite signed weight in the existing definition's native force units (joint/concentrated) or force per length (uniform member); no conversion.</param>
+      <param name="nodes">Non-null sequence of non-null nodes with positive IDs; enumerated once. Uses IDs only and preserves order/duplicates.</param>
+      <returns>The native integer status unchanged: zero is success; -1 or a more specific negative code reports failure. Empty selection returns zero without a native call.</returns>
+      <remarks><para>Snapshots and validates node identities before dispatch. Order and duplicates are preserved. Node objects contribute only their IDs; coordinates are neither read nor changed. Empty selections are successful no-ops. Weight is a finite signed Double in the native definition's current force units, without conversion. Newer help lists -100, -106, -113, -2006 and -8034; unknown codes are also returned unchanged. Does not select or create a definition.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefJointWeight(2.5, new[] { new StaadPro.Interop.Entities.Node(101, 0, 0, 0) });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.14">
+      <summary>Adds joint weight to the native seismic definition for the supplied node IDs.</summary>
+      <param name="weight">Finite signed weight in the existing definition's native force units (joint/concentrated) or force per length (uniform member); no conversion.</param>
+      <param name="nodeId">Positive node ID; supplied internally as a one-element Int32 array.</param>
+      <returns>The native integer status unchanged: zero is success; -1 or a more specific negative code reports failure. Empty selection returns zero without a native call.</returns>
+      <remarks><para>Snapshots and validates node identities before dispatch. Order and duplicates are preserved. Node objects contribute only their IDs; coordinates are neither read nor changed. Empty selections are successful no-ops. Weight is a finite signed Double in the native definition's current force units, without conversion. Newer help lists -100, -106, -113, -2006 and -8034; unknown codes are also returned unchanged. Does not select or create a definition.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefJointWeight(2.5, 101);
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
+    <member name="LoadDefinitions15.15">
+      <summary>Adds uniform or concentrated member weight to the native seismic definition.</summary>
+      <param name="seismicCode">Native member-weight code for the acquired profile, or zero for native auto-detection. Do not pass a SeismicCode definition enum cast.</param>
+      <param name="loadType">Uniform=1 or Concentrated=2; undefined values are rejected.</param>
+      <param name="weight">Finite signed weight in the existing definition's native force units (joint/concentrated) or force per length (uniform member); no conversion.</param>
+      <param name="startDistance">Finite nonnegative distance from member start to weight start/application point, in native model length units.</param>
+      <param name="endDistance">Finite nonnegative end distance in native model length units; a nonzero value must not precede startDistance. Both zero mean full-length uniform weight.</param>
+      <param name="memberIds">Non-null positive member-ID sequence, snapshotted once. Empty is a successful no-op; order and duplicates are preserved.</param>
+      <returns>True for native Boolean success, false for failure; an empty member selection returns true without native dispatch.</returns>
+      <remarks><para>seismicCode is the native member-weight number for the acquired product profile, NOT a SeismicCode definition value. Zero requests native auto-detection. Explicit nonzero codes require a reviewed build: 24.00.02.354 permits 1–25; 25.00.01.424 and 26.00.00.340 permit 1–26. Number 5 denotes Chinese GB50011-2001 in the reviewed 2024 table and NRC 2020 in the newer table. No silent numeric translation is performed. Caller must choose the correct native table. Uniform=1 and Concentrated=2. Distances are finite nonnegative values in native model length units from member start; a nonzero end cannot precede start. Both zero describe full-length uniform weight; use zero for unused concentrated end distance. Weight is forwarded unchanged in native force/length units for uniform weight or force units for concentrated weight. Order/duplicates are preserved.</para><para>Calls remain on the caller’s COM thread. Serialize access to the acquired session and keep mutable request models stable while calling. No load-case activation, save, analysis, retry or rollback is added. Native failure can leave effects; invalid native result types throw after invocation. This port preserves reference return types and exposes no by-reference parameters. Boolean methods accept actual Boolean values or integral 0/1/-1 only; integer-status/count methods require an integral Int32 result and never coerce Boolean, floating-point, text or null values. Underlying native/binding exceptions propagate. Native engineering behavior and marshaling still need validation on supported installations.</para></remarks>
+      <exception cref="ArgumentNullException">A required reference is null.</exception>
+      <exception cref="ArgumentException">A keyword, selection, structure packet or required model field is invalid.</exception>
+      <exception cref="ArgumentOutOfRangeException">A scalar is nonfinite, an ID/distance is invalid or an enum/code is outside the supported domain.</exception>
+      <exception cref="NotSupportedException">A version-sensitive seismic choice has no reviewed compatible native profile.</exception>
+      <exception cref="InvalidOperationException">The native return value has an unsupported type, range or Boolean representation.</exception>
+      <exception cref="System.Runtime.InteropServices.COMException">The underlying native invocation fails.</exception>
+      <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">A required native signature is unavailable.</exception>
+      <example>With a connected load adapter named load on the session COM thread:<code>
+bool submitDefinition = false; // Set true only for an intended native definition update/calculation.
+if (submitDefinition)
+{
+    var result = load.AddSeismicDefMemberWeight(0, StaadPro.Interop.Models.Loads.Seismic.SeismicMemberLoadType.Uniform, 2.5, 0, 0, new[] { 101, 102 });
+    Console.WriteLine(result);
+}
+      </code></example>
+    </member>
 </members>
 </doc>

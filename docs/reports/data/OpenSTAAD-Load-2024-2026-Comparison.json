@@ -7,20 +7,20 @@
     "manualFunctionsPerYear": 129,
     "pagesPerYear": 24,
     "vendorMethodsPerInspectedYear": 132,
-    "managedInterfaceOverloads": 90,
-    "managedAdapterOverloads": 90,
-    "directAdapterNativeNames": 53,
+    "managedInterfaceOverloads": 105,
+    "managedAdapterOverloads": 105,
+    "directAdapterNativeNames": 61,
     "delegatedNativeNames": 6,
-    "totalDispatchedNames": 59,
-    "documentedNamesWithoutDispatch": 70,
+    "totalDispatchedNames": 67,
+    "documentedNamesWithoutDispatch": 62,
     "privateReferenceOverloads": 115,
-    "privateReferenceMatchingOverloads": 85,
-    "privateReferencePendingOverloads": 30,
+    "privateReferenceMatchingOverloads": 100,
+    "privateReferencePendingOverloads": 15,
     "repositoryConveniences": 5
   },
   "sourceFingerprints": {
-    "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs": "cb2227d2305cc17ad392f1c5bd52d332652d6c0c2252e0fc5467dd181b4a92db",
-    "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs": "ab3cfa1a49bd255a809e439c550adfb62808e48b245e54651adeb7a48031c3b6",
+    "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs": "6f020c3625179eb1574e42ff32568ef60f6c7bfdb1e8e0757084dda365e893fb",
+    "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs": "88714759531709fff0ca53179fb49f1d0b3aef1126783efc7fbe13b7859a6ad2",
     "src/StaadPro.Interop/Models/OpenStaadWrapper.cs": "1c0b69fe545a379262ad70cb1d1f9c45de872aba92e6eb4df218441455628692",
     "src/StaadPro.Interop/StaadPro.Interop.csproj": "035570ef3e35b52a2772e2ec96b9bf886ce3d08d6e555c3d51ffd870de9f1a59"
   },
@@ -29403,6 +29403,150 @@
   ],
   "callSites": [
     {
+      "Target": "ComObject.AddWindDefinitionASCE7Parameters",
+      "Receiver": "ComObject",
+      "Name": "AddWindDefinitionASCE7Parameters",
+      "GenericArity": 0,
+      "Arguments": [
+        "parameters.TypeNumber",
+        "(int)parameters.Publication",
+        "parameters.WindSpeed",
+        "parameters.HeightAboveSeaLevel",
+        "(int)parameters.BuildingClassification",
+        "packet.StructureType",
+        "(int)parameters.ExposureCategory",
+        "parameters.ConsiderEscarpment ? 1 : 0",
+        "(int)parameters.WallType",
+        "parameters.IsFlexible ? 1 : 0",
+        "packet.Escarpment",
+        "packet.Structure",
+        "packet.Units",
+        "flags",
+        "factors"
+      ],
+      "Line": 43,
+      "Caller": "AddWindDefinitionASCE7Parameters",
+      "MethodLine": 36,
+      "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
+    },
+    {
+      "Target": "ComObject.ComputeWallWindPressureProfile",
+      "Receiver": "ComObject",
+      "Name": "ComputeWallWindPressureProfile",
+      "GenericArity": 0,
+      "Arguments": [
+        "(int)parameters.LoadingCode",
+        "parameters.WindSpeed",
+        "(int)parameters.BuildingClassification",
+        "packet.StructureType",
+        "(int)parameters.ExposureCategory",
+        "parameters.ConsiderEscarpment ? 1 : 0",
+        "packet.Units",
+        "packet.Escarpment",
+        "packet.Structure",
+        "(int)parameters.WallType"
+      ],
+      "Line": 57,
+      "Caller": "ComputeWallWindPressureProfile",
+      "MethodLine": 51,
+      "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
+    },
+    {
+      "Target": "ComObject.ComputeWallWindPressureProfileASCE72016",
+      "Receiver": "ComObject",
+      "Name": "ComputeWallWindPressureProfileASCE72016",
+      "GenericArity": 0,
+      "Arguments": [
+        "parameters.WindSpeed",
+        "parameters.HeightAboveSeaLevel",
+        "(int)parameters.BuildingClassification",
+        "packet.StructureType",
+        "(int)parameters.ExposureCategory",
+        "parameters.ConsiderEscarpment ? 1 : 0",
+        "packet.Units",
+        "packet.Escarpment",
+        "packet.Structure",
+        "(int)parameters.WallType"
+      ],
+      "Line": 70,
+      "Caller": "ComputeWallWindPressureProfileASCE72016",
+      "MethodLine": 64,
+      "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
+    },
+    {
+      "Target": "ComObject.AddSeismicDefinition",
+      "Receiver": "ComObject",
+      "Name": "AddSeismicDefinition",
+      "GenericArity": 0,
+      "Arguments": [
+        "code",
+        "accidentalTorsion"
+      ],
+      "Line": 91,
+      "Caller": "AddSeismicDefinition",
+      "MethodLine": 81,
+      "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
+    },
+    {
+      "Target": "ComObject.ModifySeismicDefinitionParams",
+      "Receiver": "ComObject",
+      "Name": "ModifySeismicDefinitionParams",
+      "GenericArity": 0,
+      "Arguments": [
+        "parameterName",
+        "value"
+      ],
+      "Line": 99,
+      "Caller": "ModifySeismicDefinitionParam",
+      "MethodLine": 95,
+      "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
+    },
+    {
+      "Target": "ComObject.AddSeismicDefSelfWeight",
+      "Receiver": "ComObject",
+      "Name": "AddSeismicDefSelfWeight",
+      "GenericArity": 0,
+      "Arguments": [
+        "weightFactor"
+      ],
+      "Line": 145,
+      "Caller": "AddSeismicDefSelfWeight",
+      "MethodLine": 142,
+      "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
+    },
+    {
+      "Target": "ComObject.AddSeismicDefJointWeight",
+      "Receiver": "ComObject",
+      "Name": "AddSeismicDefJointWeight",
+      "GenericArity": 0,
+      "Arguments": [
+        "weight",
+        "ids"
+      ],
+      "Line": 154,
+      "Caller": "AddSeismicDefJointWeight",
+      "MethodLine": 149,
+      "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
+    },
+    {
+      "Target": "ComObject.AddSeismicDefMemberWeight",
+      "Receiver": "ComObject",
+      "Name": "AddSeismicDefMemberWeight",
+      "GenericArity": 0,
+      "Arguments": [
+        "seismicCode",
+        "(int)loadType",
+        "weight",
+        "startDistance",
+        "endDistance",
+        "ids"
+      ],
+      "Line": 183,
+      "Caller": "AddSeismicDefMemberWeight",
+      "MethodLine": 170,
+      "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
+    },
+    {
       "Target": "ComObject.AddWindDefinition",
       "Receiver": "ComObject",
       "Name": "AddWindDefinition",
@@ -29411,9 +29555,9 @@
         "windDefinitionId",
         "definitionName"
       ],
-      "Line": 70,
+      "Line": 228,
       "Caller": "AddWindDefinition",
-      "MethodLine": 64,
+      "MethodLine": 222,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29426,9 +29570,9 @@
         "exposureFactor",
         "ids"
       ],
-      "Line": 82,
+      "Line": 240,
       "Caller": "AddWindExposure",
-      "MethodLine": 74,
+      "MethodLine": 232,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29441,9 +29585,9 @@
         "intensity",
         "height"
       ],
-      "Line": 113,
+      "Line": 271,
       "Caller": "AddWindIntensity",
-      "MethodLine": 108,
+      "MethodLine": 266,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29456,9 +29600,9 @@
         "pressureValues",
         "heightValues"
       ],
-      "Line": 128,
+      "Line": 286,
       "Caller": "AddWindIntensity",
-      "MethodLine": 117,
+      "MethodLine": 275,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29469,9 +29613,9 @@
       "Arguments": [
         "windDefinitionId"
       ],
-      "Line": 144,
+      "Line": 302,
       "Caller": "DeleteWindDefinition",
-      "MethodLine": 141,
+      "MethodLine": 299,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29483,9 +29627,9 @@
         "pairs.Select(p => p.Key).ToArray()",
         "pairs.Select(p => p.Value).ToArray()"
       ],
-      "Line": 177,
+      "Line": 335,
       "Caller": "AddReferenceLoadsTo",
-      "MethodLine": 172,
+      "MethodLine": 330,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29497,9 +29641,9 @@
         "pairs.Select(p => p.Key).ToArray()",
         "pairs.Select(p => p.Value).ToArray()"
       ],
-      "Line": 187,
+      "Line": 345,
       "Caller": "AddRepeatLoadsTo",
-      "MethodLine": 182,
+      "MethodLine": 340,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29513,9 +29657,9 @@
         "0.0",
         "0.0"
       ],
-      "Line": 202,
+      "Line": 360,
       "Caller": "AddAxialThermalGradientTo",
-      "MethodLine": 192,
+      "MethodLine": 350,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29529,9 +29673,9 @@
         "0.0",
         "0.0"
       ],
-      "Line": 220,
+      "Line": 378,
       "Caller": "AddAxialThermalGradientTo",
-      "MethodLine": 207,
+      "MethodLine": 365,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29540,9 +29684,9 @@
       "Name": "GetRepeatLoadCount",
       "GenericArity": 0,
       "Arguments": [],
-      "Line": 300,
+      "Line": 458,
       "Caller": "GetRepeatLoadCases",
-      "MethodLine": 294,
+      "MethodLine": 452,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29553,9 +29697,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 322,
+      "Line": 480,
       "Caller": "GetLoadCombination",
-      "MethodLine": 319,
+      "MethodLine": 477,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29566,9 +29710,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 325,
+      "Line": 483,
       "Caller": "GetLoadCombination",
-      "MethodLine": 319,
+      "MethodLine": 477,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29581,9 +29725,9 @@
         "ref ids",
         "ref factors"
       ],
-      "Line": 328,
+      "Line": 486,
       "Caller": "GetLoadCombination",
-      "MethodLine": 319,
+      "MethodLine": 477,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29595,9 +29739,9 @@
         "definition.Definition.Title",
         "definition.Definition.Id"
       ],
-      "Line": 438,
+      "Line": 596,
       "Caller": "CreateLoadCombinations",
-      "MethodLine": 424,
+      "MethodLine": 582,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29610,9 +29754,9 @@
         "pair.Key",
         "pair.Value"
       ],
-      "Line": 440,
+      "Line": 598,
       "Caller": "CreateLoadCombinations",
-      "MethodLine": 424,
+      "MethodLine": 582,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29623,9 +29767,9 @@
       "Arguments": [
         "nId"
       ],
-      "Line": 488,
+      "Line": 646,
       "Caller": "GetNodalLoads",
-      "MethodLine": 484,
+      "MethodLine": 642,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29642,9 +29786,9 @@
         "ref my",
         "ref mz"
       ],
-      "Line": 494,
+      "Line": 652,
       "Caller": "GetNodalLoads",
-      "MethodLine": 484,
+      "MethodLine": 642,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29655,9 +29799,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 546,
+      "Line": 704,
       "Caller": "GetMemberUniformlyDistributedLoads",
-      "MethodLine": 542,
+      "MethodLine": 700,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29673,9 +29817,9 @@
         "ref end",
         "ref eccentricity"
       ],
-      "Line": 552,
+      "Line": 710,
       "Caller": "GetMemberUniformlyDistributedLoads",
-      "MethodLine": 542,
+      "MethodLine": 700,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29686,9 +29830,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 605,
+      "Line": 763,
       "Caller": "GetMemberConcentratedLoads",
-      "MethodLine": 601,
+      "MethodLine": 759,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29703,9 +29847,9 @@
         "ref position",
         "ref eccentricity"
       ],
-      "Line": 611,
+      "Line": 769,
       "Caller": "GetMemberConcentratedLoads",
-      "MethodLine": 601,
+      "MethodLine": 759,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29716,9 +29860,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 668,
+      "Line": 826,
       "Caller": "GetMemberConcentratedMoments",
-      "MethodLine": 664,
+      "MethodLine": 822,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29733,9 +29877,9 @@
         "ref position",
         "ref eccentricity"
       ],
-      "Line": 674,
+      "Line": 832,
       "Caller": "GetMemberConcentratedMoments",
-      "MethodLine": 664,
+      "MethodLine": 822,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29746,9 +29890,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 727,
+      "Line": 885,
       "Caller": "GetMemberLinearVaryingLoads",
-      "MethodLine": 723,
+      "MethodLine": 881,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29763,9 +29907,9 @@
         "ref end",
         "ref middle"
       ],
-      "Line": 734,
+      "Line": 892,
       "Caller": "GetMemberLinearVaryingLoads",
-      "MethodLine": 723,
+      "MethodLine": 881,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29776,9 +29920,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 787,
+      "Line": 945,
       "Caller": "GetMemberTrapezoidalLoads",
-      "MethodLine": 783,
+      "MethodLine": 941,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29794,9 +29938,9 @@
         "ref startPosition",
         "ref endPosition"
       ],
-      "Line": 793,
+      "Line": 951,
       "Caller": "GetMemberTrapezoidalLoads",
-      "MethodLine": 783,
+      "MethodLine": 941,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29807,9 +29951,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 848,
+      "Line": 1006,
       "Caller": "GetMemberUniformMoments",
-      "MethodLine": 844,
+      "MethodLine": 1002,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29825,9 +29969,9 @@
         "ref end",
         "ref eccentricity"
       ],
-      "Line": 854,
+      "Line": 1012,
       "Caller": "GetMemberUniformMoments",
-      "MethodLine": 844,
+      "MethodLine": 1002,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29839,9 +29983,9 @@
         "ids",
         "isReferenceLoad"
       ],
-      "Line": 1431,
+      "Line": 1589,
       "Caller": "ClearPrimaryLoadCases",
-      "MethodLine": 1425,
+      "MethodLine": 1583,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29853,9 +29997,9 @@
         "ids",
         "false"
       ],
-      "Line": 1454,
+      "Line": 1612,
       "Caller": "ClearPrimaryLoadCases",
-      "MethodLine": 1448,
+      "MethodLine": 1606,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29866,9 +30010,9 @@
       "Arguments": [
         "ids"
       ],
-      "Line": 1477,
+      "Line": 1635,
       "Caller": "ClearReferenceLoadCases",
-      "MethodLine": 1471,
+      "MethodLine": 1629,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29880,9 +30024,9 @@
         "lcTitle",
         "(int)loadType"
       ],
-      "Line": 1490,
+      "Line": 1648,
       "Caller": "CreateNewPrimaryLoad",
-      "MethodLine": 1486,
+      "MethodLine": 1644,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29895,9 +30039,9 @@
         "(int)loadType",
         "lcId"
       ],
-      "Line": 1499,
+      "Line": 1657,
       "Caller": "CreateNewPrimaryLoad",
-      "MethodLine": 1495,
+      "MethodLine": 1653,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29910,9 +30054,9 @@
         "lcTitle",
         "(int)loadType"
       ],
-      "Line": 1522,
+      "Line": 1680,
       "Caller": "CreateNewReferenceLoad",
-      "MethodLine": 1518,
+      "MethodLine": 1676,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29923,9 +30067,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 1537,
+      "Line": 1695,
       "Caller": "GetLoadCaseTitle",
-      "MethodLine": 1534,
+      "MethodLine": 1692,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29936,9 +30080,9 @@
       "Arguments": [
         "lc.Id"
       ],
-      "Line": 1549,
+      "Line": 1707,
       "Caller": "SetLoadCaseActive",
-      "MethodLine": 1542,
+      "MethodLine": 1700,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29949,9 +30093,9 @@
       "Arguments": [
         "lc.Id"
       ],
-      "Line": 1553,
+      "Line": 1711,
       "Caller": "SetLoadCaseActive",
-      "MethodLine": 1542,
+      "MethodLine": 1700,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29964,9 +30108,9 @@
         "(int)direction",
         "mmSettlement / 1000.0"
       ],
-      "Line": 1622,
+      "Line": 1780,
       "Caller": "AddSupportSettlement",
-      "MethodLine": 1613,
+      "MethodLine": 1771,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29983,9 +30127,9 @@
         "nl.Forces.My",
         "nl.Forces.Mz"
       ],
-      "Line": 1705,
+      "Line": 1863,
       "Caller": "AddNodalLoad",
-      "MethodLine": 1694,
+      "MethodLine": 1852,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29998,9 +30142,9 @@
         "(int)direction",
         "pressure"
       ],
-      "Line": 1761,
+      "Line": 1919,
       "Caller": "AddPlateUniformPressure",
-      "MethodLine": 1751,
+      "MethodLine": 1909,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30009,9 +30153,9 @@
       "Name": "GetEnvelopeCount",
       "GenericArity": 0,
       "Arguments": [],
-      "Line": 1800,
+      "Line": 1958,
       "Caller": "GetEnvelopeIds",
-      "MethodLine": 1798,
+      "MethodLine": 1956,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30022,9 +30166,9 @@
       "Arguments": [
         "ref buffer"
       ],
-      "Line": 1804,
+      "Line": 1962,
       "Caller": "GetEnvelopeIds",
-      "MethodLine": 1798,
+      "MethodLine": 1956,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30037,9 +30181,9 @@
         "ref type",
         "ref count"
       ],
-      "Line": 1844,
+      "Line": 2002,
       "Caller": "GetLoadEnvelopeDetail",
-      "MethodLine": 1839,
+      "MethodLine": 1997,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30051,9 +30195,9 @@
         "envId",
         "ref buffer"
       ],
-      "Line": 1852,
+      "Line": 2010,
       "Caller": "GetLoadEnvelopeDetail",
-      "MethodLine": 1839,
+      "MethodLine": 1997,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30066,9 +30210,9 @@
         "(int)loadDirection",
         "factor"
       ],
-      "Line": 1930,
+      "Line": 2088,
       "Caller": "AddSelfweightInXYZTo",
-      "MethodLine": 1920,
+      "MethodLine": 2078,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30081,9 +30225,9 @@
         "(int)envelopType",
         "ids"
       ],
-      "Line": 1965,
+      "Line": 2123,
       "Caller": "CreateLoadEnvelopExt",
-      "MethodLine": 1960,
+      "MethodLine": 2118,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30095,9 +30239,9 @@
         "(int)loadListType",
         "ids"
       ],
-      "Line": 2000,
+      "Line": 2158,
       "Caller": "CreateLoadList",
-      "MethodLine": 1996,
+      "MethodLine": 2154,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30106,9 +30250,9 @@
       "Name": "GetPrimaryLoadCaseCount",
       "GenericArity": 0,
       "Arguments": [],
-      "Line": 2049,
+      "Line": 2207,
       "Caller": "ReadAllLoadCases",
-      "MethodLine": 2045,
+      "MethodLine": 2203,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30117,9 +30261,9 @@
       "Name": "GetReferenceLoadCaseCount",
       "GenericArity": 0,
       "Arguments": [],
-      "Line": 2049,
+      "Line": 2207,
       "Caller": "ReadAllLoadCases",
-      "MethodLine": 2045,
+      "MethodLine": 2203,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30130,9 +30274,9 @@
       "Arguments": [
         "ref buffer"
       ],
-      "Line": 2056,
+      "Line": 2214,
       "Caller": "ReadAllLoadCases",
-      "MethodLine": 2045,
+      "MethodLine": 2203,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30143,9 +30287,9 @@
       "Arguments": [
         "ref buffer"
       ],
-      "Line": 2057,
+      "Line": 2215,
       "Caller": "ReadAllLoadCases",
-      "MethodLine": 2045,
+      "MethodLine": 2203,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30156,9 +30300,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 2073,
+      "Line": 2231,
       "Caller": "ReadLoadCaseMetadata",
-      "MethodLine": 2070,
+      "MethodLine": 2228,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30169,9 +30313,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 2073,
+      "Line": 2231,
       "Caller": "ReadLoadCaseMetadata",
-      "MethodLine": 2070,
+      "MethodLine": 2228,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30182,9 +30326,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 2076,
+      "Line": 2234,
       "Caller": "ReadLoadCaseMetadata",
-      "MethodLine": 2070,
+      "MethodLine": 2228,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30195,9 +30339,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 2076,
+      "Line": 2234,
       "Caller": "ReadLoadCaseMetadata",
-      "MethodLine": 2070,
+      "MethodLine": 2228,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30206,9 +30350,9 @@
       "Name": "GetLoadCombinationCaseCount",
       "GenericArity": 0,
       "Arguments": [],
-      "Line": 2085,
+      "Line": 2243,
       "Caller": "ReadCombinationCaseIds",
-      "MethodLine": 2083,
+      "MethodLine": 2241,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30219,9 +30363,9 @@
       "Arguments": [
         "ref buffer"
       ],
-      "Line": 2088,
+      "Line": 2246,
       "Caller": "ReadCombinationCaseIds",
-      "MethodLine": 2083,
+      "MethodLine": 2241,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30232,9 +30376,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 2101,
+      "Line": 2259,
       "Caller": "ReadCombinationCaseMetadata",
-      "MethodLine": 2099,
+      "MethodLine": 2257,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30245,9 +30389,9 @@
       "Arguments": [
         "lc.Id"
       ],
-      "Line": 2127,
+      "Line": 2285,
       "Caller": "ActivateQueryCase",
-      "MethodLine": 2122,
+      "MethodLine": 2280,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30258,9 +30402,9 @@
       "Arguments": [
         "lc.Id"
       ],
-      "Line": 2133,
+      "Line": 2291,
       "Caller": "ActivateQueryCase",
-      "MethodLine": 2122,
+      "MethodLine": 2280,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30375,7 +30519,7 @@
       {
         "name": "CreateNewPrimaryLoadEx2",
         "caller": "CreateNewPrimaryLoad",
-        "line": 1499,
+        "line": 1657,
         "args": 3,
         "expected": 3,
         "mismatches": [
@@ -30394,7 +30538,7 @@
       {
         "name": "AddElementPressure",
         "caller": "AddPlateUniformPressure",
-        "line": 1761,
+        "line": 1919,
         "args": 3,
         "expected": 7,
         "mismatches": []
@@ -30403,6 +30547,327 @@
     "delegatedIssues": []
   },
   "managedInterface": [
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "AddWindDefinitionASCE7Parameters",
+      "ReturnType": "int",
+      "Parameters": [
+        {
+          "Name": "parameters",
+          "Type": "ASCE7WindDefinitionParameters",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 17
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "ComputeWallWindPressureProfile",
+      "ReturnType": "int",
+      "Parameters": [
+        {
+          "Name": "parameters",
+          "Type": "WallWindPressureProfileParameters",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 20
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "ComputeWallWindPressureProfileASCE72016",
+      "ReturnType": "int",
+      "Parameters": [
+        {
+          "Name": "parameters",
+          "Type": "ASCE72016WallWindPressureProfileParameters",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 23
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "AddSeismicDefinition",
+      "ReturnType": "bool",
+      "Parameters": [
+        {
+          "Name": "code",
+          "Type": "SeismicCode",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "considerAccidentalTorsion",
+          "Type": "bool",
+          "Default": "false",
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 26
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "AddSeismicDefinition",
+      "ReturnType": "bool",
+      "Parameters": [
+        {
+          "Name": "code",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "accidentalTorsion",
+          "Type": "int",
+          "Default": "0",
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 29
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "ModifySeismicDefinitionParam",
+      "ReturnType": "int",
+      "Parameters": [
+        {
+          "Name": "parameterName",
+          "Type": "string",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "value",
+          "Type": "double",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 32
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "ModifySeismicDefinitionParams",
+      "ReturnType": "int",
+      "Parameters": [
+        {
+          "Name": "parameters",
+          "Type": "IDictionary<string, double>",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 35
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "ModifySeismicDefinitionParams",
+      "ReturnType": "int",
+      "Parameters": [
+        {
+          "Name": "parameters",
+          "Type": "IS1893_2016SeismicParameters",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 38
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "ModifySeismicDefinitionParams",
+      "ReturnType": "int",
+      "Parameters": [
+        {
+          "Name": "parameters",
+          "Type": "IS1893_2002SeismicParameters",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 41
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "ModifySeismicDefinitionParams",
+      "ReturnType": "int",
+      "Parameters": [
+        {
+          "Name": "parameters",
+          "Type": "IBCSeismicParameters",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 44
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "AddSeismicDefSelfWeight",
+      "ReturnType": "bool",
+      "Parameters": [
+        {
+          "Name": "weightFactor",
+          "Type": "double",
+          "Default": "1.0",
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 47
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "AddSeismicDefJointWeight",
+      "ReturnType": "int",
+      "Parameters": [
+        {
+          "Name": "weight",
+          "Type": "double",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "nodeIds",
+          "Type": "IEnumerable<int>",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 50
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "AddSeismicDefJointWeight",
+      "ReturnType": "int",
+      "Parameters": [
+        {
+          "Name": "weight",
+          "Type": "double",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "nodes",
+          "Type": "IEnumerable<Node>",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 53
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "AddSeismicDefJointWeight",
+      "ReturnType": "int",
+      "Parameters": [
+        {
+          "Name": "weight",
+          "Type": "double",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "nodeId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 56
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "AddSeismicDefMemberWeight",
+      "ReturnType": "bool",
+      "Parameters": [
+        {
+          "Name": "seismicCode",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "loadType",
+          "Type": "SeismicMemberLoadType",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "weight",
+          "Type": "double",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "startDistance",
+          "Type": "double",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "endDistance",
+          "Type": "double",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "memberIds",
+          "Type": "IEnumerable<int>",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 59
+    },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
       "Owner": "IOSLoad",
@@ -30424,7 +30889,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 16
+      "Line": 62
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30447,7 +30912,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 19
+      "Line": 65
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30470,7 +30935,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 22
+      "Line": 68
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30493,7 +30958,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 25
+      "Line": 71
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30522,7 +30987,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 28
+      "Line": 74
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30551,7 +31016,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 31
+      "Line": 77
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30580,7 +31045,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 34
+      "Line": 80
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30609,7 +31074,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 37
+      "Line": 83
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30638,7 +31103,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 40
+      "Line": 86
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30661,7 +31126,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 43
+      "Line": 89
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30678,7 +31143,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 46
+      "Line": 92
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30688,7 +31153,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 49
+      "Line": 95
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30711,7 +31176,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 52
+      "Line": 98
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30734,7 +31199,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 55
+      "Line": 101
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30763,7 +31228,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 58
+      "Line": 104
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30798,7 +31263,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 61
+      "Line": 107
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30815,7 +31280,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 64
+      "Line": 110
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30832,7 +31297,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 67
+      "Line": 113
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30855,7 +31320,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 72
+      "Line": 118
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30878,7 +31343,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 74
+      "Line": 120
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30901,7 +31366,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 76
+      "Line": 122
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30911,7 +31376,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 79
+      "Line": 125
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30934,7 +31399,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 81
+      "Line": 127
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30957,7 +31422,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 83
+      "Line": 129
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30974,7 +31439,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 86
+      "Line": 132
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30997,7 +31462,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 88
+      "Line": 134
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31020,7 +31485,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 90
+      "Line": 136
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31061,7 +31526,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 93
+      "Line": 139
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31090,7 +31555,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 95
+      "Line": 141
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31107,7 +31572,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 97
+      "Line": 143
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31130,7 +31595,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 138
+      "Line": 184
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31153,7 +31618,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 179
+      "Line": 225
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31176,7 +31641,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 220
+      "Line": 266
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31199,7 +31664,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 261
+      "Line": 307
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31222,7 +31687,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 302
+      "Line": 348
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31245,7 +31710,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 343
+      "Line": 389
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31268,7 +31733,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 350
+      "Line": 396
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31291,7 +31756,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 353
+      "Line": 399
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31314,7 +31779,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 356
+      "Line": 402
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31331,7 +31796,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 359
+      "Line": 405
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31348,7 +31813,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 362
+      "Line": 408
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31365,7 +31830,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 365
+      "Line": 411
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31382,7 +31847,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 368
+      "Line": 414
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31399,7 +31864,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 371
+      "Line": 417
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31416,7 +31881,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 374
+      "Line": 420
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31439,7 +31904,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 381
+      "Line": 427
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31468,7 +31933,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 384
+      "Line": 430
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31485,7 +31950,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 387
+      "Line": 433
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31502,7 +31967,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 390
+      "Line": 436
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31531,7 +31996,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 393
+      "Line": 439
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31548,7 +32013,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 396
+      "Line": 442
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31565,7 +32030,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 399
+      "Line": 445
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31582,7 +32047,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 402
+      "Line": 448
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31599,7 +32064,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 405
+      "Line": 451
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31634,7 +32099,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 412
+      "Line": 458
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31669,7 +32134,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 415
+      "Line": 461
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31704,7 +32169,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 418
+      "Line": 464
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31739,7 +32204,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 421
+      "Line": 467
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31756,7 +32221,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 428
+      "Line": 474
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31773,7 +32238,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 431
+      "Line": 477
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31790,7 +32255,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 434
+      "Line": 480
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31807,7 +32272,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 437
+      "Line": 483
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31836,7 +32301,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 444
+      "Line": 490
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31865,7 +32330,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 447
+      "Line": 493
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31894,7 +32359,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 454
+      "Line": 500
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31923,7 +32388,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 457
+      "Line": 503
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31958,7 +32423,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 464
+      "Line": 510
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31993,7 +32458,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 467
+      "Line": 513
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32028,7 +32493,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 470
+      "Line": 516
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32051,7 +32516,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 512
+      "Line": 558
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32061,7 +32526,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 544
+      "Line": 590
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32071,7 +32536,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 576
+      "Line": 622
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32088,7 +32553,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 608
+      "Line": 654
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32105,7 +32570,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 640
+      "Line": 686
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32122,7 +32587,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 673
+      "Line": 719
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32139,7 +32604,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 706
+      "Line": 752
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32149,7 +32614,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 737
+      "Line": 783
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32166,7 +32631,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 771
+      "Line": 817
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32183,7 +32648,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 808
+      "Line": 854
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32200,7 +32665,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 843
+      "Line": 889
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32223,7 +32688,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 879
+      "Line": 925
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32252,7 +32717,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 915
+      "Line": 961
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32275,7 +32740,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 953
+      "Line": 999
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32292,7 +32757,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 983
+      "Line": 1029
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32302,7 +32767,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 1007
+      "Line": 1053
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32319,7 +32784,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 1039
+      "Line": 1085
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32329,7 +32794,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 1064
+      "Line": 1110
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32370,7 +32835,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 1096
+      "Line": 1142
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32399,7 +32864,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 1124
+      "Line": 1170
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32422,332 +32887,11 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 1153
+      "Line": 1199
     }
   ],
   "privateReference": {
     "pending": [
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "AddWindDefinitionASCE7Parameters",
-        "ReturnType": "int",
-        "Parameters": [
-          {
-            "Name": "parameters",
-            "Type": "ASCE7WindDefinitionParameters",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 715
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "ComputeWallWindPressureProfile",
-        "ReturnType": "int",
-        "Parameters": [
-          {
-            "Name": "parameters",
-            "Type": "WallWindPressureProfileParameters",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 722
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "ComputeWallWindPressureProfileASCE72016",
-        "ReturnType": "int",
-        "Parameters": [
-          {
-            "Name": "parameters",
-            "Type": "ASCE72016WallWindPressureProfileParameters",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 729
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "AddSeismicDefinition",
-        "ReturnType": "bool",
-        "Parameters": [
-          {
-            "Name": "code",
-            "Type": "SeismicCode",
-            "Default": null,
-            "Modifiers": ""
-          },
-          {
-            "Name": "considerAccidentalTorsion",
-            "Type": "bool",
-            "Default": "false",
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 743
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "AddSeismicDefinition",
-        "ReturnType": "bool",
-        "Parameters": [
-          {
-            "Name": "code",
-            "Type": "int",
-            "Default": null,
-            "Modifiers": ""
-          },
-          {
-            "Name": "accidentalTorsion",
-            "Type": "int",
-            "Default": "0",
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 751
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "ModifySeismicDefinitionParam",
-        "ReturnType": "int",
-        "Parameters": [
-          {
-            "Name": "parameterName",
-            "Type": "string",
-            "Default": null,
-            "Modifiers": ""
-          },
-          {
-            "Name": "value",
-            "Type": "double",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 759
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "ModifySeismicDefinitionParams",
-        "ReturnType": "int",
-        "Parameters": [
-          {
-            "Name": "parameters",
-            "Type": "IDictionary<string, double>",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 766
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "ModifySeismicDefinitionParams",
-        "ReturnType": "int",
-        "Parameters": [
-          {
-            "Name": "parameters",
-            "Type": "IS1893_2016SeismicParameters",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 773
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "ModifySeismicDefinitionParams",
-        "ReturnType": "int",
-        "Parameters": [
-          {
-            "Name": "parameters",
-            "Type": "IS1893_2002SeismicParameters",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 780
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "ModifySeismicDefinitionParams",
-        "ReturnType": "int",
-        "Parameters": [
-          {
-            "Name": "parameters",
-            "Type": "IBCSeismicParameters",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 787
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "AddSeismicDefSelfWeight",
-        "ReturnType": "bool",
-        "Parameters": [
-          {
-            "Name": "weightFactor",
-            "Type": "double",
-            "Default": "1.0",
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 794
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "AddSeismicDefJointWeight",
-        "ReturnType": "int",
-        "Parameters": [
-          {
-            "Name": "weight",
-            "Type": "double",
-            "Default": null,
-            "Modifiers": ""
-          },
-          {
-            "Name": "nodeIds",
-            "Type": "IEnumerable<int>",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 802
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "AddSeismicDefJointWeight",
-        "ReturnType": "int",
-        "Parameters": [
-          {
-            "Name": "weight",
-            "Type": "double",
-            "Default": null,
-            "Modifiers": ""
-          },
-          {
-            "Name": "nodes",
-            "Type": "IEnumerable<Node>",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 810
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "AddSeismicDefJointWeight",
-        "ReturnType": "int",
-        "Parameters": [
-          {
-            "Name": "weight",
-            "Type": "double",
-            "Default": null,
-            "Modifiers": ""
-          },
-          {
-            "Name": "nodeId",
-            "Type": "int",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 818
-      },
-      {
-        "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
-        "Owner": "IOSLoad",
-        "Name": "AddSeismicDefMemberWeight",
-        "ReturnType": "bool",
-        "Parameters": [
-          {
-            "Name": "seismicCode",
-            "Type": "int",
-            "Default": null,
-            "Modifiers": ""
-          },
-          {
-            "Name": "loadType",
-            "Type": "SeismicMemberLoadType",
-            "Default": null,
-            "Modifiers": ""
-          },
-          {
-            "Name": "weight",
-            "Type": "double",
-            "Default": null,
-            "Modifiers": ""
-          },
-          {
-            "Name": "startDistance",
-            "Type": "double",
-            "Default": null,
-            "Modifiers": ""
-          },
-          {
-            "Name": "endDistance",
-            "Type": "double",
-            "Default": null,
-            "Modifiers": ""
-          },
-          {
-            "Name": "memberIds",
-            "Type": "IEnumerable<int>",
-            "Default": null,
-            "Modifiers": ""
-          }
-        ],
-        "Arity": 0,
-        "Public": true,
-        "Line": 830
-      },
       {
         "File": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
         "Owner": "IOSLoad",
@@ -33199,54 +33343,6 @@
       "considerations": "Document destructive scope and dependency failures; no implicit save."
     },
     {
-      "nativeName": "ComputeWallWindPressureProfile",
-      "phase": "L3",
-      "signature": "WindProfileComputationResult ComputeWallWindPressureProfile(WallWindPressureProfileParameters parameters)",
-      "considerations": "Return generated point count and status, not fabricated height/pressure data; the referenced profile getters are outside the inspected IOSLoadUI inventory."
-    },
-    {
-      "nativeName": "ComputeWallWindPressureProfileASCE72016",
-      "phase": "L3",
-      "signature": "WindProfileComputationResult ComputeWallWindPressureProfile(ASCE72016WallWindPressureProfileParameters parameters)",
-      "considerations": "Dispatch by engineering code edition; ASCE 7-2016 is not the STAAD product year."
-    },
-    {
-      "nativeName": "AddWindDefinitionASCE7Parameters",
-      "phase": "L3",
-      "signature": "LoadOperationResult ConfigureWindDefinition(ASCE7WindDefinitionParameters parameters)",
-      "considerations": "Reuse source structure/unit/factor models after review; resolve seven-versus-eight slot inconsistencies before release."
-    },
-    {
-      "nativeName": "AddSeismicDefinition",
-      "phase": "L2",
-      "signature": "LoadOperationResult CreateSeismicDefinition(SeismicCode seismicCode, bool includeAccidentalTorsion = false)",
-      "considerations": "Use definition-code mapping, distinct from member-weight mapping; gate NRC 2020 by acquired profile."
-    },
-    {
-      "nativeName": "ModifySeismicDefinitionParams",
-      "phase": "L2",
-      "signature": "LoadOperationResult SetSeismicParameters(SeismicDefinitionParameters parameters)",
-      "considerations": "Validate allowed keywords for the selected seismic code and acquired profile; preserve original native failure code."
-    },
-    {
-      "nativeName": "AddSeismicDefSelfWeight",
-      "phase": "L2",
-      "signature": "LoadOperationResult AddSeismicSelfWeight(double weightFactor = 1.0)",
-      "considerations": "Finite Double factor; native Boolean success, not integer-zero success."
-    },
-    {
-      "nativeName": "AddSeismicDefMemberWeight",
-      "phase": "L2",
-      "signature": "LoadOperationResult AddSeismicMemberWeight(SeismicMemberWeightDefinition definition, IEnumerable<int> memberIds)",
-      "considerations": "Map stable semantic code to the acquired version-specific member-weight number; UNI=1 and CON=2."
-    },
-    {
-      "nativeName": "AddSeismicDefJointWeight",
-      "phase": "L2",
-      "signature": "LoadOperationResult AddSeismicJointWeight(double weight, IEnumerable<int> nodeIds)",
-      "considerations": "Preserve Double and Int32-array shapes; distinguish expanded 2025/2026 error codes from unknown errors."
-    },
-    {
       "nativeName": "AddSeismicDefWallArea",
       "phase": "L2",
       "signature": "LoadOperationResult AddSeismicWallArea(int definitionId, SeismicWallDirection direction, IEnumerable<SeismicWallDimension> walls)",
@@ -33588,5 +33684,41 @@
       "signature": "LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests)",
       "considerations": "Pair with BeginLoadMerging in try/finally on the same COM thread; preserve both body and cleanup failures."
     }
-  ]
+  ],
+  "baselineImplementation": {
+    "counts": {
+      "manualFunctionsPerYear": 129,
+      "pagesPerYear": 24,
+      "vendorMethodsPerInspectedYear": 132,
+      "managedInterfaceOverloads": 90,
+      "managedAdapterOverloads": 90,
+      "directAdapterNativeNames": 53,
+      "delegatedNativeNames": 6,
+      "totalDispatchedNames": 59,
+      "documentedNamesWithoutDispatch": 70,
+      "privateReferenceOverloads": 115,
+      "privateReferenceMatchingOverloads": 85,
+      "privateReferencePendingOverloads": 30,
+      "repositoryConveniences": 5
+    },
+    "sourceFingerprints": {
+      "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs": "cb2227d2305cc17ad392f1c5bd52d332652d6c0c2252e0fc5467dd181b4a92db",
+      "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs": "ab3cfa1a49bd255a809e439c550adfb62808e48b245e54651adeb7a48031c3b6",
+      "src/StaadPro.Interop/Models/OpenStaadWrapper.cs": "1c0b69fe545a379262ad70cb1d1f9c45de872aba92e6eb4df218441455628692",
+      "src/StaadPro.Interop/StaadPro.Interop.csproj": "035570ef3e35b52a2772e2ec96b9bf886ce3d08d6e555c3d51ffd870de9f1a59"
+    },
+    "managedOverloads": 90,
+    "pendingReferenceOverloads": 30,
+    "nativeDispatches": 59
+  },
+  "implementationUpdate": {
+    "date": "2026-10-22",
+    "overloadsPorted": 15,
+    "offlineTests": 2024,
+    "newTests": 263,
+    "sourceXmlExamples": 280,
+    "nativeVerified": false,
+    "packageBuilt": false,
+    "architectureStatus": "Reference signatures ported; broad named-result/polymorphic architecture remains proposed."
+  }
 }
