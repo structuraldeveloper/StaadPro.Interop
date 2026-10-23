@@ -142,10 +142,11 @@ try {
             if ($rootPorting -notmatch $method -or $readme -notmatch $method) { throw "Missing packaged root guidance for $method" }
         }
     }
+    $hasLoadExpansion = @($xml.doc.members.member | Where-Object name -like 'M:StaadPro.Interop.Adapters.Interfaces.IOSLoad.GetAssignedEntityIds(*').Count -eq 1
     $hasLoadInspection = @($xml.doc.members.member | Where-Object name -eq 'M:StaadPro.Interop.Adapters.Interfaces.IOSLoad.GetActiveLoadCaseNumber').Count -eq 1
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 143 } elseif ($owner -match 'Root') { 53 } elseif ($hasLoadInspection) { 135 } else { 120 }
+        $expectedCount = if ($owner -match 'Geometry') { 143 } elseif ($owner -match 'Root') { 53 } elseif ($hasLoadExpansion) { 171 } elseif ($hasLoadInspection) { 135 } else { 120 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -205,6 +206,27 @@ try {
             }
         }
         if ($inspectionSnippets.Count -ne 30) { throw 'Expected 30 Load inspection examples.' }
+    }
+    $expansionSnippets = @()
+    if ($hasLoadExpansion) {
+        $expansionNames = @('SplitLoadsOnBeam', 'AddCasesToEnvelope', 'RemoveCasesFromEnvelope', 'DeleteEnvelope', 'CreateAutomaticCombinations', 'CreateAutomaticRepeatLoads', 'SetLoadType', 'DeleteLoadList', 'SetAllowableStressAttribute', 'SetLimitStateAttribute', 'RemoveLoadAttribute', 'GetLoadAttribute', 'GetAssignedEntityIds', 'DeleteLoadCases', 'AddSelfWeight', 'GetNodalLoadCommand', 'AddMemberAreaLoad', 'AddMemberFixedEndLoad', 'GetMemberLoadCommand', 'AddHydrostaticPressure', 'AddTrapezoidalPressure', 'GetPlatePressureLoadCount', 'GetPlatePressureLoads', 'GetPlateConcentratedLoadCount', 'GetPlateConcentratedLoads', 'GetPlateLoadCommand', 'AddFloorLoad', 'GetFloorBeamCount', 'GetFloorInfluenceAreas', 'AddStrainLoad', 'AddSeismicLoad', 'AddWindLoad', 'AddNotionalLoad', 'GetReferenceContributionCount', 'GetReferenceContributions', 'MergeBeamLoads')
+        $expansionGuide = Read-PackageEntry 'docs/Load-Expansion.md'
+        foreach ($owner in @('Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
+            foreach ($name in $expansionNames) {
+                $prefix = "M:StaadPro.Interop.$owner.$name("
+                $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith($prefix) })
+                if ($entries.Count -ne 1) { throw "Missing expansion contract for $owner.$name" }
+                foreach ($tag in @('summary', 'returns', 'remarks', 'example/code')) {
+                    $node = $entries[0].SelectSingleNode($tag)
+                    if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $owner.$name" }
+                }
+                if ($entries[0].SelectSingleNode('remarks').InnerText -notmatch 'When to use:') { throw "Missing comparative IntelliSense for $name" }
+                if ($expansionGuide -notmatch $name) { throw "Missing expansion usage guidance for $name" }
+                $binding = if ($owner.EndsWith('IOSLoad')) { 'IOSLoad load = wrapper.Load;' } else { 'var load = new StaadPro.Interop.Adapters.Models.OSLoadAdapter(wrapper);' }
+                $expansionSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.LoadInspectionRoot())) {' + $newLine + $binding + $newLine + $entries[0].SelectSingleNode('example/code').InnerText + $newLine + '}'
+            }
+        }
+        if ($expansionSnippets.Count -ne 72) { throw 'Expected 72 expansion XML examples.' }
     }
 } finally { $archive.Dispose() }
 
@@ -466,6 +488,7 @@ public static class Program
             Check(blocked, "failed result exposes no data");
         }
         RunInspectionDocumentationExamples();
+        RunExpansionDocumentationExamples();
         Console.WriteLine("PASS: __EXAMPLE_COUNT__ packaged XML examples and Geometry/Load/Root/Output IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
@@ -480,6 +503,10 @@ __OUTPUT_EXAMPLES__
     private static void RunInspectionDocumentationExamples()
     {
 __INSPECTION_EXAMPLES__
+    }
+    private static void RunExpansionDocumentationExamples()
+    {
+__EXPANSION_EXAMPLES__
     }
     public sealed class FakeOutputRoot
     {
@@ -674,7 +701,9 @@ __INSPECTION_EXAMPLES__
 $program = $program.Replace('__EXAMPLES__', ($snippets -join "`n"))
 $program = $program.Replace('__OUTPUT_EXAMPLES__', ($outputSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__INSPECTION_EXAMPLES__', ($inspectionSnippets -join [Environment]::NewLine))
-$program = $program.Replace('__EXAMPLE_COUNT__', [string](340 + $inspectionSnippets.Count))
+$program = $program.Replace('__EXPANSION_EXAMPLES__', ($expansionSnippets -join [Environment]::NewLine))
+$program = $program.Replace('__EXAMPLE_COUNT__', [string](340 + $inspectionSnippets.Count + $expansionSnippets.Count))
+if ($hasLoadExpansion) { $program = 'using StaadPro.Interop.Models.Loads.Contracts;' + [Environment]::NewLine + 'using StaadPro.Interop.Models.Loads.Queries;' + [Environment]::NewLine + $program }
 if ($hasLoadInspection) { $program = 'using StaadPro.Interop.Enums.Loads;' + [Environment]::NewLine + $program }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/LoadInspectionFixture.cs') -Destination (Join-Path $consumerRoot 'LoadInspectionFixture.cs')
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'NuGet.Config'), $config)

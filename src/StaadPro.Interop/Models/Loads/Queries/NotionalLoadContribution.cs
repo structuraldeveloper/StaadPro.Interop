@@ -10,7 +10,7 @@ namespace StaadPro.Interop.Models.Loads.Queries
     /// and positive number are separate; duplicate contributions and finite signed/zero factors are retained.</remarks>
     public sealed class NotionalLoadContribution
     {
-        /// <summary>Creates a typed contribution for future notional assignment without native access.</summary>
+        /// <summary>Creates a typed contribution for notional assignment without native access.</summary>
         /// <param name="loadCaseId">Positive contributing case number.</param>
         /// <param name="caseType">PrimaryLoad or ReferenceLoad; supplies the family explicitly.</param>
         /// <param name="factor">Finite dimensionless signed factor, including zero.</param>

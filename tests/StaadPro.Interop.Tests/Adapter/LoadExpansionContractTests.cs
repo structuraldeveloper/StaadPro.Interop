@@ -34,11 +34,13 @@ namespace StaadPro.Interop.Tests.Adapter
                 Assert.That(proposed.Concat(typeof(IOSLoad).GetMethods()).Any(m => m.Name == name), Is.True, row.ToString());
                 Assert.That((string)row["managedSignature"], Is.Not.Null.And.Not.Empty);
             }
-            Assert.That(rows.Count(r => (string)r["source"] == "Review interface only"), Is.EqualTo(39));
-            Assert.That(rows.Count(r => ((string)r["state"]).StartsWith("Blocked:")), Is.EqualTo(3));
+            Assert.That(rows.Count(r => (string)r["source"] == "Public IOSLoad / internal services"), Is.EqualTo(39));
+            Assert.That(rows.Count(r => ((string)r["state"]).StartsWith("Blocked:")), Is.EqualTo(0));
             foreach (var method in proposed)
             {
-                Assert.That(typeof(IOSLoad).GetMethod(method.Name), Is.Null, "A pending signature must not be exposed as a runtime stub: " + method.Name);
+                var runtime = typeof(IOSLoad).GetMethod(method.Name);
+                Assert.That(runtime, Is.Not.Null, "Approved contract was not promoted: " + method.Name);
+                Assert.That(runtime.ReturnType, Is.EqualTo(method.ReturnType));
                 Assert.That(method.GetParameters().Any(p => p.ParameterType.IsByRef), Is.False);
                 AssertManagedType(method.ReturnType);
                 foreach (var p in method.GetParameters()) AssertManagedType(p.ParameterType);

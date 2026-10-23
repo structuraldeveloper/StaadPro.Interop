@@ -46,11 +46,15 @@ Construction/refresh read native metadata on the session’s COM thread. Five ty
 
 The [contract-first plan](reports/OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md) and [signature review file](contracts/IOSLoadExpansionContract.cs) define the remaining additions and all required types. The review interface is compiled only into tests, not the NuGet assembly. New supporting request/result definitions reside under Models.Loads.Contracts; pending adapter methods are not exposed.
 
+## Load expansion
+
+The 36 approved additions are implemented through IOSLoad and OSLoadAdapter; total Load coverage is 171 overloads. See [all signatures and operation comparisons](Load-Expansion.md). New public signatures use named result/request classes and managed collections without ref/out or tuples. The native attribute getter is status-only and beam merging returns invocation evidence; these limits are explicit in IntelliSense.
+
 ## `IOSLoad` Members
 
 ### Completed main-interface reference coverage
 
-All 115 main-interface reference signatures are implemented; source now exposes 135 overloads: 115 reference signatures, five conveniences and 15 additional native inspection queries. See [Load inspection](Load-Inspection-Queries.md) for their status/data contracts and activation effects. The final 15 include AddSeismicDefMemberWeight, AddSeismicDefMemberUniformWeight, AddSeismicDefMemberConcentratedWeight, AddSeismicDefWallArea, AddResponseSpectrumLoadEx, AddDirectAnalysisDefinitionParameter, AddDirectAnalysisFlexParameter, AddDirectAnalysisAxialParameter, DeleteDirectAnalysisDefinitionParameter, DeleteDirectAnalysisDefinition, AddRSLoad. See [packet contracts, overload details, model reuse, side effects and native validation limits](Load-Porting.md#load-reference-completion). The latest additions are outside the published preview.
+All 115 main-interface reference signatures are implemented; source now exposes 171 overloads: 115 reference signatures, five conveniences, 15 additional native inspection queries and 36 Load expansion methods. See [Load inspection](Load-Inspection-Queries.md) for their status/data contracts and activation effects. The final 15 include AddSeismicDefMemberWeight, AddSeismicDefMemberUniformWeight, AddSeismicDefMemberConcentratedWeight, AddSeismicDefWallArea, AddResponseSpectrumLoadEx, AddDirectAnalysisDefinitionParameter, AddDirectAnalysisFlexParameter, AddDirectAnalysisAxialParameter, DeleteDirectAnalysisDefinitionParameter, DeleteDirectAnalysisDefinition, AddRSLoad. See [packet contracts, overload details, model reuse, side effects and native validation limits](Load-Porting.md#load-reference-completion). The latest additions are outside the published preview.
 
 
 ### ASCE wind and seismic definitions

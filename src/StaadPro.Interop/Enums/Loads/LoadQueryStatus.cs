@@ -16,6 +16,8 @@ namespace StaadPro.Interop.Enums.Loads
         /// <summary>The required output exceeds the caller's retrieval limit.</summary>
         LimitExceeded,
         /// <summary>A native zero cannot distinguish no matching commands from an unavailable case.</summary>
-        EmptyOrUnavailable
+        EmptyOrUnavailable,
+        /// <summary>The requested command family or operation is not supported by the native contract.</summary>
+        Unsupported
     }
 }

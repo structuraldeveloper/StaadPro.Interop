@@ -66,7 +66,7 @@ namespace StaadPro.Interop.Models.Loads.Contracts
     }
 
     /// <summary>Contains the original pressure-command packet and four local coordinate parameters.</summary>
-    /// <remarks>Native GetElementLoadInfo supports only ElementLoadPressure and documents direction codes 0-8. The future reader must translate them to LoadDirection 1-9; unrelated element types remain unsupported.</remarks>
+    /// <remarks>Native GetElementLoadInfo supports only ElementLoadPressure and documents direction codes 0-8. The reader translates them to LoadDirection 1-9; unrelated element types remain unsupported.</remarks>
     public sealed class PlateLoadCommandInfo
     {
         internal PlateLoadCommandInfo(int loadItemIndex, LoadDirection direction, double firstPressure, double secondPressure, double thirdPressure, double fourthPressure, double firstLocalX, double firstLocalY, double secondLocalX, double secondLocalY)
@@ -118,7 +118,7 @@ namespace StaadPro.Interop.Models.Loads.Contracts
     }
 
     /// <summary>Preserves an undecoded native GetAttribute response without inventing an attribute schema.</summary>
-    /// <remarks>The reviewed help lists only 0 success/-1 error and no payload. This is a diagnostic contract only; GetLoadAttribute remains withheld from IOSLoad until meaning is verified. NativeValue must not be interpreted as a LoadStrengthType.</remarks>
+    /// <remarks>The reviewed help lists only 0 success/-1 error and no payload. This is a status observation only; GetLoadAttribute exposes 0 on documented success and rejects unknown values. NativeValue must not be interpreted as a LoadStrengthType.</remarks>
     public sealed class LoadAttributeObservation
     {
         internal LoadAttributeObservation(int nativeValue)

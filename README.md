@@ -12,11 +12,13 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Load contract review
+## Source update — Load expansion
 
-Prepared the complete [56-entry method/type contract plan](docs/reports/OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md), including read-only main-project reuse decisions, explicit signatures and a separate compile-checked review file. Defined supporting request/result types before additional native work; pending runtime methods remain unexposed.
+Implemented all **36 approved Load expansion methods** through the existing IOSLoad and single OSLoadAdapter. Source exposes **171 overloads**: 115 main-reference signatures, five earlier conveniences, 15 inspection methods and these 36 additions. Actual dispatch covers **126/129 documented native names**, plus the metadata-corroborated MergeLoadsOnBeam body. The three intentionally unused names are CreateNewPrimaryLoad (richer creation alternatives), IsCombinationCase (derived inventory capability), and AddMemberFloorLoad (the extended floor call supplies the managed route). Native dispatch coverage is not live compatibility or engineering certification.
 
-## Source update — Load inspection queries
+All 36 methods include comparative IntelliSense explaining scope, alternatives, units, native statuses and state changes. Passed 2,900 offline tests (424 new expansion cases). See [Load expansion usage](docs/Load-Expansion.md) and the [contract/type implementation record](docs/reports/OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md). GetLoadAttribute is status-only; MergeBeamLoads returns invocation evidence without certifying success. Live STAAD marshaling and engineering qualification remain pending. The prepared distribution archive below is unchanged.
+
+## Earlier source update — Load inspection queries
 
 Implemented 15 additional Load observations with complete XML contracts, named status/data results, bounded eager snapshots and an internal shared service. Source now exposes 135 Load overloads and dispatches 88/129 documented native names. Remaining undispatched names total 41: one existing alternative, one derived capability, four partial overlaps and 35 absent operations, plus three separate metadata-only candidates. Passed 2,448 offline tests (189 new cases) and all 30 new XML examples. See [Load inspection usage](docs/Load-Inspection-Queries.md). These changes postdate the prepared archive below; live native qualification remains pending.
 

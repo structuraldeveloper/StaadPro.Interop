@@ -4,6 +4,7 @@ using System.Linq;
 using StaadPro.Interop.Enums.Loads;
 using StaadPro.Interop.Models;
 using StaadPro.Interop.Models.Loads.Queries;
+using StaadPro.Interop.Models.Loads.Contracts;
 using StaadPro.Interop.Services.Interop;
 
 namespace StaadPro.Interop.Services.Load
@@ -13,8 +14,8 @@ namespace StaadPro.Interop.Services.Load
     {
         private readonly OpenStaadWrapper wrapper;
         private readonly object native;
-        private readonly object gate = new object();
-        internal LoadInspectionService(OpenStaadWrapper wrapper, object native) { this.wrapper = wrapper; this.native = native; }
+        private readonly object gate;
+        internal LoadInspectionService(OpenStaadWrapper wrapper, object native, object gate) { this.wrapper = wrapper; this.native = native; this.gate = gate; }
         private dynamic Binding()
         {
             if (wrapper.RawOpenStaad == null || !ReferenceEquals((object)wrapper.RawLoad, native))
@@ -267,6 +268,63 @@ namespace StaadPro.Interop.Services.Load
             int after = ContributionCount(notional, index);
             if (after != count) return Result<IEnumerable<T>>(op, LoadQueryStatus.StateChanged, code: after, observed: countOp);
             return Result<IEnumerable<T>>(op, LoadQueryStatus.Success, Array.AsReadOnly(result), returned, count == 0 ? countOp : op);
+        }
+        internal LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex, int maximumResults)
+        {
+            Command(commandKind); Index(commandIndex, nameof(commandIndex)); Positive(maximumResults, nameof(maximumResults));
+            return Active(primaryLoadCaseId, "GetAssignmentListForLoadType", () =>
+            {
+                const string op = "GetAssignmentListForLoadType";
+                int commands = CommandCount(commandKind);
+                if (commands == 0) return Result<IEnumerable<int>>(op, LoadQueryStatus.EmptyOrUnavailable, code: 0, observed: "GetLoadTypeCount");
+                if (commandIndex >= commands) return Result<IEnumerable<int>>(op, LoadQueryStatus.NotFound, code: commands, observed: "GetLoadTypeCount");
+                int count = Count((object)Binding().GetListSizeForLoadType((int)commandKind, commandIndex), "GetListSizeForLoadType", false);
+                if (count == 0) return Result<IEnumerable<int>>(op, LoadQueryStatus.EmptyOrUnavailable, code: count, observed: "GetListSizeForLoadType");
+                if (count > maximumResults) return Result<IEnumerable<int>>(op, LoadQueryStatus.LimitExceeded, code: count, observed: "GetListSizeForLoadType");
+                object buffer = new int[count];
+                int returned = Count((object)Binding().GetAssignmentListForLoadType((int)commandKind, commandIndex, ref buffer), op, false);
+                if (returned == 0) return Result<IEnumerable<int>>(op, LoadQueryStatus.NativeFailure, code: returned);
+                if (returned != count) return Result<IEnumerable<int>>(op, LoadQueryStatus.StateChanged, code: returned);
+                int[] ids = ArrayValues<int>(buffer, count, op);
+                foreach (int id in ids) PositiveNativeId(id, "assigned entity");
+                int afterCommands = CommandCount(commandKind);
+                if (afterCommands != commands) return Result<IEnumerable<int>>(op, LoadQueryStatus.StateChanged, code: afterCommands, observed: "GetLoadTypeCount");
+                int after = Count((object)Binding().GetListSizeForLoadType((int)commandKind, commandIndex), "GetListSizeForLoadType", false);
+                return after == count ? Result<IEnumerable<int>>(op, LoadQueryStatus.Success, Array.AsReadOnly(ids), returned) :
+                    Result<IEnumerable<int>>(op, LoadQueryStatus.StateChanged, code: after, observed: "GetListSizeForLoadType");
+            });
+        }
+        internal LoadQueryResult<int> GetReferenceContributionCount(int primaryLoadCaseId, int referenceItemIndex)
+        {
+            Index(referenceItemIndex, nameof(referenceItemIndex));
+            return Active(primaryLoadCaseId, "GetNoOfSetsInReferenceLoad", () => CountResult("GetNoOfSetsInReferenceLoad",
+                Count((object)Binding().GetNoOfSetsInReferenceLoad(referenceItemIndex), "GetNoOfSetsInReferenceLoad")));
+        }
+        internal LoadQueryResult<IEnumerable<ReferenceLoadContribution>> GetReferenceContributions(int primaryLoadCaseId, int referenceItemIndex, int maximumResults)
+        {
+            Index(referenceItemIndex, nameof(referenceItemIndex)); Positive(maximumResults, nameof(maximumResults));
+            return Active(primaryLoadCaseId, "GetReferenceLoadByIndex", () =>
+            {
+                const string op = "GetReferenceLoadByIndex", countOp = "GetNoOfSetsInReferenceLoad";
+                int count = Count((object)Binding().GetNoOfSetsInReferenceLoad(referenceItemIndex), countOp);
+                if (count == -1) return Result<IEnumerable<ReferenceLoadContribution>>(op, LoadQueryStatus.NativeFailure, code: count, observed: countOp);
+                if (count > maximumResults) return Result<IEnumerable<ReferenceLoadContribution>>(op, LoadQueryStatus.LimitExceeded, code: count, observed: countOp);
+                int returned = 0; var data = new ReferenceLoadContribution[count];
+                if (count > 0)
+                {
+                    object ids = new int[count], factors = LoadServiceContext.Doubles(count);
+                    returned = Integer((object)Binding().GetReferenceLoadByIndex(referenceItemIndex, ref ids, ref factors), op);
+                    if (returned == -1) return Result<IEnumerable<ReferenceLoadContribution>>(op, LoadQueryStatus.NativeFailure, code: returned);
+                    if (returned < -1) throw new InvalidOperationException(op + " returned an undocumented code.");
+                    // Unlike GetRepeatLoadByIndex, the reference help describes this scalar as an ID,
+                    // not a returned count. Validate the paired buffers and recheck sizing instead.
+                    int[] numbers = ArrayValues<int>(ids, count, op); double[] values = LoadServiceContext.ArrayValues<double>(factors, count, op);
+                    for (int i = 0; i < count; i++) data[i] = new ReferenceLoadContribution(LoadServiceContext.NativeId(numbers[i], op), values[i]);
+                }
+                int after = Count((object)Binding().GetNoOfSetsInReferenceLoad(referenceItemIndex), countOp);
+                return after == count ? Result<IEnumerable<ReferenceLoadContribution>>(op, LoadQueryStatus.Success, Array.AsReadOnly(data), returned, count == 0 ? countOp : op)
+                    : Result<IEnumerable<ReferenceLoadContribution>>(op, LoadQueryStatus.StateChanged, code: after, observed: countOp);
+            });
         }
         private static T[] ArrayValues<T>(object value, int count, string operation)
         {

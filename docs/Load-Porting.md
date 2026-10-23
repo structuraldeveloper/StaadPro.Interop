@@ -1,5 +1,9 @@
 # Load API porting and new assignments
 
+## Approved Load expansion
+
+Implemented all 36 approved contracts with a single IOSLoad/OSLoadAdapter surface and internal services. Current source has 171 overloads and 126/129 documented native dispatches; the three unused names have managed alternatives. Passed 2,900 offline tests. See [Load expansion contracts, differences and operating limits](Load-Expansion.md). The prepared distribution archive remains unchanged; live native qualification is pending.
+
 ## Contract-first preparation
 
 Prepared all original 56 native-entry mappings, 36 pending signatures and their supporting types before further implementation. See the [contract/type plan](reports/OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md) and [separate review signatures](contracts/IOSLoadExpansionContract.cs). Existing 15 inspection queries remain implemented; no additional pending native calls were added.

@@ -16,7 +16,7 @@ namespace StaadPro.Interop.Models.Loads.Contracts
         /// <summary>Gets the owned IDs, preserving order and duplicates; empty only for AllCases.</summary>
         public IEnumerable<int> LoadCaseIds { get; }
         /// <summary>Creates an explicit all-current-cases selection.</summary>
-        /// <returns>A selection whose future native packet deliberately uses all-case semantics.</returns>
+        /// <returns>A selection whose native packet deliberately uses all-case semantics.</returns>
         public static LoadCaseSelection AllCases() => new LoadCaseSelection(true, new int[0]);
         /// <summary>Snapshots a nonempty explicit case selection without changing the source.</summary>
         /// <param name="loadCaseIds">Positive case IDs; enumerated once.</param>

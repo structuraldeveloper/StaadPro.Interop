@@ -2,22 +2,13 @@
 
 **Date:** 23 October 2026
 **Scope:** All 56 native entries in the original semantic audit, including already-covered alternatives and the 15 inspection methods implemented in the preceding increment.
-**Status:** Contracts and supporting type definitions prepared for review. No additional native dispatch or pending runtime method was added by this contract-preparation step.
+**Status:** Approved contracts implemented. Implemented all **36 approved Load expansion methods** through the existing IOSLoad and single OSLoadAdapter. Source exposes **171 overloads**: 115 main-reference signatures, five earlier conveniences, 15 inspection methods and these 36 additions. Actual dispatch covers **126/129 documented native names**, plus the metadata-corroborated MergeLoadsOnBeam body. The three intentionally unused names are CreateNewPrimaryLoad (richer creation alternatives), IsCombinationCase (derived inventory capability), and AddMemberFloorLoad (the extended floor call supplies the managed route). Native dispatch coverage is not live compatibility or engineering certification.
 
-## 1. Review files and runtime boundary
+## 1. Approved contracts and runtime boundary
 
-The method signatures are in [IOSLoadExpansionContract.cs](../contracts/IOSLoadExpansionContract.cs). The [56-entry contract index](../contracts/LoadExpansionContractIndex.json) maps every original native entry to an existing or proposed managed signature, return type, parameter types, default, route and qualification note. The file is compiled into the test assembly to ensure every referenced type exists; it is not shipped as a production interface or instantiated through a runtime placeholder.
+The [approved signature snapshot](../contracts/IOSLoadExpansionContract.cs) is compiled only by tests; the callable signatures are in [IOSLoad](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs) with implementations in the existing [OSLoadAdapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs). The [56-entry index](../contracts/LoadExpansionContractIndex.json) records exact signatures, parameters, type reuse and internal routes. All 36 methods now have implementations and identical expanded XML on interface/adapter, with “When to use” comparisons, units, state effects, native success conventions and guarded examples. No partial adapter or public helper-service selection was introduced.
 
-Once approved for implementation, a signature moves into IOSLoad and its implementation into the existing OSLoadAdapter, which delegates to an internal service where useful. No partial adapter, user-visible service factory, sub-adapter or extra connection object is needed. Consumers continue through `wrapper.Load`. Do not add throwing method stubs merely to publish these proposals.
-
-| Disposition of the original 56 entries | Entries | Public additions required by this proposal |
-| --- | ---: | ---: |
-| Inspection functions already implemented in the preceding increment | 15 | 0 further signatures; existing contracts inherited in the review interface |
-| Existing creation alternative and derived combination membership | 2 | 0 duplicate methods |
-| Remaining entries represented by proposed additions | 39 | 36 proposed signatures |
-| Total | 56 | 36 pending signatures |
-
-The difference of three comes from shared APIs: both native case-deletion forms map to DeleteLoadCases; legacy/extended floor loading map to AddFloorLoad; Begin/End merging belong to one bounded MergeBeamLoads operation. This is managed contract consolidation, not evidence that those unused native calls are implemented.
+GetLoadAttribute is a documented status-only observation and does not decode ASD/LSD settings. MergeBeamLoads returns InvocationCompleted with IsSuccessful false because Bentley does not document the merge-body response meanings. Reference-command index base, nodal index convention, plate-command UI selection, floor distribution and live 2024–2026 marshaling remain explicit qualification requirements. See [Load expansion usage and method comparisons](../Load-Expansion.md).
 
 ## 2. Compatibility and signature rules
 
@@ -27,68 +18,66 @@ Reused target identity is `ILoadCase`, not a new LoadCaseIdentity. Existing prim
 
 ## 3. All 56 entry mappings
 
-Each native name links to its installed-reference contract inventory. Existing signature names/parameters are shown as they currently exist; only proposed new signatures use the new descriptive names.
+The original audit population is retained. “Implemented” identifies actual dispatch; it does not assert live qualification.
 
-| Native entry | Managed signature | Disposition |
-| --- | --- | --- |
-| [SplitLoadsOnBeam](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#splitloadsonbeam) | `LoadOperationResult SplitLoadsOnBeam(int originalBeamId, int newBeamId)` | Qualification required |
-| [AddLoadCasesToEnvelop](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addloadcasestoenvelop) | `LoadOperationResult AddCasesToEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds)` | Defined; implementation pending |
-| [RemoveLoadCasesFromEnvelop](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#removeloadcasesfromenvelop) | `LoadOperationResult RemoveCasesFromEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds)` | Defined; implementation pending |
-| [DeleteLoadEnvelop](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#deleteloadenvelop) | `LoadOperationResult DeleteEnvelope(int envelopeId)` | Defined; implementation pending |
-| [IsCombinationCase](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#iscombinationcase) | `IEnumerable<ILoadCase> GetAllLoadCasesOfType(LoadCaseType loadCaseType = LoadCaseType.PrimaryLoad)` | Derived capability; no duplicate API |
-| [AddAutoLoadCombinations](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addautoloadcombinations) | `LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticCombinations(AutomaticCombinationRequest request)` | Defined; implementation pending |
-| [AddAutoCombinationRepeat](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addautocombinationrepeat) | `LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticRepeatLoads(AutomaticRepeatLoadRequest request)` | Defined; implementation pending |
-| [CreateNewPrimaryLoad](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#createnewprimaryload) | `int CreateNewPrimaryLoad(string lcTitle, LoadType loadType)` | Covered alternative; no duplicate API |
-| [GetActiveLoad](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getactiveload) | `LoadQueryResult<int> GetActiveLoadCaseNumber()` | Implemented inspection; contract review requested |
-| [SetLoadType](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#setloadtype) | `LoadOperationResult SetLoadType(IEnumerable<int> loadCaseIds, LoadType loadType)` | Defined; implementation pending |
-| [GetLoadListCount](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getloadlistcount) | `LoadQueryResult<int> GetLoadListCount()` | Implemented inspection; contract review requested |
-| [GetLoadCountInLoadList](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getloadcountinloadlist) | `LoadQueryResult<int> GetLoadListCaseCount(int loadListIndex)` | Implemented inspection; contract review requested |
-| [GetLoadsInLoadList](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getloadsinloadlist) | `LoadQueryResult<IEnumerable<int>> GetLoadListCases(int loadListIndex, int maximumResults = 100000)` | Implemented inspection; contract review requested |
-| [DeleteLoadList](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#deleteloadlist) | `LoadOperationResult DeleteLoadList(int loadListIndex)` | Defined; implementation pending |
-| [SetASDLoadAttribute](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#setasdloadattribute) | `LoadOperationResult SetAllowableStressAttribute(int loadCaseId, LoadStrengthType strengthType, bool increaseAllowableStress)` | Defined; implementation pending |
-| [SetLSDLoadAttribute](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#setlsdloadattribute) | `LoadOperationResult SetLimitStateAttribute(int loadCaseId)` | Defined; implementation pending |
-| [RemoveAttribute](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#removeattribute) | `LoadOperationResult RemoveLoadAttribute(int loadCaseId)` | Defined; implementation pending |
-| [GetAttribute](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getattribute) | `LoadQueryResult<LoadAttributeObservation> GetLoadAttribute(int loadCaseId)` | Blocked: native payload undefined |
-| [GetLoadTypeCount](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getloadtypecount) | `LoadQueryResult<int> GetLoadCommandCount(int primaryLoadCaseId, LoadCommandKind commandKind)` | Implemented inspection; contract review requested |
-| [GetListSizeForLoadType](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getlistsizeforloadtype) | `LoadQueryResult<int> GetAssignedEntityCount(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex)` | Implemented inspection; contract review requested |
-| [GetAssignmentListForLoadType](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getassignmentlistforloadtype) | `LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex, int maximumResults = 100000)` | Defined; implementation pending |
-| [DeletePrimaryLoadCases](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#deleteprimaryloadcases) | `LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds)` | Defined; implementation pending |
-| [DeleteReferenceLoadCases](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#deletereferenceloadcases) | `LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds)` | Defined; implementation pending |
-| [GetLoadItemsCount](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getloaditemscount) | `LoadQueryResult<int> GetLoadItemCount(int loadCaseId)` | Implemented inspection; contract review requested |
-| [GetLoadItemType](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getloaditemtype) | `LoadQueryResult<LoadItemKind> GetLoadItemKind(int loadCaseId, int loadItemIndex)` | Implemented inspection; contract review requested |
-| [AddSelfWeightInXYZ](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addselfweightinxyz) | `LoadOperationResult AddSelfWeight(ILoadCase targetCase, SelfWeightDirection direction, double factor)` | Defined; implementation pending |
-| [GetNodalLoadInfo](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getnodalloadinfo) | `LoadQueryResult<NodalLoadCommandInfo> GetNodalLoadCommand(ILoadCase targetCase, int loadItemIndex)` | Qualification required |
-| [AddMemberAreaLoad](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addmemberareaload) | `LoadOperationResult AddMemberAreaLoad(ILoadCase targetCase, IEnumerable<int> memberIds, double areaLoad)` | Defined; implementation pending |
-| [AddMemberFixedEnd](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addmemberfixedend) | `LoadOperationResult AddMemberFixedEndLoad(ILoadCase targetCase, IEnumerable<int> memberIds, FixedEndLoadDefinition definition)` | Defined; implementation pending |
-| [GetMemberLoadInfo](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getmemberloadinfo) | `LoadQueryResult<MemberLoadCommandInfo> GetMemberLoadCommand(ILoadCase targetCase, int loadItemIndex)` | Defined; implementation pending |
-| [AddElementHydrostaticPressure](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addelementhydrostaticpressure) | `LoadOperationResult AddHydrostaticPressure(ILoadCase targetCase, IEnumerable<int> plateIds, HydrostaticPressureDefinition definition)` | Defined; implementation pending |
-| [AddElementTrapPressureEx](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addelementtrappressureex) | `LoadOperationResult AddTrapezoidalPressure(ILoadCase targetCase, IEnumerable<int> plateIds, TrapezoidalPressureDefinition definition)` | Defined; implementation pending |
-| [GetElementPressureLoadCount](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getelementpressureloadcount) | `LoadQueryResult<int> GetPlatePressureLoadCount(ILoadCase targetCase, int plateId)` | Defined; implementation pending |
-| [GetElementPressureLoads](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getelementpressureloads) | `LoadQueryResult<IEnumerable<PlatePressureLoad>> GetPlatePressureLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000)` | Defined; implementation pending |
-| [GetElementConcLoadCount](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getelementconcloadcount) | `LoadQueryResult<int> GetPlateConcentratedLoadCount(ILoadCase targetCase, int plateId)` | Defined; implementation pending |
-| [GetElementConcLoads](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getelementconcloads) | `LoadQueryResult<IEnumerable<PlateConcentratedLoad>> GetPlateConcentratedLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000)` | Defined; implementation pending |
-| [GetElementLoadInfo](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getelementloadinfo) | `LoadQueryResult<PlateLoadCommandInfo> GetPlateLoadCommand(ILoadCase targetCase, int loadItemIndex)` | Qualification required |
-| [AddMemberFloorLoad](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addmemberfloorload) | `LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition)` | Defined; implementation pending |
-| [GetBeamCountAtFloor](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getbeamcountatfloor) | `LoadQueryResult<int> GetFloorBeamCount(FloorRegion region)` | Defined; implementation pending |
-| [GetInfluenceArea](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getinfluencearea) | `LoadQueryResult<IEnumerable<BeamInfluenceArea>> GetFloorInfluenceAreas(FloorRegion region, int maximumResults = 100000)` | Defined; implementation pending |
-| [AddMemberFloorLoadEx](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addmemberfloorloadex) | `LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition)` | Defined; implementation pending |
-| [AddStrainLoad](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addstrainload) | `LoadOperationResult AddStrainLoad(ILoadCase targetCase, IEnumerable<int> elementIds, double axialElongation)` | Qualification required |
-| [AddSeismicLoad](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addseismicload) | `LoadOperationResult AddSeismicLoad(ILoadCase targetCase, GlobalAxis direction, double factor)` | Defined; implementation pending |
-| [IsDynamicLoadIncluded](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#isdynamicloadincluded) | `LoadQueryResult<bool> ContainsDynamicLoad(int loadCaseId)` | Implemented inspection; contract review requested |
-| [AddWindLoad](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addwindload) | `LoadOperationResult AddWindLoad(ILoadCase targetCase, WindLoadDefinition definition)` | Defined; implementation pending |
-| [AddNotionalLoad](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#addnotionalload) | `LoadOperationResult AddNotionalLoad(ILoadCase targetCase, IEnumerable<NotionalLoadContribution> contributions)` | Defined; implementation pending |
-| [GetNoLoadFactorInRepeatLoad](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getnoloadfactorinrepeatload) | `LoadQueryResult<int> GetRepeatContributionCount(int primaryLoadCaseId, int repeatItemIndex)` | Implemented inspection; contract review requested |
-| [GetRepeatLoadByIndex](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getrepeatloadbyindex) | `LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(int primaryLoadCaseId, int repeatItemIndex, int maximumResults = 100000)` | Implemented inspection; contract review requested |
-| [GetNotionalLoadCount](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getnotionalloadcount) | `LoadQueryResult<int> GetNotionalItemCount(int primaryLoadCaseId)` | Implemented inspection; contract review requested |
-| [GetNoLoadFactorDirectionInNotionalLoad](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getnoloadfactordirectioninnotionalload) | `LoadQueryResult<int> GetNotionalContributionCount(int primaryLoadCaseId, int notionalItemIndex)` | Implemented inspection; contract review requested |
-| [GetNotionalLoadByIndex](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getnotionalloadbyindex) | `LoadQueryResult<IEnumerable<NotionalLoadContribution>> GetNotionalContributions(int primaryLoadCaseId, int notionalItemIndex, int maximumResults = 100000)` | Implemented inspection; contract review requested |
-| [GetReferenceLoadCount](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getreferenceloadcount) | `LoadQueryResult<int> GetReferenceItemCount(int primaryLoadCaseId)` | Implemented inspection; contract review requested |
-| [GetNoOfSetsInReferenceLoad](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getnoofsetsinreferenceload) | `LoadQueryResult<int> GetReferenceContributionCount(int primaryLoadCaseId, int referenceItemIndex)` | Qualification required |
-| [GetReferenceLoadByIndex](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#getreferenceloadbyindex) | `LoadQueryResult<IEnumerable<ReferenceLoadContribution>> GetReferenceContributions(int primaryLoadCaseId, int referenceItemIndex, int maximumResults = 100000)` | Qualification required |
-| [BeginLoadMerging](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#beginloadmerging) | `LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests)` | Blocked: merge-body contract unverified |
-| [EndLoadMerging](OpenSTAAD-Load-API-Coverage-and-Contract-Inventory.md#endloadmerging) | `LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests)` | Blocked: merge-body contract unverified |
-
-The JSON index contains the expanded parameter descriptions/defaults for pending signatures; their XML equivalents are in the separate review interface. The 15 implemented signatures retain their full XML in IOSLoad/OSLoadAdapter. For combination membership use `GetAllLoadCasesOfType(LoadCaseType.LoadCombination)` with an Id membership check, or the existing GetAllLoadCombinationCases; no duplicate IsCombinationCase contract is required. Primary creation continues through the existing Ex/Ex2 wrappers and CreateNewLoadCase routing.
+| Native entry | Current disposition | Managed method | Internal route |
+| --- | --- | --- | --- |
+| SplitLoadsOnBeam | Implemented | `SplitLoadsOnBeam` | LoadBeamTransferService.cs |
+| AddLoadCasesToEnvelop | Implemented | `AddCasesToEnvelope` | LoadCaseManagementService.cs |
+| RemoveLoadCasesFromEnvelop | Implemented | `RemoveCasesFromEnvelope` | LoadCaseManagementService.cs |
+| DeleteLoadEnvelop | Implemented | `DeleteEnvelope` | LoadCaseManagementService.cs |
+| IsCombinationCase | Derived capability; no duplicate API | `GetAllLoadCasesOfType` | Existing managed API |
+| AddAutoLoadCombinations | Implemented | `CreateAutomaticCombinations` | LoadAutomaticGenerationService.cs |
+| AddAutoCombinationRepeat | Implemented | `CreateAutomaticRepeatLoads` | LoadAutomaticGenerationService.cs |
+| CreateNewPrimaryLoad | Covered alternative; no duplicate API | `CreateNewPrimaryLoad` | Existing managed API |
+| GetActiveLoad | Implemented inspection | `GetActiveLoadCaseNumber` | Existing managed API |
+| SetLoadType | Implemented | `SetLoadType` | LoadCaseManagementService.cs |
+| GetLoadListCount | Implemented inspection | `GetLoadListCount` | Existing managed API |
+| GetLoadCountInLoadList | Implemented inspection | `GetLoadListCaseCount` | Existing managed API |
+| GetLoadsInLoadList | Implemented inspection | `GetLoadListCases` | Existing managed API |
+| DeleteLoadList | Implemented | `DeleteLoadList` | LoadCaseManagementService.cs |
+| SetASDLoadAttribute | Implemented | `SetAllowableStressAttribute` | LoadCaseManagementService.cs |
+| SetLSDLoadAttribute | Implemented | `SetLimitStateAttribute` | LoadCaseManagementService.cs |
+| RemoveAttribute | Implemented | `RemoveLoadAttribute` | LoadCaseManagementService.cs |
+| GetAttribute | Implemented | `GetLoadAttribute` | LoadCaseManagementService.cs |
+| GetLoadTypeCount | Implemented inspection | `GetLoadCommandCount` | Existing managed API |
+| GetListSizeForLoadType | Implemented inspection | `GetAssignedEntityCount` | Existing managed API |
+| GetAssignmentListForLoadType | Implemented | `GetAssignedEntityIds` | LoadInspectionService.cs |
+| DeletePrimaryLoadCases | Implemented | `DeleteLoadCases` | LoadCaseManagementService.cs |
+| DeleteReferenceLoadCases | Implemented | `DeleteLoadCases` | LoadCaseManagementService.cs |
+| GetLoadItemsCount | Implemented inspection | `GetLoadItemCount` | Existing managed API |
+| GetLoadItemType | Implemented inspection | `GetLoadItemKind` | Existing managed API |
+| AddSelfWeightInXYZ | Implemented | `AddSelfWeight` | LoadAssignmentService.cs |
+| GetNodalLoadInfo | Implemented | `GetNodalLoadCommand` | LoadAssignmentQueryService.cs |
+| AddMemberAreaLoad | Implemented | `AddMemberAreaLoad` | LoadAssignmentService.cs |
+| AddMemberFixedEnd | Implemented | `AddMemberFixedEndLoad` | LoadAssignmentService.cs |
+| GetMemberLoadInfo | Implemented | `GetMemberLoadCommand` | LoadAssignmentQueryService.cs |
+| AddElementHydrostaticPressure | Implemented | `AddHydrostaticPressure` | LoadAssignmentService.cs |
+| AddElementTrapPressureEx | Implemented | `AddTrapezoidalPressure` | LoadAssignmentService.cs |
+| GetElementPressureLoadCount | Implemented | `GetPlatePressureLoadCount` | LoadAssignmentQueryService.cs |
+| GetElementPressureLoads | Implemented | `GetPlatePressureLoads` | LoadAssignmentQueryService.cs |
+| GetElementConcLoadCount | Implemented | `GetPlateConcentratedLoadCount` | LoadAssignmentQueryService.cs |
+| GetElementConcLoads | Implemented | `GetPlateConcentratedLoads` | LoadAssignmentQueryService.cs |
+| GetElementLoadInfo | Implemented | `GetPlateLoadCommand` | LoadAssignmentQueryService.cs |
+| AddMemberFloorLoad | Covered alternative via AddMemberFloorLoadEx | `AddFloorLoad` | LoadAssignmentService.cs |
+| GetBeamCountAtFloor | Implemented | `GetFloorBeamCount` | LoadAssignmentQueryService.cs |
+| GetInfluenceArea | Implemented | `GetFloorInfluenceAreas` | LoadAssignmentQueryService.cs |
+| AddMemberFloorLoadEx | Implemented | `AddFloorLoad` | LoadAssignmentService.cs |
+| AddStrainLoad | Implemented | `AddStrainLoad` | LoadAssignmentService.cs |
+| AddSeismicLoad | Implemented | `AddSeismicLoad` | LoadAssignmentService.cs |
+| IsDynamicLoadIncluded | Implemented inspection | `ContainsDynamicLoad` | Existing managed API |
+| AddWindLoad | Implemented | `AddWindLoad` | LoadAssignmentService.cs |
+| AddNotionalLoad | Implemented | `AddNotionalLoad` | LoadAssignmentService.cs |
+| GetNoLoadFactorInRepeatLoad | Implemented inspection | `GetRepeatContributionCount` | Existing managed API |
+| GetRepeatLoadByIndex | Implemented inspection | `GetRepeatContributions` | Existing managed API |
+| GetNotionalLoadCount | Implemented inspection | `GetNotionalItemCount` | Existing managed API |
+| GetNoLoadFactorDirectionInNotionalLoad | Implemented inspection | `GetNotionalContributionCount` | Existing managed API |
+| GetNotionalLoadByIndex | Implemented inspection | `GetNotionalContributions` | Existing managed API |
+| GetReferenceLoadCount | Implemented inspection | `GetReferenceItemCount` | Existing managed API |
+| GetNoOfSetsInReferenceLoad | Implemented | `GetReferenceContributionCount` | LoadInspectionService.cs |
+| GetReferenceLoadByIndex | Implemented | `GetReferenceContributions` | LoadInspectionService.cs |
+| BeginLoadMerging | Implemented | `MergeBeamLoads` | LoadBeamTransferService.cs |
+| EndLoadMerging | Implemented | `MergeBeamLoads` | LoadBeamTransferService.cs |
 
 ## 4. Read-only main-project reuse review
 
@@ -186,47 +175,46 @@ var pressure = TrapezoidalPressureDefinition.AtCorners(
     pressureAtNodeC: -3, pressureAtNodeD: -4);
 ~~~
 
-There is deliberately no callable CreateAutomaticCombinations/AddTrapezoidalPressure adapter method yet. Those signatures remain review-only until promoted with their real implementations.
+CreateAutomaticCombinations and AddTrapezoidalPressure are now callable through wrapper.Load with the shown request types. Review IDs, current units and the method-specific IntelliSense before enabling mutations.
 
 ## 6. Internal organization and calling convention
 
 ~~~text
 Adapters/Interfaces/IOSLoad.cs                 implemented public signatures only
 Adapters/Models/OSLoadAdapter.cs               single adapter, explicit sections and delegates
-Models/Loads/Contracts/                       request/result definitions prepared here
+Models/Loads/Contracts/                       immutable request/result definitions
 Models/Loads/Queries/                         reused implemented inspection results
 Enums/Loads/                                 distinct option and status domains
 Services/Load/LoadInspectionService.cs         implemented inspection routines
 Services/Load/LoadContractArguments.cs         pure managed validation/copy helpers
-Services/Load/LoadCaseManagementService.cs     planned: case/list/envelope/attribute operations
-Services/Load/LoadAutomaticGenerationService.cs planned: generation packets and result decoding
-Services/Load/LoadAssignmentService.cs         planned: additional typed load mutations
-Services/Load/LoadAssignmentQueryService.cs    planned: command/entity/floor readers
-Services/Load/LoadBeamTransferService.cs       planned: qualified split/merge lifecycle
-docs/contracts/IOSLoadExpansionContract.cs    review-only, compiled by tests
+Services/Load/LoadCaseManagementService.cs     implemented: case/list/envelope/attribute operations
+Services/Load/LoadAutomaticGenerationService.cs implemented: generation packets and result decoding
+Services/Load/LoadAssignmentService.cs         implemented: additional typed load mutations
+Services/Load/LoadAssignmentQueryService.cs    implemented: command/entity/floor readers
+Services/Load/LoadBeamTransferService.cs       implemented: qualified split/merge lifecycle
+docs/contracts/IOSLoadExpansionContract.cs    approved snapshot, compiled by tests
 ~~~
 
-Planned service files are not created as empty or throwing placeholders. This organization preserves a simple user call such as `wrapper.Load.AddWindLoad(targetCase, definition)` after implementation. Adapter sections identify native expansion/inspection work; the detailed code is independently reviewable in the service file.
+All five planned service files are implemented, with LoadServiceContext providing one captured binding, activation handling and shared lock. Consumers use wrapper.Load directly; helpers remain internal and independently reviewable.
 
 Shared contracts stay in common services. Only evidenced native differences select narrow internal policies based on `wrapper.StaadVersion`, never host ApplicationVersion. Automatic-combination error interpretation differs between 2024 and 2025/2026. Unsupported or unverified choices must be rejected before mutation; no public year-specific adapters or strings choosing service implementations.
 
-## 7. Evidence gates before pending functions are enabled
+## 7. Contract decisions and remaining native qualification
 
-| Contract | Required evidence |
+GetLoadAttribute is a documented status-only observation and does not decode ASD/LSD settings. MergeBeamLoads returns InvocationCompleted with IsSuccessful false because Bentley does not document the merge-body response meanings. Reference-command index base, nodal index convention, plate-command UI selection, floor distribution and live 2024–2026 marshaling remain explicit qualification requirements. See [Load expansion usage and method comparisons](../Load-Expansion.md).
+
+| Contract | Implemented decision and remaining check |
 | --- | --- |
-| GetAttribute | Establish whether the scalar is status or attribute information and how any payload is obtained. LoadAttributeObservation only preserves an undecoded value. No attribute enum/property is guessed. This pending method is withheld. |
-| Begin/End merging | Qualify metadata-only MergeLoadsOnBeam body, exact packets, topology, errors and effects. Attempt End in finally on the same COM context; preserve primary and cleanup failures. No separate public Begin/End calls. The managed merge operation is withheld. |
-| SplitLoadsOnBeam | Verify the inconsistent parameter table, beam relationship and case scope; do not assume geometry splitting and load transfer are atomic. |
-| Reference contribution readers | Corroborate index base, count-return semantics and output sizing; current narrative labels count/ID inconsistently. |
-| Nodal/plate command readers | Confirm original index semantics; only ElementLoadPressure is documented for GetElementLoadInfo. Respect its separate zero-based direction domain and -1 unimplemented status. |
-| Floor loading | Confirm range/group/one-way flags and the legacy GlobalX/Y-range subset before asserting equivalent dispatch. |
-| Strain/area/fixed-end and pressure quantities | Verify native dimensions, axes, signs and plate-shape conventions; requests preserve finite raw values without fabricated conversions. |
-| All new native implementations | Caller COM context, explicit validated family activation, bounded buffers, operation-specific status meanings, owned snapshots, no partial Data, live read-back and disposable engineering models. |
+| GetAttribute | Calls the documented scalar contract; exposes 0 only as a status observation, -1 as failure, and rejects unknown values. No attribute encoding is inferred. |
+| Merge lifecycle | Class listing and CLR metadata corroborate the body signature. Begin/body/End execute on one context, End is attempted in finally, and body/cleanup exceptions are preserved. Returned codes remain uninterpreted; normal completion is InvocationCompleted, never Success. Live return meanings, topology and case scope remain unqualified. |
+| SplitLoadsOnBeam | Uses the declaration and VBA two-beam example, correcting the unrelated parameter-table entry. Does not split geometry or promise case-local scope. |
+| Reference contributions | Native index is nonnegative and forwarded unchanged; no guessed base. Count is used for sizing; the fetch scalar is not forced to equal count. Validate index conventions on the acquired build. |
+| Command readers | Supported-kind preflight, zero-based original item indices, strict initialized buffers and stable count/kind checks. Nodal base and ElementLoadInfo UI-selection prerequisite remain documented native checks. |
+| Floor loading | Extended call for all managed modes; standard range uses the example’s single-space marker, one-way uses documented 0, and group names are exact. No legacy-direction fallback. Verify generated distribution. |
+| ASD flag | CLR metadata declares the native increase flag Int32, so the managed Boolean maps to 1/0 internally. |
+| Wind application | Requires available Y-up geometry before activation/assignment. No automatic axis remapping. |
+| All implementations | Offline behavior is tested. Validate actual COM, engineering values, units and model commands on disposable models before advertising build compatibility. |
 
-## 8. Verification and next steps
+## 8. Verification and release state
 
-Validation passed **2,476 offline tests**, including **28 contract-focused cases**, and a Release build with zero warnings/errors. The review interface compiles against the defined production types. Tests check all 56 unique mappings, all 36 pending signatures, no public runtime stub exposure, no tuple/object/array/ref-out signatures, complete XML on supporting public members, request validation, single enumeration and copy ownership, explicit pressure/floor modes, case-family handling, result Data guards and honest void/generation evidence.
-
-The native implementation state remains at the preceding 15-query increment: 135 Load overloads and 88/129 documented native dispatches. Remaining 41 unused names consist of one covered alternative, one derived capability, four partial overlaps and 35 absent operations. This contract work does not convert unused names into implemented native functions.
-
-After review, implement a coherent approved subset by promoting its signatures into IOSLoad, adding real single-adapter delegates and tests, and enabling internal services only after their required evidence is available. Update matrices from actual native calls. Prepared distribution packages remain unchanged; these supporting type definitions require a future package build/version before users receive them.
+Passed **2,900 offline tests**, including **424 new expansion cases**, and a Release build with zero warnings/errors. A separate local validation archive passed isolated PackageReference restore/build/runtime checks for **442 selected XML examples**, including all 72 expansion examples with mutation guards disabled. The examples compile against the installed DLL and XML; native paths are exercised by the managed test fakes, not live STAAD. Native integration/engineering qualification remains pending. This source update does not replace or publish the prepared distribution archive; package validation uses a separate local CI version.

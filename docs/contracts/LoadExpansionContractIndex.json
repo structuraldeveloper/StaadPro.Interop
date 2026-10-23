@@ -7,10 +7,10 @@
   "nativeEntries": [
     {
       "nativeName": "SplitLoadsOnBeam",
-      "state": "Qualification required",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult SplitLoadsOnBeam(int originalBeamId, int newBeamId)",
       "managedMethod": "SplitLoadsOnBeam",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadBeamTransferService.cs",
       "parameters": [
         {
@@ -27,14 +27,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Topology, affected-case scope and native parameter-table inconsistency must be verified before dispatch."
+      "notes": "Use after splitting beam geometry when the existing load definitions must be transferred to the two beam IDs. Unlike AddMemberLoad, this edits existing load definitions and does not create beam geometry or assign a new load template. Unlike MergeBeamLoads, it splits rather than combines definitions. Native scope across cases is controlled by STAAD; no managed case filter is implied. The IDs follow the native declaration and VBA example; its parameter-table description is erroneous. Native TRUE/1 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "AddLoadCasesToEnvelop",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult AddCasesToEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds)",
       "managedMethod": "AddCasesToEnvelope",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadCaseManagementService.cs",
       "parameters": [
         {
@@ -51,14 +52,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Positive IDs; snapshot once, preserve order/duplicates; reject empty selection rather than inferring all. Native 1 means success."
+      "notes": "Use to change membership of an existing envelope. CreateLoadEnvelopExt creates an envelope; CreateLoadCombinations creates combination cases. This method does neither and never changes load factors. Pass primary case IDs, not an envelope index or LOAD LIST record index. Native 1 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "RemoveLoadCasesFromEnvelop",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult RemoveCasesFromEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds)",
       "managedMethod": "RemoveCasesFromEnvelope",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadCaseManagementService.cs",
       "parameters": [
         {
@@ -75,14 +77,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "No implicit remove-all; no deletion/recreation fallback. Native 1 means success."
+      "notes": "Use to remove selected memberships while retaining the envelope and the load-case definitions. DeleteEnvelope removes the envelope itself; DeleteLoadCases removes case definitions. An empty list is rejected and never means remove all. Native 1 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "DeleteLoadEnvelop",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult DeleteEnvelope(int envelopeId)",
       "managedMethod": "DeleteEnvelope",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadCaseManagementService.cs",
       "parameters": [
         {
@@ -93,7 +96,8 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Destructive scope is the envelope, not its case definitions. Native 1 success; no implicit save."
+      "notes": "Use to delete an envelope definition. The cases previously listed in it remain case definitions; use DeleteLoadCases only when those cases should also be deleted. This method does not delete a LOAD LIST. Native 1 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "IsCombinationCase",
@@ -104,10 +108,10 @@
     },
     {
       "nativeName": "AddAutoLoadCombinations",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticCombinations(AutomaticCombinationRequest request)",
       "managedMethod": "CreateAutomaticCombinations",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAutomaticGenerationService.cs",
       "parameters": [
         {
@@ -118,14 +122,15 @@
         }
       ],
       "returnType": "LoadOperationResult<AutomaticLoadGenerationData>",
-      "notes": "Explicit all-cases selection. Returns requested and actual start IDs; generated count is absent because this native API does not return one. Select 2024 versus 2025/2026 error interpretation internally."
+      "notes": "Use installed code/category rule files to generate combination cases. CreateLoadCombinations instead accepts explicit caller-defined factors; CreateAutomaticRepeatLoads generates repeat cases, not result-combination definitions. Code and category strings must match the acquired installation, not a hard-coded engineering-code enum. AllCases is an explicit opt-in to the native empty-array all-case behavior. STAAD may advance the requested start ID; read ActualStartCaseId. GeneratedCount is null because this native API supplies no count, and IDs are never inferred as contiguous. Native 0 means success; the 2024 help lists -1 failure, while 2025/2026 list -8002/-8040/-8041. Error descriptions use wrapper.StaadVersion, never the host ApplicationVersion.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "AddAutoCombinationRepeat",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticRepeatLoads(AutomaticRepeatLoadRequest request)",
       "managedMethod": "CreateAutomaticRepeatLoads",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAutomaticGenerationService.cs",
       "parameters": [
         {
@@ -136,7 +141,8 @@
         }
       ],
       "returnType": "LoadOperationResult<AutomaticLoadGenerationData>",
-      "notes": "Returns actual start and generated count from internal reference outputs. No implicit direction flags; no inference of contiguous case IDs."
+      "notes": "Use code/category rules to generate repeat load cases whose loads participate in a subsequent analysis. CreateAutomaticCombinations creates combination definitions instead; AddRepeatLoadsTo assigns explicit factors to one existing case. Optional reference and notional participation is explicit; null NotionalOptions disables all notional flags. The returned ActualStartCaseId and GeneratedCount come from native outputs, not a guessed contiguous ID range. Native 0 means success; -1 means failure.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "CreateNewPrimaryLoad",
@@ -148,7 +154,7 @@
     },
     {
       "nativeName": "GetActiveLoad",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<int> GetActiveLoadCaseNumber()",
       "managedMethod": "GetActiveLoadCaseNumber",
       "source": "IOSLoad / OSLoadAdapter",
@@ -156,10 +162,10 @@
     },
     {
       "nativeName": "SetLoadType",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult SetLoadType(IEnumerable<int> loadCaseIds, LoadType loadType)",
       "managedMethod": "SetLoadType",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadCaseManagementService.cs",
       "parameters": [
         {
@@ -176,11 +182,12 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Reuses LoadType 0-23; does not change primary/reference family. Native 0 success, -1 failure."
+      "notes": "Use to reclassify existing cases as Dead, Live, Wind and similar engineering categories. This LoadType is different from LoadCaseType (primary/reference/combination family), LoadCommandKind (command table) and LoadItemKind (original item code). This changes native cases directly; setting a detached LoadCase.Type alone does not invoke this operation. Native 0 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetLoadListCount",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<int> GetLoadListCount()",
       "managedMethod": "GetLoadListCount",
       "source": "IOSLoad / OSLoadAdapter",
@@ -188,7 +195,7 @@
     },
     {
       "nativeName": "GetLoadCountInLoadList",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<int> GetLoadListCaseCount(int loadListIndex)",
       "managedMethod": "GetLoadListCaseCount",
       "source": "IOSLoad / OSLoadAdapter",
@@ -196,7 +203,7 @@
     },
     {
       "nativeName": "GetLoadsInLoadList",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<IEnumerable<int>> GetLoadListCases(int loadListIndex, int maximumResults = 100000)",
       "managedMethod": "GetLoadListCases",
       "source": "IOSLoad / OSLoadAdapter",
@@ -204,10 +211,10 @@
     },
     {
       "nativeName": "DeleteLoadList",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult DeleteLoadList(int loadListIndex)",
       "managedMethod": "DeleteLoadList",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadCaseManagementService.cs",
       "parameters": [
         {
@@ -218,14 +225,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "One-based list index, not a case/envelope ID. Native 0 success and -1 failure."
+      "notes": "Use to remove one LOAD LIST record created through CreateLoadList. The argument is a one-based list record index from GetLoadListCount, not a case number or envelope ID. Cases and envelopes remain defined. Use DeleteLoadCases or DeleteEnvelope for those scopes. Native 0 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "SetASDLoadAttribute",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult SetAllowableStressAttribute(int loadCaseId, LoadStrengthType strengthType, bool increaseAllowableStress)",
       "managedMethod": "SetAllowableStressAttribute",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadCaseManagementService.cs",
       "parameters": [
         {
@@ -248,14 +256,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Defined LoadStrengthType 0-6; explicitly selects the native one-third stress increase. Native 0 success."
+      "notes": "Use for an ASD case attribute with an explicit strength-of-forces choice and optional one-third allowable-stress increase. SetLimitStateAttribute instead sets LSD; SetLoadType changes engineering classification rather than design attributes. This does not select a model design code. GetLoadAttribute cannot reconstruct these settings: Bentley documents only a status observation for that getter. Native 0 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "SetLSDLoadAttribute",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult SetLimitStateAttribute(int loadCaseId)",
       "managedMethod": "SetLimitStateAttribute",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadCaseManagementService.cs",
       "parameters": [
         {
@@ -266,14 +275,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Native 0 success; does not choose a model design code."
+      "notes": "Use to set the LSD case attribute. SetAllowableStressAttribute instead exposes ASD strength and allowable-stress choices; SetLoadType changes engineering classification. This does not select a design code or run a design. GetLoadAttribute cannot reconstruct LSD/ASD settings from its documented status-only return. Native 0 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "RemoveAttribute",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult RemoveLoadAttribute(int loadCaseId)",
       "managedMethod": "RemoveLoadAttribute",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadCaseManagementService.cs",
       "parameters": [
         {
@@ -284,14 +294,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Native 0 success; no implicit clearing/deletion of case content."
+      "notes": "Use to remove a case design attribute while retaining its loads and definition. ClearPrimaryLoadCase clears items, and DeleteLoadCases removes case definitions; neither is a substitute for this attribute operation. Native 0 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetAttribute",
-      "state": "Blocked: native payload undefined",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<LoadAttributeObservation> GetLoadAttribute(int loadCaseId)",
       "managedMethod": "GetLoadAttribute",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadCaseManagementService.cs",
       "parameters": [
         {
@@ -302,11 +313,12 @@
         }
       ],
       "returnType": "LoadQueryResult<LoadAttributeObservation>",
-      "notes": "WITHHELD: the help defines only 0/-1 status and no attribute payload. No LoadStrengthType decoding or fabricated attribute fields; signature remains review-only."
+      "notes": "Use only to observe the documented native GetAttribute status. A successful Data.NativeValue is 0; it does not identify ASD, LSD, LoadStrengthType, stress-increase settings, or the absence of an attribute. Unlike the attribute setters, this API cannot return their settings because Bentley exposes no documented output payload. -1 produces NativeFailure; any other integral value is rejected as an undocumented schema rather than decoded speculatively.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetLoadTypeCount",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<int> GetLoadCommandCount(int primaryLoadCaseId, LoadCommandKind commandKind)",
       "managedMethod": "GetLoadCommandCount",
       "source": "IOSLoad / OSLoadAdapter",
@@ -314,7 +326,7 @@
     },
     {
       "nativeName": "GetListSizeForLoadType",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<int> GetAssignedEntityCount(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex)",
       "managedMethod": "GetAssignedEntityCount",
       "source": "IOSLoad / OSLoadAdapter",
@@ -322,10 +334,10 @@
     },
     {
       "nativeName": "GetAssignmentListForLoadType",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex, int maximumResults = 100000)",
       "managedMethod": "GetAssignedEntityIds",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadInspectionService.cs",
       "parameters": [
         {
@@ -354,14 +366,15 @@
         }
       ],
       "returnType": "LoadQueryResult<IEnumerable<int>>",
-      "notes": "Primary activation, zero-based command index, paired sizing/retrieval counts, valid IDs, bounds and state checks. Native 0 means error; do not infer empty success from it."
+      "notes": "Use to preserve the entity assignment list of one original command, including native order and duplicates. GetAssignedEntityCount returns only its size. GetNodalLoads/GetMemberUniformlyDistributedLoads read loads for an entity, while grouped population methods reorganize loads across entities and can lose original command identity. The zero-based commandIndex is within commandKind, not the loadItemIndex used by GetLoadItemKind. Native zero is an error/unavailable observation, not a proven empty assignment. Sizing, returned size and observed command/entity counts must agree.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "DeletePrimaryLoadCases",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds)",
       "managedMethod": "DeleteLoadCases",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadCaseManagementService.cs",
       "parameters": [
         {
@@ -378,14 +391,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Only PrimaryLoad/ReferenceLoad accepted; reuse LoadCaseType instead of a new family enum. Snapshot a nonempty selection; dependency errors and possible effects are reported. This differs from clearing items."
+      "notes": "Use to remove primary or reference case definitions. ClearPrimaryLoadCases/ClearReferenceLoadCases clear their contents while retaining the cases. Combination and RepeatLoad enum choices are rejected; repeat commands live inside primary cases and require primary-family selection. Primary requests dispatch DeletePrimaryLoadCases with the reference flag false; reference requests use DeleteReferenceLoadCases. Native 1 means success. Dependency failures are reported without deletion/recreation fallback.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "DeleteReferenceLoadCases",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds)",
       "managedMethod": "DeleteLoadCases",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadCaseManagementService.cs",
       "parameters": [
         {
@@ -402,11 +416,12 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Only PrimaryLoad/ReferenceLoad accepted; reuse LoadCaseType instead of a new family enum. Snapshot a nonempty selection; dependency errors and possible effects are reported. This differs from clearing items."
+      "notes": "Use to remove primary or reference case definitions. ClearPrimaryLoadCases/ClearReferenceLoadCases clear their contents while retaining the cases. Combination and RepeatLoad enum choices are rejected; repeat commands live inside primary cases and require primary-family selection. Primary requests dispatch DeletePrimaryLoadCases with the reference flag false; reference requests use DeleteReferenceLoadCases. Native 1 means success. Dependency failures are reported without deletion/recreation fallback.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetLoadItemsCount",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<int> GetLoadItemCount(int loadCaseId)",
       "managedMethod": "GetLoadItemCount",
       "source": "IOSLoad / OSLoadAdapter",
@@ -414,7 +429,7 @@
     },
     {
       "nativeName": "GetLoadItemType",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<LoadItemKind> GetLoadItemKind(int loadCaseId, int loadItemIndex)",
       "managedMethod": "GetLoadItemKind",
       "source": "IOSLoad / OSLoadAdapter",
@@ -422,10 +437,10 @@
     },
     {
       "nativeName": "AddSelfWeightInXYZ",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult AddSelfWeight(ILoadCase targetCase, SelfWeightDirection direction, double factor)",
       "managedMethod": "AddSelfWeight",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentService.cs",
       "parameters": [
         {
@@ -448,14 +463,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Reuses existing ILoadCase and SelfWeightDirection; factor is dimensionless. Explicit geometry-scoped API remains separate; empty selection is not relevant."
+      "notes": "Use for native whole-model self-weight covering beams, plates and solids. AddSelfweightInXYZTo instead assigns to an explicit geometry list; these scopes are different even when a caller currently lists every entity. The factor is dimensionless, with its sign preserved, and the global direction uses SelfWeightDirection. Native Boolean TRUE means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetNodalLoadInfo",
-      "state": "Qualification required",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<NodalLoadCommandInfo> GetNodalLoadCommand(ILoadCase targetCase, int loadItemIndex)",
       "managedMethod": "GetNodalLoadCommand",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentQueryService.cs",
       "parameters": [
         {
@@ -472,14 +488,15 @@
         }
       ],
       "returnType": "LoadQueryResult<NodalLoadCommandInfo>",
-      "notes": "Native text omits the index base; proposed zero-based convention requires qualification. Uses existing Forces through a defensive copy rather than new six-number arrays."
+      "notes": "Use to inspect the six components of one original ordinary nodal command. GetNodalLoads reads loads assigned to a particular node; GetNodalLoadsGroupedByLoadCase reorganizes entity data. This packet contains no node list: use GetAssignedEntityIds with the appropriate command index for assignments. Only native Nodal items are accepted; inclined loads and support displacement are not interchangeable. Pass the original zero-based GetLoadItemKind index unchanged. The nodal help omits an explicit base; confirm this command-index convention against the acquired build before production use. Native Boolean TRUE means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "AddMemberAreaLoad",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult AddMemberAreaLoad(ILoadCase targetCase, IEnumerable<int> memberIds, double areaLoad)",
       "managedMethod": "AddMemberAreaLoad",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentService.cs",
       "parameters": [
         {
@@ -502,14 +519,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Native 0 success; quantity follows native area-load units, not uniform force-per-length. No automatic conversion."
+      "notes": "Use to assign the native member AREA load parameter to selected beam IDs. AddFloorLoad instead searches enclosed floor panels and distributes floor pressure; AddMemberLoad accepts supported line-load templates. These operations can produce different distributions on the same geometry. The signed area-load value uses current native units. Native 0 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "AddMemberFixedEnd",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult AddMemberFixedEndLoad(ILoadCase targetCase, IEnumerable<int> memberIds, FixedEndLoadDefinition definition)",
       "managedMethod": "AddMemberFixedEndLoad",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentService.cs",
       "parameters": [
         {
@@ -532,14 +550,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Reuses Forces; internal buffers contain Fx/Fy/Fz/Mx/My/Mz in documented order. Native 0 success; qualify axes/sign conventions."
+      "notes": "Use to supply six force/moment components at each member end as a fixed-end load definition. This is different from assigning concentrated member forces at a distance, support settlements, or reading Output reactions. StartForces and EndForces follow Fx/Fy/Fz/Mx/My/Mz order; signs and current force/moment units are preserved without support-reaction sign reversal. Native 0 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetMemberLoadInfo",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<MemberLoadCommandInfo> GetMemberLoadCommand(ILoadCase targetCase, int loadItemIndex)",
       "managedMethod": "GetMemberLoadCommand",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentQueryService.cs",
       "parameters": [
         {
@@ -556,14 +575,15 @@
         }
       ],
       "returnType": "LoadQueryResult<MemberLoadCommandInfo>",
-      "notes": "Retains three force parameters and three distances as named fields with original item kind. Does not collapse different command families or infer dimension-independent force slots."
+      "notes": "Use to retain one original member-command packet and its native item kind. GetMemberUniformlyDistributedLoads and the concentrated/linear/trapezoidal readers instead select per-member load definitions. Force parameter dimensions depend on Kind; do not interpret moment slots as forces. Distances retain their native meanings and length units. Only the six ordinary uniform-force, uniform-moment, concentrated-force, concentrated-moment, linear and trapezoidal kinds documented for this reader are accepted. Physical-member and fixed-end packets are not inferred. The item index is zero-based. Native Boolean TRUE means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "AddElementHydrostaticPressure",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult AddHydrostaticPressure(ILoadCase targetCase, IEnumerable<int> plateIds, HydrostaticPressureDefinition definition)",
       "managedMethod": "AddHydrostaticPressure",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentService.cs",
       "parameters": [
         {
@@ -586,14 +606,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Pressure direction LocalZ/GlobalX/Y/Z; interpolation GlobalAxis maps internally to 1/2/3. Native true/1 success; distinct axes stay distinct."
+      "notes": "Use for pressures interpolated along a global coordinate axis. AddTrapezoidalPressure varies along plate-local X/Y or by joint; AddPlateUniformPressure assigns a uniform value. Pressure direction and interpolation axis are independent: the latter maps GlobalAxis X/Y/Z to native 1/2/3. Signed minimum/maximum pressure parameters are passed unchanged, not sorted or recalculated from fluid density. Native Boolean TRUE/1 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "AddElementTrapPressureEx",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult AddTrapezoidalPressure(ILoadCase targetCase, IEnumerable<int> plateIds, TrapezoidalPressureDefinition definition)",
       "managedMethod": "AddTrapezoidalPressure",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentService.cs",
       "parameters": [
         {
@@ -616,14 +637,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Named factories separate local X/Y variation from four joint pressures. Qualify triangular joint conventions before enabling that shape."
+      "notes": "Use for two-value variation along plate-local X/Y or four joint-ordered pressures. AddHydrostaticPressure interpolates along a global axis; AddPlateUniformPressure supplies one uniform pressure. AlongLocalAxis supplies zero only for the two native ignored corner slots; AtCorners retains all four joint values. No joint sorting or geometry conversion occurs. Confirm the fourth-value convention separately for triangular plates. Native Boolean TRUE/1 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetElementPressureLoadCount",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<int> GetPlatePressureLoadCount(ILoadCase targetCase, int plateId)",
       "managedMethod": "GetPlatePressureLoadCount",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentQueryService.cs",
       "parameters": [
         {
@@ -640,14 +662,15 @@
         }
       ],
       "returnType": "LoadQueryResult<int>",
-      "notes": "Zero valid, -1 failure. Count belongs to selected case, not Output results."
+      "notes": "Use to count applied pressure entries for one plate in the selected case. GetLoadItemCount counts original case command items, which need not equal this per-plate count; GetPlateConcentratedLoadCount covers concentrated loads. GetPlatePressureLoads returns the entries with values and local extents. Zero is a valid empty count, -1 is failure.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetElementPressureLoads",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<IEnumerable<PlatePressureLoad>> GetPlatePressureLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000)",
       "managedMethod": "GetPlatePressureLoads",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentQueryService.cs",
       "parameters": [
         {
@@ -670,14 +693,15 @@
         }
       ],
       "returnType": "LoadQueryResult<IEnumerable<PlatePressureLoad>>",
-      "notes": "Bounded count/fetch; materialized immutable results; native 0 success, -1 failure; no min/max reordering of native corner coordinates."
+      "notes": "Use to read applied pressure entries and local rectangular extents for one plate. GetPlateLoadCommand reads an original full-pressure command packet by item index; GetPlateConcentratedLoads reads force entries at local points. These are load definitions, not Output plate stresses. Native top-left/bottom-right order is retained without min/max sorting. The bounded owned snapshot validates all directions and finite parameters and rechecks the count. Native 0 means success; -1 means failure. Zero count returns a read-only empty snapshot without fetching.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetElementConcLoadCount",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<int> GetPlateConcentratedLoadCount(ILoadCase targetCase, int plateId)",
       "managedMethod": "GetPlateConcentratedLoadCount",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentQueryService.cs",
       "parameters": [
         {
@@ -694,14 +718,15 @@
         }
       ],
       "returnType": "LoadQueryResult<int>",
-      "notes": "Zero valid and -1 failure; element family/active case remains explicit."
+      "notes": "Use to count concentrated applied-load entries for one plate. GetPlatePressureLoadCount counts pressure entries; GetLoadItemCount counts original commands for the case. GetPlateConcentratedLoads returns magnitude and local position. Zero is a valid empty count, -1 is failure.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetElementConcLoads",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<IEnumerable<PlateConcentratedLoad>> GetPlateConcentratedLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000)",
       "managedMethod": "GetPlateConcentratedLoads",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentQueryService.cs",
       "parameters": [
         {
@@ -724,14 +749,15 @@
         }
       ],
       "returnType": "LoadQueryResult<IEnumerable<PlateConcentratedLoad>>",
-      "notes": "Reuses main ElementConcentratedLoad field semantics without its unimplemented ApplyTo or proprietary base/dependencies. Verify direction/quantity conventions."
+      "notes": "Use for concentrated applied loads at local plate positions. GetPlatePressureLoads instead returns pressure entries and rectangular extents; GetPlateLoadCommand returns an original pressure command. Magnitudes remain in current native units and are not divided by area. Native 0 means success, -1 means failure; bounded paired buffers and before/after counts protect the owned snapshot. A zero count returns an empty snapshot without fetching.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetElementLoadInfo",
-      "state": "Qualification required",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<PlateLoadCommandInfo> GetPlateLoadCommand(ILoadCase targetCase, int loadItemIndex)",
       "managedMethod": "GetPlateLoadCommand",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentQueryService.cs",
       "parameters": [
         {
@@ -748,14 +774,15 @@
         }
       ],
       "returnType": "LoadQueryResult<PlateLoadCommandInfo>",
-      "notes": "Only ElementLoadPressure is documented. Translate this API’s native 0-8 directions to LoadDirection 1-9. Native -1 means not implemented, not generic success."
+      "notes": "Use only for the original ElementLoadPressure (PlateFullPressure, 3310) item packet. GetPlatePressureLoads reads per-plate pressure assignments; it is the alternative for those values and extents. Concentrated, trapezoidal, hydrostatic and partial-pressure item codes are not treated as full-pressure packets. The item index is zero-based. This native reader alone reports directions 0-8, translated to LoadDirection 1-9; member/plate-list readers already use 1-9. Native 1 means success, 0 failure, -1 Unsupported. Bentley explicitly requires selecting the load case in the STAAD UI: managed activation and numeric checks do not certify UI selection. Ensure that UI prerequisite before calling.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "AddMemberFloorLoad",
-      "state": "Defined; implementation pending",
+      "state": "Covered alternative via AddMemberFloorLoadEx",
       "managedSignature": "LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition)",
       "managedMethod": "AddFloorLoad",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentService.cs",
       "parameters": [
         {
@@ -772,14 +799,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Shared typed request can use Ex for general modes; legacy GlobalX/Y-range subset is conditional on qualified equivalence. No duplicate public overload solely for native-name coverage."
+      "notes": "Use to let STAAD find enclosed floor panels and distribute pressure using a coordinate range or an existing FLOOR group. AddMemberAreaLoad applies the separate member AREA command; GetFloorInfluenceAreas observes geometry and assigns nothing. The extended native floor function handles all modes, so the legacy fixed-direction call is not duplicated. Range axis and loading axis are independent. Standard range mode passes the single-space marker shown in Bentley's VBA example; one-way mode passes \"0\" from its parameter table. Group mode passes the exact group name and zero ignored bounds; it does not create the group. Native 1 means success. Verify generated distributions, particularly one-way floors, against the target model.",
+      "nativeDispatch": false
     },
     {
       "nativeName": "GetBeamCountAtFloor",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<int> GetFloorBeamCount(FloorRegion region)",
       "managedMethod": "GetFloorBeamCount",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentQueryService.cs",
       "parameters": [
         {
@@ -790,14 +818,15 @@
         }
       ],
       "returnType": "LoadQueryResult<int>",
-      "notes": "GlobalAxis range is explicitly translated to native 1/2/3. Finite coordinates may require checked Single marshaling."
+      "notes": "Use for the native beam count in a bounded floor region, without assigning loads or selecting a load case. This is not GetAssignedEntityCount, which counts entities attached to an existing command. GetFloorInfluenceAreas returns beam/area pairs for the same region. Coordinates are converted to native Single precision (with range checks); RangeAxis maps X/Y/Z to native 1/2/3. Zero is an empty count; malformed negatives are rejected except -1, returned as NativeFailure.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetInfluenceArea",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<IEnumerable<BeamInfluenceArea>> GetFloorInfluenceAreas(FloorRegion region, int maximumResults = 100000)",
       "managedMethod": "GetFloorInfluenceAreas",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentQueryService.cs",
       "parameters": [
         {
@@ -814,14 +843,15 @@
         }
       ],
       "returnType": "LoadQueryResult<IEnumerable<BeamInfluenceArea>>",
-      "notes": "Bounded count/fetch with identical region; named associations replace parallel arrays. Native true/1 success; no managed engineering-area calculation."
+      "notes": "Use to observe beam/tributary influence-area pairs calculated by STAAD for a floor region. GetFloorBeamCount provides only sizing; AddFloorLoad actually assigns pressure. This method does not multiply areas by pressure or calculate managed tributary areas. It uses the same converted Single-precision bounds and range axis for sizing and retrieval (correcting the differing axes in Bentley's example). Validates positive beam IDs, finite nonnegative areas, retrieval limit and stable count. Native Boolean TRUE means success; areas use squared native length units.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "AddMemberFloorLoadEx",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition)",
       "managedMethod": "AddFloorLoad",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentService.cs",
       "parameters": [
         {
@@ -838,14 +868,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Shared typed request can use Ex for general modes; legacy GlobalX/Y-range subset is conditional on qualified equivalence. No duplicate public overload solely for native-name coverage."
+      "notes": "Use to let STAAD find enclosed floor panels and distribute pressure using a coordinate range or an existing FLOOR group. AddMemberAreaLoad applies the separate member AREA command; GetFloorInfluenceAreas observes geometry and assigns nothing. The extended native floor function handles all modes, so the legacy fixed-direction call is not duplicated. Range axis and loading axis are independent. Standard range mode passes the single-space marker shown in Bentley's VBA example; one-way mode passes \"0\" from its parameter table. Group mode passes the exact group name and zero ignored bounds; it does not create the group. Native 1 means success. Verify generated distributions, particularly one-way floors, against the target model.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "AddStrainLoad",
-      "state": "Qualification required",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult AddStrainLoad(ILoadCase targetCase, IEnumerable<int> elementIds, double axialElongation)",
       "managedMethod": "AddStrainLoad",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentService.cs",
       "parameters": [
         {
@@ -868,14 +899,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Finite signed value; engineering dimensional conventions require native technical-reference qualification. Temperature loading is not substituted."
+      "notes": "Use to assign the native initial axial elongation parameter to explicit element IDs. Despite the native Strain name, axialElongation is a length in current model units, not dimensionless strain; no division or multiplication by member length occurs. AddAxialThermalGradientTo instead supplies a thermal gradient, and fixed-end loading instead supplies force/moment components. Native 0 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "AddSeismicLoad",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult AddSeismicLoad(ILoadCase targetCase, GlobalAxis direction, double factor)",
       "managedMethod": "AddSeismicLoad",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentService.cs",
       "parameters": [
         {
@@ -898,11 +930,12 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Reuses main GlobalAxis 0/1/2; separate from definition and member-weight domains. Native 0 success and -8001 invalid direction."
+      "notes": "Use to apply the existing seismic definition to a case with a global axis and multiplier. AddSeismicDefinition creates definition settings; AddSeismicDefSelfWeight and joint/member weight methods contribute seismic weights. AddRSLoad/AddResponseSpectrumLoadEx create response-spectrum commands instead of this generated static seismic command. GlobalAxis maps directly to native 0/1/2, unlike self-weight or hydrostatic interpolation. Native 0 means success; -1/-8001 are failures.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "IsDynamicLoadIncluded",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<bool> ContainsDynamicLoad(int loadCaseId)",
       "managedMethod": "ContainsDynamicLoad",
       "source": "IOSLoad / OSLoadAdapter",
@@ -910,10 +943,10 @@
     },
     {
       "nativeName": "AddWindLoad",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult AddWindLoad(ILoadCase targetCase, WindLoadDefinition definition)",
       "managedMethod": "AddWindLoad",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentService.cs",
       "parameters": [
         {
@@ -930,14 +963,15 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Direction codes 1/3/4/6; factor signed and dimensionless. Native range assumes Y vertical; verify model compatibility. No definition creation fallback."
+      "notes": "Use to apply an existing wind definition to a case over an explicit global region. AddWindDefinition/AddWindIntensity/AddWindExposure prepare that definition; ComputeWallWindPressureProfile computes a profile and does not assign this command. This native contract assumes Y vertical: a Z-up or unavailable geometry binding returns Unsupported before activation/assignment. No automatic coordinate remapping occurs. Uses documented X/Z signed codes 1/3/4/6 rather than the inconsistent example code 2. Native 0 means success. Signed factors are retained, so a negative factor can reverse the selected direction. Bentley’s all-zero-bounds example denotes whole-range walls; an all-zero region must not be assumed to select only a geometric point. Supply appropriate nondegenerate bounds when restricting scope.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "AddNotionalLoad",
-      "state": "Defined; implementation pending",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult AddNotionalLoad(ILoadCase targetCase, IEnumerable<NotionalLoadContribution> contributions)",
       "managedMethod": "AddNotionalLoad",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadAssignmentService.cs",
       "parameters": [
         {
@@ -954,11 +988,12 @@
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "Reuses the query contribution model with a validated public constructor. Internal packets partition families with positive IDs and global 1/2/3 axes; do not forward signed read-back IDs directly to separate family arrays."
+      "notes": "Use to assign explicitly chosen primary and reference contributions to an existing case. AddRepeatLoadsTo/AddReferenceLoadsTo do not specify notional directions; CreateAutomaticRepeatLoads can generate notional participation through code rules rather than this explicit list. Contributions are partitioned into six aligned native buffers, preserving order and duplicates within each family. Assignment uses positive IDs in both families; GetNotionalContributions uses signed native IDs on readback. Factors retain signs, including zero, and directions use global X/Y/Z 1/2/3. Native 0 means success.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetNoLoadFactorInRepeatLoad",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<int> GetRepeatContributionCount(int primaryLoadCaseId, int repeatItemIndex)",
       "managedMethod": "GetRepeatContributionCount",
       "source": "IOSLoad / OSLoadAdapter",
@@ -966,7 +1001,7 @@
     },
     {
       "nativeName": "GetRepeatLoadByIndex",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(int primaryLoadCaseId, int repeatItemIndex, int maximumResults = 100000)",
       "managedMethod": "GetRepeatContributions",
       "source": "IOSLoad / OSLoadAdapter",
@@ -974,7 +1009,7 @@
     },
     {
       "nativeName": "GetNotionalLoadCount",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<int> GetNotionalItemCount(int primaryLoadCaseId)",
       "managedMethod": "GetNotionalItemCount",
       "source": "IOSLoad / OSLoadAdapter",
@@ -982,7 +1017,7 @@
     },
     {
       "nativeName": "GetNoLoadFactorDirectionInNotionalLoad",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<int> GetNotionalContributionCount(int primaryLoadCaseId, int notionalItemIndex)",
       "managedMethod": "GetNotionalContributionCount",
       "source": "IOSLoad / OSLoadAdapter",
@@ -990,7 +1025,7 @@
     },
     {
       "nativeName": "GetNotionalLoadByIndex",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<IEnumerable<NotionalLoadContribution>> GetNotionalContributions(int primaryLoadCaseId, int notionalItemIndex, int maximumResults = 100000)",
       "managedMethod": "GetNotionalContributions",
       "source": "IOSLoad / OSLoadAdapter",
@@ -998,7 +1033,7 @@
     },
     {
       "nativeName": "GetReferenceLoadCount",
-      "state": "Implemented inspection; contract review requested",
+      "state": "Implemented inspection",
       "managedSignature": "LoadQueryResult<int> GetReferenceItemCount(int primaryLoadCaseId)",
       "managedMethod": "GetReferenceItemCount",
       "source": "IOSLoad / OSLoadAdapter",
@@ -1006,10 +1041,10 @@
     },
     {
       "nativeName": "GetNoOfSetsInReferenceLoad",
-      "state": "Qualification required",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<int> GetReferenceContributionCount(int primaryLoadCaseId, int referenceItemIndex)",
       "managedMethod": "GetReferenceContributionCount",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadInspectionService.cs",
       "parameters": [
         {
@@ -1022,18 +1057,19 @@
           "type": "int",
           "name": "referenceItemIndex",
           "default": null,
-          "description": "Positive one-based proposed reference-command index; exact native semantics require qualification."
+          "description": "Nonnegative native reference-command index, passed unchanged; installed help does not establish its base."
         }
       ],
       "returnType": "LoadQueryResult<int>",
-      "notes": "Proposed positive one-based index requires qualification; native return narrative incorrectly describes an ID. Keep contract review-only until count/index semantics are corroborated."
+      "notes": "Use to size the case/factor pairs inside one REFERENCE command of the activated primary case. GetReferenceItemCount counts REFERENCE commands; GetRepeatContributionCount counts primary repeat contributions. referenceItemIndex is passed unchanged to the native API: the installed reference help does not establish its index base and has an erroneous ID description in its count table. Confirm the native index on the acquired build; no speculative rebasing or ordinal-to-ID conversion is performed. -1 is NativeFailure.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "GetReferenceLoadByIndex",
-      "state": "Qualification required",
+      "state": "Implemented",
       "managedSignature": "LoadQueryResult<IEnumerable<ReferenceLoadContribution>> GetReferenceContributions(int primaryLoadCaseId, int referenceItemIndex, int maximumResults = 100000)",
       "managedMethod": "GetReferenceContributions",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadInspectionService.cs",
       "parameters": [
         {
@@ -1046,7 +1082,7 @@
           "type": "int",
           "name": "referenceItemIndex",
           "default": null,
-          "description": "Positive one-based proposed reference-command index; exact native semantics require qualification."
+          "description": "Nonnegative native reference-command index, passed unchanged; installed help does not establish its base."
         },
         {
           "type": "int",
@@ -1056,43 +1092,46 @@
         }
       ],
       "returnType": "LoadQueryResult<IEnumerable<ReferenceLoadContribution>>",
-      "notes": "Uses a separate reference payload because existing LoadFactorContribution explicitly denotes primary repeat cases. Output size and index semantics require live corroboration."
+      "notes": "Use to retain ordered reference-case/factor pairs in one REFERENCE command. GetReferenceItemCount counts commands, and GetRepeatContributions returns primary repeat pairs. Duplicate reference IDs and signed/zero factors are preserved. Unlike the repeat reader, the reference API's scalar is described as an ID, not a returned count; it is retained as NativeReturnCode and is not required to equal the buffer size. Data is validated against the sizing call and rechecked count. The native index is passed unchanged; Bentley does not specify its base. Confirm it on the acquired build. -1 is NativeFailure.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "BeginLoadMerging",
-      "state": "Blocked: merge-body contract unverified",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests)",
       "managedMethod": "MergeBeamLoads",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadBeamTransferService.cs",
       "parameters": [
         {
           "type": "IEnumerable<BeamLoadMergeRequest>",
           "name": "requests",
           "default": null,
-          "description": "Non-null, nonempty retained/source-beam requests; snapshotted before begin. This contract is withheld until the native body is verified."
+          "description": "Non-null, nonempty retained/source-beam requests, snapshotted once before the balanced merge lifecycle."
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "WITHHELD: the merge body depends on metadata-only MergeLoadsOnBeam. Void Begin/End imply invocation evidence only. Native body, topology, side effects and errors must be qualified; preserve body and cleanup failures without a user-maintained begin/end pair."
+      "notes": "Use after a geometry merge when source-beam load definitions must be merged into retained beams. SplitLoadsOnBeam performs the opposite load transfer; neither method creates or merges geometry. Requests run in supplied order, with one BeginLoadMerging and an EndLoadMerging attempt in finally, even if begin/body throws. The body signature is corroborated by the Bentley class listing and installed CLR metadata, but its return meanings and affected-case scope are not documented. Consequently normal return is InvocationCompleted, IsSuccessful is false, and actual Boolean/integral responses remain in Steps; inspect model results rather than interpreting this as certified success. The merge is not transactional, may affect loads across cases, and is never retried. Both body and cleanup exceptions are preserved in AggregateException; a single exception retains its original stack. MayHaveChangedModel is true after invocation; no rollback is promised.",
+      "nativeDispatch": true
     },
     {
       "nativeName": "EndLoadMerging",
-      "state": "Blocked: merge-body contract unverified",
+      "state": "Implemented",
       "managedSignature": "LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests)",
       "managedMethod": "MergeBeamLoads",
-      "source": "Review interface only",
+      "source": "Public IOSLoad / internal services",
       "internalService": "LoadBeamTransferService.cs",
       "parameters": [
         {
           "type": "IEnumerable<BeamLoadMergeRequest>",
           "name": "requests",
           "default": null,
-          "description": "Non-null, nonempty retained/source-beam requests; snapshotted before begin. This contract is withheld until the native body is verified."
+          "description": "Non-null, nonempty retained/source-beam requests, snapshotted once before the balanced merge lifecycle."
         }
       ],
       "returnType": "LoadOperationResult",
-      "notes": "WITHHELD: the merge body depends on metadata-only MergeLoadsOnBeam. Void Begin/End imply invocation evidence only. Native body, topology, side effects and errors must be qualified; preserve body and cleanup failures without a user-maintained begin/end pair."
+      "notes": "Use after a geometry merge when source-beam load definitions must be merged into retained beams. SplitLoadsOnBeam performs the opposite load transfer; neither method creates or merges geometry. Requests run in supplied order, with one BeginLoadMerging and an EndLoadMerging attempt in finally, even if begin/body throws. The body signature is corroborated by the Bentley class listing and installed CLR metadata, but its return meanings and affected-case scope are not documented. Consequently normal return is InvocationCompleted, IsSuccessful is false, and actual Boolean/integral responses remain in Steps; inspect model results rather than interpreting this as certified success. The merge is not transactional, may affect loads across cases, and is never retried. Both body and cleanup exceptions are preserved in AggregateException; a single exception retains its original stack. MayHaveChangedModel is true after invocation; no rollback is promised.",
+      "nativeDispatch": true
     }
   ],
   "supportingTypes": [
@@ -1397,8 +1436,8 @@
   "routing": {
     "publicEntry": "wrapper.Load (IOSLoad / single OSLoadAdapter)",
     "partialAdapters": false,
-    "reviewOnlyInterface": true,
-    "plannedServices": [
+    "approvedContractSnapshotOnly": true,
+    "internalServices": [
       "LoadBeamTransferService.cs",
       "LoadCaseManagementService.cs",
       "LoadAutomaticGenerationService.cs",
@@ -1430,8 +1469,13 @@
         }
       ],
       "internalService": "LoadBeamTransferService.cs",
-      "state": "Qualification required",
-      "notes": "Topology, affected-case scope and native parameter-table inconsistency must be verified before dispatch."
+      "state": "Implemented",
+      "notes": "Use after splitting beam geometry when the existing load definitions must be transferred to the two beam IDs. Unlike AddMemberLoad, this edits existing load definitions and does not create beam geometry or assign a new load template. Unlike MergeBeamLoads, it splits rather than combines definitions. Native scope across cases is controlled by STAAD; no managed case filter is implied. The IDs follow the native declaration and VBA example; its parameter-table description is erroneous. Native TRUE/1 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use after splitting beam geometry when the existing load definitions must be transferred to the two beam IDs. Unlike AddMemberLoad, this edits existing load definitions and does not create beam geometry or assign a new load template. Unlike MergeBeamLoads, it splits rather than combines definitions. Native scope across cases is controlled by STAAD; no managed case filter is implied. The IDs follow the native declaration and VBA example; its parameter-table description is erroneous. Native TRUE/1 means success.",
+      "implementationNativeNames": [
+        "SplitLoadsOnBeam"
+      ]
     },
     {
       "nativeNames": [
@@ -1455,8 +1499,13 @@
         }
       ],
       "internalService": "LoadCaseManagementService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Positive IDs; snapshot once, preserve order/duplicates; reject empty selection rather than inferring all. Native 1 means success."
+      "state": "Implemented",
+      "notes": "Use to change membership of an existing envelope. CreateLoadEnvelopExt creates an envelope; CreateLoadCombinations creates combination cases. This method does neither and never changes load factors. Pass primary case IDs, not an envelope index or LOAD LIST record index. Native 1 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to change membership of an existing envelope. CreateLoadEnvelopExt creates an envelope; CreateLoadCombinations creates combination cases. This method does neither and never changes load factors. Pass primary case IDs, not an envelope index or LOAD LIST record index. Native 1 means success.",
+      "implementationNativeNames": [
+        "AddLoadCasesToEnvelop"
+      ]
     },
     {
       "nativeNames": [
@@ -1480,8 +1529,13 @@
         }
       ],
       "internalService": "LoadCaseManagementService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "No implicit remove-all; no deletion/recreation fallback. Native 1 means success."
+      "state": "Implemented",
+      "notes": "Use to remove selected memberships while retaining the envelope and the load-case definitions. DeleteEnvelope removes the envelope itself; DeleteLoadCases removes case definitions. An empty list is rejected and never means remove all. Native 1 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to remove selected memberships while retaining the envelope and the load-case definitions. DeleteEnvelope removes the envelope itself; DeleteLoadCases removes case definitions. An empty list is rejected and never means remove all. Native 1 means success.",
+      "implementationNativeNames": [
+        "RemoveLoadCasesFromEnvelop"
+      ]
     },
     {
       "nativeNames": [
@@ -1499,8 +1553,13 @@
         }
       ],
       "internalService": "LoadCaseManagementService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Destructive scope is the envelope, not its case definitions. Native 1 success; no implicit save."
+      "state": "Implemented",
+      "notes": "Use to delete an envelope definition. The cases previously listed in it remain case definitions; use DeleteLoadCases only when those cases should also be deleted. This method does not delete a LOAD LIST. Native 1 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to delete an envelope definition. The cases previously listed in it remain case definitions; use DeleteLoadCases only when those cases should also be deleted. This method does not delete a LOAD LIST. Native 1 means success.",
+      "implementationNativeNames": [
+        "DeleteLoadEnvelop"
+      ]
     },
     {
       "nativeNames": [
@@ -1518,8 +1577,13 @@
         }
       ],
       "internalService": "LoadAutomaticGenerationService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Explicit all-cases selection. Returns requested and actual start IDs; generated count is absent because this native API does not return one. Select 2024 versus 2025/2026 error interpretation internally."
+      "state": "Implemented",
+      "notes": "Use installed code/category rule files to generate combination cases. CreateLoadCombinations instead accepts explicit caller-defined factors; CreateAutomaticRepeatLoads generates repeat cases, not result-combination definitions. Code and category strings must match the acquired installation, not a hard-coded engineering-code enum. AllCases is an explicit opt-in to the native empty-array all-case behavior. STAAD may advance the requested start ID; read ActualStartCaseId. GeneratedCount is null because this native API supplies no count, and IDs are never inferred as contiguous. Native 0 means success; the 2024 help lists -1 failure, while 2025/2026 list -8002/-8040/-8041. Error descriptions use wrapper.StaadVersion, never the host ApplicationVersion.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use installed code/category rule files to generate combination cases. CreateLoadCombinations instead accepts explicit caller-defined factors; CreateAutomaticRepeatLoads generates repeat cases, not result-combination definitions. Code and category strings must match the acquired installation, not a hard-coded engineering-code enum. AllCases is an explicit opt-in to the native empty-array all-case behavior. STAAD may advance the requested start ID; read ActualStartCaseId. GeneratedCount is null because this native API supplies no count, and IDs are never inferred as contiguous. Native 0 means success; the 2024 help lists -1 failure, while 2025/2026 list -8002/-8040/-8041. Error descriptions use wrapper.StaadVersion, never the host ApplicationVersion.",
+      "implementationNativeNames": [
+        "AddAutoLoadCombinations"
+      ]
     },
     {
       "nativeNames": [
@@ -1537,8 +1601,13 @@
         }
       ],
       "internalService": "LoadAutomaticGenerationService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Returns actual start and generated count from internal reference outputs. No implicit direction flags; no inference of contiguous case IDs."
+      "state": "Implemented",
+      "notes": "Use code/category rules to generate repeat load cases whose loads participate in a subsequent analysis. CreateAutomaticCombinations creates combination definitions instead; AddRepeatLoadsTo assigns explicit factors to one existing case. Optional reference and notional participation is explicit; null NotionalOptions disables all notional flags. The returned ActualStartCaseId and GeneratedCount come from native outputs, not a guessed contiguous ID range. Native 0 means success; -1 means failure.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use code/category rules to generate repeat load cases whose loads participate in a subsequent analysis. CreateAutomaticCombinations creates combination definitions instead; AddRepeatLoadsTo assigns explicit factors to one existing case. Optional reference and notional participation is explicit; null NotionalOptions disables all notional flags. The returned ActualStartCaseId and GeneratedCount come from native outputs, not a guessed contiguous ID range. Native 0 means success; -1 means failure.",
+      "implementationNativeNames": [
+        "AddAutoCombinationRepeat"
+      ]
     },
     {
       "nativeNames": [
@@ -1562,8 +1631,13 @@
         }
       ],
       "internalService": "LoadCaseManagementService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Reuses LoadType 0-23; does not change primary/reference family. Native 0 success, -1 failure."
+      "state": "Implemented",
+      "notes": "Use to reclassify existing cases as Dead, Live, Wind and similar engineering categories. This LoadType is different from LoadCaseType (primary/reference/combination family), LoadCommandKind (command table) and LoadItemKind (original item code). This changes native cases directly; setting a detached LoadCase.Type alone does not invoke this operation. Native 0 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to reclassify existing cases as Dead, Live, Wind and similar engineering categories. This LoadType is different from LoadCaseType (primary/reference/combination family), LoadCommandKind (command table) and LoadItemKind (original item code). This changes native cases directly; setting a detached LoadCase.Type alone does not invoke this operation. Native 0 means success.",
+      "implementationNativeNames": [
+        "SetLoadType"
+      ]
     },
     {
       "nativeNames": [
@@ -1581,8 +1655,13 @@
         }
       ],
       "internalService": "LoadCaseManagementService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "One-based list index, not a case/envelope ID. Native 0 success and -1 failure."
+      "state": "Implemented",
+      "notes": "Use to remove one LOAD LIST record created through CreateLoadList. The argument is a one-based list record index from GetLoadListCount, not a case number or envelope ID. Cases and envelopes remain defined. Use DeleteLoadCases or DeleteEnvelope for those scopes. Native 0 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to remove one LOAD LIST record created through CreateLoadList. The argument is a one-based list record index from GetLoadListCount, not a case number or envelope ID. Cases and envelopes remain defined. Use DeleteLoadCases or DeleteEnvelope for those scopes. Native 0 means success.",
+      "implementationNativeNames": [
+        "DeleteLoadList"
+      ]
     },
     {
       "nativeNames": [
@@ -1612,8 +1691,13 @@
         }
       ],
       "internalService": "LoadCaseManagementService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Defined LoadStrengthType 0-6; explicitly selects the native one-third stress increase. Native 0 success."
+      "state": "Implemented",
+      "notes": "Use for an ASD case attribute with an explicit strength-of-forces choice and optional one-third allowable-stress increase. SetLimitStateAttribute instead sets LSD; SetLoadType changes engineering classification rather than design attributes. This does not select a model design code. GetLoadAttribute cannot reconstruct these settings: Bentley documents only a status observation for that getter. Native 0 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use for an ASD case attribute with an explicit strength-of-forces choice and optional one-third allowable-stress increase. SetLimitStateAttribute instead sets LSD; SetLoadType changes engineering classification rather than design attributes. This does not select a model design code. GetLoadAttribute cannot reconstruct these settings: Bentley documents only a status observation for that getter. Native 0 means success.",
+      "implementationNativeNames": [
+        "SetASDLoadAttribute"
+      ]
     },
     {
       "nativeNames": [
@@ -1631,8 +1715,13 @@
         }
       ],
       "internalService": "LoadCaseManagementService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Native 0 success; does not choose a model design code."
+      "state": "Implemented",
+      "notes": "Use to set the LSD case attribute. SetAllowableStressAttribute instead exposes ASD strength and allowable-stress choices; SetLoadType changes engineering classification. This does not select a design code or run a design. GetLoadAttribute cannot reconstruct LSD/ASD settings from its documented status-only return. Native 0 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to set the LSD case attribute. SetAllowableStressAttribute instead exposes ASD strength and allowable-stress choices; SetLoadType changes engineering classification. This does not select a design code or run a design. GetLoadAttribute cannot reconstruct LSD/ASD settings from its documented status-only return. Native 0 means success.",
+      "implementationNativeNames": [
+        "SetLSDLoadAttribute"
+      ]
     },
     {
       "nativeNames": [
@@ -1650,8 +1739,13 @@
         }
       ],
       "internalService": "LoadCaseManagementService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Native 0 success; no implicit clearing/deletion of case content."
+      "state": "Implemented",
+      "notes": "Use to remove a case design attribute while retaining its loads and definition. ClearPrimaryLoadCase clears items, and DeleteLoadCases removes case definitions; neither is a substitute for this attribute operation. Native 0 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to remove a case design attribute while retaining its loads and definition. ClearPrimaryLoadCase clears items, and DeleteLoadCases removes case definitions; neither is a substitute for this attribute operation. Native 0 means success.",
+      "implementationNativeNames": [
+        "RemoveAttribute"
+      ]
     },
     {
       "nativeNames": [
@@ -1669,8 +1763,13 @@
         }
       ],
       "internalService": "LoadCaseManagementService.cs",
-      "state": "Blocked: native payload undefined",
-      "notes": "WITHHELD: the help defines only 0/-1 status and no attribute payload. No LoadStrengthType decoding or fabricated attribute fields; signature remains review-only."
+      "state": "Implemented",
+      "notes": "Use only to observe the documented native GetAttribute status. A successful Data.NativeValue is 0; it does not identify ASD, LSD, LoadStrengthType, stress-increase settings, or the absence of an attribute. Unlike the attribute setters, this API cannot return their settings because Bentley exposes no documented output payload. -1 produces NativeFailure; any other integral value is rejected as an undocumented schema rather than decoded speculatively.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use only to observe the documented native GetAttribute status. A successful Data.NativeValue is 0; it does not identify ASD, LSD, LoadStrengthType, stress-increase settings, or the absence of an attribute. Unlike the attribute setters, this API cannot return their settings because Bentley exposes no documented output payload. -1 produces NativeFailure; any other integral value is rejected as an undocumented schema rather than decoded speculatively.",
+      "implementationNativeNames": [
+        "GetAttribute"
+      ]
     },
     {
       "nativeNames": [
@@ -1706,8 +1805,13 @@
         }
       ],
       "internalService": "LoadInspectionService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Primary activation, zero-based command index, paired sizing/retrieval counts, valid IDs, bounds and state checks. Native 0 means error; do not infer empty success from it."
+      "state": "Implemented",
+      "notes": "Use to preserve the entity assignment list of one original command, including native order and duplicates. GetAssignedEntityCount returns only its size. GetNodalLoads/GetMemberUniformlyDistributedLoads read loads for an entity, while grouped population methods reorganize loads across entities and can lose original command identity. The zero-based commandIndex is within commandKind, not the loadItemIndex used by GetLoadItemKind. Native zero is an error/unavailable observation, not a proven empty assignment. Sizing, returned size and observed command/entity counts must agree.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to preserve the entity assignment list of one original command, including native order and duplicates. GetAssignedEntityCount returns only its size. GetNodalLoads/GetMemberUniformlyDistributedLoads read loads for an entity, while grouped population methods reorganize loads across entities and can lose original command identity. The zero-based commandIndex is within commandKind, not the loadItemIndex used by GetLoadItemKind. Native zero is an error/unavailable observation, not a proven empty assignment. Sizing, returned size and observed command/entity counts must agree.",
+      "implementationNativeNames": [
+        "GetAssignmentListForLoadType"
+      ]
     },
     {
       "nativeNames": [
@@ -1732,8 +1836,14 @@
         }
       ],
       "internalService": "LoadCaseManagementService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Only PrimaryLoad/ReferenceLoad accepted; reuse LoadCaseType instead of a new family enum. Snapshot a nonempty selection; dependency errors and possible effects are reported. This differs from clearing items."
+      "state": "Implemented",
+      "notes": "Use to remove primary or reference case definitions. ClearPrimaryLoadCases/ClearReferenceLoadCases clear their contents while retaining the cases. Combination and RepeatLoad enum choices are rejected; repeat commands live inside primary cases and require primary-family selection. Primary requests dispatch DeletePrimaryLoadCases with the reference flag false; reference requests use DeleteReferenceLoadCases. Native 1 means success. Dependency failures are reported without deletion/recreation fallback.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to remove primary or reference case definitions. ClearPrimaryLoadCases/ClearReferenceLoadCases clear their contents while retaining the cases. Combination and RepeatLoad enum choices are rejected; repeat commands live inside primary cases and require primary-family selection. Primary requests dispatch DeletePrimaryLoadCases with the reference flag false; reference requests use DeleteReferenceLoadCases. Native 1 means success. Dependency failures are reported without deletion/recreation fallback.",
+      "implementationNativeNames": [
+        "DeletePrimaryLoadCases",
+        "DeleteReferenceLoadCases"
+      ]
     },
     {
       "nativeNames": [
@@ -1763,8 +1873,13 @@
         }
       ],
       "internalService": "LoadAssignmentService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Reuses existing ILoadCase and SelfWeightDirection; factor is dimensionless. Explicit geometry-scoped API remains separate; empty selection is not relevant."
+      "state": "Implemented",
+      "notes": "Use for native whole-model self-weight covering beams, plates and solids. AddSelfweightInXYZTo instead assigns to an explicit geometry list; these scopes are different even when a caller currently lists every entity. The factor is dimensionless, with its sign preserved, and the global direction uses SelfWeightDirection. Native Boolean TRUE means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use for native whole-model self-weight covering beams, plates and solids. AddSelfweightInXYZTo instead assigns to an explicit geometry list; these scopes are different even when a caller currently lists every entity. The factor is dimensionless, with its sign preserved, and the global direction uses SelfWeightDirection. Native Boolean TRUE means success.",
+      "implementationNativeNames": [
+        "AddSelfWeightInXYZ"
+      ]
     },
     {
       "nativeNames": [
@@ -1788,8 +1903,13 @@
         }
       ],
       "internalService": "LoadAssignmentQueryService.cs",
-      "state": "Qualification required",
-      "notes": "Native text omits the index base; proposed zero-based convention requires qualification. Uses existing Forces through a defensive copy rather than new six-number arrays."
+      "state": "Implemented",
+      "notes": "Use to inspect the six components of one original ordinary nodal command. GetNodalLoads reads loads assigned to a particular node; GetNodalLoadsGroupedByLoadCase reorganizes entity data. This packet contains no node list: use GetAssignedEntityIds with the appropriate command index for assignments. Only native Nodal items are accepted; inclined loads and support displacement are not interchangeable. Pass the original zero-based GetLoadItemKind index unchanged. The nodal help omits an explicit base; confirm this command-index convention against the acquired build before production use. Native Boolean TRUE means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to inspect the six components of one original ordinary nodal command. GetNodalLoads reads loads assigned to a particular node; GetNodalLoadsGroupedByLoadCase reorganizes entity data. This packet contains no node list: use GetAssignedEntityIds with the appropriate command index for assignments. Only native Nodal items are accepted; inclined loads and support displacement are not interchangeable. Pass the original zero-based GetLoadItemKind index unchanged. The nodal help omits an explicit base; confirm this command-index convention against the acquired build before production use. Native Boolean TRUE means success.",
+      "implementationNativeNames": [
+        "GetNodalLoadInfo"
+      ]
     },
     {
       "nativeNames": [
@@ -1819,8 +1939,13 @@
         }
       ],
       "internalService": "LoadAssignmentService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Native 0 success; quantity follows native area-load units, not uniform force-per-length. No automatic conversion."
+      "state": "Implemented",
+      "notes": "Use to assign the native member AREA load parameter to selected beam IDs. AddFloorLoad instead searches enclosed floor panels and distributes floor pressure; AddMemberLoad accepts supported line-load templates. These operations can produce different distributions on the same geometry. The signed area-load value uses current native units. Native 0 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to assign the native member AREA load parameter to selected beam IDs. AddFloorLoad instead searches enclosed floor panels and distributes floor pressure; AddMemberLoad accepts supported line-load templates. These operations can produce different distributions on the same geometry. The signed area-load value uses current native units. Native 0 means success.",
+      "implementationNativeNames": [
+        "AddMemberAreaLoad"
+      ]
     },
     {
       "nativeNames": [
@@ -1850,8 +1975,13 @@
         }
       ],
       "internalService": "LoadAssignmentService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Reuses Forces; internal buffers contain Fx/Fy/Fz/Mx/My/Mz in documented order. Native 0 success; qualify axes/sign conventions."
+      "state": "Implemented",
+      "notes": "Use to supply six force/moment components at each member end as a fixed-end load definition. This is different from assigning concentrated member forces at a distance, support settlements, or reading Output reactions. StartForces and EndForces follow Fx/Fy/Fz/Mx/My/Mz order; signs and current force/moment units are preserved without support-reaction sign reversal. Native 0 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to supply six force/moment components at each member end as a fixed-end load definition. This is different from assigning concentrated member forces at a distance, support settlements, or reading Output reactions. StartForces and EndForces follow Fx/Fy/Fz/Mx/My/Mz order; signs and current force/moment units are preserved without support-reaction sign reversal. Native 0 means success.",
+      "implementationNativeNames": [
+        "AddMemberFixedEnd"
+      ]
     },
     {
       "nativeNames": [
@@ -1875,8 +2005,13 @@
         }
       ],
       "internalService": "LoadAssignmentQueryService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Retains three force parameters and three distances as named fields with original item kind. Does not collapse different command families or infer dimension-independent force slots."
+      "state": "Implemented",
+      "notes": "Use to retain one original member-command packet and its native item kind. GetMemberUniformlyDistributedLoads and the concentrated/linear/trapezoidal readers instead select per-member load definitions. Force parameter dimensions depend on Kind; do not interpret moment slots as forces. Distances retain their native meanings and length units. Only the six ordinary uniform-force, uniform-moment, concentrated-force, concentrated-moment, linear and trapezoidal kinds documented for this reader are accepted. Physical-member and fixed-end packets are not inferred. The item index is zero-based. Native Boolean TRUE means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to retain one original member-command packet and its native item kind. GetMemberUniformlyDistributedLoads and the concentrated/linear/trapezoidal readers instead select per-member load definitions. Force parameter dimensions depend on Kind; do not interpret moment slots as forces. Distances retain their native meanings and length units. Only the six ordinary uniform-force, uniform-moment, concentrated-force, concentrated-moment, linear and trapezoidal kinds documented for this reader are accepted. Physical-member and fixed-end packets are not inferred. The item index is zero-based. Native Boolean TRUE means success.",
+      "implementationNativeNames": [
+        "GetMemberLoadInfo"
+      ]
     },
     {
       "nativeNames": [
@@ -1906,8 +2041,13 @@
         }
       ],
       "internalService": "LoadAssignmentService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Pressure direction LocalZ/GlobalX/Y/Z; interpolation GlobalAxis maps internally to 1/2/3. Native true/1 success; distinct axes stay distinct."
+      "state": "Implemented",
+      "notes": "Use for pressures interpolated along a global coordinate axis. AddTrapezoidalPressure varies along plate-local X/Y or by joint; AddPlateUniformPressure assigns a uniform value. Pressure direction and interpolation axis are independent: the latter maps GlobalAxis X/Y/Z to native 1/2/3. Signed minimum/maximum pressure parameters are passed unchanged, not sorted or recalculated from fluid density. Native Boolean TRUE/1 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use for pressures interpolated along a global coordinate axis. AddTrapezoidalPressure varies along plate-local X/Y or by joint; AddPlateUniformPressure assigns a uniform value. Pressure direction and interpolation axis are independent: the latter maps GlobalAxis X/Y/Z to native 1/2/3. Signed minimum/maximum pressure parameters are passed unchanged, not sorted or recalculated from fluid density. Native Boolean TRUE/1 means success.",
+      "implementationNativeNames": [
+        "AddElementHydrostaticPressure"
+      ]
     },
     {
       "nativeNames": [
@@ -1937,8 +2077,13 @@
         }
       ],
       "internalService": "LoadAssignmentService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Named factories separate local X/Y variation from four joint pressures. Qualify triangular joint conventions before enabling that shape."
+      "state": "Implemented",
+      "notes": "Use for two-value variation along plate-local X/Y or four joint-ordered pressures. AddHydrostaticPressure interpolates along a global axis; AddPlateUniformPressure supplies one uniform pressure. AlongLocalAxis supplies zero only for the two native ignored corner slots; AtCorners retains all four joint values. No joint sorting or geometry conversion occurs. Confirm the fourth-value convention separately for triangular plates. Native Boolean TRUE/1 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use for two-value variation along plate-local X/Y or four joint-ordered pressures. AddHydrostaticPressure interpolates along a global axis; AddPlateUniformPressure supplies one uniform pressure. AlongLocalAxis supplies zero only for the two native ignored corner slots; AtCorners retains all four joint values. No joint sorting or geometry conversion occurs. Confirm the fourth-value convention separately for triangular plates. Native Boolean TRUE/1 means success.",
+      "implementationNativeNames": [
+        "AddElementTrapPressureEx"
+      ]
     },
     {
       "nativeNames": [
@@ -1962,8 +2107,13 @@
         }
       ],
       "internalService": "LoadAssignmentQueryService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Zero valid, -1 failure. Count belongs to selected case, not Output results."
+      "state": "Implemented",
+      "notes": "Use to count applied pressure entries for one plate in the selected case. GetLoadItemCount counts original case command items, which need not equal this per-plate count; GetPlateConcentratedLoadCount covers concentrated loads. GetPlatePressureLoads returns the entries with values and local extents. Zero is a valid empty count, -1 is failure.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to count applied pressure entries for one plate in the selected case. GetLoadItemCount counts original case command items, which need not equal this per-plate count; GetPlateConcentratedLoadCount covers concentrated loads. GetPlatePressureLoads returns the entries with values and local extents. Zero is a valid empty count, -1 is failure.",
+      "implementationNativeNames": [
+        "GetElementPressureLoadCount"
+      ]
     },
     {
       "nativeNames": [
@@ -1993,8 +2143,13 @@
         }
       ],
       "internalService": "LoadAssignmentQueryService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Bounded count/fetch; materialized immutable results; native 0 success, -1 failure; no min/max reordering of native corner coordinates."
+      "state": "Implemented",
+      "notes": "Use to read applied pressure entries and local rectangular extents for one plate. GetPlateLoadCommand reads an original full-pressure command packet by item index; GetPlateConcentratedLoads reads force entries at local points. These are load definitions, not Output plate stresses. Native top-left/bottom-right order is retained without min/max sorting. The bounded owned snapshot validates all directions and finite parameters and rechecks the count. Native 0 means success; -1 means failure. Zero count returns a read-only empty snapshot without fetching.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to read applied pressure entries and local rectangular extents for one plate. GetPlateLoadCommand reads an original full-pressure command packet by item index; GetPlateConcentratedLoads reads force entries at local points. These are load definitions, not Output plate stresses. Native top-left/bottom-right order is retained without min/max sorting. The bounded owned snapshot validates all directions and finite parameters and rechecks the count. Native 0 means success; -1 means failure. Zero count returns a read-only empty snapshot without fetching.",
+      "implementationNativeNames": [
+        "GetElementPressureLoads"
+      ]
     },
     {
       "nativeNames": [
@@ -2018,8 +2173,13 @@
         }
       ],
       "internalService": "LoadAssignmentQueryService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Zero valid and -1 failure; element family/active case remains explicit."
+      "state": "Implemented",
+      "notes": "Use to count concentrated applied-load entries for one plate. GetPlatePressureLoadCount counts pressure entries; GetLoadItemCount counts original commands for the case. GetPlateConcentratedLoads returns magnitude and local position. Zero is a valid empty count, -1 is failure.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to count concentrated applied-load entries for one plate. GetPlatePressureLoadCount counts pressure entries; GetLoadItemCount counts original commands for the case. GetPlateConcentratedLoads returns magnitude and local position. Zero is a valid empty count, -1 is failure.",
+      "implementationNativeNames": [
+        "GetElementConcLoadCount"
+      ]
     },
     {
       "nativeNames": [
@@ -2049,8 +2209,13 @@
         }
       ],
       "internalService": "LoadAssignmentQueryService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Reuses main ElementConcentratedLoad field semantics without its unimplemented ApplyTo or proprietary base/dependencies. Verify direction/quantity conventions."
+      "state": "Implemented",
+      "notes": "Use for concentrated applied loads at local plate positions. GetPlatePressureLoads instead returns pressure entries and rectangular extents; GetPlateLoadCommand returns an original pressure command. Magnitudes remain in current native units and are not divided by area. Native 0 means success, -1 means failure; bounded paired buffers and before/after counts protect the owned snapshot. A zero count returns an empty snapshot without fetching.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use for concentrated applied loads at local plate positions. GetPlatePressureLoads instead returns pressure entries and rectangular extents; GetPlateLoadCommand returns an original pressure command. Magnitudes remain in current native units and are not divided by area. Native 0 means success, -1 means failure; bounded paired buffers and before/after counts protect the owned snapshot. A zero count returns an empty snapshot without fetching.",
+      "implementationNativeNames": [
+        "GetElementConcLoads"
+      ]
     },
     {
       "nativeNames": [
@@ -2074,8 +2239,13 @@
         }
       ],
       "internalService": "LoadAssignmentQueryService.cs",
-      "state": "Qualification required",
-      "notes": "Only ElementLoadPressure is documented. Translate this API’s native 0-8 directions to LoadDirection 1-9. Native -1 means not implemented, not generic success."
+      "state": "Implemented",
+      "notes": "Use only for the original ElementLoadPressure (PlateFullPressure, 3310) item packet. GetPlatePressureLoads reads per-plate pressure assignments; it is the alternative for those values and extents. Concentrated, trapezoidal, hydrostatic and partial-pressure item codes are not treated as full-pressure packets. The item index is zero-based. This native reader alone reports directions 0-8, translated to LoadDirection 1-9; member/plate-list readers already use 1-9. Native 1 means success, 0 failure, -1 Unsupported. Bentley explicitly requires selecting the load case in the STAAD UI: managed activation and numeric checks do not certify UI selection. Ensure that UI prerequisite before calling.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use only for the original ElementLoadPressure (PlateFullPressure, 3310) item packet. GetPlatePressureLoads reads per-plate pressure assignments; it is the alternative for those values and extents. Concentrated, trapezoidal, hydrostatic and partial-pressure item codes are not treated as full-pressure packets. The item index is zero-based. This native reader alone reports directions 0-8, translated to LoadDirection 1-9; member/plate-list readers already use 1-9. Native 1 means success, 0 failure, -1 Unsupported. Bentley explicitly requires selecting the load case in the STAAD UI: managed activation and numeric checks do not certify UI selection. Ensure that UI prerequisite before calling.",
+      "implementationNativeNames": [
+        "GetElementLoadInfo"
+      ]
     },
     {
       "nativeNames": [
@@ -2100,8 +2270,13 @@
         }
       ],
       "internalService": "LoadAssignmentService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Shared typed request can use Ex for general modes; legacy GlobalX/Y-range subset is conditional on qualified equivalence. No duplicate public overload solely for native-name coverage."
+      "state": "Implemented",
+      "notes": "Use to let STAAD find enclosed floor panels and distribute pressure using a coordinate range or an existing FLOOR group. AddMemberAreaLoad applies the separate member AREA command; GetFloorInfluenceAreas observes geometry and assigns nothing. The extended native floor function handles all modes, so the legacy fixed-direction call is not duplicated. Range axis and loading axis are independent. Standard range mode passes the single-space marker shown in Bentley's VBA example; one-way mode passes \"0\" from its parameter table. Group mode passes the exact group name and zero ignored bounds; it does not create the group. Native 1 means success. Verify generated distributions, particularly one-way floors, against the target model.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to let STAAD find enclosed floor panels and distribute pressure using a coordinate range or an existing FLOOR group. AddMemberAreaLoad applies the separate member AREA command; GetFloorInfluenceAreas observes geometry and assigns nothing. The extended native floor function handles all modes, so the legacy fixed-direction call is not duplicated. Range axis and loading axis are independent. Standard range mode passes the single-space marker shown in Bentley's VBA example; one-way mode passes \"0\" from its parameter table. Group mode passes the exact group name and zero ignored bounds; it does not create the group. Native 1 means success. Verify generated distributions, particularly one-way floors, against the target model.",
+      "implementationNativeNames": [
+        "AddMemberFloorLoadEx"
+      ]
     },
     {
       "nativeNames": [
@@ -2119,8 +2294,13 @@
         }
       ],
       "internalService": "LoadAssignmentQueryService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "GlobalAxis range is explicitly translated to native 1/2/3. Finite coordinates may require checked Single marshaling."
+      "state": "Implemented",
+      "notes": "Use for the native beam count in a bounded floor region, without assigning loads or selecting a load case. This is not GetAssignedEntityCount, which counts entities attached to an existing command. GetFloorInfluenceAreas returns beam/area pairs for the same region. Coordinates are converted to native Single precision (with range checks); RangeAxis maps X/Y/Z to native 1/2/3. Zero is an empty count; malformed negatives are rejected except -1, returned as NativeFailure.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use for the native beam count in a bounded floor region, without assigning loads or selecting a load case. This is not GetAssignedEntityCount, which counts entities attached to an existing command. GetFloorInfluenceAreas returns beam/area pairs for the same region. Coordinates are converted to native Single precision (with range checks); RangeAxis maps X/Y/Z to native 1/2/3. Zero is an empty count; malformed negatives are rejected except -1, returned as NativeFailure.",
+      "implementationNativeNames": [
+        "GetBeamCountAtFloor"
+      ]
     },
     {
       "nativeNames": [
@@ -2144,8 +2324,13 @@
         }
       ],
       "internalService": "LoadAssignmentQueryService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Bounded count/fetch with identical region; named associations replace parallel arrays. Native true/1 success; no managed engineering-area calculation."
+      "state": "Implemented",
+      "notes": "Use to observe beam/tributary influence-area pairs calculated by STAAD for a floor region. GetFloorBeamCount provides only sizing; AddFloorLoad actually assigns pressure. This method does not multiply areas by pressure or calculate managed tributary areas. It uses the same converted Single-precision bounds and range axis for sizing and retrieval (correcting the differing axes in Bentley's example). Validates positive beam IDs, finite nonnegative areas, retrieval limit and stable count. Native Boolean TRUE means success; areas use squared native length units.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to observe beam/tributary influence-area pairs calculated by STAAD for a floor region. GetFloorBeamCount provides only sizing; AddFloorLoad actually assigns pressure. This method does not multiply areas by pressure or calculate managed tributary areas. It uses the same converted Single-precision bounds and range axis for sizing and retrieval (correcting the differing axes in Bentley's example). Validates positive beam IDs, finite nonnegative areas, retrieval limit and stable count. Native Boolean TRUE means success; areas use squared native length units.",
+      "implementationNativeNames": [
+        "GetInfluenceArea"
+      ]
     },
     {
       "nativeNames": [
@@ -2175,8 +2360,13 @@
         }
       ],
       "internalService": "LoadAssignmentService.cs",
-      "state": "Qualification required",
-      "notes": "Finite signed value; engineering dimensional conventions require native technical-reference qualification. Temperature loading is not substituted."
+      "state": "Implemented",
+      "notes": "Use to assign the native initial axial elongation parameter to explicit element IDs. Despite the native Strain name, axialElongation is a length in current model units, not dimensionless strain; no division or multiplication by member length occurs. AddAxialThermalGradientTo instead supplies a thermal gradient, and fixed-end loading instead supplies force/moment components. Native 0 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to assign the native initial axial elongation parameter to explicit element IDs. Despite the native Strain name, axialElongation is a length in current model units, not dimensionless strain; no division or multiplication by member length occurs. AddAxialThermalGradientTo instead supplies a thermal gradient, and fixed-end loading instead supplies force/moment components. Native 0 means success.",
+      "implementationNativeNames": [
+        "AddStrainLoad"
+      ]
     },
     {
       "nativeNames": [
@@ -2206,8 +2396,13 @@
         }
       ],
       "internalService": "LoadAssignmentService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Reuses main GlobalAxis 0/1/2; separate from definition and member-weight domains. Native 0 success and -8001 invalid direction."
+      "state": "Implemented",
+      "notes": "Use to apply the existing seismic definition to a case with a global axis and multiplier. AddSeismicDefinition creates definition settings; AddSeismicDefSelfWeight and joint/member weight methods contribute seismic weights. AddRSLoad/AddResponseSpectrumLoadEx create response-spectrum commands instead of this generated static seismic command. GlobalAxis maps directly to native 0/1/2, unlike self-weight or hydrostatic interpolation. Native 0 means success; -1/-8001 are failures.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to apply the existing seismic definition to a case with a global axis and multiplier. AddSeismicDefinition creates definition settings; AddSeismicDefSelfWeight and joint/member weight methods contribute seismic weights. AddRSLoad/AddResponseSpectrumLoadEx create response-spectrum commands instead of this generated static seismic command. GlobalAxis maps directly to native 0/1/2, unlike self-weight or hydrostatic interpolation. Native 0 means success; -1/-8001 are failures.",
+      "implementationNativeNames": [
+        "AddSeismicLoad"
+      ]
     },
     {
       "nativeNames": [
@@ -2231,8 +2426,13 @@
         }
       ],
       "internalService": "LoadAssignmentService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Direction codes 1/3/4/6; factor signed and dimensionless. Native range assumes Y vertical; verify model compatibility. No definition creation fallback."
+      "state": "Implemented",
+      "notes": "Use to apply an existing wind definition to a case over an explicit global region. AddWindDefinition/AddWindIntensity/AddWindExposure prepare that definition; ComputeWallWindPressureProfile computes a profile and does not assign this command. This native contract assumes Y vertical: a Z-up or unavailable geometry binding returns Unsupported before activation/assignment. No automatic coordinate remapping occurs. Uses documented X/Z signed codes 1/3/4/6 rather than the inconsistent example code 2. Native 0 means success. Signed factors are retained, so a negative factor can reverse the selected direction. Bentley’s all-zero-bounds example denotes whole-range walls; an all-zero region must not be assumed to select only a geometric point. Supply appropriate nondegenerate bounds when restricting scope.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to apply an existing wind definition to a case over an explicit global region. AddWindDefinition/AddWindIntensity/AddWindExposure prepare that definition; ComputeWallWindPressureProfile computes a profile and does not assign this command. This native contract assumes Y vertical: a Z-up or unavailable geometry binding returns Unsupported before activation/assignment. No automatic coordinate remapping occurs. Uses documented X/Z signed codes 1/3/4/6 rather than the inconsistent example code 2. Native 0 means success. Signed factors are retained, so a negative factor can reverse the selected direction. Bentley’s all-zero-bounds example denotes whole-range walls; an all-zero region must not be assumed to select only a geometric point. Supply appropriate nondegenerate bounds when restricting scope.",
+      "implementationNativeNames": [
+        "AddWindLoad"
+      ]
     },
     {
       "nativeNames": [
@@ -2256,8 +2456,13 @@
         }
       ],
       "internalService": "LoadAssignmentService.cs",
-      "state": "Defined; implementation pending",
-      "notes": "Reuses the query contribution model with a validated public constructor. Internal packets partition families with positive IDs and global 1/2/3 axes; do not forward signed read-back IDs directly to separate family arrays."
+      "state": "Implemented",
+      "notes": "Use to assign explicitly chosen primary and reference contributions to an existing case. AddRepeatLoadsTo/AddReferenceLoadsTo do not specify notional directions; CreateAutomaticRepeatLoads can generate notional participation through code rules rather than this explicit list. Contributions are partitioned into six aligned native buffers, preserving order and duplicates within each family. Assignment uses positive IDs in both families; GetNotionalContributions uses signed native IDs on readback. Factors retain signs, including zero, and directions use global X/Y/Z 1/2/3. Native 0 means success.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to assign explicitly chosen primary and reference contributions to an existing case. AddRepeatLoadsTo/AddReferenceLoadsTo do not specify notional directions; CreateAutomaticRepeatLoads can generate notional participation through code rules rather than this explicit list. Contributions are partitioned into six aligned native buffers, preserving order and duplicates within each family. Assignment uses positive IDs in both families; GetNotionalContributions uses signed native IDs on readback. Factors retain signs, including zero, and directions use global X/Y/Z 1/2/3. Native 0 means success.",
+      "implementationNativeNames": [
+        "AddNotionalLoad"
+      ]
     },
     {
       "nativeNames": [
@@ -2277,12 +2482,17 @@
           "type": "int",
           "name": "referenceItemIndex",
           "default": null,
-          "description": "Positive one-based proposed reference-command index; exact native semantics require qualification."
+          "description": "Nonnegative native reference-command index, passed unchanged; installed help does not establish its base."
         }
       ],
       "internalService": "LoadInspectionService.cs",
-      "state": "Qualification required",
-      "notes": "Proposed positive one-based index requires qualification; native return narrative incorrectly describes an ID. Keep contract review-only until count/index semantics are corroborated."
+      "state": "Implemented",
+      "notes": "Use to size the case/factor pairs inside one REFERENCE command of the activated primary case. GetReferenceItemCount counts REFERENCE commands; GetRepeatContributionCount counts primary repeat contributions. referenceItemIndex is passed unchanged to the native API: the installed reference help does not establish its index base and has an erroneous ID description in its count table. Confirm the native index on the acquired build; no speculative rebasing or ordinal-to-ID conversion is performed. -1 is NativeFailure.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to size the case/factor pairs inside one REFERENCE command of the activated primary case. GetReferenceItemCount counts REFERENCE commands; GetRepeatContributionCount counts primary repeat contributions. referenceItemIndex is passed unchanged to the native API: the installed reference help does not establish its index base and has an erroneous ID description in its count table. Confirm the native index on the acquired build; no speculative rebasing or ordinal-to-ID conversion is performed. -1 is NativeFailure.",
+      "implementationNativeNames": [
+        "GetNoOfSetsInReferenceLoad"
+      ]
     },
     {
       "nativeNames": [
@@ -2302,7 +2512,7 @@
           "type": "int",
           "name": "referenceItemIndex",
           "default": null,
-          "description": "Positive one-based proposed reference-command index; exact native semantics require qualification."
+          "description": "Nonnegative native reference-command index, passed unchanged; installed help does not establish its base."
         },
         {
           "type": "int",
@@ -2312,8 +2522,13 @@
         }
       ],
       "internalService": "LoadInspectionService.cs",
-      "state": "Qualification required",
-      "notes": "Uses a separate reference payload because existing LoadFactorContribution explicitly denotes primary repeat cases. Output size and index semantics require live corroboration."
+      "state": "Implemented",
+      "notes": "Use to retain ordered reference-case/factor pairs in one REFERENCE command. GetReferenceItemCount counts commands, and GetRepeatContributions returns primary repeat pairs. Duplicate reference IDs and signed/zero factors are preserved. Unlike the repeat reader, the reference API's scalar is described as an ID, not a returned count; it is retained as NativeReturnCode and is not required to equal the buffer size. Data is validated against the sizing call and rechecked count. The native index is passed unchanged; Bentley does not specify its base. Confirm it on the acquired build. -1 is NativeFailure.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use to retain ordered reference-case/factor pairs in one REFERENCE command. GetReferenceItemCount counts commands, and GetRepeatContributions returns primary repeat pairs. Duplicate reference IDs and signed/zero factors are preserved. Unlike the repeat reader, the reference API's scalar is described as an ID, not a returned count; it is retained as NativeReturnCode and is not required to equal the buffer size. Data is validated against the sizing call and rechecked count. The native index is passed unchanged; Bentley does not specify its base. Confirm it on the acquired build. -1 is NativeFailure.",
+      "implementationNativeNames": [
+        "GetReferenceLoadByIndex"
+      ]
     },
     {
       "nativeNames": [
@@ -2328,12 +2543,36 @@
           "type": "IEnumerable<BeamLoadMergeRequest>",
           "name": "requests",
           "default": null,
-          "description": "Non-null, nonempty retained/source-beam requests; snapshotted before begin. This contract is withheld until the native body is verified."
+          "description": "Non-null, nonempty retained/source-beam requests, snapshotted once before the balanced merge lifecycle."
         }
       ],
       "internalService": "LoadBeamTransferService.cs",
-      "state": "Blocked: merge-body contract unverified",
-      "notes": "WITHHELD: the merge body depends on metadata-only MergeLoadsOnBeam. Void Begin/End imply invocation evidence only. Native body, topology, side effects and errors must be qualified; preserve body and cleanup failures without a user-maintained begin/end pair."
+      "state": "Implemented",
+      "notes": "Use after a geometry merge when source-beam load definitions must be merged into retained beams. SplitLoadsOnBeam performs the opposite load transfer; neither method creates or merges geometry. Requests run in supplied order, with one BeginLoadMerging and an EndLoadMerging attempt in finally, even if begin/body throws. The body signature is corroborated by the Bentley class listing and installed CLR metadata, but its return meanings and affected-case scope are not documented. Consequently normal return is InvocationCompleted, IsSuccessful is false, and actual Boolean/integral responses remain in Steps; inspect model results rather than interpreting this as certified success. The merge is not transactional, may affect loads across cases, and is never retried. Both body and cleanup exceptions are preserved in AggregateException; a single exception retains its original stack. MayHaveChangedModel is true after invocation; no rollback is promised.",
+      "implementationState": "Implemented",
+      "behavioralDifferences": "Use after a geometry merge when source-beam load definitions must be merged into retained beams. SplitLoadsOnBeam performs the opposite load transfer; neither method creates or merges geometry. Requests run in supplied order, with one BeginLoadMerging and an EndLoadMerging attempt in finally, even if begin/body throws. The body signature is corroborated by the Bentley class listing and installed CLR metadata, but its return meanings and affected-case scope are not documented. Consequently normal return is InvocationCompleted, IsSuccessful is false, and actual Boolean/integral responses remain in Steps; inspect model results rather than interpreting this as certified success. The merge is not transactional, may affect loads across cases, and is never retried. Both body and cleanup exceptions are preserved in AggregateException; a single exception retains its original stack. MayHaveChangedModel is true after invocation; no rollback is promised.",
+      "implementationNativeNames": [
+        "BeginLoadMerging",
+        "EndLoadMerging"
+      ]
     }
-  ]
+  ],
+  "approvedImplementation": {
+    "date": "2026-10-23",
+    "publicMethods": 36,
+    "publicLoadOverloads": 171,
+    "nativeDocumentedDispatched": 126,
+    "legacyFloorAlternative": "AddFloorLoad uses AddMemberFloorLoadEx; legacy AddMemberFloorLoad is intentionally unused.",
+    "attribute": "Documented status-only observation; no attribute schema fabricated.",
+    "merge": "Balanced metadata-corroborated invocation; completion evidence only, never certified success.",
+    "nativeQualificationRequired": [
+      "Reference index base",
+      "Nodal command index convention",
+      "ElementLoadInfo UI selection",
+      "Floor one-way distribution",
+      "Merge return meanings and engineering effects",
+      "Live 2024/2025/2026 COM marshaling"
+    ]
+  },
+  "runtimeApprovedMethodsExposed": true
 }

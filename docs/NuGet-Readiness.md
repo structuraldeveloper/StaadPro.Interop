@@ -1,5 +1,9 @@
 # NuGet readiness assessment
 
+## Current source — Load expansion
+
+Implemented the 36 approved Load additions: 171 Load overloads, 126/129 documented native dispatches and one metadata-corroborated merge body. Passed 2,900 offline tests (424 new expansion cases). All 72 new interface/adapter XML examples passed the installed-package verifier, bringing the current validation set to 442. The separate 1.0.0-preview.ci.2026102302 archive passed isolated restore/build/runtime checks with mutation guards disabled. The expansion guide is included in future archives. GetLoadAttribute is status-only; MergeBeamLoads returns InvocationCompleted and cannot certify engineering success. Native 2024–2026 COM/engineering qualification remains a release gate. Validation uses a separate local CI archive; the prepared public-distribution archive below is unchanged. See [Load expansion usage](Load-Expansion.md).
+
 ## Newer source — Load inspection queries
 
 Source adds 15 Load queries after the prepared 20261023 archive: 135 Load overloads, 88/129 documented native mappings, 2,448 passing offline tests (189 new) and 30 new compiled/executed XML examples. A validation-only CI archive passed isolated installation/build/runtime with all 370 selected XML examples; the existing distribution archive retains 340. These additions require a new reviewed package version and release documents before distribution. The prepared archive below remains unchanged. See [Load inspection](Load-Inspection-Queries.md).

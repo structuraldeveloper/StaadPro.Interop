@@ -95,8 +95,8 @@ namespace StaadPro.Interop.Models.Loads.Contracts
     }
 
     /// <summary>Contains a range-based or floor-group pressure request with explicit mode.</summary>
-    /// <remarks>A single managed operation may use the extended native floor call. Legacy dispatch must
-    /// only be used after verifying the matching GlobalX/Y-range subset; no silent direction fallback.</remarks>
+    /// <remarks>AddFloorLoad uses the extended native call for all supported modes; it does not silently fall back
+    /// to the legacy fixed-direction function.</remarks>
     public sealed class FloorLoadDefinition
     {
         private FloorLoadDefinition(double pressure, GlobalAxis direction, FloorRegion region, string group, bool oneWay)
@@ -133,7 +133,7 @@ namespace StaadPro.Interop.Models.Loads.Contracts
     }
 
     /// <summary>Contains a wind-load application request, separate from wind-definition creation.</summary>
-    /// <remarks>Native range conventions assume Y vertical; the future service must qualify that requirement.</remarks>
+    /// <remarks>Native range conventions assume Y vertical; the service rejects Z-up or unavailable geometry before assignment.</remarks>
     public sealed class WindLoadDefinition
     {
         /// <summary>Creates an explicit wind application request.</summary>

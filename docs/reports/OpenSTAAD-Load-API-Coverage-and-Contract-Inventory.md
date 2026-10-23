@@ -2,19 +2,17 @@
 
 **Review date:** 22 October 2026
 **Baseline:** main at 1483c9c
-**Status:** Original native evidence and API design proposals, updated with all 30 originally pending reference-overload implementations. Broader named-result architecture remains proposed.
+**Status:** Original native evidence and API design proposals, updated with all 30 originally pending reference-overload implementations. All 36 approved expansion contracts are now implemented; broader legacy migration and native qualification remain separate work.
 
 This annex supports the [Load multi-version architecture and plan](OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md). It inventories every detailed Load function from the installed 2024/2025/2026 help and distinguishes current native dispatches from planned additions.
 
-## Contract-first expansion review
+## Current source — approved Load expansion
 
-All original 56 entries now have explicit managed contract mappings, including existing alternatives and the 15 implemented inspection methods. The separate [compile-checked signature review](../contracts/IOSLoadExpansionContract.cs) defines 36 proposed additions covering 39 native entries; [contracts, supporting types and source reuse](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md) details every signature, required class/enum, constructor and internal route. Supporting types are defined before further native implementation. Pending signatures are not added as throwing runtime stubs, and no adapter partial classes are used. GetAttribute and the merge body remain withheld pending evidence.
+Implemented all **36 approved Load expansion methods** through the existing IOSLoad and single OSLoadAdapter. Source exposes **171 overloads**: 115 main-reference signatures, five earlier conveniences, 15 inspection methods and these 36 additions. Actual dispatch covers **126/129 documented native names**, plus the metadata-corroborated MergeLoadsOnBeam body. The three intentionally unused names are CreateNewPrimaryLoad (richer creation alternatives), IsCombinationCase (derived inventory capability), and AddMemberFloorLoad (the extended floor call supplies the managed route). Native dispatch coverage is not live compatibility or engineering certification.
 
-## Current source — 15 Load inspection queries
+GetLoadAttribute is a documented status-only observation and does not decode ASD/LSD settings. MergeBeamLoads returns InvocationCompleted with IsSuccessful false because Bentley does not document the merge-body response meanings. Reference-command index base, nodal index convention, plate-command UI selection, floor distribution and live 2024–2026 marshaling remain explicit qualification requirements. See [Load expansion usage and method comparisons](../Load-Expansion.md).
 
-Implemented all 15 inspection/contribution queries selected after the semantic audit. IOSLoad and OSLoadAdapter now expose **135 overloads** (115 reference, five earlier conveniences and 15 native expansions). Documented native coverage is **88/129**: 67 direct adapter targets, 15 additional common-service targets and six member-entity targets. The **41** unused native names comprise one covered alternative, one derived capability, four partial overlaps and **35 absent operations**; 39 native contracts retain outstanding scope, plus three separate metadata-only candidates.
-
-Passed **2,448 offline tests**, including **189 new cases**, and all **30 new XML examples** on source consumers. See [Load inspection contracts and examples](../Load-Inspection-Queries.md) for status/data results, primary activation, index bases, buffer limits, ambiguity and native qualification requirements. The prepared 20261023 archive predates these source additions. Earlier audit/reference-port counts below are historical baselines.
+The [approved contract/type record](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md) retains the 56 original audit mappings, all required model/enum definitions and read-only main-source reuse decisions. All 36 signatures are callable; the separate contract file is now a test-only approved signature snapshot. Earlier numerical baselines below remain historical.
 
 ## Historical managed capability audit — 23 October 2026
 
@@ -26,7 +24,7 @@ There are **129 distinct native functions in each year**, all with detailed entr
 
 Each entry includes the common native declaration, positional parameters, documented directions, inspected 2025/2026 CLR shape, return/error information and current source callers. C++ FAR/const reference notation must not be mechanically translated into public C# ref parameters. IsIn/IsOut flags in inspected metadata are often both false; Object& still records a CLR by-reference parameter.
 
-**S:** shared internal inspection-service dispatch. **D:** direct adapter dispatch. **E:** member-load entity dispatch reached through AddMemberLoad. **N:** neither exact dispatch form; it does not by itself mean a missing managed capability. The 88 dispatch-covered names include unresolved shape/status concerns described in the primary report. The remaining 41 N entries include historical proposed managed signatures and function-specific considerations; the semantic audit identifies alternatives/compositions that should not be duplicated solely for native-name coverage, and these signatures are design proposals, not compiled APIs. All named request/result classes in those proposals that are absent today are pending.
+**S:** internal Load service dispatch. **D:** direct adapter dispatch. **E:** delegated member-load mutation. **A:** unused native entry point with a managed alternative/composition. There are 126 exact documented dispatches and three A entries. Public-method coverage is separate from live qualification; method-specific limitations below are authoritative.
 
 Return tables below preserve functional error labels and short native explanations. A missing return table does not imply void: some entries describe the return in prose. Follow the linked reference and the declared return type. Native counts, IDs, Boolean values and zero/one success codes must not share a universal converter.
 
@@ -38,7 +36,7 @@ Parameter detail excerpts identify meaning and link back to full code/array tabl
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___load_group.html#ga1b938bf65248e91a620868453a458b9d) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___load_group.html#ga1b938bf65248e91a620868453a458b9d) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___load_group.html#ga1b938bf65248e91a620868453a458b9d)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddRSLoad(
@@ -126,15 +124,16 @@ LoadOperationResult AddResponseSpectrumLoad(ResponseSpectrumLoadParameters param
 
 **Ported reference overloads:** `bool AddRSLoad(ResponseSpectrumLoadParameters parameters)`.
 
-**Current call sites:** [AddRSLoad](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L167).
+
+**Current call sites:** [AddRSLoad — line 1076](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1076).
 
 #### SplitLoadsOnBeam
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___load_group.html#gaa4ef18bf50db77e41cc496a915955be4) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___load_group.html#gaa4ef18bf50db77e41cc496a915955be4) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___load_group.html#gaa4ef18bf50db77e41cc496a915955be4)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No implementation transfers/splits load definitions when a member is split. Geometry splitting and ordinary member-load assignment are not equivalent.
+**Managed capability:** Implemented. Use after splitting beam geometry when the existing load definitions must be transferred to the two beam IDs. Unlike AddMemberLoad, this edits existing load definitions and does not create beam geometry or assign a new load template. Unlike MergeBeamLoads, it splits rather than combines definitions. Native scope across cases is controlled by STAAD; no managed case filter is implied. The IDs follow the native declaration and VBA example; its parameter-table description is erroneous. Native TRUE/1 means success.
 
 ```cpp
 VARIANT OSLoadUI::SplitLoadsOnBeam(
@@ -159,13 +158,16 @@ VARIANT OSLoadUI::SplitLoadsOnBeam(
 | `1(TRUE)` | Successful. |
 | `0(FALSE)` | Generate Error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [SplitLoadsOnBeam — line 18](../../src/StaadPro.Interop/Services/Load/LoadBeamTransferService.cs#L18).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult SplitLoadsOnBeam(int originalBeamId, int newBeamId);
 ~~~
 
-**Contract state:** Qualification required. Topology, affected-case scope and native parameter-table inconsistency must be verified before dispatch. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use after splitting beam geometry when the existing load definitions must be transferred to the two beam IDs. Unlike AddMemberLoad, this edits existing load definitions and does not create beam geometry or assign a new load template. Unlike MergeBeamLoads, it splits rather than combines definitions. Native scope across cases is controlled by STAAD; no managed case filter is implied. The IDs follow the native declaration and VBA example; its parameter-table description is erroneous. Native TRUE/1 means success. See [usage and qualification limits](../Load-Expansion.md#splitloadsonbeam).
 
 ### Load: Definition
 
@@ -177,7 +179,7 @@ No native function declarations occur in this reviewed grouping page. Subgroups,
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_case.html#ga8c4ac07c10d5cfd0a2bda5d3f837db24) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_case.html#ga8c4ac07c10d5cfd0a2bda5d3f837db24) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_case.html#ga8c4ac07c10d5cfd0a2bda5d3f837db24)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetPrimaryLoadCaseCount();
@@ -189,13 +191,14 @@ No native parameters.
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Current call sites:** [ReadAllLoadCases — line 2349](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2349).
+
+**Current call sites:** [ReadAllLoadCases — line 3258](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3258).
 
 #### SetLoadActive
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_case.html#ga065a2faa02e196d4ba47854653a7946b) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_case.html#ga065a2faa02e196d4ba47854653a7946b) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_case.html#ga065a2faa02e196d4ba47854653a7946b)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::SetLoadActive(
@@ -218,7 +221,8 @@ VARIANT OSLoadUI::SetLoadActive(
 | `TRUE` | OK. |
 | `FALSE` | General error. |
 
-**Current call sites:** [SetLoadCaseActive — line 1853](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1853); [ActivateQueryCase — line 2433](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2433).
+
+**Current call sites:** [SetLoadCaseActive — line 2762](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2762); [ActivateQueryCase — line 3342](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3342); [Active — line 60](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L60); [Activate — line 63](../../src/StaadPro.Interop/Services/Load/LoadServiceContext.cs#L63).
 
 ### Load: Load Envelopes
 
@@ -226,7 +230,7 @@ VARIANT OSLoadUI::SetLoadActive(
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_enve.html#ga9f28063ba9f67609d5489f069da32154) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_enve.html#ga9f28063ba9f67609d5489f069da32154) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_enve.html#ga9f28063ba9f67609d5489f069da32154)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::CreateLoadEnvelop(
@@ -255,15 +259,16 @@ VARIANT OSLoadUI::CreateLoadEnvelop(
 | `1/True` | OK. |
 | `0/False` | General error. |
 
-**Current call sites:** [CreateLoadEnvelopExt — line 2265](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2265).
+
+**Current call sites:** [CreateLoadEnvelopExt — line 3174](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3174).
 
 #### AddLoadCasesToEnvelop
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_enve.html#ga16a1d26c9c356a3c96cf81d43fac81fa) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_enve.html#ga16a1d26c9c356a3c96cf81d43fac81fa) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_enve.html#ga16a1d26c9c356a3c96cf81d43fac81fa)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. Envelope creation and membership read-back exist; adding members to an existing envelope is not implemented. Recreating an envelope is not a verified equivalent.
+**Managed capability:** Implemented. Use to change membership of an existing envelope. CreateLoadEnvelopExt creates an envelope; CreateLoadCombinations creates combination cases. This method does neither and never changes load factors. Pass primary case IDs, not an envelope index or LOAD LIST record index. Native 1 means success.
 
 ```cpp
 VARIANT OSLoadUI::AddLoadCasesToEnvelop(
@@ -289,21 +294,24 @@ VARIANT OSLoadUI::AddLoadCasesToEnvelop(
 | `1` | OK. |
 | `0` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [AddCasesToEnvelope — line 17](../../src/StaadPro.Interop/Services/Load/LoadCaseManagementService.cs#L17).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddCasesToEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds);
 ~~~
 
-**Contract state:** Defined; implementation pending. Positive IDs; snapshot once, preserve order/duplicates; reject empty selection rather than inferring all. Native 1 means success. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to change membership of an existing envelope. CreateLoadEnvelopExt creates an envelope; CreateLoadCombinations creates combination cases. This method does neither and never changes load factors. Pass primary case IDs, not an envelope index or LOAD LIST record index. Native 1 means success. See [usage and qualification limits](../Load-Expansion.md#addcasestoenvelope).
 
 #### RemoveLoadCasesFromEnvelop
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_enve.html#gac630898fc921f930e89fa9f8701ea9ba) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_enve.html#gac630898fc921f930e89fa9f8701ea9ba) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_enve.html#gac630898fc921f930e89fa9f8701ea9ba)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No removal of selected members from an existing envelope. Creation/read-back cannot establish safe in-place removal.
+**Managed capability:** Implemented. Use to remove selected memberships while retaining the envelope and the load-case definitions. DeleteEnvelope removes the envelope itself; DeleteLoadCases removes case definitions. An empty list is rejected and never means remove all. Native 1 means success.
 
 ```cpp
 VARIANT OSLoadUI::RemoveLoadCasesFromEnvelop(
@@ -329,21 +337,24 @@ VARIANT OSLoadUI::RemoveLoadCasesFromEnvelop(
 | `1` | OK. |
 | `0` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [RemoveCasesFromEnvelope — line 22](../../src/StaadPro.Interop/Services/Load/LoadCaseManagementService.cs#L22).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult RemoveCasesFromEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds);
 ~~~
 
-**Contract state:** Defined; implementation pending. No implicit remove-all; no deletion/recreation fallback. Native 1 means success. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to remove selected memberships while retaining the envelope and the load-case definitions. DeleteEnvelope removes the envelope itself; DeleteLoadCases removes case definitions. An empty list is rejected and never means remove all. Native 1 means success. See [usage and qualification limits](../Load-Expansion.md#removecasesfromenvelope).
 
 #### DeleteLoadEnvelop
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_enve.html#ga1ae3d8ba1801dbf2b3e85dff88948d05) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_enve.html#ga1ae3d8ba1801dbf2b3e85dff88948d05) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_enve.html#ga1ae3d8ba1801dbf2b3e85dff88948d05)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No deletion of an existing envelope.
+**Managed capability:** Implemented. Use to delete an envelope definition. The cases previously listed in it remain case definitions; use DeleteLoadCases only when those cases should also be deleted. This method does not delete a LOAD LIST. Native 1 means success.
 
 ```cpp
 VARIANT OSLoadUI::DeleteLoadEnvelop(
@@ -366,19 +377,22 @@ VARIANT OSLoadUI::DeleteLoadEnvelop(
 | `1` | OK. |
 | `0` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [DeleteEnvelope — line 27](../../src/StaadPro.Interop/Services/Load/LoadCaseManagementService.cs#L27).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult DeleteEnvelope(int envelopeId);
 ~~~
 
-**Contract state:** Defined; implementation pending. Destructive scope is the envelope, not its case definitions. Native 1 success; no implicit save. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to delete an envelope definition. The cases previously listed in it remain case definitions; use DeleteLoadCases only when those cases should also be deleted. This method does not delete a LOAD LIST. Native 1 means success. See [usage and qualification limits](../Load-Expansion.md#deleteenvelope).
 
 #### GetEnvelopeCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_enve.html#ga0b8f688b0cddf6f418356af7112bb474) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_enve.html#ga0b8f688b0cddf6f418356af7112bb474) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_enve.html#ga0b8f688b0cddf6f418356af7112bb474)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::GetEnvelopeCount();
@@ -392,13 +406,14 @@ No native parameters.
 | --- | --- |
 | `Long/Integer` | Total Number of load Envelopes present. |
 
-**Current call sites:** [GetEnvelopeIds — line 2100](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2100).
+
+**Current call sites:** [GetEnvelopeIds — line 3009](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3009).
 
 #### GetLoadEnvelopeDetails
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_enve.html#gaf8b78c76d6f4c0151f6534f5848e77d6) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_enve.html#gaf8b78c76d6f4c0151f6534f5848e77d6) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_enve.html#gaf8b78c76d6f4c0151f6534f5848e77d6)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::GetLoadEnvelopeDetails(
@@ -429,13 +444,14 @@ long OSLoadUI::GetLoadEnvelopeDetails(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetLoadEnvelopeDetail — line 2144](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2147).
+
+**Current call sites:** [GetLoadEnvelopeDetail — line 3053](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3053).
 
 #### GetLoadListfromLoadEnvelope
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_enve.html#ga05374c9b5b38ea705b4db65d6f3ce20a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_enve.html#ga05374c9b5b38ea705b4db65d6f3ce20a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_enve.html#ga05374c9b5b38ea705b4db65d6f3ce20a)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::GetLoadListfromLoadEnvelope(
@@ -461,13 +477,14 @@ long OSLoadUI::GetLoadListfromLoadEnvelope(
 | `1` | Successful. |
 | `-1` | Unsuccessful. |
 
-**Current call sites:** [GetLoadEnvelopeDetail — line 2152](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2152).
+
+**Current call sites:** [GetLoadEnvelopeDetail — line 3061](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3061).
 
 #### GetEnvelopeIDs
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_enve.html#gaea479c68d7b2b2114d16e1ffd1a5a199) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_enve.html#gaea479c68d7b2b2114d16e1ffd1a5a199) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_enve.html#gaea479c68d7b2b2114d16e1ffd1a5a199)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::GetEnvelopeIDs(
@@ -490,7 +507,8 @@ long OSLoadUI::GetEnvelopeIDs(
 | `1` | OK. |
 | `-1` | Unsuccessful. |
 
-**Current call sites:** [GetEnvelopeIds — line 2104](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2104).
+
+**Current call sites:** [GetEnvelopeIds — line 3013](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3013).
 
 ### Load Definition: Wind
 
@@ -498,7 +516,7 @@ long OSLoadUI::GetEnvelopeIDs(
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_wind.html#ga2ae52c29c70f50fad759adefb71761e4) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_wind.html#ga2ae52c29c70f50fad759adefb71761e4) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_wind.html#ga2ae52c29c70f50fad759adefb71761e4)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddWindDefinition(
@@ -524,13 +542,14 @@ VARIANT OSLoadUI::AddWindDefinition(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddWindDefinition — line 370](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L370).
+
+**Current call sites:** [AddWindDefinition — line 1279](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1279).
 
 #### AddWindIntensity
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_wind.html#ga8a39105b37ab53253129a83229559bee) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_wind.html#ga8a39105b37ab53253129a83229559bee) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_wind.html#ga8a39105b37ab53253129a83229559bee)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddWindIntensity(
@@ -559,13 +578,14 @@ VARIANT OSLoadUI::AddWindIntensity(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddWindIntensity — line 413](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L413); [AddWindIntensity — line 428](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L431).
+
+**Current call sites:** [AddWindIntensity — line 1322](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1322); [AddWindIntensity — line 1337](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1337).
 
 #### ComputeWallWindPressureProfile
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_wind.html#ga14842eb0090688108f87a2412922b71d) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_wind.html#ga14842eb0090688108f87a2412922b71d) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_wind.html#ga14842eb0090688108f87a2412922b71d)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::ComputeWallWindPressureProfile(
@@ -624,14 +644,15 @@ WindProfileComputationResult ComputeWallWindPressureProfile(WallWindPressureProf
 
 **Ported reference overloads:** `int ComputeWallWindPressureProfile(WallWindPressureProfileParameters parameters)`.
 
-**Current call sites:** [ComputeWallWindPressureProfile](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L199).
 
+
+**Current call sites:** [ComputeWallWindPressureProfile — line 1108](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1108).
 
 #### ComputeWallWindPressureProfileASCE72016
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_wind.html#ga09d85745d67966ad0b323ddf4751b739) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_wind.html#ga09d85745d67966ad0b323ddf4751b739) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_wind.html#ga09d85745d67966ad0b323ddf4751b739)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::ComputeWallWindPressureProfileASCE72016(
@@ -691,14 +712,15 @@ WindProfileComputationResult ComputeWallWindPressureProfile(ASCE72016WallWindPre
 
 **Ported reference overloads:** `int ComputeWallWindPressureProfileASCE72016(ASCE72016WallWindPressureProfileParameters parameters)`.
 
-**Current call sites:** [ComputeWallWindPressureProfileASCE72016](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L212).
 
+
+**Current call sites:** [ComputeWallWindPressureProfileASCE72016 — line 1121](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1121).
 
 #### AddWindDefinitionASCE7Parameters
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_wind.html#gaeaa2d3d5e5b318160defa2f8596dc343) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_wind.html#gaeaa2d3d5e5b318160defa2f8596dc343) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_wind.html#gaeaa2d3d5e5b318160defa2f8596dc343)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddWindDefinitionASCE7Parameters(
@@ -767,14 +789,15 @@ LoadOperationResult ConfigureWindDefinition(ASCE7WindDefinitionParameters parame
 
 **Ported reference overloads:** `int AddWindDefinitionASCE7Parameters(ASCE7WindDefinitionParameters parameters)`.
 
-**Current call sites:** [AddWindDefinitionASCE7Parameters](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L185).
 
+
+**Current call sites:** [AddWindDefinitionASCE7Parameters — line 1094](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1094).
 
 #### AddWindExposure
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_wind.html#ga30c27ad6bfef60382db306f1d8168cef) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_wind.html#ga30c27ad6bfef60382db306f1d8168cef) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_wind.html#ga30c27ad6bfef60382db306f1d8168cef)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddWindExposure(
@@ -803,13 +826,14 @@ VARIANT OSLoadUI::AddWindExposure(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddWindExposure — line 382](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L385).
+
+**Current call sites:** [AddWindExposure — line 1291](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1291).
 
 #### DeleteWindDefinition
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_wind.html#ga0b2356ca2a0d681720b9da8d3c022cc9) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_wind.html#ga0b2356ca2a0d681720b9da8d3c022cc9) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_wind.html#ga0b2356ca2a0d681720b9da8d3c022cc9)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::DeleteWindDefinition(
@@ -832,7 +856,8 @@ VARIANT OSLoadUI::DeleteWindDefinition(
 | `0` | OK. |
 | `-8039` | Invalid load definition. |
 
-**Current call sites:** [DeleteWindDefinition — line 444](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L444).
+
+**Current call sites:** [DeleteWindDefinition — line 1353](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1353).
 
 ### Load Definition: Seismic
 
@@ -840,7 +865,7 @@ VARIANT OSLoadUI::DeleteWindDefinition(
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_seismic.html#ga885d12987341c6323c4c71b02979af9b) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_seismic.html#ga885d12987341c6323c4c71b02979af9b) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_seismic.html#ga885d12987341c6323c4c71b02979af9b)
 
-**Comparison:** Capability. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Capability. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddSeismicDefinition(
@@ -876,14 +901,15 @@ LoadOperationResult CreateSeismicDefinition(SeismicCode seismicCode, bool includ
 
 **Ported reference overloads:** `bool AddSeismicDefinition(SeismicCode code, bool considerAccidentalTorsion = false)`; `bool AddSeismicDefinition(int code, int accidentalTorsion = 0)`.
 
-**Current call sites:** [AddSeismicDefinition](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L233).
 
+
+**Current call sites:** [AddSeismicDefinition — line 1142](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1142).
 
 #### ModifySeismicDefinitionParams
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_seismic.html#ga5b4e6c8e6e7c46b829de3cb21c1f963d) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_seismic.html#ga5b4e6c8e6e7c46b829de3cb21c1f963d) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_seismic.html#ga5b4e6c8e6e7c46b829de3cb21c1f963d)
 
-**Comparison:** Capability. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Capability. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::ModifySeismicDefinitionParams(
@@ -919,14 +945,15 @@ LoadOperationResult SetSeismicParameters(SeismicDefinitionParameters parameters)
 
 **Ported reference overloads:** `int ModifySeismicDefinitionParam(string parameterName, double value)`; `int ModifySeismicDefinitionParams(IDictionary<string, double> parameters)`; `int ModifySeismicDefinitionParams(IS1893_2016SeismicParameters parameters)`; `int ModifySeismicDefinitionParams(IS1893_2002SeismicParameters parameters)`; `int ModifySeismicDefinitionParams(IBCSeismicParameters parameters)`.
 
-**Current call sites:** [ModifySeismicDefinitionParam](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L241).
 
+
+**Current call sites:** [ModifySeismicDefinitionParam — line 1150](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1150).
 
 #### AddSeismicDefSelfWeight
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_seismic.html#ga0aee693e0d969e310fc41938f5ca6cd3) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_seismic.html#ga0aee693e0d969e310fc41938f5ca6cd3) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_seismic.html#ga0aee693e0d969e310fc41938f5ca6cd3)
 
-**Comparison:** Clarified. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Clarified. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddSeismicDefSelfWeight(
@@ -959,14 +986,15 @@ LoadOperationResult AddSeismicSelfWeight(double weightFactor = 1.0);
 
 **Ported reference overloads:** `bool AddSeismicDefSelfWeight(double weightFactor = 1.0)`.
 
-**Current call sites:** [AddSeismicDefSelfWeight](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L287).
 
+
+**Current call sites:** [AddSeismicDefSelfWeight — line 1196](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1196).
 
 #### AddSeismicDefMemberWeight
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_seismic.html#ga2299de54c2eeddab2a1ba7ba11b86052) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_seismic.html#ga2299de54c2eeddab2a1ba7ba11b86052) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_seismic.html#ga2299de54c2eeddab2a1ba7ba11b86052)
 
-**Comparison:** Mapping. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Mapping. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddSeismicDefMemberWeight(
@@ -1014,14 +1042,15 @@ LoadOperationResult AddSeismicMemberWeight(SeismicMemberWeightDefinition definit
 
 **Ported reference overloads:** `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<int> memberIds)`.
 
-**Current call sites:** [AddSeismicDefMemberWeight](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L325).
 
+
+**Current call sites:** [AddSeismicDefMemberWeight — line 1234](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1234).
 
 #### AddSeismicDefJointWeight
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_seismic.html#gae8c289357923e66c14f2b08417055bc7) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_seismic.html#gae8c289357923e66c14f2b08417055bc7) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_seismic.html#gae8c289357923e66c14f2b08417055bc7)
 
-**Comparison:** Status. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Status. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddSeismicDefJointWeight(
@@ -1064,14 +1093,15 @@ LoadOperationResult AddSeismicJointWeight(double weight, IEnumerable<int> nodeId
 
 **Ported reference overloads:** `int AddSeismicDefJointWeight(double weight, IEnumerable<int> nodeIds)`; `int AddSeismicDefJointWeight(double weight, IEnumerable<Node> nodes)`; `int AddSeismicDefJointWeight(double weight, int nodeId)`.
 
-**Current call sites:** [AddSeismicDefJointWeight](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L296).
 
+
+**Current call sites:** [AddSeismicDefJointWeight — line 1205](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1205).
 
 #### AddSeismicDefWallArea
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_seismic.html#gad481a21e57f2ee6b953d5e1d111c34c7) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_seismic.html#gad481a21e57f2ee6b953d5e1d111c34c7) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_seismic.html#gad481a21e57f2ee6b953d5e1d111c34c7)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddSeismicDefWallArea(
@@ -1114,13 +1144,14 @@ LoadOperationResult AddSeismicWallArea(int definitionId, SeismicWallDirection di
 
 **Ported reference overloads:** `int AddSeismicDefWallArea(int seismicCode, string direction, IEnumerable<double> dimensions)`; `int AddSeismicDefWallArea(int seismicCode, SeismicWallDirection direction, IEnumerable<SeismicWallDimension> walls)`.
 
-**Current call sites:** [AddSeismicDefWallArea](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L70).
+
+**Current call sites:** [AddSeismicDefWallArea — line 979](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L979).
 
 #### AddResponseSpectrumLoadEx
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_seismic.html#gac24b840992cf7f15558b3c6844857f5a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_seismic.html#gac24b840992cf7f15558b3c6844857f5a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_seismic.html#gac24b840992cf7f15558b3c6844857f5a)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddResponseSpectrumLoadEx(
@@ -1172,7 +1203,8 @@ LoadOperationResult AddResponseSpectrumLoad(ResponseSpectrumLoadExParameters par
 
 **Ported reference overloads:** `bool AddResponseSpectrumLoadEx(ResponseSpectrumLoadExParameters parameters)`; `bool AddResponseSpectrumLoadEx(int spectrumCode, int combinationMethod, string[] primaryParameterNames, double[] primaryParameterValues, string[] generationParameterNames = null, double[] generationParameterValues = null, double[] customDataPairs = null)`.
 
-**Current call sites:** [SubmitExtendedSpectrum](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L107).
+
+**Current call sites:** [SubmitExtendedSpectrum — line 1016](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1016).
 
 ### Load Definition: Time History
 
@@ -1188,7 +1220,7 @@ No native function declarations occur in this reviewed grouping page. Subgroups,
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_ref_load.html#ga70c105eb346388eeed599db3ec1ea109) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_ref_load.html#ga70c105eb346388eeed599db3ec1ea109) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_ref_load.html#ga70c105eb346388eeed599db3ec1ea109)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::GetReferenceLoadCaseCount();
@@ -1203,13 +1235,14 @@ No native parameters.
 | `<Val>` | The number of reference load case. |
 | `-1` | General error. |
 
-**Current call sites:** [ReadAllLoadCases — line 2349](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2349).
+
+**Current call sites:** [ReadAllLoadCases — line 3258](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3258).
 
 #### GetReferenceLoadCaseNumbers
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_ref_load.html#gad56e67bc7dedd7e719cf97661581550c) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_ref_load.html#gad56e67bc7dedd7e719cf97661581550c) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_ref_load.html#gad56e67bc7dedd7e719cf97661581550c)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::GetReferenceLoadCaseNumbers(
@@ -1234,13 +1267,14 @@ long OSLoadUI::GetReferenceLoadCaseNumbers(
 | `-106` | 1 dimensional array of long expected. |
 | `-114` | OLE Exception Occurred. |
 
-**Current call sites:** [ReadAllLoadCases — line 2357](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2357).
+
+**Current call sites:** [ReadAllLoadCases — line 3266](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3266).
 
 #### CreateNewReferenceLoad
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_ref_load.html#ga13220ea514164923069da40dea5065fb) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_ref_load.html#ga13220ea514164923069da40dea5065fb) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_ref_load.html#ga13220ea514164923069da40dea5065fb)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::CreateNewReferenceLoad(
@@ -1270,13 +1304,14 @@ long OSLoadUI::CreateNewReferenceLoad(
 | `-1` | General error. |
 | `-8004` | Fail to create load. |
 
-**Current call sites:** [CreateNewReferenceLoad — line 1822](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1822).
+
+**Current call sites:** [CreateNewReferenceLoad — line 2731](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2731).
 
 #### SetReferenceLoadActive
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_def_ref_load.html#gad59a03aa194d6f31cbb49c59959dc053) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_def_ref_load.html#gad59a03aa194d6f31cbb49c59959dc053) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_def_ref_load.html#gad59a03aa194d6f31cbb49c59959dc053)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::SetReferenceLoadActive(
@@ -1300,7 +1335,8 @@ long OSLoadUI::SetReferenceLoadActive(
 | `-1` | General error. |
 | `-8002` | Load Case nLoadCaseNo not found. |
 
-**Current call sites:** [SetLoadCaseActive — line 1849](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1849); [ActivateQueryCase — line 2427](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2427).
+
+**Current call sites:** [SetLoadCaseActive — line 2758](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2758); [ActivateQueryCase — line 3336](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3336); [Activate — line 58](../../src/StaadPro.Interop/Services/Load/LoadServiceContext.cs#L58).
 
 ### Load Definition: Direct Analysis
 
@@ -1308,7 +1344,7 @@ long OSLoadUI::SetReferenceLoadActive(
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_direct_analysis.html#gac8fe142a3657334769e6cbe960e40d1f) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_direct_analysis.html#gac8fe142a3657334769e6cbe960e40d1f) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_direct_analysis.html#gac8fe142a3657334769e6cbe960e40d1f)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddDirectAnalysisDefinitionParameter(
@@ -1348,13 +1384,14 @@ LoadOperationResult SetDirectAnalysisParameter(DirectAnalysisParameters paramete
 
 **Ported reference overloads:** `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<int> memberIds, double parameterValue = 0.0)`; `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<Beam> members, double parameterValue = 0.0)`; `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameters parameters)`.
 
-**Current call sites:** [AddDirectAnalysisDefinitionParameter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L120).
+
+**Current call sites:** [AddDirectAnalysisDefinitionParameter — line 1029](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1029).
 
 #### DeleteDirectAnalysisDefinitionParameter
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_direct_analysis.html#gacfb6b7aa2b317a90aced0bb8df579237) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_direct_analysis.html#gacfb6b7aa2b317a90aced0bb8df579237) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_direct_analysis.html#gacfb6b7aa2b317a90aced0bb8df579237)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::DeleteDirectAnalysisDefinitionParameter(
@@ -1388,13 +1425,14 @@ LoadOperationResult DeleteDirectAnalysisParameter(DirectAnalysisParameterType pa
 
 **Ported reference overloads:** `bool DeleteDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType)`.
 
-**Current call sites:** [DeleteDirectAnalysisDefinitionParameter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L154).
+
+**Current call sites:** [DeleteDirectAnalysisDefinitionParameter — line 1063](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1063).
 
 #### DeleteDirectAnalysisDefinition
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_direct_analysis.html#ga5577e10064596d7933dc30e5b68a66fd) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_direct_analysis.html#ga5577e10064596d7933dc30e5b68a66fd) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_direct_analysis.html#ga5577e10064596d7933dc30e5b68a66fd)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch (reference overload port).
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::DeleteDirectAnalysisDefinition();
@@ -1420,7 +1458,8 @@ LoadOperationResult DeleteDirectAnalysisDefinition();
 
 **Ported reference overloads:** `bool DeleteDirectAnalysisDefinition()`.
 
-**Current call sites:** [DeleteDirectAnalysisDefinition](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L160).
+
+**Current call sites:** [DeleteDirectAnalysisDefinition — line 1069](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1069).
 
 ### Load Case Details: Load Items
 
@@ -1432,7 +1471,7 @@ No native function declarations occur in this reviewed grouping page. Subgroups,
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_comb.html#ga4c6b39b1198e6e63aba6a7b56ca59dcc) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_comb.html#ga4c6b39b1198e6e63aba6a7b56ca59dcc) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_comb.html#ga4c6b39b1198e6e63aba6a7b56ca59dcc)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadCombinationCaseCount();
@@ -1444,13 +1483,14 @@ No native parameters.
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Current call sites:** [ReadCombinationCaseIds — line 2385](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2385).
+
+**Current call sites:** [ReadCombinationCaseIds — line 3294](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3294).
 
 #### GetLoadCombinationCaseNumbers
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_comb.html#gafe01a8e664b6722b0e341e37152cb4a9) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_comb.html#gafe01a8e664b6722b0e341e37152cb4a9) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_comb.html#gafe01a8e664b6722b0e341e37152cb4a9)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadCombinationCaseNumbers(
@@ -1475,13 +1515,14 @@ VARIANT OSLoadUI::GetLoadCombinationCaseNumbers(
 | `-106` | 1 dimensional array of long expected. |
 | `-114` | OLE Exception Occurred. |
 
-**Current call sites:** [ReadCombinationCaseIds — line 2388](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2388).
+
+**Current call sites:** [ReadCombinationCaseIds — line 3297](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3297).
 
 #### CreateNewLoadCombination
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_comb.html#ga8bb03f4733ba650a9df0a8fc16e4e523) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_comb.html#ga8bb03f4733ba650a9df0a8fc16e4e523) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_comb.html#ga8bb03f4733ba650a9df0a8fc16e4e523)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::CreateNewLoadCombination(
@@ -1507,13 +1548,14 @@ VARIANT OSLoadUI::CreateNewLoadCombination(
 | `<Val>` | Number ID, assigned to new load combination. |
 | `-1` | General error. |
 
-**Current call sites:** [CreateLoadCombinations — line 738](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L738).
+
+**Current call sites:** [CreateLoadCombinations — line 1647](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1647).
 
 #### AddLoadAndFactorToCombination
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_comb.html#ga6f75602769cefbbcce48fa0098130c2a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_comb.html#ga6f75602769cefbbcce48fa0098130c2a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_comb.html#ga6f75602769cefbbcce48fa0098130c2a)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddLoadAndFactorToCombination(
@@ -1542,13 +1584,14 @@ VARIANT OSLoadUI::AddLoadAndFactorToCombination(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [CreateLoadCombinations — line 740](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L740).
+
+**Current call sites:** [CreateLoadCombinations — line 1649](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1649).
 
 #### GetNoOfLoadAndFactorPairsForCombination
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_comb.html#ga3f68ee33ca96f501438b78f008da34c8) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_comb.html#ga3f68ee33ca96f501438b78f008da34c8) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_comb.html#ga3f68ee33ca96f501438b78f008da34c8)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetNoOfLoadAndFactorPairsForCombination(
@@ -1568,13 +1611,14 @@ VARIANT OSLoadUI::GetNoOfLoadAndFactorPairsForCombination(
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Current call sites:** [GetLoadCombination — line 622](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L622).
+
+**Current call sites:** [GetLoadCombination — line 1531](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1531).
 
 #### GetLoadAndFactorForCombination
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_comb.html#ga02d917d448cea428dae77061868f19eb) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_comb.html#ga02d917d448cea428dae77061868f19eb) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_comb.html#ga02d917d448cea428dae77061868f19eb)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadAndFactorForCombination(
@@ -1603,13 +1647,14 @@ VARIANT OSLoadUI::GetLoadAndFactorForCombination(
 | `True` | if the method is successful. |
 | `False` | if the method is unsuccessful. |
 
-**Current call sites:** [GetLoadCombination — line 628](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L628).
+
+**Current call sites:** [GetLoadCombination — line 1537](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1537).
 
 #### IsCombinationCase
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_comb.html#gad07c8023e20a2452b79f0ac5a394a2d2) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_comb.html#gad07c8023e20a2452b79f0ac5a394a2d2) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_comb.html#gad07c8023e20a2452b79f0ac5a394a2d2)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** A — managed alternative/composition; intentionally no exact dispatch.
 
 **Managed capability:** Derived capability. GetAllLoadCombinationCases().Any(c => c.Id == targetId), or GetLoadCase(targetId, LoadCaseType.LoadCombination) != null, answers combination membership from a fresh native inventory. A dedicated predicate/status-result API is absent, but the user capability exists.
 
@@ -1647,9 +1692,9 @@ IEnumerable<ILoadCase> GetAllLoadCasesOfType(LoadCaseType loadCaseType = LoadCas
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_comb.html#ga0c6fba1b5eca1c912d70b36cbcac5763) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_comb.html#ga0c6fba1b5eca1c912d70b36cbcac5763) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_comb.html#ga0c6fba1b5eca1c912d70b36cbcac5763)
 
-**Comparison:** Status. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Status. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. CreateLoadCombinations consumes caller-supplied definitions/factors. It does not generate code/category-based automatic combinations or return their generated IDs.
+**Managed capability:** Implemented. Use installed code/category rule files to generate combination cases. CreateLoadCombinations instead accepts explicit caller-defined factors; CreateAutomaticRepeatLoads generates repeat cases, not result-combination definitions. Code and category strings must match the acquired installation, not a hard-coded engineering-code enum. AllCases is an explicit opt-in to the native empty-array all-case behavior. STAAD may advance the requested start ID; read ActualStartCaseId. GeneratedCount is null because this native API supplies no count, and IDs are never inferred as contiguous. Native 0 means success; the 2024 help lists -1 failure, while 2025/2026 list -8002/-8040/-8041. Error descriptions use wrapper.StaadVersion, never the host ApplicationVersion.
 
 ```cpp
 VARIANT OSLoadUI::AddAutoLoadCombinations(
@@ -1685,21 +1730,24 @@ VARIANT OSLoadUI::AddAutoLoadCombinations(
 
 **2024 return table:** `0` = if successful.; `-1` = if unsuccessful. The table above reflects 2025/2026. Preserve unknown failure codes.
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [CreateAutomaticCombinations — line 19](../../src/StaadPro.Interop/Services/Load/LoadAutomaticGenerationService.cs#L19).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticCombinations(AutomaticCombinationRequest request);
 ~~~
 
-**Contract state:** Defined; implementation pending. Explicit all-cases selection. Returns requested and actual start IDs; generated count is absent because this native API does not return one. Select 2024 versus 2025/2026 error interpretation internally. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use installed code/category rule files to generate combination cases. CreateLoadCombinations instead accepts explicit caller-defined factors; CreateAutomaticRepeatLoads generates repeat cases, not result-combination definitions. Code and category strings must match the acquired installation, not a hard-coded engineering-code enum. AllCases is an explicit opt-in to the native empty-array all-case behavior. STAAD may advance the requested start ID; read ActualStartCaseId. GeneratedCount is null because this native API supplies no count, and IDs are never inferred as contiguous. Native 0 means success; the 2024 help lists -1 failure, while 2025/2026 list -8002/-8040/-8041. Error descriptions use wrapper.StaadVersion, never the host ApplicationVersion. See [usage and qualification limits](../Load-Expansion.md#createautomaticcombinations).
 
 #### AddAutoCombinationRepeat
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_comb.html#gab0a905a41051c3ae5c0d1d6e0586f544) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_comb.html#gab0a905a41051c3ae5c0d1d6e0586f544) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_comb.html#gab0a905a41051c3ae5c0d1d6e0586f544)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. AddRepeatLoadsTo consumes caller-supplied factors; EditorLoadCombination title helpers only format text. Neither performs native automatic repeat-load generation.
+**Managed capability:** Implemented. Use code/category rules to generate repeat load cases whose loads participate in a subsequent analysis. CreateAutomaticCombinations creates combination definitions instead; AddRepeatLoadsTo assigns explicit factors to one existing case. Optional reference and notional participation is explicit; null NotionalOptions disables all notional flags. The returned ActualStartCaseId and GeneratedCount come from native outputs, not a guessed contiguous ID range. Native 0 means success; -1 means failure.
 
 ```cpp
 VARIANT OSLoadUI::AddAutoCombinationRepeat(
@@ -1761,13 +1809,16 @@ VARIANT OSLoadUI::AddAutoCombinationRepeat(
 | `0` | if successful. |
 | `-1` | if unsuccessful |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [CreateAutomaticRepeatLoads — line 51](../../src/StaadPro.Interop/Services/Load/LoadAutomaticGenerationService.cs#L51).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticRepeatLoads(AutomaticRepeatLoadRequest request);
 ~~~
 
-**Contract state:** Defined; implementation pending. Returns actual start and generated count from internal reference outputs. No implicit direction flags; no inference of contiguous case IDs. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use code/category rules to generate repeat load cases whose loads participate in a subsequent analysis. CreateAutomaticCombinations creates combination definitions instead; AddRepeatLoadsTo assigns explicit factors to one existing case. Optional reference and notional participation is explicit; null NotionalOptions disables all notional flags. The returned ActualStartCaseId and GeneratedCount come from native outputs, not a guessed contiguous ID range. Native 0 means success; -1 means failure. See [usage and qualification limits](../Load-Expansion.md#createautomaticrepeatloads).
 
 ### Load Case Details: Load Case Operation
 
@@ -1775,7 +1826,7 @@ LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticRepeatLoads(Auto
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga3e518083ebff1f7eda2bad62d3696c0c) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga3e518083ebff1f7eda2bad62d3696c0c) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga3e518083ebff1f7eda2bad62d3696c0c)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetPrimaryLoadCaseNumbers(
@@ -1800,13 +1851,14 @@ VARIANT OSLoadUI::GetPrimaryLoadCaseNumbers(
 | `-106` | 1 dimensional array of VARIANT expected. |
 | `-114` | OLE Exception Occurred. |
 
-**Current call sites:** [ReadAllLoadCases — line 2356](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2356).
+
+**Current call sites:** [ReadAllLoadCases — line 3265](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3265).
 
 #### CreateNewPrimaryLoad
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga65f4045dbd028cd4233c11f9797e453e) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga65f4045dbd028cd4233c11f9797e453e) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga65f4045dbd028cd4233c11f9797e453e)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** A — managed alternative/composition; intentionally no exact dispatch.
 
 **Managed capability:** Covered alternative. Primary creation is implemented by CreateNewPrimaryLoad overloads using native Ex/Ex2, and by CreateNewLoadCase routing on CaseType. The unused title-only native entry point is an alternative, not a missing creation capability. Default classification and exact native status behavior are not asserted identical.
 
@@ -1844,9 +1896,9 @@ int CreateNewPrimaryLoad(string lcTitle, LoadType loadType);
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga0333e9a3b2b913fe2bd20a70807dd917) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga0333e9a3b2b913fe2bd20a70807dd917) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga0333e9a3b2b913fe2bd20a70807dd917)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetActiveLoadCaseNumber`. Returns the positive native number or NativeFailure for -1. Primary/reference numbers can overlap; this result is not a LoadCase identity and performs no activation.
+**Managed capability:** Implemented. Returns the positive native number or NativeFailure for -1. Primary/reference numbers can overlap; this result is not a LoadCase identity and performs no activation.
 
 ```cpp
 VARIANT OSLoadUI::GetActiveLoad();
@@ -1869,11 +1921,13 @@ LoadQueryResult<int> GetActiveLoadCaseNumber();
 
 **Implementation contract:** Returns the positive native number or NativeFailure for -1. Primary/reference numbers can overlap; this result is not a LoadCase identity and performs no activation. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [CheckActive — line 49](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L49); [GetActiveLoadCaseNumber — line 76](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L76); [ActiveId — line 71](../../src/StaadPro.Interop/Services/Load/LoadServiceContext.cs#L71).
+
 #### GetLoadCaseTitle
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#gab2539a2b6546b0431bf1f871f5251365) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#gab2539a2b6546b0431bf1f871f5251365) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#gab2539a2b6546b0431bf1f871f5251365)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadCaseTitle(
@@ -1898,15 +1952,16 @@ VARIANT OSLoadUI::GetLoadCaseTitle(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetLoadCombination — line 625](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L625); [GetLoadCaseTitle — line 1837](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1837); [ReadLoadCaseMetadata — line 2373](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2373); [ReadCombinationCaseMetadata — line 2401](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2401).
+
+**Current call sites:** [GetLoadCombination — line 1534](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1534); [GetLoadCaseTitle — line 2746](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2746); [ReadLoadCaseMetadata — line 3282](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3282); [ReadCombinationCaseMetadata — line 3310](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3310).
 
 #### SetLoadType
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga80c30f8628faf5a95ae2058d3dc7da91) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga80c30f8628faf5a95ae2058d3dc7da91) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga80c30f8628faf5a95ae2058d3dc7da91)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. LoadCase.Type is managed metadata; setting it does not update an existing native case. Creation-time type selection is not reclassification.
+**Managed capability:** Implemented. Use to reclassify existing cases as Dead, Live, Wind and similar engineering categories. This LoadType is different from LoadCaseType (primary/reference/combination family), LoadCommandKind (command table) and LoadItemKind (original item code). This changes native cases directly; setting a detached LoadCase.Type alone does not invoke this operation. Native 0 means success.
 
 ```cpp
 VARIANT OSLoadUI::SetLoadType(
@@ -1932,19 +1987,22 @@ VARIANT OSLoadUI::SetLoadType(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [SetLoadType — line 32](../../src/StaadPro.Interop/Services/Load/LoadCaseManagementService.cs#L32).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult SetLoadType(IEnumerable<int> loadCaseIds, LoadType loadType);
 ~~~
 
-**Contract state:** Defined; implementation pending. Reuses LoadType 0-23; does not change primary/reference family. Native 0 success, -1 failure. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to reclassify existing cases as Dead, Live, Wind and similar engineering categories. This LoadType is different from LoadCaseType (primary/reference/combination family), LoadCommandKind (command table) and LoadItemKind (original item code). This changes native cases directly; setting a detached LoadCase.Type alone does not invoke this operation. Native 0 means success. See [usage and qualification limits](../Load-Expansion.md#setloadtype).
 
 #### CreateNewPrimaryLoadEx
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#gafe08d35e098340b64412fc7af7cddef5) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#gafe08d35e098340b64412fc7af7cddef5) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#gafe08d35e098340b64412fc7af7cddef5)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::CreateNewPrimaryLoadEx(
@@ -1971,13 +2029,14 @@ VARIANT OSLoadUI::CreateNewPrimaryLoadEx(
 | `-1` | General error. |
 | `-8004` | Fail to create load. |
 
-**Current call sites:** [CreateNewPrimaryLoad — line 1790](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1790).
+
+**Current call sites:** [CreateNewPrimaryLoad — line 2699](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2699).
 
 #### GetLoadType
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#gae089cbb4d51b68b2ce6a39f82cf2e9cd) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#gae089cbb4d51b68b2ce6a39f82cf2e9cd) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#gae089cbb4d51b68b2ce6a39f82cf2e9cd)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadType(
@@ -2023,13 +2082,14 @@ VARIANT OSLoadUI::GetLoadType(
 | `23` | None. |
 | `-1` | General error. |
 
-**Current call sites:** [ReadLoadCaseMetadata — line 2376](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2376).
+
+**Current call sites:** [ReadLoadCaseMetadata — line 3285](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3285).
 
 #### CreateLoadList
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga7179492fe5d8a09023270b31fb703f00) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga7179492fe5d8a09023270b31fb703f00) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga7179492fe5d8a09023270b31fb703f00)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::CreateLoadList(
@@ -2057,15 +2117,16 @@ VARIANT OSLoadUI::CreateLoadList(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [CreateLoadList — line 2300](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2300).
+
+**Current call sites:** [CreateLoadList — line 3209](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3209).
 
 #### GetLoadListCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga5197fada7df8eb6345eef3983c9daca1) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga5197fada7df8eb6345eef3983c9daca1) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga5197fada7df8eb6345eef3983c9daca1)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetLoadListCount`. Zero is a valid count; -1 is NativeFailure. This is not an envelope count or a count of cases in an individual list.
+**Managed capability:** Implemented. Zero is a valid count; -1 is NativeFailure. This is not an envelope count or a count of cases in an individual list.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadListCount();
@@ -2088,13 +2149,15 @@ LoadQueryResult<int> GetLoadListCount();
 
 **Implementation contract:** Zero is a valid count; -1 is NativeFailure. This is not an envelope count or a count of cases in an individual list. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [GetLoadListCount — line 82](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L82); [CheckList — line 85](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L85); [GetLoadListCaseCount — line 100](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L100); [GetLoadListCases — line 129](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L129).
+
 #### GetLoadCountInLoadList
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#gabd66e32af1113e62601c497524654d9b) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#gabd66e32af1113e62601c497524654d9b) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#gabd66e32af1113e62601c497524654d9b)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetLoadListCaseCount`. Validates the one-based list index against GetLoadListCount and rechecks that total after reading. Out-of-range lists are NotFound. The native count function has no documented negative error code; negative counts are rejected as malformed.
+**Managed capability:** Implemented. Validates the one-based list index against GetLoadListCount and rechecks that total after reading. Out-of-range lists are NotFound. The native count function has no documented negative error code; negative counts are rejected as malformed.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadCountInLoadList(
@@ -2122,13 +2185,15 @@ LoadQueryResult<int> GetLoadListCaseCount(int loadListIndex);
 
 **Implementation contract:** Validates the one-based list index against GetLoadListCount and rechecks that total after reading. Out-of-range lists are NotFound. The native count function has no documented negative error code; negative counts are rejected as malformed. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [ListCaseCount — line 90](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L90).
+
 #### GetLoadsInLoadList
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga43ded5daa43065693c67f76dad7f022c) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga43ded5daa43065693c67f76dad7f022c) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga43ded5daa43065693c67f76dad7f022c)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetLoadListCases`. Uses an Int32 SAFEARRAY output passed internally by reference following installed CLR metadata, despite const wording in the C++ prototype. Preserves order/duplicates; does not infer case families. Rechecks list and member counts; detected changes return StateChanged. Native false is NativeFailure. Zero cases returns a read-only empty list without fetching.
+**Managed capability:** Implemented. Uses an Int32 SAFEARRAY output passed internally by reference following installed CLR metadata, despite const wording in the C++ prototype. Preserves order/duplicates; does not infer case families. Rechecks list and member counts; detected changes return StateChanged. Native false is NativeFailure. Zero cases returns a read-only empty list without fetching.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadsInLoadList(
@@ -2162,13 +2227,15 @@ LoadQueryResult<IEnumerable<int>> GetLoadListCases(int loadListIndex, int maximu
 
 **Implementation contract:** Uses an Int32 SAFEARRAY output passed internally by reference following installed CLR metadata, despite const wording in the C++ prototype. Preserves order/duplicates; does not infer case families. Rechecks list and member counts; detected changes return StateChanged. Native false is NativeFailure. Zero cases returns a read-only empty list without fetching. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [GetLoadListCases — line 120](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L120).
+
 #### DeleteLoadList
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga42fbeecd03729b12aac29dd0b2c59bd0) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga42fbeecd03729b12aac29dd0b2c59bd0) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga42fbeecd03729b12aac29dd0b2c59bd0)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No native load-list deletion. Creating another list is not a verified deletion contract.
+**Managed capability:** Implemented. Use to remove one LOAD LIST record created through CreateLoadList. The argument is a one-based list record index from GetLoadListCount, not a case number or envelope ID. Cases and envelopes remain defined. Use DeleteLoadCases or DeleteEnvelope for those scopes. Native 0 means success.
 
 ```cpp
 VARIANT OSLoadUI::DeleteLoadList(
@@ -2191,21 +2258,24 @@ VARIANT OSLoadUI::DeleteLoadList(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [DeleteLoadList — line 37](../../src/StaadPro.Interop/Services/Load/LoadCaseManagementService.cs#L37).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult DeleteLoadList(int loadListIndex);
 ~~~
 
-**Contract state:** Defined; implementation pending. One-based list index, not a case/envelope ID. Native 0 success and -1 failure. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to remove one LOAD LIST record created through CreateLoadList. The argument is a one-based list record index from GetLoadListCount, not a case number or envelope ID. Cases and envelopes remain defined. Use DeleteLoadCases or DeleteEnvelope for those scopes. Native 0 means success. See [usage and qualification limits](../Load-Expansion.md#deleteloadlist).
 
 #### SetASDLoadAttribute
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga7946c813af9dd0c7427730474355b9c6) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga7946c813af9dd0c7427730474355b9c6) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga7946c813af9dd0c7427730474355b9c6)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No ASD attribute mutation on an existing native load case.
+**Managed capability:** Implemented. Use for an ASD case attribute with an explicit strength-of-forces choice and optional one-third allowable-stress increase. SetLimitStateAttribute instead sets LSD; SetLoadType changes engineering classification rather than design attributes. This does not select a model design code. GetLoadAttribute cannot reconstruct these settings: Bentley documents only a status observation for that getter. Native 0 means success.
 
 ```cpp
 long OSLoadUI::SetASDLoadAttribute(
@@ -2234,21 +2304,24 @@ long OSLoadUI::SetASDLoadAttribute(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [SetAllowableStressAttribute — line 42](../../src/StaadPro.Interop/Services/Load/LoadCaseManagementService.cs#L42).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult SetAllowableStressAttribute(int loadCaseId, LoadStrengthType strengthType, bool increaseAllowableStress);
 ~~~
 
-**Contract state:** Defined; implementation pending. Defined LoadStrengthType 0-6; explicitly selects the native one-third stress increase. Native 0 success. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use for an ASD case attribute with an explicit strength-of-forces choice and optional one-third allowable-stress increase. SetLimitStateAttribute instead sets LSD; SetLoadType changes engineering classification rather than design attributes. This does not select a model design code. GetLoadAttribute cannot reconstruct these settings: Bentley documents only a status observation for that getter. Native 0 means success. See [usage and qualification limits](../Load-Expansion.md#setallowablestressattribute).
 
 #### SetLSDLoadAttribute
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#gad4c0b38a84da05308d4844d122df5135) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#gad4c0b38a84da05308d4844d122df5135) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#gad4c0b38a84da05308d4844d122df5135)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No LSD attribute mutation on an existing native load case.
+**Managed capability:** Implemented. Use to set the LSD case attribute. SetAllowableStressAttribute instead exposes ASD strength and allowable-stress choices; SetLoadType changes engineering classification. This does not select a design code or run a design. GetLoadAttribute cannot reconstruct LSD/ASD settings from its documented status-only return. Native 0 means success.
 
 ```cpp
 long OSLoadUI::SetLSDLoadAttribute(
@@ -2271,21 +2344,24 @@ long OSLoadUI::SetLSDLoadAttribute(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [SetLimitStateAttribute — line 47](../../src/StaadPro.Interop/Services/Load/LoadCaseManagementService.cs#L47).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult SetLimitStateAttribute(int loadCaseId);
 ~~~
 
-**Contract state:** Defined; implementation pending. Native 0 success; does not choose a model design code. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to set the LSD case attribute. SetAllowableStressAttribute instead exposes ASD strength and allowable-stress choices; SetLoadType changes engineering classification. This does not select a design code or run a design. GetLoadAttribute cannot reconstruct LSD/ASD settings from its documented status-only return. Native 0 means success. See [usage and qualification limits](../Load-Expansion.md#setlimitstateattribute).
 
 #### RemoveAttribute
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga9110cacabbaba9bc87e54fa1774885f3) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga9110cacabbaba9bc87e54fa1774885f3) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga9110cacabbaba9bc87e54fa1774885f3)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No native load-attribute removal.
+**Managed capability:** Implemented. Use to remove a case design attribute while retaining its loads and definition. ClearPrimaryLoadCase clears items, and DeleteLoadCases removes case definitions; neither is a substitute for this attribute operation. Native 0 means success.
 
 ```cpp
 long OSLoadUI::RemoveAttribute(
@@ -2308,21 +2384,24 @@ long OSLoadUI::RemoveAttribute(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [RemoveLoadAttribute — line 52](../../src/StaadPro.Interop/Services/Load/LoadCaseManagementService.cs#L52).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult RemoveLoadAttribute(int loadCaseId);
 ~~~
 
-**Contract state:** Defined; implementation pending. Native 0 success; no implicit clearing/deletion of case content. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to remove a case design attribute while retaining its loads and definition. ClearPrimaryLoadCase clears items, and DeleteLoadCases removes case definitions; neither is a substitute for this attribute operation. Native 0 means success. See [usage and qualification limits](../Load-Expansion.md#removeloadattribute).
 
 #### GetAttribute
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#gace56ab4ec380cbf3061131ddd5e2d6a1) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#gace56ab4ec380cbf3061131ddd5e2d6a1) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#gace56ab4ec380cbf3061131ddd5e2d6a1)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No native load-attribute reader. The help documents 0/-1 status without a usable attribute payload, so result semantics require clarification before implementation.
+**Managed capability:** Implemented status observation. Use only to observe the documented native GetAttribute status. A successful Data.NativeValue is 0; it does not identify ASD, LSD, LoadStrengthType, stress-increase settings, or the absence of an attribute. Unlike the attribute setters, this API cannot return their settings because Bentley exposes no documented output payload. -1 produces NativeFailure; any other integral value is rejected as an undocumented schema rather than decoded speculatively.
 
 ```cpp
 long OSLoadUI::GetAttribute(
@@ -2345,21 +2424,24 @@ long OSLoadUI::GetAttribute(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [GetLoadAttribute — line 59](../../src/StaadPro.Interop/Services/Load/LoadCaseManagementService.cs#L59).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<LoadAttributeObservation> GetLoadAttribute(int loadCaseId);
 ~~~
 
-**Contract state:** Blocked: native payload undefined. WITHHELD: the help defines only 0/-1 status and no attribute payload. No LoadStrengthType decoding or fabricated attribute fields; signature remains review-only. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use only to observe the documented native GetAttribute status. A successful Data.NativeValue is 0; it does not identify ASD, LSD, LoadStrengthType, stress-increase settings, or the absence of an attribute. Unlike the attribute setters, this API cannot return their settings because Bentley exposes no documented output payload. -1 produces NativeFailure; any other integral value is rejected as an undocumented schema rather than decoded speculatively. See [usage and qualification limits](../Load-Expansion.md#getloadattribute).
 
 #### GetLoadTypeCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#gad2e249f1e4ba8d8d76f6a7698da94a2a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#gad2e249f1e4ba8d8d76f6a7698da94a2a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#gad2e249f1e4ba8d8d76f6a7698da94a2a)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetLoadCommandCount`. Command kind is distinct from engineering LoadType and LoadItemKind. Native zero is documented as case not found and is returned as EmptyOrUnavailable, with no Data, rather than a proven empty inventory.
+**Managed capability:** Implemented. Command kind is distinct from engineering LoadType and LoadItemKind. Native zero is documented as case not found and is returned as EmptyOrUnavailable, with no Data, rather than a proven empty inventory.
 
 ```cpp
 long OSLoadUI::GetLoadTypeCount(
@@ -2390,13 +2472,15 @@ LoadQueryResult<int> GetLoadCommandCount(int primaryLoadCaseId, LoadCommandKind 
 
 **Implementation contract:** Command kind is distinct from engineering LoadType and LoadItemKind. Native zero is documented as case not found and is returned as EmptyOrUnavailable, with no Data, rather than a proven empty inventory. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [CommandCount — line 139](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L139).
+
 #### GetListSizeForLoadType
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga8e2b9d3639488a9442eb4c4d1ec21e87) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga8e2b9d3639488a9442eb4c4d1ec21e87) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga8e2b9d3639488a9442eb4c4d1ec21e87)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetAssignedEntityCount`. Validates the zero-based command index against GetLoadTypeCount and rechecks that count afterwards. A zero command count is EmptyOrUnavailable; an index beyond a positive count is NotFound. A valid entity count can be zero. This returns a count, not the assignment-ID list.
+**Managed capability:** Implemented. Validates the zero-based command index against GetLoadTypeCount and rechecks that count afterwards. A zero command count is EmptyOrUnavailable; an index beyond a positive count is NotFound. A valid entity count can be zero. This returns a count, not the assignment-ID list.
 
 ```cpp
 long OSLoadUI::GetListSizeForLoadType(
@@ -2429,13 +2513,15 @@ LoadQueryResult<int> GetAssignedEntityCount(int primaryLoadCaseId, LoadCommandKi
 
 **Implementation contract:** Validates the zero-based command index against GetLoadTypeCount and rechecks that count afterwards. A zero command count is EmptyOrUnavailable; an index beyond a positive count is NotFound. A valid entity count can be zero. This returns a count, not the assignment-ID list. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [GetAssignedEntityCount — line 160](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L160); [GetAssignedEntityIds — line 281](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L281); [GetAssignedEntityIds — line 292](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L292).
+
 #### GetAssignmentListForLoadType
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga35276014d19da32994c0adf4ab3e53eb) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga35276014d19da32994c0adf4ab3e53eb) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga35276014d19da32994c0adf4ab3e53eb)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Partial. GetNodalLoadsGroupedByLoadCase and GetMemberLoadsGroupedByLoadCase reconstruct definition/entity buckets for supplied nodes/beams and supported families. They require an entity scope and do not preserve native command identity, order or a general command-type/index assignment list.
+**Managed capability:** Implemented. Use to preserve the entity assignment list of one original command, including native order and duplicates. GetAssignedEntityCount returns only its size. GetNodalLoads/GetMemberUniformlyDistributedLoads read loads for an entity, while grouped population methods reorganize loads across entities and can lose original command identity. The zero-based commandIndex is within commandKind, not the loadItemIndex used by GetLoadItemKind. Native zero is an error/unavailable observation, not a proven empty assignment. Sizing, returned size and observed command/entity counts must agree.
 
 ```cpp
 VARIANT OSLoadUI::GetAssignmentListForLoadType(
@@ -2464,21 +2550,24 @@ VARIANT OSLoadUI::GetAssignmentListForLoadType(
 | `<Val>` | Size of varList . |
 | `0` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [GetAssignedEntityIds — line 285](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L285).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex, int maximumResults = 100000);
 ~~~
 
-**Contract state:** Defined; implementation pending. Primary activation, zero-based command index, paired sizing/retrieval counts, valid IDs, bounds and state checks. Native 0 means error; do not infer empty success from it. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to preserve the entity assignment list of one original command, including native order and duplicates. GetAssignedEntityCount returns only its size. GetNodalLoads/GetMemberUniformlyDistributedLoads read loads for an entity, while grouped population methods reorganize loads across entities and can lose original command identity. The zero-based commandIndex is within commandKind, not the loadItemIndex used by GetLoadItemKind. Native zero is an error/unavailable observation, not a proven empty assignment. Sizing, returned size and observed command/entity counts must agree. See [usage and qualification limits](../Load-Expansion.md#getassignedentityids).
 
 #### DeletePrimaryLoadCases
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga969b11631fb0bc3fcef22c4cc54b9017) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga969b11631fb0bc3fcef22c4cc54b9017) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga969b11631fb0bc3fcef22c4cc54b9017)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. ClearPrimaryLoadCase/ClearPrimaryLoadCases remove load items; they do not implement deletion of the case definitions. The native deletion entry point also accepts a reference-family flag.
+**Managed capability:** Implemented. Use to remove primary or reference case definitions. ClearPrimaryLoadCases/ClearReferenceLoadCases clear their contents while retaining the cases. Combination and RepeatLoad enum choices are rejected; repeat commands live inside primary cases and require primary-family selection. Primary requests dispatch DeletePrimaryLoadCases with the reference flag false; reference requests use DeleteReferenceLoadCases. Native 1 means success. Dependency failures are reported without deletion/recreation fallback.
 
 ```cpp
 VARIANT OSLoadUI::DeletePrimaryLoadCases(
@@ -2506,21 +2595,24 @@ VARIANT OSLoadUI::DeletePrimaryLoadCases(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [DeleteLoadCases — line 71](../../src/StaadPro.Interop/Services/Load/LoadCaseManagementService.cs#L71).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds);
 ~~~
 
-**Contract state:** Defined; implementation pending. Only PrimaryLoad/ReferenceLoad accepted; reuse LoadCaseType instead of a new family enum. Snapshot a nonempty selection; dependency errors and possible effects are reported. This differs from clearing items. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to remove primary or reference case definitions. ClearPrimaryLoadCases/ClearReferenceLoadCases clear their contents while retaining the cases. Combination and RepeatLoad enum choices are rejected; repeat commands live inside primary cases and require primary-family selection. Primary requests dispatch DeletePrimaryLoadCases with the reference flag false; reference requests use DeleteReferenceLoadCases. Native 1 means success. Dependency failures are reported without deletion/recreation fallback. See [usage and qualification limits](../Load-Expansion.md#deleteloadcases).
 
 #### DeleteReferenceLoadCases
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga68d5bc5d7bbf772281bdec969832dd00) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga68d5bc5d7bbf772281bdec969832dd00) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga68d5bc5d7bbf772281bdec969832dd00)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. ClearReferenceLoadCase/ClearReferenceLoadCases clear items; they do not implement reference-case definition deletion. A future shared managed deletion API may cover both native deletion alternatives.
+**Managed capability:** Implemented. Use to remove primary or reference case definitions. ClearPrimaryLoadCases/ClearReferenceLoadCases clear their contents while retaining the cases. Combination and RepeatLoad enum choices are rejected; repeat commands live inside primary cases and require primary-family selection. Primary requests dispatch DeletePrimaryLoadCases with the reference flag false; reference requests use DeleteReferenceLoadCases. Native 1 means success. Dependency failures are reported without deletion/recreation fallback.
 
 ```cpp
 VARIANT OSLoadUI::DeleteReferenceLoadCases(
@@ -2545,19 +2637,22 @@ VARIANT OSLoadUI::DeleteReferenceLoadCases(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [DeleteLoadCases — line 72](../../src/StaadPro.Interop/Services/Load/LoadCaseManagementService.cs#L72).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds);
 ~~~
 
-**Contract state:** Defined; implementation pending. Only PrimaryLoad/ReferenceLoad accepted; reuse LoadCaseType instead of a new family enum. Snapshot a nonempty selection; dependency errors and possible effects are reported. This differs from clearing items. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to remove primary or reference case definitions. ClearPrimaryLoadCases/ClearReferenceLoadCases clear their contents while retaining the cases. Combination and RepeatLoad enum choices are rejected; repeat commands live inside primary cases and require primary-family selection. Primary requests dispatch DeletePrimaryLoadCases with the reference flag false; reference requests use DeleteReferenceLoadCases. Native 1 means success. Dependency failures are reported without deletion/recreation fallback. See [usage and qualification limits](../Load-Expansion.md#deleteloadcases).
 
 #### ClearPrimaryLoadCase
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#gac60cdde591385334dbbfbc0e76da682c) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#gac60cdde591385334dbbfbc0e76da682c) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#gac60cdde591385334dbbfbc0e76da682c)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::ClearPrimaryLoadCase(
@@ -2585,13 +2680,14 @@ VARIANT OSLoadUI::ClearPrimaryLoadCase(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [ClearPrimaryLoadCases — line 1731](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1731); [ClearPrimaryLoadCases — line 1754](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1754).
+
+**Current call sites:** [ClearPrimaryLoadCases — line 2640](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2640); [ClearPrimaryLoadCases — line 2663](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2663).
 
 #### ClearReferenceLoadCase
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga5651ca43e11e3932abde242666b7f6ad) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga5651ca43e11e3932abde242666b7f6ad) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga5651ca43e11e3932abde242666b7f6ad)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::ClearReferenceLoadCase(
@@ -2614,13 +2710,14 @@ VARIANT OSLoadUI::ClearReferenceLoadCase(
 | `1` | OK. |
 | `0` | Failed to delete load(s) |
 
-**Current call sites:** [ClearReferenceLoadCases — line 1777](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1777).
+
+**Current call sites:** [ClearReferenceLoadCases — line 2686](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2686).
 
 #### CreateNewPrimaryLoadEx2
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga9246e3b7e18d22d556a9bbbd73572c6a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga9246e3b7e18d22d556a9bbbd73572c6a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga9246e3b7e18d22d556a9bbbd73572c6a)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::CreateNewPrimaryLoadEx2(
@@ -2649,17 +2746,18 @@ VARIANT OSLoadUI::CreateNewPrimaryLoadEx2(
 | `<Val>` | nLoadNo . |
 | `0` | Failed to create load. |
 
-**Current call sites:** [CreateNewPrimaryLoad — line 1799](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1799).
 
 **Priority verification:** The inspected Ex2 declaration has by-reference title/type slots; the current call passes both by value. See the primary report; no implementation was changed.
+
+**Current call sites:** [CreateNewPrimaryLoad — line 2708](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2708).
 
 #### GetLoadItemsCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga3597b11d8f108005e9be64e4761887e2) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga3597b11d8f108005e9be64e4761887e2) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga3597b11d8f108005e9be64e4761887e2)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetLoadItemCount`. Zero is valid and -1 is NativeFailure. Passes the case number directly without activation or family inference. Counts native items rather than per-entity duplicates or grouped managed definitions.
+**Managed capability:** Implemented. Zero is valid and -1 is NativeFailure. Passes the case number directly without activation or family inference. Counts native items rather than per-entity duplicates or grouped managed definitions.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadItemsCount(
@@ -2689,13 +2787,15 @@ LoadQueryResult<int> GetLoadItemCount(int loadCaseId);
 
 **Implementation contract:** Zero is valid and -1 is NativeFailure. Passes the case number directly without activation or family inference. Counts native items rather than per-entity duplicates or grouped managed definitions. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [Item — line 23](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L23); [Item — line 31](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L31); [GetLoadItemCount — line 169](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L169).
+
 #### GetLoadItemType
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga90d695c8921e1e5eeb570ba37e1744fd) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga90d695c8921e1e5eeb570ba37e1744fd) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga90d695c8921e1e5eeb570ba37e1744fd)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetLoadItemKind`. Native zero is NotFound. Unknown positive codes are retained in the enum value; use Enum.IsDefined to test recognition. Code 3312 remains explicitly ambiguous between region nodal and partial plate pressure. Negative codes are malformed. No activation or family inference occurs.
+**Managed capability:** Implemented. Native zero is NotFound. Unknown positive codes are retained in the enum value; use Enum.IsDefined to test recognition. Code 3312 remains explicitly ambiguous between region nodal and partial plate pressure. Negative codes are malformed. No activation or family inference occurs.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadItemType(
@@ -2728,15 +2828,17 @@ LoadQueryResult<LoadItemKind> GetLoadItemKind(int loadCaseId, int loadItemIndex)
 
 **Implementation contract:** Native zero is NotFound. Unknown positive codes are retained in the enum value; use Enum.IsDefined to test recognition. Code 3312 remains explicitly ambiguous between region nodal and partial plate pressure. Negative codes are malformed. No activation or family inference occurs. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [Item — line 26](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L26); [Item — line 33](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L33); [GetLoadItemKind — line 177](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L177).
+
 ### Load Items: SelfWeight
 
 #### AddSelfWeightInXYZ
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_self_weight.html#gac54227b07c765ba1cb94fb1d1f4271af) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_self_weight.html#gac54227b07c765ba1cb94fb1d1f4271af) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_self_weight.html#gac54227b07c765ba1cb94fb1d1f4271af)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Partial. AddSelfweightInXYZTo already applies self-weight to explicit beam/plate/solid IDs. Geometry inventories can supply current IDs, but no integrated whole-model self-weight operation exists; an explicit list does not establish identical whole-model command scope or future-geometry behavior.
+**Managed capability:** Implemented. Use for native whole-model self-weight covering beams, plates and solids. AddSelfweightInXYZTo instead assigns to an explicit geometry list; these scopes are different even when a caller currently lists every entity. The factor is dimensionless, with its sign preserved, and the global direction uses SelfWeightDirection. Native Boolean TRUE means success.
 
 ```cpp
 VARIANT OSLoadUI::AddSelfWeightInXYZ(
@@ -2762,19 +2864,22 @@ VARIANT OSLoadUI::AddSelfWeightInXYZ(
 | `true` | Add self weight successful. |
 | `false` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [AddSelfWeight — line 20](../../src/StaadPro.Interop/Services/Load/LoadAssignmentService.cs#L20).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddSelfWeight(ILoadCase targetCase, SelfWeightDirection direction, double factor);
 ~~~
 
-**Contract state:** Defined; implementation pending. Reuses existing ILoadCase and SelfWeightDirection; factor is dimensionless. Explicit geometry-scoped API remains separate; empty selection is not relevant. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use for native whole-model self-weight covering beams, plates and solids. AddSelfweightInXYZTo instead assigns to an explicit geometry list; these scopes are different even when a caller currently lists every entity. The factor is dimensionless, with its sign preserved, and the global direction uses SelfWeightDirection. Native Boolean TRUE means success. See [usage and qualification limits](../Load-Expansion.md#addselfweight).
 
 #### AddSelfWeightInXYZToGeometry
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_self_weight.html#gac7bd07b68033a341b2ccd05d66cb1c90) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_self_weight.html#gac7bd07b68033a341b2ccd05d66cb1c90) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_self_weight.html#gac7bd07b68033a341b2ccd05d66cb1c90)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddSelfWeightInXYZToGeometry(
@@ -2803,7 +2908,8 @@ VARIANT OSLoadUI::AddSelfWeightInXYZToGeometry(
 | `true` | OK. |
 | `false` | General error. |
 
-**Current call sites:** [AddSelfweightInXYZTo — line 2230](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2230).
+
+**Current call sites:** [AddSelfweightInXYZTo — line 3139](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3139).
 
 ### Load Items: Nodal
 
@@ -2811,7 +2917,7 @@ VARIANT OSLoadUI::AddSelfWeightInXYZToGeometry(
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_nodal.html#gafd43c265f2925cc1f0a3c0c654c981c1) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_nodal.html#gafd43c265f2925cc1f0a3c0c654c981c1) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_nodal.html#gafd43c265f2925cc1f0a3c0c654c981c1)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddNodalLoad(
@@ -2857,13 +2963,14 @@ VARIANT OSLoadUI::AddNodalLoad(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [AddNodalLoad — line 2005](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2005).
+
+**Current call sites:** [AddNodalLoad — line 2914](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2914).
 
 #### AddSupportDisplacement
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_nodal.html#gadbf5b06ad7b6120475c99d605c785118) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_nodal.html#gadbf5b06ad7b6120475c99d605c785118) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_nodal.html#gadbf5b06ad7b6120475c99d605c785118)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddSupportDisplacement(
@@ -2892,13 +2999,14 @@ VARIANT OSLoadUI::AddSupportDisplacement(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddSupportSettlement — line 1922](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1922).
+
+**Current call sites:** [AddSupportSettlement — line 2831](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2831).
 
 #### GetNodalLoadCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_nodal.html#gafe7311f8ee6677a22d22fde168a7c0dc) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_nodal.html#gafe7311f8ee6677a22d22fde168a7c0dc) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_nodal.html#gafe7311f8ee6677a22d22fde168a7c0dc)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetNodalLoadCount(
@@ -2921,13 +3029,14 @@ VARIANT OSLoadUI::GetNodalLoadCount(
 | `<Val>` | The number of node(s). |
 | `-1` | General error (perhaps load case not found). |
 
-**Current call sites:** [GetNodalLoads — line 788](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L788).
+
+**Current call sites:** [GetNodalLoads — line 1697](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1697).
 
 #### GetNodalLoads
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_nodal.html#ga6ac19e170ef258bfd97ee9345850ebf1) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_nodal.html#ga6ac19e170ef258bfd97ee9345850ebf1) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_nodal.html#ga6ac19e170ef258bfd97ee9345850ebf1)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetNodalLoads(
@@ -2968,15 +3077,16 @@ VARIANT OSLoadUI::GetNodalLoads(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [GetNodalLoads — line 794](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L794).
+
+**Current call sites:** [GetNodalLoads — line 1703](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1703).
 
 #### GetNodalLoadInfo
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_nodal.html#ga53757ae693de6e733c1d842becdfccd9) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_nodal.html#ga53757ae693de6e733c1d842becdfccd9) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_nodal.html#ga53757ae693de6e733c1d842becdfccd9)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Partial. GetNodalLoads reads six force/moment components per supplied node; PopulateNodalLoads and grouping helpers also exist. They do not select or preserve the original native load-command index.
+**Managed capability:** Implemented. Use to inspect the six components of one original ordinary nodal command. GetNodalLoads reads loads assigned to a particular node; GetNodalLoadsGroupedByLoadCase reorganizes entity data. This packet contains no node list: use GetAssignedEntityIds with the appropriate command index for assignments. Only native Nodal items are accepted; inclined loads and support displacement are not interchangeable. Pass the original zero-based GetLoadItemKind index unchanged. The nodal help omits an explicit base; confirm this command-index convention against the acquired build before production use. Native Boolean TRUE means success.
 
 ```cpp
 VARIANT OSLoadUI::GetNodalLoadInfo(
@@ -3002,13 +3112,16 @@ VARIANT OSLoadUI::GetNodalLoadInfo(
 | `FALSE` | Failed |
 | `TRUE` | success |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [GetNodalLoadCommand — line 41](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L41).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<NodalLoadCommandInfo> GetNodalLoadCommand(ILoadCase targetCase, int loadItemIndex);
 ~~~
 
-**Contract state:** Qualification required. Native text omits the index base; proposed zero-based convention requires qualification. Uses existing Forces through a defensive copy rather than new six-number arrays. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to inspect the six components of one original ordinary nodal command. GetNodalLoads reads loads assigned to a particular node; GetNodalLoadsGroupedByLoadCase reorganizes entity data. This packet contains no node list: use GetAssignedEntityIds with the appropriate command index for assignments. Only native Nodal items are accepted; inclined loads and support displacement are not interchangeable. Pass the original zero-based GetLoadItemKind index unchanged. The nodal help omits an explicit base; confirm this command-index convention against the acquired build before production use. Native Boolean TRUE means success. See [usage and qualification limits](../Load-Expansion.md#getnodalloadcommand).
 
 ### Load Items: Member
 
@@ -3016,7 +3129,7 @@ LoadQueryResult<NodalLoadCommandInfo> GetNodalLoadCommand(ILoadCase targetCase, 
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga2c1823f8c9b8348eff1b2efb08011201) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga2c1823f8c9b8348eff1b2efb08011201) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga2c1823f8c9b8348eff1b2efb08011201)
 
-**Comparison:** Common. **Coverage:** E — delegated member-load dispatch.
+**Comparison:** Common. **Coverage:** E — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberUniformForce(
@@ -3054,13 +3167,14 @@ VARIANT OSLoadUI::AddMemberUniformForce(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [MemberUniformlyDistributedLoad.ApplyTo — line 84](../../src/StaadPro.Interop/Entities/MemberUniformlyDistributedLoad.cs#L84).
+
+**Current call sites:** [ApplyTo — line 84](../../src/StaadPro.Interop/Entities/MemberUniformlyDistributedLoad.cs#L84).
 
 #### AddMemberUniformMoment
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga3da137976a73640b541a66c260693e48) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga3da137976a73640b541a66c260693e48) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga3da137976a73640b541a66c260693e48)
 
-**Comparison:** Common. **Coverage:** E — delegated member-load dispatch.
+**Comparison:** Common. **Coverage:** E — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberUniformMoment(
@@ -3098,13 +3212,14 @@ VARIANT OSLoadUI::AddMemberUniformMoment(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [MemberUniformMoment.ApplyTo — line 75](../../src/StaadPro.Interop/Entities/MemberUniformMoment.cs#L75).
+
+**Current call sites:** [ApplyTo — line 75](../../src/StaadPro.Interop/Entities/MemberUniformMoment.cs#L75).
 
 #### AddMemberConcForce
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#gaa6fd59d87e1e940b83400684a9a21e63) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#gaa6fd59d87e1e940b83400684a9a21e63) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#gaa6fd59d87e1e940b83400684a9a21e63)
 
-**Comparison:** Common. **Coverage:** E — delegated member-load dispatch.
+**Comparison:** Common. **Coverage:** E — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberConcForce(
@@ -3139,13 +3254,14 @@ VARIANT OSLoadUI::AddMemberConcForce(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [MemberConcentratedLoad.ApplyTo — line 76](../../src/StaadPro.Interop/Entities/MemberConcentratedLoad.cs#L76).
+
+**Current call sites:** [ApplyTo — line 76](../../src/StaadPro.Interop/Entities/MemberConcentratedLoad.cs#L76).
 
 #### AddMemberConcMoment
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga80f43e61a87b337b821f317ab5b712cc) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga80f43e61a87b337b821f317ab5b712cc) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga80f43e61a87b337b821f317ab5b712cc)
 
-**Comparison:** Common. **Coverage:** E — delegated member-load dispatch.
+**Comparison:** Common. **Coverage:** E — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberConcMoment(
@@ -3180,13 +3296,14 @@ VARIANT OSLoadUI::AddMemberConcMoment(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [MemberConcentratedMoment.ApplyTo — line 67](../../src/StaadPro.Interop/Entities/MemberConcentratedMoment.cs#L67).
+
+**Current call sites:** [ApplyTo — line 67](../../src/StaadPro.Interop/Entities/MemberConcentratedMoment.cs#L67).
 
 #### AddMemberLinearVari
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#gae3ca9258f043cd379cfd0255ee55eb7b) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#gae3ca9258f043cd379cfd0255ee55eb7b) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#gae3ca9258f043cd379cfd0255ee55eb7b)
 
-**Comparison:** Common. **Coverage:** E — delegated member-load dispatch.
+**Comparison:** Common. **Coverage:** E — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberLinearVari(
@@ -3222,13 +3339,14 @@ VARIANT OSLoadUI::AddMemberLinearVari(
 | `-1` | General error. |
 | `-8001` | Load direction is invalid. |
 
-**Current call sites:** [MemberLinearVaryingLoad.ApplyTo — line 68](../../src/StaadPro.Interop/Entities/MemberLinearVaryingLoad.cs#L68).
+
+**Current call sites:** [ApplyTo — line 68](../../src/StaadPro.Interop/Entities/MemberLinearVaryingLoad.cs#L68).
 
 #### AddMemberTrapezoidal
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga8e3a9cf9619680e33c05618e7de30d52) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga8e3a9cf9619680e33c05618e7de30d52) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga8e3a9cf9619680e33c05618e7de30d52)
 
-**Comparison:** Common. **Coverage:** E — delegated member-load dispatch.
+**Comparison:** Common. **Coverage:** E — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberTrapezoidal(
@@ -3266,15 +3384,16 @@ VARIANT OSLoadUI::AddMemberTrapezoidal(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [MemberTrapezoidalLoad.ApplyTo — line 73](../../src/StaadPro.Interop/Entities/MemberTrapezoidalLoad.cs#L73).
+
+**Current call sites:** [ApplyTo — line 73](../../src/StaadPro.Interop/Entities/MemberTrapezoidalLoad.cs#L73).
 
 #### AddMemberAreaLoad
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga3ead37c8f7e53bd37687be53194dccc4) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga3ead37c8f7e53bd37687be53194dccc4) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga3ead37c8f7e53bd37687be53194dccc4)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No built-in area-load assignment. Existing member uniform-force definitions have different engineering dimensions/semantics.
+**Managed capability:** Implemented. Use to assign the native member AREA load parameter to selected beam IDs. AddFloorLoad instead searches enclosed floor panels and distributes floor pressure; AddMemberLoad accepts supported line-load templates. These operations can produce different distributions on the same geometry. The signed area-load value uses current native units. Native 0 means success.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberAreaLoad(
@@ -3300,21 +3419,24 @@ VARIANT OSLoadUI::AddMemberAreaLoad(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [AddMemberAreaLoad — line 25](../../src/StaadPro.Interop/Services/Load/LoadAssignmentService.cs#L25).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddMemberAreaLoad(ILoadCase targetCase, IEnumerable<int> memberIds, double areaLoad);
 ~~~
 
-**Contract state:** Defined; implementation pending. Native 0 success; quantity follows native area-load units, not uniform force-per-length. No automatic conversion. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to assign the native member AREA load parameter to selected beam IDs. AddFloorLoad instead searches enclosed floor panels and distributes floor pressure; AddMemberLoad accepts supported line-load templates. These operations can produce different distributions on the same geometry. The signed area-load value uses current native units. Native 0 means success. See [usage and qualification limits](../Load-Expansion.md#addmemberareaload).
 
 #### AddMemberFixedEnd
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#gaaf4468c2960776a1a18df2d7df79340b) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#gaaf4468c2960776a1a18df2d7df79340b) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#gaaf4468c2960776a1a18df2d7df79340b)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No built-in fixed-end member-load definition or assignment. End actions in Output are results, not load assignments.
+**Managed capability:** Implemented. Use to supply six force/moment components at each member end as a fixed-end load definition. This is different from assigning concentrated member forces at a distance, support settlements, or reading Output reactions. StartForces and EndForces follow Fx/Fy/Fz/Mx/My/Mz order; signs and current force/moment units are preserved without support-reaction sign reversal. Native 0 means success.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberFixedEnd(
@@ -3343,19 +3465,22 @@ VARIANT OSLoadUI::AddMemberFixedEnd(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [AddMemberFixedEndLoad — line 32](../../src/StaadPro.Interop/Services/Load/LoadAssignmentService.cs#L32).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddMemberFixedEndLoad(ILoadCase targetCase, IEnumerable<int> memberIds, FixedEndLoadDefinition definition);
 ~~~
 
-**Contract state:** Defined; implementation pending. Reuses Forces; internal buffers contain Fx/Fy/Fz/Mx/My/Mz in documented order. Native 0 success; qualify axes/sign conventions. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to supply six force/moment components at each member end as a fixed-end load definition. This is different from assigning concentrated member forces at a distance, support settlements, or reading Output reactions. StartForces and EndForces follow Fx/Fy/Fz/Mx/My/Mz order; signs and current force/moment units are preserved without support-reaction sign reversal. Native 0 means success. See [usage and qualification limits](../Load-Expansion.md#addmemberfixedendload).
 
 #### GetUDLLoadCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga91881f1b488a97a80c79f05d19c9acb1) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga91881f1b488a97a80c79f05d19c9acb1) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga91881f1b488a97a80c79f05d19c9acb1)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetUDLLoadCount(
@@ -3378,13 +3503,14 @@ VARIANT OSLoadUI::GetUDLLoadCount(
 | `<Val>` | The number of uniformly distributed load item(s) applied. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberUniformlyDistributedLoads — line 846](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L846).
+
+**Current call sites:** [GetMemberUniformlyDistributedLoads — line 1755](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1755).
 
 #### GetUDLLoads
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga37c0da9a1d06ec1a63b641c3023af35c) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga37c0da9a1d06ec1a63b641c3023af35c) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga37c0da9a1d06ec1a63b641c3023af35c)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetUDLLoads(
@@ -3422,13 +3548,14 @@ VARIANT OSLoadUI::GetUDLLoads(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberUniformlyDistributedLoads — line 852](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L852).
+
+**Current call sites:** [GetMemberUniformlyDistributedLoads — line 1761](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1761).
 
 #### GetUNIMomentCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga6aeeb7f578026b4ef92ad0f89212b2a4) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga6aeeb7f578026b4ef92ad0f89212b2a4) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga6aeeb7f578026b4ef92ad0f89212b2a4)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetUNIMomentCount(
@@ -3451,13 +3578,14 @@ VARIANT OSLoadUI::GetUNIMomentCount(
 | `<Val>` | The number of uniformly distributed (UNI) moment item(s) applied. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberUniformMoments — line 1148](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1148).
+
+**Current call sites:** [GetMemberUniformMoments — line 2057](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2057).
 
 #### GetUNIMoments
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga6a32b9122fb5a9c15b664aeeb0961862) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga6a32b9122fb5a9c15b664aeeb0961862) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga6a32b9122fb5a9c15b664aeeb0961862)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetUNIMoments(
@@ -3495,13 +3623,14 @@ VARIANT OSLoadUI::GetUNIMoments(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberUniformMoments — line 1154](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1154).
+
+**Current call sites:** [GetMemberUniformMoments — line 2063](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2063).
 
 #### GetTrapLoadCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga69350aaa0a2878dbbf9df1054f5f082e) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga69350aaa0a2878dbbf9df1054f5f082e) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga69350aaa0a2878dbbf9df1054f5f082e)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetTrapLoadCount(
@@ -3524,13 +3653,14 @@ VARIANT OSLoadUI::GetTrapLoadCount(
 | `<Val>` | The number of trapezoidal load item(s) applied. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberTrapezoidalLoads — line 1087](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1087).
+
+**Current call sites:** [GetMemberTrapezoidalLoads — line 1996](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1996).
 
 #### GetTrapLoads
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#gad2ea85860050c89c48c74460358a65ca) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#gad2ea85860050c89c48c74460358a65ca) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#gad2ea85860050c89c48c74460358a65ca)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetTrapLoads(
@@ -3568,13 +3698,14 @@ VARIANT OSLoadUI::GetTrapLoads(
 | `0` | OK |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberTrapezoidalLoads — line 1093](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1093).
+
+**Current call sites:** [GetMemberTrapezoidalLoads — line 2002](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2002).
 
 #### GetLinearVaryingLoadCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga7d655dfad4f7f4b445f87b8888ab212c) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga7d655dfad4f7f4b445f87b8888ab212c) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga7d655dfad4f7f4b445f87b8888ab212c)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::GetLinearVaryingLoadCount(
@@ -3597,13 +3728,14 @@ long OSLoadUI::GetLinearVaryingLoadCount(
 | `<Val>` | The number of linear varying load item(s) applied. |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberLinearVaryingLoads — line 1027](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1027).
+
+**Current call sites:** [GetMemberLinearVaryingLoads — line 1936](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1936).
 
 #### GetLinearVaryingLoads
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga1fad2339bc39c95b60b75d110f0cd17e) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga1fad2339bc39c95b60b75d110f0cd17e) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga1fad2339bc39c95b60b75d110f0cd17e)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetLinearVaryingLoads(
@@ -3638,13 +3770,14 @@ VARIANT OSLoadUI::GetLinearVaryingLoads(
 | `0` | OK |
 | `-1` | General error. |
 
-**Current call sites:** [GetMemberLinearVaryingLoads — line 1034](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1034).
+
+**Current call sites:** [GetMemberLinearVaryingLoads — line 1943](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1943).
 
 #### GetConcForceCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#gab1a51f83aa40e6178ba62688607c7877) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#gab1a51f83aa40e6178ba62688607c7877) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#gab1a51f83aa40e6178ba62688607c7877)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetConcForceCount(
@@ -3669,13 +3802,14 @@ VARIANT OSLoadUI::GetConcForceCount(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetMemberConcentratedLoads — line 905](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L905).
+
+**Current call sites:** [GetMemberConcentratedLoads — line 1814](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1814).
 
 #### GetConcForces
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga76ee32fe8074198ba6e64f446fea4aa0) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga76ee32fe8074198ba6e64f446fea4aa0) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga76ee32fe8074198ba6e64f446fea4aa0)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetConcForces(
@@ -3712,13 +3846,14 @@ VARIANT OSLoadUI::GetConcForces(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetMemberConcentratedLoads — line 911](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L911).
+
+**Current call sites:** [GetMemberConcentratedLoads — line 1820](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1820).
 
 #### GetConcMomentCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#gaa25fc3980a9d39f787f0af3c16a661b6) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#gaa25fc3980a9d39f787f0af3c16a661b6) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#gaa25fc3980a9d39f787f0af3c16a661b6)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetConcMomentCount(
@@ -3743,13 +3878,14 @@ VARIANT OSLoadUI::GetConcMomentCount(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetMemberConcentratedMoments — line 968](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L968).
+
+**Current call sites:** [GetMemberConcentratedMoments — line 1877](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1877).
 
 #### GetConcMoments
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#ga35e3e090648f7acf2f1b6dd40bf07ba0) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#ga35e3e090648f7acf2f1b6dd40bf07ba0) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#ga35e3e090648f7acf2f1b6dd40bf07ba0)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetConcMoments(
@@ -3786,15 +3922,16 @@ VARIANT OSLoadUI::GetConcMoments(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetMemberConcentratedMoments — line 974](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L974).
+
+**Current call sites:** [GetMemberConcentratedMoments — line 1883](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1883).
 
 #### GetMemberLoadInfo
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#gaa1df58fb5514e4c8814edb8e7987facd) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#gaa1df58fb5514e4c8814edb8e7987facd) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#gaa1df58fb5514e4c8814edb8e7987facd)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Partial. Six typed per-member readers and population/grouping helpers already return supported member force/moment definitions and positions. They do not expose the original generic command-index lookup or every native command family.
+**Managed capability:** Implemented. Use to retain one original member-command packet and its native item kind. GetMemberUniformlyDistributedLoads and the concentrated/linear/trapezoidal readers instead select per-member load definitions. Force parameter dimensions depend on Kind; do not interpret moment slots as forces. Distances retain their native meanings and length units. Only the six ordinary uniform-force, uniform-moment, concentrated-force, concentrated-moment, linear and trapezoidal kinds documented for this reader are accepted. Physical-member and fixed-end packets are not inferred. The item index is zero-based. Native Boolean TRUE means success.
 
 ```cpp
 VARIANT OSLoadUI::GetMemberLoadInfo(
@@ -3828,13 +3965,16 @@ VARIANT OSLoadUI::GetMemberLoadInfo(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [GetMemberLoadCommand — line 51](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L51).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<MemberLoadCommandInfo> GetMemberLoadCommand(ILoadCase targetCase, int loadItemIndex);
 ~~~
 
-**Contract state:** Defined; implementation pending. Retains three force parameters and three distances as named fields with original item kind. Does not collapse different command families or infer dimension-independent force slots. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to retain one original member-command packet and its native item kind. GetMemberUniformlyDistributedLoads and the concentrated/linear/trapezoidal readers instead select per-member load definitions. Force parameter dimensions depend on Kind; do not interpret moment slots as forces. Distances retain their native meanings and length units. Only the six ordinary uniform-force, uniform-moment, concentrated-force, concentrated-moment, linear and trapezoidal kinds documented for this reader are accepted. Physical-member and fixed-end packets are not inferred. The item index is zero-based. Native Boolean TRUE means success. See [usage and qualification limits](../Load-Expansion.md#getmemberloadcommand).
 
 ### Load Items: Physical Member
 
@@ -3846,7 +3986,7 @@ No native function declarations occur in this reviewed grouping page. Subgroups,
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_ele.html#gaeec2ec071bdd84d6139282dc089b83a2) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_ele.html#gaeec2ec071bdd84d6139282dc089b83a2) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_ele.html#gaeec2ec071bdd84d6139282dc089b83a2)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddElementPressure(
@@ -3888,17 +4028,18 @@ VARIANT OSLoadUI::AddElementPressure(
 | `-1` | General error. |
 | `-8001` | Load direction is invalid. |
 
-**Current call sites:** [AddPlateUniformPressure — line 2061](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2061).
 
 **Priority verification:** Current call supplies three arguments; the inspected declaration requires seven. See the primary report; no implementation was changed.
+
+**Current call sites:** [AddPlateUniformPressure — line 2970](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2970).
 
 #### AddElementHydrostaticPressure
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_ele.html#gac5b8a98ce4cceb2bea7775adb2b62ba2) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_ele.html#gac5b8a98ce4cceb2bea7775adb2b62ba2) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_ele.html#gac5b8a98ce4cceb2bea7775adb2b62ba2)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No plate hydrostatic pressure definition/assignment. Uniform plate pressure and seismic member weights do not provide this operation.
+**Managed capability:** Implemented. Use for pressures interpolated along a global coordinate axis. AddTrapezoidalPressure varies along plate-local X/Y or by joint; AddPlateUniformPressure assigns a uniform value. Pressure direction and interpolation axis are independent: the latter maps GlobalAxis X/Y/Z to native 1/2/3. Signed minimum/maximum pressure parameters are passed unchanged, not sorted or recalculated from fluid density. Native Boolean TRUE/1 means success.
 
 ```cpp
 VARIANT OSLoadUI::AddElementHydrostaticPressure(
@@ -3935,21 +4076,24 @@ VARIANT OSLoadUI::AddElementHydrostaticPressure(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [AddHydrostaticPressure — line 39](../../src/StaadPro.Interop/Services/Load/LoadAssignmentService.cs#L39).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddHydrostaticPressure(ILoadCase targetCase, IEnumerable<int> plateIds, HydrostaticPressureDefinition definition);
 ~~~
 
-**Contract state:** Defined; implementation pending. Pressure direction LocalZ/GlobalX/Y/Z; interpolation GlobalAxis maps internally to 1/2/3. Native true/1 success; distinct axes stay distinct. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use for pressures interpolated along a global coordinate axis. AddTrapezoidalPressure varies along plate-local X/Y or by joint; AddPlateUniformPressure assigns a uniform value. Pressure direction and interpolation axis are independent: the latter maps GlobalAxis X/Y/Z to native 1/2/3. Signed minimum/maximum pressure parameters are passed unchanged, not sorted or recalculated from fluid density. Native Boolean TRUE/1 means success. See [usage and qualification limits](../Load-Expansion.md#addhydrostaticpressure).
 
 #### AddElementTrapPressureEx
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_ele.html#ga829edeccde827aef75e1d8fb8e297cdf) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_ele.html#ga829edeccde827aef75e1d8fb8e297cdf) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_ele.html#ga829edeccde827aef75e1d8fb8e297cdf)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. AddPlateUniformPressure implements uniform pressure, not a varying/corner-pressure definition. The uniform special case does not cover this contract.
+**Managed capability:** Implemented. Use for two-value variation along plate-local X/Y or four joint-ordered pressures. AddHydrostaticPressure interpolates along a global axis; AddPlateUniformPressure supplies one uniform pressure. AlongLocalAxis supplies zero only for the two native ignored corner slots; AtCorners retains all four joint values. No joint sorting or geometry conversion occurs. Confirm the fourth-value convention separately for triangular plates. Native Boolean TRUE/1 means success.
 
 ```cpp
 VARIANT OSLoadUI::AddElementTrapPressureEx(
@@ -3992,21 +4136,24 @@ VARIANT OSLoadUI::AddElementTrapPressureEx(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [AddTrapezoidalPressure — line 46](../../src/StaadPro.Interop/Services/Load/LoadAssignmentService.cs#L46).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddTrapezoidalPressure(ILoadCase targetCase, IEnumerable<int> plateIds, TrapezoidalPressureDefinition definition);
 ~~~
 
-**Contract state:** Defined; implementation pending. Named factories separate local X/Y variation from four joint pressures. Qualify triangular joint conventions before enabling that shape. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use for two-value variation along plate-local X/Y or four joint-ordered pressures. AddHydrostaticPressure interpolates along a global axis; AddPlateUniformPressure supplies one uniform pressure. AlongLocalAxis supplies zero only for the two native ignored corner slots; AtCorners retains all four joint values. No joint sorting or geometry conversion occurs. Confirm the fourth-value convention separately for triangular plates. Native Boolean TRUE/1 means success. See [usage and qualification limits](../Load-Expansion.md#addtrapezoidalpressure).
 
 #### GetElementPressureLoadCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_ele.html#gac739a3b9dff3d045724072650172bf03) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_ele.html#gac739a3b9dff3d045724072650172bf03) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_ele.html#gac739a3b9dff3d045724072650172bf03)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No plate-pressure load count reader. AddPlateUniformPressure is a write operation; plate Output stress queries are analysis results.
+**Managed capability:** Implemented. Use to count applied pressure entries for one plate in the selected case. GetLoadItemCount counts original case command items, which need not equal this per-plate count; GetPlateConcentratedLoadCount covers concentrated loads. GetPlatePressureLoads returns the entries with values and local extents. Zero is a valid empty count, -1 is failure.
 
 ```cpp
 VARIANT OSLoadUI::GetElementPressureLoadCount(
@@ -4029,21 +4176,24 @@ VARIANT OSLoadUI::GetElementPressureLoadCount(
 | `<Val>` | The number of pressure load(s). |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [PlateCount — line 70](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L70).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<int> GetPlatePressureLoadCount(ILoadCase targetCase, int plateId);
 ~~~
 
-**Contract state:** Defined; implementation pending. Zero valid, -1 failure. Count belongs to selected case, not Output results. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to count applied pressure entries for one plate in the selected case. GetLoadItemCount counts original case command items, which need not equal this per-plate count; GetPlateConcentratedLoadCount covers concentrated loads. GetPlatePressureLoads returns the entries with values and local extents. Zero is a valid empty count, -1 is failure. See [usage and qualification limits](../Load-Expansion.md#getplatepressureloadcount).
 
 #### GetElementPressureLoads
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_ele.html#ga29a49308a9a4be3345a5dde809ccd6cf) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_ele.html#ga29a49308a9a4be3345a5dde809ccd6cf) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_ele.html#ga29a49308a9a4be3345a5dde809ccd6cf)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No plate-pressure definition read-back, including direction, pressure and local rectangle coordinates.
+**Managed capability:** Implemented. Use to read applied pressure entries and local rectangular extents for one plate. GetPlateLoadCommand reads an original full-pressure command packet by item index; GetPlateConcentratedLoads reads force entries at local points. These are load definitions, not Output plate stresses. Native top-left/bottom-right order is retained without min/max sorting. The bounded owned snapshot validates all directions and finite parameters and rechecks the count. Native 0 means success; -1 means failure. Zero count returns a read-only empty snapshot without fetching.
 
 ```cpp
 VARIANT OSLoadUI::GetElementPressureLoads(
@@ -4084,21 +4234,24 @@ VARIANT OSLoadUI::GetElementPressureLoads(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [ReadPlate — line 101](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L101).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<IEnumerable<PlatePressureLoad>> GetPlatePressureLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000);
 ~~~
 
-**Contract state:** Defined; implementation pending. Bounded count/fetch; materialized immutable results; native 0 success, -1 failure; no min/max reordering of native corner coordinates. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to read applied pressure entries and local rectangular extents for one plate. GetPlateLoadCommand reads an original full-pressure command packet by item index; GetPlateConcentratedLoads reads force entries at local points. These are load definitions, not Output plate stresses. Native top-left/bottom-right order is retained without min/max sorting. The bounded owned snapshot validates all directions and finite parameters and rechecks the count. Native 0 means success; -1 means failure. Zero count returns a read-only empty snapshot without fetching. See [usage and qualification limits](../Load-Expansion.md#getplatepressureloads).
 
 #### GetElementConcLoadCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_ele.html#ga86fa47a705ec3bd23b1a8ef5ab4353b6) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_ele.html#ga86fa47a705ec3bd23b1a8ef5ab4353b6) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_ele.html#ga86fa47a705ec3bd23b1a8ef5ab4353b6)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No plate concentrated-load count reader.
+**Managed capability:** Implemented. Use to count concentrated applied-load entries for one plate. GetPlatePressureLoadCount counts pressure entries; GetLoadItemCount counts original commands for the case. GetPlateConcentratedLoads returns magnitude and local position. Zero is a valid empty count, -1 is failure.
 
 ```cpp
 VARIANT OSLoadUI::GetElementConcLoadCount(
@@ -4121,21 +4274,24 @@ VARIANT OSLoadUI::GetElementConcLoadCount(
 | `<Val>` | The number of concentrated load on specified plate. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [PlateCount — line 71](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L71).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<int> GetPlateConcentratedLoadCount(ILoadCase targetCase, int plateId);
 ~~~
 
-**Contract state:** Defined; implementation pending. Zero valid and -1 failure; element family/active case remains explicit. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to count concentrated applied-load entries for one plate. GetPlatePressureLoadCount counts pressure entries; GetLoadItemCount counts original commands for the case. GetPlateConcentratedLoads returns magnitude and local position. Zero is a valid empty count, -1 is failure. See [usage and qualification limits](../Load-Expansion.md#getplateconcentratedloadcount).
 
 #### GetElementConcLoads
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_ele.html#ga68a485fc7281ecf5e60ce93672d6445d) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_ele.html#ga68a485fc7281ecf5e60ce93672d6445d) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_ele.html#ga68a485fc7281ecf5e60ce93672d6445d)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No plate concentrated-load definition reader.
+**Managed capability:** Implemented. Use for concentrated applied loads at local plate positions. GetPlatePressureLoads instead returns pressure entries and rectangular extents; GetPlateLoadCommand returns an original pressure command. Magnitudes remain in current native units and are not divided by area. Native 0 means success, -1 means failure; bounded paired buffers and before/after counts protect the owned snapshot. A zero count returns an empty snapshot without fetching.
 
 ```cpp
 VARIANT OSLoadUI::GetElementConcLoads(
@@ -4170,21 +4326,24 @@ VARIANT OSLoadUI::GetElementConcLoads(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [ReadPlate — line 102](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L102).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<IEnumerable<PlateConcentratedLoad>> GetPlateConcentratedLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000);
 ~~~
 
-**Contract state:** Defined; implementation pending. Reuses main ElementConcentratedLoad field semantics without its unimplemented ApplyTo or proprietary base/dependencies. Verify direction/quantity conventions. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use for concentrated applied loads at local plate positions. GetPlatePressureLoads instead returns pressure entries and rectangular extents; GetPlateLoadCommand returns an original pressure command. Magnitudes remain in current native units and are not divided by area. Native 0 means success, -1 means failure; bounded paired buffers and before/after counts protect the owned snapshot. A zero count returns an empty snapshot without fetching. See [usage and qualification limits](../Load-Expansion.md#getplateconcentratedloads).
 
 #### GetElementLoadInfo
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_ele.html#gae252989768c7a639b3f13bb01cc84809) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_ele.html#gae252989768c7a639b3f13bb01cc84809) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_ele.html#gae252989768c7a639b3f13bb01cc84809)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No element load-command index reader. Plate geometry and Output results do not supply applied load-command definitions.
+**Managed capability:** Implemented. Use only for the original ElementLoadPressure (PlateFullPressure, 3310) item packet. GetPlatePressureLoads reads per-plate pressure assignments; it is the alternative for those values and extents. Concentrated, trapezoidal, hydrostatic and partial-pressure item codes are not treated as full-pressure packets. The item index is zero-based. This native reader alone reports directions 0-8, translated to LoadDirection 1-9; member/plate-list readers already use 1-9. Native 1 means success, 0 failure, -1 Unsupported. Bentley explicitly requires selecting the load case in the STAAD UI: managed activation and numeric checks do not certify UI selection. Ensure that UI prerequisite before calling.
 
 ```cpp
 VARIANT OSLoadUI::GetElementLoadInfo(
@@ -4217,13 +4376,16 @@ VARIANT OSLoadUI::GetElementLoadInfo(
 | `0` | Unsuccessful. |
 | `-1` | Not Implemented. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [GetPlateLoadCommand — line 61](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L61).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<PlateLoadCommandInfo> GetPlateLoadCommand(ILoadCase targetCase, int loadItemIndex);
 ~~~
 
-**Contract state:** Qualification required. Only ElementLoadPressure is documented. Translate this API’s native 0-8 directions to LoadDirection 1-9. Native -1 means not implemented, not generic success. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use only for the original ElementLoadPressure (PlateFullPressure, 3310) item packet. GetPlatePressureLoads reads per-plate pressure assignments; it is the alternative for those values and extents. Concentrated, trapezoidal, hydrostatic and partial-pressure item codes are not treated as full-pressure packets. The item index is zero-based. This native reader alone reports directions 0-8, translated to LoadDirection 1-9; member/plate-list readers already use 1-9. Native 1 means success, 0 failure, -1 Unsupported. Bentley explicitly requires selecting the load case in the STAAD UI: managed activation and numeric checks do not certify UI selection. Ensure that UI prerequisite before calling. See [usage and qualification limits](../Load-Expansion.md#getplateloadcommand).
 
 ### Load Items: Floor
 
@@ -4231,9 +4393,9 @@ LoadQueryResult<PlateLoadCommandInfo> GetPlateLoadCommand(ILoadCase targetCase, 
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_floor.html#gad8d2365f154d84c6ac48bf733b3a41fd) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_floor.html#gad8d2365f154d84c6ac48bf733b3a41fd) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_floor.html#gad8d2365f154d84c6ac48bf733b3a41fd)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** A — managed alternative/composition; intentionally no exact dispatch.
 
-**Managed capability:** Absent. No automatic floor-panel discovery/distribution assignment. A caller manually generating member loads is not an implemented floor-load operation.
+**Managed capability:** Covered alternative. Use to let STAAD find enclosed floor panels and distribute pressure using a coordinate range or an existing FLOOR group. AddMemberAreaLoad applies the separate member AREA command; GetFloorInfluenceAreas observes geometry and assigns nothing. The extended native floor function handles all modes, so the legacy fixed-direction call is not duplicated. Range axis and loading axis are independent. Standard range mode passes the single-space marker shown in Bentley's VBA example; one-way mode passes "0" from its parameter table. Group mode passes the exact group name and zero ignored bounds; it does not create the group. Native 1 means success. Verify generated distributions, particularly one-way floors, against the target model.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberFloorLoad(
@@ -4277,21 +4439,22 @@ VARIANT OSLoadUI::AddMemberFloorLoad(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Prepared managed contract (review only):**
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition);
 ~~~
 
-**Contract state:** Defined; implementation pending. Shared typed request can use Ex for general modes; legacy GlobalX/Y-range subset is conditional on qualified equivalence. No duplicate public overload solely for native-name coverage. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to let STAAD find enclosed floor panels and distribute pressure using a coordinate range or an existing FLOOR group. AddMemberAreaLoad applies the separate member AREA command; GetFloorInfluenceAreas observes geometry and assigns nothing. The extended native floor function handles all modes, so the legacy fixed-direction call is not duplicated. Range axis and loading axis are independent. Standard range mode passes the single-space marker shown in Bentley's VBA example; one-way mode passes "0" from its parameter table. Group mode passes the exact group name and zero ignored bounds; it does not create the group. Native 1 means success. Verify generated distributions, particularly one-way floors, against the target model. See [usage and qualification limits](../Load-Expansion.md#addfloorload).
 
 #### GetBeamCountAtFloor
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_floor.html#gaa95d436c89c336e5002ffc642fbed2b6) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_floor.html#gaa95d436c89c336e5002ffc642fbed2b6) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_floor.html#gaa95d436c89c336e5002ffc642fbed2b6)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No floor-region beam count service matching this native operation. Geometry inventories do not by themselves implement floor-region semantics.
+**Managed capability:** Implemented. Use for the native beam count in a bounded floor region, without assigning loads or selecting a load case. This is not GetAssignedEntityCount, which counts entities attached to an existing command. GetFloorInfluenceAreas returns beam/area pairs for the same region. Coordinates are converted to native Single precision (with range checks); RangeAxis maps X/Y/Z to native 1/2/3. Zero is an empty count; malformed negatives are rejected except -1, returned as NativeFailure.
 
 ```cpp
 VARIANT OSLoadUI::GetBeamCountAtFloor(
@@ -4329,21 +4492,24 @@ VARIANT OSLoadUI::GetBeamCountAtFloor(
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [FloorCount — line 125](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L125).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<int> GetFloorBeamCount(FloorRegion region);
 ~~~
 
-**Contract state:** Defined; implementation pending. GlobalAxis range is explicitly translated to native 1/2/3. Finite coordinates may require checked Single marshaling. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use for the native beam count in a bounded floor region, without assigning loads or selecting a load case. This is not GetAssignedEntityCount, which counts entities attached to an existing command. GetFloorInfluenceAreas returns beam/area pairs for the same region. Coordinates are converted to native Single precision (with range checks); RangeAxis maps X/Y/Z to native 1/2/3. Zero is an empty count; malformed negatives are rejected except -1, returned as NativeFailure. See [usage and qualification limits](../Load-Expansion.md#getfloorbeamcount).
 
 #### GetInfluenceArea
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_floor.html#gaba0ac897a60241ed8a3a8e00506e5bed) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_floor.html#gaba0ac897a60241ed8a3a8e00506e5bed) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_floor.html#gaba0ac897a60241ed8a3a8e00506e5bed)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No floor influence-area calculation returning beam/area associations.
+**Managed capability:** Implemented. Use to observe beam/tributary influence-area pairs calculated by STAAD for a floor region. GetFloorBeamCount provides only sizing; AddFloorLoad actually assigns pressure. This method does not multiply areas by pressure or calculate managed tributary areas. It uses the same converted Single-precision bounds and range axis for sizing and retrieval (correcting the differing axes in Bentley's example). Validates positive beam IDs, finite nonnegative areas, retrieval limit and stable count. Native Boolean TRUE means success; areas use squared native length units.
 
 ```cpp
 VARIANT OSLoadUI::GetInfluenceArea(
@@ -4392,21 +4558,24 @@ VARIANT OSLoadUI::GetInfluenceArea(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [GetFloorInfluenceAreas — line 143](../../src/StaadPro.Interop/Services/Load/LoadAssignmentQueryService.cs#L143).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<IEnumerable<BeamInfluenceArea>> GetFloorInfluenceAreas(FloorRegion region, int maximumResults = 100000);
 ~~~
 
-**Contract state:** Defined; implementation pending. Bounded count/fetch with identical region; named associations replace parallel arrays. Native true/1 success; no managed engineering-area calculation. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to observe beam/tributary influence-area pairs calculated by STAAD for a floor region. GetFloorBeamCount provides only sizing; AddFloorLoad actually assigns pressure. This method does not multiply areas by pressure or calculate managed tributary areas. It uses the same converted Single-precision bounds and range axis for sizing and retrieval (correcting the differing axes in Bentley's example). Validates positive beam IDs, finite nonnegative areas, retrieval limit and stable count. Native Boolean TRUE means success; areas use squared native length units. See [usage and qualification limits](../Load-Expansion.md#getfloorinfluenceareas).
 
 #### AddMemberFloorLoadEx
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_floor.html#gae4dbae2a1476dc8b9105842bd568fb67) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_floor.html#gae4dbae2a1476dc8b9105842bd568fb67) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_floor.html#gae4dbae2a1476dc8b9105842bd568fb67)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No range/group/one-way floor-load request or assignment. A future common floor-load API can cover overlapping legacy and extended cases.
+**Managed capability:** Implemented. Use to let STAAD find enclosed floor panels and distribute pressure using a coordinate range or an existing FLOOR group. AddMemberAreaLoad applies the separate member AREA command; GetFloorInfluenceAreas observes geometry and assigns nothing. The extended native floor function handles all modes, so the legacy fixed-direction call is not duplicated. Range axis and loading axis are independent. Standard range mode passes the single-space marker shown in Bentley's VBA example; one-way mode passes "0" from its parameter table. Group mode passes the exact group name and zero ignored bounds; it does not create the group. Native 1 means success. Verify generated distributions, particularly one-way floors, against the target model.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberFloorLoadEx(
@@ -4456,13 +4625,16 @@ VARIANT OSLoadUI::AddMemberFloorLoadEx(
 | `1` | OK. |
 | `0` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [AddFloorLoad — line 57](../../src/StaadPro.Interop/Services/Load/LoadAssignmentService.cs#L57).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition);
 ~~~
 
-**Contract state:** Defined; implementation pending. Shared typed request can use Ex for general modes; legacy GlobalX/Y-range subset is conditional on qualified equivalence. No duplicate public overload solely for native-name coverage. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to let STAAD find enclosed floor panels and distribute pressure using a coordinate range or an existing FLOOR group. AddMemberAreaLoad applies the separate member AREA command; GetFloorInfluenceAreas observes geometry and assigns nothing. The extended native floor function handles all modes, so the legacy fixed-direction call is not duplicated. Range axis and loading axis are independent. Standard range mode passes the single-space marker shown in Bentley's VBA example; one-way mode passes "0" from its parameter table. Group mode passes the exact group name and zero ignored bounds; it does not create the group. Native 1 means success. Verify generated distributions, particularly one-way floors, against the target model. See [usage and qualification limits](../Load-Expansion.md#addfloorload).
 
 ### Load Items: Temperature
 
@@ -4470,7 +4642,7 @@ LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition defin
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_temp.html#ga63fe8160cb8445ac3d7acd1697b5b428) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_temp.html#ga63fe8160cb8445ac3d7acd1697b5b428) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_temp.html#ga63fe8160cb8445ac3d7acd1697b5b428)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddTemperatureLoad(
@@ -4502,15 +4674,16 @@ VARIANT OSLoadUI::AddTemperatureLoad(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddAxialThermalGradientTo — line 502](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L502); [AddAxialThermalGradientTo — line 520](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L520).
+
+**Current call sites:** [AddAxialThermalGradientTo — line 1411](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1411); [AddAxialThermalGradientTo — line 1429](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1429).
 
 #### AddStrainLoad
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_temp.html#ga33d9916b222ffd303f9625232a287451) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_temp.html#ga33d9916b222ffd303f9625232a287451) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_temp.html#ga33d9916b222ffd303f9625232a287451)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No strain-load assignment. AddAxialThermalGradientTo uses AddTemperatureLoad and is not strain loading.
+**Managed capability:** Implemented. Use to assign the native initial axial elongation parameter to explicit element IDs. Despite the native Strain name, axialElongation is a length in current model units, not dimensionless strain; no division or multiplication by member length occurs. AddAxialThermalGradientTo instead supplies a thermal gradient, and fixed-end loading instead supplies force/moment components. Native 0 means success.
 
 ```cpp
 VARIANT OSLoadUI::AddStrainLoad(
@@ -4536,13 +4709,16 @@ VARIANT OSLoadUI::AddStrainLoad(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [AddStrainLoad — line 64](../../src/StaadPro.Interop/Services/Load/LoadAssignmentService.cs#L64).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddStrainLoad(ILoadCase targetCase, IEnumerable<int> elementIds, double axialElongation);
 ~~~
 
-**Contract state:** Qualification required. Finite signed value; engineering dimensional conventions require native technical-reference qualification. Temperature loading is not substituted. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to assign the native initial axial elongation parameter to explicit element IDs. Despite the native Strain name, axialElongation is a length in current model units, not dimensionless strain; no division or multiplication by member length occurs. AddAxialThermalGradientTo instead supplies a thermal gradient, and fixed-end loading instead supplies force/moment components. Native 0 means success. See [usage and qualification limits](../Load-Expansion.md#addstrainload).
 
 ### Load Items: Seismic
 
@@ -4550,9 +4726,9 @@ LoadOperationResult AddStrainLoad(ILoadCase targetCase, IEnumerable<int> element
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_seismic.html#gaef2b657a5ddda1beb6c8af149585ffc7) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_seismic.html#gaef2b657a5ddda1beb6c8af149585ffc7) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_seismic.html#gaef2b657a5ddda1beb6c8af149585ffc7)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. Seismic definition/weight APIs and LoadType.SeismicH/SeismicV metadata exist; no seismic-load application to a case is implemented.
+**Managed capability:** Implemented. Use to apply the existing seismic definition to a case with a global axis and multiplier. AddSeismicDefinition creates definition settings; AddSeismicDefSelfWeight and joint/member weight methods contribute seismic weights. AddRSLoad/AddResponseSpectrumLoadEx create response-spectrum commands instead of this generated static seismic command. GlobalAxis maps directly to native 0/1/2, unlike self-weight or hydrostatic interpolation. Native 0 means success; -1/-8001 are failures.
 
 ```cpp
 VARIANT OSLoadUI::AddSeismicLoad(
@@ -4579,21 +4755,24 @@ VARIANT OSLoadUI::AddSeismicLoad(
 | `-1` | General error. |
 | `-8001` | Load direction is invalid. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [AddSeismicLoad — line 69](../../src/StaadPro.Interop/Services/Load/LoadAssignmentService.cs#L69).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddSeismicLoad(ILoadCase targetCase, GlobalAxis direction, double factor);
 ~~~
 
-**Contract state:** Defined; implementation pending. Reuses main GlobalAxis 0/1/2; separate from definition and member-weight domains. Native 0 success and -8001 invalid direction. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to apply the existing seismic definition to a case with a global axis and multiplier. AddSeismicDefinition creates definition settings; AddSeismicDefSelfWeight and joint/member weight methods contribute seismic weights. AddRSLoad/AddResponseSpectrumLoadEx create response-spectrum commands instead of this generated static seismic command. GlobalAxis maps directly to native 0/1/2, unlike self-weight or hydrostatic interpolation. Native 0 means success; -1/-8001 are failures. See [usage and qualification limits](../Load-Expansion.md#addseismicload).
 
 #### IsDynamicLoadIncluded
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_seismic.html#gafe4f103eedc99ab92900eb5342952e6f) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_seismic.html#gafe4f103eedc99ab92900eb5342952e6f) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_seismic.html#gafe4f103eedc99ab92900eb5342952e6f)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `ContainsDynamicLoad`. Native 1/0 means true/false successful data; -1 is NativeFailure, never Boolean true. Actual Boolean native returns are also accepted. Does not classify a case from its title or engineering type, activate it, or start analysis.
+**Managed capability:** Implemented. Native 1/0 means true/false successful data; -1 is NativeFailure, never Boolean true. Actual Boolean native returns are also accepted. Does not classify a case from its title or engineering type, activate it, or start analysis.
 
 ```cpp
 VARIANT OSLoadUI::IsDynamicLoadIncluded(
@@ -4625,6 +4804,8 @@ LoadQueryResult<bool> ContainsDynamicLoad(int loadCaseId);
 
 **Implementation contract:** Native 1/0 means true/false successful data; -1 is NativeFailure, never Boolean true. Actual Boolean native returns are also accepted. Does not classify a case from its title or engineering type, activate it, or start analysis. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [ContainsDynamicLoad — line 189](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L189).
+
 ### Load Items: Time History
 
 No native function declarations occur in this reviewed grouping page. Subgroups, where present, were traversed separately.
@@ -4635,9 +4816,9 @@ No native function declarations occur in this reviewed grouping page. Subgroups,
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_wind.html#gaa9ed8f688a0b105d17f3540581472685) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_wind.html#gaa9ed8f688a0b105d17f3540581472685) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_wind.html#gaa9ed8f688a0b105d17f3540581472685)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. Wind definition, exposure, intensity and profile computations exist; applying a wind-load command to a case is not implemented.
+**Managed capability:** Implemented. Use to apply an existing wind definition to a case over an explicit global region. AddWindDefinition/AddWindIntensity/AddWindExposure prepare that definition; ComputeWallWindPressureProfile computes a profile and does not assign this command. This native contract assumes Y vertical: a Z-up or unavailable geometry binding returns Unsupported before activation/assignment. No automatic coordinate remapping occurs. Uses documented X/Z signed codes 1/3/4/6 rather than the inconsistent example code 2. Native 0 means success. Signed factors are retained, so a negative factor can reverse the selected direction. Bentley’s all-zero-bounds example denotes whole-range walls; an all-zero region must not be assumed to select only a geometric point. Supply appropriate nondegenerate bounds when restricting scope.
 
 ```cpp
 VARIANT OSLoadUI::AddWindLoad(
@@ -4687,13 +4868,16 @@ VARIANT OSLoadUI::AddWindLoad(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [AddWindLoad — line 80](../../src/StaadPro.Interop/Services/Load/LoadAssignmentService.cs#L80).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddWindLoad(ILoadCase targetCase, WindLoadDefinition definition);
 ~~~
 
-**Contract state:** Defined; implementation pending. Direction codes 1/3/4/6; factor signed and dimensionless. Native range assumes Y vertical; verify model compatibility. No definition creation fallback. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to apply an existing wind definition to a case over an explicit global region. AddWindDefinition/AddWindIntensity/AddWindExposure prepare that definition; ComputeWallWindPressureProfile computes a profile and does not assign this command. This native contract assumes Y vertical: a Z-up or unavailable geometry binding returns Unsupported before activation/assignment. No automatic coordinate remapping occurs. Uses documented X/Z signed codes 1/3/4/6 rather than the inconsistent example code 2. Native 0 means success. Signed factors are retained, so a negative factor can reverse the selected direction. Bentley’s all-zero-bounds example denotes whole-range walls; an all-zero region must not be assumed to select only a geometric point. Supply appropriate nondegenerate bounds when restricting scope. See [usage and qualification limits](../Load-Expansion.md#addwindload).
 
 ### Load Items: Repeat
 
@@ -4701,7 +4885,7 @@ LoadOperationResult AddWindLoad(ILoadCase targetCase, WindLoadDefinition definit
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga605977fe7246b588f3bcacfa4f74d80a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga605977fe7246b588f3bcacfa4f74d80a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga605977fe7246b588f3bcacfa4f74d80a)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::AddRepeatLoad(
@@ -4726,15 +4910,16 @@ VARIANT OSLoadUI::AddRepeatLoad(
 | --- | --- |
 | `1` | If Load Case is added successfully, 0 otherwise. |
 
-**Current call sites:** [AddRepeatLoadsTo — line 487](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L487).
+
+**Current call sites:** [AddRepeatLoadsTo — line 1396](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1396).
 
 #### AddNotionalLoad
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#gad19ac47adbd00da2d8e56ff8c7bea779) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#gad19ac47adbd00da2d8e56ff8c7bea779) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#gad19ac47adbd00da2d8e56ff8c7bea779)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No notional-load assignment. Repeat/reference factor APIs do not add direction-bearing notional contributions.
+**Managed capability:** Implemented. Use to assign explicitly chosen primary and reference contributions to an existing case. AddRepeatLoadsTo/AddReferenceLoadsTo do not specify notional directions; CreateAutomaticRepeatLoads can generate notional participation through code rules rather than this explicit list. Contributions are partitioned into six aligned native buffers, preserving order and duplicates within each family. Assignment uses positive IDs in both families; GetNotionalContributions uses signed native IDs on readback. Factors retain signs, including zero, and directions use global X/Y/Z 1/2/3. Native 0 means success.
 
 ```cpp
 long OSLoadUI::AddNotionalLoad(
@@ -4772,19 +4957,22 @@ long OSLoadUI::AddNotionalLoad(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [AddNotionalLoad — line 92](../../src/StaadPro.Interop/Services/Load/LoadAssignmentService.cs#L92).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult AddNotionalLoad(ILoadCase targetCase, IEnumerable<NotionalLoadContribution> contributions);
 ~~~
 
-**Contract state:** Defined; implementation pending. Reuses the query contribution model with a validated public constructor. Internal packets partition families with positive IDs and global 1/2/3 axes; do not forward signed read-back IDs directly to separate family arrays. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to assign explicitly chosen primary and reference contributions to an existing case. AddRepeatLoadsTo/AddReferenceLoadsTo do not specify notional directions; CreateAutomaticRepeatLoads can generate notional participation through code rules rather than this explicit list. Contributions are partitioned into six aligned native buffers, preserving order and duplicates within each family. Assignment uses positive IDs in both families; GetNotionalContributions uses signed native IDs on readback. Factors retain signs, including zero, and directions use global X/Y/Z 1/2/3. Native 0 means success. See [usage and qualification limits](../Load-Expansion.md#addnotionalload).
 
 #### GetRepeatLoadCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga079ca807e856f915ffdf411f9c7fa468) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga079ca807e856f915ffdf411f9c7fa468) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga079ca807e856f915ffdf411f9c7fa468)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::GetRepeatLoadCount();
@@ -4799,15 +4987,16 @@ No native parameters.
 | `<Val>` | The number of repeat load commands in the active load case.To set the active load case use: - VARIANT OSLoadUI::SetLoadActive(const VARIANT FAR & varLoadNo) . To get the active load case use:- VARIANT OSLoadUI::GetActiveLoad() |
 | `0` | General error. |
 
-**Current call sites:** [GetRepeatLoadCases — line 600](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L600).
+
+**Current call sites:** [GetRepeatLoadCases — line 1509](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1509).
 
 #### GetNoLoadFactorInRepeatLoad
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga6ec117c499264c58e0b43ed223909834) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga6ec117c499264c58e0b43ed223909834) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga6ec117c499264c58e0b43ed223909834)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetRepeatContributionCount`. Uses the documented one-based repeat index. Zero is a successful empty count and -1 is NotFound for an invalid repeat index. This is a command contribution count, not the number of cases containing repeat loads.
+**Managed capability:** Implemented. Uses the documented one-based repeat index. Zero is a successful empty count and -1 is NotFound for an invalid repeat index. This is a command contribution count, not the number of cases containing repeat loads.
 
 ```cpp
 long OSLoadUI::GetNoLoadFactorInRepeatLoad(
@@ -4838,13 +5027,15 @@ LoadQueryResult<int> GetRepeatContributionCount(int primaryLoadCaseId, int repea
 
 **Implementation contract:** Uses the documented one-based repeat index. Zero is a successful empty count and -1 is NotFound for an invalid repeat index. This is a command contribution count, not the number of cases containing repeat loads. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [ContributionCount — line 221](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L221).
+
 #### GetRepeatLoadByIndex
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga823d0f1628893bee6ab495c46bffcfe7) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga823d0f1628893bee6ab495c46bffcfe7) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga823d0f1628893bee6ab495c46bffcfe7)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetRepeatContributions`. Sizes Int32 ID and Double factor buffers with GetNoLoadFactorInRepeatLoad; checks native returned size and a post-fetch count. Preserves duplicate positive primary IDs and finite signed/zero factors in an immutable materialized sequence. Zero pairs returns an empty sequence without fetching; -1 is NotFound. No dictionary deduplication or summation occurs.
+**Managed capability:** Implemented. Sizes Int32 ID and Double factor buffers with GetNoLoadFactorInRepeatLoad; checks native returned size and a post-fetch count. Preserves duplicate positive primary IDs and finite signed/zero factors in an immutable materialized sequence. Zero pairs returns an empty sequence without fetching; -1 is NotFound. No dictionary deduplication or summation occurs.
 
 ```cpp
 long OSLoadUI::GetRepeatLoadByIndex(
@@ -4881,13 +5072,15 @@ LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(int 
 
 **Implementation contract:** Sizes Int32 ID and Double factor buffers with GetNoLoadFactorInRepeatLoad; checks native returned size and a post-fetch count. Preserves duplicate positive primary IDs and finite signed/zero factors in an immutable materialized sequence. Zero pairs returns an empty sequence without fetching; -1 is NotFound. No dictionary deduplication or summation occurs. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [ReadContributions — line 248](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L248).
+
 #### GetNotionalLoadCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga407c6622c4ba44ae45e96b60d943e51a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga407c6622c4ba44ae45e96b60d943e51a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga407c6622c4ba44ae45e96b60d943e51a)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetNotionalItemCount`. Zero is valid and -1 is NativeFailure. Counts command items, not their constituent case/factor/direction contributions.
+**Managed capability:** Implemented. Zero is valid and -1 is NativeFailure. Counts command items, not their constituent case/factor/direction contributions.
 
 ```cpp
 long OSLoadUI::GetNotionalLoadCount();
@@ -4910,13 +5103,15 @@ LoadQueryResult<int> GetNotionalItemCount(int primaryLoadCaseId);
 
 **Implementation contract:** Zero is valid and -1 is NativeFailure. Counts command items, not their constituent case/factor/direction contributions. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [GetNotionalItemCount — line 215](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L215).
+
 #### GetNoLoadFactorDirectionInNotionalLoad
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga6a4ecff14aed8f0398fed83ab7781e9e) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga6a4ecff14aed8f0398fed83ab7781e9e) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga6a4ecff14aed8f0398fed83ab7781e9e)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetNotionalContributionCount`. Forwards a positive, one-based index following the installed examples that address command 1. Zero is valid and -1 is NativeFailure. Interprets the result as the paired reader buffer size; the manual also calls it a factor without documenting a numeric factor payload. Live index/count semantics require qualification.
+**Managed capability:** Implemented. Forwards a positive, one-based index following the installed examples that address command 1. Zero is valid and -1 is NativeFailure. Interprets the result as the paired reader buffer size; the manual also calls it a factor without documenting a numeric factor payload. Live index/count semantics require qualification.
 
 ```cpp
 long OSLoadUI::GetNoLoadFactorDirectionInNotionalLoad(
@@ -4947,13 +5142,15 @@ LoadQueryResult<int> GetNotionalContributionCount(int primaryLoadCaseId, int not
 
 **Implementation contract:** Forwards a positive, one-based index following the installed examples that address command 1. Zero is valid and -1 is NativeFailure. Interprets the result as the paired reader buffer size; the manual also calls it a factor without documenting a numeric factor payload. Live index/count semantics require qualification. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [ContributionCount — line 220](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L220).
+
 #### GetNotionalLoadByIndex
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#gad309996311f49a218df37558d7ad7cb8) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#gad309996311f49a218df37558d7ad7cb8) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#gad309996311f49a218df37558d7ad7cb8)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetNotionalContributions`. Sizes paired Int32 ID/direction and Double factor buffers using GetNoLoadFactorDirectionInNotionalLoad. Positive native IDs mean primary cases and negative IDs reference cases; returns their family, positive ID and original signed ID. Global direction codes 1/2/3 are X/Y/Z, not LoadDirection local axes. Preserves order, duplicates and signed/zero factors. Zero contributions skips fetch; -1 is NativeFailure. One-based indexing follows installed examples and remains a live qualification requirement.
+**Managed capability:** Implemented. Sizes paired Int32 ID/direction and Double factor buffers using GetNoLoadFactorDirectionInNotionalLoad. Positive native IDs mean primary cases and negative IDs reference cases; returns their family, positive ID and original signed ID. Global direction codes 1/2/3 are X/Y/Z, not LoadDirection local axes. Preserves order, duplicates and signed/zero factors. Zero contributions skips fetch; -1 is NativeFailure. One-based indexing follows installed examples and remains a live qualification requirement.
 
 ```cpp
 long OSLoadUI::GetNotionalLoadByIndex(
@@ -4993,11 +5190,13 @@ LoadQueryResult<IEnumerable<NotionalLoadContribution>> GetNotionalContributions(
 
 **Implementation contract:** Sizes paired Int32 ID/direction and Double factor buffers using GetNoLoadFactorDirectionInNotionalLoad. Positive native IDs mean primary cases and negative IDs reference cases; returns their family, positive ID and original signed ID. Global direction codes 1/2/3 are X/Y/Z, not LoadDirection local axes. Preserves order, duplicates and signed/zero factors. Zero contributions skips fetch; -1 is NativeFailure. One-based indexing follows installed examples and remains a live qualification requirement. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [ReadContributions — line 247](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L247).
+
 #### AddReferenceLoad
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga6b018e4f7084d51fdbcafafc7773257b) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga6b018e4f7084d51fdbcafafc7773257b) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga6b018e4f7084d51fdbcafafc7773257b)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 long OSLoadUI::AddReferenceLoad(
@@ -5025,15 +5224,16 @@ long OSLoadUI::AddReferenceLoad(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [AddReferenceLoadsTo — line 477](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L477).
+
+**Current call sites:** [AddReferenceLoadsTo — line 1386](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1386).
 
 #### GetReferenceLoadCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga1ee158fd662d041c3676a3af85d76f17) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga1ee158fd662d041c3676a3af85d76f17) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga1ee158fd662d041c3676a3af85d76f17)
 
-**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Implemented through `GetReferenceItemCount`. Zero is valid and -1 is NativeFailure. Does not count reference-case definitions; use existing GetAllReferenceLoadCases for that separate inventory.
+**Managed capability:** Implemented. Zero is valid and -1 is NativeFailure. Does not count reference-case definitions; use existing GetAllReferenceLoadCases for that separate inventory.
 
 ```cpp
 long OSLoadUI::GetReferenceLoadCount();
@@ -5056,13 +5256,15 @@ LoadQueryResult<int> GetReferenceItemCount(int primaryLoadCaseId);
 
 **Implementation contract:** Zero is valid and -1 is NativeFailure. Does not count reference-case definitions; use existing GetAllReferenceLoadCases for that separate inventory. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
+**Current call sites:** [GetReferenceItemCount — line 218](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L218).
+
 #### GetNoOfSetsInReferenceLoad
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga121e0d6b8f66e0ed27aed4ebdf73d67c) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga121e0d6b8f66e0ed27aed4ebdf73d67c) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga121e0d6b8f66e0ed27aed4ebdf73d67c)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No contribution count for a reference-load command index.
+**Managed capability:** Implemented. Use to size the case/factor pairs inside one REFERENCE command of the activated primary case. GetReferenceItemCount counts REFERENCE commands; GetRepeatContributionCount counts primary repeat contributions. referenceItemIndex is passed unchanged to the native API: the installed reference help does not establish its index base and has an erroneous ID description in its count table. Confirm the native index on the acquired build; no speculative rebasing or ordinal-to-ID conversion is performed. -1 is NativeFailure.
 
 ```cpp
 long OSLoadUI::GetNoOfSetsInReferenceLoad(
@@ -5085,21 +5287,24 @@ long OSLoadUI::GetNoOfSetsInReferenceLoad(
 | `<Val>` | Reference load case reference ID. |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [GetReferenceContributionCount — line 301](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L301); [GetReferenceContributions — line 309](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L309); [GetReferenceContributions — line 324](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L324).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<int> GetReferenceContributionCount(int primaryLoadCaseId, int referenceItemIndex);
 ~~~
 
-**Contract state:** Qualification required. Proposed positive one-based index requires qualification; native return narrative incorrectly describes an ID. Keep contract review-only until count/index semantics are corroborated. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to size the case/factor pairs inside one REFERENCE command of the activated primary case. GetReferenceItemCount counts REFERENCE commands; GetRepeatContributionCount counts primary repeat contributions. referenceItemIndex is passed unchanged to the native API: the installed reference help does not establish its index base and has an erroneous ID description in its count table. Confirm the native index on the acquired build; no speculative rebasing or ordinal-to-ID conversion is performed. -1 is NativeFailure. See [usage and qualification limits](../Load-Expansion.md#getreferencecontributioncount).
 
 #### GetReferenceLoadByIndex
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#gaa32d2d60d54563abc19c9be826990e3a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#gaa32d2d60d54563abc19c9be826990e3a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#gaa32d2d60d54563abc19c9be826990e3a)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No indexed reference case-ID/factor reader. AddReferenceLoadsTo is a write operation.
+**Managed capability:** Implemented. Use to retain ordered reference-case/factor pairs in one REFERENCE command. GetReferenceItemCount counts commands, and GetRepeatContributions returns primary repeat pairs. Duplicate reference IDs and signed/zero factors are preserved. Unlike the repeat reader, the reference API's scalar is described as an ID, not a returned count; it is retained as NativeReturnCode and is not required to equal the buffer size. Data is validated against the sizing call and rechecked count. The native index is passed unchanged; Bentley does not specify its base. Confirm it on the acquired build. -1 is NativeFailure.
 
 ```cpp
 long OSLoadUI::GetReferenceLoadByIndex(
@@ -5128,19 +5333,22 @@ long OSLoadUI::GetReferenceLoadByIndex(
 | `reference` | load case reference number ID(s). |
 | `-1` | General error. |
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [GetReferenceContributions — line 316](../../src/StaadPro.Interop/Services/Load/LoadInspectionService.cs#L316).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadQueryResult<IEnumerable<ReferenceLoadContribution>> GetReferenceContributions(int primaryLoadCaseId, int referenceItemIndex, int maximumResults = 100000);
 ~~~
 
-**Contract state:** Qualification required. Uses a separate reference payload because existing LoadFactorContribution explicitly denotes primary repeat cases. Output size and index semantics require live corroboration. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use to retain ordered reference-case/factor pairs in one REFERENCE command. GetReferenceItemCount counts commands, and GetRepeatContributions returns primary repeat pairs. Duplicate reference IDs and signed/zero factors are preserved. Unlike the repeat reader, the reference API's scalar is described as an ID, not a returned count; it is retained as NativeReturnCode and is not required to equal the buffer size. Data is validated against the sizing call and rechecked count. The native index is passed unchanged; Bentley does not specify its base. Confirm it on the acquired build. -1 is NativeFailure. See [usage and qualification limits](../Load-Expansion.md#getreferencecontributions).
 
 #### GetReferenceLoadType
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#gad0770a978141a1c4f3a8874fe446da54) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#gad0770a978141a1c4f3a8874fe446da54) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#gad0770a978141a1c4f3a8874fe446da54)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetReferenceLoadType(
@@ -5163,13 +5371,14 @@ VARIANT OSLoadUI::GetReferenceLoadType(
 | `-1` | General error. |
 | `Others` | (value can be 0 to 23) Reference load Type, please ref OSLoadUI::CreateNewPrimaryLoad . |
 
-**Current call sites:** [ReadLoadCaseMetadata — line 2376](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2376).
+
+**Current call sites:** [ReadLoadCaseMetadata — line 3285](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3285).
 
 #### GetReferenceLoadCaseTitle
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga801c4cec74cc10e3f8ac91559417414c) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga801c4cec74cc10e3f8ac91559417414c) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga801c4cec74cc10e3f8ac91559417414c)
 
-**Comparison:** Common. **Coverage:** D — adapter dispatch.
+**Comparison:** Common. **Coverage:** D — production dispatch; native qualification remains pending.
 
 ```cpp
 VARIANT OSLoadUI::GetReferenceLoadCaseTitle(
@@ -5193,15 +5402,16 @@ VARIANT OSLoadUI::GetReferenceLoadCaseTitle(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [ReadLoadCaseMetadata — line 2373](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2373).
+
+**Current call sites:** [ReadLoadCaseMetadata — line 3282](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3282).
 
 #### BeginLoadMerging
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga4a4a3ab7b12b6456ddce1d83568b50bf) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga4a4a3ab7b12b6456ddce1d83568b50bf) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga4a4a3ab7b12b6456ddce1d83568b50bf)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No managed merge lifecycle or bounded merge operation. Duplicate-assignment grouping helpers do not merge native beam loads.
+**Managed capability:** Implemented invocation evidence. Use after a geometry merge when source-beam load definitions must be merged into retained beams. SplitLoadsOnBeam performs the opposite load transfer; neither method creates or merges geometry. Requests run in supplied order, with one BeginLoadMerging and an EndLoadMerging attempt in finally, even if begin/body throws. The body signature is corroborated by the Bentley class listing and installed CLR metadata, but its return meanings and affected-case scope are not documented. Consequently normal return is InvocationCompleted, IsSuccessful is false, and actual Boolean/integral responses remain in Steps; inspect model results rather than interpreting this as certified success. The merge is not transactional, may affect loads across cases, and is never retried. Both body and cleanup exceptions are preserved in AggregateException; a single exception retains its original stack. MayHaveChangedModel is true after invocation; no rollback is promised.
 
 ```cpp
 void OSLoadUI::BeginLoadMerging();
@@ -5213,21 +5423,24 @@ No native parameters.
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [MergeBeamLoads — line 30](../../src/StaadPro.Interop/Services/Load/LoadBeamTransferService.cs#L30).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests);
 ~~~
 
-**Contract state:** Blocked: merge-body contract unverified. WITHHELD: the merge body depends on metadata-only MergeLoadsOnBeam. Void Begin/End imply invocation evidence only. Native body, topology, side effects and errors must be qualified; preserve body and cleanup failures without a user-maintained begin/end pair. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use after a geometry merge when source-beam load definitions must be merged into retained beams. SplitLoadsOnBeam performs the opposite load transfer; neither method creates or merges geometry. Requests run in supplied order, with one BeginLoadMerging and an EndLoadMerging attempt in finally, even if begin/body throws. The body signature is corroborated by the Bentley class listing and installed CLR metadata, but its return meanings and affected-case scope are not documented. Consequently normal return is InvocationCompleted, IsSuccessful is false, and actual Boolean/integral responses remain in Steps; inspect model results rather than interpreting this as certified success. The merge is not transactional, may affect loads across cases, and is never retried. Both body and cleanup exceptions are preserved in AggregateException; a single exception retains its original stack. MayHaveChangedModel is true after invocation; no rollback is promised. See [usage and qualification limits](../Load-Expansion.md#mergebeamloads).
 
 #### EndLoadMerging
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga07b273284cfdb265a5fae76d7631155f) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga07b273284cfdb265a5fae76d7631155f) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga07b273284cfdb265a5fae76d7631155f)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — production dispatch; native qualification remains pending.
 
-**Managed capability:** Absent. No paired native merge cleanup. A future managed merge operation should own both begin/end calls rather than expose two unrelated user obligations.
+**Managed capability:** Implemented invocation evidence. Use after a geometry merge when source-beam load definitions must be merged into retained beams. SplitLoadsOnBeam performs the opposite load transfer; neither method creates or merges geometry. Requests run in supplied order, with one BeginLoadMerging and an EndLoadMerging attempt in finally, even if begin/body throws. The body signature is corroborated by the Bentley class listing and installed CLR metadata, but its return meanings and affected-case scope are not documented. Consequently normal return is InvocationCompleted, IsSuccessful is false, and actual Boolean/integral responses remain in Steps; inspect model results rather than interpreting this as certified success. The merge is not transactional, may affect loads across cases, and is never retried. Both body and cleanup exceptions are preserved in AggregateException; a single exception retains its original stack. MayHaveChangedModel is true after invocation; no rollback is promised.
 
 ```cpp
 void OSLoadUI::EndLoadMerging();
@@ -5239,17 +5452,20 @@ No native parameters.
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Prepared managed contract (review only):**
+
+**Current call sites:** [MergeBeamLoads — line 48](../../src/StaadPro.Interop/Services/Load/LoadBeamTransferService.cs#L48).
+
+**Implemented managed contract:**
 
 ~~~csharp
 LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests);
 ~~~
 
-**Contract state:** Blocked: merge-body contract unverified. WITHHELD: the merge body depends on metadata-only MergeLoadsOnBeam. Void Begin/End imply invocation evidence only. Native body, topology, side effects and errors must be qualified; preserve body and cleanup failures without a user-maintained begin/end pair. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
+**Behavior and alternatives:** Use after a geometry merge when source-beam load definitions must be merged into retained beams. SplitLoadsOnBeam performs the opposite load transfer; neither method creates or merges geometry. Requests run in supplied order, with one BeginLoadMerging and an EndLoadMerging attempt in finally, even if begin/body throws. The body signature is corroborated by the Bentley class listing and installed CLR metadata, but its return meanings and affected-case scope are not documented. Consequently normal return is InvocationCompleted, IsSuccessful is false, and actual Boolean/integral responses remain in Steps; inspect model results rather than interpreting this as certified success. The merge is not transactional, may affect loads across cases, and is never retried. Both body and cleanup exceptions are preserved in AggregateException; a single exception retains its original stack. MayHaveChangedModel is true after invocation; no rollback is promised. See [usage and qualification limits](../Load-Expansion.md#mergebeamloads).
 
 ## 2. Supplemental installed interop inventory
 
-The following names appear in both passively inspected IOSLoadUI interfaces but not in the 129-function Load help inventory. None currently has a production Load dispatch. Presence in 2025/2026 metadata does not establish introduction in 2025 or absence in 2024.
+The following names appear in both passively inspected IOSLoadUI interfaces but not in the 129-function Load help inventory. MergeLoadsOnBeam is now invoked through the balanced MergeBeamLoads operation; its response is retained as invocation evidence without a success interpretation. The two seismic-weight candidates remain outside the approved expansion and have no dispatch. Presence in 2025/2026 metadata does not establish introduction in 2025 or absence in 2024.
 
 Before exposing them, locate an authoritative contract, verify acquired signatures and establish native statuses, units, model/case state and failure behavior. Do not infer engineering semantics solely from the name or CLR Object parameters.
 
@@ -5300,137 +5516,185 @@ System.Object MergeLoadsOnBeam(System.Object, System.Object)
 | 1 | `varBeamToKeep` | `System.Object` |
 | 2 | `varBeamToMerge` | `System.Object` |
 
-**Disposition:** Pending independent contract review. Coordinate with BeginLoadMerging/EndLoadMerging; verify cleanup and error behavior before a managed merge operation is exposed.
+**Disposition:** Implemented through MergeBeamLoads, with Begin/End cleanup ownership, actual integral/Boolean evidence, InvocationCompleted rather than Success, and preserved body/cleanup exceptions. Signature presence is corroborated; native return meanings, topology and engineering effects remain unqualified. See [the operation contract](../Load-Expansion.md#mergebeamloads).
 
 ## 3. Existing managed interface and adapter surface
 
-These **120 interface method overloads** have matching public adapter signatures. The table lists direct native calls present in that public method body only; a blank direct-call cell does not mean the managed method is unimplemented. Many overloads delegate to private helpers or other overloads. AddMemberLoad reaches six native mutations through member-load entity ApplyTo implementations; the complete native inventory above includes those dispatches.
-
-The separate public ComObject property is an escape hatch, not a method overload. Interface/base properties are outside the 120-method count.
+All **171 interface method overloads** have matching public adapter signatures: 115 main-reference methods, five earlier conveniences, 15 inspection operations and 36 approved expansion methods. The direct-call column covers only the adapter method body; delegated services/entities are included in the native coverage inventory above. ComObject and inherited properties are outside the method count.
 
 | # | Current managed signature | Interface / adapter | Direct native calls in method body |
 | ---: | --- | --- | --- |
-| 1 | `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<Beam> members)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L17) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L36) | Delegates / composes managed operations |
-| 2 | `bool AddSeismicDefMemberUniformWeight(double weight, IEnumerable<int> memberIds, double startDistance = 0, double endDistance = 0, int seismicCode = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L20) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L46) | Delegates / composes managed operations |
-| 3 | `bool AddSeismicDefMemberConcentratedWeight(double weight, double distance, IEnumerable<int> memberIds, int seismicCode = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L23) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L51) | Delegates / composes managed operations |
-| 4 | `int AddSeismicDefWallArea(int seismicCode, string direction, IEnumerable<double> dimensions)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L26) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L55) | [AddSeismicDefWallArea](#addseismicdefwallarea) |
-| 5 | `int AddSeismicDefWallArea(int seismicCode, SeismicWallDirection direction, IEnumerable<SeismicWallDimension> walls)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L29) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L74) | Delegates / composes managed operations |
-| 6 | `bool AddResponseSpectrumLoadEx(ResponseSpectrumLoadExParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L32) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L90) | Delegates / composes managed operations |
-| 7 | `bool AddResponseSpectrumLoadEx(int spectrumCode, int combinationMethod, string[] primaryParameterNames, double[] primaryParameterValues, string[] generationParameterNames = null, double[] generationParameterValues = null, double[] customDataPairs = null)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L35) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L97) | Delegates / composes managed operations |
-| 8 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<int> memberIds, double parameterValue = 0.0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L38) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L112) | [AddDirectAnalysisDefinitionParameter](#adddirectanalysisdefinitionparameter) |
-| 9 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<Beam> members, double parameterValue = 0.0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L41) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L125) | Delegates / composes managed operations |
-| 10 | `bool AddDirectAnalysisFlexParameter(double flexFactor, IEnumerable<int> memberIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L44) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L134) | Delegates / composes managed operations |
-| 11 | `bool AddDirectAnalysisAxialParameter(IEnumerable<int> memberIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L47) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L138) | Delegates / composes managed operations |
-| 12 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L50) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L142) | Delegates / composes managed operations |
-| 13 | `bool DeleteDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L53) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L151) | [DeleteDirectAnalysisDefinitionParameter](#deletedirectanalysisdefinitionparameter) |
-| 14 | `bool DeleteDirectAnalysisDefinition()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L56) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L159) | [DeleteDirectAnalysisDefinition](#deletedirectanalysisdefinition) |
-| 15 | `bool AddRSLoad(ResponseSpectrumLoadParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L59) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L163) | [AddRSLoad](#addrsload) |
-| 16 | `int AddWindDefinitionASCE7Parameters(ASCE7WindDefinitionParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L62) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L178) | [AddWindDefinitionASCE7Parameters](#addwinddefinitionasce7parameters) |
-| 17 | `int ComputeWallWindPressureProfile(WallWindPressureProfileParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L65) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L193) | [ComputeWallWindPressureProfile](#computewallwindpressureprofile) |
-| 18 | `int ComputeWallWindPressureProfileASCE72016(ASCE72016WallWindPressureProfileParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L68) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L206) | [ComputeWallWindPressureProfileASCE72016](#computewallwindpressureprofileasce72016) |
-| 19 | `bool AddSeismicDefinition(SeismicCode code, bool considerAccidentalTorsion = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L71) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L219) | Delegates / composes managed operations |
-| 20 | `bool AddSeismicDefinition(int code, int accidentalTorsion = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L74) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L223) | [AddSeismicDefinition](#addseismicdefinition) |
-| 21 | `int ModifySeismicDefinitionParam(string parameterName, double value)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L77) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L237) | [ModifySeismicDefinitionParams](#modifyseismicdefinitionparams) |
-| 22 | `int ModifySeismicDefinitionParams(IDictionary<string, double> parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L80) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L245) | Delegates / composes managed operations |
-| 23 | `int ModifySeismicDefinitionParams(IS1893_2016SeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L83) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L263) | Delegates / composes managed operations |
-| 24 | `int ModifySeismicDefinitionParams(IS1893_2002SeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L86) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L270) | Delegates / composes managed operations |
-| 25 | `int ModifySeismicDefinitionParams(IBCSeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L89) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L280) | Delegates / composes managed operations |
-| 26 | `bool AddSeismicDefSelfWeight(double weightFactor = 1.0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L92) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L284) | [AddSeismicDefSelfWeight](#addseismicdefselfweight) |
-| 27 | `int AddSeismicDefJointWeight(double weight, IEnumerable<int> nodeIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L95) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L291) | [AddSeismicDefJointWeight](#addseismicdefjointweight) |
-| 28 | `int AddSeismicDefJointWeight(double weight, IEnumerable<Node> nodes)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L98) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L300) | Delegates / composes managed operations |
-| 29 | `int AddSeismicDefJointWeight(double weight, int nodeId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L101) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L309) | Delegates / composes managed operations |
-| 30 | `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<int> memberIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L104) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L312) | [AddSeismicDefMemberWeight](#addseismicdefmemberweight) |
-| 31 | `void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L107) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L337) | Delegates / composes managed operations |
-| 32 | `void PopulateMemberUniformMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L110) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L341) | Delegates / composes managed operations |
-| 33 | `IEnumerable<Node> PopulateNodalLoads(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L113) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L348) | Delegates / composes managed operations |
-| 34 | `int AddWindDefinition(int windDefinitionId, string definitionName)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L116) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L364) | [AddWindDefinition](#addwinddefinition) |
-| 35 | `int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<int> nodeIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L119) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L374) | [AddWindExposure](#addwindexposure) |
-| 36 | `int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<Node> nodes)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L122) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L386) | Delegates / composes managed operations |
-| 37 | `int AddWindExposure(int windDefinitionId, double exposureFactor, int nodeId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L125) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L399) | Delegates / composes managed operations |
-| 38 | `int AddWindIntensity(int windDefinitionId, double intensity, double height)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L128) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L408) | [AddWindIntensity](#addwindintensity) |
-| 39 | `int AddWindIntensity(int windDefinitionId, IEnumerable<double> intensities, IEnumerable<double> heights)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L131) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L417) | [AddWindIntensity](#addwindintensity) |
-| 40 | `int AddWindIntensity(int windDefinitionId, IEnumerable<WindIntensityPair> pairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L134) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L432) | Delegates / composes managed operations |
-| 41 | `int DeleteWindDefinition(int windDefinitionId = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L137) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L441) | [DeleteWindDefinition](#deletewinddefinition) |
-| 42 | `int DeleteAllWindDefinitions()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L140) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L448) | Delegates / composes managed operations |
-| 43 | `IOSLoad AddReferenceLoadsTo(int loadCaseId, Dictionary<int, double> loadCaseNumberFactorPairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L143) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L472) | [AddReferenceLoad](#addreferenceload) |
-| 44 | `IOSLoad AddRepeatLoadsTo(int loadCaseId, IDictionary<int, double> loadCaseNumberFactorPairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L146) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L482) | [AddRepeatLoad](#addrepeatload) |
-| 45 | `IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L149) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L492) | [AddTemperatureLoad](#addtemperatureload) |
-| 46 | `IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L152) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L507) | [AddTemperatureLoad](#addtemperatureload) |
-| 47 | `IOSLoad AddMemberLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> grouped)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L155) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L541) | Delegates / composes managed operations |
-| 48 | `IOSLoad AddNodalLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> grouped)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L158) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L557) | Delegates / composes managed operations |
-| 49 | `void PopulateMemberLinearVaryingLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L163) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L573) | Delegates / composes managed operations |
-| 50 | `IEnumerable<Beam> PopulateMemberLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L165) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L579) | Delegates / composes managed operations |
-| 51 | `void PopulateMemberTrapezoidalLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L167) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L588) | Delegates / composes managed operations |
-| 52 | `HashSet<ILoadCase> GetRepeatLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L170) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L594) | [GetRepeatLoadCount](#getrepeatloadcount) |
-| 53 | `void PopulateMemberConcentratedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L172) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L607) | Delegates / composes managed operations |
-| 54 | `void PopulateMemberConcentratedMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L174) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L613) | Delegates / composes managed operations |
-| 55 | `StaadLoadCombination GetLoadCombination(int id)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L177) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L619) | [GetNoOfLoadAndFactorPairsForCombination](#getnoofloadandfactorpairsforcombination), [GetLoadCaseTitle](#getloadcasetitle), [GetLoadAndFactorForCombination](#getloadandfactorforcombination) |
-| 56 | `Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> GetMemberLoadsGroupedByLoadCase(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L179) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L651) | Delegates / composes managed operations |
-| 57 | `Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> GetNodalLoadsGroupedByLoadCase(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L181) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L666) | Delegates / composes managed operations |
-| 58 | `IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L184) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L708) | Delegates / composes managed operations |
-| 59 | `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<EditorLoadCombination> loadCombinations)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L186) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L716) | Delegates / composes managed operations |
-| 60 | `IOSLoad CreateLoadCombinations(IEnumerable<EditorLoadCombination> loadCombinations)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L188) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L727) | [CreateNewLoadCombination](#createnewloadcombination), [AddLoadAndFactorToCombination](#addloadandfactortocombination) |
-| 61 | `List<NodalLoad> GetNodalLoads(ILoadCase lc, int nId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L229) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L784) | [GetNodalLoadCount](#getnodalloadcount), [GetNodalLoads](#getnodalloads) |
-| 62 | `List<MemberUniformlyDistributedLoad> GetMemberUniformlyDistributedLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L270) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L842) | [GetUDLLoadCount](#getudlloadcount), [GetUDLLoads](#getudlloads) |
-| 63 | `List<MemberConcentratedLoad> GetMemberConcentratedLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L311) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L901) | [GetConcForceCount](#getconcforcecount), [GetConcForces](#getconcforces) |
-| 64 | `List<MemberConcentratedMoment> GetMemberConcentratedMoments(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L352) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L964) | [GetConcMomentCount](#getconcmomentcount), [GetConcMoments](#getconcmoments) |
-| 65 | `List<MemberLinearVaryingLoad> GetMemberLinearVaryingLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L393) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1023) | [GetLinearVaryingLoadCount](#getlinearvaryingloadcount), [GetLinearVaryingLoads](#getlinearvaryingloads) |
-| 66 | `List<MemberTrapezoidalLoad> GetMemberTrapezoidalLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L434) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1083) | [GetTrapLoadCount](#gettraploadcount), [GetTrapLoads](#gettraploads) |
-| 67 | `bool ClearPrimaryLoadCase(ILoadCase loadCase, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L441) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1713) | Delegates / composes managed operations |
-| 68 | `bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L444) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1717) | Delegates / composes managed operations |
-| 69 | `bool ClearPrimaryLoadCases(IEnumerable<int> lcIds, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L447) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1725) | [ClearPrimaryLoadCase](#clearprimaryloadcase) |
-| 70 | `bool ClearPrimaryLoadCase(ILoadCase loadCase)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L450) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1736) | Delegates / composes managed operations |
-| 71 | `bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L453) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1740) | Delegates / composes managed operations |
-| 72 | `bool ClearPrimaryLoadCases(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L456) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1748) | [ClearPrimaryLoadCase](#clearprimaryloadcase) |
-| 73 | `bool ClearReferenceLoadCase(ILoadCase loadCase)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L459) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1759) | Delegates / composes managed operations |
-| 74 | `bool ClearReferenceLoadCases(IEnumerable<ILoadCase> loadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L462) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1763) | Delegates / composes managed operations |
-| 75 | `bool ClearReferenceLoadCases(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L465) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1771) | [ClearReferenceLoadCase](#clearreferenceloadcase) |
-| 76 | `int CreateNewPrimaryLoad(string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L472) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1786) | [CreateNewPrimaryLoadEx](#createnewprimaryloadex) |
-| 77 | `int CreateNewPrimaryLoad(int lcId, string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L475) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1795) | [CreateNewPrimaryLoadEx2](#createnewprimaryloadex2) |
-| 78 | `int CreateNewPrimaryLoadEx(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L478) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1804) | Delegates / composes managed operations |
-| 79 | `int CreateNewPrimaryLoadEx2(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L481) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1811) | Delegates / composes managed operations |
-| 80 | `int CreateNewReferenceLoad(int lcId, string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L484) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1818) | [CreateNewReferenceLoad](#createnewreferenceload) |
-| 81 | `int CreateNewReferenceLoad(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L487) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1827) | Delegates / composes managed operations |
-| 82 | `string GetLoadCaseTitle(int id)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L490) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1834) | [GetLoadCaseTitle](#getloadcasetitle) |
-| 83 | `IOSLoad SetLoadCaseActive(ILoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L493) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1842) | [SetReferenceLoadActive](#setreferenceloadactive), [SetLoadActive](#setloadactive) |
-| 84 | `IOSLoad CreateNewLoadCase(ILoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L496) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1860) | Delegates / composes managed operations |
-| 85 | `IOSLoad AddSupportSettlement(ILoadCase lc, int nodeId, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L503) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1893) | Delegates / composes managed operations |
-| 86 | `IOSLoad AddSupportSettlement(ILoadCase lc, Node node, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L506) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1899) | Delegates / composes managed operations |
-| 87 | `IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<Node> nodes, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L509) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1906) | Delegates / composes managed operations |
-| 88 | `IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<int> nodeIds, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L512) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1913) | [AddSupportDisplacement](#addsupportdisplacement) |
-| 89 | `IOSLoad CreatePrimaryLoadCases(HashSet<ILoadCase> primaryLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L519) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1933) | Delegates / composes managed operations |
-| 90 | `IOSLoad CreatePrimaryLoadCases(IEnumerable<ILoadCase> primaryLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L522) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1937) | Delegates / composes managed operations |
-| 91 | `IOSLoad CreateReferenceLoadCases(HashSet<ILoadCase> referenceLoads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L525) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1958) | Delegates / composes managed operations |
-| 92 | `IOSLoad CreateReferenceLoadCases(IEnumerable<ILoadCase> referenceLoads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L528) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1962) | Delegates / composes managed operations |
-| 93 | `IOSLoad AddNodalLoad(ILoadCase lc, Node node, NodalLoad nl)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L535) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1987) | Delegates / composes managed operations |
-| 94 | `IOSLoad AddNodalLoad(ILoadCase lc, IEnumerable<Node> nodes, NodalLoad nl)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L538) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1994) | [AddNodalLoad](#addnodalload) |
-| 95 | `IOSLoad AddMemberLoad(ILoadCase lc, Beam beam, MemberLoad ml)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L545) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2016) | Delegates / composes managed operations |
-| 96 | `IOSLoad AddMemberLoad(ILoadCase lc, IEnumerable<Beam> beams, MemberLoad ml)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L548) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2023) | Delegates / composes managed operations |
-| 97 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, int plateId, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L555) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2045) | Delegates / composes managed operations |
-| 98 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<int> plateIds, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L558) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2051) | [AddElementPressure](#addelementpressure) |
-| 99 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<Plate> plates, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L561) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2068) | Delegates / composes managed operations |
-| 100 | `List<MemberUniformMoment> GetMemberUniformMoments(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L603) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1144) | [GetUNIMomentCount](#getunimomentcount), [GetUNIMoments](#getunimoments) |
-| 101 | `HashSet<ILoadCase> GetAllPrimaryLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L635) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1194) | Delegates / composes managed operations |
-| 102 | `HashSet<ILoadCase> GetAllReferenceLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L667) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1226) | Delegates / composes managed operations |
-| 103 | `ILoadCase GetPrimaryLoadCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L699) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1258) | Delegates / composes managed operations |
-| 104 | `ILoadCase GetReferenceLoadCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L731) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1293) | Delegates / composes managed operations |
-| 105 | `List<ILoadCase> GetPrimaryLoadCasesFromIds(IEnumerable<int> loadCasesIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L764) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1329) | Delegates / composes managed operations |
-| 106 | `List<ILoadCase> GetReferenceLoadCasesFromIds(IEnumerable<int> loadCasesIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L797) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1371) | Delegates / composes managed operations |
-| 107 | `HashSet<ILoadCase> GetAllLoadCombinationCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L828) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1411) | Delegates / composes managed operations |
-| 108 | `ILoadCase GetLoadCombinationCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L862) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1449) | Delegates / composes managed operations |
-| 109 | `IEnumerable<ILoadCase> GetLoadCombinationCasesFromIds(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L899) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1492) | Delegates / composes managed operations |
-| 110 | `IEnumerable<ILoadCase> GetAllLoadCasesOfType(LoadCaseType loadCaseType = LoadCaseType.PrimaryLoad)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L934) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1541) | Delegates / composes managed operations |
-| 111 | `ILoadCase GetLoadCase(int lcId, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L970) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1585) | Delegates / composes managed operations |
-| 112 | `IEnumerable<ILoadCase> GetLoadCases(int fromId, int toId, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1006) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1625) | Delegates / composes managed operations |
-| 113 | `IEnumerable<ILoadCase> GetLoadCasesFromIds(IEnumerable<int> loadCasesIds, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1044) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1668) | Delegates / composes managed operations |
-| 114 | `List<ILoadCase> GetLoadCasesOfType(LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1074) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1707) | Delegates / composes managed operations |
-| 115 | `HashSet<int> GetEnvelopeIds()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1098) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2098) | [GetEnvelopeCount](#getenvelopecount), [GetEnvelopeIDs](#getenvelopeids) |
-| 116 | `ILoadEnvelopeDetail GetLoadEnvelopeDetail(int envId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1130) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2139) | [GetLoadEnvelopeDetails](#getloadenvelopedetails), [GetLoadListfromLoadEnvelope](#getloadlistfromloadenvelope) |
-| 117 | `HashSet<ILoadEnvelopeDetail> GetAllLoadEnvelopeDetails()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1155) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2181) | Delegates / composes managed operations |
-| 118 | `IOSLoad AddSelfweightInXYZTo(int loadCaseId, LoadCaseType lcType, IEnumerable<int> entities, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1187) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2220) | [AddSelfWeightInXYZToGeometry](#addselfweightinxyztogeometry) |
-| 119 | `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<int> loadCaseList)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1215) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2260) | [CreateLoadEnvelop](#createloadenvelop) |
-| 120 | `dynamic CreateLoadList(LoadListType loadListType, IEnumerable<int> loadCaseIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1244) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2296) | [CreateLoadList](#createloadlist) |
-
+| 1 | `LoadOperationResult SplitLoadsOnBeam(int originalBeamId, int newBeamId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L36) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L66) | Delegates / composes managed operations |
+| 2 | `LoadOperationResult AddCasesToEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L53) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L84) | Delegates / composes managed operations |
+| 3 | `LoadOperationResult RemoveCasesFromEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L70) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L102) | Delegates / composes managed operations |
+| 4 | `LoadOperationResult DeleteEnvelope(int envelopeId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L86) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L119) | Delegates / composes managed operations |
+| 5 | `LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticCombinations(AutomaticCombinationRequest request)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L103) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L137) | Delegates / composes managed operations |
+| 6 | `LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticRepeatLoads(AutomaticRepeatLoadRequest request)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L120) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L155) | Delegates / composes managed operations |
+| 7 | `LoadOperationResult SetLoadType(IEnumerable<int> loadCaseIds, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L137) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L173) | Delegates / composes managed operations |
+| 8 | `LoadOperationResult DeleteLoadList(int loadListIndex)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L153) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L190) | Delegates / composes managed operations |
+| 9 | `LoadOperationResult SetAllowableStressAttribute(int loadCaseId, LoadStrengthType strengthType, bool increaseAllowableStress)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L171) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L209) | Delegates / composes managed operations |
+| 10 | `LoadOperationResult SetLimitStateAttribute(int loadCaseId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L187) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L226) | Delegates / composes managed operations |
+| 11 | `LoadOperationResult RemoveLoadAttribute(int loadCaseId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L203) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L243) | Delegates / composes managed operations |
+| 12 | `LoadQueryResult<LoadAttributeObservation> GetLoadAttribute(int loadCaseId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L220) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L261) | Delegates / composes managed operations |
+| 13 | `LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex, int maximumResults = 100000)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L240) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L282) | Delegates / composes managed operations |
+| 14 | `LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L257) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L300) | Delegates / composes managed operations |
+| 15 | `LoadOperationResult AddSelfWeight(ILoadCase targetCase, SelfWeightDirection direction, double factor)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L275) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L319) | Delegates / composes managed operations |
+| 16 | `LoadQueryResult<NodalLoadCommandInfo> GetNodalLoadCommand(ILoadCase targetCase, int loadItemIndex)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L293) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L338) | Delegates / composes managed operations |
+| 17 | `LoadOperationResult AddMemberAreaLoad(ILoadCase targetCase, IEnumerable<int> memberIds, double areaLoad)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L311) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L357) | Delegates / composes managed operations |
+| 18 | `LoadOperationResult AddMemberFixedEndLoad(ILoadCase targetCase, IEnumerable<int> memberIds, FixedEndLoadDefinition definition)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L329) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L376) | Delegates / composes managed operations |
+| 19 | `LoadQueryResult<MemberLoadCommandInfo> GetMemberLoadCommand(ILoadCase targetCase, int loadItemIndex)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L347) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L395) | Delegates / composes managed operations |
+| 20 | `LoadOperationResult AddHydrostaticPressure(ILoadCase targetCase, IEnumerable<int> plateIds, HydrostaticPressureDefinition definition)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L365) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L414) | Delegates / composes managed operations |
+| 21 | `LoadOperationResult AddTrapezoidalPressure(ILoadCase targetCase, IEnumerable<int> plateIds, TrapezoidalPressureDefinition definition)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L383) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L433) | Delegates / composes managed operations |
+| 22 | `LoadQueryResult<int> GetPlatePressureLoadCount(ILoadCase targetCase, int plateId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L401) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L452) | Delegates / composes managed operations |
+| 23 | `LoadQueryResult<IEnumerable<PlatePressureLoad>> GetPlatePressureLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L420) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L472) | Delegates / composes managed operations |
+| 24 | `LoadQueryResult<int> GetPlateConcentratedLoadCount(ILoadCase targetCase, int plateId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L438) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L491) | Delegates / composes managed operations |
+| 25 | `LoadQueryResult<IEnumerable<PlateConcentratedLoad>> GetPlateConcentratedLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L457) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L511) | Delegates / composes managed operations |
+| 26 | `LoadQueryResult<PlateLoadCommandInfo> GetPlateLoadCommand(ILoadCase targetCase, int loadItemIndex)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L475) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L530) | Delegates / composes managed operations |
+| 27 | `LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L492) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L548) | Delegates / composes managed operations |
+| 28 | `LoadQueryResult<int> GetFloorBeamCount(FloorRegion region)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L509) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L566) | Delegates / composes managed operations |
+| 29 | `LoadQueryResult<IEnumerable<BeamInfluenceArea>> GetFloorInfluenceAreas(FloorRegion region, int maximumResults = 100000)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L527) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L585) | Delegates / composes managed operations |
+| 30 | `LoadOperationResult AddStrainLoad(ILoadCase targetCase, IEnumerable<int> elementIds, double axialElongation)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L545) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L604) | Delegates / composes managed operations |
+| 31 | `LoadOperationResult AddSeismicLoad(ILoadCase targetCase, GlobalAxis direction, double factor)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L563) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L623) | Delegates / composes managed operations |
+| 32 | `LoadOperationResult AddWindLoad(ILoadCase targetCase, WindLoadDefinition definition)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L580) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L641) | Delegates / composes managed operations |
+| 33 | `LoadOperationResult AddNotionalLoad(ILoadCase targetCase, IEnumerable<NotionalLoadContribution> contributions)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L597) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L659) | Delegates / composes managed operations |
+| 34 | `LoadQueryResult<int> GetReferenceContributionCount(int primaryLoadCaseId, int referenceItemIndex)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L615) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L678) | Delegates / composes managed operations |
+| 35 | `LoadQueryResult<IEnumerable<ReferenceLoadContribution>> GetReferenceContributions(int primaryLoadCaseId, int referenceItemIndex, int maximumResults = 100000)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L634) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L698) | Delegates / composes managed operations |
+| 36 | `LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L651) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L716) | Delegates / composes managed operations |
+| 37 | `LoadQueryResult<int> GetActiveLoadCaseNumber()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L666) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L732) | Delegates / composes managed operations |
+| 38 | `LoadQueryResult<int> GetLoadListCount()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L677) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L744) | Delegates / composes managed operations |
+| 39 | `LoadQueryResult<int> GetLoadListCaseCount(int loadListIndex)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L690) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L758) | Delegates / composes managed operations |
+| 40 | `LoadQueryResult<IEnumerable<int>> GetLoadListCases(int loadListIndex, int maximumResults = 100000)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L704) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L773) | Delegates / composes managed operations |
+| 41 | `LoadQueryResult<int> GetLoadCommandCount(int primaryLoadCaseId, LoadCommandKind commandKind)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L718) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L788) | Delegates / composes managed operations |
+| 42 | `LoadQueryResult<int> GetAssignedEntityCount(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L733) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L804) | Delegates / composes managed operations |
+| 43 | `LoadQueryResult<int> GetLoadItemCount(int loadCaseId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L746) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L818) | Delegates / composes managed operations |
+| 44 | `LoadQueryResult<LoadItemKind> GetLoadItemKind(int loadCaseId, int loadItemIndex)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L760) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L833) | Delegates / composes managed operations |
+| 45 | `LoadQueryResult<bool> ContainsDynamicLoad(int loadCaseId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L773) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L847) | Delegates / composes managed operations |
+| 46 | `LoadQueryResult<int> GetRepeatContributionCount(int primaryLoadCaseId, int repeatItemIndex)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L787) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L862) | Delegates / composes managed operations |
+| 47 | `LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(int primaryLoadCaseId, int repeatItemIndex, int maximumResults = 100000)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L802) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L878) | Delegates / composes managed operations |
+| 48 | `LoadQueryResult<int> GetNotionalItemCount(int primaryLoadCaseId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L815) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L892) | Delegates / composes managed operations |
+| 49 | `LoadQueryResult<int> GetNotionalContributionCount(int primaryLoadCaseId, int notionalItemIndex)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L829) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L907) | Delegates / composes managed operations |
+| 50 | `LoadQueryResult<IEnumerable<NotionalLoadContribution>> GetNotionalContributions(int primaryLoadCaseId, int notionalItemIndex, int maximumResults = 100000)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L844) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L923) | Delegates / composes managed operations |
+| 51 | `LoadQueryResult<int> GetReferenceItemCount(int primaryLoadCaseId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L857) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L937) | Delegates / composes managed operations |
+| 52 | `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<Beam> members)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L862) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L945) | Delegates / composes managed operations |
+| 53 | `bool AddSeismicDefMemberUniformWeight(double weight, IEnumerable<int> memberIds, double startDistance = 0, double endDistance = 0, int seismicCode = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L865) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L955) | Delegates / composes managed operations |
+| 54 | `bool AddSeismicDefMemberConcentratedWeight(double weight, double distance, IEnumerable<int> memberIds, int seismicCode = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L868) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L960) | Delegates / composes managed operations |
+| 55 | `int AddSeismicDefWallArea(int seismicCode, string direction, IEnumerable<double> dimensions)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L871) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L964) | AddSeismicDefWallArea |
+| 56 | `int AddSeismicDefWallArea(int seismicCode, SeismicWallDirection direction, IEnumerable<SeismicWallDimension> walls)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L874) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L983) | Delegates / composes managed operations |
+| 57 | `bool AddResponseSpectrumLoadEx(ResponseSpectrumLoadExParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L877) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L999) | Delegates / composes managed operations |
+| 58 | `bool AddResponseSpectrumLoadEx(int spectrumCode, int combinationMethod, string[] primaryParameterNames, double[] primaryParameterValues, string[] generationParameterNames = null, double[] generationParameterValues = null, double[] customDataPairs = null)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L880) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1006) | Delegates / composes managed operations |
+| 59 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<int> memberIds, double parameterValue = 0.0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L883) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1021) | AddDirectAnalysisDefinitionParameter |
+| 60 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType, IEnumerable<Beam> members, double parameterValue = 0.0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L886) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1034) | Delegates / composes managed operations |
+| 61 | `bool AddDirectAnalysisFlexParameter(double flexFactor, IEnumerable<int> memberIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L889) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1043) | Delegates / composes managed operations |
+| 62 | `bool AddDirectAnalysisAxialParameter(IEnumerable<int> memberIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L892) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1047) | Delegates / composes managed operations |
+| 63 | `bool AddDirectAnalysisDefinitionParameter(DirectAnalysisParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L895) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1051) | Delegates / composes managed operations |
+| 64 | `bool DeleteDirectAnalysisDefinitionParameter(DirectAnalysisParameterType parameterType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L898) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1060) | DeleteDirectAnalysisDefinitionParameter |
+| 65 | `bool DeleteDirectAnalysisDefinition()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L901) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1068) | DeleteDirectAnalysisDefinition |
+| 66 | `bool AddRSLoad(ResponseSpectrumLoadParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L904) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1072) | AddRSLoad |
+| 67 | `int AddWindDefinitionASCE7Parameters(ASCE7WindDefinitionParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L907) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1087) | AddWindDefinitionASCE7Parameters |
+| 68 | `int ComputeWallWindPressureProfile(WallWindPressureProfileParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L910) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1102) | ComputeWallWindPressureProfile |
+| 69 | `int ComputeWallWindPressureProfileASCE72016(ASCE72016WallWindPressureProfileParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L913) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1115) | ComputeWallWindPressureProfileASCE72016 |
+| 70 | `bool AddSeismicDefinition(SeismicCode code, bool considerAccidentalTorsion = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L916) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1128) | Delegates / composes managed operations |
+| 71 | `bool AddSeismicDefinition(int code, int accidentalTorsion = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L919) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1132) | AddSeismicDefinition |
+| 72 | `int ModifySeismicDefinitionParam(string parameterName, double value)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L922) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1146) | ModifySeismicDefinitionParams |
+| 73 | `int ModifySeismicDefinitionParams(IDictionary<string, double> parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L925) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1154) | Delegates / composes managed operations |
+| 74 | `int ModifySeismicDefinitionParams(IS1893_2016SeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L928) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1172) | Delegates / composes managed operations |
+| 75 | `int ModifySeismicDefinitionParams(IS1893_2002SeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L931) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1179) | Delegates / composes managed operations |
+| 76 | `int ModifySeismicDefinitionParams(IBCSeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L934) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1186) | Delegates / composes managed operations |
+| 77 | `bool AddSeismicDefSelfWeight(double weightFactor = 1.0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L937) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1193) | AddSeismicDefSelfWeight |
+| 78 | `int AddSeismicDefJointWeight(double weight, IEnumerable<int> nodeIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L940) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1200) | AddSeismicDefJointWeight |
+| 79 | `int AddSeismicDefJointWeight(double weight, IEnumerable<Node> nodes)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L943) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1209) | Delegates / composes managed operations |
+| 80 | `int AddSeismicDefJointWeight(double weight, int nodeId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L946) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1218) | Delegates / composes managed operations |
+| 81 | `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<int> memberIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L949) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1221) | AddSeismicDefMemberWeight |
+| 82 | `void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L952) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1243) | Delegates / composes managed operations |
+| 83 | `void PopulateMemberUniformMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L955) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1250) | Delegates / composes managed operations |
+| 84 | `IEnumerable<Node> PopulateNodalLoads(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L958) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1257) | Delegates / composes managed operations |
+| 85 | `int AddWindDefinition(int windDefinitionId, string definitionName)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L961) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1273) | AddWindDefinition |
+| 86 | `int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<int> nodeIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L964) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1283) | AddWindExposure |
+| 87 | `int AddWindExposure(int windDefinitionId, double exposureFactor, IEnumerable<Node> nodes)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L967) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1295) | Delegates / composes managed operations |
+| 88 | `int AddWindExposure(int windDefinitionId, double exposureFactor, int nodeId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L970) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1308) | Delegates / composes managed operations |
+| 89 | `int AddWindIntensity(int windDefinitionId, double intensity, double height)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L973) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1317) | AddWindIntensity |
+| 90 | `int AddWindIntensity(int windDefinitionId, IEnumerable<double> intensities, IEnumerable<double> heights)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L976) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1326) | AddWindIntensity |
+| 91 | `int AddWindIntensity(int windDefinitionId, IEnumerable<WindIntensityPair> pairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L979) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1341) | Delegates / composes managed operations |
+| 92 | `int DeleteWindDefinition(int windDefinitionId = 0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L982) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1350) | DeleteWindDefinition |
+| 93 | `int DeleteAllWindDefinitions()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L985) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1357) | Delegates / composes managed operations |
+| 94 | `IOSLoad AddReferenceLoadsTo(int loadCaseId, Dictionary<int, double> loadCaseNumberFactorPairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L988) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1381) | AddReferenceLoad |
+| 95 | `IOSLoad AddRepeatLoadsTo(int loadCaseId, IDictionary<int, double> loadCaseNumberFactorPairs)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L991) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1391) | AddRepeatLoad |
+| 96 | `IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L994) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1401) | AddTemperatureLoad |
+| 97 | `IOSLoad AddAxialThermalGradientTo(int loadCaseId, IEnumerable<int> entities, double axialThermalGradient, int nThreads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L997) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1416) | AddTemperatureLoad |
+| 98 | `IOSLoad AddMemberLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> grouped)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1000) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1450) | Delegates / composes managed operations |
+| 99 | `IOSLoad AddNodalLoadsFromGroupsByLoadCase(Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> grouped)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1003) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1466) | Delegates / composes managed operations |
+| 100 | `void PopulateMemberLinearVaryingLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1008) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1482) | Delegates / composes managed operations |
+| 101 | `IEnumerable<Beam> PopulateMemberLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1010) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1488) | Delegates / composes managed operations |
+| 102 | `void PopulateMemberTrapezoidalLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1012) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1497) | Delegates / composes managed operations |
+| 103 | `HashSet<ILoadCase> GetRepeatLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1015) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1503) | GetRepeatLoadCount |
+| 104 | `void PopulateMemberConcentratedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1017) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1516) | Delegates / composes managed operations |
+| 105 | `void PopulateMemberConcentratedMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1019) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1522) | Delegates / composes managed operations |
+| 106 | `StaadLoadCombination GetLoadCombination(int id)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1022) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1528) | GetNoOfLoadAndFactorPairsForCombination, GetLoadCaseTitle, GetLoadAndFactorForCombination |
+| 107 | `Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> GetMemberLoadsGroupedByLoadCase(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1024) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1560) | Delegates / composes managed operations |
+| 108 | `Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> GetNodalLoadsGroupedByLoadCase(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1026) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1572) | Delegates / composes managed operations |
+| 109 | `IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1029) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1617) | Delegates / composes managed operations |
+| 110 | `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<EditorLoadCombination> loadCombinations)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1031) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1625) | Delegates / composes managed operations |
+| 111 | `IOSLoad CreateLoadCombinations(IEnumerable<EditorLoadCombination> loadCombinations)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1033) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1633) | CreateNewLoadCombination, AddLoadAndFactorToCombination |
+| 112 | `List<NodalLoad> GetNodalLoads(ILoadCase lc, int nId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1074) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1693) | GetNodalLoadCount, GetNodalLoads |
+| 113 | `List<MemberUniformlyDistributedLoad> GetMemberUniformlyDistributedLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1115) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1751) | GetUDLLoadCount, GetUDLLoads |
+| 114 | `List<MemberConcentratedLoad> GetMemberConcentratedLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1156) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1810) | GetConcForceCount, GetConcForces |
+| 115 | `List<MemberConcentratedMoment> GetMemberConcentratedMoments(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1197) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1873) | GetConcMomentCount, GetConcMoments |
+| 116 | `List<MemberLinearVaryingLoad> GetMemberLinearVaryingLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1238) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1932) | GetLinearVaryingLoadCount, GetLinearVaryingLoads |
+| 117 | `List<MemberTrapezoidalLoad> GetMemberTrapezoidalLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1279) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1992) | GetTrapLoadCount, GetTrapLoads |
+| 118 | `bool ClearPrimaryLoadCase(ILoadCase loadCase, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1286) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2622) | Delegates / composes managed operations |
+| 119 | `bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1289) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2626) | Delegates / composes managed operations |
+| 120 | `bool ClearPrimaryLoadCases(IEnumerable<int> lcIds, bool isReferenceLoad = false)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1292) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2634) | ClearPrimaryLoadCase |
+| 121 | `bool ClearPrimaryLoadCase(ILoadCase loadCase)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1295) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2645) | Delegates / composes managed operations |
+| 122 | `bool ClearPrimaryLoadCases(IEnumerable<ILoadCase> loadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1298) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2649) | Delegates / composes managed operations |
+| 123 | `bool ClearPrimaryLoadCases(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1301) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2657) | ClearPrimaryLoadCase |
+| 124 | `bool ClearReferenceLoadCase(ILoadCase loadCase)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1304) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2668) | Delegates / composes managed operations |
+| 125 | `bool ClearReferenceLoadCases(IEnumerable<ILoadCase> loadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1307) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2672) | Delegates / composes managed operations |
+| 126 | `bool ClearReferenceLoadCases(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1310) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2680) | ClearReferenceLoadCase |
+| 127 | `int CreateNewPrimaryLoad(string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1317) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2695) | CreateNewPrimaryLoadEx |
+| 128 | `int CreateNewPrimaryLoad(int lcId, string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1320) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2704) | CreateNewPrimaryLoadEx2 |
+| 129 | `int CreateNewPrimaryLoadEx(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1323) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2713) | Delegates / composes managed operations |
+| 130 | `int CreateNewPrimaryLoadEx2(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1326) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2720) | Delegates / composes managed operations |
+| 131 | `int CreateNewReferenceLoad(int lcId, string lcTitle, LoadType loadType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1329) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2727) | CreateNewReferenceLoad |
+| 132 | `int CreateNewReferenceLoad(LoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1332) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2736) | Delegates / composes managed operations |
+| 133 | `string GetLoadCaseTitle(int id)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1335) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2743) | GetLoadCaseTitle |
+| 134 | `IOSLoad SetLoadCaseActive(ILoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1338) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2751) | SetReferenceLoadActive, SetLoadActive |
+| 135 | `IOSLoad CreateNewLoadCase(ILoadCase lc)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1341) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2769) | Delegates / composes managed operations |
+| 136 | `IOSLoad AddSupportSettlement(ILoadCase lc, int nodeId, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1348) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2802) | Delegates / composes managed operations |
+| 137 | `IOSLoad AddSupportSettlement(ILoadCase lc, Node node, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1351) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2808) | Delegates / composes managed operations |
+| 138 | `IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<Node> nodes, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1354) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2815) | Delegates / composes managed operations |
+| 139 | `IOSLoad AddSupportSettlement(ILoadCase lc, IEnumerable<int> nodeIds, SettlementDirection direction, double mmSettlement)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1357) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2822) | AddSupportDisplacement |
+| 140 | `IOSLoad CreatePrimaryLoadCases(HashSet<ILoadCase> primaryLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1364) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2842) | Delegates / composes managed operations |
+| 141 | `IOSLoad CreatePrimaryLoadCases(IEnumerable<ILoadCase> primaryLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1367) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2846) | Delegates / composes managed operations |
+| 142 | `IOSLoad CreateReferenceLoadCases(HashSet<ILoadCase> referenceLoads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1370) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2867) | Delegates / composes managed operations |
+| 143 | `IOSLoad CreateReferenceLoadCases(IEnumerable<ILoadCase> referenceLoads)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1373) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2871) | Delegates / composes managed operations |
+| 144 | `IOSLoad AddNodalLoad(ILoadCase lc, Node node, NodalLoad nl)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1380) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2896) | Delegates / composes managed operations |
+| 145 | `IOSLoad AddNodalLoad(ILoadCase lc, IEnumerable<Node> nodes, NodalLoad nl)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1383) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2903) | AddNodalLoad |
+| 146 | `IOSLoad AddMemberLoad(ILoadCase lc, Beam beam, MemberLoad ml)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1390) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2925) | Delegates / composes managed operations |
+| 147 | `IOSLoad AddMemberLoad(ILoadCase lc, IEnumerable<Beam> beams, MemberLoad ml)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1393) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2932) | Delegates / composes managed operations |
+| 148 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, int plateId, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1400) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2954) | Delegates / composes managed operations |
+| 149 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<int> plateIds, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1403) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2960) | AddElementPressure |
+| 150 | `IOSLoad AddPlateUniformPressure(ILoadCase lc, IEnumerable<Plate> plates, double pressure, LoadDirection direction = LoadDirection.LocalZ)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1406) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2977) | Delegates / composes managed operations |
+| 151 | `List<MemberUniformMoment> GetMemberUniformMoments(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1448) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2053) | GetUNIMomentCount, GetUNIMoments |
+| 152 | `HashSet<ILoadCase> GetAllPrimaryLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1480) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2103) | Delegates / composes managed operations |
+| 153 | `HashSet<ILoadCase> GetAllReferenceLoadCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1512) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2135) | Delegates / composes managed operations |
+| 154 | `ILoadCase GetPrimaryLoadCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1544) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2167) | Delegates / composes managed operations |
+| 155 | `ILoadCase GetReferenceLoadCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1576) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2202) | Delegates / composes managed operations |
+| 156 | `List<ILoadCase> GetPrimaryLoadCasesFromIds(IEnumerable<int> loadCasesIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1609) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2238) | Delegates / composes managed operations |
+| 157 | `List<ILoadCase> GetReferenceLoadCasesFromIds(IEnumerable<int> loadCasesIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1642) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2280) | Delegates / composes managed operations |
+| 158 | `HashSet<ILoadCase> GetAllLoadCombinationCases()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1673) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2320) | Delegates / composes managed operations |
+| 159 | `ILoadCase GetLoadCombinationCaseFromId(int lcId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1707) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2358) | Delegates / composes managed operations |
+| 160 | `IEnumerable<ILoadCase> GetLoadCombinationCasesFromIds(IEnumerable<int> lcIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1744) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2401) | Delegates / composes managed operations |
+| 161 | `IEnumerable<ILoadCase> GetAllLoadCasesOfType(LoadCaseType loadCaseType = LoadCaseType.PrimaryLoad)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1779) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2450) | Delegates / composes managed operations |
+| 162 | `ILoadCase GetLoadCase(int lcId, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1815) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2494) | Delegates / composes managed operations |
+| 163 | `IEnumerable<ILoadCase> GetLoadCases(int fromId, int toId, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1851) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2534) | Delegates / composes managed operations |
+| 164 | `IEnumerable<ILoadCase> GetLoadCasesFromIds(IEnumerable<int> loadCasesIds, LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1889) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2577) | Delegates / composes managed operations |
+| 165 | `List<ILoadCase> GetLoadCasesOfType(LoadCaseType loadCaseType)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1919) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2616) | Delegates / composes managed operations |
+| 166 | `HashSet<int> GetEnvelopeIds()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1943) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3007) | GetEnvelopeCount, GetEnvelopeIDs |
+| 167 | `ILoadEnvelopeDetail GetLoadEnvelopeDetail(int envId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L1975) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3048) | GetLoadEnvelopeDetails, GetLoadListfromLoadEnvelope |
+| 168 | `HashSet<ILoadEnvelopeDetail> GetAllLoadEnvelopeDetails()` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L2000) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3090) | Delegates / composes managed operations |
+| 169 | `IOSLoad AddSelfweightInXYZTo(int loadCaseId, LoadCaseType lcType, IEnumerable<int> entities, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L2032) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3129) | AddSelfWeightInXYZToGeometry |
+| 170 | `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<int> loadCaseList)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L2060) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3169) | CreateLoadEnvelop |
+| 171 | `dynamic CreateLoadList(LoadListType loadListType, IEnumerable<int> loadCaseIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L2089) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L3205) | CreateLoadList |
 
 ## 4. Completed private-reference coverage
 
@@ -5691,4 +5955,4 @@ All 24 pages were read for each year, including zero-function grouping sections.
 
 ## 7. Evidence boundaries
 
-The original review inspected production source without edits; subsequent increments ported all 30 originally pending reference overloads and updated this inventory. The main project remained read-only throughout. Native method presence, reviewed help and passive vendor metadata do not establish actual acquired-server compatibility, licensing, engineering correctness or package contents. No live STAAD mutation or package build was performed. See the primary report for verification gates and unresolved contracts.
+The original review inspected production source without edits; subsequent increments ported all 30 originally pending reference overloads and updated this inventory. The main project remained read-only throughout. Native method presence, reviewed help and passive vendor metadata do not establish actual acquired-server compatibility, licensing, engineering correctness or package contents. No live STAAD mutation was performed. A separate local CI package passed isolated restore/build/runtime verification of 442 XML examples with native mutation guards disabled; the prepared distribution archive is unchanged. See the primary report for verification gates and unresolved contracts.

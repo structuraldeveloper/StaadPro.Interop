@@ -5,8 +5,8 @@ using StaadPro.Interop.Enums.Loads;
 
 namespace StaadPro.Interop.Models.Loads.Contracts
 {
-    /// <summary>Contains operation-specific status and native evidence for a proposed Load mutation.</summary>
-    /// <remarks>Contract prepared for future implementations. No new mutation returns this type yet.
+    /// <summary>Contains operation-specific status and native evidence for a Load mutation.</summary>
+    /// <remarks>Returned by managed Load expansion mutations.
     /// Success requires the particular operation's documented contract; void invocation evidence alone
     /// is InvocationCompleted. Transport exceptions propagate; combined body/cleanup failures must be preserved.</remarks>
     public class LoadOperationResult
@@ -23,7 +23,7 @@ namespace StaadPro.Interop.Models.Loads.Contracts
         public bool IsSuccessful => Status == LoadOperationStatus.Success;
         /// <summary>Gets ordered, materialized evidence including cleanup calls, without exposing mutable arrays.</summary>
         public IEnumerable<LoadOperationStep> Steps { get; }
-        /// <summary>Gets whether invocation may have affected model state, including when it later failed.</summary>
+        /// <summary>Gets whether a load mutation may have affected model definitions, including after failure; case activation alone is excluded.</summary>
         public bool MayHaveChangedModel { get; }
         /// <summary>Gets an explanation of failure, unsupported choices or partial completion.</summary>
         public string Diagnostic { get; }
