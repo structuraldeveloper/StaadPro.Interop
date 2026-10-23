@@ -6,7 +6,13 @@
 
 This annex supports the [Load multi-version architecture and plan](OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md). It inventories every detailed Load function from the installed 2024/2025/2026 help and distinguishes current native dispatches from planned additions.
 
-## Managed capability audit — 23 October 2026
+## Current source — 15 Load inspection queries
+
+Implemented all 15 inspection/contribution queries selected after the semantic audit. IOSLoad and OSLoadAdapter now expose **135 overloads** (115 reference, five earlier conveniences and 15 native expansions). Documented native coverage is **88/129**: 67 direct adapter targets, 15 additional common-service targets and six member-entity targets. The **41** unused native names comprise one covered alternative, one derived capability, four partial overlaps and **35 absent operations**; 39 native contracts retain outstanding scope, plus three separate metadata-only candidates.
+
+Passed **2,448 offline tests**, including **189 new cases**, and all **30 new XML examples** on source consumers. See [Load inspection contracts and examples](../Load-Inspection-Queries.md) for status/data results, primary activation, index bases, buffer limits, ambiguity and native qualification requirements. The prepared 20261023 archive predates these source additions. Earlier audit/reference-port counts below are historical baselines.
+
+## Historical managed capability audit — 23 October 2026
 
 The **56 native names without dispatch are not 56 missing managed features**. A semantic review found **one covered alternative** (primary creation), **one derived capability** (combination membership), **four partial overlaps**, and **50 native operations without an implemented managed equivalent**. Consequently 54 native contracts still have outstanding scope, but they do not necessarily require 54 separate public methods. No production code changed in this audit. See the [complete managed capability audit](OpenSTAAD-Load-Managed-Capability-Audit.md) for all 56 dispositions, source evidence and a revised proposed next 15.
 
@@ -16,7 +22,7 @@ There are **129 distinct native functions in each year**, all with detailed entr
 
 Each entry includes the common native declaration, positional parameters, documented directions, inspected 2025/2026 CLR shape, return/error information and current source callers. C++ FAR/const reference notation must not be mechanically translated into public C# ref parameters. IsIn/IsOut flags in inspected metadata are often both false; Object& still records a CLR by-reference parameter.
 
-**D:** direct adapter dispatch. **E:** member-load entity dispatch reached through AddMemberLoad. **N:** neither exact dispatch form; it does not by itself mean a missing managed capability. The 73 dispatch-covered names include unresolved shape/status concerns described in the primary report. The remaining 56 N entries include historical proposed managed signatures and function-specific considerations; the semantic audit identifies alternatives/compositions that should not be duplicated solely for native-name coverage, and these signatures are design proposals, not compiled APIs. All named request/result classes in those proposals that are absent today are pending.
+**S:** shared internal inspection-service dispatch. **D:** direct adapter dispatch. **E:** member-load entity dispatch reached through AddMemberLoad. **N:** neither exact dispatch form; it does not by itself mean a missing managed capability. The 88 dispatch-covered names include unresolved shape/status concerns described in the primary report. The remaining 41 N entries include historical proposed managed signatures and function-specific considerations; the semantic audit identifies alternatives/compositions that should not be duplicated solely for native-name coverage, and these signatures are design proposals, not compiled APIs. All named request/result classes in those proposals that are absent today are pending.
 
 Return tables below preserve functional error labels and short native explanations. A missing return table does not imply void: some entries describe the return in prose. Follow the linked reference and the declared return type. Native counts, IDs, Boolean values and zero/one success codes must not share a universal converter.
 
@@ -1834,9 +1840,9 @@ LoadCaseCreationResult CreatePrimaryLoad(string title);
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga0333e9a3b2b913fe2bd20a70807dd917) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga0333e9a3b2b913fe2bd20a70807dd917) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga0333e9a3b2b913fe2bd20a70807dd917)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. SetLoadCaseActive changes activation; it does not read current activation. OpenStaadWrapper has no active-load property.
+**Managed capability:** Implemented through `GetActiveLoadCaseNumber`. Returns the positive native number or NativeFailure for -1. Primary/reference numbers can overlap; this result is not a LoadCase identity and performs no activation.
 
 ```cpp
 VARIANT OSLoadUI::GetActiveLoad();
@@ -1851,13 +1857,13 @@ No native parameters.
 | `<Val>` | Active load case number ID. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
-LoadQueryResult<LoadCaseIdentity> GetActiveLoadCase();
-```
+~~~csharp
+LoadQueryResult<int> GetActiveLoadCaseNumber();
+~~~
 
-**Implementation consideration:** Represent absent/invalid state distinctly; do not assume primary/reference numbers identify a unique family.
+**Implementation contract:** Returns the positive native number or NativeFailure for -1. Primary/reference numbers can overlap; this result is not a LoadCase identity and performs no activation. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### GetLoadCaseTitle
 
@@ -2053,9 +2059,9 @@ VARIANT OSLoadUI::CreateLoadList(
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga5197fada7df8eb6345eef3983c9daca1) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga5197fada7df8eb6345eef3983c9daca1) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga5197fada7df8eb6345eef3983c9daca1)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. CreateLoadList exists; there is no reader for the number of native LOAD LIST records. Envelope count is a different inventory.
+**Managed capability:** Implemented through `GetLoadListCount`. Zero is a valid count; -1 is NativeFailure. This is not an envelope count or a count of cases in an individual list.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadListCount();
@@ -2070,21 +2076,21 @@ No native parameters.
 | `<Val>` | The number of load list(s). |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
+~~~csharp
 LoadQueryResult<int> GetLoadListCount();
-```
+~~~
 
-**Implementation consideration:** Nonnegative count; -1 is failure, not an empty list.
+**Implementation contract:** Zero is a valid count; -1 is NativeFailure. This is not an envelope count or a count of cases in an individual list. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### GetLoadCountInLoadList
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#gabd66e32af1113e62601c497524654d9b) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#gabd66e32af1113e62601c497524654d9b) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#gabd66e32af1113e62601c497524654d9b)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. No count reader for a native load-list index. Envelope member counts refer to envelopes, not LOAD LIST records.
+**Managed capability:** Implemented through `GetLoadListCaseCount`. Validates the one-based list index against GetLoadListCount and rechecks that total after reading. Out-of-range lists are NotFound. The native count function has no documented negative error code; negative counts are rejected as malformed.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadCountInLoadList(
@@ -2104,21 +2110,21 @@ VARIANT OSLoadUI::GetLoadCountInLoadList(
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
+~~~csharp
 LoadQueryResult<int> GetLoadListCaseCount(int loadListIndex);
-```
+~~~
 
-**Implementation consideration:** Index base and invalid-index behavior need live corroboration; do not assume a positive case ID.
+**Implementation contract:** Validates the one-based list index against GetLoadListCount and rechecks that total after reading. Out-of-range lists are NotFound. The native count function has no documented negative error code; negative counts are rejected as malformed. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### GetLoadsInLoadList
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga43ded5daa43065693c67f76dad7f022c) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga43ded5daa43065693c67f76dad7f022c) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga43ded5daa43065693c67f76dad7f022c)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. No reader for a native LOAD LIST record. GetLoadEnvelopeDetail reads envelope membership, a different object.
+**Managed capability:** Implemented through `GetLoadListCases`. Uses an Int32 SAFEARRAY output passed internally by reference following installed CLR metadata, despite const wording in the C++ prototype. Preserves order/duplicates; does not infer case families. Rechecks list and member counts; detected changes return StateChanged. Native false is NativeFailure. Zero cases returns a read-only empty list without fetching.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadsInLoadList(
@@ -2144,13 +2150,13 @@ VARIANT OSLoadUI::GetLoadsInLoadList(
 | `1` | / true Successful. |
 | `0` | / false Failed. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
-LoadQueryResult<IEnumerable<LoadCaseIdentity>> GetLoadListCases(int loadListIndex);
-```
+~~~csharp
+LoadQueryResult<IEnumerable<int>> GetLoadListCases(int loadListIndex, int maximumResults = 100000);
+~~~
 
-**Implementation consideration:** Use count/fetch under serialized session access; metadata exposes a by-reference output despite const in the C++ help declaration.
+**Implementation contract:** Uses an Int32 SAFEARRAY output passed internally by reference following installed CLR metadata, despite const wording in the C++ prototype. Preserves order/duplicates; does not infer case families. Rechecks list and member counts; detected changes return StateChanged. Native false is NativeFailure. Zero cases returns a read-only empty list without fetching. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### DeleteLoadList
 
@@ -2347,9 +2353,9 @@ LoadQueryResult<LoadAttributeInfo> GetLoadAttribute(int loadCaseId);
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#gad2e249f1e4ba8d8d76f6a7698da94a2a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#gad2e249f1e4ba8d8d76f6a7698da94a2a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#gad2e249f1e4ba8d8d76f6a7698da94a2a)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. No generic count of native commands by command-kind code in the active case. Per-entity loads and grouped definitions cannot reliably reconstruct command multiplicity.
+**Managed capability:** Implemented through `GetLoadCommandCount`. Command kind is distinct from engineering LoadType and LoadItemKind. Native zero is documented as case not found and is returned as EmptyOrUnavailable, with no Data, rather than a proven empty inventory.
 
 ```cpp
 long OSLoadUI::GetLoadTypeCount(
@@ -2372,21 +2378,21 @@ long OSLoadUI::GetLoadTypeCount(
 | `<Val>` | the number of load(s). |
 | `0` | Load Case loadCaseNo not found. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
-LoadQueryResult<int> GetLoadCommandCount(NativeLoadCommandKind commandKind);
-```
+~~~csharp
+LoadQueryResult<int> GetLoadCommandCount(int primaryLoadCaseId, LoadCommandKind commandKind);
+~~~
 
-**Implementation consideration:** Command kind is distinct from case LoadType; zero can be a valid count.
+**Implementation contract:** Command kind is distinct from engineering LoadType and LoadItemKind. Native zero is documented as case not found and is returned as EmptyOrUnavailable, with no Data, rather than a proven empty inventory. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### GetListSizeForLoadType
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga8e2b9d3639488a9442eb4c4d1ec21e87) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga8e2b9d3639488a9442eb4c4d1ec21e87) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga8e2b9d3639488a9442eb4c4d1ec21e87)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. No assignment count for the original native command-kind/index. Grouped entity counts lose native command identity.
+**Managed capability:** Implemented through `GetAssignedEntityCount`. Validates the zero-based command index against GetLoadTypeCount and rechecks that count afterwards. A zero command count is EmptyOrUnavailable; an index beyond a positive count is NotFound. A valid entity count can be zero. This returns a count, not the assignment-ID list.
 
 ```cpp
 long OSLoadUI::GetListSizeForLoadType(
@@ -2411,13 +2417,13 @@ long OSLoadUI::GetListSizeForLoadType(
 | --- | --- |
 | `<Val>` | The number of entities. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
-LoadQueryResult<int> GetAssignedEntityCount(NativeLoadCommandKind commandKind, int commandIndex);
-```
+~~~csharp
+LoadQueryResult<int> GetAssignedEntityCount(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex);
+~~~
 
-**Implementation consideration:** Validate index base independently and retain active-case binding.
+**Implementation contract:** Validates the zero-based command index against GetLoadTypeCount and rechecks that count afterwards. A zero command count is EmptyOrUnavailable; an index beyond a positive count is NotFound. A valid entity count can be zero. This returns a count, not the assignment-ID list. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### GetAssignmentListForLoadType
 
@@ -2647,9 +2653,9 @@ VARIANT OSLoadUI::CreateNewPrimaryLoadEx2(
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga3597b11d8f108005e9be64e4761887e2) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga3597b11d8f108005e9be64e4761887e2) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga3597b11d8f108005e9be64e4761887e2)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. No generic count of original load items in a specified case; counting typed per-entity results can duplicate or omit original commands.
+**Managed capability:** Implemented through `GetLoadItemCount`. Zero is valid and -1 is NativeFailure. Passes the case number directly without activation or family inference. Counts native items rather than per-entity duplicates or grouped managed definitions.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadItemsCount(
@@ -2671,21 +2677,21 @@ VARIANT OSLoadUI::GetLoadItemsCount(
 | --- | --- |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
+~~~csharp
 LoadQueryResult<int> GetLoadItemCount(int loadCaseId);
-```
+~~~
 
-**Implementation consideration:** Distinguish zero items from -1 native failure.
+**Implementation contract:** Zero is valid and -1 is NativeFailure. Passes the case number directly without activation or family inference. Counts native items rather than per-entity duplicates or grouped managed definitions. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### GetLoadItemType
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga90d695c8921e1e5eeb570ba37e1744fd) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga90d695c8921e1e5eeb570ba37e1744fd) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga90d695c8921e1e5eeb570ba37e1744fd)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. LoadItemType is a coarser managed classification of known objects. It does not query the original native item code at a case/index, and cannot replace this native table.
+**Managed capability:** Implemented through `GetLoadItemKind`. Native zero is NotFound. Unknown positive codes are retained in the enum value; use Enum.IsDefined to test recognition. Code 3312 remains explicitly ambiguous between region nodal and partial plate pressure. Negative codes are malformed. No activation or family inference occurs.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadItemType(
@@ -2710,13 +2716,13 @@ VARIANT OSLoadUI::GetLoadItemType(
 | --- | --- |
 | `0` | LoadCase/LoadItemIndex Not Found. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
-LoadQueryResult<NativeLoadItemKind> GetLoadItemKind(int loadCaseId, int loadItemIndex);
-```
+~~~csharp
+LoadQueryResult<LoadItemKind> GetLoadItemKind(int loadCaseId, int loadItemIndex);
+~~~
 
-**Implementation consideration:** Zero-based index; retain unknown numeric codes. Existing LoadItemType is not this native table; code 3312 has two documented labels requiring disambiguation.
+**Implementation contract:** Native zero is NotFound. Unknown positive codes are retained in the enum value; use Enum.IsDefined to test recognition. Code 3312 remains explicitly ambiguous between region nodal and partial plate pressure. Negative codes are malformed. No activation or family inference occurs. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 ### Load Items: SelfWeight
 
@@ -4581,9 +4587,9 @@ LoadOperationResult AddSeismicLoad(LoadCaseIdentity targetCase, SeismicLoadDirec
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_seismic.html#gafe4f103eedc99ab92900eb5342952e6f) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_seismic.html#gafe4f103eedc99ab92900eb5342952e6f) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_seismic.html#gafe4f103eedc99ab92900eb5342952e6f)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. No dynamic-load inclusion query. Case classification alone does not identify actual dynamic commands.
+**Managed capability:** Implemented through `ContainsDynamicLoad`. Native 1/0 means true/false successful data; -1 is NativeFailure, never Boolean true. Actual Boolean native returns are also accepted. Does not classify a case from its title or engineering type, activate it, or start analysis.
 
 ```cpp
 VARIANT OSLoadUI::IsDynamicLoadIncluded(
@@ -4607,13 +4613,13 @@ VARIANT OSLoadUI::IsDynamicLoadIncluded(
 | `0` | NO. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
+~~~csharp
 LoadQueryResult<bool> ContainsDynamicLoad(int loadCaseId);
-```
+~~~
 
-**Implementation consideration:** 1=true, 0=false and -1=error; negative code must never become true.
+**Implementation contract:** Native 1/0 means true/false successful data; -1 is NativeFailure, never Boolean true. Actual Boolean native returns are also accepted. Does not classify a case from its title or engineering type, activate it, or start analysis. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 ### Load Items: Time History
 
@@ -4795,9 +4801,9 @@ No native parameters.
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga6ec117c499264c58e0b43ed223909834) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga6ec117c499264c58e0b43ed223909834) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga6ec117c499264c58e0b43ed223909834)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. GetRepeatLoadCases discovers cases containing repeat commands; it does not return the number of contributions in a particular repeat command.
+**Managed capability:** Implemented through `GetRepeatContributionCount`. Uses the documented one-based repeat index. Zero is a successful empty count and -1 is NotFound for an invalid repeat index. This is a command contribution count, not the number of cases containing repeat loads.
 
 ```cpp
 long OSLoadUI::GetNoLoadFactorInRepeatLoad(
@@ -4820,21 +4826,21 @@ long OSLoadUI::GetNoLoadFactorInRepeatLoad(
 | `<Val>` | Number of load and factor pairs associated with a given repeat load command in the active load case. To set the active load case use: - VARIANT OSLoadUI::SetLoadActive(const VARIANT FAR & varLoadNo) . To get the active load case use:- VARIANT OSLoadUI::GetActiveLoad() |
 | `-1` | in case of invalid repeat load index. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
-LoadQueryResult<int> GetRepeatContributionCount(LoadCaseIdentity targetCase, int repeatItemIndex);
-```
+~~~csharp
+LoadQueryResult<int> GetRepeatContributionCount(int primaryLoadCaseId, int repeatItemIndex);
+~~~
 
-**Implementation consideration:** Command index is not a load-case ID; use required index base from contract/live evidence.
+**Implementation contract:** Uses the documented one-based repeat index. Zero is a successful empty count and -1 is NotFound for an invalid repeat index. This is a command contribution count, not the number of cases containing repeat loads. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### GetRepeatLoadByIndex
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga823d0f1628893bee6ab495c46bffcfe7) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga823d0f1628893bee6ab495c46bffcfe7) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga823d0f1628893bee6ab495c46bffcfe7)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. No read-back of case-ID/factor contributions by repeat-command index. AddRepeatLoadsTo writes contributions and does not read existing definitions.
+**Managed capability:** Implemented through `GetRepeatContributions`. Sizes Int32 ID and Double factor buffers with GetNoLoadFactorInRepeatLoad; checks native returned size and a post-fetch count. Preserves duplicate positive primary IDs and finite signed/zero factors in an immutable materialized sequence. Zero pairs returns an empty sequence without fetching; -1 is NotFound. No dictionary deduplication or summation occurs.
 
 ```cpp
 long OSLoadUI::GetRepeatLoadByIndex(
@@ -4863,21 +4869,21 @@ long OSLoadUI::GetRepeatLoadByIndex(
 | `<Val>` | Number of load and factor pairs associated with a given repeat load command in the active load case. To set the active load case use: - VARIANT OSLoadUI::SetLoadActive(const VARIANT FAR & varLoadNo) . To get the active load case use:- VARIANT OSLoadUI::GetActiveLoad() . |
 | `-1` | invalid repeat load index used. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
-LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(LoadCaseIdentity targetCase, int repeatItemIndex);
-```
+~~~csharp
+LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(int primaryLoadCaseId, int repeatItemIndex, int maximumResults = 100000);
+~~~
 
-**Implementation consideration:** Pre-size zero-indexed arrays using the paired count; preserve order and duplicate entries.
+**Implementation contract:** Sizes Int32 ID and Double factor buffers with GetNoLoadFactorInRepeatLoad; checks native returned size and a post-fetch count. Preserves duplicate positive primary IDs and finite signed/zero factors in an immutable materialized sequence. Zero pairs returns an empty sequence without fetching; -1 is NotFound. No dictionary deduplication or summation occurs. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### GetNotionalLoadCount
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga407c6622c4ba44ae45e96b60d943e51a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga407c6622c4ba44ae45e96b60d943e51a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga407c6622c4ba44ae45e96b60d943e51a)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. No count of notional-load commands in the active case.
+**Managed capability:** Implemented through `GetNotionalItemCount`. Zero is valid and -1 is NativeFailure. Counts command items, not their constituent case/factor/direction contributions.
 
 ```cpp
 long OSLoadUI::GetNotionalLoadCount();
@@ -4892,21 +4898,21 @@ No native parameters.
 | `<Val>` | The number of Notional load. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
-LoadQueryResult<int> GetNotionalItemCount(LoadCaseIdentity targetCase);
-```
+~~~csharp
+LoadQueryResult<int> GetNotionalItemCount(int primaryLoadCaseId);
+~~~
 
-**Implementation consideration:** Active-case item count, distinct from case-family discovery.
+**Implementation contract:** Zero is valid and -1 is NativeFailure. Counts command items, not their constituent case/factor/direction contributions. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### GetNoLoadFactorDirectionInNotionalLoad
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga6a4ecff14aed8f0398fed83ab7781e9e) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga6a4ecff14aed8f0398fed83ab7781e9e) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga6a4ecff14aed8f0398fed83ab7781e9e)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. No count of contributions for a notional-command index.
+**Managed capability:** Implemented through `GetNotionalContributionCount`. Forwards a positive, one-based index following the installed examples that address command 1. Zero is valid and -1 is NativeFailure. Interprets the result as the paired reader buffer size; the manual also calls it a factor without documenting a numeric factor payload. Live index/count semantics require qualification.
 
 ```cpp
 long OSLoadUI::GetNoLoadFactorDirectionInNotionalLoad(
@@ -4929,21 +4935,21 @@ long OSLoadUI::GetNoLoadFactorDirectionInNotionalLoad(
 | `<Val>` | The factor for specified Notional load. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
-LoadQueryResult<int> GetNotionalContributionCount(LoadCaseIdentity targetCase, int notionalItemIndex);
-```
+~~~csharp
+LoadQueryResult<int> GetNotionalContributionCount(int primaryLoadCaseId, int notionalItemIndex);
+~~~
 
-**Implementation consideration:** Count accompanies IDs, factors and directions in the paired fetch.
+**Implementation contract:** Forwards a positive, one-based index following the installed examples that address command 1. Zero is valid and -1 is NativeFailure. Interprets the result as the paired reader buffer size; the manual also calls it a factor without documenting a numeric factor payload. Live index/count semantics require qualification. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### GetNotionalLoadByIndex
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#gad309996311f49a218df37558d7ad7cb8) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#gad309996311f49a218df37558d7ad7cb8) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#gad309996311f49a218df37558d7ad7cb8)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. No indexed notional case-ID/factor/direction reader.
+**Managed capability:** Implemented through `GetNotionalContributions`. Sizes paired Int32 ID/direction and Double factor buffers using GetNoLoadFactorDirectionInNotionalLoad. Positive native IDs mean primary cases and negative IDs reference cases; returns their family, positive ID and original signed ID. Global direction codes 1/2/3 are X/Y/Z, not LoadDirection local axes. Preserves order, duplicates and signed/zero factors. Zero contributions skips fetch; -1 is NativeFailure. One-based indexing follows installed examples and remains a live qualification requirement.
 
 ```cpp
 long OSLoadUI::GetNotionalLoadByIndex(
@@ -4975,13 +4981,13 @@ long OSLoadUI::GetNotionalLoadByIndex(
 | `<Val>` | The size of iLoad or dFactor or iDirection . |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
-LoadQueryResult<IEnumerable<NotionalLoadContribution>> GetNotionalContributions(LoadCaseIdentity targetCase, int notionalItemIndex);
-```
+~~~csharp
+LoadQueryResult<IEnumerable<NotionalLoadContribution>> GetNotionalContributions(int primaryLoadCaseId, int notionalItemIndex, int maximumResults = 100000);
+~~~
 
-**Implementation consideration:** Validate equal output lengths and native direction codes.
+**Implementation contract:** Sizes paired Int32 ID/direction and Double factor buffers using GetNoLoadFactorDirectionInNotionalLoad. Positive native IDs mean primary cases and negative IDs reference cases; returns their family, positive ID and original signed ID. Global direction codes 1/2/3 are X/Y/Z, not LoadDirection local axes. Preserves order, duplicates and signed/zero factors. Zero contributions skips fetch; -1 is NativeFailure. One-based indexing follows installed examples and remains a live qualification requirement. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### AddReferenceLoad
 
@@ -5021,9 +5027,9 @@ long OSLoadUI::AddReferenceLoad(
 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga1ee158fd662d041c3676a3af85d76f17) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga1ee158fd662d041c3676a3af85d76f17) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga1ee158fd662d041c3676a3af85d76f17)
 
-**Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+**Comparison:** Common. **Coverage:** S — shared LoadInspectionService dispatch.
 
-**Managed capability:** Absent. GetAllReferenceLoadCases enumerates reference definitions via GetReferenceLoadCaseCount; it does not count reference-load command items in an active case.
+**Managed capability:** Implemented through `GetReferenceItemCount`. Zero is valid and -1 is NativeFailure. Does not count reference-case definitions; use existing GetAllReferenceLoadCases for that separate inventory.
 
 ```cpp
 long OSLoadUI::GetReferenceLoadCount();
@@ -5038,13 +5044,13 @@ No native parameters.
 | `<Val>` | The number of reference load case item(s). |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Implemented managed entry:**
 
-```csharp
-LoadQueryResult<int> GetReferenceItemCount(LoadCaseIdentity targetCase);
-```
+~~~csharp
+LoadQueryResult<int> GetReferenceItemCount(int primaryLoadCaseId);
+~~~
 
-**Implementation consideration:** Counts reference commands inside active case; existing GetReferenceLoadCaseCount counts definitions and is not equivalent.
+**Implementation contract:** Zero is valid and -1 is NativeFailure. Does not count reference-case definitions; use existing GetAllReferenceLoadCases for that separate inventory. See [Load inspection](../Load-Inspection-Queries.md) for shared activation, result and buffer rules.
 
 #### GetNoOfSetsInReferenceLoad
 

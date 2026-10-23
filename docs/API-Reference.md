@@ -46,7 +46,7 @@ Construction/refresh read native metadata on the session’s COM thread. Five ty
 
 ### Completed main-interface reference coverage
 
-All 115 main-interface reference signatures are now implemented; source exposes 120 overloads including five conveniences. The final 15 include AddSeismicDefMemberWeight, AddSeismicDefMemberUniformWeight, AddSeismicDefMemberConcentratedWeight, AddSeismicDefWallArea, AddResponseSpectrumLoadEx, AddDirectAnalysisDefinitionParameter, AddDirectAnalysisFlexParameter, AddDirectAnalysisAxialParameter, DeleteDirectAnalysisDefinitionParameter, DeleteDirectAnalysisDefinition, AddRSLoad. See [packet contracts, overload details, model reuse, side effects and native validation limits](Load-Porting.md#load-reference-completion). The latest additions are outside the published preview.
+All 115 main-interface reference signatures are implemented; source now exposes 135 overloads: 115 reference signatures, five conveniences and 15 additional native inspection queries. See [Load inspection](Load-Inspection-Queries.md) for their status/data contracts and activation effects. The final 15 include AddSeismicDefMemberWeight, AddSeismicDefMemberUniformWeight, AddSeismicDefMemberConcentratedWeight, AddSeismicDefWallArea, AddResponseSpectrumLoadEx, AddDirectAnalysisDefinitionParameter, AddDirectAnalysisFlexParameter, AddDirectAnalysisAxialParameter, DeleteDirectAnalysisDefinitionParameter, DeleteDirectAnalysisDefinition, AddRSLoad. See [packet contracts, overload details, model reuse, side effects and native validation limits](Load-Porting.md#load-reference-completion). The latest additions are outside the published preview.
 
 
 ### ASCE wind and seismic definitions

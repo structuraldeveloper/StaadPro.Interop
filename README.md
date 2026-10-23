@@ -12,6 +12,10 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
+## Source update — Load inspection queries
+
+Implemented 15 additional Load observations with complete XML contracts, named status/data results, bounded eager snapshots and an internal shared service. Source now exposes 135 Load overloads and dispatches 88/129 documented native names. Remaining undispatched names total 41: one existing alternative, one derived capability, four partial overlaps and 35 absent operations, plus three separate metadata-only candidates. Passed 2,448 offline tests (189 new cases) and all 30 new XML examples. See [Load inspection usage](docs/Load-Inspection-Queries.md). These changes postdate the prepared archive below; live native qualification remains pending.
+
 ## Prepared preview: 1.0.0-preview.20261023
 
 Prepared a local Windows/.NET Framework 4.8.1 preview containing **143 reference Geometry overloads**, **120 Load overloads** (all 115 main-interface signatures plus five conveniences), **15 typed Output queries**, 53 common Root operations and three optional Root operations. The approved wrapper surface is included. The seven remaining domain adapters retain placeholder APIs.
@@ -184,7 +188,7 @@ StaadPro.Interop/
 
 ## Building and Testing
 
-The current source adapters expose all 143 reference Geometry methods, 120 Load overloads and 15 typed Output queries. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
+The current source adapters expose all 143 reference Geometry methods, 135 Load overloads and 15 typed Output queries. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
 
 The Root port maps all 39 reviewed native functions and all 23 private-source Root methods through 53 common operations and three optional capability operations. Access them through `wrapper.Root`; see [root porting progress and examples](docs/Root-Porting.md).
 

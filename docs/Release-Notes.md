@@ -1,5 +1,11 @@
 # StaadPro.Interop release notes
 
+### Unreleased source — Load inspection queries
+
+Added 15 Load inspection operations for active-case number, native lists, command/item counts and kinds, dynamic inclusion, indexed repeat/notional contributions and reference-command counts. Added distinct command/item/direction enums, named status/data results, immutable contribution snapshots, bounded internal buffers, checked primary activation, binding-lifetime validation and complete interface/adapter/model XML documentation. Preserved order, duplicate contributions, native status meanings and signed notional case-family identity.
+
+Source now exposes 135 Load overloads and dispatches 88 of 129 documented native names. Of 41 undispatched names, one has an existing alternative, one is derivable, four are partially covered and 35 have no managed equivalent. Passed 2,448 offline tests, including 189 new cases, and compiled/executed all 30 new XML examples. Verified a validation-only CI archive through isolated PackageReference installation and all 370 selected XML examples. This increment is not included in the prepared preview archive below; no new distribution archive was built or published, and live native qualification remains pending.
+
 ## 1.0.0-preview.20261023 - 23 October 2026 (prepared preview)
 
 This preview includes the completed main-interface Geometry and Load ports and the first 15 typed Output queries, alongside the reviewed Root APIs and approved wrapper surface.

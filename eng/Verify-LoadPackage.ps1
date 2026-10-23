@@ -142,9 +142,10 @@ try {
             if ($rootPorting -notmatch $method -or $readme -notmatch $method) { throw "Missing packaged root guidance for $method" }
         }
     }
+    $hasLoadInspection = @($xml.doc.members.member | Where-Object name -eq 'M:StaadPro.Interop.Adapters.Interfaces.IOSLoad.GetActiveLoadCaseNumber').Count -eq 1
     foreach ($owner in @('Adapters.Interfaces.IOSGeometry', 'Adapters.Models.OSGeometryAdapter', 'Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter', 'Adapters.Interfaces.IOSRoot', 'Adapters.Models.OSRootAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        $expectedCount = if ($owner -match 'Geometry') { 143 } elseif ($owner -match 'Root') { 53 } else { 120 }
+        $expectedCount = if ($owner -match 'Geometry') { 143 } elseif ($owner -match 'Root') { 53 } elseif ($hasLoadInspection) { 135 } else { 120 }
         if ($entries.Count -ne $expectedCount) { throw "Unexpected documented method count for $owner" }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','remarks','returns')) {
@@ -187,6 +188,24 @@ try {
         }
     }
     if ($outputSnippets.Count -ne 30) { throw 'Expected 30 Output XML examples.' }
+    $inspectionSnippets = @()
+    if ($hasLoadInspection) {
+        $inspectionNames = @('GetActiveLoadCaseNumber', 'GetLoadListCount', 'GetLoadListCaseCount', 'GetLoadListCases', 'GetLoadCommandCount', 'GetAssignedEntityCount', 'GetLoadItemCount', 'GetLoadItemKind', 'ContainsDynamicLoad', 'GetRepeatContributionCount', 'GetRepeatContributions', 'GetNotionalItemCount', 'GetNotionalContributionCount', 'GetNotionalContributions', 'GetReferenceItemCount')
+        foreach ($owner in @('Adapters.Interfaces.IOSLoad', 'Adapters.Models.OSLoadAdapter')) {
+            foreach ($name in $inspectionNames) {
+                $prefix = "M:StaadPro.Interop.$owner.$name"
+                $entries = @($xml.doc.members.member | Where-Object { $_.name -eq $prefix -or $_.name.StartsWith($prefix + '(') })
+                if ($entries.Count -ne 1) { throw "Missing Load inspection contract for $owner.$name" }
+                foreach ($tag in @('summary', 'returns', 'remarks', 'example/code')) {
+                    $node = $entries[0].SelectSingleNode($tag)
+                    if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $owner.$name" }
+                }
+                $binding = if ($owner.EndsWith('IOSLoad')) { 'IOSLoad load = wrapper.Load;' } else { 'var load = new StaadPro.Interop.Adapters.Models.OSLoadAdapter(wrapper);' }
+                $inspectionSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.LoadInspectionRoot())) {' + $newLine + $binding + $newLine + $entries[0].SelectSingleNode('example/code').InnerText + $newLine + '}'
+            }
+        }
+        if ($inspectionSnippets.Count -ne 30) { throw 'Expected 30 Load inspection examples.' }
+    }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -446,7 +465,8 @@ public static class Program
             try { var ignored = failure.Data; } catch (InvalidOperationException) { blocked = true; }
             Check(blocked, "failed result exposes no data");
         }
-        Console.WriteLine("PASS: 340 packaged XML examples and Geometry/Load/Root/Output IntelliSense.");
+        RunInspectionDocumentationExamples();
+        Console.WriteLine("PASS: __EXAMPLE_COUNT__ packaged XML examples and Geometry/Load/Root/Output IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -456,6 +476,10 @@ __EXAMPLES__
     private static void RunOutputDocumentationExamples()
     {
 __OUTPUT_EXAMPLES__
+    }
+    private static void RunInspectionDocumentationExamples()
+    {
+__INSPECTION_EXAMPLES__
     }
     public sealed class FakeOutputRoot
     {
@@ -649,6 +673,10 @@ __OUTPUT_EXAMPLES__
 '@
 $program = $program.Replace('__EXAMPLES__', ($snippets -join "`n"))
 $program = $program.Replace('__OUTPUT_EXAMPLES__', ($outputSnippets -join [Environment]::NewLine))
+$program = $program.Replace('__INSPECTION_EXAMPLES__', ($inspectionSnippets -join [Environment]::NewLine))
+$program = $program.Replace('__EXAMPLE_COUNT__', [string](340 + $inspectionSnippets.Count))
+if ($hasLoadInspection) { $program = 'using StaadPro.Interop.Enums.Loads;' + [Environment]::NewLine + $program }
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/LoadInspectionFixture.cs') -Destination (Join-Path $consumerRoot 'LoadInspectionFixture.cs')
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'NuGet.Config'), $config)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Consumer.csproj'), $project)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Program.cs'), $program)

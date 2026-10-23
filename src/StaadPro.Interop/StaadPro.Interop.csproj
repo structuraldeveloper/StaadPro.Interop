@@ -46,6 +46,7 @@
   <ItemGroup>
     <None Include="$(BaseIntermediateOutputPath)package-docs\README.md" Pack="true" PackagePath="README.md" />
     <None Include="..\..\docs\Load-Queries.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Load-Inspection-Queries.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Geometry-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Load-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Output-Porting.md" Pack="true" PackagePath="docs\" />

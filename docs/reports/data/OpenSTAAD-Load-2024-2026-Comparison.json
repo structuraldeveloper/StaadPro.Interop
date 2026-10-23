@@ -7,22 +7,26 @@
     "manualFunctionsPerYear": 129,
     "pagesPerYear": 24,
     "vendorMethodsPerInspectedYear": 132,
-    "managedInterfaceOverloads": 120,
-    "managedAdapterOverloads": 120,
+    "managedInterfaceOverloads": 135,
+    "managedAdapterOverloads": 135,
     "directAdapterNativeNames": 67,
-    "delegatedNativeNames": 6,
-    "totalDispatchedNames": 73,
-    "documentedNamesWithoutDispatch": 56,
+    "delegatedNativeNames": 21,
+    "totalDispatchedNames": 88,
+    "documentedNamesWithoutDispatch": 41,
     "privateReferenceOverloads": 115,
     "privateReferenceMatchingOverloads": 115,
     "privateReferencePendingOverloads": 0,
-    "repositoryConveniences": 5
+    "repositoryConveniences": 5,
+    "sharedServiceAdditionalNativeNames": 15,
+    "memberEntityNativeNames": 6,
+    "repositoryNativeExpansions": 15
   },
   "sourceFingerprints": {
-    "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs": "e9ce0ec5fbd256760233633e9579a19f8d7a1d027728612e3868ce7973eda4e4",
-    "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs": "d6f50b88bc7cf306cc9be7fd67d157d59cca574e9d007b909be87f0b132a23a9",
+    "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs": "79f3fdc82055022bc6cef303131ad5f7824a392dfd6c8eec5444f665301ae5f2",
+    "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs": "07cc60230ca4443812c6249a0bd8f959d6ceb58897af97e98686438b695f348e",
     "src/StaadPro.Interop/Models/OpenStaadWrapper.cs": "1c0b69fe545a379262ad70cb1d1f9c45de872aba92e6eb4df218441455628692",
-    "src/StaadPro.Interop/StaadPro.Interop.csproj": "035570ef3e35b52a2772e2ec96b9bf886ce3d08d6e555c3d51ffd870de9f1a59"
+    "src/StaadPro.Interop/StaadPro.Interop.csproj": "92bc90c47356ccb5f9e0b3fc36dcf984362fadf9ef2e885a1796d655a82050aa",
+    "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs": "a46a451efdc605c41497ea74897401d22e5c5a188546b3cec9ae55a34122929e"
   },
   "versions": {
     "2024": {
@@ -29403,6 +29407,111 @@
   ],
   "callSites": [
     {
+      "Target": "load.AddMemberConcForce",
+      "Receiver": "load",
+      "Name": "AddMemberConcForce",
+      "GenericArity": 0,
+      "Arguments": [
+        "beamIds",
+        "(int)Direction",
+        "Magnitude",
+        "Position",
+        "Eccentricity"
+      ],
+      "Line": 76,
+      "Caller": "ApplyTo",
+      "MethodLine": 73,
+      "File": "src/StaadPro.Interop/Entities/MemberConcentratedLoad.cs"
+    },
+    {
+      "Target": "load.AddMemberConcMoment",
+      "Receiver": "load",
+      "Name": "AddMemberConcMoment",
+      "GenericArity": 0,
+      "Arguments": [
+        "beamIds",
+        "(int)Direction",
+        "Magnitude",
+        "Position",
+        "Eccentricity"
+      ],
+      "Line": 67,
+      "Caller": "ApplyTo",
+      "MethodLine": 64,
+      "File": "src/StaadPro.Interop/Entities/MemberConcentratedMoment.cs"
+    },
+    {
+      "Target": "load.AddMemberLinearVari",
+      "Receiver": "load",
+      "Name": "AddMemberLinearVari",
+      "GenericArity": 0,
+      "Arguments": [
+        "beamIds",
+        "(int)Direction",
+        "WStart",
+        "WEnd",
+        "WMiddle"
+      ],
+      "Line": 68,
+      "Caller": "ApplyTo",
+      "MethodLine": 65,
+      "File": "src/StaadPro.Interop/Entities/MemberLinearVaryingLoad.cs"
+    },
+    {
+      "Target": "load.AddMemberTrapezoidal",
+      "Receiver": "load",
+      "Name": "AddMemberTrapezoidal",
+      "GenericArity": 0,
+      "Arguments": [
+        "beamIds",
+        "(int)Direction",
+        "WStart",
+        "WEnd",
+        "SPosition",
+        "EPosition"
+      ],
+      "Line": 73,
+      "Caller": "ApplyTo",
+      "MethodLine": 70,
+      "File": "src/StaadPro.Interop/Entities/MemberTrapezoidalLoad.cs"
+    },
+    {
+      "Target": "load.AddMemberUniformForce",
+      "Receiver": "load",
+      "Name": "AddMemberUniformForce",
+      "GenericArity": 0,
+      "Arguments": [
+        "beamIds",
+        "(int)Direction",
+        "Magnitude",
+        "SPosition",
+        "EPosition",
+        "Eccentricity"
+      ],
+      "Line": 84,
+      "Caller": "ApplyTo",
+      "MethodLine": 81,
+      "File": "src/StaadPro.Interop/Entities/MemberUniformlyDistributedLoad.cs"
+    },
+    {
+      "Target": "load.AddMemberUniformMoment",
+      "Receiver": "load",
+      "Name": "AddMemberUniformMoment",
+      "GenericArity": 0,
+      "Arguments": [
+        "beamIds",
+        "(int)Direction",
+        "Magnitude",
+        "SPosition",
+        "EPosition",
+        "Eccentricity"
+      ],
+      "Line": 75,
+      "Caller": "ApplyTo",
+      "MethodLine": 72,
+      "File": "src/StaadPro.Interop/Entities/MemberUniformMoment.cs"
+    },
+    {
       "Target": "ComObject.AddSeismicDefWallArea",
       "Receiver": "ComObject",
       "Name": "AddSeismicDefWallArea",
@@ -29412,9 +29521,9 @@
         "nativeDirection",
         "values"
       ],
-      "Line": 70,
+      "Line": 292,
       "Caller": "AddSeismicDefWallArea",
-      "MethodLine": 55,
+      "MethodLine": 277,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29431,9 +29540,9 @@
         "packet.GenerationValues",
         "packet.CustomPairs"
       ],
-      "Line": 107,
+      "Line": 329,
       "Caller": "SubmitExtendedSpectrum",
-      "MethodLine": 106,
+      "MethodLine": 328,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29446,9 +29555,9 @@
         "ids",
         "parameterValue"
       ],
-      "Line": 120,
+      "Line": 342,
       "Caller": "AddDirectAnalysisDefinitionParameter",
-      "MethodLine": 112,
+      "MethodLine": 334,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29459,9 +29568,9 @@
       "Arguments": [
         "(int)parameterType"
       ],
-      "Line": 154,
+      "Line": 376,
       "Caller": "DeleteDirectAnalysisDefinitionParameter",
-      "MethodLine": 151,
+      "MethodLine": 373,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29470,9 +29579,9 @@
       "Name": "DeleteDirectAnalysisDefinition",
       "GenericArity": 0,
       "Arguments": [],
-      "Line": 160,
+      "Line": 382,
       "Caller": "DeleteDirectAnalysisDefinition",
-      "MethodLine": 159,
+      "MethodLine": 381,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29501,9 +29610,9 @@
         "packet.Periods",
         "packet.Ordinates"
       ],
-      "Line": 167,
+      "Line": 389,
       "Caller": "AddRSLoad",
-      "MethodLine": 163,
+      "MethodLine": 385,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29528,9 +29637,9 @@
         "flags",
         "factors"
       ],
-      "Line": 185,
+      "Line": 407,
       "Caller": "AddWindDefinitionASCE7Parameters",
-      "MethodLine": 178,
+      "MethodLine": 400,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29550,9 +29659,9 @@
         "packet.Structure",
         "(int)parameters.WallType"
       ],
-      "Line": 199,
+      "Line": 421,
       "Caller": "ComputeWallWindPressureProfile",
-      "MethodLine": 193,
+      "MethodLine": 415,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29572,9 +29681,9 @@
         "packet.Structure",
         "(int)parameters.WallType"
       ],
-      "Line": 212,
+      "Line": 434,
       "Caller": "ComputeWallWindPressureProfileASCE72016",
-      "MethodLine": 206,
+      "MethodLine": 428,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29586,9 +29695,9 @@
         "code",
         "accidentalTorsion"
       ],
-      "Line": 233,
+      "Line": 455,
       "Caller": "AddSeismicDefinition",
-      "MethodLine": 223,
+      "MethodLine": 445,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29600,9 +29709,9 @@
         "parameterName",
         "value"
       ],
-      "Line": 241,
+      "Line": 463,
       "Caller": "ModifySeismicDefinitionParam",
-      "MethodLine": 237,
+      "MethodLine": 459,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29613,9 +29722,9 @@
       "Arguments": [
         "weightFactor"
       ],
-      "Line": 287,
+      "Line": 509,
       "Caller": "AddSeismicDefSelfWeight",
-      "MethodLine": 284,
+      "MethodLine": 506,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29627,9 +29736,9 @@
         "weight",
         "ids"
       ],
-      "Line": 296,
+      "Line": 518,
       "Caller": "AddSeismicDefJointWeight",
-      "MethodLine": 291,
+      "MethodLine": 513,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29645,9 +29754,9 @@
         "endDistance",
         "ids"
       ],
-      "Line": 325,
+      "Line": 547,
       "Caller": "AddSeismicDefMemberWeight",
-      "MethodLine": 312,
+      "MethodLine": 534,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29659,9 +29768,9 @@
         "windDefinitionId",
         "definitionName"
       ],
-      "Line": 370,
+      "Line": 592,
       "Caller": "AddWindDefinition",
-      "MethodLine": 364,
+      "MethodLine": 586,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29674,9 +29783,9 @@
         "exposureFactor",
         "ids"
       ],
-      "Line": 382,
+      "Line": 604,
       "Caller": "AddWindExposure",
-      "MethodLine": 374,
+      "MethodLine": 596,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29689,9 +29798,9 @@
         "intensity",
         "height"
       ],
-      "Line": 413,
+      "Line": 635,
       "Caller": "AddWindIntensity",
-      "MethodLine": 408,
+      "MethodLine": 630,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29704,9 +29813,9 @@
         "pressureValues",
         "heightValues"
       ],
-      "Line": 428,
+      "Line": 650,
       "Caller": "AddWindIntensity",
-      "MethodLine": 417,
+      "MethodLine": 639,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29717,9 +29826,9 @@
       "Arguments": [
         "windDefinitionId"
       ],
-      "Line": 444,
+      "Line": 666,
       "Caller": "DeleteWindDefinition",
-      "MethodLine": 441,
+      "MethodLine": 663,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29731,9 +29840,9 @@
         "pairs.Select(p => p.Key).ToArray()",
         "pairs.Select(p => p.Value).ToArray()"
       ],
-      "Line": 477,
+      "Line": 699,
       "Caller": "AddReferenceLoadsTo",
-      "MethodLine": 472,
+      "MethodLine": 694,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29745,9 +29854,9 @@
         "pairs.Select(p => p.Key).ToArray()",
         "pairs.Select(p => p.Value).ToArray()"
       ],
-      "Line": 487,
+      "Line": 709,
       "Caller": "AddRepeatLoadsTo",
-      "MethodLine": 482,
+      "MethodLine": 704,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29761,9 +29870,9 @@
         "0.0",
         "0.0"
       ],
-      "Line": 502,
+      "Line": 724,
       "Caller": "AddAxialThermalGradientTo",
-      "MethodLine": 492,
+      "MethodLine": 714,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29777,9 +29886,9 @@
         "0.0",
         "0.0"
       ],
-      "Line": 520,
+      "Line": 742,
       "Caller": "AddAxialThermalGradientTo",
-      "MethodLine": 507,
+      "MethodLine": 729,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29788,9 +29897,9 @@
       "Name": "GetRepeatLoadCount",
       "GenericArity": 0,
       "Arguments": [],
-      "Line": 600,
+      "Line": 822,
       "Caller": "GetRepeatLoadCases",
-      "MethodLine": 594,
+      "MethodLine": 816,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29801,9 +29910,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 622,
+      "Line": 844,
       "Caller": "GetLoadCombination",
-      "MethodLine": 619,
+      "MethodLine": 841,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29814,9 +29923,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 625,
+      "Line": 847,
       "Caller": "GetLoadCombination",
-      "MethodLine": 619,
+      "MethodLine": 841,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29829,9 +29938,9 @@
         "ref ids",
         "ref factors"
       ],
-      "Line": 628,
+      "Line": 850,
       "Caller": "GetLoadCombination",
-      "MethodLine": 619,
+      "MethodLine": 841,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29843,9 +29952,9 @@
         "definition.Definition.Title",
         "definition.Definition.Id"
       ],
-      "Line": 738,
+      "Line": 960,
       "Caller": "CreateLoadCombinations",
-      "MethodLine": 724,
+      "MethodLine": 946,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29858,9 +29967,9 @@
         "pair.Key",
         "pair.Value"
       ],
-      "Line": 740,
+      "Line": 962,
       "Caller": "CreateLoadCombinations",
-      "MethodLine": 724,
+      "MethodLine": 946,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29871,9 +29980,9 @@
       "Arguments": [
         "nId"
       ],
-      "Line": 788,
+      "Line": 1010,
       "Caller": "GetNodalLoads",
-      "MethodLine": 784,
+      "MethodLine": 1006,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29890,9 +29999,9 @@
         "ref my",
         "ref mz"
       ],
-      "Line": 794,
+      "Line": 1016,
       "Caller": "GetNodalLoads",
-      "MethodLine": 784,
+      "MethodLine": 1006,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29903,9 +30012,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 846,
+      "Line": 1068,
       "Caller": "GetMemberUniformlyDistributedLoads",
-      "MethodLine": 842,
+      "MethodLine": 1064,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29921,9 +30030,9 @@
         "ref end",
         "ref eccentricity"
       ],
-      "Line": 852,
+      "Line": 1074,
       "Caller": "GetMemberUniformlyDistributedLoads",
-      "MethodLine": 842,
+      "MethodLine": 1064,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29934,9 +30043,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 905,
+      "Line": 1127,
       "Caller": "GetMemberConcentratedLoads",
-      "MethodLine": 901,
+      "MethodLine": 1123,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29951,9 +30060,9 @@
         "ref position",
         "ref eccentricity"
       ],
-      "Line": 911,
+      "Line": 1133,
       "Caller": "GetMemberConcentratedLoads",
-      "MethodLine": 901,
+      "MethodLine": 1123,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29964,9 +30073,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 968,
+      "Line": 1190,
       "Caller": "GetMemberConcentratedMoments",
-      "MethodLine": 964,
+      "MethodLine": 1186,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29981,9 +30090,9 @@
         "ref position",
         "ref eccentricity"
       ],
-      "Line": 974,
+      "Line": 1196,
       "Caller": "GetMemberConcentratedMoments",
-      "MethodLine": 964,
+      "MethodLine": 1186,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -29994,9 +30103,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 1027,
+      "Line": 1249,
       "Caller": "GetMemberLinearVaryingLoads",
-      "MethodLine": 1023,
+      "MethodLine": 1245,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30011,9 +30120,9 @@
         "ref end",
         "ref middle"
       ],
-      "Line": 1034,
+      "Line": 1256,
       "Caller": "GetMemberLinearVaryingLoads",
-      "MethodLine": 1023,
+      "MethodLine": 1245,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30024,9 +30133,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 1087,
+      "Line": 1309,
       "Caller": "GetMemberTrapezoidalLoads",
-      "MethodLine": 1083,
+      "MethodLine": 1305,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30042,9 +30151,9 @@
         "ref startPosition",
         "ref endPosition"
       ],
-      "Line": 1093,
+      "Line": 1315,
       "Caller": "GetMemberTrapezoidalLoads",
-      "MethodLine": 1083,
+      "MethodLine": 1305,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30055,9 +30164,9 @@
       "Arguments": [
         "mId"
       ],
-      "Line": 1148,
+      "Line": 1370,
       "Caller": "GetMemberUniformMoments",
-      "MethodLine": 1144,
+      "MethodLine": 1366,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30073,9 +30182,9 @@
         "ref end",
         "ref eccentricity"
       ],
-      "Line": 1154,
+      "Line": 1376,
       "Caller": "GetMemberUniformMoments",
-      "MethodLine": 1144,
+      "MethodLine": 1366,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30087,9 +30196,9 @@
         "ids",
         "isReferenceLoad"
       ],
-      "Line": 1731,
+      "Line": 1953,
       "Caller": "ClearPrimaryLoadCases",
-      "MethodLine": 1725,
+      "MethodLine": 1947,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30101,9 +30210,9 @@
         "ids",
         "false"
       ],
-      "Line": 1754,
+      "Line": 1976,
       "Caller": "ClearPrimaryLoadCases",
-      "MethodLine": 1748,
+      "MethodLine": 1970,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30114,9 +30223,9 @@
       "Arguments": [
         "ids"
       ],
-      "Line": 1777,
+      "Line": 1999,
       "Caller": "ClearReferenceLoadCases",
-      "MethodLine": 1771,
+      "MethodLine": 1993,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30128,9 +30237,9 @@
         "lcTitle",
         "(int)loadType"
       ],
-      "Line": 1790,
+      "Line": 2012,
       "Caller": "CreateNewPrimaryLoad",
-      "MethodLine": 1786,
+      "MethodLine": 2008,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30143,9 +30252,9 @@
         "(int)loadType",
         "lcId"
       ],
-      "Line": 1799,
+      "Line": 2021,
       "Caller": "CreateNewPrimaryLoad",
-      "MethodLine": 1795,
+      "MethodLine": 2017,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30158,9 +30267,9 @@
         "lcTitle",
         "(int)loadType"
       ],
-      "Line": 1822,
+      "Line": 2044,
       "Caller": "CreateNewReferenceLoad",
-      "MethodLine": 1818,
+      "MethodLine": 2040,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30171,9 +30280,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 1837,
+      "Line": 2059,
       "Caller": "GetLoadCaseTitle",
-      "MethodLine": 1834,
+      "MethodLine": 2056,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30184,9 +30293,9 @@
       "Arguments": [
         "lc.Id"
       ],
-      "Line": 1849,
+      "Line": 2071,
       "Caller": "SetLoadCaseActive",
-      "MethodLine": 1842,
+      "MethodLine": 2064,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30197,9 +30306,9 @@
       "Arguments": [
         "lc.Id"
       ],
-      "Line": 1853,
+      "Line": 2075,
       "Caller": "SetLoadCaseActive",
-      "MethodLine": 1842,
+      "MethodLine": 2064,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30212,9 +30321,9 @@
         "(int)direction",
         "mmSettlement / 1000.0"
       ],
-      "Line": 1922,
+      "Line": 2144,
       "Caller": "AddSupportSettlement",
-      "MethodLine": 1913,
+      "MethodLine": 2135,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30231,9 +30340,9 @@
         "nl.Forces.My",
         "nl.Forces.Mz"
       ],
-      "Line": 2005,
+      "Line": 2227,
       "Caller": "AddNodalLoad",
-      "MethodLine": 1994,
+      "MethodLine": 2216,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30246,9 +30355,9 @@
         "(int)direction",
         "pressure"
       ],
-      "Line": 2061,
+      "Line": 2283,
       "Caller": "AddPlateUniformPressure",
-      "MethodLine": 2051,
+      "MethodLine": 2273,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30257,9 +30366,9 @@
       "Name": "GetEnvelopeCount",
       "GenericArity": 0,
       "Arguments": [],
-      "Line": 2100,
+      "Line": 2322,
       "Caller": "GetEnvelopeIds",
-      "MethodLine": 2098,
+      "MethodLine": 2320,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30270,9 +30379,9 @@
       "Arguments": [
         "ref buffer"
       ],
-      "Line": 2104,
+      "Line": 2326,
       "Caller": "GetEnvelopeIds",
-      "MethodLine": 2098,
+      "MethodLine": 2320,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30285,9 +30394,9 @@
         "ref type",
         "ref count"
       ],
-      "Line": 2144,
+      "Line": 2366,
       "Caller": "GetLoadEnvelopeDetail",
-      "MethodLine": 2139,
+      "MethodLine": 2361,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30299,9 +30408,9 @@
         "envId",
         "ref buffer"
       ],
-      "Line": 2152,
+      "Line": 2374,
       "Caller": "GetLoadEnvelopeDetail",
-      "MethodLine": 2139,
+      "MethodLine": 2361,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30314,9 +30423,9 @@
         "(int)loadDirection",
         "factor"
       ],
-      "Line": 2230,
+      "Line": 2452,
       "Caller": "AddSelfweightInXYZTo",
-      "MethodLine": 2220,
+      "MethodLine": 2442,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30329,9 +30438,9 @@
         "(int)envelopType",
         "ids"
       ],
-      "Line": 2265,
+      "Line": 2487,
       "Caller": "CreateLoadEnvelopExt",
-      "MethodLine": 2260,
+      "MethodLine": 2482,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30343,9 +30452,9 @@
         "(int)loadListType",
         "ids"
       ],
-      "Line": 2300,
+      "Line": 2522,
       "Caller": "CreateLoadList",
-      "MethodLine": 2296,
+      "MethodLine": 2518,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30354,9 +30463,9 @@
       "Name": "GetPrimaryLoadCaseCount",
       "GenericArity": 0,
       "Arguments": [],
-      "Line": 2349,
+      "Line": 2571,
       "Caller": "ReadAllLoadCases",
-      "MethodLine": 2345,
+      "MethodLine": 2567,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30365,9 +30474,9 @@
       "Name": "GetReferenceLoadCaseCount",
       "GenericArity": 0,
       "Arguments": [],
-      "Line": 2349,
+      "Line": 2571,
       "Caller": "ReadAllLoadCases",
-      "MethodLine": 2345,
+      "MethodLine": 2567,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30378,9 +30487,9 @@
       "Arguments": [
         "ref buffer"
       ],
-      "Line": 2356,
+      "Line": 2578,
       "Caller": "ReadAllLoadCases",
-      "MethodLine": 2345,
+      "MethodLine": 2567,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30391,9 +30500,9 @@
       "Arguments": [
         "ref buffer"
       ],
-      "Line": 2357,
+      "Line": 2579,
       "Caller": "ReadAllLoadCases",
-      "MethodLine": 2345,
+      "MethodLine": 2567,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30404,9 +30513,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 2373,
+      "Line": 2595,
       "Caller": "ReadLoadCaseMetadata",
-      "MethodLine": 2370,
+      "MethodLine": 2592,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30417,9 +30526,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 2373,
+      "Line": 2595,
       "Caller": "ReadLoadCaseMetadata",
-      "MethodLine": 2370,
+      "MethodLine": 2592,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30430,9 +30539,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 2376,
+      "Line": 2598,
       "Caller": "ReadLoadCaseMetadata",
-      "MethodLine": 2370,
+      "MethodLine": 2592,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30443,9 +30552,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 2376,
+      "Line": 2598,
       "Caller": "ReadLoadCaseMetadata",
-      "MethodLine": 2370,
+      "MethodLine": 2592,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30454,9 +30563,9 @@
       "Name": "GetLoadCombinationCaseCount",
       "GenericArity": 0,
       "Arguments": [],
-      "Line": 2385,
+      "Line": 2607,
       "Caller": "ReadCombinationCaseIds",
-      "MethodLine": 2383,
+      "MethodLine": 2605,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30467,9 +30576,9 @@
       "Arguments": [
         "ref buffer"
       ],
-      "Line": 2388,
+      "Line": 2610,
       "Caller": "ReadCombinationCaseIds",
-      "MethodLine": 2383,
+      "MethodLine": 2605,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30480,9 +30589,9 @@
       "Arguments": [
         "id"
       ],
-      "Line": 2401,
+      "Line": 2623,
       "Caller": "ReadCombinationCaseMetadata",
-      "MethodLine": 2399,
+      "MethodLine": 2621,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30493,9 +30602,9 @@
       "Arguments": [
         "lc.Id"
       ],
-      "Line": 2427,
+      "Line": 2649,
       "Caller": "ActivateQueryCase",
-      "MethodLine": 2422,
+      "MethodLine": 2644,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
@@ -30506,115 +30615,262 @@
       "Arguments": [
         "lc.Id"
       ],
-      "Line": 2433,
+      "Line": 2655,
       "Caller": "ActivateQueryCase",
-      "MethodLine": 2422,
+      "MethodLine": 2644,
       "File": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs"
     },
     {
-      "Target": "load.AddMemberConcForce",
-      "Receiver": "load",
-      "Name": "AddMemberConcForce",
+      "Target": "Binding().GetActiveLoad",
+      "Receiver": "Binding()",
+      "Name": "GetActiveLoad",
       "GenericArity": 0,
-      "Arguments": [
-        "beamIds",
-        "(int)Direction",
-        "Magnitude",
-        "Position",
-        "Eccentricity"
-      ],
-      "Line": 76,
-      "Caller": "MemberConcentratedLoad.ApplyTo",
-      "MethodLine": 73,
-      "File": "src\\StaadPro.Interop\\Entities\\MemberConcentratedLoad.cs"
+      "Arguments": [],
+      "Line": 48,
+      "Caller": "CheckActive",
+      "MethodLine": 46,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
     },
     {
-      "Target": "load.AddMemberConcMoment",
-      "Receiver": "load",
-      "Name": "AddMemberConcMoment",
+      "Target": "Binding().SetLoadActive",
+      "Receiver": "Binding()",
+      "Name": "SetLoadActive",
       "GenericArity": 0,
       "Arguments": [
-        "beamIds",
-        "(int)Direction",
-        "Magnitude",
-        "Position",
-        "Eccentricity"
+        "primaryLoadCaseId"
       ],
-      "Line": 67,
-      "Caller": "MemberConcentratedMoment.ApplyTo",
-      "MethodLine": 64,
-      "File": "src\\StaadPro.Interop\\Entities\\MemberConcentratedMoment.cs"
+      "Line": 59,
+      "Caller": "Active",
+      "MethodLine": 54,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
     },
     {
-      "Target": "load.AddMemberLinearVari",
-      "Receiver": "load",
-      "Name": "AddMemberLinearVari",
+      "Target": "Binding().GetActiveLoad",
+      "Receiver": "Binding()",
+      "Name": "GetActiveLoad",
       "GenericArity": 0,
-      "Arguments": [
-        "beamIds",
-        "(int)Direction",
-        "WStart",
-        "WEnd",
-        "WMiddle"
-      ],
-      "Line": 68,
-      "Caller": "MemberLinearVaryingLoad.ApplyTo",
-      "MethodLine": 65,
-      "File": "src\\StaadPro.Interop\\Entities\\MemberLinearVaryingLoad.cs"
-    },
-    {
-      "Target": "load.AddMemberTrapezoidal",
-      "Receiver": "load",
-      "Name": "AddMemberTrapezoidal",
-      "GenericArity": 0,
-      "Arguments": [
-        "beamIds",
-        "(int)Direction",
-        "WStart",
-        "WEnd",
-        "SPosition",
-        "EPosition"
-      ],
-      "Line": 73,
-      "Caller": "MemberTrapezoidalLoad.ApplyTo",
-      "MethodLine": 70,
-      "File": "src\\StaadPro.Interop\\Entities\\MemberTrapezoidalLoad.cs"
-    },
-    {
-      "Target": "load.AddMemberUniformForce",
-      "Receiver": "load",
-      "Name": "AddMemberUniformForce",
-      "GenericArity": 0,
-      "Arguments": [
-        "beamIds",
-        "(int)Direction",
-        "Magnitude",
-        "SPosition",
-        "EPosition",
-        "Eccentricity"
-      ],
-      "Line": 84,
-      "Caller": "MemberUniformlyDistributedLoad.ApplyTo",
-      "MethodLine": 81,
-      "File": "src\\StaadPro.Interop\\Entities\\MemberUniformlyDistributedLoad.cs"
-    },
-    {
-      "Target": "load.AddMemberUniformMoment",
-      "Receiver": "load",
-      "Name": "AddMemberUniformMoment",
-      "GenericArity": 0,
-      "Arguments": [
-        "beamIds",
-        "(int)Direction",
-        "Magnitude",
-        "SPosition",
-        "EPosition",
-        "Eccentricity"
-      ],
+      "Arguments": [],
       "Line": 75,
-      "Caller": "MemberUniformMoment.ApplyTo",
+      "Caller": "GetActiveLoadCaseNumber",
       "MethodLine": 72,
-      "File": "src\\StaadPro.Interop\\Entities\\MemberUniformMoment.cs"
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetLoadListCount",
+      "Receiver": "Binding()",
+      "Name": "GetLoadListCount",
+      "GenericArity": 0,
+      "Arguments": [],
+      "Line": 81,
+      "Caller": "GetLoadListCount",
+      "MethodLine": 80,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetLoadListCount",
+      "Receiver": "Binding()",
+      "Name": "GetLoadListCount",
+      "GenericArity": 0,
+      "Arguments": [],
+      "Line": 84,
+      "Caller": "CheckList",
+      "MethodLine": 82,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetLoadCountInLoadList",
+      "Receiver": "Binding()",
+      "Name": "GetLoadCountInLoadList",
+      "GenericArity": 0,
+      "Arguments": [
+        "index"
+      ],
+      "Line": 89,
+      "Caller": "ListCaseCount",
+      "MethodLine": 89,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetLoadListCount",
+      "Receiver": "Binding()",
+      "Name": "GetLoadListCount",
+      "GenericArity": 0,
+      "Arguments": [],
+      "Line": 99,
+      "Caller": "GetLoadListCaseCount",
+      "MethodLine": 90,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetLoadsInLoadList",
+      "Receiver": "Binding()",
+      "Name": "GetLoadsInLoadList",
+      "GenericArity": 0,
+      "Arguments": [
+        "loadListIndex",
+        "ref buffer"
+      ],
+      "Line": 119,
+      "Caller": "GetLoadListCases",
+      "MethodLine": 104,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetLoadListCount",
+      "Receiver": "Binding()",
+      "Name": "GetLoadListCount",
+      "GenericArity": 0,
+      "Arguments": [],
+      "Line": 128,
+      "Caller": "GetLoadListCases",
+      "MethodLine": 104,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetLoadTypeCount",
+      "Receiver": "Binding()",
+      "Name": "GetLoadTypeCount",
+      "GenericArity": 0,
+      "Arguments": [
+        "(int)kind"
+      ],
+      "Line": 138,
+      "Caller": "CommandCount",
+      "MethodLine": 138,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetListSizeForLoadType",
+      "Receiver": "Binding()",
+      "Name": "GetListSizeForLoadType",
+      "GenericArity": 0,
+      "Arguments": [
+        "(int)commandKind",
+        "commandIndex"
+      ],
+      "Line": 159,
+      "Caller": "GetAssignedEntityCount",
+      "MethodLine": 150,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetLoadItemsCount",
+      "Receiver": "Binding()",
+      "Name": "GetLoadItemsCount",
+      "GenericArity": 0,
+      "Arguments": [
+        "loadCaseId"
+      ],
+      "Line": 168,
+      "Caller": "GetLoadItemCount",
+      "MethodLine": 165,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetLoadItemType",
+      "Receiver": "Binding()",
+      "Name": "GetLoadItemType",
+      "GenericArity": 0,
+      "Arguments": [
+        "loadCaseId",
+        "loadItemIndex"
+      ],
+      "Line": 176,
+      "Caller": "GetLoadItemKind",
+      "MethodLine": 170,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().IsDynamicLoadIncluded",
+      "Receiver": "Binding()",
+      "Name": "IsDynamicLoadIncluded",
+      "GenericArity": 0,
+      "Arguments": [
+        "loadCaseId"
+      ],
+      "Line": 188,
+      "Caller": "ContainsDynamicLoad",
+      "MethodLine": 182,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetNotionalLoadCount",
+      "Receiver": "Binding()",
+      "Name": "GetNotionalLoadCount",
+      "GenericArity": 0,
+      "Arguments": [],
+      "Line": 214,
+      "Caller": "GetNotionalItemCount",
+      "MethodLine": 212,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetReferenceLoadCount",
+      "Receiver": "Binding()",
+      "Name": "GetReferenceLoadCount",
+      "GenericArity": 0,
+      "Arguments": [],
+      "Line": 217,
+      "Caller": "GetReferenceItemCount",
+      "MethodLine": 215,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetNoLoadFactorDirectionInNotionalLoad",
+      "Receiver": "Binding()",
+      "Name": "GetNoLoadFactorDirectionInNotionalLoad",
+      "GenericArity": 0,
+      "Arguments": [
+        "index"
+      ],
+      "Line": 219,
+      "Caller": "ContributionCount",
+      "MethodLine": 218,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetNoLoadFactorInRepeatLoad",
+      "Receiver": "Binding()",
+      "Name": "GetNoLoadFactorInRepeatLoad",
+      "GenericArity": 0,
+      "Arguments": [
+        "index"
+      ],
+      "Line": 220,
+      "Caller": "ContributionCount",
+      "MethodLine": 218,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetNotionalLoadByIndex",
+      "Receiver": "Binding()",
+      "Name": "GetNotionalLoadByIndex",
+      "GenericArity": 0,
+      "Arguments": [
+        "index",
+        "ref ids",
+        "ref factors",
+        "ref directions"
+      ],
+      "Line": 246,
+      "Caller": "ReadContributions",
+      "MethodLine": 233,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
+    },
+    {
+      "Target": "Binding().GetRepeatLoadByIndex",
+      "Receiver": "Binding()",
+      "Name": "GetRepeatLoadByIndex",
+      "GenericArity": 0,
+      "Arguments": [
+        "index",
+        "ref ids",
+        "ref factors"
+      ],
+      "Line": 247,
+      "Caller": "ReadContributions",
+      "MethodLine": 233,
+      "File": "src/StaadPro.Interop/Services/Load/LoadInspectionService.cs"
     }
   ],
   "callShapeReview": {
@@ -30651,6 +30907,313 @@
     "delegatedIssues": []
   },
   "managedInterface": [
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetActiveLoadCaseNumber",
+      "ReturnType": "LoadQueryResult<int>",
+      "Parameters": [],
+      "Arity": 0,
+      "Public": true,
+      "Line": 27
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetLoadListCount",
+      "ReturnType": "LoadQueryResult<int>",
+      "Parameters": [],
+      "Arity": 0,
+      "Public": true,
+      "Line": 38
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetLoadListCaseCount",
+      "ReturnType": "LoadQueryResult<int>",
+      "Parameters": [
+        {
+          "Name": "loadListIndex",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 51
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetLoadListCases",
+      "ReturnType": "LoadQueryResult<IEnumerable<int>>",
+      "Parameters": [
+        {
+          "Name": "loadListIndex",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "maximumResults",
+          "Type": "int",
+          "Default": "100000",
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 65
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetLoadCommandCount",
+      "ReturnType": "LoadQueryResult<int>",
+      "Parameters": [
+        {
+          "Name": "primaryLoadCaseId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "commandKind",
+          "Type": "LoadCommandKind",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 79
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetAssignedEntityCount",
+      "ReturnType": "LoadQueryResult<int>",
+      "Parameters": [
+        {
+          "Name": "primaryLoadCaseId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "commandKind",
+          "Type": "LoadCommandKind",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "commandIndex",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 94
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetLoadItemCount",
+      "ReturnType": "LoadQueryResult<int>",
+      "Parameters": [
+        {
+          "Name": "loadCaseId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 107
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetLoadItemKind",
+      "ReturnType": "LoadQueryResult<LoadItemKind>",
+      "Parameters": [
+        {
+          "Name": "loadCaseId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "loadItemIndex",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 121
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "ContainsDynamicLoad",
+      "ReturnType": "LoadQueryResult<bool>",
+      "Parameters": [
+        {
+          "Name": "loadCaseId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 134
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetRepeatContributionCount",
+      "ReturnType": "LoadQueryResult<int>",
+      "Parameters": [
+        {
+          "Name": "primaryLoadCaseId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "repeatItemIndex",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 148
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetRepeatContributions",
+      "ReturnType": "LoadQueryResult<IEnumerable<LoadFactorContribution>>",
+      "Parameters": [
+        {
+          "Name": "primaryLoadCaseId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "repeatItemIndex",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "maximumResults",
+          "Type": "int",
+          "Default": "100000",
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 163
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetNotionalItemCount",
+      "ReturnType": "LoadQueryResult<int>",
+      "Parameters": [
+        {
+          "Name": "primaryLoadCaseId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 176
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetNotionalContributionCount",
+      "ReturnType": "LoadQueryResult<int>",
+      "Parameters": [
+        {
+          "Name": "primaryLoadCaseId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "notionalItemIndex",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 190
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetNotionalContributions",
+      "ReturnType": "LoadQueryResult<IEnumerable<NotionalLoadContribution>>",
+      "Parameters": [
+        {
+          "Name": "primaryLoadCaseId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "notionalItemIndex",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        },
+        {
+          "Name": "maximumResults",
+          "Type": "int",
+          "Default": "100000",
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 205
+    },
+    {
+      "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+      "Owner": "IOSLoad",
+      "Name": "GetReferenceItemCount",
+      "ReturnType": "LoadQueryResult<int>",
+      "Parameters": [
+        {
+          "Name": "primaryLoadCaseId",
+          "Type": "int",
+          "Default": null,
+          "Modifiers": ""
+        }
+      ],
+      "Arity": 0,
+      "Public": true,
+      "Line": 218
+    },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
       "Owner": "IOSLoad",
@@ -30696,7 +31259,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 17
+      "Line": 221
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30737,7 +31300,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 20
+      "Line": 224
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30772,7 +31335,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 23
+      "Line": 227
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30801,7 +31364,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 26
+      "Line": 230
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30830,7 +31393,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 29
+      "Line": 233
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30847,7 +31410,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 32
+      "Line": 236
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30900,7 +31463,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 35
+      "Line": 239
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30929,7 +31492,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 38
+      "Line": 242
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30958,7 +31521,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 41
+      "Line": 245
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30981,7 +31544,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 44
+      "Line": 248
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -30998,7 +31561,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 47
+      "Line": 251
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31015,7 +31578,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 50
+      "Line": 254
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31032,7 +31595,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 53
+      "Line": 257
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31042,7 +31605,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 56
+      "Line": 260
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31059,7 +31622,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 59
+      "Line": 263
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31076,7 +31639,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 62
+      "Line": 266
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31093,7 +31656,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 65
+      "Line": 269
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31110,7 +31673,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 68
+      "Line": 272
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31133,7 +31696,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 71
+      "Line": 275
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31156,7 +31719,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 74
+      "Line": 278
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31179,7 +31742,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 77
+      "Line": 281
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31196,7 +31759,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 80
+      "Line": 284
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31213,7 +31776,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 83
+      "Line": 287
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31230,7 +31793,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 86
+      "Line": 290
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31247,7 +31810,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 89
+      "Line": 293
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31264,7 +31827,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 92
+      "Line": 296
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31287,7 +31850,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 95
+      "Line": 299
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31310,7 +31873,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 98
+      "Line": 302
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31333,7 +31896,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 101
+      "Line": 305
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31380,7 +31943,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 104
+      "Line": 308
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31403,7 +31966,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 107
+      "Line": 311
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31426,7 +31989,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 110
+      "Line": 314
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31449,7 +32012,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 113
+      "Line": 317
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31472,7 +32035,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 116
+      "Line": 320
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31501,7 +32064,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 119
+      "Line": 323
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31530,7 +32093,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 122
+      "Line": 326
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31559,7 +32122,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 125
+      "Line": 329
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31588,7 +32151,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 128
+      "Line": 332
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31617,7 +32180,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 131
+      "Line": 335
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31640,7 +32203,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 134
+      "Line": 338
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31657,7 +32220,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 137
+      "Line": 341
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31667,7 +32230,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 140
+      "Line": 344
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31690,7 +32253,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 143
+      "Line": 347
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31713,7 +32276,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 146
+      "Line": 350
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31742,7 +32305,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 149
+      "Line": 353
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31777,7 +32340,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 152
+      "Line": 356
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31794,7 +32357,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 155
+      "Line": 359
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31811,7 +32374,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 158
+      "Line": 362
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31834,7 +32397,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 163
+      "Line": 367
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31857,7 +32420,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 165
+      "Line": 369
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31880,7 +32443,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 167
+      "Line": 371
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31890,7 +32453,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 170
+      "Line": 374
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31913,7 +32476,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 172
+      "Line": 376
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31936,7 +32499,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 174
+      "Line": 378
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31953,7 +32516,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 177
+      "Line": 381
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31976,7 +32539,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 179
+      "Line": 383
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -31999,7 +32562,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 181
+      "Line": 385
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32040,7 +32603,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 184
+      "Line": 388
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32069,7 +32632,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 186
+      "Line": 390
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32086,7 +32649,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 188
+      "Line": 392
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32109,7 +32672,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 229
+      "Line": 433
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32132,7 +32695,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 270
+      "Line": 474
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32155,7 +32718,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 311
+      "Line": 515
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32178,7 +32741,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 352
+      "Line": 556
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32201,7 +32764,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 393
+      "Line": 597
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32224,7 +32787,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 434
+      "Line": 638
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32247,7 +32810,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 441
+      "Line": 645
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32270,7 +32833,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 444
+      "Line": 648
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32293,7 +32856,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 447
+      "Line": 651
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32310,7 +32873,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 450
+      "Line": 654
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32327,7 +32890,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 453
+      "Line": 657
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32344,7 +32907,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 456
+      "Line": 660
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32361,7 +32924,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 459
+      "Line": 663
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32378,7 +32941,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 462
+      "Line": 666
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32395,7 +32958,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 465
+      "Line": 669
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32418,7 +32981,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 472
+      "Line": 676
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32447,7 +33010,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 475
+      "Line": 679
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32464,7 +33027,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 478
+      "Line": 682
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32481,7 +33044,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 481
+      "Line": 685
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32510,7 +33073,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 484
+      "Line": 688
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32527,7 +33090,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 487
+      "Line": 691
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32544,7 +33107,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 490
+      "Line": 694
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32561,7 +33124,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 493
+      "Line": 697
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32578,7 +33141,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 496
+      "Line": 700
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32613,7 +33176,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 503
+      "Line": 707
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32648,7 +33211,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 506
+      "Line": 710
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32683,7 +33246,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 509
+      "Line": 713
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32718,7 +33281,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 512
+      "Line": 716
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32735,7 +33298,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 519
+      "Line": 723
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32752,7 +33315,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 522
+      "Line": 726
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32769,7 +33332,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 525
+      "Line": 729
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32786,7 +33349,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 528
+      "Line": 732
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32815,7 +33378,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 535
+      "Line": 739
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32844,7 +33407,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 538
+      "Line": 742
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32873,7 +33436,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 545
+      "Line": 749
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32902,7 +33465,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 548
+      "Line": 752
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32937,7 +33500,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 555
+      "Line": 759
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -32972,7 +33535,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 558
+      "Line": 762
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33007,7 +33570,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 561
+      "Line": 765
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33030,7 +33593,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 603
+      "Line": 807
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33040,7 +33603,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 635
+      "Line": 839
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33050,7 +33613,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 667
+      "Line": 871
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33067,7 +33630,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 699
+      "Line": 903
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33084,7 +33647,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 731
+      "Line": 935
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33101,7 +33664,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 764
+      "Line": 968
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33118,7 +33681,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 797
+      "Line": 1001
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33128,7 +33691,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 828
+      "Line": 1032
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33145,7 +33708,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 862
+      "Line": 1066
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33162,7 +33725,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 899
+      "Line": 1103
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33179,7 +33742,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 934
+      "Line": 1138
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33202,7 +33765,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 970
+      "Line": 1174
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33231,7 +33794,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 1006
+      "Line": 1210
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33254,7 +33817,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 1044
+      "Line": 1248
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33271,7 +33834,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 1074
+      "Line": 1278
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33281,7 +33844,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 1098
+      "Line": 1302
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33298,7 +33861,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 1130
+      "Line": 1334
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33308,7 +33871,7 @@
       "Parameters": [],
       "Arity": 0,
       "Public": true,
-      "Line": 1155
+      "Line": 1359
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33349,7 +33912,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 1187
+      "Line": 1391
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33378,7 +33941,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 1215
+      "Line": 1419
     },
     {
       "File": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
@@ -33401,7 +33964,7 @@
       ],
       "Arity": 0,
       "Public": true,
-      "Line": 1244
+      "Line": 1448
     }
   ],
   "privateReference": {
@@ -33527,42 +34090,10 @@
       "implementationDisposition": "Already available; do not duplicate for native-name coverage"
     },
     {
-      "nativeName": "GetActiveLoad",
-      "phase": "L5",
-      "signature": "LoadQueryResult<LoadCaseIdentity> GetActiveLoadCase()",
-      "considerations": "Represent absent/invalid state distinctly; do not assume primary/reference numbers identify a unique family.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
       "nativeName": "SetLoadType",
       "phase": "L5",
       "signature": "LoadOperationResult SetLoadType(IEnumerable<int> loadCaseIds, LoadType loadType)",
       "considerations": "Reuse semantic LoadType only after native code verification; do not change case-family classification.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetLoadListCount",
-      "phase": "L5",
-      "signature": "LoadQueryResult<int> GetLoadListCount()",
-      "considerations": "Nonnegative count; -1 is failure, not an empty list.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetLoadCountInLoadList",
-      "phase": "L5",
-      "signature": "LoadQueryResult<int> GetLoadListCaseCount(int loadListIndex)",
-      "considerations": "Index base and invalid-index behavior need live corroboration; do not assume a positive case ID.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetLoadsInLoadList",
-      "phase": "L5",
-      "signature": "LoadQueryResult<IEnumerable<LoadCaseIdentity>> GetLoadListCases(int loadListIndex)",
-      "considerations": "Use count/fetch under serialized session access; metadata exposes a by-reference output despite const in the C++ help declaration.",
       "managedCapability": "Absent",
       "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
@@ -33607,22 +34138,6 @@
       "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
-      "nativeName": "GetLoadTypeCount",
-      "phase": "L5",
-      "signature": "LoadQueryResult<int> GetLoadCommandCount(NativeLoadCommandKind commandKind)",
-      "considerations": "Command kind is distinct from case LoadType; zero can be a valid count.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetListSizeForLoadType",
-      "phase": "L5",
-      "signature": "LoadQueryResult<int> GetAssignedEntityCount(NativeLoadCommandKind commandKind, int commandIndex)",
-      "considerations": "Validate index base independently and retain active-case binding.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
       "nativeName": "GetAssignmentListForLoadType",
       "phase": "L5",
       "signature": "LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(NativeLoadCommandKind commandKind, int commandIndex)",
@@ -33643,22 +34158,6 @@
       "phase": "L5",
       "signature": "LoadOperationResult DeleteReferenceLoadCases(IEnumerable<int> loadCaseIds)",
       "considerations": "Separate deletion from existing clear-content APIs; reject accidental destructive defaults.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetLoadItemsCount",
-      "phase": "L5",
-      "signature": "LoadQueryResult<int> GetLoadItemCount(int loadCaseId)",
-      "considerations": "Distinguish zero items from -1 native failure.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetLoadItemType",
-      "phase": "L5",
-      "signature": "LoadQueryResult<NativeLoadItemKind> GetLoadItemKind(int loadCaseId, int loadItemIndex)",
-      "considerations": "Zero-based index; retain unknown numeric codes. Existing LoadItemType is not this native table; code 3312 has two documented labels requiring disambiguation.",
       "managedCapability": "Absent",
       "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
@@ -33807,14 +34306,6 @@
       "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
-      "nativeName": "IsDynamicLoadIncluded",
-      "phase": "L6",
-      "signature": "LoadQueryResult<bool> ContainsDynamicLoad(int loadCaseId)",
-      "considerations": "1=true, 0=false and -1=error; negative code must never become true.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
       "nativeName": "AddWindLoad",
       "phase": "L6",
       "signature": "LoadOperationResult AddWindLoad(LoadCaseIdentity targetCase, WindLoadDefinition definition)",
@@ -33827,54 +34318,6 @@
       "phase": "L7",
       "signature": "LoadOperationResult AddNotionalLoad(LoadCaseIdentity targetCase, IEnumerable<NotionalLoadContribution> contributions)",
       "considerations": "Keep primary and reference families separate; one record carries ID, factor and direction.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetNoLoadFactorInRepeatLoad",
-      "phase": "L7",
-      "signature": "LoadQueryResult<int> GetRepeatContributionCount(LoadCaseIdentity targetCase, int repeatItemIndex)",
-      "considerations": "Command index is not a load-case ID; use required index base from contract/live evidence.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetRepeatLoadByIndex",
-      "phase": "L7",
-      "signature": "LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(LoadCaseIdentity targetCase, int repeatItemIndex)",
-      "considerations": "Pre-size zero-indexed arrays using the paired count; preserve order and duplicate entries.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetNotionalLoadCount",
-      "phase": "L7",
-      "signature": "LoadQueryResult<int> GetNotionalItemCount(LoadCaseIdentity targetCase)",
-      "considerations": "Active-case item count, distinct from case-family discovery.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetNoLoadFactorDirectionInNotionalLoad",
-      "phase": "L7",
-      "signature": "LoadQueryResult<int> GetNotionalContributionCount(LoadCaseIdentity targetCase, int notionalItemIndex)",
-      "considerations": "Count accompanies IDs, factors and directions in the paired fetch.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetNotionalLoadByIndex",
-      "phase": "L7",
-      "signature": "LoadQueryResult<IEnumerable<NotionalLoadContribution>> GetNotionalContributions(LoadCaseIdentity targetCase, int notionalItemIndex)",
-      "considerations": "Validate equal output lengths and native direction codes.",
-      "managedCapability": "Absent",
-      "implementationDisposition": "Pending native capability; design may combine related entry points"
-    },
-    {
-      "nativeName": "GetReferenceLoadCount",
-      "phase": "L7",
-      "signature": "LoadQueryResult<int> GetReferenceItemCount(LoadCaseIdentity targetCase)",
-      "considerations": "Counts reference commands inside active case; existing GetReferenceLoadCaseCount counts definitions and is not equivalent.",
       "managedCapability": "Absent",
       "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
@@ -34367,6 +34810,558 @@
         "status": "Absent",
         "explanation": "No paired native merge cleanup. A future managed merge operation should own both begin/end calls rather than expose two unrelated user obligations."
       }
-    ]
+    ],
+    "currentImplementation": {
+      "date": "2026-10-23",
+      "implementedSinceAudit": 15,
+      "coveredAlternative": 1,
+      "derivedCapability": 1,
+      "partial": 4,
+      "absent": 35,
+      "remainingNativeNamesWithoutDispatch": 41,
+      "nativeContractsWithOutstandingScope": 39,
+      "functions": [
+        {
+          "nativeName": "SplitLoadsOnBeam",
+          "phase": "L7",
+          "status": "Absent",
+          "explanation": "No implementation transfers/splits load definitions when a member is split. Geometry splitting and ordinary member-load assignment are not equivalent."
+        },
+        {
+          "nativeName": "AddLoadCasesToEnvelop",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "Envelope creation and membership read-back exist; adding members to an existing envelope is not implemented. Recreating an envelope is not a verified equivalent."
+        },
+        {
+          "nativeName": "RemoveLoadCasesFromEnvelop",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "No removal of selected members from an existing envelope. Creation/read-back cannot establish safe in-place removal."
+        },
+        {
+          "nativeName": "DeleteLoadEnvelop",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "No deletion of an existing envelope."
+        },
+        {
+          "nativeName": "IsCombinationCase",
+          "phase": "L5",
+          "status": "Derived capability",
+          "explanation": "GetAllLoadCombinationCases().Any(c => c.Id == targetId), or GetLoadCase(targetId, LoadCaseType.LoadCombination) != null, answers combination membership from a fresh native inventory. A dedicated predicate/status-result API is absent, but the user capability exists."
+        },
+        {
+          "nativeName": "AddAutoLoadCombinations",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "CreateLoadCombinations consumes caller-supplied definitions/factors. It does not generate code/category-based automatic combinations or return their generated IDs."
+        },
+        {
+          "nativeName": "AddAutoCombinationRepeat",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "AddRepeatLoadsTo consumes caller-supplied factors; EditorLoadCombination title helpers only format text. Neither performs native automatic repeat-load generation."
+        },
+        {
+          "nativeName": "CreateNewPrimaryLoad",
+          "phase": "L5",
+          "status": "Covered alternative",
+          "explanation": "Primary creation is implemented by CreateNewPrimaryLoad overloads using native Ex/Ex2, and by CreateNewLoadCase routing on CaseType. The unused title-only native entry point is an alternative, not a missing creation capability. Default classification and exact native status behavior are not asserted identical."
+        },
+        {
+          "nativeName": "GetActiveLoad",
+          "phase": "L5",
+          "status": "Implemented",
+          "explanation": "Returns the positive native number or NativeFailure for -1. Primary/reference numbers can overlap; this result is not a LoadCase identity and performs no activation.",
+          "baselineStatus": "Absent",
+          "managed": "GetActiveLoadCaseNumber"
+        },
+        {
+          "nativeName": "SetLoadType",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "LoadCase.Type is managed metadata; setting it does not update an existing native case. Creation-time type selection is not reclassification."
+        },
+        {
+          "nativeName": "GetLoadListCount",
+          "phase": "L5",
+          "status": "Implemented",
+          "explanation": "Zero is a valid count; -1 is NativeFailure. This is not an envelope count or a count of cases in an individual list.",
+          "baselineStatus": "Absent",
+          "managed": "GetLoadListCount"
+        },
+        {
+          "nativeName": "GetLoadCountInLoadList",
+          "phase": "L5",
+          "status": "Implemented",
+          "explanation": "Validates the one-based list index against GetLoadListCount and rechecks that total after reading. Out-of-range lists are NotFound. The native count function has no documented negative error code; negative counts are rejected as malformed.",
+          "baselineStatus": "Absent",
+          "managed": "GetLoadListCaseCount"
+        },
+        {
+          "nativeName": "GetLoadsInLoadList",
+          "phase": "L5",
+          "status": "Implemented",
+          "explanation": "Uses an Int32 SAFEARRAY output passed internally by reference following installed CLR metadata, despite const wording in the C++ prototype. Preserves order/duplicates; does not infer case families. Rechecks list and member counts; detected changes return StateChanged. Native false is NativeFailure. Zero cases returns a read-only empty list without fetching.",
+          "baselineStatus": "Absent",
+          "managed": "GetLoadListCases"
+        },
+        {
+          "nativeName": "DeleteLoadList",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "No native load-list deletion. Creating another list is not a verified deletion contract."
+        },
+        {
+          "nativeName": "SetASDLoadAttribute",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "No ASD attribute mutation on an existing native load case."
+        },
+        {
+          "nativeName": "SetLSDLoadAttribute",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "No LSD attribute mutation on an existing native load case."
+        },
+        {
+          "nativeName": "RemoveAttribute",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "No native load-attribute removal."
+        },
+        {
+          "nativeName": "GetAttribute",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "No native load-attribute reader. The help documents 0/-1 status without a usable attribute payload, so result semantics require clarification before implementation."
+        },
+        {
+          "nativeName": "GetLoadTypeCount",
+          "phase": "L5",
+          "status": "Implemented",
+          "explanation": "Command kind is distinct from engineering LoadType and LoadItemKind. Native zero is documented as case not found and is returned as EmptyOrUnavailable, with no Data, rather than a proven empty inventory.",
+          "baselineStatus": "Absent",
+          "managed": "GetLoadCommandCount"
+        },
+        {
+          "nativeName": "GetListSizeForLoadType",
+          "phase": "L5",
+          "status": "Implemented",
+          "explanation": "Validates the zero-based command index against GetLoadTypeCount and rechecks that count afterwards. A zero command count is EmptyOrUnavailable; an index beyond a positive count is NotFound. A valid entity count can be zero. This returns a count, not the assignment-ID list.",
+          "baselineStatus": "Absent",
+          "managed": "GetAssignedEntityCount"
+        },
+        {
+          "nativeName": "GetAssignmentListForLoadType",
+          "phase": "L5",
+          "status": "Partial",
+          "explanation": "GetNodalLoadsGroupedByLoadCase and GetMemberLoadsGroupedByLoadCase reconstruct definition/entity buckets for supplied nodes/beams and supported families. They require an entity scope and do not preserve native command identity, order or a general command-type/index assignment list."
+        },
+        {
+          "nativeName": "DeletePrimaryLoadCases",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "ClearPrimaryLoadCase/ClearPrimaryLoadCases remove load items; they do not implement deletion of the case definitions. The native deletion entry point also accepts a reference-family flag."
+        },
+        {
+          "nativeName": "DeleteReferenceLoadCases",
+          "phase": "L5",
+          "status": "Absent",
+          "explanation": "ClearReferenceLoadCase/ClearReferenceLoadCases clear items; they do not implement reference-case definition deletion. A future shared managed deletion API may cover both native deletion alternatives."
+        },
+        {
+          "nativeName": "GetLoadItemsCount",
+          "phase": "L5",
+          "status": "Implemented",
+          "explanation": "Zero is valid and -1 is NativeFailure. Passes the case number directly without activation or family inference. Counts native items rather than per-entity duplicates or grouped managed definitions.",
+          "baselineStatus": "Absent",
+          "managed": "GetLoadItemCount"
+        },
+        {
+          "nativeName": "GetLoadItemType",
+          "phase": "L5",
+          "status": "Implemented",
+          "explanation": "Native zero is NotFound. Unknown positive codes are retained in the enum value; use Enum.IsDefined to test recognition. Code 3312 remains explicitly ambiguous between region nodal and partial plate pressure. Negative codes are malformed. No activation or family inference occurs.",
+          "baselineStatus": "Absent",
+          "managed": "GetLoadItemKind"
+        },
+        {
+          "nativeName": "AddSelfWeightInXYZ",
+          "phase": "L6",
+          "status": "Partial",
+          "explanation": "AddSelfweightInXYZTo already applies self-weight to explicit beam/plate/solid IDs. Geometry inventories can supply current IDs, but no integrated whole-model self-weight operation exists; an explicit list does not establish identical whole-model command scope or future-geometry behavior."
+        },
+        {
+          "nativeName": "GetNodalLoadInfo",
+          "phase": "L6",
+          "status": "Partial",
+          "explanation": "GetNodalLoads reads six force/moment components per supplied node; PopulateNodalLoads and grouping helpers also exist. They do not select or preserve the original native load-command index."
+        },
+        {
+          "nativeName": "AddMemberAreaLoad",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No built-in area-load assignment. Existing member uniform-force definitions have different engineering dimensions/semantics."
+        },
+        {
+          "nativeName": "AddMemberFixedEnd",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No built-in fixed-end member-load definition or assignment. End actions in Output are results, not load assignments."
+        },
+        {
+          "nativeName": "GetMemberLoadInfo",
+          "phase": "L6",
+          "status": "Partial",
+          "explanation": "Six typed per-member readers and population/grouping helpers already return supported member force/moment definitions and positions. They do not expose the original generic command-index lookup or every native command family."
+        },
+        {
+          "nativeName": "AddElementHydrostaticPressure",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No plate hydrostatic pressure definition/assignment. Uniform plate pressure and seismic member weights do not provide this operation."
+        },
+        {
+          "nativeName": "AddElementTrapPressureEx",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "AddPlateUniformPressure implements uniform pressure, not a varying/corner-pressure definition. The uniform special case does not cover this contract."
+        },
+        {
+          "nativeName": "GetElementPressureLoadCount",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No plate-pressure load count reader. AddPlateUniformPressure is a write operation; plate Output stress queries are analysis results."
+        },
+        {
+          "nativeName": "GetElementPressureLoads",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No plate-pressure definition read-back, including direction, pressure and local rectangle coordinates."
+        },
+        {
+          "nativeName": "GetElementConcLoadCount",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No plate concentrated-load count reader."
+        },
+        {
+          "nativeName": "GetElementConcLoads",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No plate concentrated-load definition reader."
+        },
+        {
+          "nativeName": "GetElementLoadInfo",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No element load-command index reader. Plate geometry and Output results do not supply applied load-command definitions."
+        },
+        {
+          "nativeName": "AddMemberFloorLoad",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No automatic floor-panel discovery/distribution assignment. A caller manually generating member loads is not an implemented floor-load operation."
+        },
+        {
+          "nativeName": "GetBeamCountAtFloor",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No floor-region beam count service matching this native operation. Geometry inventories do not by themselves implement floor-region semantics."
+        },
+        {
+          "nativeName": "GetInfluenceArea",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No floor influence-area calculation returning beam/area associations."
+        },
+        {
+          "nativeName": "AddMemberFloorLoadEx",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No range/group/one-way floor-load request or assignment. A future common floor-load API can cover overlapping legacy and extended cases."
+        },
+        {
+          "nativeName": "AddStrainLoad",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "No strain-load assignment. AddAxialThermalGradientTo uses AddTemperatureLoad and is not strain loading."
+        },
+        {
+          "nativeName": "AddSeismicLoad",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "Seismic definition/weight APIs and LoadType.SeismicH/SeismicV metadata exist; no seismic-load application to a case is implemented."
+        },
+        {
+          "nativeName": "IsDynamicLoadIncluded",
+          "phase": "L6",
+          "status": "Implemented",
+          "explanation": "Native 1/0 means true/false successful data; -1 is NativeFailure, never Boolean true. Actual Boolean native returns are also accepted. Does not classify a case from its title or engineering type, activate it, or start analysis.",
+          "baselineStatus": "Absent",
+          "managed": "ContainsDynamicLoad"
+        },
+        {
+          "nativeName": "AddWindLoad",
+          "phase": "L6",
+          "status": "Absent",
+          "explanation": "Wind definition, exposure, intensity and profile computations exist; applying a wind-load command to a case is not implemented."
+        },
+        {
+          "nativeName": "AddNotionalLoad",
+          "phase": "L7",
+          "status": "Absent",
+          "explanation": "No notional-load assignment. Repeat/reference factor APIs do not add direction-bearing notional contributions."
+        },
+        {
+          "nativeName": "GetNoLoadFactorInRepeatLoad",
+          "phase": "L7",
+          "status": "Implemented",
+          "explanation": "Uses the documented one-based repeat index. Zero is a successful empty count and -1 is NotFound for an invalid repeat index. This is a command contribution count, not the number of cases containing repeat loads.",
+          "baselineStatus": "Absent",
+          "managed": "GetRepeatContributionCount"
+        },
+        {
+          "nativeName": "GetRepeatLoadByIndex",
+          "phase": "L7",
+          "status": "Implemented",
+          "explanation": "Sizes Int32 ID and Double factor buffers with GetNoLoadFactorInRepeatLoad; checks native returned size and a post-fetch count. Preserves duplicate positive primary IDs and finite signed/zero factors in an immutable materialized sequence. Zero pairs returns an empty sequence without fetching; -1 is NotFound. No dictionary deduplication or summation occurs.",
+          "baselineStatus": "Absent",
+          "managed": "GetRepeatContributions"
+        },
+        {
+          "nativeName": "GetNotionalLoadCount",
+          "phase": "L7",
+          "status": "Implemented",
+          "explanation": "Zero is valid and -1 is NativeFailure. Counts command items, not their constituent case/factor/direction contributions.",
+          "baselineStatus": "Absent",
+          "managed": "GetNotionalItemCount"
+        },
+        {
+          "nativeName": "GetNoLoadFactorDirectionInNotionalLoad",
+          "phase": "L7",
+          "status": "Implemented",
+          "explanation": "Forwards a positive, one-based index following the installed examples that address command 1. Zero is valid and -1 is NativeFailure. Interprets the result as the paired reader buffer size; the manual also calls it a factor without documenting a numeric factor payload. Live index/count semantics require qualification.",
+          "baselineStatus": "Absent",
+          "managed": "GetNotionalContributionCount"
+        },
+        {
+          "nativeName": "GetNotionalLoadByIndex",
+          "phase": "L7",
+          "status": "Implemented",
+          "explanation": "Sizes paired Int32 ID/direction and Double factor buffers using GetNoLoadFactorDirectionInNotionalLoad. Positive native IDs mean primary cases and negative IDs reference cases; returns their family, positive ID and original signed ID. Global direction codes 1/2/3 are X/Y/Z, not LoadDirection local axes. Preserves order, duplicates and signed/zero factors. Zero contributions skips fetch; -1 is NativeFailure. One-based indexing follows installed examples and remains a live qualification requirement.",
+          "baselineStatus": "Absent",
+          "managed": "GetNotionalContributions"
+        },
+        {
+          "nativeName": "GetReferenceLoadCount",
+          "phase": "L7",
+          "status": "Implemented",
+          "explanation": "Zero is valid and -1 is NativeFailure. Does not count reference-case definitions; use existing GetAllReferenceLoadCases for that separate inventory.",
+          "baselineStatus": "Absent",
+          "managed": "GetReferenceItemCount"
+        },
+        {
+          "nativeName": "GetNoOfSetsInReferenceLoad",
+          "phase": "L7",
+          "status": "Absent",
+          "explanation": "No contribution count for a reference-load command index."
+        },
+        {
+          "nativeName": "GetReferenceLoadByIndex",
+          "phase": "L7",
+          "status": "Absent",
+          "explanation": "No indexed reference case-ID/factor reader. AddReferenceLoadsTo is a write operation."
+        },
+        {
+          "nativeName": "BeginLoadMerging",
+          "phase": "L7",
+          "status": "Absent",
+          "explanation": "No managed merge lifecycle or bounded merge operation. Duplicate-assignment grouping helpers do not merge native beam loads."
+        },
+        {
+          "nativeName": "EndLoadMerging",
+          "phase": "L7",
+          "status": "Absent",
+          "explanation": "No paired native merge cleanup. A future managed merge operation should own both begin/end calls rather than expose two unrelated user obligations."
+        }
+      ]
+    }
+  },
+  "inspectionImplementation": {
+    "date": "2026-10-23",
+    "parentCommit": "f2d4eaa",
+    "managedOverloadsAdded": 15,
+    "currentManagedOverloads": 135,
+    "nativeNamesAdded": [
+      "GetActiveLoad",
+      "GetLoadListCount",
+      "GetLoadCountInLoadList",
+      "GetLoadsInLoadList",
+      "GetLoadTypeCount",
+      "GetListSizeForLoadType",
+      "GetLoadItemsCount",
+      "GetLoadItemType",
+      "IsDynamicLoadIncluded",
+      "GetNoLoadFactorInRepeatLoad",
+      "GetRepeatLoadByIndex",
+      "GetNotionalLoadCount",
+      "GetNoLoadFactorDirectionInNotionalLoad",
+      "GetNotionalLoadByIndex",
+      "GetReferenceLoadCount"
+    ],
+    "remainingWithoutDispatch": [
+      "SplitLoadsOnBeam",
+      "AddLoadCasesToEnvelop",
+      "RemoveLoadCasesFromEnvelop",
+      "DeleteLoadEnvelop",
+      "IsCombinationCase",
+      "AddAutoLoadCombinations",
+      "AddAutoCombinationRepeat",
+      "CreateNewPrimaryLoad",
+      "SetLoadType",
+      "DeleteLoadList",
+      "SetASDLoadAttribute",
+      "SetLSDLoadAttribute",
+      "RemoveAttribute",
+      "GetAttribute",
+      "GetAssignmentListForLoadType",
+      "DeletePrimaryLoadCases",
+      "DeleteReferenceLoadCases",
+      "AddSelfWeightInXYZ",
+      "GetNodalLoadInfo",
+      "AddMemberAreaLoad",
+      "AddMemberFixedEnd",
+      "GetMemberLoadInfo",
+      "AddElementHydrostaticPressure",
+      "AddElementTrapPressureEx",
+      "GetElementPressureLoadCount",
+      "GetElementPressureLoads",
+      "GetElementConcLoadCount",
+      "GetElementConcLoads",
+      "GetElementLoadInfo",
+      "AddMemberFloorLoad",
+      "GetBeamCountAtFloor",
+      "GetInfluenceArea",
+      "AddMemberFloorLoadEx",
+      "AddStrainLoad",
+      "AddSeismicLoad",
+      "AddWindLoad",
+      "AddNotionalLoad",
+      "GetNoOfSetsInReferenceLoad",
+      "GetReferenceLoadByIndex",
+      "BeginLoadMerging",
+      "EndLoadMerging"
+    ],
+    "offlineTests": 2448,
+    "newTests": 189,
+    "sourceXmlExamples": 30,
+    "packageVerifierExamplesForFutureSource": 370,
+    "privateReferenceOverloads": 115,
+    "privateReferencePending": 0,
+    "nativeRuntimeValidated": false,
+    "distributionPackageBuilt": false,
+    "guide": "docs/Load-Inspection-Queries.md",
+    "operations": [
+      {
+        "native": "GetActiveLoad",
+        "managedSignature": "LoadQueryResult<int> GetActiveLoadCaseNumber()",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetLoadListCount",
+        "managedSignature": "LoadQueryResult<int> GetLoadListCount()",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetLoadCountInLoadList",
+        "managedSignature": "LoadQueryResult<int> GetLoadListCaseCount(int loadListIndex)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetLoadsInLoadList",
+        "managedSignature": "LoadQueryResult<IEnumerable<int>> GetLoadListCases(int loadListIndex, int maximumResults = 100000)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetLoadTypeCount",
+        "managedSignature": "LoadQueryResult<int> GetLoadCommandCount(int primaryLoadCaseId, LoadCommandKind commandKind)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetListSizeForLoadType",
+        "managedSignature": "LoadQueryResult<int> GetAssignedEntityCount(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetLoadItemsCount",
+        "managedSignature": "LoadQueryResult<int> GetLoadItemCount(int loadCaseId)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetLoadItemType",
+        "managedSignature": "LoadQueryResult<LoadItemKind> GetLoadItemKind(int loadCaseId, int loadItemIndex)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "IsDynamicLoadIncluded",
+        "managedSignature": "LoadQueryResult<bool> ContainsDynamicLoad(int loadCaseId)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetNoLoadFactorInRepeatLoad",
+        "managedSignature": "LoadQueryResult<int> GetRepeatContributionCount(int primaryLoadCaseId, int repeatItemIndex)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetRepeatLoadByIndex",
+        "managedSignature": "LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(int primaryLoadCaseId, int repeatItemIndex, int maximumResults = 100000)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetNotionalLoadCount",
+        "managedSignature": "LoadQueryResult<int> GetNotionalItemCount(int primaryLoadCaseId)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetNoLoadFactorDirectionInNotionalLoad",
+        "managedSignature": "LoadQueryResult<int> GetNotionalContributionCount(int primaryLoadCaseId, int notionalItemIndex)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetNotionalLoadByIndex",
+        "managedSignature": "LoadQueryResult<IEnumerable<NotionalLoadContribution>> GetNotionalContributions(int primaryLoadCaseId, int notionalItemIndex, int maximumResults = 100000)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      },
+      {
+        "native": "GetReferenceLoadCount",
+        "managedSignature": "LoadQueryResult<int> GetReferenceItemCount(int primaryLoadCaseId)",
+        "status": "Implemented",
+        "contract": "Common 2024-2026 installed documentation; native runtime qualification pending"
+      }
+    ],
+    "validationPackage": {
+      "version": "1.0.0-preview.ci.2026102301",
+      "purpose": "Local validation only; not a new distribution release",
+      "isolatedRestoreBuildRun": true,
+      "executedXmlExamples": 370,
+      "published": false
+    }
   }
 }

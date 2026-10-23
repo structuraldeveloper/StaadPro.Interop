@@ -1,5 +1,9 @@
 # NuGet readiness assessment
 
+## Newer source — Load inspection queries
+
+Source adds 15 Load queries after the prepared 20261023 archive: 135 Load overloads, 88/129 documented native mappings, 2,448 passing offline tests (189 new) and 30 new compiled/executed XML examples. A validation-only CI archive passed isolated installation/build/runtime with all 370 selected XML examples; the existing distribution archive retains 340. These additions require a new reviewed package version and release documents before distribution. The prepared archive below remains unchanged. See [Load inspection](Load-Inspection-Queries.md).
+
 ## Prepared preview — 23 October 2026
 
 Prepared **1.0.0-preview.20261023** for Windows/.NET Framework 4.8.1. The archive includes 143 reference Geometry overloads, 120 Load overloads (all 115 main-interface reference signatures plus five conveniences), 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper surface. Seven other domain APIs remain placeholders.

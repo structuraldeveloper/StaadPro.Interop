@@ -1,5 +1,11 @@
 # Load API porting and new assignments
 
+## Current source — 15 additional inspection queries
+
+Implemented the 15 genuinely missing observation contracts selected after the semantic audit. Current IOSLoad/OSLoadAdapter each expose **135 overloads**, retaining all 115 private reference signatures and five conveniences plus 15 native expansions. Native dispatch coverage is now **88/129**, leaving 41 unused entry points: one alternative, one derived capability, four partial overlaps and 35 absent operations. Three metadata-only candidates remain separate. See [Load inspection contracts and examples](Load-Inspection-Queries.md) for all signatures, statuses, index bases, primary activation effects, bounded snapshots and qualification limits. Passed 2,448 offline tests (189 new) and 30 new XML examples; the prepared preview archive predates this source increment.
+
+The audit and reference-port entries below describe the baseline before this increment.
+
 ## Managed capability audit — 23 October 2026
 
 The 56 undispatched native names are not 56 missing features. Semantic review found one existing creation alternative, one derived combination-membership capability, four partial overlaps and 50 operations without a managed equivalent. See the [complete semantic audit](reports/OpenSTAAD-Load-Managed-Capability-Audit.md) before selecting new work; 54 native contracts have outstanding scope, without implying 54 separate public methods. No functions were added for this review.

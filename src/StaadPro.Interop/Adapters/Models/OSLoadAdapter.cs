@@ -7,6 +7,8 @@ using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Extensions;
 using StaadPro.Interop.Models;
+using StaadPro.Interop.Enums.Loads;
+using StaadPro.Interop.Models.Loads.Queries;
 using StaadPro.Interop.Models.Loads.Wind;
 using StaadPro.Interop.Models.Loads.Seismic;
 using StaadPro.Interop.Services.Load;
@@ -24,10 +26,230 @@ namespace StaadPro.Interop.Adapters.Models
         {
             if (wrapper == null) throw new ArgumentNullException(nameof(wrapper));
             ComObject = wrapper.RawLoad ?? throw new ArgumentNullException(nameof(wrapper.RawLoad), "STAAD Load COM object is not initialized.");
+            inspection = new LoadInspectionService(wrapper, (object)ComObject);
         }
 
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='IOSLoad.P:ComObject']/*" />
         public dynamic ComObject { get; }
+
+        private readonly LoadInspectionService inspection;
+
+        /// <summary>Reads the native active load-case number without inferring its family.</summary>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Returns the positive native number or NativeFailure for -1. Primary/reference numbers can overlap; this result is not a LoadCase identity and performs no activation.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless.</para></remarks>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetActiveLoadCaseNumber();
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<int> GetActiveLoadCaseNumber() =>
+            inspection.GetActiveLoadCaseNumber();
+
+        /// <summary>Counts native LOAD LIST records.</summary>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Zero is a valid count; -1 is NativeFailure. This is not an envelope count or a count of cases in an individual list.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless.</para></remarks>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetLoadListCount();
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<int> GetLoadListCount() =>
+            inspection.GetLoadListCount();
+
+        /// <summary>Counts the case numbers in one native LOAD LIST record.</summary>
+        /// <param name="loadListIndex">One-based native LOAD LIST record index; must be positive.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Validates the one-based list index against GetLoadListCount and rechecks that total after reading. Out-of-range lists are NotFound. The native count function has no documented negative error code; negative counts are rejected as malformed.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetLoadListCaseCount(1);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<int> GetLoadListCaseCount(int loadListIndex) =>
+            inspection.GetLoadListCaseCount(loadListIndex);
+
+        /// <summary>Reads an owned, ordered snapshot of case numbers from a native LOAD LIST.</summary>
+        /// <param name="loadListIndex">One-based native LOAD LIST record index; must be positive.</param>
+        /// <param name="maximumResults">Positive retrieval limit (default 100000). A larger native count returns LimitExceeded before allocating output buffers; no silent truncation occurs.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Uses an Int32 SAFEARRAY output passed internally by reference following installed CLR metadata, despite const wording in the C++ prototype. Preserves order/duplicates; does not infer case families. Rechecks list and member counts; detected changes return StateChanged. Native false is NativeFailure. Zero cases returns a read-only empty list without fetching.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetLoadListCases(1);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<IEnumerable<int>> GetLoadListCases(int loadListIndex, int maximumResults = 100000) =>
+            inspection.GetLoadListCases(loadListIndex, maximumResults);
+
+        /// <summary>Counts commands of a native kind in an explicitly activated primary case.</summary>
+        /// <param name="primaryLoadCaseId">Positive primary load-case number. Activates this primary case with SetLoadActive; reference-family activation is not supported by this overload.</param>
+        /// <param name="commandKind">Defined LoadCommandKind command-table value, not the engineering classification of a case.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Command kind is distinct from engineering LoadType and LoadItemKind. Native zero is documented as case not found and is returned as EmptyOrUnavailable, with no Data, rather than a proven empty inventory.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless. Activates the requested primary case and checks GetActiveLoad before and after retrieval. Activation failure stops the query. Observed activation mismatch returns StateChanged; -1 from the active-number check is NativeFailure. The target remains active; previous activation is not restored, including after failure. A numeric active-case check cannot prove the family against an external switch to a reference case with the same number.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetLoadCommandCount(17, LoadCommandKind.Nodal);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<int> GetLoadCommandCount(int primaryLoadCaseId, LoadCommandKind commandKind) =>
+            inspection.GetLoadCommandCount(primaryLoadCaseId, commandKind);
+
+        /// <summary>Counts entities assigned to one command of a specified native kind.</summary>
+        /// <param name="primaryLoadCaseId">Positive primary load-case number. Activates this primary case with SetLoadActive; reference-family activation is not supported by this overload.</param>
+        /// <param name="commandKind">Defined LoadCommandKind command-table value, not the engineering classification of a case.</param>
+        /// <param name="commandIndex">Zero-based index within the specified native command kind; must be nonnegative.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Validates the zero-based command index against GetLoadTypeCount and rechecks that count afterwards. A zero command count is EmptyOrUnavailable; an index beyond a positive count is NotFound. A valid entity count can be zero. This returns a count, not the assignment-ID list.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless. Activates the requested primary case and checks GetActiveLoad before and after retrieval. Activation failure stops the query. Observed activation mismatch returns StateChanged; -1 from the active-number check is NativeFailure. The target remains active; previous activation is not restored, including after failure. A numeric active-case check cannot prove the family against an external switch to a reference case with the same number.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetAssignedEntityCount(17, LoadCommandKind.Nodal, 0);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<int> GetAssignedEntityCount(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex) =>
+            inspection.GetAssignedEntityCount(primaryLoadCaseId, commandKind, commandIndex);
+
+        /// <summary>Counts original native load items in a specified load case.</summary>
+        /// <param name="loadCaseId">Positive native case number passed directly to STAAD; its accepted family/suitability is determined by the native API.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Zero is valid and -1 is NativeFailure. Passes the case number directly without activation or family inference. Counts native items rather than per-entity duplicates or grouped managed definitions.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetLoadItemCount(17);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<int> GetLoadItemCount(int loadCaseId) =>
+            inspection.GetLoadItemCount(loadCaseId);
+
+        /// <summary>Reads the original native kind at a zero-based load-item index.</summary>
+        /// <param name="loadCaseId">Positive native case number passed directly to STAAD; its accepted family/suitability is determined by the native API.</param>
+        /// <param name="loadItemIndex">Zero-based original native item index within the specified case; must be nonnegative.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Native zero is NotFound. Unknown positive codes are retained in the enum value; use Enum.IsDefined to test recognition. Code 3312 remains explicitly ambiguous between region nodal and partial plate pressure. Negative codes are malformed. No activation or family inference occurs.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetLoadItemKind(17, 0);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<LoadItemKind> GetLoadItemKind(int loadCaseId, int loadItemIndex) =>
+            inspection.GetLoadItemKind(loadCaseId, loadItemIndex);
+
+        /// <summary>Observes whether the specified case includes dynamic loading.</summary>
+        /// <param name="loadCaseId">Positive native case number passed directly to STAAD; its accepted family/suitability is determined by the native API.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Native 1/0 means true/false successful data; -1 is NativeFailure, never Boolean true. Actual Boolean native returns are also accepted. Does not classify a case from its title or engineering type, activate it, or start analysis.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.ContainsDynamicLoad(17);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<bool> ContainsDynamicLoad(int loadCaseId) =>
+            inspection.ContainsDynamicLoad(loadCaseId);
+
+        /// <summary>Counts case/factor pairs in one repeat command.</summary>
+        /// <param name="primaryLoadCaseId">Positive primary load-case number. Activates this primary case with SetLoadActive; reference-family activation is not supported by this overload.</param>
+        /// <param name="repeatItemIndex">One-based repeat-command index in the selected primary case; must be positive.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Uses the documented one-based repeat index. Zero is a successful empty count and -1 is NotFound for an invalid repeat index. This is a command contribution count, not the number of cases containing repeat loads.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless. Activates the requested primary case and checks GetActiveLoad before and after retrieval. Activation failure stops the query. Observed activation mismatch returns StateChanged; -1 from the active-number check is NativeFailure. The target remains active; previous activation is not restored, including after failure. A numeric active-case check cannot prove the family against an external switch to a reference case with the same number.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetRepeatContributionCount(17, 1);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<int> GetRepeatContributionCount(int primaryLoadCaseId, int repeatItemIndex) =>
+            inspection.GetRepeatContributionCount(primaryLoadCaseId, repeatItemIndex);
+
+        /// <summary>Reads ordered case/factor pairs for a repeat command.</summary>
+        /// <param name="primaryLoadCaseId">Positive primary load-case number. Activates this primary case with SetLoadActive; reference-family activation is not supported by this overload.</param>
+        /// <param name="repeatItemIndex">One-based repeat-command index in the selected primary case; must be positive.</param>
+        /// <param name="maximumResults">Positive retrieval limit (default 100000). A larger native count returns LimitExceeded before allocating output buffers; no silent truncation occurs.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Sizes Int32 ID and Double factor buffers with GetNoLoadFactorInRepeatLoad; checks native returned size and a post-fetch count. Preserves duplicate positive primary IDs and finite signed/zero factors in an immutable materialized sequence. Zero pairs returns an empty sequence without fetching; -1 is NotFound. No dictionary deduplication or summation occurs.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless. Activates the requested primary case and checks GetActiveLoad before and after retrieval. Activation failure stops the query. Observed activation mismatch returns StateChanged; -1 from the active-number check is NativeFailure. The target remains active; previous activation is not restored, including after failure. A numeric active-case check cannot prove the family against an external switch to a reference case with the same number.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetRepeatContributions(17, 1);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(int primaryLoadCaseId, int repeatItemIndex, int maximumResults = 100000) =>
+            inspection.GetRepeatContributions(primaryLoadCaseId, repeatItemIndex, maximumResults);
+
+        /// <summary>Counts notional-load commands in the selected primary case.</summary>
+        /// <param name="primaryLoadCaseId">Positive primary load-case number. Activates this primary case with SetLoadActive; reference-family activation is not supported by this overload.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Zero is valid and -1 is NativeFailure. Counts command items, not their constituent case/factor/direction contributions.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless. Activates the requested primary case and checks GetActiveLoad before and after retrieval. Activation failure stops the query. Observed activation mismatch returns StateChanged; -1 from the active-number check is NativeFailure. The target remains active; previous activation is not restored, including after failure. A numeric active-case check cannot prove the family against an external switch to a reference case with the same number.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetNotionalItemCount(17);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<int> GetNotionalItemCount(int primaryLoadCaseId) =>
+            inspection.GetNotionalItemCount(primaryLoadCaseId);
+
+        /// <summary>Counts contribution slots in a notional-load command.</summary>
+        /// <param name="primaryLoadCaseId">Positive primary load-case number. Activates this primary case with SetLoadActive; reference-family activation is not supported by this overload.</param>
+        /// <param name="notionalItemIndex">Positive one-based notional-command index following the installed examples; verify behavior on the acquired native build.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Forwards a positive, one-based index following the installed examples that address command 1. Zero is valid and -1 is NativeFailure. Interprets the result as the paired reader buffer size; the manual also calls it a factor without documenting a numeric factor payload. Live index/count semantics require qualification.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless. Activates the requested primary case and checks GetActiveLoad before and after retrieval. Activation failure stops the query. Observed activation mismatch returns StateChanged; -1 from the active-number check is NativeFailure. The target remains active; previous activation is not restored, including after failure. A numeric active-case check cannot prove the family against an external switch to a reference case with the same number.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetNotionalContributionCount(17, 1);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<int> GetNotionalContributionCount(int primaryLoadCaseId, int notionalItemIndex) =>
+            inspection.GetNotionalContributionCount(primaryLoadCaseId, notionalItemIndex);
+
+        /// <summary>Reads ordered notional case/factor/global-direction contributions.</summary>
+        /// <param name="primaryLoadCaseId">Positive primary load-case number. Activates this primary case with SetLoadActive; reference-family activation is not supported by this overload.</param>
+        /// <param name="notionalItemIndex">Positive one-based notional-command index following the installed examples; verify behavior on the acquired native build.</param>
+        /// <param name="maximumResults">Positive retrieval limit (default 100000). A larger native count returns LimitExceeded before allocating output buffers; no silent truncation occurs.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Sizes paired Int32 ID/direction and Double factor buffers using GetNoLoadFactorDirectionInNotionalLoad. Positive native IDs mean primary cases and negative IDs reference cases; returns their family, positive ID and original signed ID. Global direction codes 1/2/3 are X/Y/Z, not LoadDirection local axes. Preserves order, duplicates and signed/zero factors. Zero contributions skips fetch; -1 is NativeFailure. One-based indexing follows installed examples and remains a live qualification requirement.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless. Activates the requested primary case and checks GetActiveLoad before and after retrieval. Activation failure stops the query. Observed activation mismatch returns StateChanged; -1 from the active-number check is NativeFailure. The target remains active; previous activation is not restored, including after failure. A numeric active-case check cannot prove the family against an external switch to a reference case with the same number.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetNotionalContributions(17, 1);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<IEnumerable<NotionalLoadContribution>> GetNotionalContributions(int primaryLoadCaseId, int notionalItemIndex, int maximumResults = 100000) =>
+            inspection.GetNotionalContributions(primaryLoadCaseId, notionalItemIndex, maximumResults);
+
+        /// <summary>Counts reference-load command items inside the selected primary case.</summary>
+        /// <param name="primaryLoadCaseId">Positive primary load-case number. Activates this primary case with SetLoadActive; reference-family activation is not supported by this overload.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
+        /// <remarks><para>Zero is valid and -1 is NativeFailure. Does not count reference-case definitions; use existing GetAllReferenceLoadCases for that separate inventory.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless. Activates the requested primary case and checks GetActiveLoad before and after retrieval. Activation failure stops the query. Observed activation mismatch returns StateChanged; -1 from the active-number check is NativeFailure. The target remains active; previous activation is not restored, including after failure. A numeric active-case check cannot prove the family against an external switch to a reference case with the same number.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">A number/index/limit or command-kind request is outside its documented domain.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is stale/disposed or a native response has an unsupported type, undocumented code, invalid array shape or unwritten/nonfinite data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The native interface lacks a compatible reviewed member.</exception>
+        /// <example><code>var result = load.GetReferenceItemCount(17);
+        /// if (result.IsSuccessful) Console.WriteLine(result.Data);
+        /// else Console.WriteLine(result.Status + ": " + result.Diagnostic);</code></example>
+        public LoadQueryResult<int> GetReferenceItemCount(int primaryLoadCaseId) =>
+            inspection.GetReferenceItemCount(primaryLoadCaseId);
 
 
         #region Remaining Seismic, Spectrum and Direct Analysis Reference Operations

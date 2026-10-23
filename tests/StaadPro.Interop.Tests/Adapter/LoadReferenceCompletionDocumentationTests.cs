@@ -50,7 +50,7 @@ namespace StaadPro.Interop.Tests.Adapter
                 Assert.That(method.GetParameters().Any(p => p.ParameterType.IsByRef), Is.False);
                 Assert.That(contractDoc.Elements("exception").Count(), Is.GreaterThanOrEqualTo(5));
             }
-            Assert.That(typeof(IOSLoad).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(120));
+            Assert.That(typeof(IOSLoad).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(135));
         }
     }
 }
