@@ -26,6 +26,10 @@ Completed the final 15 reference Load overloads: AddSeismicDefMemberWeight, AddS
 
 The [Output review](docs/Output-Porting.md) compares STAAD.Pro 2024, 2025 and 2026, inventories every native contract and main-project overload, and proposes shared internal services with narrow version policies. Output remains a binding-only placeholder; this review adds documentation, not result-extraction APIs or package contents.
 
+## Property comparison and planned work
+
+The [Property review](docs/Property-Porting.md) compares STAAD.Pro 2024, 2025 and 2026, inventories native contracts and delegated main-project implementations, and proposes shared internal services with focused version policies. Property remains a binding-only placeholder; this review adds documentation and an implementation plan without changing package contents.
+
 ## Published preview: 1.0.0-preview.20261015
 
 This preview includes the completed wrapper bindings and five additional Root metadata queries: `GetApplicationVersion`, `GetBaseUnit`, `GetInputUnitForForce`, `GetInputUnitForLength` and `GetMainWindowHandle`. Wrapper-owned queries reuse cached properties; directly constructed Root adapters read their supplied native root. Unit compatibility fallbacks are documented in the [Root guide](docs/Root-Porting.md). Analysis observation also adds `IsAnalyzing()`, `GetAnalysisStatus()` and `GetAnalysisStatus(string modelFilePath)`, with immutable status/data results and no public reference outputs. See the [analysis guide](docs/Root-Analysis-Queries.md). Common reads also add `GetStaadFileFolder()`, `IsPhysicalModel()` and `GetErrorMessage()`; see the [common query guide](docs/Root-Common-Queries.md). This preview also includes `GetProcessId()`, `SetInputUnitForLength(LengthInputUnit)`, `SetInputUnitForForce(ForceInputUnit)`, `SetShortJobInfo(...)` (including a ShortJobInfo overload) and `UpdateStructure()`. See the [model setup guide](docs/Root-Model-Setup.md). These APIs are included in this preview archive.
