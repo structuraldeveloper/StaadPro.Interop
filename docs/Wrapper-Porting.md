@@ -1,6 +1,6 @@
 ﻿# OpenStaadWrapper implementation and source parity
 
-**Updated:** 22 October 2026
+**Updated:** 23 October 2026
 **Scope approved:** Complete wrapper members, raw objects, application/model metadata and adapter bindings. Unported domain adapters are placeholders; their functions will be ported separately.
 
 The [main project wrapper](<D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OpenStaadWrapper.cs>) was treated as **strictly read-only**. All implementation changes are in this open-source repository. The wrapper now includes all **30 source properties**, both constructor forms and all three public methods. The existing IsConnected property is retained as an additional convenience.
@@ -30,14 +30,14 @@ The source's Bentley COM types are represented by object/dynamic, matching this 
 | `RawSupport` | Captures native Support interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `Support` | Binding-only `IOSSupport` / `OSSupportAdapter` placeholder; no domain functions ported. See the [Support comparison and plan](Support-Porting.md). |
 | `RawDesign` | Captures native Design interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
-| `Design` | Binding-only `IOSDesign` / `OSDesignAdapter` placeholder; no domain functions ported. |
+| `Design` | Binding-only `IOSDesign` / `OSDesignAdapter` placeholder; no domain functions ported. See the [Design comparison and plan](Design-Porting.md). |
 | `RawCommands` | Captures native Command (singular) interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
-| `Commands` | Binding-only `IOSCommands` / `OSCommandsAdapter` placeholder; no domain functions ported. |
+| `Commands` | Binding-only `IOSCommands` / `OSCommandsAdapter` placeholder; no domain functions ported. See the [Commands comparison and plan](Commands-Porting.md). |
 | `RawTable` | Captures native Table interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `RawView` | Captures native View interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
-| `Table` | Binding-only `IOSTable` / `OSTableAdapter` placeholder; no domain functions ported. |
-| `View` | Binding-only `IOSView` / `OSViewAdapter` placeholder; no domain functions ported. |
-| `IdeaStatiCa` | Placeholder created only when Geometry, Load and Output bindings exist. |
+| `Table` | Binding-only `IOSTable` / `OSTableAdapter` placeholder; no domain functions ported. See the [Table comparison and plan](Table-Porting.md). |
+| `View` | Binding-only `IOSView` / `OSViewAdapter` placeholder; no domain functions ported. See the [View comparison and plan](View-Porting.md). |
+| `IdeaStatiCa` | Placeholder created only when Geometry, Load and Output bindings exist. See the [integration source review and plan](IDEA-StatiCa-Porting.md) for the additional operation prerequisites. |
 | `StaadVersion` | Native STAAD version; independent copy on access; null if version member absent. |
 | `ApplicationVersion` | Entry/calling host assembly version; never native STAAD version selection. |
 | `StaadEdition` | None / V8i / Connect using the source major-version rule. |
