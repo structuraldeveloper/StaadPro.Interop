@@ -134,7 +134,7 @@ namespace StaadPro.Interop.Tests.Models
         [Test]
         public void PlaceholdersExposeNoUnportedDomainFunctions()
         {
-            foreach (Type type in new[] { typeof(IOSOutput), typeof(IOSProperty), typeof(IOSSupport), typeof(IOSDesign), typeof(IOSCommands), typeof(IOSTable), typeof(IOSView), typeof(IOpenStaadIdeaStatiCaAdapter) })
+            foreach (Type type in new[] { typeof(IOSProperty), typeof(IOSSupport), typeof(IOSDesign), typeof(IOSCommands), typeof(IOSTable), typeof(IOSView), typeof(IOpenStaadIdeaStatiCaAdapter) })
                 Assert.That(type.GetMethods().Where(m => !m.IsSpecialName), Is.Empty, type.Name);
         }
 

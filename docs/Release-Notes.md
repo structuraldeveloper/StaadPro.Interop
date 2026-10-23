@@ -1,5 +1,11 @@
 # StaadPro.Interop release notes
 
+### Unreleased source development — 23 October 2026
+
+Implemented 15 typed Output queries for analysis/buckling availability, nodal displacement, support reactions, local member-end forces, static checks, seven plate-center result families and member design section/ratio observations. Added named status/data results, immutable owned payloads, strict native flags and buffer validation, documented design sentinel outcomes, binding-lifetime guards and complete interface/adapter/model IntelliSense. Reused source component conventions and existing force models without modifying the private source project or wrapper. Passed 2,259 offline tests, including 74 new Output cases, and a Release build with zero warnings/errors. Compiled and executed all 30 new Output XML examples against managed native stand-ins.
+
+Reconfirmed complete Load reference parity: 115 main-interface overloads are present in both current types, each exposing 120 overloads including five conveniences. No reference Load port was pending. The broader vendor-only Load inventory remains separate work. Forty-five documented Output native names and live marshaling/engineering qualification remain pending. No NuGet archive was built or published for this increment.
+
 ### Unreleased source development — 22 October 2026
 
 Completed the final 15 main-interface Load reference overloads, including remaining seismic member/wall operations, extended and legacy response-spectrum loads and direct-analysis definition APIs. Reused source request models and enum domains; added independent native packets, strict validation, checked Single conversion, guarded examples and complete interface/adapter/model IntelliSense. Source now exposes 120 Load overloads (115 reference plus five conveniences), with no reference interface overload pending. Passed 2,185 offline tests, including 161 new cases, and a Release build with zero warnings/errors. Compiled and executed all 310 selected source-reference XML examples with native mutations guarded; updated reusable package verification for the same inventory. Native numerical/marshaling validation and the broader managed capability/result architecture remain separate work; no NuGet archive was built or published.

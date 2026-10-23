@@ -33847,5 +33847,27 @@
       "packageBuilt": false,
       "architectureStatus": "Reference signatures ported; broad named-result/polymorphic architecture remains proposed."
     }
-  ]
+  ],
+  "referencePortingAudit": {
+    "date": "2026-10-23",
+    "referenceOverloads": 115,
+    "currentInterfaceOverloads": 120,
+    "currentAdapterOverloads": 120,
+    "missingFromInterface": [],
+    "missingFromAdapter": [],
+    "sourceFiles": [
+      {
+        "file": "Adapters/Interfaces/IOSLoad.cs",
+        "sha256": "cf95f9d0af217c347f386ad56acdf3d738ebf1e94205f75770b0941a3d44311e"
+      },
+      {
+        "file": "Adapters/Models/OSLoadAdapter.cs",
+        "sha256": "19f2e328b669aafbf5ca336767f0d44f7b709af735d7887b0bc30e61bf7a7412"
+      }
+    ],
+    "executablePlaceholderFound": false,
+    "remainingDocumentedNativeExpansion": 56,
+    "remainingMetadataOnlyCandidates": 3,
+    "codeChanged": false
+  }
 }

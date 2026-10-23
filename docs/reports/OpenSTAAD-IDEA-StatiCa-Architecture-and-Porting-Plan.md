@@ -12,7 +12,7 @@ The main source contains **24 interface methods and 24 public adapter methods**,
 
 The source provides substantially more than Excel export: connected-plate ownership, force/coordinate transforms, nodal and support equilibrium, explicit IDEA member mapping, round-trip verification, reusable mapping profiles, topology diagrams, single-joint and batch exports, cancellation/progress and provenance manifests.
 
-These capabilities should be reused deliberately after the required Output/Property/Support operations exist. Porting only the outer adapter now would produce an unusable or misleading API. Non-null placeholder bindings do not establish readiness.
+These capabilities should be reused deliberately after the required Output/Property/Support operations exist. Porting only the outer adapter now would produce an unusable or misleading API. Output now has 15 typed queries, but its local-basis/plate-corner paths and Property/Support prerequisites remain pending. Non-null bindings do not establish readiness.
 
 The [complete source API and model inventory](OpenSTAAD-IDEA-StatiCa-API-Coverage-and-Contract-Inventory.md) records all method overloads, parameters, return types, option/model properties, enum members, helper responsibilities and source references. [Machine-readable evidence](data/OpenSTAAD-IDEA-StatiCa-Source-Inventory.json) preserves declarations, call dependencies and read-only source fingerprints.
 
@@ -31,7 +31,7 @@ No STAAD/IDEA project was opened or modified, no export was produced, and no mai
 | Wrapper / Root | Native STAAD version, model path and units | Approved wrapper and Root surface implemented; caches/fallback provenance documented separately | Select upstream policies from StaadVersion, never ApplicationVersion. |
 | Geometry | Node/member lookup, connected beams/plates, node groups and discovery | Reference overloads ported; live behavior still requires qualification | Reuse Geometry services and verified entity/coordinate contracts. |
 | Load | Case enumeration, combinations and nodal loads | Reference overloads ported; result-case semantics still need integration fixtures | Preserve case identity, combination factors and cycle protection. |
-| Output | Results readiness, member end forces/local basis, plate corner forces and support forces | Binding-only placeholder; comparison/plan completed | Principal blocker; invoke the appropriate qualified Output profile internally. |
+| Output | Results readiness, member end forces/local basis, plate corner forces and support forces | First 15 typed queries implemented; local-basis/plate-corner paths still pending | Principal blocker; invoke the appropriate qualified Output profile internally. |
 | Property | Beta angles and member end offsets | Binding-only placeholder; comparison/plan completed | Principal blocker for correct local/global transforms and eccentric moments. |
 | Support | Supported-node membership for optional support-reaction paths | Binding-only placeholder; comparison/plan completed | Required when support-aware equilibrium/closure is requested, not for every extraction. |
 | IDEA mapping/import format | Joint/member IDs/names, axes, load positions, active components and source artifacts | No typed integration implementation | Separate format/version profile; STAAD year must not select an IDEA schema. |

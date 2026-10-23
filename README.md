@@ -14,7 +14,9 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ## Current source additions
 
-Completed all 143 reference Geometry overloads with `IdentifyPhysicalMembers`, `GroupPhysicalMembersByPlanAngle` and `GeneratePolygonMesh`. Added source models, managed services, detailed XML contracts and regression tests. The approved wrapper surface remains complete; its eight placeholder domains are intentionally separate work. These additions are not included in the published preview below. See [Geometry completion and usage](docs/Geometry-Porting.md#completed-managed-geometry-operations).
+Implemented the first 15 typed [Output queries](docs/Output-Porting.md), covering analysis/buckling availability, nodal displacements, reactions, local member-end actions, static checks, seven plate-center operations and member design section/ratio observations. Added status/data results, immutable payloads, native validation, complete XML contracts and regression tests. Rechecked Load: all 115 main-interface reference overloads are present in its 120 exposed overloads, with no reference port pending. These additions are not included in the published preview.
+
+Completed all 143 reference Geometry overloads with `IdentifyPhysicalMembers`, `GroupPhysicalMembersByPlanAngle` and `GeneratePolygonMesh`. Added source models, managed services, detailed XML contracts and regression tests. The approved wrapper surface remains complete; its remaining domain APIs are separate work, with the first 15 Output queries now implemented. These additions are not included in the published preview below. See [Geometry completion and usage](docs/Geometry-Porting.md#completed-managed-geometry-operations).
 
 Added the next 12 reference Load overloads: uniform member-load population, nodal refresh and basic wind definition/exposure/intensity/deletion. That earlier increment exposed 90 overloads (85 reference mappings and five convenience overloads), with 30 then pending. These are source additions after the published preview. See [Load coverage and contracts](docs/Load-Porting.md).
 
@@ -24,7 +26,7 @@ Completed the final 15 reference Load overloads: AddSeismicDefMemberWeight, AddS
 
 ## Output comparison and planned work
 
-The [Output review](docs/Output-Porting.md) compares STAAD.Pro 2024, 2025 and 2026, inventories every native contract and main-project overload, and proposes shared internal services with narrow version policies. Output remains a binding-only placeholder; this review adds documentation, not result-extraction APIs or package contents.
+The [Output guide](docs/Output-Porting.md) documents 15 implemented typed queries and 45 pending native mappings. The linked 2024–2026 comparison inventories every native contract and main-project overload, with shared services for identical contracts and narrow policies planned for evidenced differences. Source coverage does not certify live native behavior or change the published preview.
 
 ## Property comparison and planned work
 

@@ -263,3 +263,9 @@ AnalysisEngine is in `StaadPro.Interop.Enums.Root`. ConnectedProjectResult and C
 NativeProcessHandleValue is in `StaadPro.Interop.Models.Root`. It exposes immutable numeric data, not an owning or verified Windows handle. CreateNamedView/SaveNamedView follow inspected 2025/2026 managed interop declarations; their help pages contain inconsistent error-output arguments. Their void return does not establish success.
 
 Optional access uses `root.Capabilities.GetAdinaExport()`, `GetAnalysisErrorMessages()` and `GetAnalysisWarningMessages()`. Successful acquisitions return IOSRootAdinaExport, IOSRootAnalysisErrorMessages or IOSRootAnalysisWarningMessages respectively. Each exposes its typed operation and status/data result. Unsupported results contain no adapter; exact candidate profiles and metadata checks are not runtime certification. See the [completion and capability guide](Root-Completion-and-Capabilities.md).
+
+## Output result queries
+
+IOSOutput and OSOutputAdapter expose 15 typed queries covering analysis/buckling availability, nodal displacement, support reactions, local member-end forces, static checks, seven plate-center result families and member design section/ratio observations. Each returns OutputQueryResult&lt;T&gt; with explicit status and owned data; inspect IsSuccessful before Data. No public reference outputs or tuples are used.
+
+See the [Output API guide](Output-Porting.md) for all signatures, payloads, native flags, axes/units, sentinels, examples, threading/lifetime rules and the 45 pending native mappings. These are source additions after the published preview; live native qualification remains pending.

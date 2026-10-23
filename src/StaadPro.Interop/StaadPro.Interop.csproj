@@ -48,6 +48,7 @@
     <None Include="..\..\docs\Load-Queries.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Geometry-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Load-Porting.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Output-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Analysis-Queries.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Common-Queries.md" Pack="true" PackagePath="docs\" />

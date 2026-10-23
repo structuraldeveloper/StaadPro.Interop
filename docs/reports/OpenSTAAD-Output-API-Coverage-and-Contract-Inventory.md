@@ -1,8 +1,8 @@
 # OpenSTAAD Output API coverage and contract inventory
 
-**Review date:** 22 October 2026<br>
+**Review date:** 22 October 2026<br>**Implementation updated:** 23 October 2026<br>
 **Repository baseline:** `3c67959163450d1b2c150bbc8f25a5c1f99dc30c`<br>
-**Status:** Reference inventory and proposed contracts; no Output domain implementation was added.
+**Status:** Fifteen typed Output queries implemented; 45 native mappings remain pending. Historical source fingerprints below identify the comparison baseline.
 
 Read the [cross-version architecture and plan](OpenSTAAD-Output-Multi-Version-Architecture-and-Plan.md) for conclusions, policy boundaries and release gates. The [comparison evidence](data/OpenSTAAD-Output-2024-2026-Comparison.json) contains exact declarations, complete parameter-table descriptions, return tables, fingerprints and managed-source mappings.
 
@@ -10,35 +10,35 @@ Read the [cross-version architecture and plan](OpenSTAAD-Output-Multi-Version-Ar
 
 The Analysis Results tree contributes 48 functions in 2024 and 49 in 2025/2026. Eleven additional functions belong to OSOutputUI but are filed under Steel Design Results. This inventory includes those functions, giving 59 / 60 / 60 native names. The linked Chinese Steel section was inspected and contributes zero OSOutputUI functions; other native owners in that section are outside this Output review. Ten pages per year were traversed; nine contain Output functions.
 
-Current IOSOutput and OSOutputAdapter expose zero domain methods; ComObject and the inherited Wrapper binding are real properties. RootMemberForcesService separately calls AreResultsAvailable and GetMemberEndForces. Thus no typed Output method is complete, while two of the 60 native names already have an indirect production dispatch elsewhere in the assembly.
+Current IOSOutput and OSOutputAdapter expose 15 typed queries mapping 15 documented native names. RootMemberForcesService separately retains its two existing Output dispatches. Forty-five documented native names remain pending; raw binding presence is distinct from typed coverage.
 
 The read-only main IOSOutput has 86 method overloads, and its OSOutputAdapter implements all 86, plus 24 private methods. These map to 17 distinct native targets; 43 of the 60 documented native names have no direct target in that reference adapter. Main-source parity, typed adapter coverage and native-name coverage are separate counts.
 
-All 60 entries below remain pending as typed Output APIs. Proposed classes and signatures are design proposals. Their names may be refined at API review; they do not exist merely because they appear here. Every proposed query result carries qualified status, operation identity and the listed payload. No proposed signature exposes ref/out or tuples.
+Fifteen entries below now have typed Output APIs; 45 remain pending. Implemented entries identify their actual managed signatures. Other classes and signatures are design proposals. Their names may be refined at API review; they do not exist merely because they appear here. Every proposed query result carries qualified status, operation identity and the listed payload. No proposed signature exposes ref/out or tuples.
 
 ## 2. Complete cross-version matrix
 
 | Native Output function | 2024 | 2025 / 2026 | Comparison | Current coverage | Main-source target | Plan |
 | --- | --- | --- | --- | --- | --- | --- |
-| [AreResultsAvailable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491) / `VARIANT` | Unchanged | Root delegation only | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L49) | O2 |
-| [GetMemberDesignSectionName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217) / `VARIANT` | Unchanged | Pending | Not called | O5 |
+| [AreResultsAvailable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491) / `VARIANT` | Unchanged | Implemented: `GetAnalysisResultAvailability`; Root retained | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L49) | O2 |
+| [GetMemberDesignSectionName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217) / `VARIANT` | Unchanged | Implemented: `GetMemberDesignSectionName` | Not called | O5 |
 | [IsMultipleMemberSteelDesignResultsAvailable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetSteelDesignParameterBlockCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetSteelDesignParameterBlockNameByIndex](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gae4d12cb96249a53e02ac209d4ec28bb7) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gae4d12cb96249a53e02ac209d4ec28bb7) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gae4d12cb96249a53e02ac209d4ec28bb7) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetMultipleMemberSteelDesignRatio](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gae9107fd34396f30c46e3e34660194db4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gae9107fd34396f30c46e3e34660194db4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gae9107fd34396f30c46e3e34660194db4) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetMultipleMemberSteelDesignMaxRatio](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gab44e212393084c79c2da98b206b9c612) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gab44e212393084c79c2da98b206b9c612) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gab44e212393084c79c2da98b206b9c612) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetMultipleMemberSteelDesignResults](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gaa2dd5aae686f3943747519b19cc2dbcd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gaa2dd5aae686f3943747519b19cc2dbcd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gaa2dd5aae686f3943747519b19cc2dbcd) / `VARIANT` | Unchanged | Pending | Not called | O10 |
-| [GetMemberSteelDesignRatio](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L178) | O5 |
+| [GetMemberSteelDesignRatio](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4) / `VARIANT` | Unchanged | Implemented: `GetMemberSteelUtilizationRatio` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L178) | O5 |
 | [GetMemberSteelDesignResults](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L155) | O5 |
 | [GetMemberSteelDesignMinFailureRatio](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga33d973a3a58d9bb7dbb1a551dbe112c8) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga33d973a3a58d9bb7dbb1a551dbe112c8) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga33d973a3a58d9bb7dbb1a551dbe112c8) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetMemberSteelDesignMaxFailureRatio](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga5bedb4627e488a567f4786374d07cea9) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga5bedb4627e488a567f4786374d07cea9) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga5bedb4627e488a567f4786374d07cea9) / `VARIANT` | Unchanged | Pending | Not called | O10 |
-| [GetNodeDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc) / `VARIANT` | Unchanged | Pending | Not called | O2 |
-| [GetSupportReactions](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L71) | O2 |
+| [GetNodeDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc) / `VARIANT` | Unchanged | Implemented: `GetNodeDisplacements` | Not called | O2 |
+| [GetSupportReactions](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1) / `VARIANT` | Unchanged | Implemented: `GetSupportReactions` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L71) | O2 |
 | [GetMatInfluenceAreas](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856) / `VARIANT` | Unchanged | Pending | Not called | O7 |
 | [GetBasePressures](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99) / `VARIANT` | Formatting or typo only | Pending | Not called | O7 |
 | [GetMemberEndDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#gaf4f46574a9c80c6398e062781d131cf2) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#gaf4f46574a9c80c6398e062781d131cf2) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#gaf4f46574a9c80c6398e062781d131cf2) / `VARIANT` | Version policy candidate | Pending | Not called | O6 |
 | [GetIntermediateMemberTransDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd) / `VARIANT` | Unchanged | Pending | Not called | O6 |
-| [GetMemberEndForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329) / `VARIANT` | Unchanged | Root delegation only | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L233) | O2 |
+| [GetMemberEndForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329) / `VARIANT` | Unchanged | Implemented: `GetMemberEndForces`; Root retained | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L233) | O2 |
 | [GetPMemberEndForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060) / `VARIANT` | Formatting or typo only | Pending | Not called | O6 |
 | [GetMinMaxBendingMoment](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#gaf63c90d9d6acf2007bd0dc194d59a813) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#gaf63c90d9d6acf2007bd0dc194d59a813) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#gaf63c90d9d6acf2007bd0dc194d59a813) / `VARIANT` | Version policy candidate | Pending | Not called | O6 |
 | [GetMinMaxShearForce](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#gac5691dcf8af2b39c3ca8a1d6ed06a93a) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#gac5691dcf8af2b39c3ca8a1d6ed06a93a) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#gac5691dcf8af2b39c3ca8a1d6ed06a93a) / `VARIANT` | Version policy candidate | Pending | Not called | O6 |
@@ -48,13 +48,13 @@ All 60 entries below remain pending as typed Output APIs. Proposed classes and s
 | [GetMaxSectionDisplacement](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga1ddbbc7a3b403db9d08040fff625326b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga1ddbbc7a3b403db9d08040fff625326b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga1ddbbc7a3b403db9d08040fff625326b) / `VARIANT` | Version policy candidate | Pending | Not called | O6 |
 | [GetIntermediateDeflectionAtDistance](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56) / `VARIANT` | Unchanged | Pending | Not called | O6 |
 | [GetIntermediateMemberAbsTransDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34) / `VARIANT` | Unchanged | Pending | Not called | O6 |
-| [GetAllPlateCenterStressesAndMoments](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88) / `VARIANT` | Unchanged | Pending | Not called | O3 |
-| [GetPlateCenterNormalPrincipalStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L895) | O3 |
-| [GetAllPlateCenterForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L865) | O3 |
-| [GetAllPlateCenterMoments](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga911d707d71f6114ca6587ee315e168fa) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga911d707d71f6114ca6587ee315e168fa) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga911d707d71f6114ca6587ee315e168fa) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L873) | O3 |
-| [GetAllPlateCenterPrincipalStressesAndAngles](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c) / `VARIANT` | Unchanged | Pending | Not called | O3 |
-| [GetAllPlateCenterPrincipalStressesAndAnglesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c) / `VARIANT` | Unchanged | Pending | Not called | O3 |
-| [GetPlateCenterVonMisesStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L883) | O3 |
+| [GetAllPlateCenterStressesAndMoments](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterStressesAndMoments` | Not called | O3 |
+| [GetPlateCenterNormalPrincipalStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterNormalPrincipalStresses` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L895) | O3 |
+| [GetAllPlateCenterForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterForces` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L865) | O3 |
+| [GetAllPlateCenterMoments](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga911d707d71f6114ca6587ee315e168fa) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga911d707d71f6114ca6587ee315e168fa) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga911d707d71f6114ca6587ee315e168fa) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterMoments` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L873) | O3 |
+| [GetAllPlateCenterPrincipalStressesAndAngles](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterPrincipalStressesAndAngles` | Not called | O3 |
+| [GetAllPlateCenterPrincipalStressesAndAnglesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterPrincipalStressesAndAnglesEx` | Not called | O3 |
+| [GetPlateCenterVonMisesStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterVonMisesStresses` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L883) | O3 |
 | [GetPlateCornerForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga68bc8a450a29bc91630da63201e05870) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga68bc8a450a29bc91630da63201e05870) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga68bc8a450a29bc91630da63201e05870) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L378) | O4 |
 | [GetResultantForceAlongLineForPlateList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga16b671df915dfa2ca6691372f0c827be) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga16b671df915dfa2ca6691372f0c827be) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga16b671df915dfa2ca6691372f0c827be) / `VARIANT` | Formatting or typo only | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L808) | O4 |
 | [GetResultantForceAlongLineForParametricSurface](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga2d8565301564943488f7604ce1b44e8b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga2d8565301564943488f7604ce1b44e8b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga2d8565301564943488f7604ce1b44e8b) / `VARIANT` | Formatting or typo only | Pending | Not called | O4 |
@@ -75,8 +75,8 @@ All 60 entries below remain pending as typed Output APIs. Proposed classes and s
 | [GetTimeHistoryResponse](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57) / `VARIANT` | Unchanged | Pending | Not called | O9 |
 | [GetTimeHistoryResponseMinMax](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga3206fd5f32a98d437bd0dab1e3a82bf4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga3206fd5f32a98d437bd0dab1e3a82bf4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga3206fd5f32a98d437bd0dab1e3a82bf4) / `VARIANT` | Unchanged | Pending | Not called | O9 |
 | [GetMaxBeamStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#gae0623051a17845003fd341a3ca0bb007) | Not in help/header | [long](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#gae0623051a17845003fd341a3ca0bb007) / `long` | Added help member | Pending | Not called | O10 |
-| [GetStaticCheckResult](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L91) | O2 |
-| [IsBucklingAnalysisResultsAvailable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L54) | O5 |
+| [GetStaticCheckResult](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38) / `VARIANT` | Unchanged | Implemented: `GetStaticCheckResult` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L91) | O2 |
+| [IsBucklingAnalysisResultsAvailable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c) / `VARIANT` | Unchanged | Implemented: `GetBucklingResultAvailability` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L54) | O5 |
 | [GetNoOfBucklingFactors](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L923) | O5 |
 | [GetBucklingFactor](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#gab1fae0d3b4a716ba9919da5d54f242c0) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#gab1fae0d3b4a716ba9919da5d54f242c0) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#gab1fae0d3b4a716ba9919da5d54f242c0) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L931) | O5 |
 | [GetBucklingModeDisplacementAtNode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L945) | O5 |
@@ -96,7 +96,7 @@ Descriptions below retain the functional parameter details and native codes. The
 **Section:** Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** [Root AreResultsAvailable](../../src/StaadPro.Interop/Services/Root/Analysis/RootMemberForcesService.cs#L22); no typed Output method.<br>
+**Current implementation:** `GetAnalysisResultAvailability` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** [AreResultsAvailable native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L49), [GetMemberEndForces native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L220)<br>
 **Workstream:** O2
 
@@ -114,8 +114,8 @@ No parameters.
 
 `System.Object AreResultsAvailable()`
 
-**Proposed managed entry:** `GetAnalysisResultAvailability()`<br>
-**Proposed return class:** `AnalysisResultAvailabilityResult`<br>
+**Implemented managed entry:** `OutputQueryResult<bool> GetAnalysisResultAvailability()`<br>
+**Implemented return type:** `OutputQueryResult<bool>`<br>
 **Result and validation contract:** False means unavailable, not a failed analysis diagnosis; distinguish unavailable from a COM failure.
 
 <a id="output-getmemberdesignsectionname"></a>
@@ -125,7 +125,7 @@ No parameters.
 **Section:** Design: Steel Design Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetMemberDesignSectionName` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O5
 
@@ -150,8 +150,8 @@ VARIANT OSOutputUI::GetMemberDesignSectionName(const VARIANT FAR&varnBeamNo)
 
 `System.Object GetMemberDesignSectionName(System.Object)`
 
-**Proposed managed entry:** `GetMemberDesignSectionName(int memberId)`<br>
-**Proposed return class:** `MemberDesignSectionResult`<br>
+**Implemented managed entry:** `OutputQueryResult<string> GetMemberDesignSectionName(int memberId)`<br>
+**Implemented return type:** `OutputQueryResult<string>`<br>
 **Result and validation contract:** Direct string; empty means not found per help. Preserve unavailable/not-found separately from successful nonempty section.
 
 <a id="output-ismultiplemembersteeldesignresultsavailable"></a>
@@ -359,7 +359,7 @@ VARIANT OSOutputUI::GetMultipleMemberSteelDesignResults(const VARIANT FAR&vszPar
 **Section:** Design: Steel Design Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetMemberSteelUtilizationRatio` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** [GetMemberSteelUtilizationRatios native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L178), [PopulateMemberSteelUtilizationRatios native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L190), [GetMemberSteelUtilizationRatio native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L199), [GetMemberSteelUtilizationRatioAsync native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L1010)<br>
 **Workstream:** O5
 
@@ -381,8 +381,8 @@ VARIANT OSOutputUI::GetMemberSteelDesignRatio(const VARIANT FAR&vnBeamNo,VARIANT
 
 `System.Object GetMemberSteelDesignRatio(System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetMemberSteelUtilizationRatio(int memberId)`<br>
-**Proposed return class:** `SteelDesignRatioResult`<br>
+**Implemented managed entry:** `OutputQueryResult<double> GetMemberSteelUtilizationRatio(int memberId)`<br>
+**Implemented return type:** `OutputQueryResult<double>`<br>
 **Result and validation contract:** Reuse source ratio conveniences after strict success/numeric checks; copy batch data without mutating Beam unless explicitly requested.
 
 <a id="output-getmembersteeldesignresults"></a>
@@ -498,7 +498,7 @@ VARIANT OSOutputUI::GetMemberSteelDesignMaxFailureRatio(VARIANT FAR&pdRatio)
 **Section:** Result: Nodes/Joints/Supports Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetNodeDisplacements` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O2
 
@@ -521,8 +521,8 @@ VARIANT OSOutputUI::GetNodeDisplacements(const VARIANT FAR&nNodeNo,const VARIANT
 
 `System.Object GetNodeDisplacements(System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetNodeDisplacements(int nodeId, int loadCaseId)`<br>
-**Proposed return class:** `NodalDisplacementResult`<br>
+**Implemented managed entry:** `OutputQueryResult<NodeDisplacements> GetNodeDisplacements(int nodeId, int loadCaseId)`<br>
+**Implemented return type:** `OutputQueryResult<NodeDisplacements>`<br>
 **Result and validation contract:** Six translations/rotations in native order; identify axes and units; preserve node/case identity.
 
 <a id="output-getsupportreactions"></a>
@@ -532,7 +532,7 @@ VARIANT OSOutputUI::GetNodeDisplacements(const VARIANT FAR&nNodeNo,const VARIANT
 **Section:** Result: Nodes/Joints/Supports Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetSupportReactions` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** [GetSupportReactions native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L71), [GetSupportReactionsAsync native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L969)<br>
 **Workstream:** O2
 
@@ -555,8 +555,8 @@ VARIANT OSOutputUI::GetSupportReactions(const VARIANT FAR&nNodeNo,const VARIANT 
 
 `System.Object GetSupportReactions(System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetSupportReactions(int nodeId, int loadCaseId)`<br>
-**Proposed return class:** `SupportReactionResult`<br>
+**Implemented managed entry:** `OutputQueryResult<ForceComponents> GetSupportReactions(int nodeId, int loadCaseId)`<br>
+**Implemented return type:** `OutputQueryResult<ForceComponents>`<br>
 **Result and validation contract:** Six force/moment values. A separately named applied-support-force convenience negates a copy, preserving action/reaction semantics.
 
 <a id="output-getmatinfluenceareas"></a>
@@ -729,7 +729,7 @@ VARIANT OSOutputUI::GetIntermediateMemberTransDisplacements(const VARIANT FAR&nM
 **Section:** Result: Members Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** [Root GetMemberEndForces](../../src/StaadPro.Interop/Services/Root/Analysis/RootMemberForcesService.cs#L36); no typed Output method.<br>
+**Current implementation:** `GetMemberEndForces` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** [GetMemberEndForces native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L233), [GetMemberEndForcesAsync native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L1038)<br>
 **Workstream:** O2
 
@@ -754,8 +754,8 @@ VARIANT OSOutputUI::GetMemberEndForces(const VARIANT FAR&nMemberNo,const VARIANT
 
 `System.Object GetMemberEndForces(System.Object, System.Object, System.Object, System.Object ByRef, System.Object)`
 
-**Proposed managed entry:** `GetMemberEndForces(int memberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem)`<br>
-**Proposed return class:** `MemberEndForcesResult`<br>
+**Implemented managed entry:** `OutputQueryResult<ForceComponents> GetMemberEndForces(int memberId, MemberEnd memberEnd, int loadCaseId)`<br>
+**Implemented return type:** `OutputQueryResult<ForceComponents>`<br>
 **Result and validation contract:** Six values. Reuse Root decoding rules; request native local/global axes explicitly, preserving member end and reference point.
 
 <a id="output-getpmemberendforces"></a>
@@ -1125,7 +1125,7 @@ VARIANT OSOutputUI::GetIntermediateMemberAbsTransDisplacements(const VARIANT FAR
 **Section:** Result: Plates Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetPlateCenterStressesAndMoments` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O3
 
@@ -1148,8 +1148,8 @@ VARIANT OSOutputUI::GetAllPlateCenterStressesAndMoments(const VARIANT FAR&nPlate
 
 `System.Object GetAllPlateCenterStressesAndMoments(System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetPlateCenterStressesAndMoments(int plateId, int loadCaseId)`<br>
-**Proposed return class:** `PlateCenterStressAndMomentResult`<br>
+**Implemented managed entry:** `OutputQueryResult<PlateCenterStressesAndMoments> GetPlateCenterStressesAndMoments(int plateId, int loadCaseId)`<br>
+**Implemented return type:** `OutputQueryResult<PlateCenterStressesAndMoments>`<br>
 **Result and validation contract:** Eight SQX,SQY,MX,MY,MXY,SX,SY,SXY values mix stress with moment per unit width; keep physical dimensions separate.
 
 <a id="output-getplatecenternormalprincipalstresses"></a>
@@ -1159,7 +1159,7 @@ VARIANT OSOutputUI::GetAllPlateCenterStressesAndMoments(const VARIANT FAR&nPlate
 **Section:** Result: Plates Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetPlateCenterNormalPrincipalStresses` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** [GetPlatePrincipalStresses native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L895), [GetPlatePrincipalStressesAsync native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L1336)<br>
 **Workstream:** O3
 
@@ -1185,8 +1185,8 @@ VARIANT OSOutputUI::GetPlateCenterNormalPrincipalStresses(const VARIANT FAR&nPla
 
 `System.Object GetPlateCenterNormalPrincipalStresses(System.Object, System.Object, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef)`
 
-**Proposed managed entry:** `GetPlateCenterPrincipalStresses(int plateId, int loadCaseId)`<br>
-**Proposed return class:** `PlatePrincipalStressResult`<br>
+**Implemented managed entry:** `OutputQueryResult<PlatePrincipalStresses> GetPlateCenterNormalPrincipalStresses(int plateId, int loadCaseId)`<br>
+**Implemented return type:** `OutputQueryResult<PlatePrincipalStresses>`<br>
 **Result and validation contract:** Top maximum/minimum and bottom maximum/minimum; reuse source model meaning while adding qualified status and immutable snapshots.
 
 <a id="output-getallplatecenterforces"></a>
@@ -1196,7 +1196,7 @@ VARIANT OSOutputUI::GetPlateCenterNormalPrincipalStresses(const VARIANT FAR&nPla
 **Section:** Result: Plates Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetPlateCenterForces` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** [GetPlateCenterForces native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L865), [GetPlateCenterForcesAsync native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L1306)<br>
 **Workstream:** O3
 
@@ -1219,8 +1219,8 @@ VARIANT OSOutputUI::GetAllPlateCenterForces(const VARIANT FAR&nPlateNo,const VAR
 
 `System.Object GetAllPlateCenterForces(System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetPlateCenterMembraneAndShearStresses(int plateId, int loadCaseId)`<br>
-**Proposed return class:** `PlateCenterStressResult`<br>
+**Implemented managed entry:** `OutputQueryResult<PlateCenterForces> GetPlateCenterForces(int plateId, int loadCaseId)`<br>
+**Implemented return type:** `OutputQueryResult<PlateCenterForces>`<br>
 **Result and validation contract:** Native name says forces but five outputs SQX,SQY,SX,SY,SXY are stresses. Retain source convenience only with explicit units/meaning.
 
 <a id="output-getallplatecentermoments"></a>
@@ -1230,7 +1230,7 @@ VARIANT OSOutputUI::GetAllPlateCenterForces(const VARIANT FAR&nPlateNo,const VAR
 **Section:** Result: Plates Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga911d707d71f6114ca6587ee315e168fa) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga911d707d71f6114ca6587ee315e168fa) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga911d707d71f6114ca6587ee315e168fa)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetPlateCenterMoments` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** [GetPlateCenterMoments native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L873), [GetPlateCenterMomentsAsync native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L1314)<br>
 **Workstream:** O3
 
@@ -1253,8 +1253,8 @@ VARIANT OSOutputUI::GetAllPlateCenterMoments(const VARIANT FAR&nPlateNo,const VA
 
 `System.Object GetAllPlateCenterMoments(System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetPlateCenterMoments(int plateId, int loadCaseId)`<br>
-**Proposed return class:** `PlateCenterMomentResult`<br>
+**Implemented managed entry:** `OutputQueryResult<PlateCenterMoments> GetPlateCenterMoments(int plateId, int loadCaseId)`<br>
+**Implemented return type:** `OutputQueryResult<PlateCenterMoments>`<br>
 **Result and validation contract:** Three MX,MY,MXY moments per unit width; distinguish these from a six-component concentrated moment vector.
 
 <a id="output-getallplatecenterprincipalstressesandangles"></a>
@@ -1264,7 +1264,7 @@ VARIANT OSOutputUI::GetAllPlateCenterMoments(const VARIANT FAR&nPlateNo,const VA
 **Section:** Result: Plates Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetPlateCenterPrincipalStressesAndAngles` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O3
 
@@ -1287,8 +1287,8 @@ VARIANT OSOutputUI::GetAllPlateCenterPrincipalStressesAndAngles(const VARIANT FA
 
 `System.Object GetAllPlateCenterPrincipalStressesAndAngles(System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetPlateCenterPrincipalStressesAndAngles(int plateId, int loadCaseId)`<br>
-**Proposed return class:** `PlatePrincipalStressAndAngleResult`<br>
+**Implemented managed entry:** `OutputQueryResult<PlatePrincipalStressesAndAngles> GetPlateCenterPrincipalStressesAndAngles(int plateId, int loadCaseId)`<br>
+**Implemented return type:** `OutputQueryResult<PlatePrincipalStressesAndAngles>`<br>
 **Result and validation contract:** Eight values: six top/bottom principal/shear stresses and two angles. Help says float; verify Single/Double SAFEARRAY element type and angle units.
 
 <a id="output-getallplatecenterprincipalstressesandanglesex"></a>
@@ -1298,7 +1298,7 @@ VARIANT OSOutputUI::GetAllPlateCenterPrincipalStressesAndAngles(const VARIANT FA
 **Section:** Result: Plates Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetPlateCenterPrincipalStressesAndAnglesEx` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O3
 
@@ -1322,8 +1322,8 @@ VARIANT OSOutputUI::GetAllPlateCenterPrincipalStressesAndAnglesEx(const VARIANT 
 
 `System.Object GetAllPlateCenterPrincipalStressesAndAnglesEx(System.Object, System.Object, System.Object ByRef, System.Object ByRef)`
 
-**Proposed managed entry:** `GetPlateCenterPrincipalStressesAndAngles(PlatePrincipalStressQuery query)`<br>
-**Proposed return class:** `PlatePrincipalStressAndAngleResult`<br>
+**Implemented managed entry:** `OutputQueryResult<PlatePrincipalStressesAndAngles> GetPlateCenterPrincipalStressesAndAnglesEx(int plateId, int loadCaseId)`<br>
+**Implemented return type:** `OutputQueryResult<PlatePrincipalStressesAndAngles>`<br>
 **Result and validation contract:** Separate six-stress/two-angle buffers; explicit request can select separate-buffer transport. Do not retry an engineering failure through another native API.
 
 <a id="output-getplatecentervonmisesstresses"></a>
@@ -1333,7 +1333,7 @@ VARIANT OSOutputUI::GetAllPlateCenterPrincipalStressesAndAnglesEx(const VARIANT 
 **Section:** Result: Plates Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetPlateCenterVonMisesStresses` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** [GetPlateCenterVonMises native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L883), [GetPlateCenterVonMisesAsync native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L1324)<br>
 **Workstream:** O3
 
@@ -1357,8 +1357,8 @@ VARIANT OSOutputUI::GetPlateCenterVonMisesStresses(const VARIANT FAR&nPlateNo,co
 
 `System.Object GetPlateCenterVonMisesStresses(System.Object, System.Object, System.Object ByRef, System.Object ByRef)`
 
-**Proposed managed entry:** `GetPlateCenterVonMisesStresses(int plateId, int loadCaseId)`<br>
-**Proposed return class:** `PlateVonMisesStressResult`<br>
+**Implemented managed entry:** `OutputQueryResult<PlateCenterVonMises> GetPlateCenterVonMisesStresses(int plateId, int loadCaseId)`<br>
+**Implemented return type:** `OutputQueryResult<PlateCenterVonMises>`<br>
 **Result and validation contract:** Two qualified top/bottom scalar outputs; preserve plate/case identity and stress units.
 
 <a id="output-getplatecornerforces"></a>
@@ -2142,7 +2142,7 @@ long OSOutputUI::GetMaxBeamStresses(long nBeamNo,long nLC,double*pdCompStress,lo
 **Section:** Result: Static Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetStaticCheckResult` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** [GetStaticCheckResults native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L91), [GetStaticCheckResultAsync native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L985), [GetStaticCheckResults native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L1394)<br>
 **Workstream:** O2
 
@@ -2165,8 +2165,8 @@ VARIANT OSOutputUI::GetStaticCheckResult(const VARIANT FAR&varLC,VARIANT FAR&var
 
 `System.Object GetStaticCheckResult(System.Object, System.Object ByRef, System.Object ByRef)`
 
-**Proposed managed entry:** `GetStaticCheckResult(int loadCaseId)`<br>
-**Proposed return class:** `StaticCheckQueryResult`<br>
+**Implemented managed entry:** `OutputQueryResult<StaticCheckResult> GetStaticCheckResult(int loadCaseId)`<br>
+**Implemented return type:** `OutputQueryResult<StaticCheckResult>`<br>
 **Result and validation contract:** Two six-component arrays with loads/reactions. Reuse source StaticCheckResult meaning; status and both buffers must be valid before computing residuals.
 
 <a id="output-isbucklinganalysisresultsavailable"></a>
@@ -2176,7 +2176,7 @@ VARIANT OSOutputUI::GetStaticCheckResult(const VARIANT FAR&varLC,VARIANT FAR&var
 **Section:** Result: Buckling Analysis Result Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** `GetBucklingResultAvailability` on IOSOutput/OSOutputAdapter; shared internal OutputQueryReader; offline validation only.<br>
 **Main reference:** [AreBucklingAnalysisResultsAvailable native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L54)<br>
 **Workstream:** O5
 
@@ -2199,8 +2199,8 @@ No parameters.
 
 `System.Object IsBucklingAnalysisResultsAvailable()`
 
-**Proposed managed entry:** `GetBucklingResultAvailability()`<br>
-**Proposed return class:** `BucklingResultAvailabilityResult`<br>
+**Implemented managed entry:** `OutputQueryResult<bool> GetBucklingResultAvailability()`<br>
+**Implemented return type:** `OutputQueryResult<bool>`<br>
 **Result and validation contract:** Availability 0/1 is data; false must not become generic query failure.
 
 <a id="output-getnoofbucklingfactors"></a>

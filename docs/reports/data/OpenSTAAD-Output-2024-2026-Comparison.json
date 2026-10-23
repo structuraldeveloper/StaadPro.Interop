@@ -10,9 +10,9 @@
     },
     "union": 60,
     "intersection": 59,
-    "currentOutputMethods": 0,
+    "currentOutputMethods": 15,
     "currentDelegatedNativeNames": 2,
-    "currentUnmappedNativeNames": 58,
+    "currentUnmappedNativeNames": 45,
     "referenceOverloads": 86,
     "referencePublicAdapterMethods": 86,
     "referenceAsyncOverloads": 33,
@@ -406,33 +406,48 @@
   "currentSourceEvidence": [
     {
       "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSOutput.cs",
-      "bytes": 605,
-      "sha256": "bf16e384858875ab718bd58daa5bc8a6b69f84a26dd78ba19776beda7d6e8366"
+      "bytes": 28040,
+      "sha256": "ab0a4bb344c1836f587a034e2bde177cb7e9d941b28c573b2d8c4bba0519c7b3"
     },
     {
       "file": "src/StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs",
-      "bytes": 1245,
-      "sha256": "9871341acede230cbd4197e1b0a2f551578beaad8432c9cfce0b0da05393fd3d"
+      "bytes": 29950,
+      "sha256": "b27ac8fb32dd29574252fa6f34548e535128a94852af37edfb2f24fba25fbbf6"
     },
     {
-      "file": "src/StaadPro.Interop/Models/OpenStaadWrapper.cs",
-      "bytes": 21039,
-      "sha256": "1c0b69fe545a379262ad70cb1d1f9c45de872aba92e6eb4df218441455628692"
+      "file": "src/StaadPro.Interop/Enums/Output/OutputQueryStatus.cs",
+      "bytes": 857,
+      "sha256": "82cd30b7544d9a9ac030032e58cf33581b2f912f83ba1d311c356062d988df00"
     },
     {
-      "file": "src/StaadPro.Interop/Services/Root/Analysis/RootMemberForcesService.cs",
-      "bytes": 4436,
-      "sha256": "53f374a6b497f66d49d8d1ae59d61505274f5c3c582b55ecf6f9022e50beec92"
+      "file": "src/StaadPro.Interop/Services/Output/OutputQueryReader.cs",
+      "bytes": 13326,
+      "sha256": "7233aa38b10dd217c10b9b82ffc0ae27c41928bd9b0a862eca5cf3a1e741d120"
     },
     {
-      "file": "src/StaadPro.Interop/Models/Root/MemberForcesResult.cs",
-      "bytes": 2208,
-      "sha256": "ad876d0290a43337013b1347a44268a70c95cbd6068db1f02cf626157b6ba33e"
+      "file": "src/StaadPro.Interop/Models/Output/ForceComponents.cs",
+      "bytes": 2121,
+      "sha256": "3425c22da3fa3808c0b2502f2817e1c00bf1aabc40b235dd5b4a256b67614917"
     },
     {
-      "file": "src/StaadPro.Interop/StaadPro.Interop.csproj",
-      "bytes": 5056,
-      "sha256": "035570ef3e35b52a2772e2ec96b9bf886ce3d08d6e555c3d51ffd870de9f1a59"
+      "file": "src/StaadPro.Interop/Models/Output/NodeDisplacements.cs",
+      "bytes": 1780,
+      "sha256": "54ea14a210f06c7a2e5f3d614507d61bc961699329fd0266160ccf9d4e763392"
+    },
+    {
+      "file": "src/StaadPro.Interop/Models/Output/OutputQueryResult.cs",
+      "bytes": 3194,
+      "sha256": "fd56a23068c7c37fae9acab5fb64aae2ba3ebc1ce7e213a645dd4d4eb0bbb61a"
+    },
+    {
+      "file": "src/StaadPro.Interop/Models/Output/PlateCenterResults.cs",
+      "bytes": 5531,
+      "sha256": "1893f3cb5bed1f6a9641725b962b3c8a8d0fd8f18fbad58bfd464be855fc4d62"
+    },
+    {
+      "file": "src/StaadPro.Interop/Models/Output/StaticCheckResult.cs",
+      "bytes": 824,
+      "sha256": "5f122ae21e15b3d280c323dbd11df1b811a2364d674a7a0c1bf33918c36f0f75"
     }
   ],
   "referenceSourceEvidence": [
@@ -5032,7 +5047,7 @@
       "name": "AreResultsAvailable",
       "category": "Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [
         {
           "owner": "RootMemberForcesService",
@@ -5117,13 +5132,20 @@
           "examplesSha256": "badbf5a6109481d1d56eeec315ddd575eb53b67261c877923fffa49ab5a6b454",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetAnalysisResultAvailability",
+        "returnType": "OutputQueryResult<bool>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<bool> GetAnalysisResultAvailability()"
       }
     },
     {
       "name": "GetMemberDesignSectionName",
       "category": "Design: Steel Design Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -5238,6 +5260,13 @@
           "examplesSha256": "66202149a3324d595d84496378a3e836787b1158b92302c2552c48137675f83d",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetMemberDesignSectionName",
+        "returnType": "OutputQueryResult<string>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<string> GetMemberDesignSectionName(int memberId)"
       }
     },
     {
@@ -6198,7 +6227,7 @@
       "name": "GetMemberSteelDesignRatio",
       "category": "Design: Steel Design Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -6372,6 +6401,13 @@
           "examplesSha256": "f82e3ec6b6966bea8126bccd09864264225933b882e7646387effdec863d584d",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetMemberSteelUtilizationRatio",
+        "returnType": "OutputQueryResult<double>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<double> GetMemberSteelUtilizationRatio(int memberId)"
       }
     },
     {
@@ -7046,7 +7082,7 @@
       "name": "GetNodeDisplacements",
       "category": "Result: Nodes/Joints/Supports Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -7212,13 +7248,20 @@
           "examplesSha256": "68f7a553af935bca0fe9649ab0100bf033818e693847251b95ec4ac4f9249d39",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetNodeDisplacements",
+        "returnType": "OutputQueryResult<NodeDisplacements>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<NodeDisplacements> GetNodeDisplacements(int nodeId, int loadCaseId)"
       }
     },
     {
       "name": "GetSupportReactions",
       "category": "Result: Nodes/Joints/Supports Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -7407,6 +7450,13 @@
           "examplesSha256": "c0f45ddb34215b3876b378c27d79266803a39e36d2840105a31a7da481ec7c08",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetSupportReactions",
+        "returnType": "OutputQueryResult<ForceComponents>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<ForceComponents> GetSupportReactions(int nodeId, int loadCaseId)"
       }
     },
     {
@@ -8332,7 +8382,7 @@
       "name": "GetMemberEndForces",
       "category": "Result: Members Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [
         {
           "owner": "RootMemberForcesService",
@@ -8600,6 +8650,13 @@
           "examplesSha256": "b606edacd0523adb2959cb54abe4ecc5b6a3689a41a4c7d6ba4d92d70d830d3d",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetMemberEndForces",
+        "returnType": "OutputQueryResult<ForceComponents>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<ForceComponents> GetMemberEndForces(int memberId, MemberEnd memberEnd, int loadCaseId)"
       }
     },
     {
@@ -10814,7 +10871,7 @@
       "name": "GetAllPlateCenterStressesAndMoments",
       "category": "Result: Plates Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -10980,13 +11037,20 @@
           "examplesSha256": "77d2bf67d8a440a63386fe0f4a95f1ee7c093e70cd3e6b89b1321faab14521f9",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetPlateCenterStressesAndMoments",
+        "returnType": "OutputQueryResult<PlateCenterStressesAndMoments>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<PlateCenterStressesAndMoments> GetPlateCenterStressesAndMoments(int plateId, int loadCaseId)"
       }
     },
     {
       "name": "GetPlateCenterNormalPrincipalStresses",
       "category": "Result: Plates Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -11280,13 +11344,20 @@
           "examplesSha256": "ab2d4fc611af25837f67ec2a58684ae6438c4767a9a31de6624bdbac41f2e8c4",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetPlateCenterNormalPrincipalStresses",
+        "returnType": "OutputQueryResult<PlatePrincipalStresses>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<PlatePrincipalStresses> GetPlateCenterNormalPrincipalStresses(int plateId, int loadCaseId)"
       }
     },
     {
       "name": "GetAllPlateCenterForces",
       "category": "Result: Plates Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -11475,13 +11546,20 @@
           "examplesSha256": "c178002defdfee409c92e7fc06d8fe71249ba5b6829b8cbb002c490667131422",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetPlateCenterForces",
+        "returnType": "OutputQueryResult<PlateCenterForces>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<PlateCenterForces> GetPlateCenterForces(int plateId, int loadCaseId)"
       }
     },
     {
       "name": "GetAllPlateCenterMoments",
       "category": "Result: Plates Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -11670,13 +11748,20 @@
           "examplesSha256": "1c3ccc2e9521b278c9f27fafd78d373ae9db2dd57f2979b7969486cd8e6b47ca",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetPlateCenterMoments",
+        "returnType": "OutputQueryResult<PlateCenterMoments>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<PlateCenterMoments> GetPlateCenterMoments(int plateId, int loadCaseId)"
       }
     },
     {
       "name": "GetAllPlateCenterPrincipalStressesAndAngles",
       "category": "Result: Plates Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -11842,13 +11927,20 @@
           "examplesSha256": "e4538ffee561f053cc593d156d131d4ca57634d1dac4b68b3211180d9a228618",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetPlateCenterPrincipalStressesAndAngles",
+        "returnType": "OutputQueryResult<PlatePrincipalStressesAndAngles>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<PlatePrincipalStressesAndAngles> GetPlateCenterPrincipalStressesAndAngles(int plateId, int loadCaseId)"
       }
     },
     {
       "name": "GetAllPlateCenterPrincipalStressesAndAnglesEx",
       "category": "Result: Plates Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -12047,13 +12139,20 @@
           "examplesSha256": "d2fd293215ec1a860d87d0ce36602f8f7bfd4a24a7404eacfe600fe818319db9",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetPlateCenterPrincipalStressesAndAnglesEx",
+        "returnType": "OutputQueryResult<PlatePrincipalStressesAndAngles>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<PlatePrincipalStressesAndAngles> GetPlateCenterPrincipalStressesAndAnglesEx(int plateId, int loadCaseId)"
       }
     },
     {
       "name": "GetPlateCenterVonMisesStresses",
       "category": "Result: Plates Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -12277,6 +12376,13 @@
           "examplesSha256": "2a6d513a1c271d28b76c31196d76d3df2e8a1c5ff2143ddbdbb811a8774f9ac8",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetPlateCenterVonMisesStresses",
+        "returnType": "OutputQueryResult<PlateCenterVonMises>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<PlateCenterVonMises> GetPlateCenterVonMisesStresses(int plateId, int loadCaseId)"
       }
     },
     {
@@ -16946,7 +17052,7 @@
       "name": "GetStaticCheckResult",
       "category": "Result: Static Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -17146,13 +17252,20 @@
           "examplesSha256": "3cf4138c6b45b22552bebb7d9fc6c5e5566bf2ca3c7ab03cfe5628a93a991478",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetStaticCheckResult",
+        "returnType": "OutputQueryResult<StaticCheckResult>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<StaticCheckResult> GetStaticCheckResult(int loadCaseId)"
       }
     },
     {
       "name": "IsBucklingAnalysisResultsAvailable",
       "category": "Result: Buckling Analysis Result Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -17248,6 +17361,13 @@
           "examplesSha256": "f10e1124f2fc4ae08b27deb53526df962f9f02c7f7fdb026c2bab9090687d06f",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetBucklingResultAvailability",
+        "returnType": "OutputQueryResult<bool>",
+        "nativeRuntimeVerified": false,
+        "managedSignature": "OutputQueryResult<bool> GetBucklingResultAvailability()"
       }
     },
     {
@@ -22073,6 +22193,203 @@
           "hasDetailedContract": false
         }
       }
+    }
+  ],
+  "implementationUpdate": {
+    "date": "2026-10-23",
+    "parentCommit": "6bc16fec0b87367c956317da41f8df8c7d7a5e57",
+    "managedMethods": 15,
+    "nativeMappings": 15,
+    "pendingDocumentedNativeMappings": 45,
+    "implementedFunctions": [
+      {
+        "managed": "GetAnalysisResultAvailability",
+        "native": "AreResultsAvailable",
+        "returnType": "bool",
+        "signature": "OutputQueryResult<bool> GetAnalysisResultAvailability()"
+      },
+      {
+        "managed": "GetNodeDisplacements",
+        "native": "GetNodeDisplacements",
+        "returnType": "NodeDisplacements",
+        "signature": "OutputQueryResult<NodeDisplacements> GetNodeDisplacements(int nodeId, int loadCaseId)"
+      },
+      {
+        "managed": "GetSupportReactions",
+        "native": "GetSupportReactions",
+        "returnType": "ForceComponents",
+        "signature": "OutputQueryResult<ForceComponents> GetSupportReactions(int nodeId, int loadCaseId)"
+      },
+      {
+        "managed": "GetMemberEndForces",
+        "native": "GetMemberEndForces",
+        "returnType": "ForceComponents",
+        "signature": "OutputQueryResult<ForceComponents> GetMemberEndForces(int memberId, MemberEnd memberEnd, int loadCaseId)"
+      },
+      {
+        "managed": "GetStaticCheckResult",
+        "native": "GetStaticCheckResult",
+        "returnType": "StaticCheckResult",
+        "signature": "OutputQueryResult<StaticCheckResult> GetStaticCheckResult(int loadCaseId)"
+      },
+      {
+        "managed": "GetPlateCenterStressesAndMoments",
+        "native": "GetAllPlateCenterStressesAndMoments",
+        "returnType": "PlateCenterStressesAndMoments",
+        "signature": "OutputQueryResult<PlateCenterStressesAndMoments> GetPlateCenterStressesAndMoments(int plateId, int loadCaseId)"
+      },
+      {
+        "managed": "GetPlateCenterNormalPrincipalStresses",
+        "native": "GetPlateCenterNormalPrincipalStresses",
+        "returnType": "PlatePrincipalStresses",
+        "signature": "OutputQueryResult<PlatePrincipalStresses> GetPlateCenterNormalPrincipalStresses(int plateId, int loadCaseId)"
+      },
+      {
+        "managed": "GetPlateCenterForces",
+        "native": "GetAllPlateCenterForces",
+        "returnType": "PlateCenterForces",
+        "signature": "OutputQueryResult<PlateCenterForces> GetPlateCenterForces(int plateId, int loadCaseId)"
+      },
+      {
+        "managed": "GetPlateCenterMoments",
+        "native": "GetAllPlateCenterMoments",
+        "returnType": "PlateCenterMoments",
+        "signature": "OutputQueryResult<PlateCenterMoments> GetPlateCenterMoments(int plateId, int loadCaseId)"
+      },
+      {
+        "managed": "GetPlateCenterPrincipalStressesAndAngles",
+        "native": "GetAllPlateCenterPrincipalStressesAndAngles",
+        "returnType": "PlatePrincipalStressesAndAngles",
+        "signature": "OutputQueryResult<PlatePrincipalStressesAndAngles> GetPlateCenterPrincipalStressesAndAngles(int plateId, int loadCaseId)"
+      },
+      {
+        "managed": "GetPlateCenterPrincipalStressesAndAnglesEx",
+        "native": "GetAllPlateCenterPrincipalStressesAndAnglesEx",
+        "returnType": "PlatePrincipalStressesAndAngles",
+        "signature": "OutputQueryResult<PlatePrincipalStressesAndAngles> GetPlateCenterPrincipalStressesAndAnglesEx(int plateId, int loadCaseId)"
+      },
+      {
+        "managed": "GetPlateCenterVonMisesStresses",
+        "native": "GetPlateCenterVonMisesStresses",
+        "returnType": "PlateCenterVonMises",
+        "signature": "OutputQueryResult<PlateCenterVonMises> GetPlateCenterVonMisesStresses(int plateId, int loadCaseId)"
+      },
+      {
+        "managed": "GetMemberDesignSectionName",
+        "native": "GetMemberDesignSectionName",
+        "returnType": "string",
+        "signature": "OutputQueryResult<string> GetMemberDesignSectionName(int memberId)"
+      },
+      {
+        "managed": "GetMemberSteelUtilizationRatio",
+        "native": "GetMemberSteelDesignRatio",
+        "returnType": "double",
+        "signature": "OutputQueryResult<double> GetMemberSteelUtilizationRatio(int memberId)"
+      },
+      {
+        "managed": "GetBucklingResultAvailability",
+        "native": "IsBucklingAnalysisResultsAvailable",
+        "returnType": "bool",
+        "signature": "OutputQueryResult<bool> GetBucklingResultAvailability()"
+      }
+    ],
+    "pendingNativeNames": [
+      "IsMultipleMemberSteelDesignResultsAvailable",
+      "GetSteelDesignParameterBlockCount",
+      "GetSteelDesignParameterBlockNameByIndex",
+      "GetMultipleMemberSteelDesignRatio",
+      "GetMultipleMemberSteelDesignMaxRatio",
+      "GetMultipleMemberSteelDesignResults",
+      "GetMemberSteelDesignResults",
+      "GetMemberSteelDesignMinFailureRatio",
+      "GetMemberSteelDesignMaxFailureRatio",
+      "GetMatInfluenceAreas",
+      "GetBasePressures",
+      "GetMemberEndDisplacements",
+      "GetIntermediateMemberTransDisplacements",
+      "GetPMemberEndForces",
+      "GetMinMaxBendingMoment",
+      "GetMinMaxShearForce",
+      "GetMinMaxAxialForce",
+      "GetIntermediateMemberForcesAtDistance",
+      "GetPMemberIntermediateForcesAtDistance",
+      "GetMaxSectionDisplacement",
+      "GetIntermediateDeflectionAtDistance",
+      "GetIntermediateMemberAbsTransDisplacements",
+      "GetPlateCornerForces",
+      "GetResultantForceAlongLineForPlateList",
+      "GetResultantForceAlongLineForParametricSurface",
+      "GetPlateStressAtPoint",
+      "GetAllSolidNormalStresses",
+      "GetAllSolidShearStresses",
+      "GetAllSolidPrincipalStresses",
+      "GetAllSolidVonMisesStresses",
+      "GetNLLoadStep",
+      "GetNLNodeDisplacements",
+      "GetNoOfModesExtracted",
+      "GetModeFrequency",
+      "GetModalDisplacementAtNode",
+      "GetModalMassParticipationFactors",
+      "GetMissingMassParticipationFactors",
+      "GetTimeHistoryIntegrationStepInfo",
+      "GetTimeHistoryResponseAtTime",
+      "GetTimeHistoryResponse",
+      "GetTimeHistoryResponseMinMax",
+      "GetMaxBeamStresses",
+      "GetNoOfBucklingFactors",
+      "GetBucklingFactor",
+      "GetBucklingModeDisplacementAtNode"
+    ],
+    "phases": "O1 foundation and all typed O2/O3 mappings implemented; three independent O5 queries implemented while O4 contracts remain unresolved. Native qualification gates remain pending.",
+    "validation": {
+      "offlineTestsPassed": 2259,
+      "newOutputTestCases": 74,
+      "compiledExecutedXmlExamples": 30,
+      "releaseBuildWarnings": 0,
+      "releaseBuildErrors": 0,
+      "nativeRuntimeValidation": false,
+      "nugetBuilt": false
+    },
+    "principalBufferContract": {
+      "inputElementType": "System.Double",
+      "basis": "Concrete installed VBA examples allocate Double stress/angle arrays, despite parameter prose saying float.",
+      "acceptedReturnedElementTypes": [
+        "System.Double",
+        "System.Single"
+      ],
+      "nativeVerified": false
+    }
+  },
+  "comparisonBaselineSourceEvidence": [
+    {
+      "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSOutput.cs",
+      "bytes": 605,
+      "sha256": "bf16e384858875ab718bd58daa5bc8a6b69f84a26dd78ba19776beda7d6e8366"
+    },
+    {
+      "file": "src/StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs",
+      "bytes": 1245,
+      "sha256": "9871341acede230cbd4197e1b0a2f551578beaad8432c9cfce0b0da05393fd3d"
+    },
+    {
+      "file": "src/StaadPro.Interop/Models/OpenStaadWrapper.cs",
+      "bytes": 21039,
+      "sha256": "1c0b69fe545a379262ad70cb1d1f9c45de872aba92e6eb4df218441455628692"
+    },
+    {
+      "file": "src/StaadPro.Interop/Services/Root/Analysis/RootMemberForcesService.cs",
+      "bytes": 4436,
+      "sha256": "53f374a6b497f66d49d8d1ae59d61505274f5c3c582b55ecf6f9022e50beec92"
+    },
+    {
+      "file": "src/StaadPro.Interop/Models/Root/MemberForcesResult.cs",
+      "bytes": 2208,
+      "sha256": "ad876d0290a43337013b1347a44268a70c95cbd6068db1f02cf626157b6ba33e"
+    },
+    {
+      "file": "src/StaadPro.Interop/StaadPro.Interop.csproj",
+      "bytes": 5056,
+      "sha256": "035570ef3e35b52a2772e2ec96b9bf886ce3d08d6e555c3d51ffd870de9f1a59"
     }
   ]
 }
