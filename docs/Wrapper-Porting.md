@@ -28,7 +28,7 @@ The source's Bentley COM types are represented by object/dynamic, matching this 
 | `RawProperty` | Captures native Property interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `Property` | Binding-only `IOSProperty` / `OSPropertyAdapter` placeholder; no domain functions ported. See the [Property comparison and plan](Property-Porting.md). |
 | `RawSupport` | Captures native Support interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
-| `Support` | Binding-only `IOSSupport` / `OSSupportAdapter` placeholder; no domain functions ported. |
+| `Support` | Binding-only `IOSSupport` / `OSSupportAdapter` placeholder; no domain functions ported. See the [Support comparison and plan](Support-Porting.md). |
 | `RawDesign` | Captures native Design interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `Design` | Binding-only `IOSDesign` / `OSDesignAdapter` placeholder; no domain functions ported. |
 | `RawCommands` | Captures native Command (singular) interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
