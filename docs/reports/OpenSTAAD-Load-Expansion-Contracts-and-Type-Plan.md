@@ -218,3 +218,13 @@ GetLoadAttribute is a documented status-only observation and does not decode ASD
 ## 8. Verification and release state
 
 Passed **2,900 offline tests**, including **424 new expansion cases**, and a Release build with zero warnings/errors. A separate local validation archive passed isolated PackageReference restore/build/runtime checks for **442 selected XML examples**, including all 72 expansion examples with mutation guards disabled. The examples compile against the installed DLL and XML; native paths are exercised by the managed test fakes, not live STAAD. Native integration/engineering qualification remains pending. This source update does not replace or publish the prepared distribution archive; package validation uses a separate local CI version.
+
+## 9. Parked work and approval checkpoint
+
+**User direction, 23 October 2026:** park further Load implementation and move to the remaining domains. The existing implementations remain in place. The next domain identified by the product roadmap is Property & Materials; its offset/orientation prerequisites also support subsequent Output work.
+
+The unimplemented metadata-only candidates are `AddSeismicDefElementWeight` and `AddSeismicDefFloorWeight`. They require a native-contract review, proposed managed signatures/supporting types and the user's explicit approval before implementation. They are separate from the three documented native entry points intentionally covered through existing alternatives/composition.
+
+Reference/nodal index qualification, plate-command UI selection, floor distribution, beam transfer effects, richer attribute interpretation and live COM/engineering acceptance also remain parked review work. No guessed return interpretation or behavior change may be introduced while implementing another domain. Existing status-only attribute observations and invocation-only merge results must retain their documented limits.
+
+**Reminder checkpoint:** before resuming Load or preparing the next public NuGet release, bring these items and limitations back to the user's attention. Obtain explicit approval for any further Load implementation; prior approval for the completed expansion is not continuing authorization for these deferred items. This reminder is recorded in the [roadmap](../../ROADMAP.md#parked-load-work--explicit-approval-required), without a timed notification.

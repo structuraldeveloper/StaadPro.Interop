@@ -6,6 +6,24 @@ Our mission is to provide the structural engineering and computational design co
 
 ---
 
+## Current porting priority — 23 October 2026
+
+The next domain to port is **Property & Materials** (`IOSProperty` / `OSPropertyAdapter`), corresponding to Phase 3 below. Its current implementation exposes the native binding only; no typed Property domain functions have been ported. The main reference contains 103 interface overloads and four additional public adapter methods. These source-parity counts are distinct from the 212-name cross-version native inventory and its reserved/deprecated exclusions.
+
+Start with the shared binding/version/result foundation (P1), then qualified member local/global offset, release and beta-angle reads from P2. These support subsequent Output offset and coordinate-transformation workflows without requiring the full section catalog first. Continue with material observations (P3), section/thickness observations (P4), and the approved creation/assignment workstreams. See the [Property implementation sequence](docs/reports/OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md#10-implementation-sequence).
+
+Output already exposes 15 typed queries; its 45 remaining documented native functions retain their own dependency and qualification gates. The [remaining-adapter sequence](docs/reports/OpenSTAAD-Remaining-Adapters-Review-Index.md#3-recommended-implementation-sequence) prioritizes Property orientation/offset prerequisites alongside Output foundations, followed by Support/Commands, Design, Table/View and IDEA StatiCa integration. This dependency sequence supplements the product milestones below.
+
+### Parked Load work — explicit approval required
+
+At the user's request, further Load implementation is parked. The completed 36-method expansion and existing Load APIs remain implemented. No further Load port, native-contract interpretation or qualification-driven behavior change is authorized by the move to another domain.
+
+- `AddSeismicDefElementWeight` and `AddSeismicDefFloorWeight`: pending native-contract review and implementation, outside the 129-function documented inventory.
+- Remaining native qualification and richer-contract questions: reference/nodal indices, plate-command UI selection, floor distribution, beam split/merge behavior, attribute payload interpretation and actual 2024–2026 COM/engineering validation. These concern implemented APIs and must not be counted as another list of missing functions.
+- Before further Load implementation, present the evidence and proposed contracts/changes for the user's review and obtain explicit approval. Prior Load implementation approval does not authorize this deferred work.
+
+**Reminder checkpoint:** before resuming Load **or preparing the next public NuGet release**, remind the user of these parked items, their validation limits and the explicit approval requirement. This is a recorded workflow checkpoint, not a scheduled calendar notification. See the [Load contract and implementation record](docs/reports/OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md#9-parked-work-and-approval-checkpoint).
+
 ## Milestone Overview
 
 ```mermaid
@@ -103,8 +121,7 @@ Provides structural section catalogs, material models, and element specification
   - Uniform thickness assignment and multi-layered composite shell definitions.
   - Surface thickness modifiers and orthotropic membrane definitions.
 - **Constitutive Material Models**:
-  - Isotropic and Orthotropic materials: Modulus of Elasticity ($E$), Poisson's Ratio ($
-u$), Density ($ho$), Thermal Expansion Coefficient ($lpha$), Damping Ratio ($eta$).
+  - Isotropic and orthotropic materials: modulus of elasticity ($E$), Poisson's ratio ($\nu$), density ($\rho$), thermal expansion coefficient ($\alpha$), and damping ratio ($\beta$).
   - Standard material presets: Structural Steel (A992, A36, S355, E250), Concrete (C25/30, C30/37, 4000 psi), Aluminum, Timber.
 - **Member Specifications & Releases**:
   - Beam end releases (Start/End $F_x, F_y, F_z, M_x, M_y, M_z$ with partial moment release and elastic spring constants).
@@ -155,7 +172,7 @@ High-throughput post-processing, solver invocation, and analytical result extrac
   - Maximum/minimum force envelopes across load combinations.
   - Beam local deflections and relative span deflection ratios ($L/\Delta$).
 - **Plate & Shell Stress Resultants**:
-  - Center and corner node stresses: Principal stresses ($\sigma_1, \sigma_2$), Von Mises equivalent stress ($\sigma_{vm}$), Maximum shear ($	au_{max}$).
+  - Center and corner node stresses: Principal stresses ($\sigma_1, \sigma_2$), Von Mises equivalent stress ($\sigma_{vm}$), Maximum shear ($\tau_{max}$).
   - Membrane forces ($N_x, N_y, N_{xy}$), Bending moments ($M_x, M_y, M_{xy}$), Out-of-plane transverse shear ($Q_x, Q_y$).
   - Top and bottom surface stress layer extraction.
 
