@@ -4,6 +4,10 @@
 **Reviewed source:** main at `60b47fa`.
 **Scope:** Semantic review of the 56 documented native Load names without dispatch, across the current interface, adapter, delegated entities, grouping extensions, helper services, wrapper and related Geometry/Root surfaces. The installed 2024–2026 contract inventory is the native reference. The private main project remained read-only; this audit does not port functions or change production code.
 
+## Contract-first expansion review
+
+All original 56 entries now have explicit managed contract mappings, including existing alternatives and the 15 implemented inspection methods. The separate [compile-checked signature review](../contracts/IOSLoadExpansionContract.cs) defines 36 proposed additions covering 39 native entries; [contracts, supporting types and source reuse](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md) details every signature, required class/enum, constructor and internal route. Supporting types are defined before further native implementation. Pending signatures are not added as throwing runtime stubs, and no adapter partial classes are used. GetAttribute and the merge body remain withheld pending evidence.
+
 ## Current implementation update
 
 Implemented 15 previously absent operations listed in section 6. Current native dispatch is **88/129**, with **41** native names still unused: one covered alternative, one derived capability, four partial overlaps and **35 absent operations**. Thus 39 documented native contracts retain outstanding scope. The original 56-row semantic review below remains the review population; 15 of those rows now say Implemented. Source exposes **135 Load overloads**. See [inspection contracts](../Load-Inspection-Queries.md) for all 15 signatures and operating limits. Passed 2,448 offline tests (189 new) and all 30 new XML examples; the prepared package archive remains unchanged.
@@ -49,7 +53,7 @@ This is an observed-inventory predicate with managed exceptions on discovery fai
 | Native operation | Existing managed path | Remaining distinction |
 | --- | --- | --- |
 | AddSelfWeightInXYZ | [AddSelfweightInXYZTo](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2220); Geometry inventories can enumerate current beams, plates and solids | Explicit IDs are supported. There is no integrated whole-model assignment, and no evidence here that an explicit snapshot has identical whole-model command semantics. |
-| GetNodalLoadInfo | [GetNodalLoads](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L784) and [GetNodalLoadsGroupedByLoadCase](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L663) | Force/moment data is available per node, but native command-index identity is not preserved. |
+| GetNodalLoadInfo | [GetNodalLoads](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L784) and [GetNodalLoadsGroupedByLoadCase](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L666) | Force/moment data is available per node, but native command-index identity is not preserved. |
 | GetMemberLoadInfo | Six per-member typed readers and [GetMemberLoadsGroupedByLoadCase](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L651) | Supported numeric definitions can be read; original generic command-index lookup and broader command families are not covered. |
 | GetAssignmentListForLoadType | Existing nodal/member grouping helpers | Buckets reconstructed for supplied entities are not the original native command-kind/index assignments. |
 
@@ -121,7 +125,7 @@ Each native-name link opens its detailed declaration, parameter and return contr
 ## 5. Similar names that do not establish equivalence
 
 - [ClearPrimaryLoadCases](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1748) and [ClearReferenceLoadCases](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L1771) clear load items. The installed native help distinguishes this from deleting the case definitions.
-- [CreateLoadCombinations](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L724) consumes supplied combinations/factors. It does not generate combinations automatically from a design code/category.
+- [CreateLoadCombinations](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L727) consumes supplied combinations/factors. It does not generate combinations automatically from a design code/category.
 - [CreateLoadEnvelopExt](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2260) creates an envelope. It does not prove safe append/removal/deletion of an existing envelope.
 - [AddWindDefinition](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L364) and [AddSeismicDefinition](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L219) create definitions, not wind/seismic commands applied to a case.
 - [AddPlateUniformPressure](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2051) writes uniform pressure. It does not read plate loads or implement general trapezoidal/hydrostatic pressures.

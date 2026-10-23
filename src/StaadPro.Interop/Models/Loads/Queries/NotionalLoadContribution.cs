@@ -1,5 +1,7 @@
+using System;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Enums.Loads;
+using StaadPro.Interop.Services.Load;
 
 namespace StaadPro.Interop.Models.Loads.Queries
 {
@@ -8,6 +10,20 @@ namespace StaadPro.Interop.Models.Loads.Queries
     /// and positive number are separate; duplicate contributions and finite signed/zero factors are retained.</remarks>
     public sealed class NotionalLoadContribution
     {
+        /// <summary>Creates a typed contribution for future notional assignment without native access.</summary>
+        /// <param name="loadCaseId">Positive contributing case number.</param>
+        /// <param name="caseType">PrimaryLoad or ReferenceLoad; supplies the family explicitly.</param>
+        /// <param name="factor">Finite dimensionless signed factor, including zero.</param>
+        /// <param name="direction">Defined global notional axis.</param>
+        /// <exception cref="ArgumentOutOfRangeException">ID, family, factor or direction is invalid.</exception>
+        public NotionalLoadContribution(int loadCaseId, LoadCaseType caseType, double factor, NotionalLoadDirection direction)
+        {
+            LoadCaseId = LoadContractArguments.Positive(loadCaseId, nameof(loadCaseId));
+            if (caseType != LoadCaseType.PrimaryLoad && caseType != LoadCaseType.ReferenceLoad) throw new ArgumentOutOfRangeException(nameof(caseType));
+            CaseType = caseType; Factor = LoadContractArguments.Finite(factor, nameof(factor));
+            Direction = LoadContractArguments.Defined(direction, nameof(direction));
+            NativeLoadCaseId = caseType == LoadCaseType.PrimaryLoad ? loadCaseId : -loadCaseId;
+        }
         internal NotionalLoadContribution(int id, double factor, NotionalLoadDirection direction)
         { NativeLoadCaseId = id; LoadCaseId = System.Math.Abs(id); CaseType = id > 0 ? LoadCaseType.PrimaryLoad : LoadCaseType.ReferenceLoad;
             Factor = factor; Direction = direction; }

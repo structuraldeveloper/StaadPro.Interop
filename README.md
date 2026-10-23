@@ -12,6 +12,10 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
+## Load contract review
+
+Prepared the complete [56-entry method/type contract plan](docs/reports/OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md), including read-only main-project reuse decisions, explicit signatures and a separate compile-checked review file. Defined supporting request/result types before additional native work; pending runtime methods remain unexposed.
+
 ## Source update — Load inspection queries
 
 Implemented 15 additional Load observations with complete XML contracts, named status/data results, bounded eager snapshots and an internal shared service. Source now exposes 135 Load overloads and dispatches 88/129 documented native names. Remaining undispatched names total 41: one existing alternative, one derived capability, four partial overlaps and 35 absent operations, plus three separate metadata-only candidates. Passed 2,448 offline tests (189 new cases) and all 30 new XML examples. See [Load inspection usage](docs/Load-Inspection-Queries.md). These changes postdate the prepared archive below; live native qualification remains pending.

@@ -1,5 +1,9 @@
 # Load API porting and new assignments
 
+## Contract-first preparation
+
+Prepared all original 56 native-entry mappings, 36 pending signatures and their supporting types before further implementation. See the [contract/type plan](reports/OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md) and [separate review signatures](contracts/IOSLoadExpansionContract.cs). Existing 15 inspection queries remain implemented; no additional pending native calls were added.
+
 ## Current source — 15 additional inspection queries
 
 Implemented the 15 genuinely missing observation contracts selected after the semantic audit. Current IOSLoad/OSLoadAdapter each expose **135 overloads**, retaining all 115 private reference signatures and five conveniences plus 15 native expansions. Native dispatch coverage is now **88/129**, leaving 41 unused entry points: one alternative, one derived capability, four partial overlaps and 35 absent operations. Three metadata-only candidates remain separate. See [Load inspection contracts and examples](Load-Inspection-Queries.md) for all signatures, statuses, index bases, primary activation effects, bounded snapshots and qualification limits. Passed 2,448 offline tests (189 new) and 30 new XML examples; the prepared preview archive predates this source increment.

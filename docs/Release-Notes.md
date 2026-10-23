@@ -1,5 +1,9 @@
 # StaadPro.Interop release notes
 
+### Unreleased source — Load contract preparation
+
+Prepared the original 56-entry contract catalog and 36 proposed managed additions, with consistent named results, typed requests and descriptive parameters. Reused existing case, force and inspection models, ported the semantic GlobalAxis enum, and defined required supporting classes/enums with XML documentation and managed validation. Added a public validated constructor to the existing notional contribution type for future assignment input. Kept pending signatures in a separate compile-checked review file rather than exposing throwing runtime methods. Documented internal service boundaries and withheld attribute/merge contracts pending native evidence. Passed 2,476 offline tests, including 28 contract-focused cases, and a Release build with zero warnings/errors. This preparation adds no native dispatch and does not rebuild the prepared package.
+
 ### Unreleased source — Load inspection queries
 
 Added 15 Load inspection operations for active-case number, native lists, command/item counts and kinds, dynamic inclusion, indexed repeat/notional contributions and reference-command counts. Added distinct command/item/direction enums, named status/data results, immutable contribution snapshots, bounded internal buffers, checked primary activation, binding-lifetime validation and complete interface/adapter/model XML documentation. Preserved order, duplicate contributions, native status meanings and signed notional case-family identity.

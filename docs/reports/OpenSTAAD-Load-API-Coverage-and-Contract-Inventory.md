@@ -6,6 +6,10 @@
 
 This annex supports the [Load multi-version architecture and plan](OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md). It inventories every detailed Load function from the installed 2024/2025/2026 help and distinguishes current native dispatches from planned additions.
 
+## Contract-first expansion review
+
+All original 56 entries now have explicit managed contract mappings, including existing alternatives and the 15 implemented inspection methods. The separate [compile-checked signature review](../contracts/IOSLoadExpansionContract.cs) defines 36 proposed additions covering 39 native entries; [contracts, supporting types and source reuse](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md) details every signature, required class/enum, constructor and internal route. Supporting types are defined before further native implementation. Pending signatures are not added as throwing runtime stubs, and no adapter partial classes are used. GetAttribute and the merge body remain withheld pending evidence.
+
 ## Current source — 15 Load inspection queries
 
 Implemented all 15 inspection/contribution queries selected after the semantic audit. IOSLoad and OSLoadAdapter now expose **135 overloads** (115 reference, five earlier conveniences and 15 native expansions). Documented native coverage is **88/129**: 67 direct adapter targets, 15 additional common-service targets and six member-entity targets. The **41** unused native names comprise one covered alternative, one derived capability, four partial overlaps and **35 absent operations**; 39 native contracts retain outstanding scope, plus three separate metadata-only candidates.
@@ -155,13 +159,13 @@ VARIANT OSLoadUI::SplitLoadsOnBeam(
 | `1(TRUE)` | Successful. |
 | `0(FALSE)` | Generate Error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
+~~~csharp
 LoadOperationResult SplitLoadsOnBeam(int originalBeamId, int newBeamId);
-```
+~~~
 
-**Implementation consideration:** Verify beam topology and native splitting semantics; do not assume a geometry split and a load split are atomic.
+**Contract state:** Qualification required. Topology, affected-case scope and native parameter-table inconsistency must be verified before dispatch. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 ### Load: Definition
 
@@ -285,13 +289,13 @@ VARIANT OSLoadUI::AddLoadCasesToEnvelop(
 | `1` | OK. |
 | `0` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddCasesToEnvelope(int envelopeId, IEnumerable<int> loadCaseIds);
-```
+~~~csharp
+LoadOperationResult AddCasesToEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds);
+~~~
 
-**Implementation consideration:** Validate positive IDs; preserve membership order; native 1 means success.
+**Contract state:** Defined; implementation pending. Positive IDs; snapshot once, preserve order/duplicates; reject empty selection rather than inferring all. Native 1 means success. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### RemoveLoadCasesFromEnvelop
 
@@ -325,13 +329,13 @@ VARIANT OSLoadUI::RemoveLoadCasesFromEnvelop(
 | `1` | OK. |
 | `0` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult RemoveCasesFromEnvelope(int envelopeId, IEnumerable<int> loadCaseIds);
-```
+~~~csharp
+LoadOperationResult RemoveCasesFromEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds);
+~~~
 
-**Implementation consideration:** Do not silently interpret empty input as removing all members.
+**Contract state:** Defined; implementation pending. No implicit remove-all; no deletion/recreation fallback. Native 1 means success. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### DeleteLoadEnvelop
 
@@ -362,13 +366,13 @@ VARIANT OSLoadUI::DeleteLoadEnvelop(
 | `1` | OK. |
 | `0` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
+~~~csharp
 LoadOperationResult DeleteEnvelope(int envelopeId);
-```
+~~~
 
-**Implementation consideration:** Document destructive scope and dependency failures; no implicit save.
+**Contract state:** Defined; implementation pending. Destructive scope is the envelope, not its case definitions. Native 1 success; no implicit save. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetEnvelopeCount
 
@@ -425,7 +429,7 @@ long OSLoadUI::GetLoadEnvelopeDetails(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Current call sites:** [GetLoadEnvelopeDetail — line 2144](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2144).
+**Current call sites:** [GetLoadEnvelopeDetail — line 2144](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L2147).
 
 #### GetLoadListfromLoadEnvelope
 
@@ -555,7 +559,7 @@ VARIANT OSLoadUI::AddWindIntensity(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddWindIntensity — line 413](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L413); [AddWindIntensity — line 428](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L428).
+**Current call sites:** [AddWindIntensity — line 413](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L413); [AddWindIntensity — line 428](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L431).
 
 #### ComputeWallWindPressureProfile
 
@@ -799,7 +803,7 @@ VARIANT OSLoadUI::AddWindExposure(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Current call sites:** [AddWindExposure — line 382](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L382).
+**Current call sites:** [AddWindExposure — line 382](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L385).
 
 #### DeleteWindDefinition
 
@@ -1631,13 +1635,13 @@ VARIANT OSLoadUI::IsCombinationCase(
 | `0` | NO. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Existing managed mapping (no duplicate proposed):**
 
-```csharp
-LoadQueryResult<bool> IsCombinationCase(int loadCaseId);
-```
+~~~csharp
+IEnumerable<ILoadCase> GetAllLoadCasesOfType(LoadCaseType loadCaseType = LoadCaseType.PrimaryLoad);
+~~~
 
-**Implementation consideration:** Distinguish 1=true, 0=false and -1=error; false is valid data.
+**Contract disposition:** Use LoadCombination and test Id membership; existing GetAllLoadCombinationCases is also available. No new direct predicate is required.
 
 #### AddAutoLoadCombinations
 
@@ -1681,13 +1685,13 @@ VARIANT OSLoadUI::AddAutoLoadCombinations(
 
 **2024 return table:** `0` = if successful.; `-1` = if unsuccessful. The table above reflects 2025/2026. Preserve unknown failure codes.
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-AutoCombinationResult CreateAutomaticCombinations(AutoCombinationRequest request);
-```
+~~~csharp
+LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticCombinations(AutomaticCombinationRequest request);
+~~~
 
-**Implementation consideration:** Return requested and actual start IDs; interpret 2024 versus 2025/2026 status tables separately; snapshot supplied case IDs.
+**Contract state:** Defined; implementation pending. Explicit all-cases selection. Returns requested and actual start IDs; generated count is absent because this native API does not return one. Select 2024 versus 2025/2026 error interpretation internally. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### AddAutoCombinationRepeat
 
@@ -1757,13 +1761,13 @@ VARIANT OSLoadUI::AddAutoCombinationRepeat(
 | `0` | if successful. |
 | `-1` | if unsuccessful |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-AutoRepeatCombinationResult CreateAutomaticRepeatLoads(AutoRepeatCombinationRequest request);
-```
+~~~csharp
+LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticRepeatLoads(AutomaticRepeatLoadRequest request);
+~~~
 
-**Implementation consideration:** Return actual start ID and generated count from native by-reference slots; explicit all-cases selection because null/empty means all.
+**Contract state:** Defined; implementation pending. Returns actual start and generated count from internal reference outputs. No implicit direction flags; no inference of contiguous case IDs. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 ### Load Case Details: Load Case Operation
 
@@ -1828,13 +1832,13 @@ VARIANT OSLoadUI::CreateNewPrimaryLoad(
 | `-1` | General error. |
 | `-8004` | Fail to create load. |
 
-**Proposed managed entry:**
+**Existing managed mapping (no duplicate proposed):**
 
-```csharp
-LoadCaseCreationResult CreatePrimaryLoad(string title);
-```
+~~~csharp
+int CreateNewPrimaryLoad(string lcTitle, LoadType loadType);
+~~~
 
-**Implementation consideration:** Optional simple form; existing typed Ex/Ex2 wrappers already cover richer creation. Preserve returned ID and native failure distinctions.
+**Contract disposition:** Existing Ex/Ex2 routing covers creation; existing signatures and return behavior are retained.
 
 #### GetActiveLoad
 
@@ -1928,13 +1932,13 @@ VARIANT OSLoadUI::SetLoadType(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
+~~~csharp
 LoadOperationResult SetLoadType(IEnumerable<int> loadCaseIds, LoadType loadType);
-```
+~~~
 
-**Implementation consideration:** Reuse semantic LoadType only after native code verification; do not change case-family classification.
+**Contract state:** Defined; implementation pending. Reuses LoadType 0-23; does not change primary/reference family. Native 0 success, -1 failure. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### CreateNewPrimaryLoadEx
 
@@ -2187,13 +2191,13 @@ VARIANT OSLoadUI::DeleteLoadList(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
+~~~csharp
 LoadOperationResult DeleteLoadList(int loadListIndex);
-```
+~~~
 
-**Implementation consideration:** List index is not an envelope ID or case ID; native zero means success.
+**Contract state:** Defined; implementation pending. One-based list index, not a case/envelope ID. Native 0 success and -1 failure. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### SetASDLoadAttribute
 
@@ -2230,13 +2234,13 @@ long OSLoadUI::SetASDLoadAttribute(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
+~~~csharp
 LoadOperationResult SetAllowableStressAttribute(int loadCaseId, LoadStrengthType strengthType, bool increaseAllowableStress);
-```
+~~~
 
-**Implementation consideration:** Use dedicated strength enum after values are checked against metadata/help.
+**Contract state:** Defined; implementation pending. Defined LoadStrengthType 0-6; explicitly selects the native one-third stress increase. Native 0 success. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### SetLSDLoadAttribute
 
@@ -2267,13 +2271,13 @@ long OSLoadUI::SetLSDLoadAttribute(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
+~~~csharp
 LoadOperationResult SetLimitStateAttribute(int loadCaseId);
-```
+~~~
 
-**Implementation consideration:** Native zero success; avoid implicit changes to model design code.
+**Contract state:** Defined; implementation pending. Native 0 success; does not choose a model design code. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### RemoveAttribute
 
@@ -2304,13 +2308,13 @@ long OSLoadUI::RemoveAttribute(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
+~~~csharp
 LoadOperationResult RemoveLoadAttribute(int loadCaseId);
-```
+~~~
 
-**Implementation consideration:** Explicit attribute removal only.
+**Contract state:** Defined; implementation pending. Native 0 success; no implicit clearing/deletion of case content. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetAttribute
 
@@ -2341,13 +2345,13 @@ long OSLoadUI::GetAttribute(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<LoadAttributeInfo> GetLoadAttribute(int loadCaseId);
-```
+~~~csharp
+LoadQueryResult<LoadAttributeObservation> GetLoadAttribute(int loadCaseId);
+~~~
 
-**Implementation consideration:** Release blocked until result meaning is established: help documents status 0/-1 without explaining an attribute payload.
+**Contract state:** Blocked: native payload undefined. WITHHELD: the help defines only 0/-1 status and no attribute payload. No LoadStrengthType decoding or fabricated attribute fields; signature remains review-only. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetLoadTypeCount
 
@@ -2460,13 +2464,13 @@ VARIANT OSLoadUI::GetAssignmentListForLoadType(
 | `<Val>` | Size of varList . |
 | `0` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(NativeLoadCommandKind commandKind, int commandIndex);
-```
+~~~csharp
+LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex, int maximumResults = 100000);
+~~~
 
-**Implementation consideration:** Return independent IDs plus count/status interpretation; validate initialized buffer slots.
+**Contract state:** Defined; implementation pending. Primary activation, zero-based command index, paired sizing/retrieval counts, valid IDs, bounds and state checks. Native 0 means error; do not infer empty success from it. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### DeletePrimaryLoadCases
 
@@ -2502,13 +2506,13 @@ VARIANT OSLoadUI::DeletePrimaryLoadCases(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult DeleteLoadCases(LoadCaseFamily family, IEnumerable<int> loadCaseIds);
-```
+~~~csharp
+LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds);
+~~~
 
-**Implementation consideration:** Use explicit family selection; expose primary/reference scope without an unexplained Boolean flag.
+**Contract state:** Defined; implementation pending. Only PrimaryLoad/ReferenceLoad accepted; reuse LoadCaseType instead of a new family enum. Snapshot a nonempty selection; dependency errors and possible effects are reported. This differs from clearing items. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### DeleteReferenceLoadCases
 
@@ -2541,13 +2545,13 @@ VARIANT OSLoadUI::DeleteReferenceLoadCases(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult DeleteReferenceLoadCases(IEnumerable<int> loadCaseIds);
-```
+~~~csharp
+LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds);
+~~~
 
-**Implementation consideration:** Separate deletion from existing clear-content APIs; reject accidental destructive defaults.
+**Contract state:** Defined; implementation pending. Only PrimaryLoad/ReferenceLoad accepted; reuse LoadCaseType instead of a new family enum. Snapshot a nonempty selection; dependency errors and possible effects are reported. This differs from clearing items. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### ClearPrimaryLoadCase
 
@@ -2758,13 +2762,13 @@ VARIANT OSLoadUI::AddSelfWeightInXYZ(
 | `true` | Add self weight successful. |
 | `false` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddSelfWeight(LoadCaseIdentity targetCase, SelfWeightDirection direction, double factor);
-```
+~~~csharp
+LoadOperationResult AddSelfWeight(ILoadCase targetCase, SelfWeightDirection direction, double factor);
+~~~
 
-**Implementation consideration:** Whole-model operation; existing entity-scoped API is not identical. Check activation before assigning.
+**Contract state:** Defined; implementation pending. Reuses existing ILoadCase and SelfWeightDirection; factor is dimensionless. Explicit geometry-scoped API remains separate; empty selection is not relevant. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### AddSelfWeightInXYZToGeometry
 
@@ -2998,13 +3002,13 @@ VARIANT OSLoadUI::GetNodalLoadInfo(
 | `FALSE` | Failed |
 | `TRUE` | success |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<NodalLoadCommandInfo> GetNodalLoadCommand(LoadCaseIdentity targetCase, int loadItemIndex);
-```
+~~~csharp
+LoadQueryResult<NodalLoadCommandInfo> GetNodalLoadCommand(ILoadCase targetCase, int loadItemIndex);
+~~~
 
-**Implementation consideration:** Read node force/moment components into named fields; do not expose mutable by-reference arrays.
+**Contract state:** Qualification required. Native text omits the index base; proposed zero-based convention requires qualification. Uses existing Forces through a defensive copy rather than new six-number arrays. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 ### Load Items: Member
 
@@ -3296,13 +3300,13 @@ VARIANT OSLoadUI::AddMemberAreaLoad(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddMemberAreaLoad(LoadCaseIdentity targetCase, IEnumerable<int> memberIds, double areaLoad);
-```
+~~~csharp
+LoadOperationResult AddMemberAreaLoad(ILoadCase targetCase, IEnumerable<int> memberIds, double areaLoad);
+~~~
 
-**Implementation consideration:** Preserve engineering quantity and current model units; validate active-case routing.
+**Contract state:** Defined; implementation pending. Native 0 success; quantity follows native area-load units, not uniform force-per-length. No automatic conversion. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### AddMemberFixedEnd
 
@@ -3339,13 +3343,13 @@ VARIANT OSLoadUI::AddMemberFixedEnd(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddMemberFixedEndLoad(LoadCaseIdentity targetCase, IEnumerable<int> memberIds, FixedEndLoadDefinition definition);
-```
+~~~csharp
+LoadOperationResult AddMemberFixedEndLoad(ILoadCase targetCase, IEnumerable<int> memberIds, FixedEndLoadDefinition definition);
+~~~
 
-**Implementation consideration:** Use named start/end force and moment components with verified array ordering.
+**Contract state:** Defined; implementation pending. Reuses Forces; internal buffers contain Fx/Fy/Fz/Mx/My/Mz in documented order. Native 0 success; qualify axes/sign conventions. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetUDLLoadCount
 
@@ -3824,13 +3828,13 @@ VARIANT OSLoadUI::GetMemberLoadInfo(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<MemberLoadCommandInfo> GetMemberLoadCommand(LoadCaseIdentity targetCase, int loadItemIndex);
-```
+~~~csharp
+LoadQueryResult<MemberLoadCommandInfo> GetMemberLoadCommand(ILoadCase targetCase, int loadItemIndex);
+~~~
 
-**Implementation consideration:** Return direction, forces and distances as typed definition data; not an entity assignment query.
+**Contract state:** Defined; implementation pending. Retains three force parameters and three distances as named fields with original item kind. Does not collapse different command families or infer dimension-independent force slots. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 ### Load Items: Physical Member
 
@@ -3931,13 +3935,13 @@ VARIANT OSLoadUI::AddElementHydrostaticPressure(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddHydrostaticPressure(LoadCaseIdentity targetCase, IEnumerable<int> plateIds, HydrostaticPressureDefinition definition);
-```
+~~~csharp
+LoadOperationResult AddHydrostaticPressure(ILoadCase targetCase, IEnumerable<int> plateIds, HydrostaticPressureDefinition definition);
+~~~
 
-**Implementation consideration:** Separate pressure direction from interpolation direction and preserve min/max units.
+**Contract state:** Defined; implementation pending. Pressure direction LocalZ/GlobalX/Y/Z; interpolation GlobalAxis maps internally to 1/2/3. Native true/1 success; distinct axes stay distinct. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### AddElementTrapPressureEx
 
@@ -3988,13 +3992,13 @@ VARIANT OSLoadUI::AddElementTrapPressureEx(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddTrapezoidalPressure(LoadCaseIdentity targetCase, IEnumerable<int> plateIds, TrapezoidalPressureDefinition definition);
-```
+~~~csharp
+LoadOperationResult AddTrapezoidalPressure(ILoadCase targetCase, IEnumerable<int> plateIds, TrapezoidalPressureDefinition definition);
+~~~
 
-**Implementation consideration:** Validate variation/corner-pressure layout without flattening semantically different directions.
+**Contract state:** Defined; implementation pending. Named factories separate local X/Y variation from four joint pressures. Qualify triangular joint conventions before enabling that shape. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetElementPressureLoadCount
 
@@ -4025,13 +4029,13 @@ VARIANT OSLoadUI::GetElementPressureLoadCount(
 | `<Val>` | The number of pressure load(s). |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<int> GetPlatePressureLoadCount(LoadCaseIdentity targetCase, int plateId);
-```
+~~~csharp
+LoadQueryResult<int> GetPlatePressureLoadCount(ILoadCase targetCase, int plateId);
+~~~
 
-**Implementation consideration:** Count and fetch require the same active case; existing AddPlateUniformPressure is a separate mutation.
+**Contract state:** Defined; implementation pending. Zero valid, -1 failure. Count belongs to selected case, not Output results. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetElementPressureLoads
 
@@ -4080,13 +4084,13 @@ VARIANT OSLoadUI::GetElementPressureLoads(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<IEnumerable<PlatePressureLoad>> GetPlatePressureLoads(LoadCaseIdentity targetCase, int plateId);
-```
+~~~csharp
+LoadQueryResult<IEnumerable<PlatePressureLoad>> GetPlatePressureLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000);
+~~~
 
-**Implementation consideration:** Return named pressure/rectangle coordinates with exact buffer counts, lower-bound handling and finite data.
+**Contract state:** Defined; implementation pending. Bounded count/fetch; materialized immutable results; native 0 success, -1 failure; no min/max reordering of native corner coordinates. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetElementConcLoadCount
 
@@ -4117,13 +4121,13 @@ VARIANT OSLoadUI::GetElementConcLoadCount(
 | `<Val>` | The number of concentrated load on specified plate. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<int> GetPlateConcentratedLoadCount(LoadCaseIdentity targetCase, int plateId);
-```
+~~~csharp
+LoadQueryResult<int> GetPlateConcentratedLoadCount(ILoadCase targetCase, int plateId);
+~~~
 
-**Implementation consideration:** Valid zero count returns successful empty query data through the paired reader.
+**Contract state:** Defined; implementation pending. Zero valid and -1 failure; element family/active case remains explicit. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetElementConcLoads
 
@@ -4166,13 +4170,13 @@ VARIANT OSLoadUI::GetElementConcLoads(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<IEnumerable<PlateConcentratedLoad>> GetPlateConcentratedLoads(LoadCaseIdentity targetCase, int plateId);
-```
+~~~csharp
+LoadQueryResult<IEnumerable<PlateConcentratedLoad>> GetPlateConcentratedLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000);
+~~~
 
-**Implementation consideration:** Map direction, magnitude and local coordinates to named records.
+**Contract state:** Defined; implementation pending. Reuses main ElementConcentratedLoad field semantics without its unimplemented ApplyTo or proprietary base/dependencies. Verify direction/quantity conventions. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetElementLoadInfo
 
@@ -4213,13 +4217,13 @@ VARIANT OSLoadUI::GetElementLoadInfo(
 | `0` | Unsuccessful. |
 | `-1` | Not Implemented. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<PlateLoadCommandInfo> GetPlateLoadCommand(LoadCaseIdentity targetCase, int loadItemIndex);
-```
+~~~csharp
+LoadQueryResult<PlateLoadCommandInfo> GetPlateLoadCommand(ILoadCase targetCase, int loadItemIndex);
+~~~
 
-**Implementation consideration:** Manual supports ElementLoadPressure only and requires selected load case; do not advertise all element commands.
+**Contract state:** Qualification required. Only ElementLoadPressure is documented. Translate this API’s native 0-8 directions to LoadDirection 1-9. Native -1 means not implemented, not generic success. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 ### Load Items: Floor
 
@@ -4273,13 +4277,13 @@ VARIANT OSLoadUI::AddMemberFloorLoad(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddFloorLoad(LoadCaseIdentity targetCase, FloorLoadDefinition definition);
-```
+~~~csharp
+LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition);
+~~~
 
-**Implementation consideration:** Check documented direction/range restrictions and engineering axes before wrapping legacy form.
+**Contract state:** Defined; implementation pending. Shared typed request can use Ex for general modes; legacy GlobalX/Y-range subset is conditional on qualified equivalence. No duplicate public overload solely for native-name coverage. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetBeamCountAtFloor
 
@@ -4325,13 +4329,13 @@ VARIANT OSLoadUI::GetBeamCountAtFloor(
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
+~~~csharp
 LoadQueryResult<int> GetFloorBeamCount(FloorRegion region);
-```
+~~~
 
-**Implementation consideration:** Range direction 1/2/3 is a different enum from force direction; finite ordered coordinate bounds.
+**Contract state:** Defined; implementation pending. GlobalAxis range is explicitly translated to native 1/2/3. Finite coordinates may require checked Single marshaling. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetInfluenceArea
 
@@ -4388,13 +4392,13 @@ VARIANT OSLoadUI::GetInfluenceArea(
 
 **Summary/detailed declaration note:** The evidence data retains both forms, including parameter-name aliases. Do not bind by the help-table spelling; compare argument position/type and acquired signature.
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<IEnumerable<BeamInfluenceArea>> GetFloorInfluenceAreas(FloorRegion region);
-```
+~~~csharp
+LoadQueryResult<IEnumerable<BeamInfluenceArea>> GetFloorInfluenceAreas(FloorRegion region, int maximumResults = 100000);
+~~~
 
-**Implementation consideration:** Count/fetch consistent region; return beam-ID/area associations, not two unpaired sequences.
+**Contract state:** Defined; implementation pending. Bounded count/fetch with identical region; named associations replace parallel arrays. Native true/1 success; no managed engineering-area calculation. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### AddMemberFloorLoadEx
 
@@ -4452,13 +4456,13 @@ VARIANT OSLoadUI::AddMemberFloorLoadEx(
 | `1` | OK. |
 | `0` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddFloorLoad(LoadCaseIdentity targetCase, ExtendedFloorLoadDefinition definition);
-```
+~~~csharp
+LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition);
+~~~
 
-**Implementation consideration:** Discriminate coordinate-range, group and one-way modes in the request model.
+**Contract state:** Defined; implementation pending. Shared typed request can use Ex for general modes; legacy GlobalX/Y-range subset is conditional on qualified equivalence. No duplicate public overload solely for native-name coverage. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 ### Load Items: Temperature
 
@@ -4532,13 +4536,13 @@ VARIANT OSLoadUI::AddStrainLoad(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddStrainLoad(LoadCaseIdentity targetCase, IEnumerable<int> elementIds, double axialElongation);
-```
+~~~csharp
+LoadOperationResult AddStrainLoad(ILoadCase targetCase, IEnumerable<int> elementIds, double axialElongation);
+~~~
 
-**Implementation consideration:** Check element types and dimensional meaning from native technical reference before deciding units conversion.
+**Contract state:** Qualification required. Finite signed value; engineering dimensional conventions require native technical-reference qualification. Temperature loading is not substituted. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 ### Load Items: Seismic
 
@@ -4575,13 +4579,13 @@ VARIANT OSLoadUI::AddSeismicLoad(
 | `-1` | General error. |
 | `-8001` | Load direction is invalid. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddSeismicLoad(LoadCaseIdentity targetCase, SeismicLoadDirection direction, double factor);
-```
+~~~csharp
+LoadOperationResult AddSeismicLoad(ILoadCase targetCase, GlobalAxis direction, double factor);
+~~~
 
-**Implementation consideration:** Use native seismic direction domain; zero success and -8001 invalid direction.
+**Contract state:** Defined; implementation pending. Reuses main GlobalAxis 0/1/2; separate from definition and member-weight domains. Native 0 success and -8001 invalid direction. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### IsDynamicLoadIncluded
 
@@ -4683,13 +4687,13 @@ VARIANT OSLoadUI::AddWindLoad(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddWindLoad(LoadCaseIdentity targetCase, WindLoadDefinition definition);
-```
+~~~csharp
+LoadOperationResult AddWindLoad(ILoadCase targetCase, WindLoadDefinition definition);
+~~~
 
-**Implementation consideration:** Definition ID, direction, factor, structure flag and ranges belong in a typed request; no automatic case/definition creation.
+**Contract state:** Defined; implementation pending. Direction codes 1/3/4/6; factor signed and dimensionless. Native range assumes Y vertical; verify model compatibility. No definition creation fallback. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 ### Load Items: Repeat
 
@@ -4768,13 +4772,13 @@ long OSLoadUI::AddNotionalLoad(
 | `0` | OK. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadOperationResult AddNotionalLoad(LoadCaseIdentity targetCase, IEnumerable<NotionalLoadContribution> contributions);
-```
+~~~csharp
+LoadOperationResult AddNotionalLoad(ILoadCase targetCase, IEnumerable<NotionalLoadContribution> contributions);
+~~~
 
-**Implementation consideration:** Keep primary and reference families separate; one record carries ID, factor and direction.
+**Contract state:** Defined; implementation pending. Reuses the query contribution model with a validated public constructor. Internal packets partition families with positive IDs and global 1/2/3 axes; do not forward signed read-back IDs directly to separate family arrays. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetRepeatLoadCount
 
@@ -5081,13 +5085,13 @@ long OSLoadUI::GetNoOfSetsInReferenceLoad(
 | `<Val>` | Reference load case reference ID. |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<int> GetReferenceContributionCount(LoadCaseIdentity targetCase, int referenceItemIndex);
-```
+~~~csharp
+LoadQueryResult<int> GetReferenceContributionCount(int primaryLoadCaseId, int referenceItemIndex);
+~~~
 
-**Implementation consideration:** Distinguish command index and referenced case number.
+**Contract state:** Qualification required. Proposed positive one-based index requires qualification; native return narrative incorrectly describes an ID. Keep contract review-only until count/index semantics are corroborated. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetReferenceLoadByIndex
 
@@ -5124,13 +5128,13 @@ long OSLoadUI::GetReferenceLoadByIndex(
 | `reference` | load case reference number ID(s). |
 | `-1` | General error. |
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
-LoadQueryResult<IEnumerable<LoadFactorContribution>> GetReferenceContributions(LoadCaseIdentity targetCase, int referenceItemIndex);
-```
+~~~csharp
+LoadQueryResult<IEnumerable<ReferenceLoadContribution>> GetReferenceContributions(int primaryLoadCaseId, int referenceItemIndex, int maximumResults = 100000);
+~~~
 
-**Implementation consideration:** Return original order/factors and explicit reference family; validate native count result.
+**Contract state:** Qualification required. Uses a separate reference payload because existing LoadFactorContribution explicitly denotes primary repeat cases. Output size and index semantics require live corroboration. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### GetReferenceLoadType
 
@@ -5209,13 +5213,13 @@ No native parameters.
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
+~~~csharp
 LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests);
-```
+~~~
 
-**Implementation consideration:** Expose a bounded managed operation rather than a user-maintained begin/end pair; void native call does not prove success.
+**Contract state:** Blocked: merge-body contract unverified. WITHHELD: the merge body depends on metadata-only MergeLoadsOnBeam. Void Begin/End imply invocation evidence only. Native body, topology, side effects and errors must be qualified; preserve body and cleanup failures without a user-maintained begin/end pair. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 #### EndLoadMerging
 
@@ -5235,13 +5239,13 @@ No native parameters.
 
 No return-value table is present. Read the return prose in the linked reference; do not infer Boolean success or invent a payload.
 
-**Proposed managed entry:**
+**Prepared managed contract (review only):**
 
-```csharp
+~~~csharp
 LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests);
-```
+~~~
 
-**Implementation consideration:** Pair with BeginLoadMerging in try/finally on the same COM thread; preserve both body and cleanup failures.
+**Contract state:** Blocked: merge-body contract unverified. WITHHELD: the merge body depends on metadata-only MergeLoadsOnBeam. Void Begin/End imply invocation evidence only. Native body, topology, side effects and errors must be qualified; preserve body and cleanup failures without a user-maintained begin/end pair. See [contract-first plan](OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
 ## 2. Supplemental installed interop inventory
 
@@ -5330,13 +5334,13 @@ The separate public ComObject property is an escape hatch, not a method overload
 | 22 | `int ModifySeismicDefinitionParams(IDictionary<string, double> parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L80) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L245) | Delegates / composes managed operations |
 | 23 | `int ModifySeismicDefinitionParams(IS1893_2016SeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L83) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L263) | Delegates / composes managed operations |
 | 24 | `int ModifySeismicDefinitionParams(IS1893_2002SeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L86) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L270) | Delegates / composes managed operations |
-| 25 | `int ModifySeismicDefinitionParams(IBCSeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L89) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L277) | Delegates / composes managed operations |
+| 25 | `int ModifySeismicDefinitionParams(IBCSeismicParameters parameters)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L89) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L280) | Delegates / composes managed operations |
 | 26 | `bool AddSeismicDefSelfWeight(double weightFactor = 1.0)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L92) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L284) | [AddSeismicDefSelfWeight](#addseismicdefselfweight) |
 | 27 | `int AddSeismicDefJointWeight(double weight, IEnumerable<int> nodeIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L95) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L291) | [AddSeismicDefJointWeight](#addseismicdefjointweight) |
 | 28 | `int AddSeismicDefJointWeight(double weight, IEnumerable<Node> nodes)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L98) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L300) | Delegates / composes managed operations |
 | 29 | `int AddSeismicDefJointWeight(double weight, int nodeId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L101) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L309) | Delegates / composes managed operations |
 | 30 | `bool AddSeismicDefMemberWeight(int seismicCode, SeismicMemberLoadType loadType, double weight, double startDistance, double endDistance, IEnumerable<int> memberIds)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L104) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L312) | [AddSeismicDefMemberWeight](#addseismicdefmemberweight) |
-| 31 | `void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L107) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L334) | Delegates / composes managed operations |
+| 31 | `void PopulateMemberUniformlyDistributedLoads(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L107) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L337) | Delegates / composes managed operations |
 | 32 | `void PopulateMemberUniformMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L110) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L341) | Delegates / composes managed operations |
 | 33 | `IEnumerable<Node> PopulateNodalLoads(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L113) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L348) | Delegates / composes managed operations |
 | 34 | `int AddWindDefinition(int windDefinitionId, string definitionName)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L116) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L364) | [AddWindDefinition](#addwinddefinition) |
@@ -5362,10 +5366,10 @@ The separate public ComObject property is an escape hatch, not a method overload
 | 54 | `void PopulateMemberConcentratedMoments(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L174) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L613) | Delegates / composes managed operations |
 | 55 | `StaadLoadCombination GetLoadCombination(int id)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L177) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L619) | [GetNoOfLoadAndFactorPairsForCombination](#getnoofloadandfactorpairsforcombination), [GetLoadCaseTitle](#getloadcasetitle), [GetLoadAndFactorForCombination](#getloadandfactorforcombination) |
 | 56 | `Dictionary<ILoadCase, List<(MemberLoad Load, List<Beam> Beams)>> GetMemberLoadsGroupedByLoadCase(IEnumerable<Beam> forBeams, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L179) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L651) | Delegates / composes managed operations |
-| 57 | `Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> GetNodalLoadsGroupedByLoadCase(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L181) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L663) | Delegates / composes managed operations |
+| 57 | `Dictionary<ILoadCase, List<(NodalLoad Load, List<Node> Nodes)>> GetNodalLoadsGroupedByLoadCase(IEnumerable<Node> forNodes, IEnumerable<ILoadCase> fromLoadCases)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L181) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L666) | Delegates / composes managed operations |
 | 58 | `IOSLoad AddSelfweightInXYZTo(int loadCaseId, IEnumerable<int> entities, int nThreads, SelfWeightDirection loadDirection = SelfWeightDirection.GlobalY, double factor = -1)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L184) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L708) | Delegates / composes managed operations |
 | 59 | `IOSLoad CreateLoadEnvelopExt(int envelopId, LoadEnvelopType envelopType, IEnumerable<EditorLoadCombination> loadCombinations)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L186) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L716) | Delegates / composes managed operations |
-| 60 | `IOSLoad CreateLoadCombinations(IEnumerable<EditorLoadCombination> loadCombinations)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L188) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L724) | [CreateNewLoadCombination](#createnewloadcombination), [AddLoadAndFactorToCombination](#addloadandfactortocombination) |
+| 60 | `IOSLoad CreateLoadCombinations(IEnumerable<EditorLoadCombination> loadCombinations)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L188) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L727) | [CreateNewLoadCombination](#createnewloadcombination), [AddLoadAndFactorToCombination](#addloadandfactortocombination) |
 | 61 | `List<NodalLoad> GetNodalLoads(ILoadCase lc, int nId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L229) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L784) | [GetNodalLoadCount](#getnodalloadcount), [GetNodalLoads](#getnodalloads) |
 | 62 | `List<MemberUniformlyDistributedLoad> GetMemberUniformlyDistributedLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L270) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L842) | [GetUDLLoadCount](#getudlloadcount), [GetUDLLoads](#getudlloads) |
 | 63 | `List<MemberConcentratedLoad> GetMemberConcentratedLoads(ILoadCase lc, int mId)` | [interface](../../src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs#L311) / [adapter](../../src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs#L901) | [GetConcForceCount](#getconcforcecount), [GetConcForces](#getconcforces) |

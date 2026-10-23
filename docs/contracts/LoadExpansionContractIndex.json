@@ -1,0 +1,2339 @@
+{
+  "date": "2026-10-23",
+  "scope": "Original 56 undispatched native entries",
+  "runtimePendingMethodsExposed": false,
+  "partialAdapters": false,
+  "reviewInterface": "IOSLoadExpansionContract.cs",
+  "nativeEntries": [
+    {
+      "nativeName": "SplitLoadsOnBeam",
+      "state": "Qualification required",
+      "managedSignature": "LoadOperationResult SplitLoadsOnBeam(int originalBeamId, int newBeamId)",
+      "managedMethod": "SplitLoadsOnBeam",
+      "source": "Review interface only",
+      "internalService": "LoadBeamTransferService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "originalBeamId",
+          "default": null,
+          "description": "Positive original beam number; it must differ from newBeamId."
+        },
+        {
+          "type": "int",
+          "name": "newBeamId",
+          "default": null,
+          "description": "Positive newly created beam number; geometry creation is a separate operation."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Topology, affected-case scope and native parameter-table inconsistency must be verified before dispatch."
+    },
+    {
+      "nativeName": "AddLoadCasesToEnvelop",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult AddCasesToEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds)",
+      "managedMethod": "AddCasesToEnvelope",
+      "source": "Review interface only",
+      "internalService": "LoadCaseManagementService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "envelopeId",
+          "default": null,
+          "description": "Positive existing envelope number."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "primaryLoadCaseIds",
+          "default": null,
+          "description": "Non-null, nonempty positive primary-case IDs; snapshotted once, preserving order and duplicates."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Positive IDs; snapshot once, preserve order/duplicates; reject empty selection rather than inferring all. Native 1 means success."
+    },
+    {
+      "nativeName": "RemoveLoadCasesFromEnvelop",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult RemoveCasesFromEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds)",
+      "managedMethod": "RemoveCasesFromEnvelope",
+      "source": "Review interface only",
+      "internalService": "LoadCaseManagementService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "envelopeId",
+          "default": null,
+          "description": "Positive existing envelope number."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "primaryLoadCaseIds",
+          "default": null,
+          "description": "Non-null, nonempty positive primary-case IDs; snapshotted once, preserving order and duplicates."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "No implicit remove-all; no deletion/recreation fallback. Native 1 means success."
+    },
+    {
+      "nativeName": "DeleteLoadEnvelop",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult DeleteEnvelope(int envelopeId)",
+      "managedMethod": "DeleteEnvelope",
+      "source": "Review interface only",
+      "internalService": "LoadCaseManagementService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "envelopeId",
+          "default": null,
+          "description": "Positive existing envelope number."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Destructive scope is the envelope, not its case definitions. Native 1 success; no implicit save."
+    },
+    {
+      "nativeName": "IsCombinationCase",
+      "state": "Derived capability; no duplicate API",
+      "managedSignature": "IEnumerable<ILoadCase> GetAllLoadCasesOfType(LoadCaseType loadCaseType = LoadCaseType.PrimaryLoad)",
+      "managedMethod": "GetAllLoadCasesOfType",
+      "notes": "Use LoadCombination and test Id membership; existing GetAllLoadCombinationCases is also available. No new direct predicate is required."
+    },
+    {
+      "nativeName": "AddAutoLoadCombinations",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticCombinations(AutomaticCombinationRequest request)",
+      "managedMethod": "CreateAutomaticCombinations",
+      "source": "Review interface only",
+      "internalService": "LoadAutomaticGenerationService.cs",
+      "parameters": [
+        {
+          "type": "AutomaticCombinationRequest",
+          "name": "request",
+          "default": null,
+          "description": "Non-null typed generation request with an explicit case selection and valid parameters."
+        }
+      ],
+      "returnType": "LoadOperationResult<AutomaticLoadGenerationData>",
+      "notes": "Explicit all-cases selection. Returns requested and actual start IDs; generated count is absent because this native API does not return one. Select 2024 versus 2025/2026 error interpretation internally."
+    },
+    {
+      "nativeName": "AddAutoCombinationRepeat",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticRepeatLoads(AutomaticRepeatLoadRequest request)",
+      "managedMethod": "CreateAutomaticRepeatLoads",
+      "source": "Review interface only",
+      "internalService": "LoadAutomaticGenerationService.cs",
+      "parameters": [
+        {
+          "type": "AutomaticRepeatLoadRequest",
+          "name": "request",
+          "default": null,
+          "description": "Non-null typed generation request with an explicit case selection and valid parameters."
+        }
+      ],
+      "returnType": "LoadOperationResult<AutomaticLoadGenerationData>",
+      "notes": "Returns actual start and generated count from internal reference outputs. No implicit direction flags; no inference of contiguous case IDs."
+    },
+    {
+      "nativeName": "CreateNewPrimaryLoad",
+      "state": "Covered alternative; no duplicate API",
+      "managedSignature": "int CreateNewPrimaryLoad(string lcTitle, LoadType loadType)",
+      "managedMethod": "CreateNewPrimaryLoad",
+      "additionalEntry": "IOSLoad CreateNewLoadCase(ILoadCase lc)",
+      "notes": "Existing Ex/Ex2 routing covers creation; existing signatures and return behavior are retained."
+    },
+    {
+      "nativeName": "GetActiveLoad",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<int> GetActiveLoadCaseNumber()",
+      "managedMethod": "GetActiveLoadCaseNumber",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "int"
+    },
+    {
+      "nativeName": "SetLoadType",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult SetLoadType(IEnumerable<int> loadCaseIds, LoadType loadType)",
+      "managedMethod": "SetLoadType",
+      "source": "Review interface only",
+      "internalService": "LoadCaseManagementService.cs",
+      "parameters": [
+        {
+          "type": "IEnumerable<int>",
+          "name": "loadCaseIds",
+          "default": null,
+          "description": "Non-null, nonempty positive case IDs; empty input never means all."
+        },
+        {
+          "type": "LoadType",
+          "name": "loadType",
+          "default": null,
+          "description": "Defined existing LoadType engineering classification, not case family."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Reuses LoadType 0-23; does not change primary/reference family. Native 0 success, -1 failure."
+    },
+    {
+      "nativeName": "GetLoadListCount",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<int> GetLoadListCount()",
+      "managedMethod": "GetLoadListCount",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "int"
+    },
+    {
+      "nativeName": "GetLoadCountInLoadList",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<int> GetLoadListCaseCount(int loadListIndex)",
+      "managedMethod": "GetLoadListCaseCount",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "int"
+    },
+    {
+      "nativeName": "GetLoadsInLoadList",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<IEnumerable<int>> GetLoadListCases(int loadListIndex, int maximumResults = 100000)",
+      "managedMethod": "GetLoadListCases",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "IEnumerable<int>"
+    },
+    {
+      "nativeName": "DeleteLoadList",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult DeleteLoadList(int loadListIndex)",
+      "managedMethod": "DeleteLoadList",
+      "source": "Review interface only",
+      "internalService": "LoadCaseManagementService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadListIndex",
+          "default": null,
+          "description": "Positive one-based native LOAD LIST index."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "One-based list index, not a case/envelope ID. Native 0 success and -1 failure."
+    },
+    {
+      "nativeName": "SetASDLoadAttribute",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult SetAllowableStressAttribute(int loadCaseId, LoadStrengthType strengthType, bool increaseAllowableStress)",
+      "managedMethod": "SetAllowableStressAttribute",
+      "source": "Review interface only",
+      "internalService": "LoadCaseManagementService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadCaseId",
+          "default": null,
+          "description": "Positive native case number."
+        },
+        {
+          "type": "LoadStrengthType",
+          "name": "strengthType",
+          "default": null,
+          "description": "Defined native ASD strength-of-forces choice."
+        },
+        {
+          "type": "bool",
+          "name": "increaseAllowableStress",
+          "default": null,
+          "description": "Explicitly allows the native one-third ASD increase when true."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Defined LoadStrengthType 0-6; explicitly selects the native one-third stress increase. Native 0 success."
+    },
+    {
+      "nativeName": "SetLSDLoadAttribute",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult SetLimitStateAttribute(int loadCaseId)",
+      "managedMethod": "SetLimitStateAttribute",
+      "source": "Review interface only",
+      "internalService": "LoadCaseManagementService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadCaseId",
+          "default": null,
+          "description": "Positive native case number."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Native 0 success; does not choose a model design code."
+    },
+    {
+      "nativeName": "RemoveAttribute",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult RemoveLoadAttribute(int loadCaseId)",
+      "managedMethod": "RemoveLoadAttribute",
+      "source": "Review interface only",
+      "internalService": "LoadCaseManagementService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadCaseId",
+          "default": null,
+          "description": "Positive native case number."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Native 0 success; no implicit clearing/deletion of case content."
+    },
+    {
+      "nativeName": "GetAttribute",
+      "state": "Blocked: native payload undefined",
+      "managedSignature": "LoadQueryResult<LoadAttributeObservation> GetLoadAttribute(int loadCaseId)",
+      "managedMethod": "GetLoadAttribute",
+      "source": "Review interface only",
+      "internalService": "LoadCaseManagementService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadCaseId",
+          "default": null,
+          "description": "Positive native case number."
+        }
+      ],
+      "returnType": "LoadQueryResult<LoadAttributeObservation>",
+      "notes": "WITHHELD: the help defines only 0/-1 status and no attribute payload. No LoadStrengthType decoding or fabricated attribute fields; signature remains review-only."
+    },
+    {
+      "nativeName": "GetLoadTypeCount",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<int> GetLoadCommandCount(int primaryLoadCaseId, LoadCommandKind commandKind)",
+      "managedMethod": "GetLoadCommandCount",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "int"
+    },
+    {
+      "nativeName": "GetListSizeForLoadType",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<int> GetAssignedEntityCount(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex)",
+      "managedMethod": "GetAssignedEntityCount",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "int"
+    },
+    {
+      "nativeName": "GetAssignmentListForLoadType",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex, int maximumResults = 100000)",
+      "managedMethod": "GetAssignedEntityIds",
+      "source": "Review interface only",
+      "internalService": "LoadInspectionService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "primaryLoadCaseId",
+          "default": null,
+          "description": "Positive primary-case number, activated internally with before/after identity checks."
+        },
+        {
+          "type": "LoadCommandKind",
+          "name": "commandKind",
+          "default": null,
+          "description": "Defined LoadCommandKind, distinct from engineering LoadType and LoadItemKind."
+        },
+        {
+          "type": "int",
+          "name": "commandIndex",
+          "default": null,
+          "description": "Nonnegative zero-based index within the native command kind."
+        },
+        {
+          "type": "int",
+          "name": "maximumResults",
+          "default": "100000",
+          "description": "Positive retrieval limit; defaults to 100000. No silent truncation or unbounded allocation."
+        }
+      ],
+      "returnType": "LoadQueryResult<IEnumerable<int>>",
+      "notes": "Primary activation, zero-based command index, paired sizing/retrieval counts, valid IDs, bounds and state checks. Native 0 means error; do not infer empty success from it."
+    },
+    {
+      "nativeName": "DeletePrimaryLoadCases",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds)",
+      "managedMethod": "DeleteLoadCases",
+      "source": "Review interface only",
+      "internalService": "LoadCaseManagementService.cs",
+      "parameters": [
+        {
+          "type": "LoadCaseType",
+          "name": "caseType",
+          "default": null,
+          "description": "PrimaryLoad or ReferenceLoad only; combination/repeat classifications are rejected."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "loadCaseIds",
+          "default": null,
+          "description": "Non-null, nonempty positive case IDs; empty input never means all."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Only PrimaryLoad/ReferenceLoad accepted; reuse LoadCaseType instead of a new family enum. Snapshot a nonempty selection; dependency errors and possible effects are reported. This differs from clearing items."
+    },
+    {
+      "nativeName": "DeleteReferenceLoadCases",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds)",
+      "managedMethod": "DeleteLoadCases",
+      "source": "Review interface only",
+      "internalService": "LoadCaseManagementService.cs",
+      "parameters": [
+        {
+          "type": "LoadCaseType",
+          "name": "caseType",
+          "default": null,
+          "description": "PrimaryLoad or ReferenceLoad only; combination/repeat classifications are rejected."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "loadCaseIds",
+          "default": null,
+          "description": "Non-null, nonempty positive case IDs; empty input never means all."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Only PrimaryLoad/ReferenceLoad accepted; reuse LoadCaseType instead of a new family enum. Snapshot a nonempty selection; dependency errors and possible effects are reported. This differs from clearing items."
+    },
+    {
+      "nativeName": "GetLoadItemsCount",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<int> GetLoadItemCount(int loadCaseId)",
+      "managedMethod": "GetLoadItemCount",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "int"
+    },
+    {
+      "nativeName": "GetLoadItemType",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<LoadItemKind> GetLoadItemKind(int loadCaseId, int loadItemIndex)",
+      "managedMethod": "GetLoadItemKind",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "LoadItemKind"
+    },
+    {
+      "nativeName": "AddSelfWeightInXYZ",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult AddSelfWeight(ILoadCase targetCase, SelfWeightDirection direction, double factor)",
+      "managedMethod": "AddSelfWeight",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "SelfWeightDirection",
+          "name": "direction",
+          "default": null,
+          "description": "Defined semantic axis/direction; internal mapping uses the operation-specific numeric domain."
+        },
+        {
+          "type": "double",
+          "name": "factor",
+          "default": null,
+          "description": "Finite signed dimensionless multiplier; zero is preserved."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Reuses existing ILoadCase and SelfWeightDirection; factor is dimensionless. Explicit geometry-scoped API remains separate; empty selection is not relevant."
+    },
+    {
+      "nativeName": "GetNodalLoadInfo",
+      "state": "Qualification required",
+      "managedSignature": "LoadQueryResult<NodalLoadCommandInfo> GetNodalLoadCommand(ILoadCase targetCase, int loadItemIndex)",
+      "managedMethod": "GetNodalLoadCommand",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentQueryService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "loadItemIndex",
+          "default": null,
+          "description": "Nonnegative original command index; native base and supported command families must be qualified."
+        }
+      ],
+      "returnType": "LoadQueryResult<NodalLoadCommandInfo>",
+      "notes": "Native text omits the index base; proposed zero-based convention requires qualification. Uses existing Forces through a defensive copy rather than new six-number arrays."
+    },
+    {
+      "nativeName": "AddMemberAreaLoad",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult AddMemberAreaLoad(ILoadCase targetCase, IEnumerable<int> memberIds, double areaLoad)",
+      "managedMethod": "AddMemberAreaLoad",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "memberIds",
+          "default": null,
+          "description": "Non-null, nonempty positive member IDs; enumerated once."
+        },
+        {
+          "type": "double",
+          "name": "areaLoad",
+          "default": null,
+          "description": "Finite signed native area-load quantity, not assumed uniform force per length."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Native 0 success; quantity follows native area-load units, not uniform force-per-length. No automatic conversion."
+    },
+    {
+      "nativeName": "AddMemberFixedEnd",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult AddMemberFixedEndLoad(ILoadCase targetCase, IEnumerable<int> memberIds, FixedEndLoadDefinition definition)",
+      "managedMethod": "AddMemberFixedEndLoad",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "memberIds",
+          "default": null,
+          "description": "Non-null, nonempty positive member IDs; enumerated once."
+        },
+        {
+          "type": "FixedEndLoadDefinition",
+          "name": "definition",
+          "default": null,
+          "description": "Non-null typed definition with validated finite values and explicit mode."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Reuses Forces; internal buffers contain Fx/Fy/Fz/Mx/My/Mz in documented order. Native 0 success; qualify axes/sign conventions."
+    },
+    {
+      "nativeName": "GetMemberLoadInfo",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadQueryResult<MemberLoadCommandInfo> GetMemberLoadCommand(ILoadCase targetCase, int loadItemIndex)",
+      "managedMethod": "GetMemberLoadCommand",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentQueryService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "loadItemIndex",
+          "default": null,
+          "description": "Nonnegative original command index; native base and supported command families must be qualified."
+        }
+      ],
+      "returnType": "LoadQueryResult<MemberLoadCommandInfo>",
+      "notes": "Retains three force parameters and three distances as named fields with original item kind. Does not collapse different command families or infer dimension-independent force slots."
+    },
+    {
+      "nativeName": "AddElementHydrostaticPressure",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult AddHydrostaticPressure(ILoadCase targetCase, IEnumerable<int> plateIds, HydrostaticPressureDefinition definition)",
+      "managedMethod": "AddHydrostaticPressure",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "plateIds",
+          "default": null,
+          "description": "Non-null, nonempty positive plate IDs; enumerated once."
+        },
+        {
+          "type": "HydrostaticPressureDefinition",
+          "name": "definition",
+          "default": null,
+          "description": "Non-null typed definition with validated finite values and explicit mode."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Pressure direction LocalZ/GlobalX/Y/Z; interpolation GlobalAxis maps internally to 1/2/3. Native true/1 success; distinct axes stay distinct."
+    },
+    {
+      "nativeName": "AddElementTrapPressureEx",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult AddTrapezoidalPressure(ILoadCase targetCase, IEnumerable<int> plateIds, TrapezoidalPressureDefinition definition)",
+      "managedMethod": "AddTrapezoidalPressure",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "plateIds",
+          "default": null,
+          "description": "Non-null, nonempty positive plate IDs; enumerated once."
+        },
+        {
+          "type": "TrapezoidalPressureDefinition",
+          "name": "definition",
+          "default": null,
+          "description": "Non-null typed definition with validated finite values and explicit mode."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Named factories separate local X/Y variation from four joint pressures. Qualify triangular joint conventions before enabling that shape."
+    },
+    {
+      "nativeName": "GetElementPressureLoadCount",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadQueryResult<int> GetPlatePressureLoadCount(ILoadCase targetCase, int plateId)",
+      "managedMethod": "GetPlatePressureLoadCount",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentQueryService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "plateId",
+          "default": null,
+          "description": "Positive native plate number."
+        }
+      ],
+      "returnType": "LoadQueryResult<int>",
+      "notes": "Zero valid, -1 failure. Count belongs to selected case, not Output results."
+    },
+    {
+      "nativeName": "GetElementPressureLoads",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadQueryResult<IEnumerable<PlatePressureLoad>> GetPlatePressureLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000)",
+      "managedMethod": "GetPlatePressureLoads",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentQueryService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "plateId",
+          "default": null,
+          "description": "Positive native plate number."
+        },
+        {
+          "type": "int",
+          "name": "maximumResults",
+          "default": "100000",
+          "description": "Positive retrieval limit; defaults to 100000. No silent truncation or unbounded allocation."
+        }
+      ],
+      "returnType": "LoadQueryResult<IEnumerable<PlatePressureLoad>>",
+      "notes": "Bounded count/fetch; materialized immutable results; native 0 success, -1 failure; no min/max reordering of native corner coordinates."
+    },
+    {
+      "nativeName": "GetElementConcLoadCount",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadQueryResult<int> GetPlateConcentratedLoadCount(ILoadCase targetCase, int plateId)",
+      "managedMethod": "GetPlateConcentratedLoadCount",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentQueryService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "plateId",
+          "default": null,
+          "description": "Positive native plate number."
+        }
+      ],
+      "returnType": "LoadQueryResult<int>",
+      "notes": "Zero valid and -1 failure; element family/active case remains explicit."
+    },
+    {
+      "nativeName": "GetElementConcLoads",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadQueryResult<IEnumerable<PlateConcentratedLoad>> GetPlateConcentratedLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000)",
+      "managedMethod": "GetPlateConcentratedLoads",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentQueryService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "plateId",
+          "default": null,
+          "description": "Positive native plate number."
+        },
+        {
+          "type": "int",
+          "name": "maximumResults",
+          "default": "100000",
+          "description": "Positive retrieval limit; defaults to 100000. No silent truncation or unbounded allocation."
+        }
+      ],
+      "returnType": "LoadQueryResult<IEnumerable<PlateConcentratedLoad>>",
+      "notes": "Reuses main ElementConcentratedLoad field semantics without its unimplemented ApplyTo or proprietary base/dependencies. Verify direction/quantity conventions."
+    },
+    {
+      "nativeName": "GetElementLoadInfo",
+      "state": "Qualification required",
+      "managedSignature": "LoadQueryResult<PlateLoadCommandInfo> GetPlateLoadCommand(ILoadCase targetCase, int loadItemIndex)",
+      "managedMethod": "GetPlateLoadCommand",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentQueryService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "loadItemIndex",
+          "default": null,
+          "description": "Nonnegative original command index; native base and supported command families must be qualified."
+        }
+      ],
+      "returnType": "LoadQueryResult<PlateLoadCommandInfo>",
+      "notes": "Only ElementLoadPressure is documented. Translate this API’s native 0-8 directions to LoadDirection 1-9. Native -1 means not implemented, not generic success."
+    },
+    {
+      "nativeName": "AddMemberFloorLoad",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition)",
+      "managedMethod": "AddFloorLoad",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "FloorLoadDefinition",
+          "name": "definition",
+          "default": null,
+          "description": "Non-null typed definition with validated finite values and explicit mode."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Shared typed request can use Ex for general modes; legacy GlobalX/Y-range subset is conditional on qualified equivalence. No duplicate public overload solely for native-name coverage."
+    },
+    {
+      "nativeName": "GetBeamCountAtFloor",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadQueryResult<int> GetFloorBeamCount(FloorRegion region)",
+      "managedMethod": "GetFloorBeamCount",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentQueryService.cs",
+      "parameters": [
+        {
+          "type": "FloorRegion",
+          "name": "region",
+          "default": null,
+          "description": "Non-null bounded region with finite coordinates and an explicit range axis."
+        }
+      ],
+      "returnType": "LoadQueryResult<int>",
+      "notes": "GlobalAxis range is explicitly translated to native 1/2/3. Finite coordinates may require checked Single marshaling."
+    },
+    {
+      "nativeName": "GetInfluenceArea",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadQueryResult<IEnumerable<BeamInfluenceArea>> GetFloorInfluenceAreas(FloorRegion region, int maximumResults = 100000)",
+      "managedMethod": "GetFloorInfluenceAreas",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentQueryService.cs",
+      "parameters": [
+        {
+          "type": "FloorRegion",
+          "name": "region",
+          "default": null,
+          "description": "Non-null bounded region with finite coordinates and an explicit range axis."
+        },
+        {
+          "type": "int",
+          "name": "maximumResults",
+          "default": "100000",
+          "description": "Positive retrieval limit; defaults to 100000. No silent truncation or unbounded allocation."
+        }
+      ],
+      "returnType": "LoadQueryResult<IEnumerable<BeamInfluenceArea>>",
+      "notes": "Bounded count/fetch with identical region; named associations replace parallel arrays. Native true/1 success; no managed engineering-area calculation."
+    },
+    {
+      "nativeName": "AddMemberFloorLoadEx",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition)",
+      "managedMethod": "AddFloorLoad",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "FloorLoadDefinition",
+          "name": "definition",
+          "default": null,
+          "description": "Non-null typed definition with validated finite values and explicit mode."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Shared typed request can use Ex for general modes; legacy GlobalX/Y-range subset is conditional on qualified equivalence. No duplicate public overload solely for native-name coverage."
+    },
+    {
+      "nativeName": "AddStrainLoad",
+      "state": "Qualification required",
+      "managedSignature": "LoadOperationResult AddStrainLoad(ILoadCase targetCase, IEnumerable<int> elementIds, double axialElongation)",
+      "managedMethod": "AddStrainLoad",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "elementIds",
+          "default": null,
+          "description": "Non-null, nonempty positive beam/plate IDs for the native strain operation."
+        },
+        {
+          "type": "double",
+          "name": "axialElongation",
+          "default": null,
+          "description": "Finite signed initial elongation/shrinkage in the qualified native engineering convention."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Finite signed value; engineering dimensional conventions require native technical-reference qualification. Temperature loading is not substituted."
+    },
+    {
+      "nativeName": "AddSeismicLoad",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult AddSeismicLoad(ILoadCase targetCase, GlobalAxis direction, double factor)",
+      "managedMethod": "AddSeismicLoad",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "GlobalAxis",
+          "name": "direction",
+          "default": null,
+          "description": "Defined semantic axis/direction; internal mapping uses the operation-specific numeric domain."
+        },
+        {
+          "type": "double",
+          "name": "factor",
+          "default": null,
+          "description": "Finite signed dimensionless multiplier; zero is preserved."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Reuses main GlobalAxis 0/1/2; separate from definition and member-weight domains. Native 0 success and -8001 invalid direction."
+    },
+    {
+      "nativeName": "IsDynamicLoadIncluded",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<bool> ContainsDynamicLoad(int loadCaseId)",
+      "managedMethod": "ContainsDynamicLoad",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "bool"
+    },
+    {
+      "nativeName": "AddWindLoad",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult AddWindLoad(ILoadCase targetCase, WindLoadDefinition definition)",
+      "managedMethod": "AddWindLoad",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "WindLoadDefinition",
+          "name": "definition",
+          "default": null,
+          "description": "Non-null typed definition with validated finite values and explicit mode."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Direction codes 1/3/4/6; factor signed and dimensionless. Native range assumes Y vertical; verify model compatibility. No definition creation fallback."
+    },
+    {
+      "nativeName": "AddNotionalLoad",
+      "state": "Defined; implementation pending",
+      "managedSignature": "LoadOperationResult AddNotionalLoad(ILoadCase targetCase, IEnumerable<NotionalLoadContribution> contributions)",
+      "managedMethod": "AddNotionalLoad",
+      "source": "Review interface only",
+      "internalService": "LoadAssignmentService.cs",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<NotionalLoadContribution>",
+          "name": "contributions",
+          "default": null,
+          "description": "Non-null, nonempty contribution records. Order and duplicates preserved; null entries rejected."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "Reuses the query contribution model with a validated public constructor. Internal packets partition families with positive IDs and global 1/2/3 axes; do not forward signed read-back IDs directly to separate family arrays."
+    },
+    {
+      "nativeName": "GetNoLoadFactorInRepeatLoad",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<int> GetRepeatContributionCount(int primaryLoadCaseId, int repeatItemIndex)",
+      "managedMethod": "GetRepeatContributionCount",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "int"
+    },
+    {
+      "nativeName": "GetRepeatLoadByIndex",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(int primaryLoadCaseId, int repeatItemIndex, int maximumResults = 100000)",
+      "managedMethod": "GetRepeatContributions",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "IEnumerable<LoadFactorContribution>"
+    },
+    {
+      "nativeName": "GetNotionalLoadCount",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<int> GetNotionalItemCount(int primaryLoadCaseId)",
+      "managedMethod": "GetNotionalItemCount",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "int"
+    },
+    {
+      "nativeName": "GetNoLoadFactorDirectionInNotionalLoad",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<int> GetNotionalContributionCount(int primaryLoadCaseId, int notionalItemIndex)",
+      "managedMethod": "GetNotionalContributionCount",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "int"
+    },
+    {
+      "nativeName": "GetNotionalLoadByIndex",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<IEnumerable<NotionalLoadContribution>> GetNotionalContributions(int primaryLoadCaseId, int notionalItemIndex, int maximumResults = 100000)",
+      "managedMethod": "GetNotionalContributions",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "IEnumerable<NotionalLoadContribution>"
+    },
+    {
+      "nativeName": "GetReferenceLoadCount",
+      "state": "Implemented inspection; contract review requested",
+      "managedSignature": "LoadQueryResult<int> GetReferenceItemCount(int primaryLoadCaseId)",
+      "managedMethod": "GetReferenceItemCount",
+      "source": "IOSLoad / OSLoadAdapter",
+      "modelTypes": "int"
+    },
+    {
+      "nativeName": "GetNoOfSetsInReferenceLoad",
+      "state": "Qualification required",
+      "managedSignature": "LoadQueryResult<int> GetReferenceContributionCount(int primaryLoadCaseId, int referenceItemIndex)",
+      "managedMethod": "GetReferenceContributionCount",
+      "source": "Review interface only",
+      "internalService": "LoadInspectionService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "primaryLoadCaseId",
+          "default": null,
+          "description": "Positive primary-case number, activated internally with before/after identity checks."
+        },
+        {
+          "type": "int",
+          "name": "referenceItemIndex",
+          "default": null,
+          "description": "Positive one-based proposed reference-command index; exact native semantics require qualification."
+        }
+      ],
+      "returnType": "LoadQueryResult<int>",
+      "notes": "Proposed positive one-based index requires qualification; native return narrative incorrectly describes an ID. Keep contract review-only until count/index semantics are corroborated."
+    },
+    {
+      "nativeName": "GetReferenceLoadByIndex",
+      "state": "Qualification required",
+      "managedSignature": "LoadQueryResult<IEnumerable<ReferenceLoadContribution>> GetReferenceContributions(int primaryLoadCaseId, int referenceItemIndex, int maximumResults = 100000)",
+      "managedMethod": "GetReferenceContributions",
+      "source": "Review interface only",
+      "internalService": "LoadInspectionService.cs",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "primaryLoadCaseId",
+          "default": null,
+          "description": "Positive primary-case number, activated internally with before/after identity checks."
+        },
+        {
+          "type": "int",
+          "name": "referenceItemIndex",
+          "default": null,
+          "description": "Positive one-based proposed reference-command index; exact native semantics require qualification."
+        },
+        {
+          "type": "int",
+          "name": "maximumResults",
+          "default": "100000",
+          "description": "Positive retrieval limit; defaults to 100000. No silent truncation or unbounded allocation."
+        }
+      ],
+      "returnType": "LoadQueryResult<IEnumerable<ReferenceLoadContribution>>",
+      "notes": "Uses a separate reference payload because existing LoadFactorContribution explicitly denotes primary repeat cases. Output size and index semantics require live corroboration."
+    },
+    {
+      "nativeName": "BeginLoadMerging",
+      "state": "Blocked: merge-body contract unverified",
+      "managedSignature": "LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests)",
+      "managedMethod": "MergeBeamLoads",
+      "source": "Review interface only",
+      "internalService": "LoadBeamTransferService.cs",
+      "parameters": [
+        {
+          "type": "IEnumerable<BeamLoadMergeRequest>",
+          "name": "requests",
+          "default": null,
+          "description": "Non-null, nonempty retained/source-beam requests; snapshotted before begin. This contract is withheld until the native body is verified."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "WITHHELD: the merge body depends on metadata-only MergeLoadsOnBeam. Void Begin/End imply invocation evidence only. Native body, topology, side effects and errors must be qualified; preserve body and cleanup failures without a user-maintained begin/end pair."
+    },
+    {
+      "nativeName": "EndLoadMerging",
+      "state": "Blocked: merge-body contract unverified",
+      "managedSignature": "LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests)",
+      "managedMethod": "MergeBeamLoads",
+      "source": "Review interface only",
+      "internalService": "LoadBeamTransferService.cs",
+      "parameters": [
+        {
+          "type": "IEnumerable<BeamLoadMergeRequest>",
+          "name": "requests",
+          "default": null,
+          "description": "Non-null, nonempty retained/source-beam requests; snapshotted before begin. This contract is withheld until the native body is verified."
+        }
+      ],
+      "returnType": "LoadOperationResult",
+      "notes": "WITHHELD: the merge body depends on metadata-only MergeLoadsOnBeam. Void Begin/End imply invocation evidence only. Native body, topology, side effects and errors must be qualified; preserve body and cleanup failures without a user-maintained begin/end pair."
+    }
+  ],
+  "supportingTypes": [
+    {
+      "name": "LoadCaseSelection",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/AutomaticLoadGeneration.cs"
+    },
+    {
+      "name": "AutomaticCombinationRequest",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/AutomaticLoadGeneration.cs"
+    },
+    {
+      "name": "AutomaticNotionalOptions",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/AutomaticLoadGeneration.cs"
+    },
+    {
+      "name": "AutomaticRepeatLoadRequest",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/AutomaticLoadGeneration.cs"
+    },
+    {
+      "name": "AutomaticLoadGenerationData",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/AutomaticLoadGeneration.cs"
+    },
+    {
+      "name": "GlobalLoadRegion",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadRegions.cs"
+    },
+    {
+      "name": "FloorRegion",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadRegions.cs"
+    },
+    {
+      "name": "FixedEndLoadDefinition",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadAssignmentDefinitions.cs"
+    },
+    {
+      "name": "HydrostaticPressureDefinition",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadAssignmentDefinitions.cs"
+    },
+    {
+      "name": "TrapezoidalPressureDefinition",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadAssignmentDefinitions.cs"
+    },
+    {
+      "name": "FloorLoadDefinition",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadAssignmentDefinitions.cs"
+    },
+    {
+      "name": "WindLoadDefinition",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadAssignmentDefinitions.cs"
+    },
+    {
+      "name": "LoadOperationResult",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadOperationResult.cs"
+    },
+    {
+      "name": "LoadOperationResult<T>",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadOperationResult.cs"
+    },
+    {
+      "name": "LoadOperationStep",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadOperationResult.cs"
+    },
+    {
+      "name": "MemberLoadCommandInfo",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadInspectionData.cs"
+    },
+    {
+      "name": "PlatePressureLoad",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadInspectionData.cs"
+    },
+    {
+      "name": "PlateConcentratedLoad",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadInspectionData.cs"
+    },
+    {
+      "name": "PlateLoadCommandInfo",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadInspectionData.cs"
+    },
+    {
+      "name": "BeamInfluenceArea",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadInspectionData.cs"
+    },
+    {
+      "name": "ReferenceLoadContribution",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadInspectionData.cs"
+    },
+    {
+      "name": "LoadAttributeObservation",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/LoadInspectionData.cs"
+    },
+    {
+      "name": "NodalLoadCommandInfo",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/NodalLoadCommandInfo.cs"
+    },
+    {
+      "name": "BeamLoadMergeRequest",
+      "file": "src/StaadPro.Interop/Models/Loads/Contracts/BeamLoadMergeRequest.cs"
+    },
+    {
+      "name": "GlobalAxis",
+      "file": "src/StaadPro.Interop/Enums/GlobalAxis.cs"
+    },
+    {
+      "name": "LoadStrengthType",
+      "file": "src/StaadPro.Interop/Enums/Loads/LoadContractOptions.cs"
+    },
+    {
+      "name": "PlatePressureVariation",
+      "file": "src/StaadPro.Interop/Enums/Loads/LoadContractOptions.cs"
+    },
+    {
+      "name": "WindLoadDirection",
+      "file": "src/StaadPro.Interop/Enums/Loads/LoadContractOptions.cs"
+    },
+    {
+      "name": "AutomaticNotionalDirections",
+      "file": "src/StaadPro.Interop/Enums/Loads/LoadContractOptions.cs"
+    },
+    {
+      "name": "LoadOperationStatus",
+      "file": "src/StaadPro.Interop/Enums/Loads/LoadContractOptions.cs"
+    }
+  ],
+  "mainSourceEvidence": {
+    "rootRole": "Strictly read-only reference interop project",
+    "files": [
+      {
+        "file": "Adapters/Interfaces/IOSLoad.cs",
+        "sha256": "cf95f9d0af217c347f386ad56acdf3d738ebf1e94205f75770b0941a3d44311e",
+        "bytes": 52961
+      },
+      {
+        "file": "Adapters/Models/OSLoadAdapter.cs",
+        "sha256": "19f2e328b669aafbf5ca336767f0d44f7b709af735d7887b0bc30e61bf7a7412",
+        "bytes": 73913
+      },
+      {
+        "file": "Entities/Loads/SelfWeightLoad.cs",
+        "sha256": "eb99a67e7aa889fec63f492a7223b0094b9015e5f2d3c9e69aec0a9f6eb88f5b",
+        "bytes": 2504
+      },
+      {
+        "file": "Entities/Loads/ElementConcentratedLoad.cs",
+        "sha256": "fe93db8ca516c46ea37b8a45ed81d774414e7da57593e186019ca20bc479816f",
+        "bytes": 1357
+      },
+      {
+        "file": "Entities/PlatePressure.cs",
+        "sha256": "177e1ca4c4301796d506320feee5bf36fbcb80ff5b826517c66c9fc1eb39c4ad",
+        "bytes": 4118
+      },
+      {
+        "file": "Entities/Loads/LoadCombinationsDefinition.cs",
+        "sha256": "cfb13fe624d8b63b8a1386fde4d87566b571b0b8aaed27c34498fcf7e394db89",
+        "bytes": 6092
+      },
+      {
+        "file": "Entities/Loads/NodalLoad.cs",
+        "sha256": "ad1713e2d4717e468ae40b4b243eab852e1cbdedc42cee72046f507872e761a4",
+        "bytes": 2871
+      },
+      {
+        "file": "Entities/Loads/MemberUniformlyDistributedLoad.cs",
+        "sha256": "a1b401df13f61d6c5ad5d37d7102300bba8a30c83cdf0feacd7b4cfed87d220b",
+        "bytes": 4753
+      },
+      {
+        "file": "Entities/Loads/MemberConcentratedLoad.cs",
+        "sha256": "436b557a1ec27cfc8018ddebfee7fe701ba8804112b05b0552d9a1f9f77d6d9b",
+        "bytes": 3277
+      },
+      {
+        "file": "Entities/Loads/MemberTrapezoidalLoad.cs",
+        "sha256": "c16420e6066eb82b2c66a7716baa5eae84d9ace6bdf9c6d64e86ed38e88edffc",
+        "bytes": 3605
+      },
+      {
+        "file": "Entities/Loads/EditorLoadCombination.cs",
+        "sha256": "3d27510a841dc144f4a0e09ba46bdbbb93c84c37770cde95aa17545e100354c8",
+        "bytes": 5837
+      },
+      {
+        "file": "Entities/Loads/LoadCase.cs",
+        "sha256": "e1fbd080781123541b28030ebcb65ae6fb45e2e3eaadb60984f470cb94b48ba4",
+        "bytes": 2459
+      },
+      {
+        "file": "Interfaces/ILoadCase.cs",
+        "sha256": "24ba13495bff62a39ba2234e794135393ea2c87b49939f40ebdc0fcf36db17ff",
+        "bytes": 470
+      },
+      {
+        "file": "Models/Forces.cs",
+        "sha256": "dbbe4a83c0655004d23f4e82327c3752f64da731091a9d65cd7eed2d10b6a218",
+        "bytes": 4451
+      },
+      {
+        "file": "Models/StaadLoadCombination.cs",
+        "sha256": "db713a3186dd2ab11876571c9a50072be05f4e8c1d729ba8f671f99ae34aeaa6",
+        "bytes": 667
+      },
+      {
+        "file": "Models/Tools/TransferLoads.cs",
+        "sha256": "dc4928ba207b224f159acbc1f795cb3d6b01ae9bf0f19c90ae21ba86b8bee9eb",
+        "bytes": 1296
+      },
+      {
+        "file": "Enums/GlobalAxis.cs",
+        "sha256": "3babc6f3fbcd21658187cfd3e5bb13c89c9e263ef800b8903cdf5731fec3291e",
+        "bytes": 94
+      },
+      {
+        "file": "Enums/Loads/LoadType.cs",
+        "sha256": "e37569926c51eeacf1ff0997142cd1c52d1df938c9ffbd40b061b1dc7f05b930",
+        "bytes": 1642
+      },
+      {
+        "file": "Enums/Loads/LoadDirection.cs",
+        "sha256": "973aa1eabd60db567ea9c01e23205053d0788cb62bf8cb6fc439e5d79a6c85fb",
+        "bytes": 303
+      },
+      {
+        "file": "Enums/Loads/SelfWeightDirection.cs",
+        "sha256": "ab64e7fb77dc6a92cb64c75e07bf857c311cd14884705df978cd88ffa0e5f6ff",
+        "bytes": 170
+      },
+      {
+        "file": "Models/Loads/Seismic/SeismicEnums.cs",
+        "sha256": "d3d1e5369799de0bf3673871327fed646b3e1f13caaf02e4a8df38ce6f62fd7e",
+        "bytes": 8834
+      },
+      {
+        "file": "Models/Loads/Wind/ASCE7WindDefinitionParameters.cs",
+        "sha256": "ce4a562c60f120594a89ec4412da73f714599ae8c056ae7c9c68b6ea982cf7ec",
+        "bytes": 4780
+      }
+    ]
+  },
+  "reuseDecisions": [
+    {
+      "item": "ILoadCase / LoadCase",
+      "source": "Existing current types, already derived from main load-case concepts",
+      "decision": "Reused for target-case identity instead of inventing LoadCaseIdentity. Snapshot ID/family before submission; do not import main result/UI collections."
+    },
+    {
+      "item": "LoadCaseType / LoadType",
+      "source": "Existing current enums",
+      "decision": "Reused for case family and engineering classification. No new LoadCaseFamily enum; deletion accepts only primary/reference."
+    },
+    {
+      "item": "Forces / NodalLoad / MemberLoad hierarchy",
+      "source": "Existing current types plus main definitions",
+      "decision": "Forces is reused with defensive copying for fixed-end input and nodal-command output. Existing per-entity loads remain; a command-info class adds native index identity instead of pretending grouping preserves it."
+    },
+    {
+      "item": "LoadQueryResult / LoadQueryStatus / LoadCommandKind / LoadItemKind",
+      "source": "Existing 15-query increment",
+      "decision": "Reused unchanged for future observations. Command-kind and item-kind tables remain distinct."
+    },
+    {
+      "item": "NotionalLoadContribution",
+      "source": "Existing 15-query result class",
+      "decision": "Added a validated public constructor so the same named type can be supplied as input. No second notional input class or tuple."
+    },
+    {
+      "item": "SelfWeightLoad",
+      "source": "Main Entities/Loads/SelfWeightLoad.cs",
+      "decision": "Reviewed but not ported as a duplicate: existing SelfWeightDirection plus finite factor already expresses the required request. Main uses LoadDirection codes, so its object is not forwarded numerically."
+    },
+    {
+      "item": "PlatePressure",
+      "source": "Main Entities/PlatePressure.cs",
+      "decision": "Reused its four joint-value concept in TrapezoidalPressureDefinition.AtCorners. Did not import Y-up fluid computation, four-decimal text output, invalid-direction fallback or equality-by-plate-ID into a native request."
+    },
+    {
+      "item": "ElementConcentratedLoad",
+      "source": "Main Entities/Loads/ElementConcentratedLoad.cs",
+      "decision": "Reused direction, magnitude and local-coordinate fields in PlateConcentratedLoad. Main ApplyTo is NotImplementedException and uses proprietary bases/extensions; those are not copied."
+    },
+    {
+      "item": "EditorLoadCombination / StaadLoadCombination / LoadCombinationsDefinition",
+      "source": "Existing current models and main definitions",
+      "decision": "Retained existing supplied-definition APIs. The main LoadCombinationsDefinition is application/template/file-persistence oriented; it does not describe native code/category automatic generation and is not ported into that request."
+    },
+    {
+      "item": "GlobalAxis",
+      "source": "Main Enums/GlobalAxis.cs",
+      "decision": "Ported the simple X/Y/Z semantic enum with explicit 0/1/2 values and XML documentation. Future native services translate separately for 1/2/3 interpolation/ranges."
+    },
+    {
+      "item": "ASCE wind / seismic configuration models",
+      "source": "Already ported Models/Loads/Wind and Seismic families",
+      "decision": "Reused for their existing definition APIs. WindLoadDefinition is new because it applies a definition to a case with direction/region; it is not an alternative ASCE definition."
+    },
+    {
+      "item": "TransferLoads and application services",
+      "source": "Main Models/Tools/TransferLoads.cs and source searches",
+      "decision": "UI/storage/selection orchestration is not a native operation/result contract. No new dependency on ReInvented.Shared or proprietary OpenSTAADUI is introduced."
+    }
+  ],
+  "routing": {
+    "publicEntry": "wrapper.Load (IOSLoad / single OSLoadAdapter)",
+    "partialAdapters": false,
+    "reviewOnlyInterface": true,
+    "plannedServices": [
+      "LoadBeamTransferService.cs",
+      "LoadCaseManagementService.cs",
+      "LoadAutomaticGenerationService.cs",
+      "LoadInspectionService.cs",
+      "LoadAssignmentService.cs",
+      "LoadAssignmentQueryService.cs"
+    ]
+  },
+  "pendingSignatures": [
+    {
+      "nativeNames": [
+        "SplitLoadsOnBeam"
+      ],
+      "name": "SplitLoadsOnBeam",
+      "signature": "LoadOperationResult SplitLoadsOnBeam(int originalBeamId, int newBeamId)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "originalBeamId",
+          "default": null,
+          "description": "Positive original beam number; it must differ from newBeamId."
+        },
+        {
+          "type": "int",
+          "name": "newBeamId",
+          "default": null,
+          "description": "Positive newly created beam number; geometry creation is a separate operation."
+        }
+      ],
+      "internalService": "LoadBeamTransferService.cs",
+      "state": "Qualification required",
+      "notes": "Topology, affected-case scope and native parameter-table inconsistency must be verified before dispatch."
+    },
+    {
+      "nativeNames": [
+        "AddLoadCasesToEnvelop"
+      ],
+      "name": "AddCasesToEnvelope",
+      "signature": "LoadOperationResult AddCasesToEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "envelopeId",
+          "default": null,
+          "description": "Positive existing envelope number."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "primaryLoadCaseIds",
+          "default": null,
+          "description": "Non-null, nonempty positive primary-case IDs; snapshotted once, preserving order and duplicates."
+        }
+      ],
+      "internalService": "LoadCaseManagementService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Positive IDs; snapshot once, preserve order/duplicates; reject empty selection rather than inferring all. Native 1 means success."
+    },
+    {
+      "nativeNames": [
+        "RemoveLoadCasesFromEnvelop"
+      ],
+      "name": "RemoveCasesFromEnvelope",
+      "signature": "LoadOperationResult RemoveCasesFromEnvelope(int envelopeId, IEnumerable<int> primaryLoadCaseIds)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "envelopeId",
+          "default": null,
+          "description": "Positive existing envelope number."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "primaryLoadCaseIds",
+          "default": null,
+          "description": "Non-null, nonempty positive primary-case IDs; snapshotted once, preserving order and duplicates."
+        }
+      ],
+      "internalService": "LoadCaseManagementService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "No implicit remove-all; no deletion/recreation fallback. Native 1 means success."
+    },
+    {
+      "nativeNames": [
+        "DeleteLoadEnvelop"
+      ],
+      "name": "DeleteEnvelope",
+      "signature": "LoadOperationResult DeleteEnvelope(int envelopeId)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "envelopeId",
+          "default": null,
+          "description": "Positive existing envelope number."
+        }
+      ],
+      "internalService": "LoadCaseManagementService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Destructive scope is the envelope, not its case definitions. Native 1 success; no implicit save."
+    },
+    {
+      "nativeNames": [
+        "AddAutoLoadCombinations"
+      ],
+      "name": "CreateAutomaticCombinations",
+      "signature": "LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticCombinations(AutomaticCombinationRequest request)",
+      "returnType": "LoadOperationResult<AutomaticLoadGenerationData>",
+      "parameters": [
+        {
+          "type": "AutomaticCombinationRequest",
+          "name": "request",
+          "default": null,
+          "description": "Non-null typed generation request with an explicit case selection and valid parameters."
+        }
+      ],
+      "internalService": "LoadAutomaticGenerationService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Explicit all-cases selection. Returns requested and actual start IDs; generated count is absent because this native API does not return one. Select 2024 versus 2025/2026 error interpretation internally."
+    },
+    {
+      "nativeNames": [
+        "AddAutoCombinationRepeat"
+      ],
+      "name": "CreateAutomaticRepeatLoads",
+      "signature": "LoadOperationResult<AutomaticLoadGenerationData> CreateAutomaticRepeatLoads(AutomaticRepeatLoadRequest request)",
+      "returnType": "LoadOperationResult<AutomaticLoadGenerationData>",
+      "parameters": [
+        {
+          "type": "AutomaticRepeatLoadRequest",
+          "name": "request",
+          "default": null,
+          "description": "Non-null typed generation request with an explicit case selection and valid parameters."
+        }
+      ],
+      "internalService": "LoadAutomaticGenerationService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Returns actual start and generated count from internal reference outputs. No implicit direction flags; no inference of contiguous case IDs."
+    },
+    {
+      "nativeNames": [
+        "SetLoadType"
+      ],
+      "name": "SetLoadType",
+      "signature": "LoadOperationResult SetLoadType(IEnumerable<int> loadCaseIds, LoadType loadType)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "IEnumerable<int>",
+          "name": "loadCaseIds",
+          "default": null,
+          "description": "Non-null, nonempty positive case IDs; empty input never means all."
+        },
+        {
+          "type": "LoadType",
+          "name": "loadType",
+          "default": null,
+          "description": "Defined existing LoadType engineering classification, not case family."
+        }
+      ],
+      "internalService": "LoadCaseManagementService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Reuses LoadType 0-23; does not change primary/reference family. Native 0 success, -1 failure."
+    },
+    {
+      "nativeNames": [
+        "DeleteLoadList"
+      ],
+      "name": "DeleteLoadList",
+      "signature": "LoadOperationResult DeleteLoadList(int loadListIndex)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadListIndex",
+          "default": null,
+          "description": "Positive one-based native LOAD LIST index."
+        }
+      ],
+      "internalService": "LoadCaseManagementService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "One-based list index, not a case/envelope ID. Native 0 success and -1 failure."
+    },
+    {
+      "nativeNames": [
+        "SetASDLoadAttribute"
+      ],
+      "name": "SetAllowableStressAttribute",
+      "signature": "LoadOperationResult SetAllowableStressAttribute(int loadCaseId, LoadStrengthType strengthType, bool increaseAllowableStress)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadCaseId",
+          "default": null,
+          "description": "Positive native case number."
+        },
+        {
+          "type": "LoadStrengthType",
+          "name": "strengthType",
+          "default": null,
+          "description": "Defined native ASD strength-of-forces choice."
+        },
+        {
+          "type": "bool",
+          "name": "increaseAllowableStress",
+          "default": null,
+          "description": "Explicitly allows the native one-third ASD increase when true."
+        }
+      ],
+      "internalService": "LoadCaseManagementService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Defined LoadStrengthType 0-6; explicitly selects the native one-third stress increase. Native 0 success."
+    },
+    {
+      "nativeNames": [
+        "SetLSDLoadAttribute"
+      ],
+      "name": "SetLimitStateAttribute",
+      "signature": "LoadOperationResult SetLimitStateAttribute(int loadCaseId)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadCaseId",
+          "default": null,
+          "description": "Positive native case number."
+        }
+      ],
+      "internalService": "LoadCaseManagementService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Native 0 success; does not choose a model design code."
+    },
+    {
+      "nativeNames": [
+        "RemoveAttribute"
+      ],
+      "name": "RemoveLoadAttribute",
+      "signature": "LoadOperationResult RemoveLoadAttribute(int loadCaseId)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadCaseId",
+          "default": null,
+          "description": "Positive native case number."
+        }
+      ],
+      "internalService": "LoadCaseManagementService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Native 0 success; no implicit clearing/deletion of case content."
+    },
+    {
+      "nativeNames": [
+        "GetAttribute"
+      ],
+      "name": "GetLoadAttribute",
+      "signature": "LoadQueryResult<LoadAttributeObservation> GetLoadAttribute(int loadCaseId)",
+      "returnType": "LoadQueryResult<LoadAttributeObservation>",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadCaseId",
+          "default": null,
+          "description": "Positive native case number."
+        }
+      ],
+      "internalService": "LoadCaseManagementService.cs",
+      "state": "Blocked: native payload undefined",
+      "notes": "WITHHELD: the help defines only 0/-1 status and no attribute payload. No LoadStrengthType decoding or fabricated attribute fields; signature remains review-only."
+    },
+    {
+      "nativeNames": [
+        "GetAssignmentListForLoadType"
+      ],
+      "name": "GetAssignedEntityIds",
+      "signature": "LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(int primaryLoadCaseId, LoadCommandKind commandKind, int commandIndex, int maximumResults = 100000)",
+      "returnType": "LoadQueryResult<IEnumerable<int>>",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "primaryLoadCaseId",
+          "default": null,
+          "description": "Positive primary-case number, activated internally with before/after identity checks."
+        },
+        {
+          "type": "LoadCommandKind",
+          "name": "commandKind",
+          "default": null,
+          "description": "Defined LoadCommandKind, distinct from engineering LoadType and LoadItemKind."
+        },
+        {
+          "type": "int",
+          "name": "commandIndex",
+          "default": null,
+          "description": "Nonnegative zero-based index within the native command kind."
+        },
+        {
+          "type": "int",
+          "name": "maximumResults",
+          "default": "100000",
+          "description": "Positive retrieval limit; defaults to 100000. No silent truncation or unbounded allocation."
+        }
+      ],
+      "internalService": "LoadInspectionService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Primary activation, zero-based command index, paired sizing/retrieval counts, valid IDs, bounds and state checks. Native 0 means error; do not infer empty success from it."
+    },
+    {
+      "nativeNames": [
+        "DeletePrimaryLoadCases",
+        "DeleteReferenceLoadCases"
+      ],
+      "name": "DeleteLoadCases",
+      "signature": "LoadOperationResult DeleteLoadCases(LoadCaseType caseType, IEnumerable<int> loadCaseIds)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "LoadCaseType",
+          "name": "caseType",
+          "default": null,
+          "description": "PrimaryLoad or ReferenceLoad only; combination/repeat classifications are rejected."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "loadCaseIds",
+          "default": null,
+          "description": "Non-null, nonempty positive case IDs; empty input never means all."
+        }
+      ],
+      "internalService": "LoadCaseManagementService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Only PrimaryLoad/ReferenceLoad accepted; reuse LoadCaseType instead of a new family enum. Snapshot a nonempty selection; dependency errors and possible effects are reported. This differs from clearing items."
+    },
+    {
+      "nativeNames": [
+        "AddSelfWeightInXYZ"
+      ],
+      "name": "AddSelfWeight",
+      "signature": "LoadOperationResult AddSelfWeight(ILoadCase targetCase, SelfWeightDirection direction, double factor)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "SelfWeightDirection",
+          "name": "direction",
+          "default": null,
+          "description": "Defined semantic axis/direction; internal mapping uses the operation-specific numeric domain."
+        },
+        {
+          "type": "double",
+          "name": "factor",
+          "default": null,
+          "description": "Finite signed dimensionless multiplier; zero is preserved."
+        }
+      ],
+      "internalService": "LoadAssignmentService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Reuses existing ILoadCase and SelfWeightDirection; factor is dimensionless. Explicit geometry-scoped API remains separate; empty selection is not relevant."
+    },
+    {
+      "nativeNames": [
+        "GetNodalLoadInfo"
+      ],
+      "name": "GetNodalLoadCommand",
+      "signature": "LoadQueryResult<NodalLoadCommandInfo> GetNodalLoadCommand(ILoadCase targetCase, int loadItemIndex)",
+      "returnType": "LoadQueryResult<NodalLoadCommandInfo>",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "loadItemIndex",
+          "default": null,
+          "description": "Nonnegative original command index; native base and supported command families must be qualified."
+        }
+      ],
+      "internalService": "LoadAssignmentQueryService.cs",
+      "state": "Qualification required",
+      "notes": "Native text omits the index base; proposed zero-based convention requires qualification. Uses existing Forces through a defensive copy rather than new six-number arrays."
+    },
+    {
+      "nativeNames": [
+        "AddMemberAreaLoad"
+      ],
+      "name": "AddMemberAreaLoad",
+      "signature": "LoadOperationResult AddMemberAreaLoad(ILoadCase targetCase, IEnumerable<int> memberIds, double areaLoad)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "memberIds",
+          "default": null,
+          "description": "Non-null, nonempty positive member IDs; enumerated once."
+        },
+        {
+          "type": "double",
+          "name": "areaLoad",
+          "default": null,
+          "description": "Finite signed native area-load quantity, not assumed uniform force per length."
+        }
+      ],
+      "internalService": "LoadAssignmentService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Native 0 success; quantity follows native area-load units, not uniform force-per-length. No automatic conversion."
+    },
+    {
+      "nativeNames": [
+        "AddMemberFixedEnd"
+      ],
+      "name": "AddMemberFixedEndLoad",
+      "signature": "LoadOperationResult AddMemberFixedEndLoad(ILoadCase targetCase, IEnumerable<int> memberIds, FixedEndLoadDefinition definition)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "memberIds",
+          "default": null,
+          "description": "Non-null, nonempty positive member IDs; enumerated once."
+        },
+        {
+          "type": "FixedEndLoadDefinition",
+          "name": "definition",
+          "default": null,
+          "description": "Non-null typed definition with validated finite values and explicit mode."
+        }
+      ],
+      "internalService": "LoadAssignmentService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Reuses Forces; internal buffers contain Fx/Fy/Fz/Mx/My/Mz in documented order. Native 0 success; qualify axes/sign conventions."
+    },
+    {
+      "nativeNames": [
+        "GetMemberLoadInfo"
+      ],
+      "name": "GetMemberLoadCommand",
+      "signature": "LoadQueryResult<MemberLoadCommandInfo> GetMemberLoadCommand(ILoadCase targetCase, int loadItemIndex)",
+      "returnType": "LoadQueryResult<MemberLoadCommandInfo>",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "loadItemIndex",
+          "default": null,
+          "description": "Nonnegative original command index; native base and supported command families must be qualified."
+        }
+      ],
+      "internalService": "LoadAssignmentQueryService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Retains three force parameters and three distances as named fields with original item kind. Does not collapse different command families or infer dimension-independent force slots."
+    },
+    {
+      "nativeNames": [
+        "AddElementHydrostaticPressure"
+      ],
+      "name": "AddHydrostaticPressure",
+      "signature": "LoadOperationResult AddHydrostaticPressure(ILoadCase targetCase, IEnumerable<int> plateIds, HydrostaticPressureDefinition definition)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "plateIds",
+          "default": null,
+          "description": "Non-null, nonempty positive plate IDs; enumerated once."
+        },
+        {
+          "type": "HydrostaticPressureDefinition",
+          "name": "definition",
+          "default": null,
+          "description": "Non-null typed definition with validated finite values and explicit mode."
+        }
+      ],
+      "internalService": "LoadAssignmentService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Pressure direction LocalZ/GlobalX/Y/Z; interpolation GlobalAxis maps internally to 1/2/3. Native true/1 success; distinct axes stay distinct."
+    },
+    {
+      "nativeNames": [
+        "AddElementTrapPressureEx"
+      ],
+      "name": "AddTrapezoidalPressure",
+      "signature": "LoadOperationResult AddTrapezoidalPressure(ILoadCase targetCase, IEnumerable<int> plateIds, TrapezoidalPressureDefinition definition)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "plateIds",
+          "default": null,
+          "description": "Non-null, nonempty positive plate IDs; enumerated once."
+        },
+        {
+          "type": "TrapezoidalPressureDefinition",
+          "name": "definition",
+          "default": null,
+          "description": "Non-null typed definition with validated finite values and explicit mode."
+        }
+      ],
+      "internalService": "LoadAssignmentService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Named factories separate local X/Y variation from four joint pressures. Qualify triangular joint conventions before enabling that shape."
+    },
+    {
+      "nativeNames": [
+        "GetElementPressureLoadCount"
+      ],
+      "name": "GetPlatePressureLoadCount",
+      "signature": "LoadQueryResult<int> GetPlatePressureLoadCount(ILoadCase targetCase, int plateId)",
+      "returnType": "LoadQueryResult<int>",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "plateId",
+          "default": null,
+          "description": "Positive native plate number."
+        }
+      ],
+      "internalService": "LoadAssignmentQueryService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Zero valid, -1 failure. Count belongs to selected case, not Output results."
+    },
+    {
+      "nativeNames": [
+        "GetElementPressureLoads"
+      ],
+      "name": "GetPlatePressureLoads",
+      "signature": "LoadQueryResult<IEnumerable<PlatePressureLoad>> GetPlatePressureLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000)",
+      "returnType": "LoadQueryResult<IEnumerable<PlatePressureLoad>>",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "plateId",
+          "default": null,
+          "description": "Positive native plate number."
+        },
+        {
+          "type": "int",
+          "name": "maximumResults",
+          "default": "100000",
+          "description": "Positive retrieval limit; defaults to 100000. No silent truncation or unbounded allocation."
+        }
+      ],
+      "internalService": "LoadAssignmentQueryService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Bounded count/fetch; materialized immutable results; native 0 success, -1 failure; no min/max reordering of native corner coordinates."
+    },
+    {
+      "nativeNames": [
+        "GetElementConcLoadCount"
+      ],
+      "name": "GetPlateConcentratedLoadCount",
+      "signature": "LoadQueryResult<int> GetPlateConcentratedLoadCount(ILoadCase targetCase, int plateId)",
+      "returnType": "LoadQueryResult<int>",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "plateId",
+          "default": null,
+          "description": "Positive native plate number."
+        }
+      ],
+      "internalService": "LoadAssignmentQueryService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Zero valid and -1 failure; element family/active case remains explicit."
+    },
+    {
+      "nativeNames": [
+        "GetElementConcLoads"
+      ],
+      "name": "GetPlateConcentratedLoads",
+      "signature": "LoadQueryResult<IEnumerable<PlateConcentratedLoad>> GetPlateConcentratedLoads(ILoadCase targetCase, int plateId, int maximumResults = 100000)",
+      "returnType": "LoadQueryResult<IEnumerable<PlateConcentratedLoad>>",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "plateId",
+          "default": null,
+          "description": "Positive native plate number."
+        },
+        {
+          "type": "int",
+          "name": "maximumResults",
+          "default": "100000",
+          "description": "Positive retrieval limit; defaults to 100000. No silent truncation or unbounded allocation."
+        }
+      ],
+      "internalService": "LoadAssignmentQueryService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Reuses main ElementConcentratedLoad field semantics without its unimplemented ApplyTo or proprietary base/dependencies. Verify direction/quantity conventions."
+    },
+    {
+      "nativeNames": [
+        "GetElementLoadInfo"
+      ],
+      "name": "GetPlateLoadCommand",
+      "signature": "LoadQueryResult<PlateLoadCommandInfo> GetPlateLoadCommand(ILoadCase targetCase, int loadItemIndex)",
+      "returnType": "LoadQueryResult<PlateLoadCommandInfo>",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "int",
+          "name": "loadItemIndex",
+          "default": null,
+          "description": "Nonnegative original command index; native base and supported command families must be qualified."
+        }
+      ],
+      "internalService": "LoadAssignmentQueryService.cs",
+      "state": "Qualification required",
+      "notes": "Only ElementLoadPressure is documented. Translate this API’s native 0-8 directions to LoadDirection 1-9. Native -1 means not implemented, not generic success."
+    },
+    {
+      "nativeNames": [
+        "AddMemberFloorLoad",
+        "AddMemberFloorLoadEx"
+      ],
+      "name": "AddFloorLoad",
+      "signature": "LoadOperationResult AddFloorLoad(ILoadCase targetCase, FloorLoadDefinition definition)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "FloorLoadDefinition",
+          "name": "definition",
+          "default": null,
+          "description": "Non-null typed definition with validated finite values and explicit mode."
+        }
+      ],
+      "internalService": "LoadAssignmentService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Shared typed request can use Ex for general modes; legacy GlobalX/Y-range subset is conditional on qualified equivalence. No duplicate public overload solely for native-name coverage."
+    },
+    {
+      "nativeNames": [
+        "GetBeamCountAtFloor"
+      ],
+      "name": "GetFloorBeamCount",
+      "signature": "LoadQueryResult<int> GetFloorBeamCount(FloorRegion region)",
+      "returnType": "LoadQueryResult<int>",
+      "parameters": [
+        {
+          "type": "FloorRegion",
+          "name": "region",
+          "default": null,
+          "description": "Non-null bounded region with finite coordinates and an explicit range axis."
+        }
+      ],
+      "internalService": "LoadAssignmentQueryService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "GlobalAxis range is explicitly translated to native 1/2/3. Finite coordinates may require checked Single marshaling."
+    },
+    {
+      "nativeNames": [
+        "GetInfluenceArea"
+      ],
+      "name": "GetFloorInfluenceAreas",
+      "signature": "LoadQueryResult<IEnumerable<BeamInfluenceArea>> GetFloorInfluenceAreas(FloorRegion region, int maximumResults = 100000)",
+      "returnType": "LoadQueryResult<IEnumerable<BeamInfluenceArea>>",
+      "parameters": [
+        {
+          "type": "FloorRegion",
+          "name": "region",
+          "default": null,
+          "description": "Non-null bounded region with finite coordinates and an explicit range axis."
+        },
+        {
+          "type": "int",
+          "name": "maximumResults",
+          "default": "100000",
+          "description": "Positive retrieval limit; defaults to 100000. No silent truncation or unbounded allocation."
+        }
+      ],
+      "internalService": "LoadAssignmentQueryService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Bounded count/fetch with identical region; named associations replace parallel arrays. Native true/1 success; no managed engineering-area calculation."
+    },
+    {
+      "nativeNames": [
+        "AddStrainLoad"
+      ],
+      "name": "AddStrainLoad",
+      "signature": "LoadOperationResult AddStrainLoad(ILoadCase targetCase, IEnumerable<int> elementIds, double axialElongation)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<int>",
+          "name": "elementIds",
+          "default": null,
+          "description": "Non-null, nonempty positive beam/plate IDs for the native strain operation."
+        },
+        {
+          "type": "double",
+          "name": "axialElongation",
+          "default": null,
+          "description": "Finite signed initial elongation/shrinkage in the qualified native engineering convention."
+        }
+      ],
+      "internalService": "LoadAssignmentService.cs",
+      "state": "Qualification required",
+      "notes": "Finite signed value; engineering dimensional conventions require native technical-reference qualification. Temperature loading is not substituted."
+    },
+    {
+      "nativeNames": [
+        "AddSeismicLoad"
+      ],
+      "name": "AddSeismicLoad",
+      "signature": "LoadOperationResult AddSeismicLoad(ILoadCase targetCase, GlobalAxis direction, double factor)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "GlobalAxis",
+          "name": "direction",
+          "default": null,
+          "description": "Defined semantic axis/direction; internal mapping uses the operation-specific numeric domain."
+        },
+        {
+          "type": "double",
+          "name": "factor",
+          "default": null,
+          "description": "Finite signed dimensionless multiplier; zero is preserved."
+        }
+      ],
+      "internalService": "LoadAssignmentService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Reuses main GlobalAxis 0/1/2; separate from definition and member-weight domains. Native 0 success and -8001 invalid direction."
+    },
+    {
+      "nativeNames": [
+        "AddWindLoad"
+      ],
+      "name": "AddWindLoad",
+      "signature": "LoadOperationResult AddWindLoad(ILoadCase targetCase, WindLoadDefinition definition)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "WindLoadDefinition",
+          "name": "definition",
+          "default": null,
+          "description": "Non-null typed definition with validated finite values and explicit mode."
+        }
+      ],
+      "internalService": "LoadAssignmentService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Direction codes 1/3/4/6; factor signed and dimensionless. Native range assumes Y vertical; verify model compatibility. No definition creation fallback."
+    },
+    {
+      "nativeNames": [
+        "AddNotionalLoad"
+      ],
+      "name": "AddNotionalLoad",
+      "signature": "LoadOperationResult AddNotionalLoad(ILoadCase targetCase, IEnumerable<NotionalLoadContribution> contributions)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "targetCase",
+          "default": null,
+          "description": "Existing ILoadCase with positive ID and supported PrimaryLoad/ReferenceLoad family; metadata is snapshotted before activation."
+        },
+        {
+          "type": "IEnumerable<NotionalLoadContribution>",
+          "name": "contributions",
+          "default": null,
+          "description": "Non-null, nonempty contribution records. Order and duplicates preserved; null entries rejected."
+        }
+      ],
+      "internalService": "LoadAssignmentService.cs",
+      "state": "Defined; implementation pending",
+      "notes": "Reuses the query contribution model with a validated public constructor. Internal packets partition families with positive IDs and global 1/2/3 axes; do not forward signed read-back IDs directly to separate family arrays."
+    },
+    {
+      "nativeNames": [
+        "GetNoOfSetsInReferenceLoad"
+      ],
+      "name": "GetReferenceContributionCount",
+      "signature": "LoadQueryResult<int> GetReferenceContributionCount(int primaryLoadCaseId, int referenceItemIndex)",
+      "returnType": "LoadQueryResult<int>",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "primaryLoadCaseId",
+          "default": null,
+          "description": "Positive primary-case number, activated internally with before/after identity checks."
+        },
+        {
+          "type": "int",
+          "name": "referenceItemIndex",
+          "default": null,
+          "description": "Positive one-based proposed reference-command index; exact native semantics require qualification."
+        }
+      ],
+      "internalService": "LoadInspectionService.cs",
+      "state": "Qualification required",
+      "notes": "Proposed positive one-based index requires qualification; native return narrative incorrectly describes an ID. Keep contract review-only until count/index semantics are corroborated."
+    },
+    {
+      "nativeNames": [
+        "GetReferenceLoadByIndex"
+      ],
+      "name": "GetReferenceContributions",
+      "signature": "LoadQueryResult<IEnumerable<ReferenceLoadContribution>> GetReferenceContributions(int primaryLoadCaseId, int referenceItemIndex, int maximumResults = 100000)",
+      "returnType": "LoadQueryResult<IEnumerable<ReferenceLoadContribution>>",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "primaryLoadCaseId",
+          "default": null,
+          "description": "Positive primary-case number, activated internally with before/after identity checks."
+        },
+        {
+          "type": "int",
+          "name": "referenceItemIndex",
+          "default": null,
+          "description": "Positive one-based proposed reference-command index; exact native semantics require qualification."
+        },
+        {
+          "type": "int",
+          "name": "maximumResults",
+          "default": "100000",
+          "description": "Positive retrieval limit; defaults to 100000. No silent truncation or unbounded allocation."
+        }
+      ],
+      "internalService": "LoadInspectionService.cs",
+      "state": "Qualification required",
+      "notes": "Uses a separate reference payload because existing LoadFactorContribution explicitly denotes primary repeat cases. Output size and index semantics require live corroboration."
+    },
+    {
+      "nativeNames": [
+        "BeginLoadMerging",
+        "EndLoadMerging"
+      ],
+      "name": "MergeBeamLoads",
+      "signature": "LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests)",
+      "returnType": "LoadOperationResult",
+      "parameters": [
+        {
+          "type": "IEnumerable<BeamLoadMergeRequest>",
+          "name": "requests",
+          "default": null,
+          "description": "Non-null, nonempty retained/source-beam requests; snapshotted before begin. This contract is withheld until the native body is verified."
+        }
+      ],
+      "internalService": "LoadBeamTransferService.cs",
+      "state": "Blocked: merge-body contract unverified",
+      "notes": "WITHHELD: the merge body depends on metadata-only MergeLoadsOnBeam. Void Begin/End imply invocation evidence only. Native body, topology, side effects and errors must be qualified; preserve body and cleanup failures without a user-maintained begin/end pair."
+    }
+  ]
+}

@@ -34,6 +34,8 @@ namespace StaadPro.Interop.Adapters.Models
 
         private readonly LoadInspectionService inspection;
 
+        #region Native Load inspection and contribution queries
+
         /// <summary>Reads the native active load-case number without inferring its family.</summary>
         /// <returns>A named status/data result. Inspect IsSuccessful before Data; failed, ambiguous or changed observations expose no payload. NativeFunction and NativeReturnCode identify the decisive native response, including preflight calls.</returns>
         /// <remarks><para>Returns the positive native number or NativeFailure for -1. Primary/reference numbers can overlap; this result is not a LoadCase identity and performs no activation.</para><para>Uses the shared installed 2024–2026 contract; no year-specific differences were found for this operation. Runs synchronously on the caller's COM apartment. Calls through these new methods on one adapter are serialized; legacy/raw calls, other adapters and external edits are not locked out. Count/activation checks detect observed changes but cannot prove an atomic snapshot or detect same-count replacements. Dispose/rebind invalidates the captured binding. No load assignment, save, solver invocation, retry, rollback or units conversion is performed; any factors are dimensionless.</para></remarks>
@@ -251,6 +253,7 @@ namespace StaadPro.Interop.Adapters.Models
         public LoadQueryResult<int> GetReferenceItemCount(int primaryLoadCaseId) =>
             inspection.GetReferenceItemCount(primaryLoadCaseId);
 
+        #endregion
 
         #region Remaining Seismic, Spectrum and Direct Analysis Reference Operations
 

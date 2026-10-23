@@ -42,6 +42,10 @@ Construction/refresh read native metadata on the session’s COM thread. Five ty
 - `GetPlatesConnectedAtNode(int nodeId)`: Returns all incident plates for a node.
 - `DistributeTorque(...)`: Distributes torsional load as equivalent nodal forces.
 
+## Load expansion contracts for review
+
+The [contract-first plan](reports/OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md) and [signature review file](contracts/IOSLoadExpansionContract.cs) define the remaining additions and all required types. The review interface is compiled only into tests, not the NuGet assembly. New supporting request/result definitions reside under Models.Loads.Contracts; pending adapter methods are not exposed.
+
 ## `IOSLoad` Members
 
 ### Completed main-interface reference coverage
