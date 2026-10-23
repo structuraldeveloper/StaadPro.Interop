@@ -6,7 +6,13 @@ Our mission is to provide the structural engineering and computational design co
 
 ---
 
-## Current porting priority — 23 October 2026
+## Implementation pause — 23 October 2026
+
+At the user’s request, all remaining domain implementations are paused. The first 25 Property queries remain completed; the 179 remaining active Property mappings, remaining Output operations and other unported domains are deferred. No further implementation or package behavior change is authorized by the current diagnostic review. The parked Load items retain their separate explicit-approval requirement.
+
+**Reminder checkpoint:** when the user next discusses resuming porting, or before preparing the next public NuGet release, remind them of this pause and the outstanding implementation/qualification work. Resume only on their instruction. This is a workflow reminder, without a scheduled notification date. Read-only investigation of reported failures and an assembly-wide audit may continue.
+
+## Porting priority when implementation resumes — 23 October 2026
 
 The next domain to port is **Property & Materials** (`IOSProperty` / `OSPropertyAdapter`), corresponding to Phase 3 below. The first 25 typed Property queries are implemented in current source: all 13 P2 observations plus the first 12 P3 material observations. Of 204 active reviewed native names, 179 remain pending. The main reference contains 103 interface overloads and four additional public adapter methods. These source-parity counts are distinct from the 212-name cross-version native inventory and its reserved/deprecated exclusions.
 
