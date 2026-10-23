@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\StaadPro.Interop\StaadPro.Interop.csproj" />
     <Compile Include="..\..\docs\contracts\IOSLoadExpansionContract.cs" Link="ContractReview\IOSLoadExpansionContract.cs" />
+    <Compile Include="..\..\eng\Fixtures\PropertyPortFixture.cs" Link="Fixtures\PropertyPortFixture.cs" />
     <None Include="..\..\docs\contracts\LoadExpansionContractIndex.json" Link="ContractReview\LoadExpansionContractIndex.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

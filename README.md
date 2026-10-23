@@ -12,29 +12,25 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Source update — Property foundations
+## Property main-project ports
 
-Implemented the first 25 typed Property queries for member and plate offsets, releases, section properties and material observations. Results use named status/data classes, existing MemberEnd and Vector3D types, owned collections and comparative XML IntelliSense. Shared 2024–2026 contracts use one internal reader. Native naming, selector and documentation ambiguities are recorded rather than replaced with inferred values. Passed 3,322 offline tests, including 422 new Property cases, and a Release build with zero warnings/errors. Native COM and engineering qualification remain pending; 179 active Property mappings remain to be implemented. The parked Load work and prepared distribution archive are unchanged. See the [Property usage and porting guide](docs/Property-Porting.md).
+Added 25 main-project Property overloads for section/thickness inventories, assignment discovery, material context and assignment, member specifications, and global-Y member-end offsets. Property now exposes **50 overloads**: the existing 25 typed observations and these 25 signature-compatible ports. All new interface and adapter methods include expanded XML IntelliSense with parameters, return values, examples, units, side effects and failure contracts. Shared locking/lifetime checks, bounded native buffers and checked operation-specific statuses are included. Passed **3,531 offline tests**, including **209 new Property cases**, with zero build warnings/errors. The installed-package verifier compiles and runs **542 selected XML examples**, including all **100 Property examples**, against managed stand-ins. Live COM and engineering qualification remain pending. See the [25-method guide](docs/Property-Main-Ports.md) and [Property inventory](docs/Property-Porting.md).
 
 ## Earlier source update — Load expansion
 
 Implemented all **36 approved Load expansion methods** through the existing IOSLoad and single OSLoadAdapter. Source exposes **171 overloads**: 115 main-reference signatures, five earlier conveniences, 15 inspection methods and these 36 additions. Actual dispatch covers **126/129 documented native names**, plus the metadata-corroborated MergeLoadsOnBeam body. The three intentionally unused names are CreateNewPrimaryLoad (richer creation alternatives), IsCombinationCase (derived inventory capability), and AddMemberFloorLoad (the extended floor call supplies the managed route). Native dispatch coverage is not live compatibility or engineering certification.
 
-All 36 methods include comparative IntelliSense explaining scope, alternatives, units, native statuses and state changes. Passed 2,900 offline tests (424 new expansion cases). See [Load expansion usage](docs/Load-Expansion.md) and the [contract/type implementation record](docs/reports/OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md). GetLoadAttribute is status-only; MergeBeamLoads returns invocation evidence without certifying success. Live STAAD marshaling and engineering qualification remain pending. The prepared distribution archive below is unchanged.
+All 36 methods include comparative IntelliSense explaining scope, alternatives, units, native statuses and state changes. Passed 2,900 offline tests (424 new expansion cases). See [Load expansion usage](docs/Load-Expansion.md) and the [contract/type implementation record](docs/reports/OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md). GetLoadAttribute is status-only; MergeBeamLoads returns invocation evidence without certifying success. Live STAAD marshaling and engineering qualification remain pending. These Load additions are included in the new prepared preview.
 
 ## Earlier source update — Load inspection queries
 
 Implemented 15 additional Load observations with complete XML contracts, named status/data results, bounded eager snapshots and an internal shared service. Source now exposes 135 Load overloads and dispatches 88/129 documented native names. Remaining undispatched names total 41: one existing alternative, one derived capability, four partial overlaps and 35 absent operations, plus three separate metadata-only candidates. Passed 2,448 offline tests (189 new cases) and all 30 new XML examples. See [Load inspection usage](docs/Load-Inspection-Queries.md). These changes postdate the prepared archive below; live native qualification remains pending.
 
-## Prepared preview: 1.0.0-preview.20261023
+## Prepared preview: 1.0.0-preview.20261023.1
 
-Prepared a local Windows/.NET Framework 4.8.1 preview containing **143 reference Geometry overloads**, **120 Load overloads** (all 115 main-interface signatures plus five conveniences), **15 typed Output queries**, 53 common Root operations and three optional Root operations. The approved wrapper surface is included. The seven remaining domain adapters retain placeholder APIs.
+The local archive includes 50 Property overloads, 171 Load overloads, all 143 reference Geometry overloads, 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
-Output covers availability, displacement, reactions, local member-end forces, static checks, plate-center results and member design observations with named status/data results and complete XML IntelliSense. See [Output usage](docs/Output-Porting.md), [Geometry contracts](docs/Geometry-Porting.md) and [Load contracts](docs/Load-Porting.md).
-
-The [Load semantic audit](docs/reports/OpenSTAAD-Load-Managed-Capability-Audit.md) distinguishes unused native entry points from missing capabilities: one alternative, one derived capability, four partial overlaps and 50 absent operations among the 56 undispatched names. These broader Load scopes and 45 documented Output mappings remain pending.
-
-Release validation covers **2,259 offline tests** and **340 installed-package XML examples** against managed stand-ins. Live native marshaling, units and engineering qualification remain pending. The archive is prepared locally; this build does not publish a new version to NuGet.org. See [release notes](docs/Release-Notes.md) and [local installation](docs/Installation.md#install-the-prepared-archive-through-a-local-feed) for distribution details.
+Validated a Release solution build, 3,531 offline tests and isolated installation with 542 compiled/executed XML examples. The archive is prepared for manual upload and has not been published to NuGet.org. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
 
 ## Output comparison and planned work
 
@@ -42,7 +38,7 @@ The [Output guide](docs/Output-Porting.md) documents 15 implemented typed querie
 
 ## Property implementation and comparison
 
-The [Property review](docs/Property-Porting.md) compares STAAD.Pro 2024, 2025 and 2026, inventories native contracts and delegated main-project implementations, and proposes shared internal services with focused version policies. The current source implements the first 25 typed Property queries; 179 active native mappings remain pending. The prepared distribution preview predates this increment.
+The [Property review](docs/Property-Porting.md) records 50 managed overloads and routes to 44 of the 204 active native candidates, with 160 remaining. The [main-project ports guide](docs/Property-Main-Ports.md) lists all 25 new signatures and explains compatibility sentinels, no-op inputs, native status checks, raw section-buffer limits and mutation behavior. The [multi-version inventory](docs/reports/OpenSTAAD-Property-API-Coverage-and-Contract-Inventory.md) remains the earlier contract evidence; dispatch coverage does not certify complete typed payloads or live compatibility.
 
 ## Support comparison and planned work
 
@@ -210,8 +206,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261023 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261023.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261023.1 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261023.1.nupkg
 ```
 
 ---

@@ -2,7 +2,7 @@
 
 ## Package and runtime
 
-The locally prepared preview is `1.0.0-preview.20261023`, including the approved wrapper surface, all 143 reference Geometry overloads, 120 Load overloads (115 reference plus five conveniences), 15 typed Output queries, 53 common Root operations and three optional Root operations. Use this exact version with the local-feed instructions below. This local build does not establish a new public publication. Public-feed examples retain the previously verified version; consult [release notes](Release-Notes.md), [Load contracts](Load-Porting.md), [Output usage](Output-Porting.md) and [Root capabilities](Root-Completion-and-Capabilities.md) for scope and limits.
+The locally prepared preview is `1.0.0-preview.20261023.1`, including the approved wrapper surface, all 143 reference Geometry overloads, 171 Load overloads and 50 Property overloads, 15 typed Output queries, 53 common Root operations and three optional Root operations. Use this exact version with the local-feed instructions below. This local build does not establish a new public publication. Public-feed examples retain the previously verified version; consult [release notes](Release-Notes.md), [Load contracts](Load-Porting.md), [Output usage](Output-Porting.md) and [Root capabilities](Root-Completion-and-Capabilities.md) for scope and limits.
 
 This guide uses preview version `1.0.0-preview.20261012.1` of package `StaadPro.Interop`. Public-feed commands apply after that exact version is accepted and available on NuGet.org; [Publishing.md](Publishing.md) explains upload and verification. The same verified archive can be installed immediately through a local feed.
 
@@ -16,7 +16,7 @@ This guide uses preview version `1.0.0-preview.20261012.1` of package `StaadPro.
 
 Installation and managed package checks do not require a STAAD license. Native STAAD operations do. Bentley software/binaries are separately installed and licensed. The package targets `net481`; this release does not advertise .NET 8/9/10 application compatibility. SDK version and the consuming application's target framework are different things.
 
-Newtonsoft.Json is restored as a package dependency. XML documentation is included beside the DLL for IntelliSense on both `IOSLoad` and `OSLoadAdapter`.
+Newtonsoft.Json is restored as a package dependency. Expanded XML documentation is included beside the DLL for IntelliSense on interfaces and concrete adapters, including all 50 `IOSProperty`/`OSPropertyAdapter` overloads. The [Property guide](Property-Main-Ports.md) covers the 25 new main-project ports.
 
 ## Install from the public feed
 
@@ -98,7 +98,7 @@ In the consumer directory, use a project-scoped `NuGet.Config`:
 NuGet.org remains configured for dependencies. Add the exact package reference with:
 
 ```powershell
-dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261023
+dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261023.1
 dotnet restore ./YourApp.csproj --configfile ./NuGet.Config --packages ./packages
 dotnet build ./YourApp.csproj -c Release --no-restore
 ```

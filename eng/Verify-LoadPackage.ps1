@@ -232,22 +232,27 @@ try {
     $hasPropertyFoundation = @($xml.doc.members.member | Where-Object name -eq 'M:StaadPro.Interop.Adapters.Interfaces.IOSProperty.GetBetaAngle(System.Int32)').Count -eq 1
     if ($hasPropertyFoundation) {
         $propertyGuide = Read-PackageEntry 'docs/Property-Porting.md'
+        $propertyGuide += Read-PackageEntry 'docs/Property-Main-Ports.md'
+        $mainPortNames = @('GetUnusedSectionsCount', 'GetUnusedSectionsIds', 'GetBeamProperty', 'GetPlateMaterialName', 'GetSectionPropertyList', 'GetSectionPropertyName', 'GetSectionPropertyValues', 'GetSectionPropertyAssignedBeams', 'GetThicknessPropertyList', 'GetThicknessPropertyAssignedPlates', 'GetAveragePlateThickness', 'GetBeamsWithMissingSectionProperty', 'GetPlatesWithMissingThicknessProperty', 'GetMemberSpecification', 'AssignBeamProperty', 'AssignMaterialToMember', 'SetMaterialName', 'AssignMemberEndOffsets', 'AssignMemberEndOffset')
         foreach ($owner in @('Adapters.Interfaces.IOSProperty', 'Adapters.Models.OSPropertyAdapter')) {
             $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-            if ($entries.Count -ne 25) { throw "Expected 25 Property method contracts for $owner." }
+            if ($entries.Count -ne 50) { throw "Expected 50 Property method contracts for $owner." }
             foreach ($entry in $entries) {
-                foreach ($tag in @('summary', 'returns', 'remarks', 'example/code')) {
+                $methodName = [regex]::Match($entry.name, '\.([^.()]+)(?:\(|$)').Groups[1].Value
+                $requiredTags = @('summary', 'remarks', 'example/code')
+                if ($methodName -notin @('AssignBeamProperty', 'AssignMaterialToMember', 'SetMaterialName')) { $requiredTags += 'returns' }
+                foreach ($tag in $requiredTags) {
                     $node = $entry.SelectSingleNode($tag)
                     if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete Property $tag for $($entry.name)" }
                 }
                 if ($entry.SelectSingleNode('remarks').InnerText -notmatch 'When to use:') { throw "Missing comparative Property IntelliSense for $($entry.name)" }
-                $methodName = [regex]::Match($entry.name, '\.([^.()]+)(?:\(|$)').Groups[1].Value
                 if ($propertyGuide -notmatch $methodName) { throw "Missing Property guidance for $methodName" }
                 $binding = if ($owner.EndsWith('IOSProperty')) { 'IOSProperty property = wrapper.Property;' } else { 'var property = new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper);' }
-                $propertySnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyQueryFixture.Root { Property = new PackageVerification.PropertyQueryFixture.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
+                $fixture = if ($methodName -in $mainPortNames) { 'PropertyPortFixture' } else { 'PropertyQueryFixture' }
+                $propertySnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.' + $fixture + '.Root { Property = new PackageVerification.' + $fixture + '.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
             }
         }
-        if ($propertySnippets.Count -ne 50) { throw 'Expected 50 Property XML examples.' }
+        if ($propertySnippets.Count -ne 100) { throw 'Expected 100 Property XML examples.' }
     }
 } finally { $archive.Dispose() }
 
@@ -733,6 +738,7 @@ $program = $program.Replace('__EXAMPLE_COUNT__', [string](340 + $inspectionSnipp
 if ($hasLoadExpansion) { $program = 'using StaadPro.Interop.Models.Loads.Contracts;' + [Environment]::NewLine + 'using StaadPro.Interop.Models.Loads.Queries;' + [Environment]::NewLine + $program }
 if ($hasLoadInspection) { $program = 'using StaadPro.Interop.Enums.Loads;' + [Environment]::NewLine + $program }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyQueryFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyQueryFixture.cs') }
+if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyPortFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyPortFixture.cs') }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/LoadInspectionFixture.cs') -Destination (Join-Path $consumerRoot 'LoadInspectionFixture.cs')
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'NuGet.Config'), $config)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Consumer.csproj'), $project)

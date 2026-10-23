@@ -28,6 +28,8 @@ namespace StaadPro.Interop.Services.Property
             return native;
         }
         private T Run<T>(Func<T> body) { lock (gate) { Binding(); var data = body(); Binding(); return data; } }
+        // Compatibility ports share the observation reader's binding lifetime checks and lock.
+        internal T WithBinding<T>(Func<object, T> body) => Run(() => body(native));
         private static PropertyQueryResult<T> Result<T>(string op, PropertyQueryStatus status, T data = default, object response = null, string diagnostic = null)
         {
             bool? flag = response is bool b ? b : (bool?)null;

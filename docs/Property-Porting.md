@@ -1,10 +1,20 @@
-# Property foundations: offsets, releases and material observations
+# Property observations and main-project ports
 
 **Updated:** 23 October 2026
 
-Implemented **25 typed Property queries** through IOSProperty and the single non-partial OSPropertyAdapter: all 13 P2 native names and the first 12 P3 names in the documented allocation. Shared 2024–2026 contracts use one internal reader and strict value decoder. The 212-name union contains eight excluded entries, leaving 204 active candidates; **25 have managed routes and 179 remain pending**. GetPlateSectionPropertyRefNo is documented but absent from inspected vendor CLR metadata, so its acquired receiver may return Unsupported. Implementation coverage does not certify live COM or engineering behavior.
+## Current increment: 25 main-project ports
 
-Passed **3,322 offline tests**, including **422 new Property cases**, and a Release build with zero warnings/errors. All 50 interface/adapter XML examples compiled and ran through isolated installation of the local validation package; all 492 selected package examples passed. This is source and managed-stand-in verification; live native qualification remains pending. The prepared distribution archive is unchanged.
+Added 25 main-project Property overloads for section/thickness inventories, assignment discovery, material context and assignment, member specifications, and global-Y member-end offsets. Property now exposes **50 overloads**: the existing 25 typed observations and these 25 signature-compatible ports. All new interface and adapter methods include expanded XML IntelliSense with parameters, return values, examples, units, side effects and failure contracts. Shared locking/lifetime checks, bounded native buffers and checked operation-specific statuses are included. Passed **3,531 offline tests**, including **209 new Property cases**, with zero build warnings/errors. The installed-package verifier compiles and runs **542 selected XML examples**, including all **100 Property examples**, against managed stand-ins. Live COM and engineering qualification remain pending. See [all 25 added signatures and usage contracts](Property-Main-Ports.md).
+
+The current adapter exposes **50 public overloads** and adds routes to **19 further native names**, for **44 of 204 active native candidates** with **160 remaining**. Eight of the 212-name union remain excluded. This is dispatch-route coverage, not a claim of complete typed parsing or native qualification: the raw section-buffer route deliberately does not decode a version-specific layout. The archived multi-version review retains its original preimplementation coverage labels.
+
+The compatibility methods preserve main-project signatures and direct return types; the original 25 observation methods retain their status/data contracts. Both sets share one adapter lock and captured-binding checks. Assignment and material-context operations mutate native state without implicit saving; read methods remain read-only.
+
+## Earlier foundation increment
+
+The first increment implemented **25 typed Property queries** through IOSProperty and the single non-partial OSPropertyAdapter: all 13 P2 native names and the first 12 P3 names in the documented allocation. Shared 2024–2026 contracts use one internal reader and strict value decoder. The 212-name union contains eight excluded entries, leaving 204 active candidates; **25 had managed routes and 179 remained pending at that checkpoint**. GetPlateSectionPropertyRefNo is documented but absent from inspected vendor CLR metadata, so its acquired receiver may return Unsupported. Implementation coverage does not certify live COM or engineering behavior.
+
+Passed **3,322 offline tests**, including **422 new Property cases**, and a Release build with zero warnings/errors. All 50 interface/adapter XML examples compiled and ran through isolated installation of the local validation package; all 492 selected package examples passed. This is source and managed-stand-in verification; live native qualification remains pending. That foundation checkpoint used a separate validation archive; the new preview below includes both increments.
 
 Adding these members to IOSProperty requires custom interface implementations to provide the new members. Existing wrapper/provider contracts and target frameworks are unchanged. The legacy ComObject escape hatch remains available; direct calls bypass the typed validation described here.
 
@@ -14,7 +24,7 @@ Each method returns PropertyQueryResult<T>. Inspect IsSuccessful before reading 
 
 NoSpecification, NotAssigned, NotFound and NativeFailure have different meanings. A successful zero offset remains valid data; missing offsets never produce a fabricated zero vector. Named native material queries can use integer-zero success, Boolean success or returned-name success depending on the function. Assignment state is native 1=Unassigned / 2=Assigned.
 
-All calls are read-only, execute on the caller’s established COM apartment, and share a lock on one Property adapter. They do not activate cases, run analysis, save, create/assign properties, retry calls or perform unit conversion. Other adapters, raw calls, wrappers and external edits are not excluded. Reacquire wrapper.Property after RefreshComObjects. Captured receivers are checked before and after retrieval; a same-binding unsaved edit or same-count reorder cannot be ruled out.
+All 25 foundation query calls are read-only, execute on the caller’s established COM apartment, and share a lock on one Property adapter. They do not activate cases, run analysis, save, create/assign properties, retry calls or perform unit conversion. Other adapters, raw calls, wrappers and external edits are not excluded. Reacquire wrapper.Property after RefreshComObjects. Captured receivers are checked before and after retrieval; a same-binding unsaved edit or same-count reorder cannot be ruled out.
 
 Native numerical units are preserved. Weight density means force/volume, not mass/volume. Elastic/shear moduli and strengths retain force/area dimensions; thermal expansion retains inverse-temperature units; damping, Poisson and strength ratios are dimensionless. Member/plate offsets and section thicknesses retain length units, areas length-squared and inertia slots length-to-the-fourth. Wrapper input-unit fallback caches do not establish an observed Property-unit contract.
 
@@ -294,4 +304,4 @@ Use for independent directional material constants; isotropic queries cannot sub
 - Establish physical axis/plane order for orthotropic buffers; first/second/third values intentionally retain native order.
 - Confirm acquired GetPlateSectionPropertyRefNo presence; missing-member observations are Unsupported without a fallback API.
 
-The next Property work remains the remaining P3 operations, followed by P4 section/thickness observations. Reserved, private and deprecated entries remain excluded. The parked Load items require separate explicit user approval; this Property increment does not resume them.
+The remaining Property work includes the pending P3 operations and complete typed/version-specific P4 section/thickness observations. The [25 compatibility ports](Property-Main-Ports.md) add selected main-project inventory/assignment capabilities but do not complete those typed workstreams. Reserved, private and deprecated entries remain excluded. The parked Load items require separate explicit user approval; this Property increment does not resume them.

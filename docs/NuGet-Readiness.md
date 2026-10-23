@@ -1,6 +1,14 @@
 # NuGet readiness assessment
 
-## Current source — Property foundations
+## Latest prepared preview — 1.0.0-preview.20261023.1
+
+Added 25 main-project Property overloads for section/thickness inventories, assignment discovery, material context and assignment, member specifications, and global-Y member-end offsets. Property now exposes **50 overloads**: the existing 25 typed observations and these 25 signature-compatible ports. All new interface and adapter methods include expanded XML IntelliSense with parameters, return values, examples, units, side effects and failure contracts. Shared locking/lifetime checks, bounded native buffers and checked operation-specific statuses are included. Passed **3,531 offline tests**, including **209 new Property cases**, with zero build warnings/errors. The installed-package verifier compiles and runs **542 selected XML examples**, including all **100 Property examples**, against managed stand-ins. Live COM and engineering qualification remain pending.
+
+The package includes 50 Property overloads, all 171 current Load overloads, 143 reference Geometry overloads, 15 typed Output queries and the reviewed Root/wrapper surface. It ships expanded interface/adapter XML and the new [Property guide](Property-Main-Ports.md). All 25 new main-project signatures were compared with the read-only reference. The reference projects remain unchanged.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261023.1.nupkg` for manual upload. Isolated verification checks metadata, guide/version consistency, the net481 DLL/XML pair, exact restored archive identity and 542 executable examples. No native STAAD model is modified by verification, and no package is uploaded to NuGet.org by this task. Native and engineering qualification remains a release gate.
+
+## Earlier foundation validation — Property
 
 Implemented the first 25 typed Property queries for member and plate offsets, releases, section properties and material observations. Results use named status/data classes, existing MemberEnd and Vector3D types, owned collections and comparative XML IntelliSense. Shared 2024–2026 contracts use one internal reader. Native naming, selector and documentation ambiguities are recorded rather than replaced with inferred values. Passed 3,322 offline tests, including 422 new Property cases, and a Release build with zero warnings/errors. Native COM and engineering qualification remain pending; 179 active Property mappings remain to be implemented. The parked Load work and prepared distribution archive are unchanged. See [Property usage](Property-Porting.md). The local 1.0.0-preview.ci.2026102303 validation archive passed isolated restore/build/runtime verification with all 492 selected XML examples, including all 50 new Property examples. No public publication is requested.
 
