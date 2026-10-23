@@ -1,5 +1,19 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261023 - 23 October 2026 (prepared preview)
+
+This preview includes the completed main-interface Geometry and Load ports and the first 15 typed Output queries, alongside the reviewed Root APIs and approved wrapper surface.
+
+- Completed all 143 reference Geometry overloads, including physical-member identification, plan-angle grouping and bounded polygon meshing.
+- Completed all 115 main-interface Load signatures, exposed through 120 managed overloads including five conveniences. Included wind and seismic configuration, response-spectrum requests, direct-analysis definitions, population readers and related typed parameter models.
+- Added 15 Output observations for analysis/buckling availability, node displacements, support reactions, local member-end actions, static checks, seven plate-center result operations and member design section/utilization. Results use named status/data classes and immutable payloads, with strict native-response validation and expanded interface/adapter/model IntelliSense.
+- Corrected Load coverage terminology: 56 documented native entry points lack direct/delegated calls, but one capability has an existing alternative and one is derivable. Four have partial coverage and 50 have no managed equivalent found. This release does not add those broader native operations.
+- Updated packaged usage, installation and publishing guidance. Retained 53 common Root operations, three optional Root operations and the approved wrapper bindings. Seven remaining domain adapters retain placeholder APIs.
+
+Release verification covers a Release solution build, **2,259 offline tests**, and isolated PackageReference installation with compilation/execution of **340 selected XML examples** against managed stand-ins, including all 30 new Output examples. Package verification checks metadata, target assets, XML documentation and shipped guides. These checks do not invoke a native STAAD model or certify live marshaling, result units or engineering accuracy.
+
+Targets Windows and .NET Framework 4.8.1 (net481). The archive contains no .NET Core/.NET 8 library asset. Live native compatibility and engineering qualification remain pending; 45 documented Output mappings and additional Load scopes remain separate work. This entry describes a locally prepared preview, not a new public NuGet.org publication.
+
 ### Unreleased source development — 23 October 2026
 
 Implemented 15 typed Output queries for analysis/buckling availability, nodal displacement, support reactions, local member-end forces, static checks, seven plate-center result families and member design section/ratio observations. Added named status/data results, immutable owned payloads, strict native flags and buffer validation, documented design sentinel outcomes, binding-lifetime guards and complete interface/adapter/model IntelliSense. Reused source component conventions and existing force models without modifying the private source project or wrapper. Passed 2,259 offline tests, including 74 new Output cases, and a Release build with zero warnings/errors. Compiled and executed all 30 new Output XML examples against managed native stand-ins.

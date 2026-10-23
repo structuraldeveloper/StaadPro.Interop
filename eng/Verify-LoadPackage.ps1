@@ -24,6 +24,8 @@ try {
     $geometryGuide = Read-PackageEntry 'docs/Geometry-Porting.md'
     $loadPorting = Read-PackageEntry 'docs/Load-Porting.md'
     $rootPorting = Read-PackageEntry 'docs/Root-Porting.md'
+    $outputPorting = Read-PackageEntry 'docs/Output-Porting.md'
+    if ($outputPorting -notmatch 'GetAnalysisResultAvailability' -or $readme -notmatch '15 typed') { throw 'Missing packaged Output guidance.' }
     if ($installation -notmatch 'net481' -or $publishing -notmatch 'nuget.org') { throw 'Incomplete installation/publishing guides.' }
     $installationCode = [regex]::Match($installation, '(?s)```csharp\s*\r?\n(.*?)```').Groups[1].Value
     if ([string]::IsNullOrWhiteSpace($installationCode)) { throw 'Missing installation C# example.' }
@@ -168,7 +170,23 @@ try {
         }
     }
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
-    if ($snippets.Count -ne 310) { throw "Expected 310 packaged XML examples; found $($snippets.Count)." }
+    if ($snippets.Count -ne 310) { throw "Expected 310 existing packaged XML examples; found $($snippets.Count)." }
+    $outputSnippets = @()
+    $newLine = [Environment]::NewLine
+    foreach ($owner in @('Adapters.Interfaces.IOSOutput', 'Adapters.Models.OSOutputAdapter')) {
+        $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+        if ($entries.Count -ne 15) { throw "Expected 15 documented Output queries for $owner." }
+        foreach ($entry in $entries) {
+            foreach ($tag in @('summary', 'returns', 'remarks', 'example/code')) {
+                $node = $entry.SelectSingleNode($tag)
+                if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $($entry.name)" }
+            }
+            $binding = if ($owner.EndsWith('IOSOutput')) { 'IOSOutput output = wrapper.Output;' } else { 'var output = new StaadPro.Interop.Adapters.Models.OSOutputAdapter(wrapper);' }
+            $example = $entry.SelectSingleNode('example/code').InnerText.Replace('wrapper.Output.', 'output.')
+            $outputSnippets += 'using (var wrapper = new OpenStaadWrapper(new FakeOutputRoot())) {' + $newLine + $binding + $newLine + $example + $newLine + '}'
+        }
+    }
+    if ($outputSnippets.Count -ne 30) { throw 'Expected 30 Output XML examples.' }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -410,12 +428,71 @@ public static class Program
             Check(typeof(IOSGeometry).GetMethod("SegregateMembersByConnectivity").GetParameters()[1].DefaultValue.Equals(MemberConnectivityScope.EndpointsOnly), "member default scope");
             Check(typeof(IOSGeometry).GetMethod("SegregatePlatesByConnectivity").GetParameters()[1].DefaultValue.Equals(PlateConnectivityScope.SharedEdge), "plate default scope");
         }
-        Console.WriteLine("PASS: 310 packaged XML examples and complete geometry/load/root IntelliSense.");
+        RunOutputDocumentationExamples();
+        using (var wrapper = new OpenStaadWrapper(new FakeOutputRoot()))
+        {
+            var output = wrapper.Output;
+            Check(typeof(IOSOutput).GetMethods().Count(m => !m.IsSpecialName) == 15, "installed Output query count");
+            Check(output.GetMemberEndForces(17, MemberEnd.Start, 1).Data.Fx == 1.25, "installed local end actions");
+            Check(output.GetPlateCenterPrincipalStressesAndAnglesEx(17, 1).Data.AngleBottom == 2.25, "installed split principal buffers");
+            var native = (FakeOutput)(object)wrapper.RawOutput;
+            native.Available = false;
+            var unavailable = output.GetAnalysisResultAvailability();
+            Check(unavailable.IsSuccessful && !unavailable.Data, "false availability remains successful data");
+            native.Status = false;
+            var failure = output.GetNodeDisplacements(17, 1);
+            Check(!failure.IsSuccessful, "native false remains retrieval failure");
+            bool blocked = false;
+            try { var ignored = failure.Data; } catch (InvalidOperationException) { blocked = true; }
+            Check(blocked, "failed result exposes no data");
+        }
+        Console.WriteLine("PASS: 340 packaged XML examples and Geometry/Load/Root/Output IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
     {
 __EXAMPLES__
+    }
+    private static void RunOutputDocumentationExamples()
+    {
+__OUTPUT_EXAMPLES__
+    }
+    public sealed class FakeOutputRoot
+    {
+        public object Geometry => null;
+        public object Load => null;
+        public FakeOutput Output { get; } = new FakeOutput();
+    }
+    public sealed class FakeOutput
+    {
+        public bool Status = true, Available = true;
+        private bool Fill(ref object values)
+        {
+            var array = values as double[];
+            if (array == null) throw new Exception("Expected Double Output buffer.");
+            for (int i = 0; i < array.Length; i++) array[i] = i + 1.25;
+            return Status;
+        }
+        public bool AreResultsAvailable() => Available;
+        public int IsBucklingAnalysisResultsAvailable() => Available ? 1 : 0;
+        public bool GetNodeDisplacements(int id, int load, ref object values) => Fill(ref values);
+        public bool GetSupportReactions(int id, int load, ref object values) => Fill(ref values);
+        public bool GetMemberEndForces(int id, int end, int load, ref object values, int global)
+        { if (global != 0) throw new Exception("Expected local end actions."); return Fill(ref values); }
+        public bool GetStaticCheckResult(int load, ref object forces, ref object reactions)
+        { Fill(ref forces); return Fill(ref reactions); }
+        public bool GetAllPlateCenterStressesAndMoments(int id, int load, ref object values) => Fill(ref values);
+        public bool GetAllPlateCenterForces(int id, int load, ref object values) => Fill(ref values);
+        public bool GetAllPlateCenterMoments(int id, int load, ref object values) => Fill(ref values);
+        public bool GetAllPlateCenterPrincipalStressesAndAngles(int id, int load, ref object values) => Fill(ref values);
+        public bool GetAllPlateCenterPrincipalStressesAndAnglesEx(int id, int load, ref object stresses, ref object angles)
+        { Fill(ref stresses); return Fill(ref angles); }
+        public bool GetPlateCenterNormalPrincipalStresses(int id, int load, ref object maximumTop, ref object minimumTop, ref object maximumBottom, ref object minimumBottom)
+        { maximumTop = 1.25; minimumTop = 2.25; maximumBottom = 3.25; minimumBottom = 4.25; return Status; }
+        public bool GetPlateCenterVonMisesStresses(int id, int load, ref object top, ref object bottom)
+        { top = 1.25; bottom = 2.25; return Status; }
+        public string GetMemberDesignSectionName(int id) => "UC 305x305";
+        public bool GetMemberSteelDesignRatio(int id, ref object ratio) { ratio = 1.25; return Status; }
     }
     public class FakeRoot
     {
@@ -571,6 +648,7 @@ __EXAMPLES__
 }
 '@
 $program = $program.Replace('__EXAMPLES__', ($snippets -join "`n"))
+$program = $program.Replace('__OUTPUT_EXAMPLES__', ($outputSnippets -join [Environment]::NewLine))
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'NuGet.Config'), $config)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Consumer.csproj'), $project)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Program.cs'), $program)

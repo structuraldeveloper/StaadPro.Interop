@@ -12,17 +12,15 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Current source additions
+## Prepared preview: 1.0.0-preview.20261023
 
-Implemented the first 15 typed [Output queries](docs/Output-Porting.md), covering analysis/buckling availability, nodal displacements, reactions, local member-end actions, static checks, seven plate-center operations and member design section/ratio observations. Added status/data results, immutable payloads, native validation, complete XML contracts and regression tests. Rechecked Load: all 115 main-interface reference overloads are present in its 120 exposed overloads, with no reference port pending. These additions are not included in the published preview.
+Prepared a local Windows/.NET Framework 4.8.1 preview containing **143 reference Geometry overloads**, **120 Load overloads** (all 115 main-interface signatures plus five conveniences), **15 typed Output queries**, 53 common Root operations and three optional Root operations. The approved wrapper surface is included. The seven remaining domain adapters retain placeholder APIs.
 
-Completed all 143 reference Geometry overloads with `IdentifyPhysicalMembers`, `GroupPhysicalMembersByPlanAngle` and `GeneratePolygonMesh`. Added source models, managed services, detailed XML contracts and regression tests. The approved wrapper surface remains complete; its remaining domain APIs are separate work, with the first 15 Output queries now implemented. These additions are not included in the published preview below. See [Geometry completion and usage](docs/Geometry-Porting.md#completed-managed-geometry-operations).
+Output covers availability, displacement, reactions, local member-end forces, static checks, plate-center results and member design observations with named status/data results and complete XML IntelliSense. See [Output usage](docs/Output-Porting.md), [Geometry contracts](docs/Geometry-Porting.md) and [Load contracts](docs/Load-Porting.md).
 
-Added the next 12 reference Load overloads: uniform member-load population, nodal refresh and basic wind definition/exposure/intensity/deletion. That earlier increment exposed 90 overloads (85 reference mappings and five convenience overloads), with 30 then pending. These are source additions after the published preview. See [Load coverage and contracts](docs/Load-Porting.md).
+The [Load semantic audit](docs/reports/OpenSTAAD-Load-Managed-Capability-Audit.md) distinguishes unused native entry points from missing capabilities: one alternative, one derived capability, four partial overlaps and 50 absent operations among the 56 undispatched names. These broader Load scopes and 45 documented Output mappings remain pending.
 
-Added the next 15 reference Load overloads for typed ASCE wind configuration/profile calculations and seismic definition, parameter and weight operations. These include AddWindDefinitionASCE7Parameters, ComputeWallWindPressureProfile, ComputeWallWindPressureProfileASCE72016, AddSeismicDefinition, ModifySeismicDefinitionParam, ModifySeismicDefinitionParams, AddSeismicDefSelfWeight, AddSeismicDefJointWeight and AddSeismicDefMemberWeight. Reused source parameter models, added complete XML contracts and guarded examples, and validated native argument packets, statuses and acquired-profile seismic restrictions. That earlier increment exposed 105 overloads (100 reference mappings plus five conveniences), with 15 then pending. These additions are not included in the published preview. See [Load contracts and progress](docs/Load-Porting.md#asce-wind-and-seismic-definitions).
-
-Completed the final 15 reference Load overloads: AddSeismicDefMemberWeight, AddSeismicDefMemberUniformWeight, AddSeismicDefMemberConcentratedWeight, AddSeismicDefWallArea, AddResponseSpectrumLoadEx, AddDirectAnalysisDefinitionParameter, AddDirectAnalysisFlexParameter, AddDirectAnalysisAxialParameter, DeleteDirectAnalysisDefinitionParameter, DeleteDirectAnalysisDefinition, AddRSLoad. This completes all 115 main-interface reference signatures; source IOSLoad and OSLoadAdapter each expose 120 overloads including five conveniences, with no reference overload pending. Added spectrum/direct-analysis/wall models, full XML IntelliSense and validation of native packets, statuses, units and precision boundaries. These additions are not included in the published preview. See [Load reference completion and contracts](docs/Load-Porting.md#load-reference-completion).
+Release validation covers **2,259 offline tests** and **340 installed-package XML examples** against managed stand-ins. Live native marshaling, units and engineering qualification remain pending. The archive is prepared locally; this build does not publish a new version to NuGet.org. See [release notes](docs/Release-Notes.md) and [local installation](docs/Installation.md#install-the-prepared-archive-through-a-local-feed) for distribution details.
 
 ## Output comparison and planned work
 
@@ -186,7 +184,7 @@ StaadPro.Interop/
 
 ## Building and Testing
 
-The current source adapters expose all 143 reference geometry methods and 90 load overloads. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
+The current source adapters expose all 143 reference Geometry methods, 120 Load overloads and 15 typed Output queries. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
 
 The Root port maps all 39 reviewed native functions and all 23 private-source Root methods through 53 common operations and three optional capability operations. Access them through `wrapper.Root`; see [root porting progress and examples](docs/Root-Porting.md).
 
@@ -198,8 +196,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261015 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261015.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261023 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261023.nupkg
 ```
 
 ---

@@ -5,9 +5,13 @@
 **Scope:** All linked Load help sections installed with STAAD.Pro 2024, 2025 and 2026; the current managed Load surface and delegated entity implementations; the read-only main-project reference; and passive inspection of the installed 2025/2026 vendor interop assemblies.
 **Status:** Original comparison and architecture proposals, with current reference-overload implementation status updated below. The full proposed architecture is not yet implemented.
 
+## Managed capability audit — 23 October 2026
+
+The **56 native names without dispatch are not 56 missing managed features**. A semantic review found **one covered alternative** (primary creation), **one derived capability** (combination membership), **four partial overlaps**, and **50 native operations without an implemented managed equivalent**. Consequently 54 native contracts still have outstanding scope, but they do not necessarily require 54 separate public methods. No production code changed in this audit. See the [complete managed capability audit](OpenSTAAD-Load-Managed-Capability-Audit.md) for all 56 dispositions, source evidence and a revised proposed next 15.
+
 ## Current implementation update — 22 October 2026
 
-Completed the final 15 private-main-interface reference overloads. IOSLoad and OSLoadAdapter now each expose **120 method overloads: all 115 reference signatures plus five repository conveniences**, with **zero reference interface overloads pending**. Current native dispatch coverage is **73 of 129 documented names**: 67 direct adapter targets plus six delegated member-load mutations. **56 native names** remain without a current dispatch.
+Completed the final 15 private-main-interface reference overloads. IOSLoad and OSLoadAdapter now each expose **120 method overloads: all 115 reference signatures plus five repository conveniences**, with **zero reference interface overloads pending**. Current native dispatch coverage is **73 of 129 documented names**: 67 direct adapter targets plus six delegated member-load mutations. **56 native names** remain without a current dispatch; the semantic audit above separates these from missing managed capabilities.
 
 The latest implementation completes member-weight conveniences, wall-area input, both spectrum APIs and direct-analysis definition creation/deletion. Reused source models/enums and checked snapshots, status handling and Single conversion. Wall-area code 15, definition codes, member-weight codes and the two spectrum-modal domains remain explicitly separate. Native-layout ambiguities are recorded in the [completion guide](../Load-Porting.md#load-reference-completion).
 
@@ -35,6 +39,8 @@ Use shared implementations for unchanged operations and narrow internal policies
 | Additional native names reached through member-load ApplyTo implementations | 6 |
 | Documented native names with either dispatch form | 73 |
 | Documented native names without either dispatch form | 56 |
+| Of those: covered alternative / derived capability | 1 / 1 |
+| Of those: partial scope / no managed equivalent | 4 / 50 |
 | Methods in each inspected 2025/2026 IOSLoadUI | 132 |
 | Metadata-only methods outside the traversed help inventory | 3 |
 | Current main-project reference IOSLoad overloads | 115 |
@@ -524,6 +530,8 @@ sequenceDiagram
 | Void native return | Report invocation evidence honestly; do not fabricate a native success code. |
 
 ## 10. Implementation sequence and approval checkpoints
+
+The phase counts below remain counts of unused native names, not feature gaps. The [semantic audit](OpenSTAAD-Load-Managed-Capability-Audit.md) supersedes treating every L5–L7 row as a mandatory new API: L5 has one covered alternative, one derived capability, one partial overlap and 21 absent operations; L6 has three partial overlaps and 17 absent operations; all 12 L7 entries remain absent. Complete the approved missing scopes rather than duplicating existing creation/composition APIs.
 
 The sequence below retains the original review workstreams. The completed reference-overload port dispatches all native targets in L2, L3 and L4. Broader result/capability architecture and remaining native targets are pending; the current update is described above.
 

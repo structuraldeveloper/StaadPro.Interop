@@ -6,13 +6,17 @@
 
 This annex supports the [Load multi-version architecture and plan](OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md). It inventories every detailed Load function from the installed 2024/2025/2026 help and distinguishes current native dispatches from planned additions.
 
+## Managed capability audit — 23 October 2026
+
+The **56 native names without dispatch are not 56 missing managed features**. A semantic review found **one covered alternative** (primary creation), **one derived capability** (combination membership), **four partial overlaps**, and **50 native operations without an implemented managed equivalent**. Consequently 54 native contracts still have outstanding scope, but they do not necessarily require 54 separate public methods. No production code changed in this audit. See the [complete managed capability audit](OpenSTAAD-Load-Managed-Capability-Audit.md) for all 56 dispositions, source evidence and a revised proposed next 15.
+
 ## 1. Complete documented native inventory
 
 There are **129 distinct native functions in each year**, all with detailed entries. The native summary and detailed declarations match across product years after formatting normalization. Parameter identifiers can differ between a summary, a detailed prototype, its parameter table and vendor interop metadata; those differences are preserved rather than treated as additional overloads.
 
 Each entry includes the common native declaration, positional parameters, documented directions, inspected 2025/2026 CLR shape, return/error information and current source callers. C++ FAR/const reference notation must not be mechanically translated into public C# ref parameters. IsIn/IsOut flags in inspected metadata are often both false; Object& still records a CLR by-reference parameter.
 
-**D:** direct adapter dispatch. **E:** member-load entity dispatch reached through AddMemberLoad. **N:** neither. The 73 dispatch-covered names include unresolved shape/status concerns described in the primary report. The remaining 56 N entries include a proposed managed signature and a function-specific implementation consideration; these signatures are design proposals, not compiled APIs. All named request/result classes in those proposals that are absent today are pending.
+**D:** direct adapter dispatch. **E:** member-load entity dispatch reached through AddMemberLoad. **N:** neither exact dispatch form; it does not by itself mean a missing managed capability. The 73 dispatch-covered names include unresolved shape/status concerns described in the primary report. The remaining 56 N entries include historical proposed managed signatures and function-specific considerations; the semantic audit identifies alternatives/compositions that should not be duplicated solely for native-name coverage, and these signatures are design proposals, not compiled APIs. All named request/result classes in those proposals that are absent today are pending.
 
 Return tables below preserve functional error labels and short native explanations. A missing return table does not imply void: some entries describe the return in prose. Follow the linked reference and the declared return type. Native counts, IDs, Boolean values and zero/one success codes must not share a universal converter.
 
@@ -119,6 +123,8 @@ LoadOperationResult AddResponseSpectrumLoad(ResponseSpectrumLoadParameters param
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___load_group.html#gaa4ef18bf50db77e41cc496a915955be4) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___load_group.html#gaa4ef18bf50db77e41cc496a915955be4) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___load_group.html#gaa4ef18bf50db77e41cc496a915955be4)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+
+**Managed capability:** Absent. No implementation transfers/splits load definitions when a member is split. Geometry splitting and ordinary member-load assignment are not equivalent.
 
 ```cpp
 VARIANT OSLoadUI::SplitLoadsOnBeam(
@@ -247,6 +253,8 @@ VARIANT OSLoadUI::CreateLoadEnvelop(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
 
+**Managed capability:** Absent. Envelope creation and membership read-back exist; adding members to an existing envelope is not implemented. Recreating an envelope is not a verified equivalent.
+
 ```cpp
 VARIANT OSLoadUI::AddLoadCasesToEnvelop(
     const VARIANT FAR&varEnvNo,
@@ -285,6 +293,8 @@ LoadOperationResult AddCasesToEnvelope(int envelopeId, IEnumerable<int> loadCase
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
 
+**Managed capability:** Absent. No removal of selected members from an existing envelope. Creation/read-back cannot establish safe in-place removal.
+
 ```cpp
 VARIANT OSLoadUI::RemoveLoadCasesFromEnvelop(
     const VARIANT FAR&varEnvNo,
@@ -322,6 +332,8 @@ LoadOperationResult RemoveCasesFromEnvelope(int envelopeId, IEnumerable<int> loa
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_enve.html#ga1ae3d8ba1801dbf2b3e85dff88948d05) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_enve.html#ga1ae3d8ba1801dbf2b3e85dff88948d05) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_enve.html#ga1ae3d8ba1801dbf2b3e85dff88948d05)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. No deletion of an existing envelope.
 
 ```cpp
 VARIANT OSLoadUI::DeleteLoadEnvelop(
@@ -1589,6 +1601,8 @@ VARIANT OSLoadUI::GetLoadAndFactorForCombination(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
 
+**Managed capability:** Derived capability. GetAllLoadCombinationCases().Any(c => c.Id == targetId), or GetLoadCase(targetId, LoadCaseType.LoadCombination) != null, answers combination membership from a fresh native inventory. A dedicated predicate/status-result API is absent, but the user capability exists.
+
 ```cpp
 VARIANT OSLoadUI::IsCombinationCase(
     long nLoadCase
@@ -1624,6 +1638,8 @@ LoadQueryResult<bool> IsCombinationCase(int loadCaseId);
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_comb.html#ga0c6fba1b5eca1c912d70b36cbcac5763) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_comb.html#ga0c6fba1b5eca1c912d70b36cbcac5763) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_comb.html#ga0c6fba1b5eca1c912d70b36cbcac5763)
 
 **Comparison:** Status. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. CreateLoadCombinations consumes caller-supplied definitions/factors. It does not generate code/category-based automatic combinations or return their generated IDs.
 
 ```cpp
 VARIANT OSLoadUI::AddAutoLoadCombinations(
@@ -1672,6 +1688,8 @@ AutoCombinationResult CreateAutomaticCombinations(AutoCombinationRequest request
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_comb.html#gab0a905a41051c3ae5c0d1d6e0586f544) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_comb.html#gab0a905a41051c3ae5c0d1d6e0586f544) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_comb.html#gab0a905a41051c3ae5c0d1d6e0586f544)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. AddRepeatLoadsTo consumes caller-supplied factors; EditorLoadCombination title helpers only format text. Neither performs native automatic repeat-load generation.
 
 ```cpp
 VARIANT OSLoadUI::AddAutoCombinationRepeat(
@@ -1780,6 +1798,8 @@ VARIANT OSLoadUI::GetPrimaryLoadCaseNumbers(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
 
+**Managed capability:** Covered alternative. Primary creation is implemented by CreateNewPrimaryLoad overloads using native Ex/Ex2, and by CreateNewLoadCase routing on CaseType. The unused title-only native entry point is an alternative, not a missing creation capability. Default classification and exact native status behavior are not asserted identical.
+
 ```cpp
 VARIANT OSLoadUI::CreateNewPrimaryLoad(
     const VARIANT FAR&varPrimaryLoadTitle
@@ -1815,6 +1835,8 @@ LoadCaseCreationResult CreatePrimaryLoad(string title);
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga0333e9a3b2b913fe2bd20a70807dd917) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga0333e9a3b2b913fe2bd20a70807dd917) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga0333e9a3b2b913fe2bd20a70807dd917)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. SetLoadCaseActive changes activation; it does not read current activation. OpenStaadWrapper has no active-load property.
 
 ```cpp
 VARIANT OSLoadUI::GetActiveLoad();
@@ -1873,6 +1895,8 @@ VARIANT OSLoadUI::GetLoadCaseTitle(
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga80c30f8628faf5a95ae2058d3dc7da91) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga80c30f8628faf5a95ae2058d3dc7da91) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga80c30f8628faf5a95ae2058d3dc7da91)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. LoadCase.Type is managed metadata; setting it does not update an existing native case. Creation-time type selection is not reclassification.
 
 ```cpp
 VARIANT OSLoadUI::SetLoadType(
@@ -2031,6 +2055,8 @@ VARIANT OSLoadUI::CreateLoadList(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
 
+**Managed capability:** Absent. CreateLoadList exists; there is no reader for the number of native LOAD LIST records. Envelope count is a different inventory.
+
 ```cpp
 VARIANT OSLoadUI::GetLoadListCount();
 ```
@@ -2057,6 +2083,8 @@ LoadQueryResult<int> GetLoadListCount();
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#gabd66e32af1113e62601c497524654d9b) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#gabd66e32af1113e62601c497524654d9b) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#gabd66e32af1113e62601c497524654d9b)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. No count reader for a native load-list index. Envelope member counts refer to envelopes, not LOAD LIST records.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadCountInLoadList(
@@ -2089,6 +2117,8 @@ LoadQueryResult<int> GetLoadListCaseCount(int loadListIndex);
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga43ded5daa43065693c67f76dad7f022c) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga43ded5daa43065693c67f76dad7f022c) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga43ded5daa43065693c67f76dad7f022c)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. No reader for a native LOAD LIST record. GetLoadEnvelopeDetail reads envelope membership, a different object.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadsInLoadList(
@@ -2128,6 +2158,8 @@ LoadQueryResult<IEnumerable<LoadCaseIdentity>> GetLoadListCases(int loadListInde
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
 
+**Managed capability:** Absent. No native load-list deletion. Creating another list is not a verified deletion contract.
+
 ```cpp
 VARIANT OSLoadUI::DeleteLoadList(
     const VARIANT FAR&varLoadListIndex
@@ -2162,6 +2194,8 @@ LoadOperationResult DeleteLoadList(int loadListIndex);
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga7946c813af9dd0c7427730474355b9c6) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga7946c813af9dd0c7427730474355b9c6) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga7946c813af9dd0c7427730474355b9c6)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. No ASD attribute mutation on an existing native load case.
 
 ```cpp
 long OSLoadUI::SetASDLoadAttribute(
@@ -2204,6 +2238,8 @@ LoadOperationResult SetAllowableStressAttribute(int loadCaseId, LoadStrengthType
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
 
+**Managed capability:** Absent. No LSD attribute mutation on an existing native load case.
+
 ```cpp
 long OSLoadUI::SetLSDLoadAttribute(
     long nLoadCase
@@ -2238,6 +2274,8 @@ LoadOperationResult SetLimitStateAttribute(int loadCaseId);
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga9110cacabbaba9bc87e54fa1774885f3) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga9110cacabbaba9bc87e54fa1774885f3) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga9110cacabbaba9bc87e54fa1774885f3)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. No native load-attribute removal.
 
 ```cpp
 long OSLoadUI::RemoveAttribute(
@@ -2274,6 +2312,8 @@ LoadOperationResult RemoveLoadAttribute(int loadCaseId);
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
 
+**Managed capability:** Absent. No native load-attribute reader. The help documents 0/-1 status without a usable attribute payload, so result semantics require clarification before implementation.
+
 ```cpp
 long OSLoadUI::GetAttribute(
     long lLoadCase
@@ -2309,6 +2349,8 @@ LoadQueryResult<LoadAttributeInfo> GetLoadAttribute(int loadCaseId);
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
 
+**Managed capability:** Absent. No generic count of native commands by command-kind code in the active case. Per-entity loads and grouped definitions cannot reliably reconstruct command multiplicity.
+
 ```cpp
 long OSLoadUI::GetLoadTypeCount(
     int loadType
@@ -2343,6 +2385,8 @@ LoadQueryResult<int> GetLoadCommandCount(NativeLoadCommandKind commandKind);
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga8e2b9d3639488a9442eb4c4d1ec21e87) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga8e2b9d3639488a9442eb4c4d1ec21e87) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga8e2b9d3639488a9442eb4c4d1ec21e87)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. No assignment count for the original native command-kind/index. Grouped entity counts lose native command identity.
 
 ```cpp
 long OSLoadUI::GetListSizeForLoadType(
@@ -2380,6 +2424,8 @@ LoadQueryResult<int> GetAssignedEntityCount(NativeLoadCommandKind commandKind, i
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga35276014d19da32994c0adf4ab3e53eb) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga35276014d19da32994c0adf4ab3e53eb) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga35276014d19da32994c0adf4ab3e53eb)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Partial. GetNodalLoadsGroupedByLoadCase and GetMemberLoadsGroupedByLoadCase reconstruct definition/entity buckets for supplied nodes/beams and supported families. They require an entity scope and do not preserve native command identity, order or a general command-type/index assignment list.
 
 ```cpp
 VARIANT OSLoadUI::GetAssignmentListForLoadType(
@@ -2422,6 +2468,8 @@ LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(NativeLoadCommandKind com
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
 
+**Managed capability:** Absent. ClearPrimaryLoadCase/ClearPrimaryLoadCases remove load items; they do not implement deletion of the case definitions. The native deletion entry point also accepts a reference-family flag.
+
 ```cpp
 VARIANT OSLoadUI::DeletePrimaryLoadCases(
     const VARIANT FAR&varPrimaryLoadCaseNos,
@@ -2461,6 +2509,8 @@ LoadOperationResult DeleteLoadCases(LoadCaseFamily family, IEnumerable<int> load
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga68d5bc5d7bbf772281bdec969832dd00) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga68d5bc5d7bbf772281bdec969832dd00) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga68d5bc5d7bbf772281bdec969832dd00)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. ClearReferenceLoadCase/ClearReferenceLoadCases clear items; they do not implement reference-case definition deletion. A future shared managed deletion API may cover both native deletion alternatives.
 
 ```cpp
 VARIANT OSLoadUI::DeleteReferenceLoadCases(
@@ -2599,6 +2649,8 @@ VARIANT OSLoadUI::CreateNewPrimaryLoadEx2(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
 
+**Managed capability:** Absent. No generic count of original load items in a specified case; counting typed per-entity results can duplicate or omit original commands.
+
 ```cpp
 VARIANT OSLoadUI::GetLoadItemsCount(
     long nLoadCaseNo
@@ -2632,6 +2684,8 @@ LoadQueryResult<int> GetLoadItemCount(int loadCaseId);
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_operation.html#ga90d695c8921e1e5eeb570ba37e1744fd) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_operation.html#ga90d695c8921e1e5eeb570ba37e1744fd) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_operation.html#ga90d695c8921e1e5eeb570ba37e1744fd)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L5.
+
+**Managed capability:** Absent. LoadItemType is a coarser managed classification of known objects. It does not query the original native item code at a case/index, and cannot replace this native table.
 
 ```cpp
 VARIANT OSLoadUI::GetLoadItemType(
@@ -2671,6 +2725,8 @@ LoadQueryResult<NativeLoadItemKind> GetLoadItemKind(int loadCaseId, int loadItem
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_self_weight.html#gac54227b07c765ba1cb94fb1d1f4271af) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_self_weight.html#gac54227b07c765ba1cb94fb1d1f4271af) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_self_weight.html#gac54227b07c765ba1cb94fb1d1f4271af)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+
+**Managed capability:** Partial. AddSelfweightInXYZTo already applies self-weight to explicit beam/plate/solid IDs. Geometry inventories can supply current IDs, but no integrated whole-model self-weight operation exists; an explicit list does not establish identical whole-model command scope or future-geometry behavior.
 
 ```cpp
 VARIANT OSLoadUI::AddSelfWeightInXYZ(
@@ -2909,6 +2965,8 @@ VARIANT OSLoadUI::GetNodalLoads(
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_nodal.html#ga53757ae693de6e733c1d842becdfccd9) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_nodal.html#ga53757ae693de6e733c1d842becdfccd9) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_nodal.html#ga53757ae693de6e733c1d842becdfccd9)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+
+**Managed capability:** Partial. GetNodalLoads reads six force/moment components per supplied node; PopulateNodalLoads and grouping helpers also exist. They do not select or preserve the original native load-command index.
 
 ```cpp
 VARIANT OSLoadUI::GetNodalLoadInfo(
@@ -3206,6 +3264,8 @@ VARIANT OSLoadUI::AddMemberTrapezoidal(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
 
+**Managed capability:** Absent. No built-in area-load assignment. Existing member uniform-force definitions have different engineering dimensions/semantics.
+
 ```cpp
 VARIANT OSLoadUI::AddMemberAreaLoad(
     const VARIANT FAR&varBeamNo,
@@ -3243,6 +3303,8 @@ LoadOperationResult AddMemberAreaLoad(LoadCaseIdentity targetCase, IEnumerable<i
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_mem.html#gaaf4468c2960776a1a18df2d7df79340b) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_mem.html#gaaf4468c2960776a1a18df2d7df79340b) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_mem.html#gaaf4468c2960776a1a18df2d7df79340b)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+
+**Managed capability:** Absent. No built-in fixed-end member-load definition or assignment. End actions in Output are results, not load assignments.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberFixedEnd(
@@ -3722,6 +3784,8 @@ VARIANT OSLoadUI::GetConcMoments(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
 
+**Managed capability:** Partial. Six typed per-member readers and population/grouping helpers already return supported member force/moment definitions and positions. They do not expose the original generic command-index lookup or every native command family.
+
 ```cpp
 VARIANT OSLoadUI::GetMemberLoadInfo(
     const VARIANT FAR&varloadIndex,
@@ -3824,6 +3888,8 @@ VARIANT OSLoadUI::AddElementPressure(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
 
+**Managed capability:** Absent. No plate hydrostatic pressure definition/assignment. Uniform plate pressure and seismic member weights do not provide this operation.
+
 ```cpp
 VARIANT OSLoadUI::AddElementHydrostaticPressure(
     const VARIANT FAR&varPlateNo,
@@ -3872,6 +3938,8 @@ LoadOperationResult AddHydrostaticPressure(LoadCaseIdentity targetCase, IEnumera
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_ele.html#ga829edeccde827aef75e1d8fb8e297cdf) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_ele.html#ga829edeccde827aef75e1d8fb8e297cdf) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_ele.html#ga829edeccde827aef75e1d8fb8e297cdf)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+
+**Managed capability:** Absent. AddPlateUniformPressure implements uniform pressure, not a varying/corner-pressure definition. The uniform special case does not cover this contract.
 
 ```cpp
 VARIANT OSLoadUI::AddElementTrapPressureEx(
@@ -3928,6 +3996,8 @@ LoadOperationResult AddTrapezoidalPressure(LoadCaseIdentity targetCase, IEnumera
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
 
+**Managed capability:** Absent. No plate-pressure load count reader. AddPlateUniformPressure is a write operation; plate Output stress queries are analysis results.
+
 ```cpp
 VARIANT OSLoadUI::GetElementPressureLoadCount(
     const VARIANT FAR&varPlateNo
@@ -3962,6 +4032,8 @@ LoadQueryResult<int> GetPlatePressureLoadCount(LoadCaseIdentity targetCase, int 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_ele.html#ga29a49308a9a4be3345a5dde809ccd6cf) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_ele.html#ga29a49308a9a4be3345a5dde809ccd6cf) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_ele.html#ga29a49308a9a4be3345a5dde809ccd6cf)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+
+**Managed capability:** Absent. No plate-pressure definition read-back, including direction, pressure and local rectangle coordinates.
 
 ```cpp
 VARIANT OSLoadUI::GetElementPressureLoads(
@@ -4016,6 +4088,8 @@ LoadQueryResult<IEnumerable<PlatePressureLoad>> GetPlatePressureLoads(LoadCaseId
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
 
+**Managed capability:** Absent. No plate concentrated-load count reader.
+
 ```cpp
 VARIANT OSLoadUI::GetElementConcLoadCount(
     const VARIANT FAR&varPlateNo
@@ -4050,6 +4124,8 @@ LoadQueryResult<int> GetPlateConcentratedLoadCount(LoadCaseIdentity targetCase, 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_ele.html#ga68a485fc7281ecf5e60ce93672d6445d) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_ele.html#ga68a485fc7281ecf5e60ce93672d6445d) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_ele.html#ga68a485fc7281ecf5e60ce93672d6445d)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+
+**Managed capability:** Absent. No plate concentrated-load definition reader.
 
 ```cpp
 VARIANT OSLoadUI::GetElementConcLoads(
@@ -4098,6 +4174,8 @@ LoadQueryResult<IEnumerable<PlateConcentratedLoad>> GetPlateConcentratedLoads(Lo
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
 
+**Managed capability:** Absent. No element load-command index reader. Plate geometry and Output results do not supply applied load-command definitions.
+
 ```cpp
 VARIANT OSLoadUI::GetElementLoadInfo(
     const VARIANT FAR&varloadIndex,
@@ -4144,6 +4222,8 @@ LoadQueryResult<PlateLoadCommandInfo> GetPlateLoadCommand(LoadCaseIdentity targe
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_floor.html#gad8d2365f154d84c6ac48bf733b3a41fd) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_floor.html#gad8d2365f154d84c6ac48bf733b3a41fd) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_floor.html#gad8d2365f154d84c6ac48bf733b3a41fd)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+
+**Managed capability:** Absent. No automatic floor-panel discovery/distribution assignment. A caller manually generating member loads is not an implemented floor-load operation.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberFloorLoad(
@@ -4201,6 +4281,8 @@ LoadOperationResult AddFloorLoad(LoadCaseIdentity targetCase, FloorLoadDefinitio
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
 
+**Managed capability:** Absent. No floor-region beam count service matching this native operation. Geometry inventories do not by themselves implement floor-region semantics.
+
 ```cpp
 VARIANT OSLoadUI::GetBeamCountAtFloor(
     const VARIANT FAR&fMinX,
@@ -4250,6 +4332,8 @@ LoadQueryResult<int> GetFloorBeamCount(FloorRegion region);
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_floor.html#gaba0ac897a60241ed8a3a8e00506e5bed) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_floor.html#gaba0ac897a60241ed8a3a8e00506e5bed) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_floor.html#gaba0ac897a60241ed8a3a8e00506e5bed)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+
+**Managed capability:** Absent. No floor influence-area calculation returning beam/area associations.
 
 ```cpp
 VARIANT OSLoadUI::GetInfluenceArea(
@@ -4311,6 +4395,8 @@ LoadQueryResult<IEnumerable<BeamInfluenceArea>> GetFloorInfluenceAreas(FloorRegi
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_floor.html#gae4dbae2a1476dc8b9105842bd568fb67) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_floor.html#gae4dbae2a1476dc8b9105842bd568fb67) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_floor.html#gae4dbae2a1476dc8b9105842bd568fb67)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+
+**Managed capability:** Absent. No range/group/one-way floor-load request or assignment. A future common floor-load API can cover overlapping legacy and extended cases.
 
 ```cpp
 VARIANT OSLoadUI::AddMemberFloorLoadEx(
@@ -4414,6 +4500,8 @@ VARIANT OSLoadUI::AddTemperatureLoad(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
 
+**Managed capability:** Absent. No strain-load assignment. AddAxialThermalGradientTo uses AddTemperatureLoad and is not strain loading.
+
 ```cpp
 VARIANT OSLoadUI::AddStrainLoad(
     const VARIANT FAR&varElementNo,
@@ -4454,6 +4542,8 @@ LoadOperationResult AddStrainLoad(LoadCaseIdentity targetCase, IEnumerable<int> 
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
 
+**Managed capability:** Absent. Seismic definition/weight APIs and LoadType.SeismicH/SeismicV metadata exist; no seismic-load application to a case is implemented.
+
 ```cpp
 VARIANT OSLoadUI::AddSeismicLoad(
     const VARIANT FAR&varDirection,
@@ -4492,6 +4582,8 @@ LoadOperationResult AddSeismicLoad(LoadCaseIdentity targetCase, SeismicLoadDirec
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_seismic.html#gafe4f103eedc99ab92900eb5342952e6f) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_seismic.html#gafe4f103eedc99ab92900eb5342952e6f) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_seismic.html#gafe4f103eedc99ab92900eb5342952e6f)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+
+**Managed capability:** Absent. No dynamic-load inclusion query. Case classification alone does not identify actual dynamic commands.
 
 ```cpp
 VARIANT OSLoadUI::IsDynamicLoadIncluded(
@@ -4534,6 +4626,8 @@ No native function declarations occur in this reviewed grouping page. Subgroups,
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_wind.html#gaa9ed8f688a0b105d17f3540581472685) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_wind.html#gaa9ed8f688a0b105d17f3540581472685) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_wind.html#gaa9ed8f688a0b105d17f3540581472685)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L6.
+
+**Managed capability:** Absent. Wind definition, exposure, intensity and profile computations exist; applying a wind-load command to a case is not implemented.
 
 ```cpp
 VARIANT OSLoadUI::AddWindLoad(
@@ -4630,6 +4724,8 @@ VARIANT OSLoadUI::AddRepeatLoad(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
 
+**Managed capability:** Absent. No notional-load assignment. Repeat/reference factor APIs do not add direction-bearing notional contributions.
+
 ```cpp
 long OSLoadUI::AddNotionalLoad(
     const VARIANT FAR&varPrimaryLoadCaseList,
@@ -4701,6 +4797,8 @@ No native parameters.
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
 
+**Managed capability:** Absent. GetRepeatLoadCases discovers cases containing repeat commands; it does not return the number of contributions in a particular repeat command.
+
 ```cpp
 long OSLoadUI::GetNoLoadFactorInRepeatLoad(
     long nIndex
@@ -4735,6 +4833,8 @@ LoadQueryResult<int> GetRepeatContributionCount(LoadCaseIdentity targetCase, int
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga823d0f1628893bee6ab495c46bffcfe7) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga823d0f1628893bee6ab495c46bffcfe7) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga823d0f1628893bee6ab495c46bffcfe7)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+
+**Managed capability:** Absent. No read-back of case-ID/factor contributions by repeat-command index. AddRepeatLoadsTo writes contributions and does not read existing definitions.
 
 ```cpp
 long OSLoadUI::GetRepeatLoadByIndex(
@@ -4777,6 +4877,8 @@ LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(Load
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
 
+**Managed capability:** Absent. No count of notional-load commands in the active case.
+
 ```cpp
 long OSLoadUI::GetNotionalLoadCount();
 ```
@@ -4803,6 +4905,8 @@ LoadQueryResult<int> GetNotionalItemCount(LoadCaseIdentity targetCase);
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga6a4ecff14aed8f0398fed83ab7781e9e) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga6a4ecff14aed8f0398fed83ab7781e9e) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga6a4ecff14aed8f0398fed83ab7781e9e)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+
+**Managed capability:** Absent. No count of contributions for a notional-command index.
 
 ```cpp
 long OSLoadUI::GetNoLoadFactorDirectionInNotionalLoad(
@@ -4838,6 +4942,8 @@ LoadQueryResult<int> GetNotionalContributionCount(LoadCaseIdentity targetCase, i
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#gad309996311f49a218df37558d7ad7cb8) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#gad309996311f49a218df37558d7ad7cb8) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#gad309996311f49a218df37558d7ad7cb8)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+
+**Managed capability:** Absent. No indexed notional case-ID/factor/direction reader.
 
 ```cpp
 long OSLoadUI::GetNotionalLoadByIndex(
@@ -4917,6 +5023,8 @@ long OSLoadUI::AddReferenceLoad(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
 
+**Managed capability:** Absent. GetAllReferenceLoadCases enumerates reference definitions via GetReferenceLoadCaseCount; it does not count reference-load command items in an active case.
+
 ```cpp
 long OSLoadUI::GetReferenceLoadCount();
 ```
@@ -4943,6 +5051,8 @@ LoadQueryResult<int> GetReferenceItemCount(LoadCaseIdentity targetCase);
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga121e0d6b8f66e0ed27aed4ebdf73d67c) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga121e0d6b8f66e0ed27aed4ebdf73d67c) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga121e0d6b8f66e0ed27aed4ebdf73d67c)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+
+**Managed capability:** Absent. No contribution count for a reference-load command index.
 
 ```cpp
 long OSLoadUI::GetNoOfSetsInReferenceLoad(
@@ -4978,6 +5088,8 @@ LoadQueryResult<int> GetReferenceContributionCount(LoadCaseIdentity targetCase, 
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#gaa32d2d60d54563abc19c9be826990e3a) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#gaa32d2d60d54563abc19c9be826990e3a) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#gaa32d2d60d54563abc19c9be826990e3a)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+
+**Managed capability:** Absent. No indexed reference case-ID/factor reader. AddReferenceLoadsTo is a write operation.
 
 ```cpp
 long OSLoadUI::GetReferenceLoadByIndex(
@@ -5079,6 +5191,8 @@ VARIANT OSLoadUI::GetReferenceLoadCaseTitle(
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
 
+**Managed capability:** Absent. No managed merge lifecycle or bounded merge operation. Duplicate-assignment grouping helpers do not merge native beam loads.
+
 ```cpp
 void OSLoadUI::BeginLoadMerging();
 ```
@@ -5102,6 +5216,8 @@ LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests);
 [2024 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_load_repeat.html#ga07b273284cfdb265a5fae76d7631155f) · [2025 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_load_repeat.html#ga07b273284cfdb265a5fae76d7631155f) · [2026 reference](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_load_repeat.html#ga07b273284cfdb265a5fae76d7631155f)
 
 **Comparison:** Common. **Coverage:** N — no current production dispatch; planned phase L7.
+
+**Managed capability:** Absent. No paired native merge cleanup. A future managed merge operation should own both begin/end calls rather than expose two unrelated user obligations.
 
 ```cpp
 void OSLoadUI::EndLoadMerging();

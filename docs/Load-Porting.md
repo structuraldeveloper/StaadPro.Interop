@@ -1,10 +1,14 @@
 # Load API porting and new assignments
 
+## Managed capability audit — 23 October 2026
+
+The 56 undispatched native names are not 56 missing features. Semantic review found one existing creation alternative, one derived combination-membership capability, four partial overlaps and 50 operations without a managed equivalent. See the [complete semantic audit](reports/OpenSTAAD-Load-Managed-Capability-Audit.md) before selecting new work; 54 native contracts have outstanding scope, without implying 54 separate public methods. No functions were added for this review.
+
 ## Reference porting audit — 23 October 2026
 
 Reparsed the strictly read-only main IOSLoad/OSLoadAdapter and the current interface/adapter. All **115 main-interface signatures** are present in both current types, which each expose **120 overloads**. No main-interface port is pending and no NotImplementedException or executable placeholder was found in the Load adapter. Existing NotSupportedException paths describe documented family, profile or representation restrictions, rather than unimplemented stubs.
 
-The full offline regression suite was run with the new Output work. No Load implementation changes were necessary. The separate vendor inventory still has **56 documented native names without dispatch**, plus three metadata-only candidates. Those are broader native API expansion and contract-discovery work, not missing main-project overloads; they remain listed in the cross-version plan.
+The full offline regression suite was run with the new Output work. No Load implementation changes were necessary. The separate vendor inventory still has **56 documented native names without dispatch**, plus three metadata-only candidates. These require semantic disposition before API expansion, not a blanket implementation backlog; they are not missing main-project overloads. The semantic audit above records the corrected disposition.
 
 The private main project’s reference `IOSLoad` contains 115 method overloads. This repository now exposes 120: 115 matching reference overloads plus five repository-specific convenience overloads. There are no main-interface reference overloads pending. Counts treat overloads separately and compare both interface and adapter method signatures.
 

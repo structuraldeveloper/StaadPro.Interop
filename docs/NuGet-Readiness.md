@@ -1,5 +1,15 @@
 # NuGet readiness assessment
 
+## Prepared preview — 23 October 2026
+
+Prepared **1.0.0-preview.20261023** for Windows/.NET Framework 4.8.1. The archive includes 143 reference Geometry overloads, 120 Load overloads (all 115 main-interface reference signatures plus five conveniences), 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper surface. Seven other domain APIs remain placeholders.
+
+Verification covers a Release build with zero warnings/errors, **2,259 offline tests**, and an isolated PackageReference-only consumer that restores the exact local archive and compiles/executes **340 XML examples** against managed native stand-ins. The archive and verification evidence are under `artifacts/release`. This is a locally prepared preview; this task does not upload or establish public availability of the new version.
+
+The corrected [Load semantic audit](reports/OpenSTAAD-Load-Managed-Capability-Audit.md) records one existing alternative, one derived capability, four partial overlaps and 50 absent operations among the 56 native names without dispatch. Those broader scopes and 45 documented Output mappings remain pending. Live COM marshaling, native result units, engineering accuracy and advertised-build qualification remain release gates. This package has no .NET Core/.NET 8 library asset.
+
+## Earlier source updates (historical)
+
 The final 15 Load reference overloads are now ported. Current source exposes 120 overloads (115 main-interface reference plus five convenience), with no reference overload pending. Passed 2,185 offline tests; the reusable verifier selects 310 XML examples. No new archive was built or published, and live native compatibility/engineering checks remain required. See [Load reference completion](Load-Porting.md#load-reference-completion).
 
 The preceding Load increment ported another 15 reference overloads for typed ASCE wind and seismic operations. That earlier increment exposed 105 overloads (100 reference plus five convenience), with 15 reference overloads pending. The source suite passed 2,024 offline tests; the verifier now selects 280 XML examples. No new package was built or published; native marshaling/engineering validation remains a release gate. See [Load contracts](Load-Porting.md#asce-wind-and-seismic-definitions).

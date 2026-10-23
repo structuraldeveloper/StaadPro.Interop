@@ -33466,337 +33466,449 @@
       "nativeName": "SplitLoadsOnBeam",
       "phase": "L7",
       "signature": "LoadOperationResult SplitLoadsOnBeam(int originalBeamId, int newBeamId)",
-      "considerations": "Verify beam topology and native splitting semantics; do not assume a geometry split and a load split are atomic."
+      "considerations": "Verify beam topology and native splitting semantics; do not assume a geometry split and a load split are atomic.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "AddLoadCasesToEnvelop",
       "phase": "L5",
       "signature": "LoadOperationResult AddCasesToEnvelope(int envelopeId, IEnumerable<int> loadCaseIds)",
-      "considerations": "Validate positive IDs; preserve membership order; native 1 means success."
+      "considerations": "Validate positive IDs; preserve membership order; native 1 means success.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "RemoveLoadCasesFromEnvelop",
       "phase": "L5",
       "signature": "LoadOperationResult RemoveCasesFromEnvelope(int envelopeId, IEnumerable<int> loadCaseIds)",
-      "considerations": "Do not silently interpret empty input as removing all members."
+      "considerations": "Do not silently interpret empty input as removing all members.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "DeleteLoadEnvelop",
       "phase": "L5",
       "signature": "LoadOperationResult DeleteEnvelope(int envelopeId)",
-      "considerations": "Document destructive scope and dependency failures; no implicit save."
+      "considerations": "Document destructive scope and dependency failures; no implicit save.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "IsCombinationCase",
       "phase": "L5",
       "signature": "LoadQueryResult<bool> IsCombinationCase(int loadCaseId)",
-      "considerations": "Distinguish 1=true, 0=false and -1=error; false is valid data."
+      "considerations": "Distinguish 1=true, 0=false and -1=error; false is valid data.",
+      "managedCapability": "Derived capability",
+      "implementationDisposition": "Already derivable; a dedicated predicate is optional"
     },
     {
       "nativeName": "AddAutoLoadCombinations",
       "phase": "L5",
       "signature": "AutoCombinationResult CreateAutomaticCombinations(AutoCombinationRequest request)",
-      "considerations": "Return requested and actual start IDs; interpret 2024 versus 2025/2026 status tables separately; snapshot supplied case IDs."
+      "considerations": "Return requested and actual start IDs; interpret 2024 versus 2025/2026 status tables separately; snapshot supplied case IDs.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "AddAutoCombinationRepeat",
       "phase": "L5",
       "signature": "AutoRepeatCombinationResult CreateAutomaticRepeatLoads(AutoRepeatCombinationRequest request)",
-      "considerations": "Return actual start ID and generated count from native by-reference slots; explicit all-cases selection because null/empty means all."
+      "considerations": "Return actual start ID and generated count from native by-reference slots; explicit all-cases selection because null/empty means all.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "CreateNewPrimaryLoad",
       "phase": "L5",
       "signature": "LoadCaseCreationResult CreatePrimaryLoad(string title)",
-      "considerations": "Optional simple form; existing typed Ex/Ex2 wrappers already cover richer creation. Preserve returned ID and native failure distinctions."
+      "considerations": "Optional simple form; existing typed Ex/Ex2 wrappers already cover richer creation. Preserve returned ID and native failure distinctions.",
+      "managedCapability": "Covered alternative",
+      "implementationDisposition": "Already available; do not duplicate for native-name coverage"
     },
     {
       "nativeName": "GetActiveLoad",
       "phase": "L5",
       "signature": "LoadQueryResult<LoadCaseIdentity> GetActiveLoadCase()",
-      "considerations": "Represent absent/invalid state distinctly; do not assume primary/reference numbers identify a unique family."
+      "considerations": "Represent absent/invalid state distinctly; do not assume primary/reference numbers identify a unique family.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "SetLoadType",
       "phase": "L5",
       "signature": "LoadOperationResult SetLoadType(IEnumerable<int> loadCaseIds, LoadType loadType)",
-      "considerations": "Reuse semantic LoadType only after native code verification; do not change case-family classification."
+      "considerations": "Reuse semantic LoadType only after native code verification; do not change case-family classification.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetLoadListCount",
       "phase": "L5",
       "signature": "LoadQueryResult<int> GetLoadListCount()",
-      "considerations": "Nonnegative count; -1 is failure, not an empty list."
+      "considerations": "Nonnegative count; -1 is failure, not an empty list.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetLoadCountInLoadList",
       "phase": "L5",
       "signature": "LoadQueryResult<int> GetLoadListCaseCount(int loadListIndex)",
-      "considerations": "Index base and invalid-index behavior need live corroboration; do not assume a positive case ID."
+      "considerations": "Index base and invalid-index behavior need live corroboration; do not assume a positive case ID.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetLoadsInLoadList",
       "phase": "L5",
       "signature": "LoadQueryResult<IEnumerable<LoadCaseIdentity>> GetLoadListCases(int loadListIndex)",
-      "considerations": "Use count/fetch under serialized session access; metadata exposes a by-reference output despite const in the C++ help declaration."
+      "considerations": "Use count/fetch under serialized session access; metadata exposes a by-reference output despite const in the C++ help declaration.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "DeleteLoadList",
       "phase": "L5",
       "signature": "LoadOperationResult DeleteLoadList(int loadListIndex)",
-      "considerations": "List index is not an envelope ID or case ID; native zero means success."
+      "considerations": "List index is not an envelope ID or case ID; native zero means success.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "SetASDLoadAttribute",
       "phase": "L5",
       "signature": "LoadOperationResult SetAllowableStressAttribute(int loadCaseId, LoadStrengthType strengthType, bool increaseAllowableStress)",
-      "considerations": "Use dedicated strength enum after values are checked against metadata/help."
+      "considerations": "Use dedicated strength enum after values are checked against metadata/help.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "SetLSDLoadAttribute",
       "phase": "L5",
       "signature": "LoadOperationResult SetLimitStateAttribute(int loadCaseId)",
-      "considerations": "Native zero success; avoid implicit changes to model design code."
+      "considerations": "Native zero success; avoid implicit changes to model design code.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "RemoveAttribute",
       "phase": "L5",
       "signature": "LoadOperationResult RemoveLoadAttribute(int loadCaseId)",
-      "considerations": "Explicit attribute removal only."
+      "considerations": "Explicit attribute removal only.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetAttribute",
       "phase": "L5",
       "signature": "LoadQueryResult<LoadAttributeInfo> GetLoadAttribute(int loadCaseId)",
-      "considerations": "Release blocked until result meaning is established: help documents status 0/-1 without explaining an attribute payload."
+      "considerations": "Release blocked until result meaning is established: help documents status 0/-1 without explaining an attribute payload.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetLoadTypeCount",
       "phase": "L5",
       "signature": "LoadQueryResult<int> GetLoadCommandCount(NativeLoadCommandKind commandKind)",
-      "considerations": "Command kind is distinct from case LoadType; zero can be a valid count."
+      "considerations": "Command kind is distinct from case LoadType; zero can be a valid count.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetListSizeForLoadType",
       "phase": "L5",
       "signature": "LoadQueryResult<int> GetAssignedEntityCount(NativeLoadCommandKind commandKind, int commandIndex)",
-      "considerations": "Validate index base independently and retain active-case binding."
+      "considerations": "Validate index base independently and retain active-case binding.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetAssignmentListForLoadType",
       "phase": "L5",
       "signature": "LoadQueryResult<IEnumerable<int>> GetAssignedEntityIds(NativeLoadCommandKind commandKind, int commandIndex)",
-      "considerations": "Return independent IDs plus count/status interpretation; validate initialized buffer slots."
+      "considerations": "Return independent IDs plus count/status interpretation; validate initialized buffer slots.",
+      "managedCapability": "Partial",
+      "implementationDisposition": "Implement only the remaining distinct native scope"
     },
     {
       "nativeName": "DeletePrimaryLoadCases",
       "phase": "L5",
       "signature": "LoadOperationResult DeleteLoadCases(LoadCaseFamily family, IEnumerable<int> loadCaseIds)",
-      "considerations": "Use explicit family selection; expose primary/reference scope without an unexplained Boolean flag."
+      "considerations": "Use explicit family selection; expose primary/reference scope without an unexplained Boolean flag.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "DeleteReferenceLoadCases",
       "phase": "L5",
       "signature": "LoadOperationResult DeleteReferenceLoadCases(IEnumerable<int> loadCaseIds)",
-      "considerations": "Separate deletion from existing clear-content APIs; reject accidental destructive defaults."
+      "considerations": "Separate deletion from existing clear-content APIs; reject accidental destructive defaults.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetLoadItemsCount",
       "phase": "L5",
       "signature": "LoadQueryResult<int> GetLoadItemCount(int loadCaseId)",
-      "considerations": "Distinguish zero items from -1 native failure."
+      "considerations": "Distinguish zero items from -1 native failure.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetLoadItemType",
       "phase": "L5",
       "signature": "LoadQueryResult<NativeLoadItemKind> GetLoadItemKind(int loadCaseId, int loadItemIndex)",
-      "considerations": "Zero-based index; retain unknown numeric codes. Existing LoadItemType is not this native table; code 3312 has two documented labels requiring disambiguation."
+      "considerations": "Zero-based index; retain unknown numeric codes. Existing LoadItemType is not this native table; code 3312 has two documented labels requiring disambiguation.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "AddSelfWeightInXYZ",
       "phase": "L6",
       "signature": "LoadOperationResult AddSelfWeight(LoadCaseIdentity targetCase, SelfWeightDirection direction, double factor)",
-      "considerations": "Whole-model operation; existing entity-scoped API is not identical. Check activation before assigning."
+      "considerations": "Whole-model operation; existing entity-scoped API is not identical. Check activation before assigning.",
+      "managedCapability": "Partial",
+      "implementationDisposition": "Implement only the remaining distinct native scope"
     },
     {
       "nativeName": "GetNodalLoadInfo",
       "phase": "L6",
       "signature": "LoadQueryResult<NodalLoadCommandInfo> GetNodalLoadCommand(LoadCaseIdentity targetCase, int loadItemIndex)",
-      "considerations": "Read node force/moment components into named fields; do not expose mutable by-reference arrays."
+      "considerations": "Read node force/moment components into named fields; do not expose mutable by-reference arrays.",
+      "managedCapability": "Partial",
+      "implementationDisposition": "Implement only the remaining distinct native scope"
     },
     {
       "nativeName": "AddMemberAreaLoad",
       "phase": "L6",
       "signature": "LoadOperationResult AddMemberAreaLoad(LoadCaseIdentity targetCase, IEnumerable<int> memberIds, double areaLoad)",
-      "considerations": "Preserve engineering quantity and current model units; validate active-case routing."
+      "considerations": "Preserve engineering quantity and current model units; validate active-case routing.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "AddMemberFixedEnd",
       "phase": "L6",
       "signature": "LoadOperationResult AddMemberFixedEndLoad(LoadCaseIdentity targetCase, IEnumerable<int> memberIds, FixedEndLoadDefinition definition)",
-      "considerations": "Use named start/end force and moment components with verified array ordering."
+      "considerations": "Use named start/end force and moment components with verified array ordering.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetMemberLoadInfo",
       "phase": "L6",
       "signature": "LoadQueryResult<MemberLoadCommandInfo> GetMemberLoadCommand(LoadCaseIdentity targetCase, int loadItemIndex)",
-      "considerations": "Return direction, forces and distances as typed definition data; not an entity assignment query."
+      "considerations": "Return direction, forces and distances as typed definition data; not an entity assignment query.",
+      "managedCapability": "Partial",
+      "implementationDisposition": "Implement only the remaining distinct native scope"
     },
     {
       "nativeName": "AddElementHydrostaticPressure",
       "phase": "L6",
       "signature": "LoadOperationResult AddHydrostaticPressure(LoadCaseIdentity targetCase, IEnumerable<int> plateIds, HydrostaticPressureDefinition definition)",
-      "considerations": "Separate pressure direction from interpolation direction and preserve min/max units."
+      "considerations": "Separate pressure direction from interpolation direction and preserve min/max units.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "AddElementTrapPressureEx",
       "phase": "L6",
       "signature": "LoadOperationResult AddTrapezoidalPressure(LoadCaseIdentity targetCase, IEnumerable<int> plateIds, TrapezoidalPressureDefinition definition)",
-      "considerations": "Validate variation/corner-pressure layout without flattening semantically different directions."
+      "considerations": "Validate variation/corner-pressure layout without flattening semantically different directions.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetElementPressureLoadCount",
       "phase": "L6",
       "signature": "LoadQueryResult<int> GetPlatePressureLoadCount(LoadCaseIdentity targetCase, int plateId)",
-      "considerations": "Count and fetch require the same active case; existing AddPlateUniformPressure is a separate mutation."
+      "considerations": "Count and fetch require the same active case; existing AddPlateUniformPressure is a separate mutation.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetElementPressureLoads",
       "phase": "L6",
       "signature": "LoadQueryResult<IEnumerable<PlatePressureLoad>> GetPlatePressureLoads(LoadCaseIdentity targetCase, int plateId)",
-      "considerations": "Return named pressure/rectangle coordinates with exact buffer counts, lower-bound handling and finite data."
+      "considerations": "Return named pressure/rectangle coordinates with exact buffer counts, lower-bound handling and finite data.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetElementConcLoadCount",
       "phase": "L6",
       "signature": "LoadQueryResult<int> GetPlateConcentratedLoadCount(LoadCaseIdentity targetCase, int plateId)",
-      "considerations": "Valid zero count returns successful empty query data through the paired reader."
+      "considerations": "Valid zero count returns successful empty query data through the paired reader.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetElementConcLoads",
       "phase": "L6",
       "signature": "LoadQueryResult<IEnumerable<PlateConcentratedLoad>> GetPlateConcentratedLoads(LoadCaseIdentity targetCase, int plateId)",
-      "considerations": "Map direction, magnitude and local coordinates to named records."
+      "considerations": "Map direction, magnitude and local coordinates to named records.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetElementLoadInfo",
       "phase": "L6",
       "signature": "LoadQueryResult<PlateLoadCommandInfo> GetPlateLoadCommand(LoadCaseIdentity targetCase, int loadItemIndex)",
-      "considerations": "Manual supports ElementLoadPressure only and requires selected load case; do not advertise all element commands."
+      "considerations": "Manual supports ElementLoadPressure only and requires selected load case; do not advertise all element commands.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "AddMemberFloorLoad",
       "phase": "L6",
       "signature": "LoadOperationResult AddFloorLoad(LoadCaseIdentity targetCase, FloorLoadDefinition definition)",
-      "considerations": "Check documented direction/range restrictions and engineering axes before wrapping legacy form."
+      "considerations": "Check documented direction/range restrictions and engineering axes before wrapping legacy form.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetBeamCountAtFloor",
       "phase": "L6",
       "signature": "LoadQueryResult<int> GetFloorBeamCount(FloorRegion region)",
-      "considerations": "Range direction 1/2/3 is a different enum from force direction; finite ordered coordinate bounds."
+      "considerations": "Range direction 1/2/3 is a different enum from force direction; finite ordered coordinate bounds.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetInfluenceArea",
       "phase": "L6",
       "signature": "LoadQueryResult<IEnumerable<BeamInfluenceArea>> GetFloorInfluenceAreas(FloorRegion region)",
-      "considerations": "Count/fetch consistent region; return beam-ID/area associations, not two unpaired sequences."
+      "considerations": "Count/fetch consistent region; return beam-ID/area associations, not two unpaired sequences.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "AddMemberFloorLoadEx",
       "phase": "L6",
       "signature": "LoadOperationResult AddFloorLoad(LoadCaseIdentity targetCase, ExtendedFloorLoadDefinition definition)",
-      "considerations": "Discriminate coordinate-range, group and one-way modes in the request model."
+      "considerations": "Discriminate coordinate-range, group and one-way modes in the request model.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "AddStrainLoad",
       "phase": "L6",
       "signature": "LoadOperationResult AddStrainLoad(LoadCaseIdentity targetCase, IEnumerable<int> elementIds, double axialElongation)",
-      "considerations": "Check element types and dimensional meaning from native technical reference before deciding units conversion."
+      "considerations": "Check element types and dimensional meaning from native technical reference before deciding units conversion.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "AddSeismicLoad",
       "phase": "L6",
       "signature": "LoadOperationResult AddSeismicLoad(LoadCaseIdentity targetCase, SeismicLoadDirection direction, double factor)",
-      "considerations": "Use native seismic direction domain; zero success and -8001 invalid direction."
+      "considerations": "Use native seismic direction domain; zero success and -8001 invalid direction.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "IsDynamicLoadIncluded",
       "phase": "L6",
       "signature": "LoadQueryResult<bool> ContainsDynamicLoad(int loadCaseId)",
-      "considerations": "1=true, 0=false and -1=error; negative code must never become true."
+      "considerations": "1=true, 0=false and -1=error; negative code must never become true.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "AddWindLoad",
       "phase": "L6",
       "signature": "LoadOperationResult AddWindLoad(LoadCaseIdentity targetCase, WindLoadDefinition definition)",
-      "considerations": "Definition ID, direction, factor, structure flag and ranges belong in a typed request; no automatic case/definition creation."
+      "considerations": "Definition ID, direction, factor, structure flag and ranges belong in a typed request; no automatic case/definition creation.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "AddNotionalLoad",
       "phase": "L7",
       "signature": "LoadOperationResult AddNotionalLoad(LoadCaseIdentity targetCase, IEnumerable<NotionalLoadContribution> contributions)",
-      "considerations": "Keep primary and reference families separate; one record carries ID, factor and direction."
+      "considerations": "Keep primary and reference families separate; one record carries ID, factor and direction.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetNoLoadFactorInRepeatLoad",
       "phase": "L7",
       "signature": "LoadQueryResult<int> GetRepeatContributionCount(LoadCaseIdentity targetCase, int repeatItemIndex)",
-      "considerations": "Command index is not a load-case ID; use required index base from contract/live evidence."
+      "considerations": "Command index is not a load-case ID; use required index base from contract/live evidence.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetRepeatLoadByIndex",
       "phase": "L7",
       "signature": "LoadQueryResult<IEnumerable<LoadFactorContribution>> GetRepeatContributions(LoadCaseIdentity targetCase, int repeatItemIndex)",
-      "considerations": "Pre-size zero-indexed arrays using the paired count; preserve order and duplicate entries."
+      "considerations": "Pre-size zero-indexed arrays using the paired count; preserve order and duplicate entries.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetNotionalLoadCount",
       "phase": "L7",
       "signature": "LoadQueryResult<int> GetNotionalItemCount(LoadCaseIdentity targetCase)",
-      "considerations": "Active-case item count, distinct from case-family discovery."
+      "considerations": "Active-case item count, distinct from case-family discovery.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetNoLoadFactorDirectionInNotionalLoad",
       "phase": "L7",
       "signature": "LoadQueryResult<int> GetNotionalContributionCount(LoadCaseIdentity targetCase, int notionalItemIndex)",
-      "considerations": "Count accompanies IDs, factors and directions in the paired fetch."
+      "considerations": "Count accompanies IDs, factors and directions in the paired fetch.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetNotionalLoadByIndex",
       "phase": "L7",
       "signature": "LoadQueryResult<IEnumerable<NotionalLoadContribution>> GetNotionalContributions(LoadCaseIdentity targetCase, int notionalItemIndex)",
-      "considerations": "Validate equal output lengths and native direction codes."
+      "considerations": "Validate equal output lengths and native direction codes.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetReferenceLoadCount",
       "phase": "L7",
       "signature": "LoadQueryResult<int> GetReferenceItemCount(LoadCaseIdentity targetCase)",
-      "considerations": "Counts reference commands inside active case; existing GetReferenceLoadCaseCount counts definitions and is not equivalent."
+      "considerations": "Counts reference commands inside active case; existing GetReferenceLoadCaseCount counts definitions and is not equivalent.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetNoOfSetsInReferenceLoad",
       "phase": "L7",
       "signature": "LoadQueryResult<int> GetReferenceContributionCount(LoadCaseIdentity targetCase, int referenceItemIndex)",
-      "considerations": "Distinguish command index and referenced case number."
+      "considerations": "Distinguish command index and referenced case number.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "GetReferenceLoadByIndex",
       "phase": "L7",
       "signature": "LoadQueryResult<IEnumerable<LoadFactorContribution>> GetReferenceContributions(LoadCaseIdentity targetCase, int referenceItemIndex)",
-      "considerations": "Return original order/factors and explicit reference family; validate native count result."
+      "considerations": "Return original order/factors and explicit reference family; validate native count result.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "BeginLoadMerging",
       "phase": "L7",
       "signature": "LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests)",
-      "considerations": "Expose a bounded managed operation rather than a user-maintained begin/end pair; void native call does not prove success."
+      "considerations": "Expose a bounded managed operation rather than a user-maintained begin/end pair; void native call does not prove success.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     },
     {
       "nativeName": "EndLoadMerging",
       "phase": "L7",
       "signature": "LoadOperationResult MergeBeamLoads(IEnumerable<BeamLoadMergeRequest> requests)",
-      "considerations": "Pair with BeginLoadMerging in try/finally on the same COM thread; preserve both body and cleanup failures."
+      "considerations": "Pair with BeginLoadMerging in try/finally on the same COM thread; preserve both body and cleanup failures.",
+      "managedCapability": "Absent",
+      "implementationDisposition": "Pending native capability; design may combine related entry points"
     }
   ],
   "baselineImplementation": {
@@ -33869,5 +33981,392 @@
     "remainingDocumentedNativeExpansion": 56,
     "remainingMetadataOnlyCandidates": 3,
     "codeChanged": false
+  },
+  "managedCapabilityAudit": {
+    "date": "2026-10-23",
+    "reviewedCommit": "60b47fa",
+    "scope": "The 56 documented native names without dispatch; managed adapters, helper services, entities, grouping extensions, wrapper and related Geometry/Root surfaces",
+    "classificationCounts": {
+      "coveredAlternative": 1,
+      "derivedCapability": 1,
+      "partial": 4,
+      "absent": 50,
+      "totalNativeNamesWithoutDispatch": 56,
+      "nativeContractsWithOutstandingScope": 54
+    },
+    "doesNotImplySeparatePublicMethods": true,
+    "productionCodeChanged": false,
+    "existingOfflineTestsPassed": 490,
+    "nativeRuntimeValidation": false,
+    "nugetBuilt": false,
+    "report": "docs/reports/OpenSTAAD-Load-Managed-Capability-Audit.md",
+    "sourceFingerprints": [
+      {
+        "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSLoad.cs",
+        "sha256": "e9ce0ec5fbd256760233633e9579a19f8d7a1d027728612e3868ce7973eda4e4"
+      },
+      {
+        "file": "src/StaadPro.Interop/Adapters/Models/OSLoadAdapter.cs",
+        "sha256": "d6f50b88bc7cf306cc9be7fd67d157d59cca574e9d007b909be87f0b132a23a9"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/OpenStaadWrapper.cs",
+        "sha256": "1c0b69fe545a379262ad70cb1d1f9c45de872aba92e6eb4df218441455628692"
+      },
+      {
+        "file": "src/StaadPro.Interop/Extensions/MemberLoadExtensions.cs",
+        "sha256": "f4ffc025550a48dbb324fa662d4133d3a3538b5f7973d91e7cae3a8f1afb1c15"
+      },
+      {
+        "file": "src/StaadPro.Interop/Extensions/NodalLoadExtensions.cs",
+        "sha256": "0a6c90c45da09f1bea9ddb6d0b38f4131b3087219d1922a1e68f7b4399107dea"
+      },
+      {
+        "file": "src/StaadPro.Interop/Entities/MemberLoad.cs",
+        "sha256": "db38da1f76ebe7ff9b770cf79647a2c8abb394c000648978fd6ab2c851a5ebf0"
+      },
+      {
+        "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSGeometry.cs",
+        "sha256": "a19e1dafa6c92994883e263e0c6efad487dcfab2cc4fe06dace5d355b4034afb"
+      }
+    ],
+    "functions": [
+      {
+        "nativeName": "SplitLoadsOnBeam",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "No implementation transfers/splits load definitions when a member is split. Geometry splitting and ordinary member-load assignment are not equivalent."
+      },
+      {
+        "nativeName": "AddLoadCasesToEnvelop",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "Envelope creation and membership read-back exist; adding members to an existing envelope is not implemented. Recreating an envelope is not a verified equivalent."
+      },
+      {
+        "nativeName": "RemoveLoadCasesFromEnvelop",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No removal of selected members from an existing envelope. Creation/read-back cannot establish safe in-place removal."
+      },
+      {
+        "nativeName": "DeleteLoadEnvelop",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No deletion of an existing envelope."
+      },
+      {
+        "nativeName": "IsCombinationCase",
+        "phase": "L5",
+        "status": "Derived capability",
+        "explanation": "GetAllLoadCombinationCases().Any(c => c.Id == targetId), or GetLoadCase(targetId, LoadCaseType.LoadCombination) != null, answers combination membership from a fresh native inventory. A dedicated predicate/status-result API is absent, but the user capability exists."
+      },
+      {
+        "nativeName": "AddAutoLoadCombinations",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "CreateLoadCombinations consumes caller-supplied definitions/factors. It does not generate code/category-based automatic combinations or return their generated IDs."
+      },
+      {
+        "nativeName": "AddAutoCombinationRepeat",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "AddRepeatLoadsTo consumes caller-supplied factors; EditorLoadCombination title helpers only format text. Neither performs native automatic repeat-load generation."
+      },
+      {
+        "nativeName": "CreateNewPrimaryLoad",
+        "phase": "L5",
+        "status": "Covered alternative",
+        "explanation": "Primary creation is implemented by CreateNewPrimaryLoad overloads using native Ex/Ex2, and by CreateNewLoadCase routing on CaseType. The unused title-only native entry point is an alternative, not a missing creation capability. Default classification and exact native status behavior are not asserted identical."
+      },
+      {
+        "nativeName": "GetActiveLoad",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "SetLoadCaseActive changes activation; it does not read current activation. OpenStaadWrapper has no active-load property."
+      },
+      {
+        "nativeName": "SetLoadType",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "LoadCase.Type is managed metadata; setting it does not update an existing native case. Creation-time type selection is not reclassification."
+      },
+      {
+        "nativeName": "GetLoadListCount",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "CreateLoadList exists; there is no reader for the number of native LOAD LIST records. Envelope count is a different inventory."
+      },
+      {
+        "nativeName": "GetLoadCountInLoadList",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No count reader for a native load-list index. Envelope member counts refer to envelopes, not LOAD LIST records."
+      },
+      {
+        "nativeName": "GetLoadsInLoadList",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No reader for a native LOAD LIST record. GetLoadEnvelopeDetail reads envelope membership, a different object."
+      },
+      {
+        "nativeName": "DeleteLoadList",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No native load-list deletion. Creating another list is not a verified deletion contract."
+      },
+      {
+        "nativeName": "SetASDLoadAttribute",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No ASD attribute mutation on an existing native load case."
+      },
+      {
+        "nativeName": "SetLSDLoadAttribute",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No LSD attribute mutation on an existing native load case."
+      },
+      {
+        "nativeName": "RemoveAttribute",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No native load-attribute removal."
+      },
+      {
+        "nativeName": "GetAttribute",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No native load-attribute reader. The help documents 0/-1 status without a usable attribute payload, so result semantics require clarification before implementation."
+      },
+      {
+        "nativeName": "GetLoadTypeCount",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No generic count of native commands by command-kind code in the active case. Per-entity loads and grouped definitions cannot reliably reconstruct command multiplicity."
+      },
+      {
+        "nativeName": "GetListSizeForLoadType",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No assignment count for the original native command-kind/index. Grouped entity counts lose native command identity."
+      },
+      {
+        "nativeName": "GetAssignmentListForLoadType",
+        "phase": "L5",
+        "status": "Partial",
+        "explanation": "GetNodalLoadsGroupedByLoadCase and GetMemberLoadsGroupedByLoadCase reconstruct definition/entity buckets for supplied nodes/beams and supported families. They require an entity scope and do not preserve native command identity, order or a general command-type/index assignment list."
+      },
+      {
+        "nativeName": "DeletePrimaryLoadCases",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "ClearPrimaryLoadCase/ClearPrimaryLoadCases remove load items; they do not implement deletion of the case definitions. The native deletion entry point also accepts a reference-family flag."
+      },
+      {
+        "nativeName": "DeleteReferenceLoadCases",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "ClearReferenceLoadCase/ClearReferenceLoadCases clear items; they do not implement reference-case definition deletion. A future shared managed deletion API may cover both native deletion alternatives."
+      },
+      {
+        "nativeName": "GetLoadItemsCount",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "No generic count of original load items in a specified case; counting typed per-entity results can duplicate or omit original commands."
+      },
+      {
+        "nativeName": "GetLoadItemType",
+        "phase": "L5",
+        "status": "Absent",
+        "explanation": "LoadItemType is a coarser managed classification of known objects. It does not query the original native item code at a case/index, and cannot replace this native table."
+      },
+      {
+        "nativeName": "AddSelfWeightInXYZ",
+        "phase": "L6",
+        "status": "Partial",
+        "explanation": "AddSelfweightInXYZTo already applies self-weight to explicit beam/plate/solid IDs. Geometry inventories can supply current IDs, but no integrated whole-model self-weight operation exists; an explicit list does not establish identical whole-model command scope or future-geometry behavior."
+      },
+      {
+        "nativeName": "GetNodalLoadInfo",
+        "phase": "L6",
+        "status": "Partial",
+        "explanation": "GetNodalLoads reads six force/moment components per supplied node; PopulateNodalLoads and grouping helpers also exist. They do not select or preserve the original native load-command index."
+      },
+      {
+        "nativeName": "AddMemberAreaLoad",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No built-in area-load assignment. Existing member uniform-force definitions have different engineering dimensions/semantics."
+      },
+      {
+        "nativeName": "AddMemberFixedEnd",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No built-in fixed-end member-load definition or assignment. End actions in Output are results, not load assignments."
+      },
+      {
+        "nativeName": "GetMemberLoadInfo",
+        "phase": "L6",
+        "status": "Partial",
+        "explanation": "Six typed per-member readers and population/grouping helpers already return supported member force/moment definitions and positions. They do not expose the original generic command-index lookup or every native command family."
+      },
+      {
+        "nativeName": "AddElementHydrostaticPressure",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No plate hydrostatic pressure definition/assignment. Uniform plate pressure and seismic member weights do not provide this operation."
+      },
+      {
+        "nativeName": "AddElementTrapPressureEx",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "AddPlateUniformPressure implements uniform pressure, not a varying/corner-pressure definition. The uniform special case does not cover this contract."
+      },
+      {
+        "nativeName": "GetElementPressureLoadCount",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No plate-pressure load count reader. AddPlateUniformPressure is a write operation; plate Output stress queries are analysis results."
+      },
+      {
+        "nativeName": "GetElementPressureLoads",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No plate-pressure definition read-back, including direction, pressure and local rectangle coordinates."
+      },
+      {
+        "nativeName": "GetElementConcLoadCount",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No plate concentrated-load count reader."
+      },
+      {
+        "nativeName": "GetElementConcLoads",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No plate concentrated-load definition reader."
+      },
+      {
+        "nativeName": "GetElementLoadInfo",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No element load-command index reader. Plate geometry and Output results do not supply applied load-command definitions."
+      },
+      {
+        "nativeName": "AddMemberFloorLoad",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No automatic floor-panel discovery/distribution assignment. A caller manually generating member loads is not an implemented floor-load operation."
+      },
+      {
+        "nativeName": "GetBeamCountAtFloor",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No floor-region beam count service matching this native operation. Geometry inventories do not by themselves implement floor-region semantics."
+      },
+      {
+        "nativeName": "GetInfluenceArea",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No floor influence-area calculation returning beam/area associations."
+      },
+      {
+        "nativeName": "AddMemberFloorLoadEx",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No range/group/one-way floor-load request or assignment. A future common floor-load API can cover overlapping legacy and extended cases."
+      },
+      {
+        "nativeName": "AddStrainLoad",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No strain-load assignment. AddAxialThermalGradientTo uses AddTemperatureLoad and is not strain loading."
+      },
+      {
+        "nativeName": "AddSeismicLoad",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "Seismic definition/weight APIs and LoadType.SeismicH/SeismicV metadata exist; no seismic-load application to a case is implemented."
+      },
+      {
+        "nativeName": "IsDynamicLoadIncluded",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "No dynamic-load inclusion query. Case classification alone does not identify actual dynamic commands."
+      },
+      {
+        "nativeName": "AddWindLoad",
+        "phase": "L6",
+        "status": "Absent",
+        "explanation": "Wind definition, exposure, intensity and profile computations exist; applying a wind-load command to a case is not implemented."
+      },
+      {
+        "nativeName": "AddNotionalLoad",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "No notional-load assignment. Repeat/reference factor APIs do not add direction-bearing notional contributions."
+      },
+      {
+        "nativeName": "GetNoLoadFactorInRepeatLoad",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "GetRepeatLoadCases discovers cases containing repeat commands; it does not return the number of contributions in a particular repeat command."
+      },
+      {
+        "nativeName": "GetRepeatLoadByIndex",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "No read-back of case-ID/factor contributions by repeat-command index. AddRepeatLoadsTo writes contributions and does not read existing definitions."
+      },
+      {
+        "nativeName": "GetNotionalLoadCount",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "No count of notional-load commands in the active case."
+      },
+      {
+        "nativeName": "GetNoLoadFactorDirectionInNotionalLoad",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "No count of contributions for a notional-command index."
+      },
+      {
+        "nativeName": "GetNotionalLoadByIndex",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "No indexed notional case-ID/factor/direction reader."
+      },
+      {
+        "nativeName": "GetReferenceLoadCount",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "GetAllReferenceLoadCases enumerates reference definitions via GetReferenceLoadCaseCount; it does not count reference-load command items in an active case."
+      },
+      {
+        "nativeName": "GetNoOfSetsInReferenceLoad",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "No contribution count for a reference-load command index."
+      },
+      {
+        "nativeName": "GetReferenceLoadByIndex",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "No indexed reference case-ID/factor reader. AddReferenceLoadsTo is a write operation."
+      },
+      {
+        "nativeName": "BeginLoadMerging",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "No managed merge lifecycle or bounded merge operation. Duplicate-assignment grouping helpers do not merge native beam loads."
+      },
+      {
+        "nativeName": "EndLoadMerging",
+        "phase": "L7",
+        "status": "Absent",
+        "explanation": "No paired native merge cleanup. A future managed merge operation should own both begin/end calls rather than expose two unrelated user obligations."
+      }
+    ]
   }
 }
