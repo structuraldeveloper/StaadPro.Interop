@@ -8,7 +8,11 @@ StaadPro.Interop provides typed adapters and managed models for working with an 
 
 This preview includes the completed reference Geometry and Load ports, 15 typed Output queries, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
 
-## Current source — Load expansion
+## Current source — Property foundations
+
+Implemented the first 25 typed Property queries for member and plate offsets, releases, section properties and material observations. Results use named status/data classes, existing MemberEnd and Vector3D types, owned collections and comparative XML IntelliSense. Shared 2024–2026 contracts use one internal reader. Native naming, selector and documentation ambiguities are recorded rather than replaced with inferred values. Passed 3,322 offline tests, including 422 new Property cases, and a Release build with zero warnings/errors. Native COM and engineering qualification remain pending; 179 active Property mappings remain to be implemented. The parked Load work and prepared distribution archive are unchanged. The packaged docs/Property-Porting.md guide explains all 25 methods and their alternatives. These APIs are included when this README is packaged from the current source, and are absent from the earlier prepared distribution archive.
+
+## Earlier source — Load expansion
 
 The current source includes 171 Load overloads, comprising all 115 main-reference signatures, five earlier conveniences, 15 inspection operations and 36 typed expansion methods. The expansion covers case/envelope/list mutations, automatic generation, new assignments, plate/floor and original-command readback, reference contributions and beam transfers, with comparative IntelliSense and 2,900 passing offline tests. GetLoadAttribute is status-only; MergeBeamLoads provides invocation evidence rather than certified success. The native and engineering qualification limits are described in the packaged docs/Load-Expansion.md guide. This source/validation update does not establish a new public distribution release.
 
@@ -30,7 +34,7 @@ Load exposes **120 overloads: all 115 main-interface signatures plus five conven
 
 Output provides **15 typed queries** for analysis/buckling result availability, node displacements, support reactions, local member-end forces, static checks, seven plate-center operations, member design section names and steel utilization ratios. Named status/data results preserve native units, documented failure/sentinel distinctions and immutable owned data. Inspect IsSuccessful before Data. These observations do not run analysis or establish result freshness. See the [Output guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Porting.md). Forty-five documented native Output mappings remain pending.
 
-The approved wrapper surface is complete. Property, Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders; their domain implementations are separate work.
+The approved wrapper surface is complete. The earlier prepared distribution archive retains Property as a placeholder; current source adds 25 typed Property queries as described above. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
 ## Requirements
 

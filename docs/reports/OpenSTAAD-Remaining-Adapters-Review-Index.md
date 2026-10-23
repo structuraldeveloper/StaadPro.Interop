@@ -12,7 +12,7 @@
 | Geometry | 135 / 135 / 135, including one deprecated summary | 143 | Reference parity complete; wider native and version-policy work remains. [Geometry plan](OpenSTAAD-Geometry-Multi-Version-Architecture-and-Plan.md) |
 | Load | 129 / 129 / 129 | 115 | Reference parity complete, with five additional conveniences; wider native coverage remains. [Load plan](OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md) |
 | Output | 59 / 60 / 60 | 86 | 15 native mappings implemented; 45 pending. [Output plan](OpenSTAAD-Output-Multi-Version-Architecture-and-Plan.md) |
-| Property | 204 / 209 / 209 | 103 | Binding-only placeholder; deprecated/reserved/private entries distinguished in its report. [Property plan](OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md) |
+| Property | 204 / 209 / 209 | 103 | 25 typed native mappings implemented; 179 active mappings pending. Deprecated/reserved/private entries distinguished in its report. [Property plan](OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md) |
 | Support | 35 / 35 / 35 | 33 | Binding-only placeholder. [Support plan](OpenSTAAD-Support-Multi-Version-Architecture-and-Plan.md) |
 | Design | 31 / 45 / 45 | 7 | Binding-only placeholder. [Design plan](OpenSTAAD-Design-Multi-Version-Architecture-and-Plan.md) |
 | Commands | 18 / 18 / 18, including one deprecated summary | 21 | Binding-only placeholder. [Commands plan](OpenSTAAD-Commands-Multi-Version-Architecture-and-Plan.md) |
@@ -22,7 +22,7 @@
 
 These are domain report scopes, not interchangeable measures. Managed overloads, native names, class helpers, reserved entries and metadata-only functions must not be summed as a single “implemented API” total. In particular, Output-owned functions filed under the Design steel help page are counted in Output.
 
-All reviewed domains now have comparison/source inventories and architecture plans. Output subsequently added its first 15 typed queries; the other domains in that remaining-review increment remain placeholders. That completes the **review series**, not implementation of those domains or native qualification of existing ports.
+All reviewed domains now have comparison/source inventories and architecture plans. Output subsequently added its first 15 typed queries and Property added its first 25 typed observations; the other domains in that remaining-review increment remain placeholders. That completes the **review series**, not implementation of those domains or native qualification of existing ports.
 
 ## 2. Findings from the remaining review
 

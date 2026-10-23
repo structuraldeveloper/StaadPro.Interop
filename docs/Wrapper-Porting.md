@@ -5,7 +5,7 @@
 
 The [main project wrapper](<D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OpenStaadWrapper.cs>) was treated as **strictly read-only**. All implementation changes are in this open-source repository. The wrapper now includes all **30 source properties**, both constructor forms and all three public methods. The existing IsConnected property is retained as an additional convenience.
 
-The public wrapper surface is complete for this approved scope. Output now exposes 15 typed result queries. The types behind Property, Support, Design, Commands, Table, View and IdeaStatiCa remain explicitly documented placeholders. Their native bindings are real; no missing domain operation is disguised as implemented or replaced by a throwing stub.
+The public wrapper surface is complete for this approved scope. Output now exposes 15 typed result queries and Property exposes 25 typed observation queries. The types behind Support, Design, Commands, Table, View and IdeaStatiCa remain explicitly documented placeholders. Their native bindings are real; no missing domain operation is disguised as implemented or replaced by a throwing stub.
 
 ## 1. Source/member parity
 
@@ -26,7 +26,7 @@ The source's Bentley COM types are represented by object/dynamic, matching this 
 | `RawOutput` | Captures native Output interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `Output` | `IOSOutput` / `OSOutputAdapter` with 15 typed status/data queries; 45 native mappings remain pending. See the [Output guide](Output-Porting.md). |
 | `RawProperty` | Captures native Property interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
-| `Property` | Binding-only `IOSProperty` / `OSPropertyAdapter` placeholder; no domain functions ported. See the [Property comparison and plan](Property-Porting.md). |
+| `Property` | `IOSProperty` / `OSPropertyAdapter` exposes 25 typed observation queries with internal native calls and no public reference outputs. See the [Property guide](Property-Porting.md). |
 | `RawSupport` | Captures native Support interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `Support` | Binding-only `IOSSupport` / `OSSupportAdapter` placeholder; no domain functions ported. See the [Support comparison and plan](Support-Porting.md). |
 | `RawDesign` | Captures native Design interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
@@ -61,7 +61,7 @@ Source private helpers are ported directly or extracted into internal services. 
 | Binding | Implemented now | Deferred |
 | --- | --- | --- |
 | Output | Binding and 15 typed queries with named results, immutable payloads and XML. | Remaining 45 documented native mappings, supplemental contracts and live qualification. |
-| Property / Support / Design / Commands / Table / View | Named public interface and sealed non-partial adapter; captured ComObject and owning Wrapper; correct native raw object. | Every domain-specific function. |
+| Support / Design / Commands / Table / View | Named public interface and sealed non-partial adapter; captured ComObject and owning Wrapper; correct native raw object. | Every domain-specific function. |
 | IDEA StatiCa | Named public placeholder interface/adapter and owning wrapper; required Geometry/Load/Output binding precondition. | Options, extraction, mapping, equilibrium checks, diagrams and export functions from the main integration. |
 | Geometry / Load / Root | Existing implementations retained, with rebuilt bindings on refresh. | Broader native API coverage and version qualification. Main-interface Load reference parity and the reviewed Root/Geometry mappings are complete. |
 
@@ -150,4 +150,4 @@ Construction and refresh do not show host UI or launch/close STAAD. The default 
 
 Source wrapper SHA-256: `83737733D57A672313385F99EA0CA8FFA10F1917FB6A33B89E43CE27E3F37B14`.
 
-The published 1.0.0-preview.20261015 package includes the approved wrapper surface and reviewed Root mappings. The final three Geometry operations were implemented later and require a new package before distribution. The wrapper has no missing approved source property, constructor or public method; this increment rechecks parity and integration rather than duplicating existing members. The original wrapper increment kept eight domain APIs outside its scope. Output subsequently added 15 typed queries; the other seven remain placeholders. See [Geometry completion](Geometry-Porting.md#completed-managed-geometry-operations).
+The published 1.0.0-preview.20261015 package includes the approved wrapper surface and reviewed Root mappings. The final three Geometry operations were implemented later and require a new package before distribution. The wrapper has no missing approved source property, constructor or public method; this increment rechecks parity and integration rather than duplicating existing members. The original wrapper increment kept eight domain APIs outside its scope. Output subsequently added 15 typed queries and Property added 25 typed observation queries; the other six remain placeholders. See [Geometry completion](Geometry-Porting.md#completed-managed-geometry-operations).

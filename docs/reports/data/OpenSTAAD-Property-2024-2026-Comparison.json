@@ -29,8 +29,8 @@
     "unchangedCommonContracts": 188,
     "changedCommonExamples": 75,
     "changes2025To2026": 0,
-    "currentPropertyMethods": 0,
-    "currentPropertyNativeDispatches": 0,
+    "currentPropertyMethods": 25,
+    "currentPropertyNativeDispatches": 25,
     "referenceInterfaceOverloads": 103,
     "referencePublicAdapterMethods": 107,
     "referenceAdapterOnlyMethods": 4,
@@ -47,7 +47,8 @@
     "supplementalCandidateUnion": 15,
     "excludedClassOnlyHelperNames": 22,
     "groupClassAndMetadataCandidateUnion": 227,
-    "referenceActiveCandidatesWithoutTarget": 129
+    "referenceActiveCandidatesWithoutTarget": 129,
+    "remainingActiveCandidateNames": 179
   },
   "manualEvidence": {
     "2024": {
@@ -32158,7 +32159,7 @@
       "name": "GetBetaAngle",
       "category": "Section: Beta Angle Operation Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "PopulateBetaAngles",
@@ -32184,7 +32185,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetBetaAngle",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SectionAngleResult",
@@ -32315,7 +32316,9 @@
           "examplesSha256": "9da03ef06176b9a9885db63c3997d88056c5a408f3fd458614ce0972ea7b717b",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<double> GetBetaAngle(int memberId)",
+      "currentImplementationNotes": "Use to observe orientation about the analytical member axis; offsets and releases do not represent beta rotation. Returns the finite signed native angle unchanged, including zero. Native -3001 is NotFound. No degrees/radians conversion or managed local-axis reconstruction is performed."
     },
     {
       "name": "GetSectionPropertyValues",
@@ -45584,12 +45587,12 @@
       "name": "GetElementOffsetSpecCount",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetElementOffsetSpecCount",
         "proposedRequest": "OffsetQuery",
         "proposedResult": "PropertyCountResult",
@@ -45669,7 +45672,9 @@
           "examplesSha256": "b7e774ddb23760ce6a7815850698fc8eeee1b0ca5b9c2c74e1f3e339869b4875",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<int> GetElementOffsetSpecificationCount()",
+      "currentImplementationNotes": "This counts native offset specifications, not plates, corners, nonzero vectors or assigned members. Zero is a valid count. Use GetPlateOffsetSpecification to inspect one plate corner and its stored convention. Undocumented negative counts are rejected."
     },
     {
       "name": "RemoveAllElementOffsetSpec",
@@ -48667,7 +48672,7 @@
       "name": "GetMemberReleaseSpecEx",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetMemberReleaseSpecificationExtended",
@@ -48688,7 +48693,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetMemberReleaseSpecEx",
         "proposedRequest": "MemberReleaseRequest",
         "proposedResult": "MemberReleaseQueryResult",
@@ -48984,7 +48989,9 @@
           "examplesSha256": "9b79fec0c93af62549323f66202d2faec58e93ebeee2b7356b8c52d687932c77",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<MemberReleaseSpecification> GetMemberReleaseSpecificationExtended(int memberId, MemberEnd memberEnd)",
+      "currentImplementationNotes": "Prefer this query when common MP or directional MPX/MPY/MPZ factors are needed. The basic GetMemberReleaseSpecification returns only six mode/parameter slots and cannot supply the separate extended factors. Native 1/true succeeds and 0/false fails. Modes 0/1/-1/-2/-3 are retained per DOF rather than converted to Boolean release flags. Unused spring/MP slots may remain unwritten and are represented as null; an applicable spring or factor must be written and finite. The native common MP factor is dimensionless; translational and rotational spring stiffness retain their different native dimensions."
     },
     {
       "name": "GetInactiveMemberCount",
@@ -54980,7 +54987,7 @@
       "name": "GetIsotropicMaterialAssignedBeamCount",
       "category": "Material: Get and Remove Material Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetIsotropicMaterialAssignedBeams",
@@ -54996,7 +55003,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetIsotropicMaterialAssignedBeamCount",
         "proposedRequest": "MaterialQuery",
         "proposedResult": "PropertyCountResult",
@@ -55127,13 +55134,15 @@
           "examplesSha256": "2e0f4c67e3f38698d66d2ab2d6716a87f3bf40e203a8aa07d134a9fabd9e466d",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<int> GetIsotropicMaterialAssignedMemberCount(string materialName)",
+      "currentImplementationNotes": "Use for sizing member assignments. GetIsotropicMaterialCount counts material definitions; GetIsotropicMaterialAssignedMemberIds returns the member IDs. A material name is not an index or section/property ID. Nonnegative values are treated as counts following the native purpose and read-only main-source usage; the help table incorrectly lists only 0 OK and its example passes a number despite the named input. Zero is a valid empty count; -6023 is NotFound. This count interpretation remains a live qualification requirement."
     },
     {
       "name": "GetIsotropicMaterialAssignedBeamList",
       "category": "Material: Get and Remove Material Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetIsotropicMaterialAssignedBeams",
@@ -55150,7 +55159,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetIsotropicMaterialAssignedBeamList",
         "proposedRequest": "MaterialQuery",
         "proposedResult": "PropertyIdentifierListResult",
@@ -55314,13 +55323,15 @@
           "examplesSha256": "8a7f1cc1c9c76bf7ea71f30fe5adefeeb5b5b10d2a761309825ac3b3f765ffdd",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<IEnumerable<int>> GetIsotropicMaterialAssignedMemberIds(string materialName, int maximumResults = 100000)",
+      "currentImplementationNotes": "Use when native assignment IDs are required without preloading Beam objects. The main source convenience filters a caller-supplied Beam collection; this query returns every native listed ID, preserving order and duplicates. It sizes with GetIsotropicMaterialAssignedBeamCount, validates positive Int32 IDs and exact array shape, and rechecks the count. Native list return 0 succeeds and -6023 is NotFound. Zero count returns an empty read-only snapshot without fetching; a larger count than maximumResults returns LimitExceeded before allocation. Count interpretation follows the native purpose/main usage despite the inconsistent help table. Same-count replacement or concurrent changes through other receivers cannot be proved absent."
     },
     {
       "name": "GetMaterialProperty",
       "category": "Material: Get and Remove Material Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetMaterialProperty",
@@ -55341,7 +55352,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetMaterialProperty",
         "proposedRequest": "MaterialQuery",
         "proposedResult": "MaterialQueryResult",
@@ -55637,13 +55648,15 @@
           "examplesSha256": "18ea049b0f3b7079d4fc5b3f18eb38d38f26ea31fc330ae3c6aac32347e5549b",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<MaterialProperties> GetMaterialProperty(string materialName)",
+      "currentImplementationNotes": "Use an exact material name obtained from an entity or native material observation. GetIsotropicMaterialProperty instead uses a zero-based list index and supplies native G; GetExtendedMaterialProperty also supplies strength fields. Native return 0 succeeds and -6023 is NotFound. These are different success semantics from the Boolean extended function. ShearModulus, Strengths and AssignmentState are null because this function does not return them. No default engineering values or computed G are substituted. Density remains weight per volume."
     },
     {
       "name": "GetBeamMaterialName",
       "category": "Material: Get and Remove Material Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetAllMaterialPropertiesWithPopulatedAssignments",
@@ -55669,7 +55682,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetBeamMaterialName",
         "proposedRequest": "MaterialQuery",
         "proposedResult": "MaterialNameResult",
@@ -55773,18 +55786,20 @@
           "examplesSha256": "863148854b361d614c5d90c724f45fcb7d8eb6b6d6d687fe7977acf7217f0796",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<string> GetBeamMaterialName(int memberId)",
+      "currentImplementationNotes": "Use for name discovery before a named material query. This returns a name, not constants, an index, a property ID or a new assignment. Native spelling/case/whitespace are preserved. Empty or native-null text is EmptyOrUnavailable because the help supplies no way to distinguish no assignment from a missing/unavailable member. Non-string responses are rejected; no guessed material name is returned."
     },
     {
       "name": "GetElementMaterialName",
       "category": "Material: Get and Remove Material Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetElementMaterialName",
         "proposedRequest": "MaterialQuery",
         "proposedResult": "MaterialNameResult",
@@ -55888,13 +55903,15 @@
           "examplesSha256": "22c5c8bb66e2c1b2c56f94cf246ae5ba14f9e973416fb16ec4ca9daf3f7c8eae",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<string> GetElementMaterialName(int plateId)",
+      "currentImplementationNotes": "This native element query takes a plate ID. Use GetBeamMaterialName for members; do not pass a node, solid ID or material-list index. It returns the exact name, not constants or thickness. Empty/native-null text is EmptyOrUnavailable because the contract does not distinguish unassigned and unavailable entities. No fallback to a similarly named plate/material API is attempted."
     },
     {
       "name": "GetIsotropicMaterialCount",
       "category": "Material: Get and Remove Material Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetAllIsotropicMaterialProperties",
@@ -55908,7 +55925,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetIsotropicMaterialCount",
         "proposedRequest": "MaterialQuery",
         "proposedResult": "PropertyCountResult",
@@ -55988,13 +56005,15 @@
           "examplesSha256": "86cf66369bc2050e25255497b1b11a61a4ed8a2ed83b521c4b74180f2e105769",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<int> GetIsotropicMaterialCount()",
+      "currentImplementationNotes": "Use to bound the zero-based materialIndex accepted by GetIsotropicMaterialProperty and GetExtendedIsotropicMaterialProperty. This is not a member/plate assignment count. Zero is a valid empty definition inventory; undocumented negative or nonintegral counts are rejected. A count is only an observation, not a stable reservation of material identities."
     },
     {
       "name": "GetIsotropicMaterialProperties",
       "category": "Material: Get and Remove Material Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetIsotropicMaterialProperty",
@@ -56016,7 +56035,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetIsotropicMaterialProperties",
         "proposedRequest": "MaterialQuery",
         "proposedResult": "MaterialQueryResult",
@@ -56345,13 +56364,15 @@
           "examplesSha256": "9bc8b3d3df74cd4d14c2bca7708a88c487cd0b115c06a96014c3a935040940e0",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<MaterialProperties> GetIsotropicMaterialProperty(int materialIndex)",
+      "currentImplementationNotes": "Use for material enumeration, unlike GetMaterialProperty which selects by name. materialIndex is zero-based, not a native property ID or member ID. This function returns G directly; that native value is retained instead of the main MaterialProperty computed E/(2*(1+Poisson)) substitute. The native return is the material name, not a success flag. Null/empty name or an index outside the observed count is NotFound. Before/after material counts detect observed changes but not same-count reorderings. Strengths and AssignmentState are null."
     },
     {
       "name": "GetMaterialPropertyEx",
       "category": "Material: Get and Remove Material Property",
       "classification": "Type/meaning clarification",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetExtendedMaterialProperty",
@@ -56377,7 +56398,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetMaterialPropertyEx",
         "proposedRequest": "MaterialDefinitionRequest",
         "proposedResult": "MaterialQueryResult",
@@ -56838,13 +56859,15 @@
           "examplesSha256": "4f1d3d412f4091d00c750d298e4729e1df0b633a1de5424f000ecad6b2993509",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<MaterialProperties> GetExtendedMaterialProperty(string materialName)",
+      "currentImplementationNotes": "Choose over GetMaterialProperty when Fy/Fu/Ry/Rt/Fcu are needed. GetExtendedIsotropicMaterialProperty selects a zero-based index and additionally returns native G; this name-based function omits G, so ShearModulus is null. Unlike basic named GetMaterialProperty, native Boolean true means success and false means failure. Strength stresses retain native force/area units; Ry/Rt are dimensionless. No material classification, design pass/fail, default strength or computed shear modulus is inferred."
     },
     {
       "name": "GetIsotropicMaterialPropertiesEx",
       "category": "Material: Get and Remove Material Property",
       "classification": "Type/meaning clarification",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetExtendedIsotropicMaterialProperty",
@@ -56871,7 +56894,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetIsotropicMaterialPropertiesEx",
         "proposedRequest": "MaterialDefinitionRequest",
         "proposedResult": "MaterialQueryResult",
@@ -57338,18 +57361,20 @@
           "examplesSha256": "05874b16da7158e68e6c5024ad1e224c5d26b7238f29287a8f7823f21f2330aa",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<MaterialProperties> GetExtendedIsotropicMaterialProperty(int materialIndex)",
+      "currentImplementationNotes": "Use for enumeration with native G and Fy/Fu/Ry/Rt/Fcu. GetExtendedMaterialProperty selects by name and lacks G; GetIsotropicMaterialProperty omits strengths. The native return is the material name, not a Boolean or numeric status. Null/empty name or an out-of-range observed index is NotFound. Coupled counts are checked before/after; no atomic snapshot or stable same-count ordering is promised. All supplied constants and strength fields must be written and finite; optional AssignmentState remains null."
     },
     {
       "name": "GetIsotropicMaterialPropertiesAssigned",
       "category": "Material: Get and Remove Material Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetIsotropicMaterialPropertiesAssigned",
         "proposedRequest": "MaterialQuery",
         "proposedResult": "MaterialQueryResult",
@@ -57711,18 +57736,20 @@
           "examplesSha256": "c3478a04245e5469e0694b2a7eba145ac252e674dd752af10ff6d55381486931",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<MaterialProperties> GetIsotropicMaterialPropertiesAssigned(int nativeMaterialNumber)",
+      "currentImplementationNotes": "Use when the native assignment observation is required; the ordinary and extended indexed functions do not return it. nativeMaterialNumber is forwarded unchanged: this help says material number ID, unlike the explicitly zero-based indexed methods. Nonnegative input is accepted without guessed rebasing or a count-based ID/index conversion; qualify the selector on the acquired build. Native string name supplies success; null/empty means NotFound. Assignment output 1 means Unassigned and 2 Assigned, not Boolean 0/1; documented Double or integral forms are decoded exactly. Strengths remain null."
     },
     {
       "name": "GetOrthotropic2DMaterialCount",
       "category": "Material: Get and Remove Material Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetOrthotropic2DMaterialCount",
         "proposedRequest": "MaterialQuery",
         "proposedResult": "PropertyCountResult",
@@ -57802,18 +57829,20 @@
           "examplesSha256": "1aefc129cd2ac582f7cb559249e3968c57810cfacca182fcce55183d72484f3e",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<int> GetOrthotropic2DMaterialCount()",
+      "currentImplementationNotes": "Use for the 2D orthotropic inventory, not isotropic or 3D material counts and not element assignments. Zero is valid. The associated property getter documents a native material number rather than an explicit zero-based list index; this count does not establish a selector rebasing rule. Undocumented negative/nonintegral counts are rejected."
     },
     {
       "name": "GetOrthotropic2DMaterialProperties",
       "category": "Material: Get and Remove Material Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P3",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetOrthotropic2DMaterialProperties",
         "proposedRequest": "MaterialQuery",
         "proposedResult": "MaterialQueryResult",
@@ -58142,7 +58171,9 @@
           "examplesSha256": "6ce1b17be39e6026883adbe856bd202fc18d29fe2e807772dce711bb84784fa9",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<Orthotropic2DMaterialProperties> GetOrthotropic2DMaterialProperties(int nativeMaterialNumber)",
+      "currentImplementationNotes": "Use for independent directional material constants; isotropic queries cannot substitute for them. nativeMaterialNumber is forwarded unchanged and must be qualified on the acquired build because the help does not establish its base. Native string name indicates success; null/empty is NotFound. Buffer sizes are E=2, Poisson=2, G=3, weight density=2, thermal expansion=2 and damping=2; each output must be finite and owned. Named first/second/third fields preserve native order because the help does not identify physical axis/plane ordering. Do not assume global X/Y or XY/YZ/ZX, derive G, or replace missing values with isotropic defaults."
     },
     {
       "name": "GetOrthotropic3DMaterialCount",
@@ -63742,7 +63773,7 @@
       "name": "GetMemberReleaseSpec",
       "category": "ElementProperty: Functions Get Property information through Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetMemberReleaseSpecification",
@@ -63761,7 +63792,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetMemberReleaseSpec",
         "proposedRequest": "MemberReleaseRequest",
         "proposedResult": "MemberReleaseQueryResult",
@@ -63991,13 +64022,15 @@
           "examplesSha256": "fed422da7c6b976a4acbdf453db87ee7c87f82efa4cf5ef2d89e07f46942824d",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<MemberReleaseSpecification> GetMemberReleaseSpecification(int memberId, MemberEnd memberEnd)",
+      "currentImplementationNotes": "Use for basic release/spring observations. Choose GetMemberReleaseSpecificationExtended for separate common MP and MPX/MPY/MPZ outputs; this basic query never invents zero for those missing outputs. Native 1/true succeeds and 0/false fails. FX/FY/FZ/MX/MY/MZ mode order and 0/1/-1/-2/-3 codes are preserved. Only applicable parameter slots are consumed; a spring or directional partial-factor slot must be finite. These are model specifications, not support reactions or member-end Output forces."
     },
     {
       "name": "GetMemberLocalOffSet",
       "category": "ElementProperty: Functions Get Property information through Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetBeamOffsetSpecification",
@@ -64017,7 +64050,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetMemberLocalOffSet",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "OffsetQueryResult",
@@ -64304,13 +64337,15 @@
           "examplesSha256": "b9080268edc2ac10877b41aac625c8ae74834365d1ecae6f801952864862e373",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<Vector3D> GetMemberLocalOffset(int memberId, MemberEnd memberEnd)",
+      "currentImplementationNotes": "Choose this query when a local-coordinate offset is needed; GetMemberGlobalOffset asks STAAD for global components. The vector is an offset in native length units, not a position, displacement result or beta rotation. Native 0 succeeds; -6027 is NoSpecification, -3001 NotFound and -6026 InvalidReference. A successful zero vector stays successful and is not replaced by a shared no-offset singleton. No coordinate conversion or sign change is applied."
     },
     {
       "name": "GetMemberGlobalOffSet",
       "category": "ElementProperty: Functions Get Property information through Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetBeamOffsetSpecification",
@@ -64330,7 +64365,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetMemberGlobalOffSet",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "OffsetQueryResult",
@@ -64617,18 +64652,20 @@
           "examplesSha256": "2bb3fde9dcc73e2949ee3c3f0801045a45f9e21b90df7e2edf0fa732f0e0d52b",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<Vector3D> GetMemberGlobalOffset(int memberId, MemberEnd memberEnd)",
+      "currentImplementationNotes": "Choose this query for global components; GetMemberLocalOffset requests member-local components. No managed rotation is substituted. Native 0 succeeds; -6027 is NoSpecification, -3001 NotFound and -6026 InvalidReference. A successful zero vector differs from an absent specification. The returned Vector3D is an independent value in native length units. These are modeling offsets, not Output displacements."
     },
     {
       "name": "GetBeamProperty",
       "category": "ElementProperty: Functions Get Property information through Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetBeamProperty",
         "proposedRequest": "SectionQuery",
         "proposedResult": "SectionDefinitionResult",
@@ -65047,18 +65084,20 @@
           "examplesSha256": "3e070bae796879c092b381a6a0e6284d08bca5812dbaa1d214cf447fa7a8e82f",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<BeamSectionProperties> GetMemberSectionProperties(int memberId)",
+      "currentImplementationNotes": "Use for width, depth, axial/shear areas and the three named native inertia slots. GetMemberSectionPropertiesExtended additionally returns flange/web thickness; those fields are null here. This does not hydrate a section catalog or select a section shape. Native 1/true succeeds; 0/false cannot distinguish a missing member, unassigned property and general failure, so it returns NativeFailure without fabricated data. Native Ix/Iz descriptions conflict with conventional physical-axis labels; their slot names/order are preserved without assuming a torsion or principal-axis mapping. Length, area and inertia slots retain their respective native length, length-squared and length-to-the-fourth units."
     },
     {
       "name": "GetBeamPropertyAll",
       "category": "ElementProperty: Functions Get Property information through Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetBeamPropertyAll",
         "proposedRequest": "SectionQuery",
         "proposedResult": "SectionDefinitionResult",
@@ -65531,18 +65570,20 @@
           "examplesSha256": "6905de12a3c88efe779f356c624149952f60e14283841904220e979a2662d680",
           "exampleCount": 3
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<BeamSectionProperties> GetMemberSectionPropertiesExtended(int memberId)",
+      "currentImplementationNotes": "Use instead of GetMemberSectionProperties when the two additional thickness outputs are required. No section shape, catalog identity, material or new property is inferred. Native 1/true succeeds; 0/false is an ambiguous failure and exposes no packet. All returned slots must be finite. Native Ix/Iz prose is inconsistent, so NativeIx/NativeIy/NativeIz retain native slot identity rather than a guessed torsional/principal interpretation. Values retain native length, area and fourth-power length units."
     },
     {
       "name": "GetBeamConstants",
       "category": "ElementProperty: Functions Get Property information through Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetBeamConstants",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "SpecificationQueryResult",
@@ -65838,18 +65879,20 @@
           "examplesSha256": "43af6858a458a0ac21881d8e2dac0c9bc278eba535fddb59c2be730da9bc34f3",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<MaterialConstants> GetMemberMaterialConstants(int memberId)",
+      "currentImplementationNotes": "Use when the member is known but its material name is not. GetMaterialProperty instead selects a material by exact name; indexed isotropic queries select a material-list index and additionally return G. This native call returns E, Poisson ratio, weight density, thermal expansion and damping, not G or strength fields. ShearModulus is therefore null, never computed from E/Poisson. Native Boolean true succeeds; false does not distinguish a missing member from unavailable constants. WeightDensity is weight per volume, not mass density."
     },
     {
       "name": "GetElementLocalOffset",
       "category": "ElementProperty: Functions Get Property information through Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetElementLocalOffset",
         "proposedRequest": "OffsetQuery",
         "proposedResult": "OffsetQueryResult",
@@ -66124,18 +66167,20 @@
           "examplesSha256": "4125d71384d0941c65ed59b165ad0cec59b4e7cdafacb9ea3cfb9e3c27b1a00d",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<Vector3D> GetPlateLocalOffset(int plateId, int cornerIndex)",
+      "currentImplementationNotes": "Choose this query for local components, GetPlateGlobalOffset for global components, or GetPlateOffsetSpecification for the stored selector and vector. cornerIndex is native incidence position 1/2/3/4, never a node ID; triangular-corner validity remains STAAD-controlled. Native 0 succeeds, -4001 is NotFound and -6027 NoSpecification. A successful zero vector is retained. No incidence lookup, coordinate transform or unit conversion occurs."
     },
     {
       "name": "GetElementGlobalOffset",
       "category": "ElementProperty: Functions Get Property information through Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetElementGlobalOffset",
         "proposedRequest": "OffsetQuery",
         "proposedResult": "OffsetQueryResult",
@@ -66410,13 +66455,15 @@
           "examplesSha256": "ac93e72d5f3fba51fefe68ac4f0c4cbbc822bbbaf47fc1a06a7aa28739ed5bfc",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<Vector3D> GetPlateGlobalOffset(int plateId, int cornerIndex)",
+      "currentImplementationNotes": "Use for global components; GetPlateLocalOffset returns local components and GetPlateOffsetSpecification returns the stored convention. The native Global function is called despite its help summary mistakenly saying local. cornerIndex is a one-based incidence position 1-4, not a node number. Native 0 succeeds, -4001 is NotFound and -6027 NoSpecification. A successful zero vector is not absence; no conversion or sign change occurs."
     },
     {
       "name": "GetElementOffsetSpec",
       "category": "ElementProperty: Functions Get Property information through Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetElementNodeOffset",
@@ -66437,7 +66484,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetElementOffsetSpec",
         "proposedRequest": "OffsetQuery",
         "proposedResult": "OffsetQueryResult",
@@ -66745,18 +66792,20 @@
           "examplesSha256": "35f1fd32d3622863c7b8ff4f888549e16fb7d890dcd7db1061cffbdfaf6304db",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<ElementOffsetSpecification> GetPlateOffsetSpecification(int plateId, int cornerIndex)",
+      "currentImplementationNotes": "Use when the original Local/Global/Z selector is needed; the local/global offset queries instead request components in a particular coordinate frame. Native 1 supplies an offset, native 0 explicitly means NoSpecification, and -4001 means NotFound. This differs from the local/global getters, where 0 is success. Stored selectors are Local=0, Global=1 and Z=2, matching the main ElementNodeOffsetAxis enum; they must not be cast from its opposite member OffsetAxis numbering. No physical meaning or conversion beyond the native Z selector is inferred. A code-1 zero vector remains valid data."
     },
     {
       "name": "GetPlateSectionPropertyRefNo",
       "category": "ElementProperty: Functions Get Property information through Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P2",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented; native runtime qualification pending",
         "proposedMethod": "GetPlateSectionPropertyRefNo",
         "proposedRequest": "SectionDefinitionRequest",
         "proposedResult": "PropertyReferenceResult",
@@ -66899,7 +66948,9 @@
           "examplesSha256": "5a391dd58f8fd9215ff89fb2cced1421f87b44c51eee74fd2ee495455eb07c8f",
           "exampleCount": 2
         }
-      }
+      },
+      "currentManagedSignature": "PropertyQueryResult<int> GetPlateSectionPropertyId(int plateId)",
+      "currentImplementationNotes": "Use to identify an assigned property, not to read its thickness values or count property definitions. Positive return values are property IDs; -4001 is NotFound and -6022 NotAssigned. Zero is undocumented and rejected. The method is documented in all three reviewed help sets but absent from inspected 2025/2026 CLR interfaces: a missing acquired dispatch member returns Unsupported. No alternate function name, different entity type or fallback call is attempted; other transport errors propagate."
     },
     {
       "name": "GetPublishedProfileName",
@@ -73402,5 +73453,714 @@
     "Help presence, metadata presence, successful native invocation and package coverage are distinct.",
     "Class-only surface identities and metadata names are not assumed equivalent.",
     "No Property domain API, source implementation, target framework or NuGet package was changed."
-  ]
+  ],
+  "implementationUpdate": {
+    "date": "2026-10-23",
+    "parentCommit": "9ed9e8a",
+    "interfaceMethods": 25,
+    "adapterMethods": 25,
+    "nativeRoutes": 25,
+    "activeCandidatesRemaining": 179,
+    "workstreams": {
+      "P1": "Shared binding/result/decoder foundation implemented",
+      "P2": "13/13 native routes implemented; live qualification pending",
+      "P3": "First 12/23 native routes implemented"
+    },
+    "contracts": [
+      {
+        "native": "GetBetaAngle",
+        "managedSignature": "PropertyQueryResult<double> GetBetaAngle(int memberId)",
+        "phase": "P2",
+        "behavior": "Use to observe orientation about the analytical member axis; offsets and releases do not represent beta rotation. Returns the finite signed native angle unchanged, including zero. Native -3001 is NotFound. No degrees/radians conversion or managed local-axis reconstruction is performed."
+      },
+      {
+        "native": "GetElementOffsetSpecCount",
+        "managedSignature": "PropertyQueryResult<int> GetElementOffsetSpecificationCount()",
+        "phase": "P2",
+        "behavior": "This counts native offset specifications, not plates, corners, nonzero vectors or assigned members. Zero is a valid count. Use GetPlateOffsetSpecification to inspect one plate corner and its stored convention. Undocumented negative counts are rejected."
+      },
+      {
+        "native": "GetMemberReleaseSpecEx",
+        "managedSignature": "PropertyQueryResult<MemberReleaseSpecification> GetMemberReleaseSpecificationExtended(int memberId, MemberEnd memberEnd)",
+        "phase": "P2",
+        "behavior": "Prefer this query when common MP or directional MPX/MPY/MPZ factors are needed. The basic GetMemberReleaseSpecification returns only six mode/parameter slots and cannot supply the separate extended factors. Native 1/true succeeds and 0/false fails. Modes 0/1/-1/-2/-3 are retained per DOF rather than converted to Boolean release flags. Unused spring/MP slots may remain unwritten and are represented as null; an applicable spring or factor must be written and finite. The native common MP factor is dimensionless; translational and rotational spring stiffness retain their different native dimensions."
+      },
+      {
+        "native": "GetMemberReleaseSpec",
+        "managedSignature": "PropertyQueryResult<MemberReleaseSpecification> GetMemberReleaseSpecification(int memberId, MemberEnd memberEnd)",
+        "phase": "P2",
+        "behavior": "Use for basic release/spring observations. Choose GetMemberReleaseSpecificationExtended for separate common MP and MPX/MPY/MPZ outputs; this basic query never invents zero for those missing outputs. Native 1/true succeeds and 0/false fails. FX/FY/FZ/MX/MY/MZ mode order and 0/1/-1/-2/-3 codes are preserved. Only applicable parameter slots are consumed; a spring or directional partial-factor slot must be finite. These are model specifications, not support reactions or member-end Output forces."
+      },
+      {
+        "native": "GetMemberLocalOffSet",
+        "managedSignature": "PropertyQueryResult<Vector3D> GetMemberLocalOffset(int memberId, MemberEnd memberEnd)",
+        "phase": "P2",
+        "behavior": "Choose this query when a local-coordinate offset is needed; GetMemberGlobalOffset asks STAAD for global components. The vector is an offset in native length units, not a position, displacement result or beta rotation. Native 0 succeeds; -6027 is NoSpecification, -3001 NotFound and -6026 InvalidReference. A successful zero vector stays successful and is not replaced by a shared no-offset singleton. No coordinate conversion or sign change is applied."
+      },
+      {
+        "native": "GetMemberGlobalOffSet",
+        "managedSignature": "PropertyQueryResult<Vector3D> GetMemberGlobalOffset(int memberId, MemberEnd memberEnd)",
+        "phase": "P2",
+        "behavior": "Choose this query for global components; GetMemberLocalOffset requests member-local components. No managed rotation is substituted. Native 0 succeeds; -6027 is NoSpecification, -3001 NotFound and -6026 InvalidReference. A successful zero vector differs from an absent specification. The returned Vector3D is an independent value in native length units. These are modeling offsets, not Output displacements."
+      },
+      {
+        "native": "GetBeamProperty",
+        "managedSignature": "PropertyQueryResult<BeamSectionProperties> GetMemberSectionProperties(int memberId)",
+        "phase": "P2",
+        "behavior": "Use for width, depth, axial/shear areas and the three named native inertia slots. GetMemberSectionPropertiesExtended additionally returns flange/web thickness; those fields are null here. This does not hydrate a section catalog or select a section shape. Native 1/true succeeds; 0/false cannot distinguish a missing member, unassigned property and general failure, so it returns NativeFailure without fabricated data. Native Ix/Iz descriptions conflict with conventional physical-axis labels; their slot names/order are preserved without assuming a torsion or principal-axis mapping. Length, area and inertia slots retain their respective native length, length-squared and length-to-the-fourth units."
+      },
+      {
+        "native": "GetBeamPropertyAll",
+        "managedSignature": "PropertyQueryResult<BeamSectionProperties> GetMemberSectionPropertiesExtended(int memberId)",
+        "phase": "P2",
+        "behavior": "Use instead of GetMemberSectionProperties when the two additional thickness outputs are required. No section shape, catalog identity, material or new property is inferred. Native 1/true succeeds; 0/false is an ambiguous failure and exposes no packet. All returned slots must be finite. Native Ix/Iz prose is inconsistent, so NativeIx/NativeIy/NativeIz retain native slot identity rather than a guessed torsional/principal interpretation. Values retain native length, area and fourth-power length units."
+      },
+      {
+        "native": "GetBeamConstants",
+        "managedSignature": "PropertyQueryResult<MaterialConstants> GetMemberMaterialConstants(int memberId)",
+        "phase": "P2",
+        "behavior": "Use when the member is known but its material name is not. GetMaterialProperty instead selects a material by exact name; indexed isotropic queries select a material-list index and additionally return G. This native call returns E, Poisson ratio, weight density, thermal expansion and damping, not G or strength fields. ShearModulus is therefore null, never computed from E/Poisson. Native Boolean true succeeds; false does not distinguish a missing member from unavailable constants. WeightDensity is weight per volume, not mass density."
+      },
+      {
+        "native": "GetElementLocalOffset",
+        "managedSignature": "PropertyQueryResult<Vector3D> GetPlateLocalOffset(int plateId, int cornerIndex)",
+        "phase": "P2",
+        "behavior": "Choose this query for local components, GetPlateGlobalOffset for global components, or GetPlateOffsetSpecification for the stored selector and vector. cornerIndex is native incidence position 1/2/3/4, never a node ID; triangular-corner validity remains STAAD-controlled. Native 0 succeeds, -4001 is NotFound and -6027 NoSpecification. A successful zero vector is retained. No incidence lookup, coordinate transform or unit conversion occurs."
+      },
+      {
+        "native": "GetElementGlobalOffset",
+        "managedSignature": "PropertyQueryResult<Vector3D> GetPlateGlobalOffset(int plateId, int cornerIndex)",
+        "phase": "P2",
+        "behavior": "Use for global components; GetPlateLocalOffset returns local components and GetPlateOffsetSpecification returns the stored convention. The native Global function is called despite its help summary mistakenly saying local. cornerIndex is a one-based incidence position 1-4, not a node number. Native 0 succeeds, -4001 is NotFound and -6027 NoSpecification. A successful zero vector is not absence; no conversion or sign change occurs."
+      },
+      {
+        "native": "GetElementOffsetSpec",
+        "managedSignature": "PropertyQueryResult<ElementOffsetSpecification> GetPlateOffsetSpecification(int plateId, int cornerIndex)",
+        "phase": "P2",
+        "behavior": "Use when the original Local/Global/Z selector is needed; the local/global offset queries instead request components in a particular coordinate frame. Native 1 supplies an offset, native 0 explicitly means NoSpecification, and -4001 means NotFound. This differs from the local/global getters, where 0 is success. Stored selectors are Local=0, Global=1 and Z=2, matching the main ElementNodeOffsetAxis enum; they must not be cast from its opposite member OffsetAxis numbering. No physical meaning or conversion beyond the native Z selector is inferred. A code-1 zero vector remains valid data."
+      },
+      {
+        "native": "GetPlateSectionPropertyRefNo",
+        "managedSignature": "PropertyQueryResult<int> GetPlateSectionPropertyId(int plateId)",
+        "phase": "P2",
+        "behavior": "Use to identify an assigned property, not to read its thickness values or count property definitions. Positive return values are property IDs; -4001 is NotFound and -6022 NotAssigned. Zero is undocumented and rejected. The method is documented in all three reviewed help sets but absent from inspected 2025/2026 CLR interfaces: a missing acquired dispatch member returns Unsupported. No alternate function name, different entity type or fallback call is attempted; other transport errors propagate."
+      },
+      {
+        "native": "GetIsotropicMaterialAssignedBeamCount",
+        "managedSignature": "PropertyQueryResult<int> GetIsotropicMaterialAssignedMemberCount(string materialName)",
+        "phase": "P3",
+        "behavior": "Use for sizing member assignments. GetIsotropicMaterialCount counts material definitions; GetIsotropicMaterialAssignedMemberIds returns the member IDs. A material name is not an index or section/property ID. Nonnegative values are treated as counts following the native purpose and read-only main-source usage; the help table incorrectly lists only 0 OK and its example passes a number despite the named input. Zero is a valid empty count; -6023 is NotFound. This count interpretation remains a live qualification requirement."
+      },
+      {
+        "native": "GetIsotropicMaterialAssignedBeamList",
+        "managedSignature": "PropertyQueryResult<IEnumerable<int>> GetIsotropicMaterialAssignedMemberIds(string materialName, int maximumResults = 100000)",
+        "phase": "P3",
+        "behavior": "Use when native assignment IDs are required without preloading Beam objects. The main source convenience filters a caller-supplied Beam collection; this query returns every native listed ID, preserving order and duplicates. It sizes with GetIsotropicMaterialAssignedBeamCount, validates positive Int32 IDs and exact array shape, and rechecks the count. Native list return 0 succeeds and -6023 is NotFound. Zero count returns an empty read-only snapshot without fetching; a larger count than maximumResults returns LimitExceeded before allocation. Count interpretation follows the native purpose/main usage despite the inconsistent help table. Same-count replacement or concurrent changes through other receivers cannot be proved absent."
+      },
+      {
+        "native": "GetMaterialProperty",
+        "managedSignature": "PropertyQueryResult<MaterialProperties> GetMaterialProperty(string materialName)",
+        "phase": "P3",
+        "behavior": "Use an exact material name obtained from an entity or native material observation. GetIsotropicMaterialProperty instead uses a zero-based list index and supplies native G; GetExtendedMaterialProperty also supplies strength fields. Native return 0 succeeds and -6023 is NotFound. These are different success semantics from the Boolean extended function. ShearModulus, Strengths and AssignmentState are null because this function does not return them. No default engineering values or computed G are substituted. Density remains weight per volume."
+      },
+      {
+        "native": "GetBeamMaterialName",
+        "managedSignature": "PropertyQueryResult<string> GetBeamMaterialName(int memberId)",
+        "phase": "P3",
+        "behavior": "Use for name discovery before a named material query. This returns a name, not constants, an index, a property ID or a new assignment. Native spelling/case/whitespace are preserved. Empty or native-null text is EmptyOrUnavailable because the help supplies no way to distinguish no assignment from a missing/unavailable member. Non-string responses are rejected; no guessed material name is returned."
+      },
+      {
+        "native": "GetElementMaterialName",
+        "managedSignature": "PropertyQueryResult<string> GetElementMaterialName(int plateId)",
+        "phase": "P3",
+        "behavior": "This native element query takes a plate ID. Use GetBeamMaterialName for members; do not pass a node, solid ID or material-list index. It returns the exact name, not constants or thickness. Empty/native-null text is EmptyOrUnavailable because the contract does not distinguish unassigned and unavailable entities. No fallback to a similarly named plate/material API is attempted."
+      },
+      {
+        "native": "GetIsotropicMaterialCount",
+        "managedSignature": "PropertyQueryResult<int> GetIsotropicMaterialCount()",
+        "phase": "P3",
+        "behavior": "Use to bound the zero-based materialIndex accepted by GetIsotropicMaterialProperty and GetExtendedIsotropicMaterialProperty. This is not a member/plate assignment count. Zero is a valid empty definition inventory; undocumented negative or nonintegral counts are rejected. A count is only an observation, not a stable reservation of material identities."
+      },
+      {
+        "native": "GetIsotropicMaterialProperties",
+        "managedSignature": "PropertyQueryResult<MaterialProperties> GetIsotropicMaterialProperty(int materialIndex)",
+        "phase": "P3",
+        "behavior": "Use for material enumeration, unlike GetMaterialProperty which selects by name. materialIndex is zero-based, not a native property ID or member ID. This function returns G directly; that native value is retained instead of the main MaterialProperty computed E/(2*(1+Poisson)) substitute. The native return is the material name, not a success flag. Null/empty name or an index outside the observed count is NotFound. Before/after material counts detect observed changes but not same-count reorderings. Strengths and AssignmentState are null."
+      },
+      {
+        "native": "GetMaterialPropertyEx",
+        "managedSignature": "PropertyQueryResult<MaterialProperties> GetExtendedMaterialProperty(string materialName)",
+        "phase": "P3",
+        "behavior": "Choose over GetMaterialProperty when Fy/Fu/Ry/Rt/Fcu are needed. GetExtendedIsotropicMaterialProperty selects a zero-based index and additionally returns native G; this name-based function omits G, so ShearModulus is null. Unlike basic named GetMaterialProperty, native Boolean true means success and false means failure. Strength stresses retain native force/area units; Ry/Rt are dimensionless. No material classification, design pass/fail, default strength or computed shear modulus is inferred."
+      },
+      {
+        "native": "GetIsotropicMaterialPropertiesEx",
+        "managedSignature": "PropertyQueryResult<MaterialProperties> GetExtendedIsotropicMaterialProperty(int materialIndex)",
+        "phase": "P3",
+        "behavior": "Use for enumeration with native G and Fy/Fu/Ry/Rt/Fcu. GetExtendedMaterialProperty selects by name and lacks G; GetIsotropicMaterialProperty omits strengths. The native return is the material name, not a Boolean or numeric status. Null/empty name or an out-of-range observed index is NotFound. Coupled counts are checked before/after; no atomic snapshot or stable same-count ordering is promised. All supplied constants and strength fields must be written and finite; optional AssignmentState remains null."
+      },
+      {
+        "native": "GetIsotropicMaterialPropertiesAssigned",
+        "managedSignature": "PropertyQueryResult<MaterialProperties> GetIsotropicMaterialPropertiesAssigned(int nativeMaterialNumber)",
+        "phase": "P3",
+        "behavior": "Use when the native assignment observation is required; the ordinary and extended indexed functions do not return it. nativeMaterialNumber is forwarded unchanged: this help says material number ID, unlike the explicitly zero-based indexed methods. Nonnegative input is accepted without guessed rebasing or a count-based ID/index conversion; qualify the selector on the acquired build. Native string name supplies success; null/empty means NotFound. Assignment output 1 means Unassigned and 2 Assigned, not Boolean 0/1; documented Double or integral forms are decoded exactly. Strengths remain null."
+      },
+      {
+        "native": "GetOrthotropic2DMaterialCount",
+        "managedSignature": "PropertyQueryResult<int> GetOrthotropic2DMaterialCount()",
+        "phase": "P3",
+        "behavior": "Use for the 2D orthotropic inventory, not isotropic or 3D material counts and not element assignments. Zero is valid. The associated property getter documents a native material number rather than an explicit zero-based list index; this count does not establish a selector rebasing rule. Undocumented negative/nonintegral counts are rejected."
+      },
+      {
+        "native": "GetOrthotropic2DMaterialProperties",
+        "managedSignature": "PropertyQueryResult<Orthotropic2DMaterialProperties> GetOrthotropic2DMaterialProperties(int nativeMaterialNumber)",
+        "phase": "P3",
+        "behavior": "Use for independent directional material constants; isotropic queries cannot substitute for them. nativeMaterialNumber is forwarded unchanged and must be qualified on the acquired build because the help does not establish its base. Native string name indicates success; null/empty is NotFound. Buffer sizes are E=2, Poisson=2, G=3, weight density=2, thermal expansion=2 and damping=2; each output must be finite and owned. Named first/second/third fields preserve native order because the help does not identify physical axis/plane ordering. Do not assume global X/Y or XY/YZ/ZX, derive G, or replace missing values with isotropic defaults."
+      }
+    ],
+    "callSites": [
+      {
+        "Target": "Binding().GetBetaAngle",
+        "Receiver": "Binding()",
+        "Name": "GetBetaAngle",
+        "GenericArity": 0,
+        "Arguments": [
+          "memberId"
+        ],
+        "Line": 46,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "GetBetaAngle",
+        "methodLine": 41
+      },
+      {
+        "Target": "Binding().GetElementOffsetSpecCount",
+        "Receiver": "Binding()",
+        "Name": "GetElementOffsetSpecCount",
+        "GenericArity": 0,
+        "Arguments": [],
+        "Line": 53,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "GetElementOffsetSpecificationCount",
+        "methodLine": 51
+      },
+      {
+        "Target": "Binding().GetMemberLocalOffSet",
+        "Receiver": "Binding()",
+        "Name": "GetMemberLocalOffSet",
+        "GenericArity": 0,
+        "Arguments": [
+          "memberId",
+          "(int)memberEnd",
+          "ref x",
+          "ref y",
+          "ref z"
+        ],
+        "Line": 80,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "MemberOffset",
+        "methodLine": 74
+      },
+      {
+        "Target": "Binding().GetMemberGlobalOffSet",
+        "Receiver": "Binding()",
+        "Name": "GetMemberGlobalOffSet",
+        "GenericArity": 0,
+        "Arguments": [
+          "memberId",
+          "(int)memberEnd",
+          "ref x",
+          "ref y",
+          "ref z"
+        ],
+        "Line": 81,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "MemberOffset",
+        "methodLine": 74
+      },
+      {
+        "Target": "Binding().GetElementLocalOffset",
+        "Receiver": "Binding()",
+        "Name": "GetElementLocalOffset",
+        "GenericArity": 0,
+        "Arguments": [
+          "plateId",
+          "cornerIndex",
+          "ref x",
+          "ref y",
+          "ref z"
+        ],
+        "Line": 93,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "PlateOffset",
+        "methodLine": 87
+      },
+      {
+        "Target": "Binding().GetElementGlobalOffset",
+        "Receiver": "Binding()",
+        "Name": "GetElementGlobalOffset",
+        "GenericArity": 0,
+        "Arguments": [
+          "plateId",
+          "cornerIndex",
+          "ref x",
+          "ref y",
+          "ref z"
+        ],
+        "Line": 94,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "PlateOffset",
+        "methodLine": 87
+      },
+      {
+        "Target": "Binding().GetElementOffsetSpec",
+        "Receiver": "Binding()",
+        "Name": "GetElementOffsetSpec",
+        "GenericArity": 0,
+        "Arguments": [
+          "plateId",
+          "cornerIndex",
+          "ref axis",
+          "ref x",
+          "ref y",
+          "ref z"
+        ],
+        "Line": 104,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "GetPlateOffsetSpecification",
+        "methodLine": 98
+      },
+      {
+        "Target": "Binding().GetPlateSectionPropertyRefNo",
+        "Receiver": "Binding()",
+        "Name": "GetPlateSectionPropertyRefNo",
+        "GenericArity": 0,
+        "Arguments": [
+          "plateId"
+        ],
+        "Line": 121,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "GetPlateSectionPropertyId",
+        "methodLine": 112
+      },
+      {
+        "Target": "Binding().GetMemberReleaseSpecEx",
+        "Receiver": "Binding()",
+        "Name": "GetMemberReleaseSpecEx",
+        "GenericArity": 0,
+        "Arguments": [
+          "memberId",
+          "(int)memberEnd",
+          "ref modes",
+          "ref parameters",
+          "ref common",
+          "ref factors"
+        ],
+        "Line": 141,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "Release",
+        "methodLine": 134
+      },
+      {
+        "Target": "Binding().GetMemberReleaseSpec",
+        "Receiver": "Binding()",
+        "Name": "GetMemberReleaseSpec",
+        "GenericArity": 0,
+        "Arguments": [
+          "memberId",
+          "(int)memberEnd",
+          "ref modes",
+          "ref parameters"
+        ],
+        "Line": 142,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "Release",
+        "methodLine": 134
+      },
+      {
+        "Target": "Binding().GetBeamPropertyAll",
+        "Receiver": "Binding()",
+        "Name": "GetBeamPropertyAll",
+        "GenericArity": 0,
+        "Arguments": [
+          "memberId",
+          "ref width",
+          "ref depth",
+          "ref ax",
+          "ref ay",
+          "ref az",
+          "ref ix",
+          "ref iy",
+          "ref iz",
+          "ref flange",
+          "ref web"
+        ],
+        "Line": 176,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "Section",
+        "methodLine": 168
+      },
+      {
+        "Target": "Binding().GetBeamProperty",
+        "Receiver": "Binding()",
+        "Name": "GetBeamProperty",
+        "GenericArity": 0,
+        "Arguments": [
+          "memberId",
+          "ref width",
+          "ref depth",
+          "ref ax",
+          "ref ay",
+          "ref az",
+          "ref ix",
+          "ref iy",
+          "ref iz"
+        ],
+        "Line": 177,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "Section",
+        "methodLine": 168
+      },
+      {
+        "Target": "Binding().GetBeamConstants",
+        "Receiver": "Binding()",
+        "Name": "GetBeamConstants",
+        "GenericArity": 0,
+        "Arguments": [
+          "memberId",
+          "ref e",
+          "ref poisson",
+          "ref density",
+          "ref alpha",
+          "ref damping"
+        ],
+        "Line": 191,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "GetMemberMaterialConstants",
+        "methodLine": 185
+      },
+      {
+        "Target": "Binding().GetElementMaterialName",
+        "Receiver": "Binding()",
+        "Name": "GetElementMaterialName",
+        "GenericArity": 0,
+        "Arguments": [
+          "entityId"
+        ],
+        "Line": 208,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "EntityMaterialName",
+        "methodLine": 202
+      },
+      {
+        "Target": "Binding().GetBeamMaterialName",
+        "Receiver": "Binding()",
+        "Name": "GetBeamMaterialName",
+        "GenericArity": 0,
+        "Arguments": [
+          "entityId"
+        ],
+        "Line": 208,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "EntityMaterialName",
+        "methodLine": 202
+      },
+      {
+        "Target": "Binding().GetIsotropicMaterialCount",
+        "Receiver": "Binding()",
+        "Name": "GetIsotropicMaterialCount",
+        "GenericArity": 0,
+        "Arguments": [],
+        "Line": 217,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "GetIsotropicMaterialCount",
+        "methodLine": 215
+      },
+      {
+        "Target": "Binding().GetOrthotropic2DMaterialCount",
+        "Receiver": "Binding()",
+        "Name": "GetOrthotropic2DMaterialCount",
+        "GenericArity": 0,
+        "Arguments": [],
+        "Line": 222,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "GetOrthotropic2DMaterialCount",
+        "methodLine": 220
+      },
+      {
+        "Target": "Binding().GetIsotropicMaterialAssignedBeamCount",
+        "Receiver": "Binding()",
+        "Name": "GetIsotropicMaterialAssignedBeamCount",
+        "GenericArity": 0,
+        "Arguments": [
+          "materialName"
+        ],
+        "Line": 225,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "AssignedCount",
+        "methodLine": 225
+      },
+      {
+        "Target": "Binding().GetIsotropicMaterialAssignedBeamList",
+        "Receiver": "Binding()",
+        "Name": "GetIsotropicMaterialAssignedBeamList",
+        "GenericArity": 0,
+        "Arguments": [
+          "materialName",
+          "ref ids"
+        ],
+        "Line": 251,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "GetIsotropicMaterialAssignedMemberIds",
+        "methodLine": 238
+      },
+      {
+        "Target": "Binding().GetMaterialPropertyEx",
+        "Receiver": "Binding()",
+        "Name": "GetMaterialPropertyEx",
+        "GenericArity": 0,
+        "Arguments": [
+          "materialName",
+          "ref e",
+          "ref poisson",
+          "ref density",
+          "ref alpha",
+          "ref damping",
+          "ref fy",
+          "ref fu",
+          "ref ry",
+          "ref rt",
+          "ref fcu"
+        ],
+        "Line": 272,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "NamedMaterial",
+        "methodLine": 264
+      },
+      {
+        "Target": "Binding().GetMaterialProperty",
+        "Receiver": "Binding()",
+        "Name": "GetMaterialProperty",
+        "GenericArity": 0,
+        "Arguments": [
+          "materialName",
+          "ref e",
+          "ref poisson",
+          "ref density",
+          "ref alpha",
+          "ref damping"
+        ],
+        "Line": 273,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "NamedMaterial",
+        "methodLine": 264
+      },
+      {
+        "Target": "Binding().GetIsotropicMaterialCount",
+        "Receiver": "Binding()",
+        "Name": "GetIsotropicMaterialCount",
+        "GenericArity": 0,
+        "Arguments": [],
+        "Line": 293,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "IndexedMaterial",
+        "methodLine": 287
+      },
+      {
+        "Target": "Binding().GetIsotropicMaterialPropertiesEx",
+        "Receiver": "Binding()",
+        "Name": "GetIsotropicMaterialPropertiesEx",
+        "GenericArity": 0,
+        "Arguments": [
+          "materialIndex",
+          "ref e",
+          "ref poisson",
+          "ref g",
+          "ref density",
+          "ref alpha",
+          "ref damping",
+          "ref fy",
+          "ref fu",
+          "ref ry",
+          "ref rt",
+          "ref fcu"
+        ],
+        "Line": 297,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "IndexedMaterial",
+        "methodLine": 287
+      },
+      {
+        "Target": "Binding().GetIsotropicMaterialProperties",
+        "Receiver": "Binding()",
+        "Name": "GetIsotropicMaterialProperties",
+        "GenericArity": 0,
+        "Arguments": [
+          "materialIndex",
+          "ref e",
+          "ref poisson",
+          "ref g",
+          "ref density",
+          "ref alpha",
+          "ref damping"
+        ],
+        "Line": 298,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "IndexedMaterial",
+        "methodLine": 287
+      },
+      {
+        "Target": "Binding().GetIsotropicMaterialCount",
+        "Receiver": "Binding()",
+        "Name": "GetIsotropicMaterialCount",
+        "GenericArity": 0,
+        "Arguments": [],
+        "Line": 303,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "IndexedMaterial",
+        "methodLine": 287
+      },
+      {
+        "Target": "Binding().GetIsotropicMaterialPropertiesAssigned",
+        "Receiver": "Binding()",
+        "Name": "GetIsotropicMaterialPropertiesAssigned",
+        "GenericArity": 0,
+        "Arguments": [
+          "nativeMaterialNumber",
+          "ref e",
+          "ref poisson",
+          "ref g",
+          "ref density",
+          "ref alpha",
+          "ref damping",
+          "ref assigned"
+        ],
+        "Line": 315,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "GetIsotropicMaterialPropertiesAssigned",
+        "methodLine": 308
+      },
+      {
+        "Target": "Binding().GetOrthotropic2DMaterialProperties",
+        "Receiver": "Binding()",
+        "Name": "GetOrthotropic2DMaterialProperties",
+        "GenericArity": 0,
+        "Arguments": [
+          "nativeMaterialNumber",
+          "ref e",
+          "ref poisson",
+          "ref g",
+          "ref density",
+          "ref alpha",
+          "ref damping"
+        ],
+        "Line": 331,
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "caller": "GetOrthotropic2DMaterialProperties",
+        "methodLine": 324
+      }
+    ],
+    "readOnlyMainHashesVerified": 74,
+    "sourceReuse": [
+      {
+        "item": "MemberEnd",
+        "decision": "Reused the existing Start=0 / End=1 enum; no duplicate member-end type."
+      },
+      {
+        "item": "Vector3D",
+        "decision": "Reused the existing WindowsBase value vector for independent local/global offsets."
+      },
+      {
+        "item": "NativeValues",
+        "decision": "Reused strict integral native decoding instead of Convert.ToInt32 rounding/coercion."
+      },
+      {
+        "item": "Main ElementNodeOffsetAxis",
+        "decision": "Ported exact Local=0 / Global=1 / Z=2 semantics with XML; did not reuse the oppositely numbered member OffsetAxis."
+      },
+      {
+        "item": "Main MaterialProperty",
+        "decision": "Reused E/Poisson/weight-density/thermal/damping and strength field meanings. Returned immutable observations; did not copy assumed engineering defaults, computed G/K substitutes, entity-assignment collections or proprietary catalog/unit dependencies. Native G is retained only when returned."
+      },
+      {
+        "item": "Main MemberReleases / Releases / Springs / MpFactors",
+        "decision": "Reused six-DOF order and MP concepts. Added per-DOF release modes and nullable applicable factors because Boolean Releases loses -1/-2/-3 and the source whole-release classification cannot represent independent mixed modes. Did not copy mutable parsing/event wiring or defaults for unavailable MP outputs."
+      },
+      {
+        "item": "Main OffsetSpecification / ElementNodeOffset",
+        "decision": "Reused offset, incidence-index and coordinate-selector semantics. Used existing MemberEnd plus Vector3D/status results rather than copying mutable assignment sets or collapsing absent and successful-zero offsets to a shared singleton."
+      },
+      {
+        "item": "Existing result patterns",
+        "decision": "Followed the existing named status/data pattern without coupling Property absence/status meanings to Output/Load enums or adding public tuples/ref/out."
+      }
+    ],
+    "tests": {
+      "offline": 3322,
+      "newProperty": 422,
+      "xmlExamples": 50,
+      "installedPackageExamples": 492
+    },
+    "nativeRuntimeValidated": false,
+    "distributionPackageBuilt": false,
+    "guide": "docs/Property-Porting.md",
+    "contractIndex": "docs/contracts/PropertyFoundationContractIndex.json",
+    "baselineSourceEvidenceNote": "The top-level currentSourceEvidence retains the original comparison snapshot at baselineCommit. Implementation source evidence below describes the current increment.",
+    "sourceEvidence": [
+      {
+        "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSProperty.cs",
+        "bytes": 70466,
+        "sha256": "47cd4e81b3bd577fc81b6dfb1fa83670f133eb2c12e23323107250ec1d729924"
+      },
+      {
+        "file": "src/StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs",
+        "bytes": 73096,
+        "sha256": "d48f038286f5183ccec8d70f5107d4278778959f7c576d229a5a1b7938628000"
+      },
+      {
+        "file": "src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs",
+        "bytes": 26863,
+        "sha256": "66f0332b39b0225ff91888d4a7757622e3a5ad9aa12536acec34be3e0efce1ed"
+      },
+      {
+        "file": "src/StaadPro.Interop/Services/Property/PropertyValueReader.cs",
+        "bytes": 3495,
+        "sha256": "b681570c8a2ce8666a4afba5d4edab07405934dfc029cf3eacdffb844cad5663"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/Property/BeamSectionProperties.cs",
+        "bytes": 2373,
+        "sha256": "faf6bb011bbebdcbe525a0686f63daf777b582a32bcede50b9cefe681dc94d3f"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/Property/ElementOffsetSpecification.cs",
+        "bytes": 945,
+        "sha256": "d783392e11eacc8027bd8e17b5dc3e0448addc7eee24d5ef3468629ed7317983"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/Property/MaterialProperties.cs",
+        "bytes": 3973,
+        "sha256": "65b83d80d34dde43ce6f6e9b8fa54b0926cb99a3ac2c8aaf060eaaa77319d833"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/Property/MemberReleaseSpecification.cs",
+        "bytes": 4144,
+        "sha256": "55c1490995936a3dc8e4719827ef422db7904abcfe54cc49b659cdc2d68a9130"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/Property/Orthotropic2DMaterialProperties.cs",
+        "bytes": 3616,
+        "sha256": "4ea05162004158af409e0ba4cfdafaffd9ef5c7aed743dbce18997faf9ca7023"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/Property/PropertyQueryResult.cs",
+        "bytes": 2545,
+        "sha256": "21975e7155c6630a125bd888715f800e1812f6abedb22e6cd056a3a4c123d961"
+      },
+      {
+        "file": "src/StaadPro.Interop/Enums/Property/PropertyQueryStatus.cs",
+        "bytes": 3318,
+        "sha256": "906ecaf401514d3c1bb1f72f6e45f5bdc27fc41887a81d198068585494c5b9a2"
+      }
+    ]
+  }
 }

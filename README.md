@@ -12,7 +12,11 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Source update — Load expansion
+## Source update — Property foundations
+
+Implemented the first 25 typed Property queries for member and plate offsets, releases, section properties and material observations. Results use named status/data classes, existing MemberEnd and Vector3D types, owned collections and comparative XML IntelliSense. Shared 2024–2026 contracts use one internal reader. Native naming, selector and documentation ambiguities are recorded rather than replaced with inferred values. Passed 3,322 offline tests, including 422 new Property cases, and a Release build with zero warnings/errors. Native COM and engineering qualification remain pending; 179 active Property mappings remain to be implemented. The parked Load work and prepared distribution archive are unchanged. See the [Property usage and porting guide](docs/Property-Porting.md).
+
+## Earlier source update — Load expansion
 
 Implemented all **36 approved Load expansion methods** through the existing IOSLoad and single OSLoadAdapter. Source exposes **171 overloads**: 115 main-reference signatures, five earlier conveniences, 15 inspection methods and these 36 additions. Actual dispatch covers **126/129 documented native names**, plus the metadata-corroborated MergeLoadsOnBeam body. The three intentionally unused names are CreateNewPrimaryLoad (richer creation alternatives), IsCombinationCase (derived inventory capability), and AddMemberFloorLoad (the extended floor call supplies the managed route). Native dispatch coverage is not live compatibility or engineering certification.
 
@@ -36,9 +40,9 @@ Release validation covers **2,259 offline tests** and **340 installed-package XM
 
 The [Output guide](docs/Output-Porting.md) documents 15 implemented typed queries and 45 pending native mappings. The linked 2024–2026 comparison inventories every native contract and main-project overload, with shared services for identical contracts and narrow policies planned for evidenced differences. Source coverage does not certify live native behavior or change the published preview.
 
-## Property comparison and planned work
+## Property implementation and comparison
 
-The [Property review](docs/Property-Porting.md) compares STAAD.Pro 2024, 2025 and 2026, inventories native contracts and delegated main-project implementations, and proposes shared internal services with focused version policies. Property remains a binding-only placeholder; this review adds documentation and an implementation plan without changing package contents.
+The [Property review](docs/Property-Porting.md) compares STAAD.Pro 2024, 2025 and 2026, inventories native contracts and delegated main-project implementations, and proposes shared internal services with focused version policies. The current source implements the first 25 typed Property queries; 179 active native mappings remain pending. The prepared distribution preview predates this increment.
 
 ## Support comparison and planned work
 

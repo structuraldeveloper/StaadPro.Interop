@@ -1,0 +1,929 @@
+{
+  "date": "2026-10-23",
+  "scope": "First 25 Property native queries in P2 then P3 order",
+  "publicMethods": 25,
+  "partialAdapters": false,
+  "versionPolicy": "Shared 2024–2026 contracts; no native-code branching is needed for type-only clarifications.",
+  "contracts": [
+    {
+      "managed": "GetBetaAngle",
+      "native": "GetBetaAngle",
+      "returnType": "PropertyQueryResult<double>",
+      "parameters": "int memberId",
+      "summary": "Reads the native beta angle of one member.",
+      "remarks": "Use to observe orientation about the analytical member axis; offsets and releases do not represent beta rotation. Returns the finite signed native angle unchanged, including zero. Native -3001 is NotFound. No degrees/radians conversion or managed local-axis reconstruction is performed.",
+      "example": "17",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<double> GetBetaAngle(int memberId)",
+      "parameterDescriptions": [
+        {
+          "name": "memberId",
+          "declaration": "int memberId",
+          "description": "Positive analytical member ID, not a collection index or physical-member ID."
+        }
+      ],
+      "returnDescription": "The signed native beta angle, or NotFound for native -3001."
+    },
+    {
+      "managed": "GetElementOffsetSpecificationCount",
+      "native": "GetElementOffsetSpecCount",
+      "returnType": "PropertyQueryResult<int>",
+      "parameters": "",
+      "summary": "Counts element-offset specifications in the current model.",
+      "remarks": "This counts native offset specifications, not plates, corners, nonzero vectors or assigned members. Zero is a valid count. Use GetPlateOffsetSpecification to inspect one plate corner and its stored convention. Undocumented negative counts are rejected.",
+      "example": "",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<int> GetElementOffsetSpecificationCount()",
+      "parameterDescriptions": [],
+      "returnDescription": "The nonnegative native specification count; zero is a successful count."
+    },
+    {
+      "managed": "GetMemberReleaseSpecificationExtended",
+      "native": "GetMemberReleaseSpecEx",
+      "returnType": "PropertyQueryResult<MemberReleaseSpecification>",
+      "parameters": "int memberId, MemberEnd memberEnd",
+      "summary": "Reads member-end release modes and applicable extended partial-moment outputs.",
+      "remarks": "Prefer this query when common MP or directional MPX/MPY/MPZ factors are needed. The basic GetMemberReleaseSpecification returns only six mode/parameter slots and cannot supply the separate extended factors. Native 1/true succeeds and 0/false fails. Modes 0/1/-1/-2/-3 are retained per DOF rather than converted to Boolean release flags. Unused spring/MP slots may remain unwritten and are represented as null; an applicable spring or factor must be written and finite. The native common MP factor is dimensionless; translational and rotational spring stiffness retain their different native dimensions.",
+      "example": "17, MemberEnd.End",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<MemberReleaseSpecification> GetMemberReleaseSpecificationExtended(int memberId, MemberEnd memberEnd)",
+      "parameterDescriptions": [
+        {
+          "name": "memberId",
+          "declaration": "int memberId",
+          "description": "Positive analytical member ID, not a collection index or physical-member ID."
+        },
+        {
+          "name": "memberEnd",
+          "declaration": "MemberEnd memberEnd",
+          "description": "MemberEnd.Start (native 0) or MemberEnd.End (native 1)."
+        }
+      ],
+      "returnDescription": "A six-DOF release snapshot including applicable common and directional partial-moment factors, or NativeFailure."
+    },
+    {
+      "managed": "GetMemberReleaseSpecification",
+      "native": "GetMemberReleaseSpec",
+      "returnType": "PropertyQueryResult<MemberReleaseSpecification>",
+      "parameters": "int memberId, MemberEnd memberEnd",
+      "summary": "Reads the six native release modes and applicable spring/partial-moment slots at a member end.",
+      "remarks": "Use for basic release/spring observations. Choose GetMemberReleaseSpecificationExtended for separate common MP and MPX/MPY/MPZ outputs; this basic query never invents zero for those missing outputs. Native 1/true succeeds and 0/false fails. FX/FY/FZ/MX/MY/MZ mode order and 0/1/-1/-2/-3 codes are preserved. Only applicable parameter slots are consumed; a spring or directional partial-factor slot must be finite. These are model specifications, not support reactions or member-end Output forces.",
+      "example": "17, MemberEnd.Start",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<MemberReleaseSpecification> GetMemberReleaseSpecification(int memberId, MemberEnd memberEnd)",
+      "parameterDescriptions": [
+        {
+          "name": "memberId",
+          "declaration": "int memberId",
+          "description": "Positive analytical member ID, not a collection index or physical-member ID."
+        },
+        {
+          "name": "memberEnd",
+          "declaration": "MemberEnd memberEnd",
+          "description": "MemberEnd.Start (native 0) or MemberEnd.End (native 1)."
+        }
+      ],
+      "returnDescription": "A six-DOF release snapshot with applicable native parameter slots; separate extended factors remain unavailable."
+    },
+    {
+      "managed": "GetMemberLocalOffset",
+      "native": "GetMemberLocalOffSet",
+      "returnType": "PropertyQueryResult<Vector3D>",
+      "parameters": "int memberId, MemberEnd memberEnd",
+      "summary": "Reads a member-end offset expressed in member-local coordinates.",
+      "remarks": "Choose this query when a local-coordinate offset is needed; GetMemberGlobalOffset asks STAAD for global components. The vector is an offset in native length units, not a position, displacement result or beta rotation. Native 0 succeeds; -6027 is NoSpecification, -3001 NotFound and -6026 InvalidReference. A successful zero vector stays successful and is not replaced by a shared no-offset singleton. No coordinate conversion or sign change is applied.",
+      "example": "17, MemberEnd.Start",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<Vector3D> GetMemberLocalOffset(int memberId, MemberEnd memberEnd)",
+      "parameterDescriptions": [
+        {
+          "name": "memberId",
+          "declaration": "int memberId",
+          "description": "Positive analytical member ID, not a collection index or physical-member ID."
+        },
+        {
+          "name": "memberEnd",
+          "declaration": "MemberEnd memberEnd",
+          "description": "MemberEnd.Start (native 0) or MemberEnd.End (native 1)."
+        }
+      ],
+      "returnDescription": "An independent member-local offset vector, or the documented absent, missing-entity or invalid-reference outcome."
+    },
+    {
+      "managed": "GetMemberGlobalOffset",
+      "native": "GetMemberGlobalOffSet",
+      "returnType": "PropertyQueryResult<Vector3D>",
+      "parameters": "int memberId, MemberEnd memberEnd",
+      "summary": "Reads a member-end offset expressed in global coordinates.",
+      "remarks": "Choose this query for global components; GetMemberLocalOffset requests member-local components. No managed rotation is substituted. Native 0 succeeds; -6027 is NoSpecification, -3001 NotFound and -6026 InvalidReference. A successful zero vector differs from an absent specification. The returned Vector3D is an independent value in native length units. These are modeling offsets, not Output displacements.",
+      "example": "17, MemberEnd.End",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<Vector3D> GetMemberGlobalOffset(int memberId, MemberEnd memberEnd)",
+      "parameterDescriptions": [
+        {
+          "name": "memberId",
+          "declaration": "int memberId",
+          "description": "Positive analytical member ID, not a collection index or physical-member ID."
+        },
+        {
+          "name": "memberEnd",
+          "declaration": "MemberEnd memberEnd",
+          "description": "MemberEnd.Start (native 0) or MemberEnd.End (native 1)."
+        }
+      ],
+      "returnDescription": "An independent global offset vector, or the documented absent, missing-entity or invalid-reference outcome."
+    },
+    {
+      "managed": "GetMemberSectionProperties",
+      "native": "GetBeamProperty",
+      "returnType": "PropertyQueryResult<BeamSectionProperties>",
+      "parameters": "int memberId",
+      "summary": "Reads the short native section-property packet assigned to a member.",
+      "remarks": "Use for width, depth, axial/shear areas and the three named native inertia slots. GetMemberSectionPropertiesExtended additionally returns flange/web thickness; those fields are null here. This does not hydrate a section catalog or select a section shape. Native 1/true succeeds; 0/false cannot distinguish a missing member, unassigned property and general failure, so it returns NativeFailure without fabricated data. Native Ix/Iz descriptions conflict with conventional physical-axis labels; their slot names/order are preserved without assuming a torsion or principal-axis mapping. Length, area and inertia slots retain their respective native length, length-squared and length-to-the-fourth units.",
+      "example": "17",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<BeamSectionProperties> GetMemberSectionProperties(int memberId)",
+      "parameterDescriptions": [
+        {
+          "name": "memberId",
+          "declaration": "int memberId",
+          "description": "Positive analytical member ID, not a collection index or physical-member ID."
+        }
+      ],
+      "returnDescription": "A section snapshot with width, depth, areas and native inertia slots; thickness fields are unavailable. Native zero reports NativeFailure."
+    },
+    {
+      "managed": "GetMemberSectionPropertiesExtended",
+      "native": "GetBeamPropertyAll",
+      "returnType": "PropertyQueryResult<BeamSectionProperties>",
+      "parameters": "int memberId",
+      "summary": "Reads the native member-section packet including top-flange and web thickness.",
+      "remarks": "Use instead of GetMemberSectionProperties when the two additional thickness outputs are required. No section shape, catalog identity, material or new property is inferred. Native 1/true succeeds; 0/false is an ambiguous failure and exposes no packet. All returned slots must be finite. Native Ix/Iz prose is inconsistent, so NativeIx/NativeIy/NativeIz retain native slot identity rather than a guessed torsional/principal interpretation. Values retain native length, area and fourth-power length units.",
+      "example": "17",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<BeamSectionProperties> GetMemberSectionPropertiesExtended(int memberId)",
+      "parameterDescriptions": [
+        {
+          "name": "memberId",
+          "declaration": "int memberId",
+          "description": "Positive analytical member ID, not a collection index or physical-member ID."
+        }
+      ],
+      "returnDescription": "A section snapshot with width, depth, areas, native inertia slots and flange/web thicknesses; native zero reports NativeFailure."
+    },
+    {
+      "managed": "GetMemberMaterialConstants",
+      "native": "GetBeamConstants",
+      "returnType": "PropertyQueryResult<MaterialConstants>",
+      "parameters": "int memberId",
+      "summary": "Reads material constants associated with a specific member.",
+      "remarks": "Use when the member is known but its material name is not. GetMaterialProperty instead selects a material by exact name; indexed isotropic queries select a material-list index and additionally return G. This native call returns E, Poisson ratio, weight density, thermal expansion and damping, not G or strength fields. ShearModulus is therefore null, never computed from E/Poisson. Native Boolean true succeeds; false does not distinguish a missing member from unavailable constants. WeightDensity is weight per volume, not mass density.",
+      "example": "17",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<MaterialConstants> GetMemberMaterialConstants(int memberId)",
+      "parameterDescriptions": [
+        {
+          "name": "memberId",
+          "declaration": "int memberId",
+          "description": "Positive analytical member ID, not a collection index or physical-member ID."
+        }
+      ],
+      "returnDescription": "The five member-assigned material constants; the unreturned shear modulus remains unavailable."
+    },
+    {
+      "managed": "GetPlateLocalOffset",
+      "native": "GetElementLocalOffset",
+      "returnType": "PropertyQueryResult<Vector3D>",
+      "parameters": "int plateId, int cornerIndex",
+      "summary": "Reads a plate-corner offset in plate-local coordinates.",
+      "remarks": "Choose this query for local components, GetPlateGlobalOffset for global components, or GetPlateOffsetSpecification for the stored selector and vector. cornerIndex is native incidence position 1/2/3/4, never a node ID; triangular-corner validity remains STAAD-controlled. Native 0 succeeds, -4001 is NotFound and -6027 NoSpecification. A successful zero vector is retained. No incidence lookup, coordinate transform or unit conversion occurs.",
+      "example": "17, 1",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<Vector3D> GetPlateLocalOffset(int plateId, int cornerIndex)",
+      "parameterDescriptions": [
+        {
+          "name": "plateId",
+          "declaration": "int plateId",
+          "description": "Positive native plate ID, not a node or section-property ID."
+        },
+        {
+          "name": "cornerIndex",
+          "declaration": "int cornerIndex",
+          "description": "One-based native incidence position 1-4, not a node ID. The acquired model determines valid triangular-plate corners."
+        }
+      ],
+      "returnDescription": "An independent plate-local offset vector, or the documented absent/missing-plate outcome."
+    },
+    {
+      "managed": "GetPlateGlobalOffset",
+      "native": "GetElementGlobalOffset",
+      "returnType": "PropertyQueryResult<Vector3D>",
+      "parameters": "int plateId, int cornerIndex",
+      "summary": "Reads a plate-corner offset in global coordinates.",
+      "remarks": "Use for global components; GetPlateLocalOffset returns local components and GetPlateOffsetSpecification returns the stored convention. The native Global function is called despite its help summary mistakenly saying local. cornerIndex is a one-based incidence position 1-4, not a node number. Native 0 succeeds, -4001 is NotFound and -6027 NoSpecification. A successful zero vector is not absence; no conversion or sign change occurs.",
+      "example": "17, 2",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<Vector3D> GetPlateGlobalOffset(int plateId, int cornerIndex)",
+      "parameterDescriptions": [
+        {
+          "name": "plateId",
+          "declaration": "int plateId",
+          "description": "Positive native plate ID, not a node or section-property ID."
+        },
+        {
+          "name": "cornerIndex",
+          "declaration": "int cornerIndex",
+          "description": "One-based native incidence position 1-4, not a node ID. The acquired model determines valid triangular-plate corners."
+        }
+      ],
+      "returnDescription": "An independent global offset vector, or the documented absent/missing-plate outcome."
+    },
+    {
+      "managed": "GetPlateOffsetSpecification",
+      "native": "GetElementOffsetSpec",
+      "returnType": "PropertyQueryResult<ElementOffsetSpecification>",
+      "parameters": "int plateId, int cornerIndex",
+      "summary": "Reads a plate-corner offset in its stored native convention.",
+      "remarks": "Use when the original Local/Global/Z selector is needed; the local/global offset queries instead request components in a particular coordinate frame. Native 1 supplies an offset, native 0 explicitly means NoSpecification, and -4001 means NotFound. This differs from the local/global getters, where 0 is success. Stored selectors are Local=0, Global=1 and Z=2, matching the main ElementNodeOffsetAxis enum; they must not be cast from its opposite member OffsetAxis numbering. No physical meaning or conversion beyond the native Z selector is inferred. A code-1 zero vector remains valid data.",
+      "example": "17, 1",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<ElementOffsetSpecification> GetPlateOffsetSpecification(int plateId, int cornerIndex)",
+      "parameterDescriptions": [
+        {
+          "name": "plateId",
+          "declaration": "int plateId",
+          "description": "Positive native plate ID, not a node or section-property ID."
+        },
+        {
+          "name": "cornerIndex",
+          "declaration": "int cornerIndex",
+          "description": "One-based native incidence position 1-4, not a node ID. The acquired model determines valid triangular-plate corners."
+        }
+      ],
+      "returnDescription": "The stored coordinate convention and offset, or NoSpecification for native zero and NotFound for native -4001."
+    },
+    {
+      "managed": "GetPlateSectionPropertyId",
+      "native": "GetPlateSectionPropertyRefNo",
+      "returnType": "PropertyQueryResult<int>",
+      "parameters": "int plateId",
+      "summary": "Reads the native section-property reference assigned to a plate.",
+      "remarks": "Use to identify an assigned property, not to read its thickness values or count property definitions. Positive return values are property IDs; -4001 is NotFound and -6022 NotAssigned. Zero is undocumented and rejected. The method is documented in all three reviewed help sets but absent from inspected 2025/2026 CLR interfaces: a missing acquired dispatch member returns Unsupported. No alternate function name, different entity type or fallback call is attempted; other transport errors propagate.",
+      "example": "17",
+      "phase": "P2",
+      "signature": "PropertyQueryResult<int> GetPlateSectionPropertyId(int plateId)",
+      "parameterDescriptions": [
+        {
+          "name": "plateId",
+          "declaration": "int plateId",
+          "description": "Positive native plate ID, not a node or section-property ID."
+        }
+      ],
+      "returnDescription": "The positive assigned property reference, NotFound, NotAssigned, or Unsupported when the acquired receiver lacks this documented member."
+    },
+    {
+      "managed": "GetIsotropicMaterialAssignedMemberCount",
+      "native": "GetIsotropicMaterialAssignedBeamCount",
+      "returnType": "PropertyQueryResult<int>",
+      "parameters": "string materialName",
+      "summary": "Counts members assigned to an exact isotropic material name.",
+      "remarks": "Use for sizing member assignments. GetIsotropicMaterialCount counts material definitions; GetIsotropicMaterialAssignedMemberIds returns the member IDs. A material name is not an index or section/property ID. Nonnegative values are treated as counts following the native purpose and read-only main-source usage; the help table incorrectly lists only 0 OK and its example passes a number despite the named input. Zero is a valid empty count; -6023 is NotFound. This count interpretation remains a live qualification requirement.",
+      "example": "\"STEEL\"",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<int> GetIsotropicMaterialAssignedMemberCount(string materialName)",
+      "parameterDescriptions": [
+        {
+          "name": "materialName",
+          "declaration": "string materialName",
+          "description": "Exact nonblank native material name, preserved without trimming or case normalization; null and NUL-containing text are rejected."
+        }
+      ],
+      "returnDescription": "The nonnegative assigned-member count, or NotFound for native -6023."
+    },
+    {
+      "managed": "GetIsotropicMaterialAssignedMemberIds",
+      "native": "GetIsotropicMaterialAssignedBeamList",
+      "returnType": "PropertyQueryResult<IEnumerable<int>>",
+      "parameters": "string materialName, int maximumResults = 100000",
+      "summary": "Reads an owned bounded snapshot of members assigned to an isotropic material.",
+      "remarks": "Use when native assignment IDs are required without preloading Beam objects. The main source convenience filters a caller-supplied Beam collection; this query returns every native listed ID, preserving order and duplicates. It sizes with GetIsotropicMaterialAssignedBeamCount, validates positive Int32 IDs and exact array shape, and rechecks the count. Native list return 0 succeeds and -6023 is NotFound. Zero count returns an empty read-only snapshot without fetching; a larger count than maximumResults returns LimitExceeded before allocation. Count interpretation follows the native purpose/main usage despite the inconsistent help table. Same-count replacement or concurrent changes through other receivers cannot be proved absent.",
+      "example": "\"STEEL\"",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<IEnumerable<int>> GetIsotropicMaterialAssignedMemberIds(string materialName, int maximumResults = 100000)",
+      "parameterDescriptions": [
+        {
+          "name": "materialName",
+          "declaration": "string materialName",
+          "description": "Exact nonblank native material name, preserved without trimming or case normalization; null and NUL-containing text are rejected."
+        },
+        {
+          "name": "maximumResults",
+          "declaration": "int maximumResults = 100000",
+          "description": "Positive retrieval/allocation limit, default 100000. No truncation or unbounded allocation occurs."
+        }
+      ],
+      "returnDescription": "A materialized read-only member-ID sequence preserving native order and duplicates, or an absence, retrieval-limit or changed-count outcome."
+    },
+    {
+      "managed": "GetMaterialProperty",
+      "native": "GetMaterialProperty",
+      "returnType": "PropertyQueryResult<MaterialProperties>",
+      "parameters": "string materialName",
+      "summary": "Reads basic material constants selected by exact name.",
+      "remarks": "Use an exact material name obtained from an entity or native material observation. GetIsotropicMaterialProperty instead uses a zero-based list index and supplies native G; GetExtendedMaterialProperty also supplies strength fields. Native return 0 succeeds and -6023 is NotFound. These are different success semantics from the Boolean extended function. ShearModulus, Strengths and AssignmentState are null because this function does not return them. No default engineering values or computed G are substituted. Density remains weight per volume.",
+      "example": "\"STEEL\"",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<MaterialProperties> GetMaterialProperty(string materialName)",
+      "parameterDescriptions": [
+        {
+          "name": "materialName",
+          "declaration": "string materialName",
+          "description": "Exact nonblank native material name, preserved without trimming or case normalization; null and NUL-containing text are rejected."
+        }
+      ],
+      "returnDescription": "Five named material constants without an inferred shear modulus or strength packet, or NotFound."
+    },
+    {
+      "managed": "GetBeamMaterialName",
+      "native": "GetBeamMaterialName",
+      "returnType": "PropertyQueryResult<string>",
+      "parameters": "int memberId",
+      "summary": "Reads the exact material name associated with a member.",
+      "remarks": "Use for name discovery before a named material query. This returns a name, not constants, an index, a property ID or a new assignment. Native spelling/case/whitespace are preserved. Empty or native-null text is EmptyOrUnavailable because the help supplies no way to distinguish no assignment from a missing/unavailable member. Non-string responses are rejected; no guessed material name is returned.",
+      "example": "17",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<string> GetBeamMaterialName(int memberId)",
+      "parameterDescriptions": [
+        {
+          "name": "memberId",
+          "declaration": "int memberId",
+          "description": "Positive analytical member ID, not a collection index or physical-member ID."
+        }
+      ],
+      "returnDescription": "The exact native member material name, or EmptyOrUnavailable when the response cannot distinguish absence from unavailable entity data."
+    },
+    {
+      "managed": "GetElementMaterialName",
+      "native": "GetElementMaterialName",
+      "returnType": "PropertyQueryResult<string>",
+      "parameters": "int plateId",
+      "summary": "Reads the exact material name associated with a plate element.",
+      "remarks": "This native element query takes a plate ID. Use GetBeamMaterialName for members; do not pass a node, solid ID or material-list index. It returns the exact name, not constants or thickness. Empty/native-null text is EmptyOrUnavailable because the contract does not distinguish unassigned and unavailable entities. No fallback to a similarly named plate/material API is attempted.",
+      "example": "17",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<string> GetElementMaterialName(int plateId)",
+      "parameterDescriptions": [
+        {
+          "name": "plateId",
+          "declaration": "int plateId",
+          "description": "Positive native plate ID, not a node or section-property ID."
+        }
+      ],
+      "returnDescription": "The exact native plate material name, or EmptyOrUnavailable when the response cannot distinguish absence from unavailable entity data."
+    },
+    {
+      "managed": "GetIsotropicMaterialCount",
+      "native": "GetIsotropicMaterialCount",
+      "returnType": "PropertyQueryResult<int>",
+      "parameters": "",
+      "summary": "Counts isotropic material definitions in the current model.",
+      "remarks": "Use to bound the zero-based materialIndex accepted by GetIsotropicMaterialProperty and GetExtendedIsotropicMaterialProperty. This is not a member/plate assignment count. Zero is a valid empty definition inventory; undocumented negative or nonintegral counts are rejected. A count is only an observation, not a stable reservation of material identities.",
+      "example": "",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<int> GetIsotropicMaterialCount()",
+      "parameterDescriptions": [],
+      "returnDescription": "The nonnegative native isotropic-material count; zero is successful."
+    },
+    {
+      "managed": "GetIsotropicMaterialProperty",
+      "native": "GetIsotropicMaterialProperties",
+      "returnType": "PropertyQueryResult<MaterialProperties>",
+      "parameters": "int materialIndex",
+      "summary": "Reads isotropic constants and name by zero-based material-list index.",
+      "remarks": "Use for material enumeration, unlike GetMaterialProperty which selects by name. materialIndex is zero-based, not a native property ID or member ID. This function returns G directly; that native value is retained instead of the main MaterialProperty computed E/(2*(1+Poisson)) substitute. The native return is the material name, not a success flag. Null/empty name or an index outside the observed count is NotFound. Before/after material counts detect observed changes but not same-count reorderings. Strengths and AssignmentState are null.",
+      "example": "0",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<MaterialProperties> GetIsotropicMaterialProperty(int materialIndex)",
+      "parameterDescriptions": [
+        {
+          "name": "materialIndex",
+          "declaration": "int materialIndex",
+          "description": "Nonnegative zero-based native material-list index, checked against the observed isotropic count."
+        }
+      ],
+      "returnDescription": "The indexed material name and constants including native shear modulus, or an absent/changed-count outcome."
+    },
+    {
+      "managed": "GetExtendedMaterialProperty",
+      "native": "GetMaterialPropertyEx",
+      "returnType": "PropertyQueryResult<MaterialProperties>",
+      "parameters": "string materialName",
+      "summary": "Reads named material constants and extended strength fields.",
+      "remarks": "Choose over GetMaterialProperty when Fy/Fu/Ry/Rt/Fcu are needed. GetExtendedIsotropicMaterialProperty selects a zero-based index and additionally returns native G; this name-based function omits G, so ShearModulus is null. Unlike basic named GetMaterialProperty, native Boolean true means success and false means failure. Strength stresses retain native force/area units; Ry/Rt are dimensionless. No material classification, design pass/fail, default strength or computed shear modulus is inferred.",
+      "example": "\"STEEL\"",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<MaterialProperties> GetExtendedMaterialProperty(string materialName)",
+      "parameterDescriptions": [
+        {
+          "name": "materialName",
+          "declaration": "string materialName",
+          "description": "Exact nonblank native material name, preserved without trimming or case normalization; null and NUL-containing text are rejected."
+        }
+      ],
+      "returnDescription": "Named material constants and all five strength values; the unreturned shear modulus remains unavailable. Native false reports NativeFailure."
+    },
+    {
+      "managed": "GetExtendedIsotropicMaterialProperty",
+      "native": "GetIsotropicMaterialPropertiesEx",
+      "returnType": "PropertyQueryResult<MaterialProperties>",
+      "parameters": "int materialIndex",
+      "summary": "Reads isotropic constants and extended strengths by zero-based material-list index.",
+      "remarks": "Use for enumeration with native G and Fy/Fu/Ry/Rt/Fcu. GetExtendedMaterialProperty selects by name and lacks G; GetIsotropicMaterialProperty omits strengths. The native return is the material name, not a Boolean or numeric status. Null/empty name or an out-of-range observed index is NotFound. Coupled counts are checked before/after; no atomic snapshot or stable same-count ordering is promised. All supplied constants and strength fields must be written and finite; optional AssignmentState remains null.",
+      "example": "0",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<MaterialProperties> GetExtendedIsotropicMaterialProperty(int materialIndex)",
+      "parameterDescriptions": [
+        {
+          "name": "materialIndex",
+          "declaration": "int materialIndex",
+          "description": "Nonnegative zero-based native material-list index, checked against the observed isotropic count."
+        }
+      ],
+      "returnDescription": "The indexed material name, constants including native shear modulus and all five strength values, or an absent/changed-count outcome."
+    },
+    {
+      "managed": "GetIsotropicMaterialPropertiesAssigned",
+      "native": "GetIsotropicMaterialPropertiesAssigned",
+      "returnType": "PropertyQueryResult<MaterialProperties>",
+      "parameters": "int nativeMaterialNumber",
+      "summary": "Reads native isotropic constants together with assignment state.",
+      "remarks": "Use when the native assignment observation is required; the ordinary and extended indexed functions do not return it. nativeMaterialNumber is forwarded unchanged: this help says material number ID, unlike the explicitly zero-based indexed methods. Nonnegative input is accepted without guessed rebasing or a count-based ID/index conversion; qualify the selector on the acquired build. Native string name supplies success; null/empty means NotFound. Assignment output 1 means Unassigned and 2 Assigned, not Boolean 0/1; documented Double or integral forms are decoded exactly. Strengths remain null.",
+      "example": "2",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<MaterialProperties> GetIsotropicMaterialPropertiesAssigned(int nativeMaterialNumber)",
+      "parameterDescriptions": [
+        {
+          "name": "nativeMaterialNumber",
+          "declaration": "int nativeMaterialNumber",
+          "description": "Nonnegative native material selector, passed unchanged. The reviewed contract does not establish its index base; no automatic rebasing is performed."
+        }
+      ],
+      "returnDescription": "The returned material name and constants with explicit native assignment state 1=Unassigned or 2=Assigned, or NotFound."
+    },
+    {
+      "managed": "GetOrthotropic2DMaterialCount",
+      "native": "GetOrthotropic2DMaterialCount",
+      "returnType": "PropertyQueryResult<int>",
+      "parameters": "",
+      "summary": "Counts native 2D orthotropic material definitions.",
+      "remarks": "Use for the 2D orthotropic inventory, not isotropic or 3D material counts and not element assignments. Zero is valid. The associated property getter documents a native material number rather than an explicit zero-based list index; this count does not establish a selector rebasing rule. Undocumented negative/nonintegral counts are rejected.",
+      "example": "",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<int> GetOrthotropic2DMaterialCount()",
+      "parameterDescriptions": [],
+      "returnDescription": "The nonnegative native two-dimensional orthotropic-material count; zero is successful."
+    },
+    {
+      "managed": "GetOrthotropic2DMaterialProperties",
+      "native": "GetOrthotropic2DMaterialProperties",
+      "returnType": "PropertyQueryResult<Orthotropic2DMaterialProperties>",
+      "parameters": "int nativeMaterialNumber",
+      "summary": "Reads the native name and thirteen values of a 2D orthotropic material.",
+      "remarks": "Use for independent directional material constants; isotropic queries cannot substitute for them. nativeMaterialNumber is forwarded unchanged and must be qualified on the acquired build because the help does not establish its base. Native string name indicates success; null/empty is NotFound. Buffer sizes are E=2, Poisson=2, G=3, weight density=2, thermal expansion=2 and damping=2; each output must be finite and owned. Named first/second/third fields preserve native order because the help does not identify physical axis/plane ordering. Do not assume global X/Y or XY/YZ/ZX, derive G, or replace missing values with isotropic defaults.",
+      "example": "2",
+      "phase": "P3",
+      "signature": "PropertyQueryResult<Orthotropic2DMaterialProperties> GetOrthotropic2DMaterialProperties(int nativeMaterialNumber)",
+      "parameterDescriptions": [
+        {
+          "name": "nativeMaterialNumber",
+          "declaration": "int nativeMaterialNumber",
+          "description": "Nonnegative native material selector, passed unchanged. The reviewed contract does not establish its index base; no automatic rebasing is performed."
+        }
+      ],
+      "returnDescription": "An immutable named material snapshot preserving all 13 returned scalar slots and their native ordering, or NotFound."
+    }
+  ],
+  "nativeQualificationRequired": [
+    "Assigned material member count help inconsistency",
+    "Member section Ix/Iz physical interpretation",
+    "Native material number selectors for assigned/orthotropic queries",
+    "Orthotropic physical direction/plane ordering",
+    "Acquired GetPlateSectionPropertyRefNo dispatch presence",
+    "Live COM and engineering validation"
+  ],
+  "reuseDecisions": [
+    {
+      "item": "MemberEnd",
+      "decision": "Reused the existing Start=0 / End=1 enum; no duplicate member-end type."
+    },
+    {
+      "item": "Vector3D",
+      "decision": "Reused the existing WindowsBase value vector for independent local/global offsets."
+    },
+    {
+      "item": "NativeValues",
+      "decision": "Reused strict integral native decoding instead of Convert.ToInt32 rounding/coercion."
+    },
+    {
+      "item": "Main ElementNodeOffsetAxis",
+      "decision": "Ported exact Local=0 / Global=1 / Z=2 semantics with XML; did not reuse the oppositely numbered member OffsetAxis."
+    },
+    {
+      "item": "Main MaterialProperty",
+      "decision": "Reused E/Poisson/weight-density/thermal/damping and strength field meanings. Returned immutable observations; did not copy assumed engineering defaults, computed G/K substitutes, entity-assignment collections or proprietary catalog/unit dependencies. Native G is retained only when returned."
+    },
+    {
+      "item": "Main MemberReleases / Releases / Springs / MpFactors",
+      "decision": "Reused six-DOF order and MP concepts. Added per-DOF release modes and nullable applicable factors because Boolean Releases loses -1/-2/-3 and the source whole-release classification cannot represent independent mixed modes. Did not copy mutable parsing/event wiring or defaults for unavailable MP outputs."
+    },
+    {
+      "item": "Main OffsetSpecification / ElementNodeOffset",
+      "decision": "Reused offset, incidence-index and coordinate-selector semantics. Used existing MemberEnd plus Vector3D/status results rather than copying mutable assignment sets or collapsing absent and successful-zero offsets to a shared singleton."
+    },
+    {
+      "item": "Existing result patterns",
+      "decision": "Followed the existing named status/data pattern without coupling Property absence/status meanings to Output/Load enums or adding public tuples/ref/out."
+    }
+  ],
+  "readOnlyMainEvidence": [
+    {
+      "file": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Interfaces/IOSProperty.cs",
+      "sha256": "7b4184fb1e7f25982a1e3c5225affbad1678fb9b0f8af161aafa33a0140c0040",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:/04. ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs",
+      "sha256": "cfd93f64c48bcc31256c7f0cfe88eff3a5cc354d3cb46cdb04d1542ffeaf7171",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\CastellatedSection.cs",
+      "sha256": "826c92fd109637a6dee5337e436c8812d25ab2fad6ec9fecdf3161285c539fb7",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\ColdChannelLippedSection.cs",
+      "sha256": "a648f5e533c5fcabd41fac9a40aa65c46f7d5d4a15a8748c1132943838cbecfc",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\ColdChannelSection.cs",
+      "sha256": "62dceb090788cf53d770f92f7503ee547d3782730fdee1aceedc75b5c2467d8d",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\CSectionDoubleProfile.cs",
+      "sha256": "4857db36588827055d689dd3fb77b6915e7555ce48a68df175b3cf0115ee0d1b",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\ISectionComposite.cs",
+      "sha256": "7a84b9d154b0546dfd7a6c35d691ea3dd843e065f40e3c4fd78b4cbefd389fa5",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\ISectionDoubleProfile.cs",
+      "sha256": "d94925b8d8eec532f18871557ed0f5bd24768c0c06181a21f2801222f335d7d2",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\ISectionWithCoverPlates.cs",
+      "sha256": "79139a01ea50c60ad9991f0d9d346be8a0f0c64c0632732109047fc4742c11e4",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\LOrBoxSection.cs",
+      "sha256": "f51db7c386feafebc959726a8a90c65dead014c1f77e95515fcf56363e00f434",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\LSectionDoubleProfile.cs",
+      "sha256": "fd35b5e420b791cdf0a37b1eb2b30f3e965c0ddd80c828dd457ff972dc34feba",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\PipeSection.cs",
+      "sha256": "f9093faa164edf87463324e3d4166cd6cdf4564568ddd2372d4f688e7517bc68",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\PlateStrip.cs",
+      "sha256": "0fc5c001c62e68cd052c56080f12ea388174e283e7284a1c011aa34129479c25",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\PrismaticCircleSection.cs",
+      "sha256": "866deaa8d93aa81cf31de452703032c88dd21e091c5143d6e3b9ceba15610d8b",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\PrismaticGeneralSection.cs",
+      "sha256": "e8d697e4187e5351e7a9b423c111b75cc4735e61839c7f3bbe8d4ee25ab3db40",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\PrismaticRectangleSection.cs",
+      "sha256": "ef1fe2c59dbaf721a5b181c1e215506fe328a0bcad2eefdb48f69f3a282e89ac",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\PrismaticTeeSection.cs",
+      "sha256": "00b1c7aa7da2fdb96e0cbed547f3760eaa1b6f95e5610cc0d002343f407696c1",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\PrismaticTrapezoidalSection.cs",
+      "sha256": "f61d9b8daf5f5abfd1ed5d2e99e013af7a493050dca41f0f26ba9fa45390bf13",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\SolidRoundSection.cs",
+      "sha256": "1496050614913b3a904368b381c7a92e89a130ea4d12a9cb7e5cf3274cea9f67",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\TaperISection.cs",
+      "sha256": "cfdc8eaba326d3367022e99de7b9a6b64313dc808b48b670f61e1723e419ebef",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\TaperTubeSection.cs",
+      "sha256": "f35e199afe53b09b5cfbd53fb3d2162f40b8640c3bb37f0f11ec2d71bb7b22b5",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\TCISection.cs",
+      "sha256": "8aac0696d6fb08e142b93c585919c743d9552a12bcf264a0f58d62c417235475",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\UptAngleSection.cs",
+      "sha256": "47fc7724f9c7330096698406742fca9631eefcf20f0610ffa03b56f54490c846",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\UptChannelSection.cs",
+      "sha256": "b6f2581ade1e608d99a6b36dc4ffd2b412c27f278d108fc36642e51be10a8d1a",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\UptDoubleAngleSection.cs",
+      "sha256": "44db0e485e6c749e08e5bd054dd40d8033e6dba2f692de345f3eb3470fedd2c2",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\UptGeneralSection.cs",
+      "sha256": "01222b89ba2d331c67179810ec1d3fc0b600f783fdabcc22fadd1efd499f1dda",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\UptISection.cs",
+      "sha256": "2df153dee4fbdfbde1bee533d753399f3ce63080ed3838af238c6a036014687a",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\UptPipeSection.cs",
+      "sha256": "b30f6a42529636ab80b041433b603ca44ca18d627b8aeda32f2b166474ddee1e",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\UptPrismaticSection.cs",
+      "sha256": "83cd2566eb413b61bbbe75e24b610a9e5c2271d9e7976ce00b6db7559f4463ac",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\UptTeeSection.cs",
+      "sha256": "154afbda28e853d06c682201d3f25a7cd8c11cda07a0bac8ffa5f901727117be",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\UptTubeSection.cs",
+      "sha256": "63b36bff87e9a2a7cc5cbe1ebfc373a4f188e5b8fa5f169915d1feaf7313e22d",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OSProperty\\UptWideFlangeSection.cs",
+      "sha256": "c436718e05388a99f76e76f8ebfff01999e8d8094cd189e41a3828453700d7db",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Base\\OSProperty\\GenericSection.cs",
+      "sha256": "59ca21957b148d8107414ebbf77288132a8d3b500ba7af1718ad327b47bce73c",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Base\\OSProperty\\InertialSection.cs",
+      "sha256": "9ab6ae7deda561a52098180aae57bb1cd988ab03ac1b824db2ff93d3396b6e7a",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Base\\OSProperty\\PrismaticSection.cs",
+      "sha256": "78cc2660e38f6c52451321667058e23ce6b390c85c3252c22c90dc415ef0e21c",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Base\\OSProperty\\StandardSection.cs",
+      "sha256": "b9cdf9d6716e99f2acbd3d362c530536e61f51e9775299fb8cab7cf1e1d920bc",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Base\\OSProperty\\UptSection.cs",
+      "sha256": "2c0e8331bde55f0c9b3e0ed934928fdf8f96dc9780ff4a293bd29f72dc2e7bca",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\ICastellatedSection.cs",
+      "sha256": "3f0e08c63709f32d1f442b35f8c0c19d7a4bba3cd809a5f791977a24d09d747e",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IColdChannelSection.cs",
+      "sha256": "d9f4e9ddb6935aa77f2829815ba33b832aacb7c4a1a3c65242ca20fb483ddf46",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IGenericSection.cs",
+      "sha256": "8c34b25081bc14718c4b72ad045330a8a770ef0b2512b6f468c5cec16f7169dc",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IInertialSection.cs",
+      "sha256": "bfa9f989b295eff3b3dccd3b0ddaeda381c7caac09771c0f8498aa46c9dec81f",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\ILOrBoxSection.cs",
+      "sha256": "9ee3e1cd275ad0bcaff813c14e8eb0f914b41a41161464eb43e5baa8eb917e7b",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IPipeSection.cs",
+      "sha256": "d4a3a1fa957e21dc1f97a82f6f034a9ace0fe9a4f01ff90c80d7d734529d20e2",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IPlateStrip.cs",
+      "sha256": "321827c7313ebf0cfcff32265d29c4f0c7d5a72dc72a6df4b89ecc3e67229869",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IPrismaticSection.cs",
+      "sha256": "03e4618939cc85a5fb054bbf33541899f9012a96dbc65f4b5dd3f8cba37dd630",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\ISolidRoundSection.cs",
+      "sha256": "9d1a93ace567edb049f914dfaef808bba538985f6ccf5000d05a4d44bfc70585",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IStandardSection.cs",
+      "sha256": "04411662c74781aad7445fc86309c94ee4389ac28f5ad397ebc81e353a524a7e",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\ITaperSection.cs",
+      "sha256": "caa325fea68a7f4d8a077f3d98004fcec17baa232a995d3c6f2d81a57fc3e8b4",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\ITaperTubeSection.cs",
+      "sha256": "53b03fecab8ed51ef8ee543676606868facf8f65bb263e8305edd30e88460b47",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\ITCISection.cs",
+      "sha256": "8f2f09c2df55d38e7a69a63e5c97324120db2ebdb93e35cc4de807c75532f03b",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IUptGeneralSection.cs",
+      "sha256": "860b19e52b82a04b0be9bb40070eba8c80ddef33da375c91924bf63eb0ab860f",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IUptISection.cs",
+      "sha256": "9fd66213ae7b22ceee6370779195fbf8c6db9c13e32686376782bbab90da52e2",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IUptPipeSection.cs",
+      "sha256": "6b3a806896c3d316dc7b47ce70f4823138359d0cb2729fc9995eb9e5f638537a",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IUptPrismaticSection.cs",
+      "sha256": "270dab9fea7f5db39bffe5e00a2d0fe06e5189b76699e9f5523ab6746e8306c1",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Interfaces\\OSProperty\\IUptSection.cs",
+      "sha256": "7983549cd6433ae3cc24548f98ade55e3fc83a49baa524c8725a8e8b913f6343",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Services\\SectionPropertyServices.cs",
+      "sha256": "c3a8a3209c986ff5465104ab28ec0e56c9643e6ccab642f2c88aa983a2645698",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Extensions\\IGenericSectionExtensions.cs",
+      "sha256": "337d34da6ab8a02940ee5a4777af4260329105c77c5a115efc7cc6a1ccc99a14",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Factories\\SectionFactory.cs",
+      "sha256": "ba167b6e46f4d4bba2be6f73ad38ad4721750cbf2bac06138b830de14041719f",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Entities\\MaterialProperty.cs",
+      "sha256": "534c584482fc3463634573136cf1f35f82a4cba12a6bfa6efa8acce39970e6ec",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Entities\\OffsetSpecification.cs",
+      "sha256": "be92850983fc2765b233eaa2b9d55f386805cd48edc5c90a9f32c25f8ac0fd95",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Entities\\PlateThickness.cs",
+      "sha256": "7dd1a5ce0b612bd3d32ddbeb61199c76ea3bff51a6d73b3e9a5f905122b8c77d",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Entities\\PlateElementThickness.cs",
+      "sha256": "130b6e29caa883da1f056b0b33e860b5930bcf53dc9217974cf4773dbbf8cea4",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Entities\\MemberReleases.cs",
+      "sha256": "48cd0a7a6c6b8f56a2af8d9f1978aad796f25bbbfd70d9106d7b24774e5bb67c",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Entities\\Releases.cs",
+      "sha256": "53a5a6e2cf925e5d990ea635d117703c6623faccdd09fef0b06972ab3d031c9b",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Entities\\ElementNodeOffset.cs",
+      "sha256": "21d05fed728d3aa97d10f0e37396336de9c85cfdcbfe7da3dbf1f141a44a746c",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Entities\\ElementOffset.cs",
+      "sha256": "97efcab9fa4fee567486b1ce64f11c84d6d0f02858b7a8681837bc6e73eae208",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Entities\\ElementReleases.cs",
+      "sha256": "758cfd8e17dfef93ef86f9890bc63d98303f756166431973b2d317d7fa9a3c84",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Entities\\SectionProperties\\SectionProperty.cs",
+      "sha256": "1e357b352b641ae0bd16b1b6c503e793b74769a5c9504716392d46524d3a7f31",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Enums\\OSProperty\\SectionPropertyType.cs",
+      "sha256": "9b3c2ce8a34b15745a0d32144d3053764e2d68dda9cb7b1a07f8e460ece1bb7a",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Enums\\OffsetLocation.cs",
+      "sha256": "36e85b5dba41d5e18aed9183478c9d3e29f8e4b525268838e3078e9db6fce5e7",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Enums\\OffsetAxis.cs",
+      "sha256": "e2b4f9d803b10f60017a6fc6e6c291c61fe3e3d3749646c982a211f5cbec0d03",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Enums\\ReleaseType.cs",
+      "sha256": "cbd2bb560b214286620e21ef7cde8b1c9df6e69e1dca6b56fc5f876c28847174",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OpenStaadWrapper.cs",
+      "sha256": "83737733d57a672313385f99ea0ca8ffa10f1917fb6a33b89e43ce27e3f37b14",
+      "matchesReviewHash": true
+    },
+    {
+      "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Models\\OffsetAwareMemberEndForces.cs",
+      "sha256": "f2a4d47299955163fb685af63d75fae70b8e2f2be340f627913b396e9a0c0dae",
+      "matchesReviewHash": true
+    }
+  ],
+  "validation": {
+    "offlineTests": 3322,
+    "newPropertyTests": 422,
+    "xmlExamples": 50,
+    "nativeRuntimeValidated": false,
+    "distributionPackageBuilt": false,
+    "installedPackageXmlExamples": 492,
+    "localValidationPackage": "1.0.0-preview.ci.2026102303"
+  }
+}

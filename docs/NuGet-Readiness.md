@@ -1,6 +1,10 @@
 # NuGet readiness assessment
 
-## Current source — Load expansion
+## Current source — Property foundations
+
+Implemented the first 25 typed Property queries for member and plate offsets, releases, section properties and material observations. Results use named status/data classes, existing MemberEnd and Vector3D types, owned collections and comparative XML IntelliSense. Shared 2024–2026 contracts use one internal reader. Native naming, selector and documentation ambiguities are recorded rather than replaced with inferred values. Passed 3,322 offline tests, including 422 new Property cases, and a Release build with zero warnings/errors. Native COM and engineering qualification remain pending; 179 active Property mappings remain to be implemented. The parked Load work and prepared distribution archive are unchanged. See [Property usage](Property-Porting.md). The local 1.0.0-preview.ci.2026102303 validation archive passed isolated restore/build/runtime verification with all 492 selected XML examples, including all 50 new Property examples. No public publication is requested.
+
+## Earlier source — Load expansion
 
 Implemented the 36 approved Load additions: 171 Load overloads, 126/129 documented native dispatches and one metadata-corroborated merge body. Passed 2,900 offline tests (424 new expansion cases). All 72 new interface/adapter XML examples passed the installed-package verifier, bringing the current validation set to 442. The separate 1.0.0-preview.ci.2026102302 archive passed isolated restore/build/runtime checks with mutation guards disabled. The expansion guide is included in future archives. GetLoadAttribute is status-only; MergeBeamLoads returns InvocationCompleted and cannot certify engineering success. Native 2024–2026 COM/engineering qualification remains a release gate. Validation uses a separate local CI archive; the prepared public-distribution archive below is unchanged. See [Load expansion usage](Load-Expansion.md).
 

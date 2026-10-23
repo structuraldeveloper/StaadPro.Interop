@@ -10,7 +10,8 @@ All 30 main-source wrapper properties, both constructor forms, RefreshComObjects
 
 - `Root`, `Geometry`, `Load`: existing implemented adapters.
 - `RawOpenStaad`, `RawGeometry`, `RawLoad`, `RawOutput`, `RawProperty`, `RawSupport`, `RawDesign`, `RawCommands`, `RawTable`, `RawView`: native bindings; RawCommands reads the native singular Command property.
-- `Output`, `Property`, `Support`, `Design`, `Commands`, `Table`, `View`: binding-only placeholders; their domain functions are not ported.
+- `Output`: 15 typed result queries; `Property`: 25 typed observation queries.
+- `Support`, `Design`, `Commands`, `Table`, `View`: binding-only placeholders; their domain functions are not ported.
 - `IdeaStatiCa`: integration placeholder when Geometry/Load/Output exist; no transformation, verification or export functions are available.
 - `StaadVersion`: cached native STAAD version; each access returns a copy, null when unavailable. This is the source for native version selection.
 - `ApplicationVersion`: entry/calling host assembly version; it is not the STAAD version.
@@ -277,3 +278,9 @@ Optional access uses `root.Capabilities.GetAdinaExport()`, `GetAnalysisErrorMess
 IOSOutput and OSOutputAdapter expose 15 typed queries covering analysis/buckling availability, nodal displacement, support reactions, local member-end forces, static checks, seven plate-center result families and member design section/ratio observations. Each returns OutputQueryResult&lt;T&gt; with explicit status and owned data; inspect IsSuccessful before Data. No public reference outputs or tuples are used.
 
 See the [Output API guide](Output-Porting.md) for all signatures, payloads, native flags, axes/units, sentinels, examples, threading/lifetime rules and the 45 pending native mappings. These are source additions after the published preview; live native qualification remains pending.
+
+## Property observations
+
+The current `IOSProperty` / `OSPropertyAdapter` surface contains 25 read-only queries. Every query returns `PropertyQueryResult<T>`; inspect `IsSuccessful` before accessing `Data`. No public reference outputs or tuples are used. See the [complete signature and behavior table](Property-Porting.md#implemented-apis-and-choosing-between-them) for member releases, member/plate offsets, section properties, material names/constants, isotropic observations and orthotropic observations.
+
+Existing `MemberEnd` and `Vector3D` types are reused. New named results distinguish native success, missing entities, absent specifications, unavailable members, collection limits and changed counts. Native units, signs and array ordering are preserved. These methods do not assign properties, convert units, run analysis or certify result freshness. The documented-but-metadata-absent plate property reference query reports `Unsupported` when its exact member is unavailable.

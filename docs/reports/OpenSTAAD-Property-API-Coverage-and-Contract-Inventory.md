@@ -2,9 +2,15 @@
 
 **Review date:** 23 October 2026<br>
 **Baseline:** `3b94e637839f0c3e28c1486d8f03f0a8af230b43`<br>
-**Status:** Documentation and implementation proposals only. The main project was strictly read-only.
+**Status:** Native comparison evidence retained; first 25 common typed query mappings implemented. The main project remained strictly read-only.
 
 Read the [comparison and architecture plan](OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md) for policy decisions and sequencing. The [comparison JSON](data/OpenSTAAD-Property-2024-2026-Comparison.json) preserves all three years separately, exact declarations, complete parameter descriptions, native tables, vendor metadata, source mappings and file fingerprints.
+
+## Current source — first 25 Property queries
+
+Implemented **25 typed Property queries** through IOSProperty and the single non-partial OSPropertyAdapter: all 13 P2 native names and the first 12 P3 names in the documented allocation. Shared 2024–2026 contracts use one internal reader and strict value decoder. The 212-name union contains eight excluded entries, leaving 204 active candidates; **25 have managed routes and 179 remain pending**. GetPlateSectionPropertyRefNo is documented but absent from inspected vendor CLR metadata, so its acquired receiver may return Unsupported. Implementation coverage does not certify live COM or engineering behavior.
+
+Passed **3,313 offline tests**, including **413 new Property cases**, with a Release build free of warnings/errors. Both interface and concrete adapter have matching expanded XML with method comparisons, units/axes, indices, native statuses, exceptions and examples. See [Property usage and reuse decisions](../Property-Porting.md) and the [exact contract index](../contracts/PropertyFoundationContractIndex.json). Main-source review remained read-only; all 74 recorded source fingerprints still match.
 
 ## 1. Scope and counting rules
 
@@ -12,228 +18,228 @@ The Property group tree has 204 / 209 / 209 names in 2024/2025/2026, with 199 / 
 
 There are 18 group pages per year. All were traversed, and a scan of the other group pages found no additional OSPropertyUI-owned function rows. Class-level native listings and generated headers are supplemental evidence. Thirteen surface-related class summaries, fourteen metadata names outside the group tree, and their overlaps form fifteen supplemental candidates; twenty-two additional class-only implementation helpers are excluded.
 
-Current IOSProperty and OSPropertyAdapter contain zero domain functions and zero Property native dispatches. ComObject and inherited Wrapper are binding properties, not domain implementations. The main IOSProperty has 103 overloads; its adapter implements all of them and adds four assignment-query conveniences. It has seven private helpers.
+Current IOSProperty and OSPropertyAdapter contain 25 typed domain queries and 25 Property native dispatch routes. ComObject and inherited Wrapper are binding properties, not domain implementations. The main IOSProperty has 103 overloads; its adapter implements all of them and adds four assignment-query conveniences. It has seven private helpers.
 
 Source coverage counts actual native invocation names, not managed name matches: 56 direct adapter targets plus nineteen additional delegated section-model targets, 75 in total. A source method named GetBeamProperty discovers a property ID by enumerating assignments; it does not call the native eight-output GetBeamProperty. A name-only coverage search would incorrectly mark that native API complete.
 
-Every non-excluded function remains pending as a typed Property API. Named request/result families below are preliminary design proposals, not exported types. Closely related methods should reuse a few cohesive models or typed request subclasses; this is not a plan to create one class per native function. All new public outputs avoid ref/out and tuples.
+The remaining 179 active candidates remain pending as a typed Property API. Named request/result families below are preliminary design proposals, not exported types. Closely related methods should reuse a few cohesive models or typed request subclasses; this is not a plan to create one class per native function. All new public outputs avoid ref/out and tuples.
 
 ## 2. Complete cross-version function matrix
 
-| Native Property name | 2024 | 2025 / 2026 | Contract classification | Main source call targets | Plan |
-| --- | --- | --- | --- | --- | --- |
-| [CreateBeamPropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gaf2cc429be392fe527feed7dc33f78d6c) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1086) | P6 |
-| [CreateBeamPropertyFromTableWithCoverPlates](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gab96ba7f158851c24a2eb289af7f17c6f) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L253) | P6 |
-| [CreateBeamPropertyFromTableComposite](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga50040de9e0075880f3f7285284b7c79a) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1770) | P6 |
-| [CreateWideFlangePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga78cec5f9be32c1061963f94ed050d331) | `VARIANT` | `VARIANT` | Unchanged | No target | P6 |
-| [CreateBeamPropertyFromTableEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gadce802ef32861d83b01a4226b234939c) | `VARIANT` | `VARIANT` | Unchanged | No target | P6 |
-| [CreateTeePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga9623d2b80ee04d55f188772469ae23e7) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1740) | P6 |
-| [CreateChannelPropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gaa08e9a925a2afa0ba3abde267f4eadb1) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1780) | P6 |
-| [CreateAnglePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga6f1c73d26e890715030ddd5e1f765b20) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1803) | P6 |
-| [CreateTubePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga64ab21d46e0b14bdb71c9bd0f1e84c29) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1835) | P6 |
-| [CreatePipePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga8df35fc2730a95842893d45040aaa00b) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1819) | P6 |
-| [CreatePrismaticRectangleProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga4ef3ab387d4b23c1c8e3d3e2d7b7783d) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticRectangleSection.cs#L47) | P6 |
-| [CreatePrismaticCircleProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga016cb17310c1214ad731ef8603f74fcc) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticCircleSection.cs#L38) | P6 |
-| [CreatePrismaticTeeProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga26721d08a647bddd960d0499b42ac5c9) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticTeeSection.cs#L57) | P6 |
-| [CreatePrismaticTrapezoidalProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga0fdc7ad624d8f07839d85b017b518350) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticTrapezoidalSection.cs#L52) | P6 |
-| [CreatePrismaticGeneralProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gae35d506434e6db9abd1edcb540a9d1cb) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticGeneralSection.cs#L63) | P6 |
-| [CreateTaperedIProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gad01c26661a6e9a588c4e5cfb46ce9403) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/TaperISection.cs#L71) | P6 |
-| [CreateTaperedTubeProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga558bd4cf571d37c5f3520b2e7e56b9e5) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/TaperTubeSection.cs#L52) | P6 |
-| [CreatePlateThicknessProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga4ab7a973986b611d748302e8dcdc0154) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1167) | P6 |
-| [CreateUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gacffe1377c08a287a4b95c1fc315f4127) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptAngleSection.cs#L49) | P8 |
-| [AddUPTPropertyWIDEFLANGE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gaf8641a9ec57a7ad52f1f4ee44c4f5168) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptWideFlangeSection.cs#L56) | P8 |
-| [AddUPTPropertyWIDEFLANGEUNEQUAL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga416ce6e066c01171353a67dceb72d404) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [AddUPTPropertyWIDEFLANGECOMPOSITE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gad0aeaec8b6052eaa4e713b184506e935) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [AddUPTPropertyCHANNEL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga762e3143fd9fa6d9ffc3f213af23d57f) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptChannelSection.cs#L53) | P8 |
-| [AddUPTPropertyANGLE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d33b8f55788d2d6a28d75542179a38e) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptAngleSection.cs#L50) | P8 |
-| [AddUPTPropertyDOUBLEANGLE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga7659bafc3884233e8006403264df40b2) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptDoubleAngleSection.cs#L53) | P8 |
-| [AddUPTPropertyTEE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga6657114c7f25e838f5189e45571532d2) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTeeSection.cs#L53) | P8 |
-| [AddUPTPropertyPIPE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga927bbbce72db4a45e0006b936840ffea) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPipeSection.cs#L56) | P8 |
-| [AddUPTPropertyTUBE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga3a2f714b28bce009a5df574409915b70) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTubeSection.cs#L43) | P8 |
-| [AddUPTPropertyGENERAL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gaa701fb0dc527b5cd73cb0c0d6616487f) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptGeneralSection.cs#L89) | P8 |
-| [AddUPTPropertyISECTION](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga192963517f316eef4bf5cb2822d78424) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptISection.cs#L89) | P8 |
-| [AddUPTPropertyPRISMATIC](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga828f857560168eb9d6a9809950454017) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPrismaticSection.cs#L57) | P8 |
-| [CreatePropertyFromUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d6c2edb2612f542b9a1596221a9f784) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptGeneralSection.cs#L91) | P8 |
-| [GetUptGeneralProfilePointsCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gac11402eeb7ce630b8a4b40b0a63cb83e) | Absent | `VARIANT` | Newly documented in 2025 | No target | P8 |
-| [GetUptGeneralProfileBoundaryPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga9f135f3a5b84d9041a60bf5c276699c2) | Absent | `VARIANT` | Newly documented in 2025 | No target | P8 |
-| [GetUptGeneralStressLocationPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga206fc2be959408948d3e81aa6751ed7a) | Absent | `VARIANT` | Newly documented in 2025 | No target | P8 |
-| [AssignBetaAngle](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_beta.html#gac25ed74556a088b204e59721179f1660) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1575) | P5 |
-| [GetBetaAngle](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_beta.html#ga7dbd2b865f74ec34570f04fad356f42b) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L631) | P2 |
-| [GetSectionPropertyValues](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga91afb41d03b9b4df33f3b47b36de3938) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 |
-| [GetSectionPropertyAssignedBeamCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga008bbb46f75923080b95eb63962f1acd) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L55) | P4 |
-| [GetSectionPropertyAssignedBeamList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga4cb2980c099d339e6f0d5532448f1bb1) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1056) | P4 |
-| [GetBeamSectionPropertyRefNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga3c67b414c91c210bf5cc4b70a2f3be74) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 |
-| [GetBeamSectionPropertyValuesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga8d1dc394d29fa932cd97c281ab619ab6) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 |
-| [GetSectionPropertyValuesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga0497f1f458d11eb783f465a85dc6ad27) | `VARIANT` | `VARIANT` | Version policy candidate | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1019) | P4 |
-| [GetSectionTableNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga9c3b455750b4ed8046d78fecb0b8cbc7) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 |
-| [GetBeamSectionPropertyTypeNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga37be18e3c326761c52fb42fa0773a97c) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 |
-| [GetBeamSectionName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga398cd10fa2ef3710d2807797445be4bb) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 |
-| [GetBeamSectionDisplayName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga967af878ba279f8d3a2fe58a0d209a14) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 |
-| [GetCountryTableNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga5ed5bfb3b3caf8dd8d395858eb6bbdec) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 |
-| [GetSectionPropertyCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gabd01f29a4421f6fe05c2138cda657595) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L598) | P4 |
-| [GetSectionPropertyList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga58470c040e0adc4607e00e054b4c6daa) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L602) | P4 |
-| [GetSectionPropertyName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga22f293fd885cd2f6a2102d5a9f9e691d) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1080) | P4 |
-| [GetSectionPropertyType](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga70e659ae3da254327aa62b82914dee1f) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 |
-| [GetSectionPropertyCountry](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga7ecdf0e76eeebbeb8cb5d225ab319084) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1022) | P4 |
-| [GetShapeCode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gae13c9d4c20e1a0a487728cbdcdf73024) | `long` | `long` | Version policy candidate | No target | P9 |
-| [GetRecordForSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga75d00082ceba112a311334739850896b) | `long` | `long` | Version policy candidate | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1029) | P9 |
-| [GetPlateThickness](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga2fa3663eee2b4f19cfd109177de444fe) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1278) | P4 |
-| [GetThicknessPropertyCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga1b82bcd70a84320fa1c5f153255426f8) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1246) | P4 |
-| [GetThicknessPropertyList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga080e308745d58857189ab422b9b6102e) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1249) | P4 |
-| [GetThicknessPropertyAssignedPlateCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga6b405e7c6b5a5a294277ffc910dbe42e) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1294) | P4 |
-| [GetThicknessPropertyAssignedPlateList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gacec0dbd476ed855f50796f7bb4166d2d) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1296) | P4 |
-| [GetThicknessPropertyValues](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gafd3b17a65417534a41a8f1497e4517c6) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1270) | P4 |
-| [RemovePropertyFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga99c86bf4b01408c684ff009e0e00079b) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveMaterialFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaa8489347df16c3ea9aea52ca421e4e53) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveMaterialFromSolid](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaefebf74d842cbed7e39736e94abb8ea4) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [GetIsotropicMaterialAssignedPlateList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaf6b9b9403e5b7e0ae90ba797491f17af) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L411) | P4 |
-| [GetCountofSectionPropertyValuesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga2e1e4793b70cdd102f55d878b92685cc) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1015) | P4 |
-| [FindUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gac238a7c187f6e53ca29b25f2331b20a3) | `long` | `long` | Unchanged | No target | P8 |
-| [CreateUPTTableEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga0fb2e9ebe08ff961ce2e620616ceefa0) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [RemoveUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gaf713bf43b402d4efc3af2b5296ede180) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [RemovePropertyFromUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gaf6f7c76255b453edb2cf220fb297ec72) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [CreatePropertyFromUserTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gabb8beaa20258b93f62714c9672415350) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [GetUserProvidedTableCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga32c6d22bc1d698ce9e1ea6b2f8473cd9) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [GetUserProvidedTableList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga76a5e72dc10bf0cb788454375ef3717b) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [GetUserProvidedTableSectionCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga300e2d80e44a9a02dc31dd461dde271e) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [GetUserProvidedTableSectionList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga01f780a22d5a0720124a9a18c91461d7) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [GetUserProvidedTableSectionType](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gadf28c45e67614bb66eb332b8dd76588b) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [GetUserProvidedTableSectionPropertyCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga43427a4ed7d22d28a82038f6351fee1e) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [GetUserProvidedTableSectionProperties](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga6fa18da33cf823a4a528ddaa35d7aeb3) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [GetUserProvidedTableNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga778d97759d0fae3321f116992db15f50) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 |
-| [CreateMemberReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gabfb89e094b1aa1a943716dfb7a0d4841) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1585) | P7 |
-| [CreateMemberPartialReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gae408d55746db59e4c22c2e505bb403a2) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateMemberTrussSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga19c64f2a9dc77cab9176f382524d17ca) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateMemberInactiveSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gabdcfbecf01cd5889eb04da0aa8102a41) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateMemberTensionSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga8db5109360921dde0350b2cdd4fe611a) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateMemberCompressionSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd9eeea22012202b700e42de2dae4dc0) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateMemberIgnoreStiffSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gad30bdd6dd57392faa1cf132df4819164) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateMemberCableSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga354fa1642399ba13018d1a610149589c) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateMemberCableSpecEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga1fe56e4b2b563db42107d0f2b68b8fb4) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateMemberOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga452a2b2f15fcbf10a46a11e8dec7ef42) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L732) | P7 |
-| [CreateElementNodeReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd355c2d78879ae36eb5cabf7c0d99eb) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateElementPlaneStressSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gaec273848a190a0e1c308a4c770b45f1f) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateElementIgnoreInplaneRotnSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gade9e2bced8795b0cd4dab888244829b3) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [AddControlDependentRelation](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gacfbf4be0e4710af48fbbb2c08bec0cfd) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateElementOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd77251b4fa48baa9491672bf3a3a3ca) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateElementLocalZOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gac1057cd910b775a08d6c2c7df22e2781) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [CreateMemberFireProofingSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga6792430dddf478392843d424059c8730) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [DeleteMemberReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gafe30a2d90280de4c4fd6149959730507) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [DeleteAllControlDependentRelations](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gad780df368b309c15dec931245113040c) | `long` | `long` | Unchanged | No target | P10 |
-| [GetElementOffsetSpecCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5facbddbfb9ea2ad0b48c454a122cf24) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 |
-| [RemoveAllElementOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaa7bdd908c360ccf8ca9e41ee0e894b5a) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [GetMemberSpecCode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga6b19b83068026b147eeb88a3528328d0) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L874) | P7 |
-| [RemovePropertyFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga551c8845b034009e68a16ec2813c50bc) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveBeamPropertyHelper](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gadb028ea4f8477119ab50eb4881ebef61) | `BOOL` | `BOOL` | Native private helper: excluded | No target | P0 |
-| [DeleteProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga26852ecd49fc5ea7657d2b5198a1c7ba) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [GetPropertyUniqueID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5aa6aa08217095c0a0eb65530dd867e8) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [SetPropertyUniqueID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gac7758ac39ea94bba561989b4898e59bb) | `void` | `void` | Unchanged | No target | P7 |
-| [DeleteMemberSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1956ce5d3c9487681c3dcca8c2a7f4a4) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveMemberReleaseSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaaee16932dc7a02f3d707576fc2d009a0) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveMemberOffsetSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga76d69608bda66b72f7a1c9011b68a46d) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveMemberTrussSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga01e39b8ece2146ea7aa09b7ff33423cd) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveMemberInactiveSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaec27f611f0d02de6278bdb6601d106f8) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveMemberTensionSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga22be38efdbc61ef92dabf2b7eb25ad89) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveMemberCompressionSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1fac54088e17dbc9a7e7e93a5a9d1d45) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveMemberIgnoreStiffSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga159089ba705d76f58988ecd3cd052be3) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveMemberCableSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga2b82e36f819c8df67990bdc88da6dd6f) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveElementPlaneStressSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gafc527399dbd62917400f8922ba0b4294) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveElementIgnoreInplaneRotnSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga9b1e19ac200b1c62409785f5c80dd845) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveElementNodeReleaseSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga6503cab6a999f8024fe606c4e32c614a) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [RemoveAllElementNodeReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga8a3da913ec174caaa00066aac9ac2cad) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [GetMemberReleaseSpecEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga8ba58d357fc17509602aff5e2e99c9d4) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L968) | P2 |
-| [GetInactiveMemberCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1b96f8f630976e634b4906f1a1bb60b3) | `long` | `long` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L832) | P7 |
-| [GetInactiveMemberList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga25d477cfe62c96ccbd7901073e76540d) | `void` | `void` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L834) | P7 |
-| [GetAlphaAngleForSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga6aa625ced61caf38f8f164bbb4ecb0c0) | `VARIANT` | `VARIANT` | Formatting/cross-reference only | No target | P7 |
-| [GetCentroidLocationForSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gac9e334a5b43efdadb0faaaa95b48e20b) | `VARIANT` | `VARIANT` | Formatting/cross-reference only | No target | P7 |
-| [GetFireProofedBeamCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga2bfefd59d0590e70c72b7f086e6ede10) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [GetFireProofedBeamList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga838cda3edcec54845560c94c9163d004) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [GetFireProofDataForBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gad5ab8626f3f670ef18fc37c7851528f3) | `VARIANT` | `VARIANT` | Type/meaning clarification | No target | P7 |
-| [GetFireProofingSpecCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5b41580941d25c3f519a74ae1e840a60) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [GetFireProofingSpecDetails](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga9bdbff55763121a7a63149630ed66435) | `VARIANT` | `VARIANT` | Type/meaning clarification | No target | P7 |
-| [GetFireProofingSpecAssignedBeamCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga7fef558917ef800217ce7ef0160c06d1) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [GetFireProofingSpecAssignedBeamList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1cc2f6b4d2a0be3115cdc362d07b48e4) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [RemoveMemberFireProofingSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5ed5d25078d40c5c9c9f011dfc38db57) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [CreateAssignProfileProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga9e14482ffc29d710f72d6e8f648945b6) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 |
-| [AssignBeamProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#gab13d04addd4f49d9ddeb79bc04e076cd) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1091) | P5 |
-| [AssignMemberSpecToBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga04773e6f7e7e123337dd8808525659d6) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L734) | P5 |
-| [AssignPlateThickness](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga1a61c38085b3e44b4017ad4b5fba7329) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1185) | P5 |
-| [AssignParametricSurfaceThickness](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga452172a2ca1781a313b638e1e92f1d05) | `VARIANT` (summary only) | `VARIANT` (summary only) | Reserved: do not use | No target | P0 |
-| [AssignElementSpecToPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga7cfac9861855bd012a1c0e9ab75577bd) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 |
-| [UpdatePropertiesToDesignSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga0ee52e9e4368ba1a8ac84bfff8c336dd) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 |
-| [CreateIsotropicMaterialProperties](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#ga21f578122b014d7b963ac9cbffb0cd33) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1446) | P5 |
-| [CreateIsotropicMaterialPropertiesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#ga0bc4eb672546e351191883694a504138) | `VARIANT` | `VARIANT` | Type/meaning clarification | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1476) | P5 |
-| [CreateIsotropicMaterialSteel](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#ga6d780606438b7dd9a2621feeb2addc46) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 |
-| [CreateIsotropicMaterialConcrete](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#gae3f66093596a98c0a09a9483c1fc61db) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 |
-| [CreateIsotropicMaterialAluminum](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#ga9edf9ae98088d07e28177a6ce0f7e915) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 |
-| [CreateIsotropicMaterialTimber](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#ga120025647e015ec700e4b19452f35e92) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 |
-| [GetIsotropicMaterialAssignedBeamCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gae487189c55613e48e06b63ef9669c0fb) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L440) | P3 |
-| [GetIsotropicMaterialAssignedBeamList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga40e7abe1185d79a7053ab5f5b7f19555) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L443) | P3 |
-| [GetMaterialProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga90b6809ba31300363321cce519f0b9c3) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L180) | P3 |
-| [GetBeamMaterialName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gade8859bea46c3bccd85204f73593e0b0) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L105) | P3 |
-| [GetElementMaterialName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga44859f04996f6facbe39d62d67594b8c) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 |
-| [GetIsotropicMaterialCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gaa8e5a0c6288ae8d53eded96a1fb0c114) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L331) | P3 |
-| [GetIsotropicMaterialProperties](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gaeead1ecb0ed0c1587d432a1e3b9887b5) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L374) | P3 |
-| [GetMaterialPropertyEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga02bbaecea45e8ab88558707f439acbe1) | `VARIANT` | `VARIANT` | Type/meaning clarification | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L151) | P3 |
-| [GetIsotropicMaterialPropertiesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gab82a93e375ef05e9f893b5ba272b7ad5) | `VARIANT` | `VARIANT` | Type/meaning clarification | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L348) | P3 |
-| [GetIsotropicMaterialPropertiesAssigned](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga74438ad3dd2db13772443598f8ee1707) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 |
-| [GetOrthotropic2DMaterialCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga34d6f21ac2f41814c0a2ca78f0d387ed) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 |
-| [GetOrthotropic2DMaterialProperties](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga04b76b162db405e4a289b71f05b7e673) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 |
-| [GetOrthotropic3DMaterialCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gab247088c8327421655e4ad0b53b8a19f) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 |
-| [GetOrthotropic3DMaterialProperties](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga7be4c04b41e1326016a62cd43ccbf8e6) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 |
-| [DeleteMaterial](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga10ded1e9c1480a77783bd89565a1b082) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L71) | P3 |
-| [RemoveMaterialFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gac084be83e5205fc0f6c766025e063531) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 |
-| [RemoveBeamMaterialHelper](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga3caee4c622453d9c30f56cc797d04231) | `BOOL` | `BOOL` | Native private helper: excluded | No target | P0 |
-| [GetPlateMaterialName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga0a6b8e8cdb65ed2b9747e95d7fb7706a) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L109) | P3 |
-| [GetIsotropicMaterialAssignedPlateCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga2eaaa9ee8060d95d5f4c587ac45860e5) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L408) | P3 |
-| [GetSolidMaterialName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga9b909a32be274f8a4a797ea85bdf2340) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 |
-| [GetIsotropicMaterialAssignedSolidCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga875c78622314eabe9df5600344f39a87) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 |
-| [GetIsotropicMaterialAssignedSolidList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga87626360957ef20687a901188e328fdd) | `VARIANT` | `VARIANT` | Type/meaning clarification | No target | P3 |
-| [SetTypeToIsotropicMaterial](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga14f907ed47c4fbfd9d1c644ce60ed823) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 |
-| [GetTypeForIsotropicMaterial](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga3f9536e2090de7917bb53289dcccf2f0) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 |
-| [SetMaterialID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#gaeef73e958f01de09e3c761d0272599d5) | `void` | `void` | Deprecated: use SetMaterialName | No target | P0 |
-| [SetMaterialName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#ga3d08cca38e2d9db5f1e7fdfae318ede6) | `void` | `void` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L232) | P5 |
-| [AssignMaterialToMember](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#ga1d4300751f2837d7af62dc01dbb2432a) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L211) | P5 |
-| [AssignMaterialToPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#gad8b53c7251166270f27431a17b8172e1) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1567) | P5 |
-| [AssignMaterialToParametricSurface](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#gaebf142533eb1edfef25b3f787da3119d) | `VARIANT` (summary only) | `VARIANT` (summary only) | Reserved: do not use | No target | P0 |
-| [AssignMaterialToSolid](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#ga0a26c0b843f84f87f796b75646fe0b72) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 |
-| [CreateMemberAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_attri.html#ga596e62e697d449368e61f64155d2e3e3) | `long` | `long` | Unchanged | No target | P7 |
-| [CreateElementAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_attri.html#gaf9f5aa915388204e73930be35b8936fc) | `long` | `long` | Unchanged | No target | P7 |
-| [DeleteMemberAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga624209a58bc90aa8debb826c76cf4850) | `long` | `long` | Unchanged | No target | P7 |
-| [GetMemberCountByAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#gacb8947a2d5bc779fcd83573c288a024f) | `long` | `long` | Unchanged | No target | P7 |
-| [GetMemberListByAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga601c518a43ee9b2181bb74a1eef40cdb) | `long` | `long` | Unchanged | No target | P7 |
-| [GetMemberAttributeCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga65d055a80eda1974297c41556424518a) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [GetMemberAttributeList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga8ee3d1f547137a80ac72d653fadb49a9) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 |
-| [DeleteElementAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga33b257dd90f2aa0dfdc229de5f4f09be) | `long` | `long` | Unchanged | No target | P7 |
-| [GetElementCountByAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#gae0769d51f8406a5d3a64daba5ade7c1c) | `long` | `long` | Unchanged | No target | P7 |
-| [GetElementListByAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#gafc4b745f61d6e1d6679342b777c32e55) | `long` | `long` | Unchanged | No target | P7 |
-| [GetAssignedAttributeCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga152207bd66e3c7aaa590a87dfde0ee79) | `long` | `long` | Unchanged | No target | P7 |
-| [GetAssignedAttributeByIndex](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga5fb1fa2b9a41c80056c21d5af43ead20) | `long` | `long` | Unchanged | No target | P7 |
-| [RemoveAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#gae2b97c9c2b4b73c84e9f221f50062150) | `long` | `long` | Unchanged | No target | P7 |
-| [AssignMemberAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_attri.html#gad33b01a3d202d730de11bd3e13e0d8c6) | `long` | `long` | Unchanged | No target | P7 |
-| [AssignElementAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_attri.html#ga07b29997e1c5a2ccee2677104bd3dced) | `long` | `long` | Unchanged | No target | P7 |
-| [GetMemberReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga87a6522925d50ef55f783c90659e0180) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L916) | P2 |
-| [GetMemberLocalOffSet](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#gafdd6f4200ccd7a34763427950ff01281) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L709) | P2 |
-| [GetMemberGlobalOffSet](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#gaf5e75d28dc527fdefb40ac84111caaa3) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L707) | P2 |
-| [GetBeamProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga185a7f1dd1d7576097df4e187e23bfe3) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 |
-| [GetBeamPropertyAll](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga2ecc4ba0fec2945bfdda017ed702cbea) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 |
-| [GetBeamConstants](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga13b2745c44a68596591a21b578efa331) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 |
-| [GetElementLocalOffset](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#gaef9c6cdae820d578c8a9a093edc8ae91) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 |
-| [GetElementGlobalOffset](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga4cc99a4ac6ee14397d95e411c515f1d8) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 |
-| [GetElementOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga94a58d54353f25487a5127b28f6f83ec) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1195) | P2 |
-| [GetPlateSectionPropertyRefNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga365e1db0fa5a9fde9ff8ba9359f81cc3) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 |
-| [GetPublishedProfileName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_publish.html#ga255dfc3675daa744d31d7cd41dc4e1f1) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [GetSTAADProfileName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_publish.html#ga505bb1119e1751bc9006263b43016121) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 |
-| [SetStandardProfileDBFolder](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga4e87d6b72233137048da0333c8565781) | `long` | `long` | Version policy candidate | No target | P9 |
-| [GetStandardProfileDBFolder](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaa29514922cc9ae65f0d92da202144f5f) | `VARIANT` | `VARIANT` | Formatting/cross-reference only | No target | P9 |
-| [GetDefaultStandardProfileDBFolder](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaf3c05fdd108cc02b0269073ae1543663) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 |
-| [IsStandardDatabaseSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaeb4bb81496f3d6451e9a126ea0a6d3a6) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 |
-| [GetStandardSectionDatabaseName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga527cf81f6e5369eec3076be58fde90cc) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 |
-| [GetStandardSectionTableName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga45b152c818ab6a2b89be7d90892d0ded) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 |
-| [GetStandardSectionName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga87dfe66234b751a9c9f5914de89e2fb1) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 |
-| [GetProfileBoundaryInformation](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga97b4352067b45df2388452488c772be1) | `VARIANT` (summary only) | Absent | Reserved: do not use | No target | P0 |
-| [GetProfileNoOfPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga32bba6cd08a1fb0c8b776376e6306c2f) | `VARIANT` (summary only) | Absent | Reserved: do not use | No target | P0 |
-| [GetProfileBoundaryPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga51857b4c21c7bec5391a0a26f34a6a40) | `VARIANT` (summary only) | Absent | Reserved: do not use | No target | P0 |
+| Native Property name | 2024 | 2025 / 2026 | Contract classification | Main source call targets | Plan | Current typed mapping |
+| --- | --- | --- | --- | --- | --- | --- |
+| [CreateBeamPropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gaf2cc429be392fe527feed7dc33f78d6c) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1086) | P6 | Pending |
+| [CreateBeamPropertyFromTableWithCoverPlates](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gab96ba7f158851c24a2eb289af7f17c6f) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L253) | P6 | Pending |
+| [CreateBeamPropertyFromTableComposite](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga50040de9e0075880f3f7285284b7c79a) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1770) | P6 | Pending |
+| [CreateWideFlangePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga78cec5f9be32c1061963f94ed050d331) | `VARIANT` | `VARIANT` | Unchanged | No target | P6 | Pending |
+| [CreateBeamPropertyFromTableEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gadce802ef32861d83b01a4226b234939c) | `VARIANT` | `VARIANT` | Unchanged | No target | P6 | Pending |
+| [CreateTeePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga9623d2b80ee04d55f188772469ae23e7) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1740) | P6 | Pending |
+| [CreateChannelPropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gaa08e9a925a2afa0ba3abde267f4eadb1) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1780) | P6 | Pending |
+| [CreateAnglePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga6f1c73d26e890715030ddd5e1f765b20) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1803) | P6 | Pending |
+| [CreateTubePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga64ab21d46e0b14bdb71c9bd0f1e84c29) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1835) | P6 | Pending |
+| [CreatePipePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga8df35fc2730a95842893d45040aaa00b) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1819) | P6 | Pending |
+| [CreatePrismaticRectangleProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga4ef3ab387d4b23c1c8e3d3e2d7b7783d) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticRectangleSection.cs#L47) | P6 | Pending |
+| [CreatePrismaticCircleProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga016cb17310c1214ad731ef8603f74fcc) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticCircleSection.cs#L38) | P6 | Pending |
+| [CreatePrismaticTeeProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga26721d08a647bddd960d0499b42ac5c9) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticTeeSection.cs#L57) | P6 | Pending |
+| [CreatePrismaticTrapezoidalProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga0fdc7ad624d8f07839d85b017b518350) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticTrapezoidalSection.cs#L52) | P6 | Pending |
+| [CreatePrismaticGeneralProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gae35d506434e6db9abd1edcb540a9d1cb) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticGeneralSection.cs#L63) | P6 | Pending |
+| [CreateTaperedIProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gad01c26661a6e9a588c4e5cfb46ce9403) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/TaperISection.cs#L71) | P6 | Pending |
+| [CreateTaperedTubeProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga558bd4cf571d37c5f3520b2e7e56b9e5) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/TaperTubeSection.cs#L52) | P6 | Pending |
+| [CreatePlateThicknessProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga4ab7a973986b611d748302e8dcdc0154) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1167) | P6 | Pending |
+| [CreateUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gacffe1377c08a287a4b95c1fc315f4127) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptAngleSection.cs#L49) | P8 | Pending |
+| [AddUPTPropertyWIDEFLANGE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gaf8641a9ec57a7ad52f1f4ee44c4f5168) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptWideFlangeSection.cs#L56) | P8 | Pending |
+| [AddUPTPropertyWIDEFLANGEUNEQUAL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga416ce6e066c01171353a67dceb72d404) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [AddUPTPropertyWIDEFLANGECOMPOSITE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gad0aeaec8b6052eaa4e713b184506e935) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [AddUPTPropertyCHANNEL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga762e3143fd9fa6d9ffc3f213af23d57f) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptChannelSection.cs#L53) | P8 | Pending |
+| [AddUPTPropertyANGLE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d33b8f55788d2d6a28d75542179a38e) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptAngleSection.cs#L50) | P8 | Pending |
+| [AddUPTPropertyDOUBLEANGLE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga7659bafc3884233e8006403264df40b2) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptDoubleAngleSection.cs#L53) | P8 | Pending |
+| [AddUPTPropertyTEE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga6657114c7f25e838f5189e45571532d2) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTeeSection.cs#L53) | P8 | Pending |
+| [AddUPTPropertyPIPE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga927bbbce72db4a45e0006b936840ffea) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPipeSection.cs#L56) | P8 | Pending |
+| [AddUPTPropertyTUBE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga3a2f714b28bce009a5df574409915b70) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTubeSection.cs#L43) | P8 | Pending |
+| [AddUPTPropertyGENERAL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gaa701fb0dc527b5cd73cb0c0d6616487f) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptGeneralSection.cs#L89) | P8 | Pending |
+| [AddUPTPropertyISECTION](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga192963517f316eef4bf5cb2822d78424) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptISection.cs#L89) | P8 | Pending |
+| [AddUPTPropertyPRISMATIC](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga828f857560168eb9d6a9809950454017) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPrismaticSection.cs#L57) | P8 | Pending |
+| [CreatePropertyFromUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d6c2edb2612f542b9a1596221a9f784) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptGeneralSection.cs#L91) | P8 | Pending |
+| [GetUptGeneralProfilePointsCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gac11402eeb7ce630b8a4b40b0a63cb83e) | Absent | `VARIANT` | Newly documented in 2025 | No target | P8 | Pending |
+| [GetUptGeneralProfileBoundaryPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga9f135f3a5b84d9041a60bf5c276699c2) | Absent | `VARIANT` | Newly documented in 2025 | No target | P8 | Pending |
+| [GetUptGeneralStressLocationPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga206fc2be959408948d3e81aa6751ed7a) | Absent | `VARIANT` | Newly documented in 2025 | No target | P8 | Pending |
+| [AssignBetaAngle](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_beta.html#gac25ed74556a088b204e59721179f1660) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1575) | P5 | Pending |
+| [GetBetaAngle](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_beta.html#ga7dbd2b865f74ec34570f04fad356f42b) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L631) | P2 | [GetBetaAngle](../Property-Porting.md#getbetaangle) |
+| [GetSectionPropertyValues](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga91afb41d03b9b4df33f3b47b36de3938) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 | Pending |
+| [GetSectionPropertyAssignedBeamCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga008bbb46f75923080b95eb63962f1acd) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L55) | P4 | Pending |
+| [GetSectionPropertyAssignedBeamList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga4cb2980c099d339e6f0d5532448f1bb1) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1056) | P4 | Pending |
+| [GetBeamSectionPropertyRefNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga3c67b414c91c210bf5cc4b70a2f3be74) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 | Pending |
+| [GetBeamSectionPropertyValuesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga8d1dc394d29fa932cd97c281ab619ab6) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 | Pending |
+| [GetSectionPropertyValuesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga0497f1f458d11eb783f465a85dc6ad27) | `VARIANT` | `VARIANT` | Version policy candidate | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1019) | P4 | Pending |
+| [GetSectionTableNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga9c3b455750b4ed8046d78fecb0b8cbc7) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 | Pending |
+| [GetBeamSectionPropertyTypeNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga37be18e3c326761c52fb42fa0773a97c) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 | Pending |
+| [GetBeamSectionName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga398cd10fa2ef3710d2807797445be4bb) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 | Pending |
+| [GetBeamSectionDisplayName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga967af878ba279f8d3a2fe58a0d209a14) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 | Pending |
+| [GetCountryTableNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga5ed5bfb3b3caf8dd8d395858eb6bbdec) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 | Pending |
+| [GetSectionPropertyCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gabd01f29a4421f6fe05c2138cda657595) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L598) | P4 | Pending |
+| [GetSectionPropertyList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga58470c040e0adc4607e00e054b4c6daa) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L602) | P4 | Pending |
+| [GetSectionPropertyName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga22f293fd885cd2f6a2102d5a9f9e691d) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1080) | P4 | Pending |
+| [GetSectionPropertyType](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga70e659ae3da254327aa62b82914dee1f) | `VARIANT` | `VARIANT` | Unchanged | No target | P4 | Pending |
+| [GetSectionPropertyCountry](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga7ecdf0e76eeebbeb8cb5d225ab319084) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1022) | P4 | Pending |
+| [GetShapeCode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gae13c9d4c20e1a0a487728cbdcdf73024) | `long` | `long` | Version policy candidate | No target | P9 | Pending |
+| [GetRecordForSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga75d00082ceba112a311334739850896b) | `long` | `long` | Version policy candidate | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1029) | P9 | Pending |
+| [GetPlateThickness](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga2fa3663eee2b4f19cfd109177de444fe) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1278) | P4 | Pending |
+| [GetThicknessPropertyCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga1b82bcd70a84320fa1c5f153255426f8) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1246) | P4 | Pending |
+| [GetThicknessPropertyList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga080e308745d58857189ab422b9b6102e) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1249) | P4 | Pending |
+| [GetThicknessPropertyAssignedPlateCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga6b405e7c6b5a5a294277ffc910dbe42e) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1294) | P4 | Pending |
+| [GetThicknessPropertyAssignedPlateList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gacec0dbd476ed855f50796f7bb4166d2d) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1296) | P4 | Pending |
+| [GetThicknessPropertyValues](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gafd3b17a65417534a41a8f1497e4517c6) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1270) | P4 | Pending |
+| [RemovePropertyFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga99c86bf4b01408c684ff009e0e00079b) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveMaterialFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaa8489347df16c3ea9aea52ca421e4e53) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveMaterialFromSolid](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaefebf74d842cbed7e39736e94abb8ea4) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [GetIsotropicMaterialAssignedPlateList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaf6b9b9403e5b7e0ae90ba797491f17af) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L411) | P4 | Pending |
+| [GetCountofSectionPropertyValuesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga2e1e4793b70cdd102f55d878b92685cc) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1015) | P4 | Pending |
+| [FindUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gac238a7c187f6e53ca29b25f2331b20a3) | `long` | `long` | Unchanged | No target | P8 | Pending |
+| [CreateUPTTableEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga0fb2e9ebe08ff961ce2e620616ceefa0) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [RemoveUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gaf713bf43b402d4efc3af2b5296ede180) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [RemovePropertyFromUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gaf6f7c76255b453edb2cf220fb297ec72) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [CreatePropertyFromUserTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gabb8beaa20258b93f62714c9672415350) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [GetUserProvidedTableCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga32c6d22bc1d698ce9e1ea6b2f8473cd9) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [GetUserProvidedTableList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga76a5e72dc10bf0cb788454375ef3717b) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [GetUserProvidedTableSectionCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga300e2d80e44a9a02dc31dd461dde271e) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [GetUserProvidedTableSectionList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga01f780a22d5a0720124a9a18c91461d7) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [GetUserProvidedTableSectionType](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gadf28c45e67614bb66eb332b8dd76588b) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [GetUserProvidedTableSectionPropertyCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga43427a4ed7d22d28a82038f6351fee1e) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [GetUserProvidedTableSectionProperties](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga6fa18da33cf823a4a528ddaa35d7aeb3) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [GetUserProvidedTableNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga778d97759d0fae3321f116992db15f50) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
+| [CreateMemberReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gabfb89e094b1aa1a943716dfb7a0d4841) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1585) | P7 | Pending |
+| [CreateMemberPartialReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gae408d55746db59e4c22c2e505bb403a2) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateMemberTrussSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga19c64f2a9dc77cab9176f382524d17ca) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateMemberInactiveSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gabdcfbecf01cd5889eb04da0aa8102a41) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateMemberTensionSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga8db5109360921dde0350b2cdd4fe611a) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateMemberCompressionSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd9eeea22012202b700e42de2dae4dc0) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateMemberIgnoreStiffSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gad30bdd6dd57392faa1cf132df4819164) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateMemberCableSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga354fa1642399ba13018d1a610149589c) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateMemberCableSpecEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga1fe56e4b2b563db42107d0f2b68b8fb4) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateMemberOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga452a2b2f15fcbf10a46a11e8dec7ef42) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L732) | P7 | Pending |
+| [CreateElementNodeReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd355c2d78879ae36eb5cabf7c0d99eb) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateElementPlaneStressSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gaec273848a190a0e1c308a4c770b45f1f) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateElementIgnoreInplaneRotnSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gade9e2bced8795b0cd4dab888244829b3) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [AddControlDependentRelation](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gacfbf4be0e4710af48fbbb2c08bec0cfd) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateElementOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd77251b4fa48baa9491672bf3a3a3ca) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateElementLocalZOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gac1057cd910b775a08d6c2c7df22e2781) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateMemberFireProofingSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga6792430dddf478392843d424059c8730) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [DeleteMemberReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gafe30a2d90280de4c4fd6149959730507) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [DeleteAllControlDependentRelations](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gad780df368b309c15dec931245113040c) | `long` | `long` | Unchanged | No target | P10 | Pending |
+| [GetElementOffsetSpecCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5facbddbfb9ea2ad0b48c454a122cf24) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 | [GetElementOffsetSpecificationCount](../Property-Porting.md#getelementoffsetspecificationcount) |
+| [RemoveAllElementOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaa7bdd908c360ccf8ca9e41ee0e894b5a) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [GetMemberSpecCode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga6b19b83068026b147eeb88a3528328d0) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L874) | P7 | Pending |
+| [RemovePropertyFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga551c8845b034009e68a16ec2813c50bc) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveBeamPropertyHelper](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gadb028ea4f8477119ab50eb4881ebef61) | `BOOL` | `BOOL` | Native private helper: excluded | No target | P0 | Excluded |
+| [DeleteProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga26852ecd49fc5ea7657d2b5198a1c7ba) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [GetPropertyUniqueID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5aa6aa08217095c0a0eb65530dd867e8) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [SetPropertyUniqueID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gac7758ac39ea94bba561989b4898e59bb) | `void` | `void` | Unchanged | No target | P7 | Pending |
+| [DeleteMemberSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1956ce5d3c9487681c3dcca8c2a7f4a4) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveMemberReleaseSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaaee16932dc7a02f3d707576fc2d009a0) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveMemberOffsetSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga76d69608bda66b72f7a1c9011b68a46d) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveMemberTrussSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga01e39b8ece2146ea7aa09b7ff33423cd) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveMemberInactiveSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaec27f611f0d02de6278bdb6601d106f8) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveMemberTensionSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga22be38efdbc61ef92dabf2b7eb25ad89) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveMemberCompressionSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1fac54088e17dbc9a7e7e93a5a9d1d45) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveMemberIgnoreStiffSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga159089ba705d76f58988ecd3cd052be3) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveMemberCableSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga2b82e36f819c8df67990bdc88da6dd6f) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveElementPlaneStressSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gafc527399dbd62917400f8922ba0b4294) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveElementIgnoreInplaneRotnSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga9b1e19ac200b1c62409785f5c80dd845) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveElementNodeReleaseSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga6503cab6a999f8024fe606c4e32c614a) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveAllElementNodeReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga8a3da913ec174caaa00066aac9ac2cad) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [GetMemberReleaseSpecEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga8ba58d357fc17509602aff5e2e99c9d4) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L968) | P2 | [GetMemberReleaseSpecificationExtended](../Property-Porting.md#getmemberreleasespecificationextended) |
+| [GetInactiveMemberCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1b96f8f630976e634b4906f1a1bb60b3) | `long` | `long` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L832) | P7 | Pending |
+| [GetInactiveMemberList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga25d477cfe62c96ccbd7901073e76540d) | `void` | `void` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L834) | P7 | Pending |
+| [GetAlphaAngleForSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga6aa625ced61caf38f8f164bbb4ecb0c0) | `VARIANT` | `VARIANT` | Formatting/cross-reference only | No target | P7 | Pending |
+| [GetCentroidLocationForSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gac9e334a5b43efdadb0faaaa95b48e20b) | `VARIANT` | `VARIANT` | Formatting/cross-reference only | No target | P7 | Pending |
+| [GetFireProofedBeamCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga2bfefd59d0590e70c72b7f086e6ede10) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [GetFireProofedBeamList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga838cda3edcec54845560c94c9163d004) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [GetFireProofDataForBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gad5ab8626f3f670ef18fc37c7851528f3) | `VARIANT` | `VARIANT` | Type/meaning clarification | No target | P7 | Pending |
+| [GetFireProofingSpecCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5b41580941d25c3f519a74ae1e840a60) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [GetFireProofingSpecDetails](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga9bdbff55763121a7a63149630ed66435) | `VARIANT` | `VARIANT` | Type/meaning clarification | No target | P7 | Pending |
+| [GetFireProofingSpecAssignedBeamCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga7fef558917ef800217ce7ef0160c06d1) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [GetFireProofingSpecAssignedBeamList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1cc2f6b4d2a0be3115cdc362d07b48e4) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [RemoveMemberFireProofingSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5ed5d25078d40c5c9c9f011dfc38db57) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [CreateAssignProfileProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga9e14482ffc29d710f72d6e8f648945b6) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 | Pending |
+| [AssignBeamProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#gab13d04addd4f49d9ddeb79bc04e076cd) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1091) | P5 | Pending |
+| [AssignMemberSpecToBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga04773e6f7e7e123337dd8808525659d6) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L734) | P5 | Pending |
+| [AssignPlateThickness](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga1a61c38085b3e44b4017ad4b5fba7329) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1185) | P5 | Pending |
+| [AssignParametricSurfaceThickness](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga452172a2ca1781a313b638e1e92f1d05) | `VARIANT` (summary only) | `VARIANT` (summary only) | Reserved: do not use | No target | P0 | Excluded |
+| [AssignElementSpecToPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga7cfac9861855bd012a1c0e9ab75577bd) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 | Pending |
+| [UpdatePropertiesToDesignSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_section.html#ga0ee52e9e4368ba1a8ac84bfff8c336dd) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 | Pending |
+| [CreateIsotropicMaterialProperties](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#ga21f578122b014d7b963ac9cbffb0cd33) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1446) | P5 | Pending |
+| [CreateIsotropicMaterialPropertiesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#ga0bc4eb672546e351191883694a504138) | `VARIANT` | `VARIANT` | Type/meaning clarification | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1476) | P5 | Pending |
+| [CreateIsotropicMaterialSteel](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#ga6d780606438b7dd9a2621feeb2addc46) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 | Pending |
+| [CreateIsotropicMaterialConcrete](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#gae3f66093596a98c0a09a9483c1fc61db) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 | Pending |
+| [CreateIsotropicMaterialAluminum](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#ga9edf9ae98088d07e28177a6ce0f7e915) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 | Pending |
+| [CreateIsotropicMaterialTimber](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_mat.html#ga120025647e015ec700e4b19452f35e92) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 | Pending |
+| [GetIsotropicMaterialAssignedBeamCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gae487189c55613e48e06b63ef9669c0fb) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L440) | P3 | [GetIsotropicMaterialAssignedMemberCount](../Property-Porting.md#getisotropicmaterialassignedmembercount) |
+| [GetIsotropicMaterialAssignedBeamList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga40e7abe1185d79a7053ab5f5b7f19555) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L443) | P3 | [GetIsotropicMaterialAssignedMemberIds](../Property-Porting.md#getisotropicmaterialassignedmemberids) |
+| [GetMaterialProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga90b6809ba31300363321cce519f0b9c3) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L180) | P3 | [GetMaterialProperty](../Property-Porting.md#getmaterialproperty) |
+| [GetBeamMaterialName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gade8859bea46c3bccd85204f73593e0b0) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L105) | P3 | [GetBeamMaterialName](../Property-Porting.md#getbeammaterialname) |
+| [GetElementMaterialName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga44859f04996f6facbe39d62d67594b8c) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 | [GetElementMaterialName](../Property-Porting.md#getelementmaterialname) |
+| [GetIsotropicMaterialCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gaa8e5a0c6288ae8d53eded96a1fb0c114) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L331) | P3 | [GetIsotropicMaterialCount](../Property-Porting.md#getisotropicmaterialcount) |
+| [GetIsotropicMaterialProperties](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gaeead1ecb0ed0c1587d432a1e3b9887b5) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L374) | P3 | [GetIsotropicMaterialProperty](../Property-Porting.md#getisotropicmaterialproperty) |
+| [GetMaterialPropertyEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga02bbaecea45e8ab88558707f439acbe1) | `VARIANT` | `VARIANT` | Type/meaning clarification | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L151) | P3 | [GetExtendedMaterialProperty](../Property-Porting.md#getextendedmaterialproperty) |
+| [GetIsotropicMaterialPropertiesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gab82a93e375ef05e9f893b5ba272b7ad5) | `VARIANT` | `VARIANT` | Type/meaning clarification | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L348) | P3 | [GetExtendedIsotropicMaterialProperty](../Property-Porting.md#getextendedisotropicmaterialproperty) |
+| [GetIsotropicMaterialPropertiesAssigned](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga74438ad3dd2db13772443598f8ee1707) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 | [GetIsotropicMaterialPropertiesAssigned](../Property-Porting.md#getisotropicmaterialpropertiesassigned) |
+| [GetOrthotropic2DMaterialCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga34d6f21ac2f41814c0a2ca78f0d387ed) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 | [GetOrthotropic2DMaterialCount](../Property-Porting.md#getorthotropic2dmaterialcount) |
+| [GetOrthotropic2DMaterialProperties](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga04b76b162db405e4a289b71f05b7e673) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 | [GetOrthotropic2DMaterialProperties](../Property-Porting.md#getorthotropic2dmaterialproperties) |
+| [GetOrthotropic3DMaterialCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gab247088c8327421655e4ad0b53b8a19f) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 | Pending |
+| [GetOrthotropic3DMaterialProperties](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga7be4c04b41e1326016a62cd43ccbf8e6) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 | Pending |
+| [DeleteMaterial](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga10ded1e9c1480a77783bd89565a1b082) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L71) | P3 | Pending |
+| [RemoveMaterialFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gac084be83e5205fc0f6c766025e063531) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 | Pending |
+| [RemoveBeamMaterialHelper](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga3caee4c622453d9c30f56cc797d04231) | `BOOL` | `BOOL` | Native private helper: excluded | No target | P0 | Excluded |
+| [GetPlateMaterialName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga0a6b8e8cdb65ed2b9747e95d7fb7706a) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L109) | P3 | Pending |
+| [GetIsotropicMaterialAssignedPlateCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga2eaaa9ee8060d95d5f4c587ac45860e5) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L408) | P3 | Pending |
+| [GetSolidMaterialName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga9b909a32be274f8a4a797ea85bdf2340) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 | Pending |
+| [GetIsotropicMaterialAssignedSolidCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga875c78622314eabe9df5600344f39a87) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 | Pending |
+| [GetIsotropicMaterialAssignedSolidList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga87626360957ef20687a901188e328fdd) | `VARIANT` | `VARIANT` | Type/meaning clarification | No target | P3 | Pending |
+| [SetTypeToIsotropicMaterial](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga14f907ed47c4fbfd9d1c644ce60ed823) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 | Pending |
+| [GetTypeForIsotropicMaterial](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga3f9536e2090de7917bb53289dcccf2f0) | `VARIANT` | `VARIANT` | Unchanged | No target | P3 | Pending |
+| [SetMaterialID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#gaeef73e958f01de09e3c761d0272599d5) | `void` | `void` | Deprecated: use SetMaterialName | No target | P0 | Excluded |
+| [SetMaterialName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#ga3d08cca38e2d9db5f1e7fdfae318ede6) | `void` | `void` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L232) | P5 | Pending |
+| [AssignMaterialToMember](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#ga1d4300751f2837d7af62dc01dbb2432a) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L211) | P5 | Pending |
+| [AssignMaterialToPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#gad8b53c7251166270f27431a17b8172e1) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1567) | P5 | Pending |
+| [AssignMaterialToParametricSurface](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#gaebf142533eb1edfef25b3f787da3119d) | `VARIANT` (summary only) | `VARIANT` (summary only) | Reserved: do not use | No target | P0 | Excluded |
+| [AssignMaterialToSolid](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_mat.html#ga0a26c0b843f84f87f796b75646fe0b72) | `VARIANT` | `VARIANT` | Unchanged | No target | P5 | Pending |
+| [CreateMemberAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_attri.html#ga596e62e697d449368e61f64155d2e3e3) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [CreateElementAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_attri.html#gaf9f5aa915388204e73930be35b8936fc) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [DeleteMemberAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga624209a58bc90aa8debb826c76cf4850) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [GetMemberCountByAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#gacb8947a2d5bc779fcd83573c288a024f) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [GetMemberListByAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga601c518a43ee9b2181bb74a1eef40cdb) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [GetMemberAttributeCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga65d055a80eda1974297c41556424518a) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [GetMemberAttributeList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga8ee3d1f547137a80ac72d653fadb49a9) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [DeleteElementAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga33b257dd90f2aa0dfdc229de5f4f09be) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [GetElementCountByAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#gae0769d51f8406a5d3a64daba5ade7c1c) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [GetElementListByAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#gafc4b745f61d6e1d6679342b777c32e55) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [GetAssignedAttributeCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga152207bd66e3c7aaa590a87dfde0ee79) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [GetAssignedAttributeByIndex](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#ga5fb1fa2b9a41c80056c21d5af43ead20) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [RemoveAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_attri.html#gae2b97c9c2b4b73c84e9f221f50062150) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [AssignMemberAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_attri.html#gad33b01a3d202d730de11bd3e13e0d8c6) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [AssignElementAttribute](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_assign_attri.html#ga07b29997e1c5a2ccee2677104bd3dced) | `long` | `long` | Unchanged | No target | P7 | Pending |
+| [GetMemberReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga87a6522925d50ef55f783c90659e0180) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L916) | P2 | [GetMemberReleaseSpecification](../Property-Porting.md#getmemberreleasespecification) |
+| [GetMemberLocalOffSet](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#gafdd6f4200ccd7a34763427950ff01281) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L709) | P2 | [GetMemberLocalOffset](../Property-Porting.md#getmemberlocaloffset) |
+| [GetMemberGlobalOffSet](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#gaf5e75d28dc527fdefb40ac84111caaa3) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L707) | P2 | [GetMemberGlobalOffset](../Property-Porting.md#getmemberglobaloffset) |
+| [GetBeamProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga185a7f1dd1d7576097df4e187e23bfe3) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 | [GetMemberSectionProperties](../Property-Porting.md#getmembersectionproperties) |
+| [GetBeamPropertyAll](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga2ecc4ba0fec2945bfdda017ed702cbea) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 | [GetMemberSectionPropertiesExtended](../Property-Porting.md#getmembersectionpropertiesextended) |
+| [GetBeamConstants](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga13b2745c44a68596591a21b578efa331) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 | [GetMemberMaterialConstants](../Property-Porting.md#getmembermaterialconstants) |
+| [GetElementLocalOffset](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#gaef9c6cdae820d578c8a9a093edc8ae91) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 | [GetPlateLocalOffset](../Property-Porting.md#getplatelocaloffset) |
+| [GetElementGlobalOffset](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga4cc99a4ac6ee14397d95e411c515f1d8) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 | [GetPlateGlobalOffset](../Property-Porting.md#getplateglobaloffset) |
+| [GetElementOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga94a58d54353f25487a5127b28f6f83ec) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1195) | P2 | [GetPlateOffsetSpecification](../Property-Porting.md#getplateoffsetspecification) |
+| [GetPlateSectionPropertyRefNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga365e1db0fa5a9fde9ff8ba9359f81cc3) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 | [GetPlateSectionPropertyId](../Property-Porting.md#getplatesectionpropertyid) |
+| [GetPublishedProfileName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_publish.html#ga255dfc3675daa744d31d7cd41dc4e1f1) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [GetSTAADProfileName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_publish.html#ga505bb1119e1751bc9006263b43016121) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [SetStandardProfileDBFolder](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga4e87d6b72233137048da0333c8565781) | `long` | `long` | Version policy candidate | No target | P9 | Pending |
+| [GetStandardProfileDBFolder](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaa29514922cc9ae65f0d92da202144f5f) | `VARIANT` | `VARIANT` | Formatting/cross-reference only | No target | P9 | Pending |
+| [GetDefaultStandardProfileDBFolder](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaf3c05fdd108cc02b0269073ae1543663) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | Pending |
+| [IsStandardDatabaseSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaeb4bb81496f3d6451e9a126ea0a6d3a6) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | Pending |
+| [GetStandardSectionDatabaseName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga527cf81f6e5369eec3076be58fde90cc) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | Pending |
+| [GetStandardSectionTableName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga45b152c818ab6a2b89be7d90892d0ded) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | Pending |
+| [GetStandardSectionName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga87dfe66234b751a9c9f5914de89e2fb1) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | Pending |
+| [GetProfileBoundaryInformation](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga97b4352067b45df2388452488c772be1) | `VARIANT` (summary only) | Absent | Reserved: do not use | No target | P0 | Excluded |
+| [GetProfileNoOfPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga32bba6cd08a1fb0c8b776376e6306c2f) | `VARIANT` (summary only) | Absent | Reserved: do not use | No target | P0 | Excluded |
+| [GetProfileBoundaryPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga51857b4c21c7bec5391a0a26f34a6a40) | `VARIANT` (summary only) | Absent | Reserved: do not use | No target | P0 | Excluded |
 
 ## 3. Function-by-function contracts and implementation proposals
 
@@ -1873,8 +1879,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Section: Beta Angle Operation Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_beta.html#ga7dbd2b865f74ec34570f04fad356f42b) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_beta.html#ga7dbd2b865f74ec34570f04fad356f42b) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_beta.html#ga7dbd2b865f74ec34570f04fad356f42b)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<double> GetBetaAngle(int memberId)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetBetaAngle(const VARIANT FAR&varnBeamNo)
@@ -1899,13 +1905,17 @@ VARIANT OSPropertyUI::GetBetaAngle(const VARIANT FAR&varnBeamNo)
 **Main adapter targets:** [PopulateBetaAngles](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L631), [GetBetaAngle](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L639)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetBetaAngle(int memberId)`<br>
-**Proposed named result:** `SectionAngleResult`
+**Implemented managed entry:** `PropertyQueryResult<double> GetBetaAngle(int memberId)`<br>
+**Implemented result:** `PropertyQueryResult<double>`
 
 Distinguish a valid zero/negative angle from documented member-not-found code -3001; verify angle units.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getsectionpropertyvalues"></a>
+
+**Implemented behavior and alternatives:** Use to observe orientation about the analytical member axis; offsets and releases do not represent beta rotation. Returns the finite signed native angle unchanged, including zero. Native -3001 is NotFound. No degrees/radians conversion or managed local-axis reconstruction is performed.
+
+**Current native call sites:** [GetBetaAngle](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L46). See [usage and qualification](../Property-Porting.md#getbetaangle).
 
 ### 38. GetSectionPropertyValues
 
@@ -4365,8 +4375,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Get and Remove Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga5facbddbfb9ea2ad0b48c454a122cf24) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga5facbddbfb9ea2ad0b48c454a122cf24) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5facbddbfb9ea2ad0b48c454a122cf24)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<int> GetElementOffsetSpecificationCount()`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetElementOffsetSpecCount()
@@ -4387,13 +4397,17 @@ No parameters.
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetElementOffsetSpecCount()`<br>
-**Proposed named result:** `PropertyCountResult`
+**Implemented managed entry:** `PropertyQueryResult<int> GetElementOffsetSpecificationCount()`<br>
+**Implemented result:** `PropertyQueryResult<int>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-removeallelementoffsetspec"></a>
+
+**Implemented behavior and alternatives:** This counts native offset specifications, not plates, corners, nonzero vectors or assigned members. Zero is a valid count. Use GetPlateOffsetSpecification to inspect one plate corner and its stored convention. Undocumented negative counts are rejected.
+
+**Current native call sites:** [GetElementOffsetSpecificationCount](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L53). See [usage and qualification](../Property-Porting.md#getelementoffsetspecificationcount).
 
 ### 100. RemoveAllElementOffsetSpec
 
@@ -5166,8 +5180,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Get and Remove Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga8ba58d357fc17509602aff5e2e99c9d4) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga8ba58d357fc17509602aff5e2e99c9d4) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga8ba58d357fc17509602aff5e2e99c9d4)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<MemberReleaseSpecification> GetMemberReleaseSpecificationExtended(int memberId, MemberEnd memberEnd)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetMemberReleaseSpecEx(const VARIANT FAR&varnBeamNo,const VARIANT FAR&varnEnd,VARIANT FAR&varnReleaseArray,VARIANT FAR&varfSpringConstArray,VARIANT FAR&varfMPFactor,VARIANT FAR&varfMPFactorArray)
@@ -5197,13 +5211,17 @@ VARIANT OSPropertyUI::GetMemberReleaseSpecEx(const VARIANT FAR&varnBeamNo,const 
 **Main adapter targets:** [GetMemberReleaseSpecificationExtended](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L968)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetMemberRelease(MemberReleaseQuery query)`<br>
-**Proposed named result:** `MemberReleaseQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<MemberReleaseSpecification> GetMemberReleaseSpecificationExtended(int memberId, MemberEnd memberEnd)`<br>
+**Implemented result:** `PropertyQueryResult<MemberReleaseSpecification>`
 
 Include scalar MP plus three rotational MP factors; preserve -2/-3 flags and do not infer fixed releases from failed zero buffers.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getinactivemembercount"></a>
+
+**Implemented behavior and alternatives:** Prefer this query when common MP or directional MPX/MPY/MPZ factors are needed. The basic GetMemberReleaseSpecification returns only six mode/parameter slots and cannot supply the separate extended factors. Native 1/true succeeds and 0/false fails. Modes 0/1/-1/-2/-3 are retained per DOF rather than converted to Boolean release flags. Unused spring/MP slots may remain unwritten and are represented as null; an applicable spring or factor must be written and finite. The native common MP factor is dimensionless; translational and rotational spring stiffness retain their different native dimensions.
+
+**Current native call sites:** [Release](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L141). See [usage and qualification](../Property-Porting.md#getmemberreleasespecificationextended).
 
 ### 121. GetInactiveMemberCount
 
@@ -6296,8 +6314,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#gae487189c55613e48e06b63ef9669c0fb) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#gae487189c55613e48e06b63ef9669c0fb) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gae487189c55613e48e06b63ef9669c0fb)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<int> GetIsotropicMaterialAssignedMemberCount(string materialName)`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetIsotropicMaterialAssignedBeamCount(const VARIANT&strMaterialName)
@@ -6322,21 +6340,25 @@ VARIANT OSPropertyUI::GetIsotropicMaterialAssignedBeamCount(const VARIANT&strMat
 **Main adapter targets:** [GetIsotropicMaterialAssignedBeams](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L440)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetIsotropicMaterialAssignedBeamCount(MaterialQuery request)`<br>
-**Proposed named result:** `PropertyCountResult`
+**Implemented managed entry:** `PropertyQueryResult<int> GetIsotropicMaterialAssignedMemberCount(string materialName)`<br>
+**Implemented result:** `PropertyQueryResult<int>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getisotropicmaterialassignedbeamlist"></a>
+
+**Implemented behavior and alternatives:** Use for sizing member assignments. GetIsotropicMaterialCount counts material definitions; GetIsotropicMaterialAssignedMemberIds returns the member IDs. A material name is not an index or section/property ID. Nonnegative values are treated as counts following the native purpose and read-only main-source usage; the help table incorrectly lists only 0 OK and its example passes a number despite the named input. Zero is a valid empty count; -6023 is NotFound. This count interpretation remains a live qualification requirement.
+
+**Current native call sites:** [AssignedCount](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L225). See [usage and qualification](../Property-Porting.md#getisotropicmaterialassignedmembercount).
 
 ### 147. GetIsotropicMaterialAssignedBeamList
 
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#ga40e7abe1185d79a7053ab5f5b7f19555) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#ga40e7abe1185d79a7053ab5f5b7f19555) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga40e7abe1185d79a7053ab5f5b7f19555)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<IEnumerable<int>> GetIsotropicMaterialAssignedMemberIds(string materialName, int maximumResults = 100000)`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetIsotropicMaterialAssignedBeamList(const VARIANT&strMaterialName,VARIANT FAR&nBeamList)
@@ -6362,21 +6384,25 @@ VARIANT OSPropertyUI::GetIsotropicMaterialAssignedBeamList(const VARIANT&strMate
 **Main adapter targets:** [GetIsotropicMaterialAssignedBeams](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L443)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetIsotropicMaterialAssignedBeamList(MaterialQuery request)`<br>
-**Proposed named result:** `PropertyIdentifierListResult`
+**Implemented managed entry:** `PropertyQueryResult<IEnumerable<int>> GetIsotropicMaterialAssignedMemberIds(string materialName, int maximumResults = 100000)`<br>
+**Implemented result:** `PropertyQueryResult<IEnumerable<int>>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getmaterialproperty"></a>
+
+**Implemented behavior and alternatives:** Use when native assignment IDs are required without preloading Beam objects. The main source convenience filters a caller-supplied Beam collection; this query returns every native listed ID, preserving order and duplicates. It sizes with GetIsotropicMaterialAssignedBeamCount, validates positive Int32 IDs and exact array shape, and rechecks the count. Native list return 0 succeeds and -6023 is NotFound. Zero count returns an empty read-only snapshot without fetching; a larger count than maximumResults returns LimitExceeded before allocation. Count interpretation follows the native purpose/main usage despite the inconsistent help table. Same-count replacement or concurrent changes through other receivers cannot be proved absent.
+
+**Current native call sites:** [GetIsotropicMaterialAssignedMemberIds](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L251). See [usage and qualification](../Property-Porting.md#getisotropicmaterialassignedmemberids).
 
 ### 148. GetMaterialProperty
 
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#ga90b6809ba31300363321cce519f0b9c3) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#ga90b6809ba31300363321cce519f0b9c3) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga90b6809ba31300363321cce519f0b9c3)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<MaterialProperties> GetMaterialProperty(string materialName)`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetMaterialProperty(const VARIANT FAR&varstrMaterialName,VARIANT FAR&vardElasticity,VARIANT FAR&vardPoisson,VARIANT FAR&vardDensity,VARIANT FAR&vardAlpha,VARIANT FAR&vardDamp)
@@ -6406,21 +6432,25 @@ VARIANT OSPropertyUI::GetMaterialProperty(const VARIANT FAR&varstrMaterialName,V
 **Main adapter targets:** [GetMaterialProperty](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L180)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetMaterialProperty(MaterialQuery request)`<br>
-**Proposed named result:** `MaterialQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<MaterialProperties> GetMaterialProperty(string materialName)`<br>
+**Implemented result:** `PropertyQueryResult<MaterialProperties>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getbeammaterialname"></a>
+
+**Implemented behavior and alternatives:** Use an exact material name obtained from an entity or native material observation. GetIsotropicMaterialProperty instead uses a zero-based list index and supplies native G; GetExtendedMaterialProperty also supplies strength fields. Native return 0 succeeds and -6023 is NotFound. These are different success semantics from the Boolean extended function. ShearModulus, Strengths and AssignmentState are null because this function does not return them. No default engineering values or computed G are substituted. Density remains weight per volume.
+
+**Current native call sites:** [NamedMaterial](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L273). See [usage and qualification](../Property-Porting.md#getmaterialproperty).
 
 ### 149. GetBeamMaterialName
 
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#gade8859bea46c3bccd85204f73593e0b0) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#gade8859bea46c3bccd85204f73593e0b0) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gade8859bea46c3bccd85204f73593e0b0)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<string> GetBeamMaterialName(int memberId)`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetBeamMaterialName(const VARIANT FAR&varnBeamNo)
@@ -6440,21 +6470,25 @@ VARIANT OSPropertyUI::GetBeamMaterialName(const VARIANT FAR&varnBeamNo)
 **Main adapter targets:** [GetAllMaterialPropertiesWithPopulatedAssignments](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L105), [GetBeamMaterialName](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L199)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetBeamMaterialName(MaterialQuery request)`<br>
-**Proposed named result:** `MaterialNameResult`
+**Implemented managed entry:** `PropertyQueryResult<string> GetBeamMaterialName(int memberId)`<br>
+**Implemented result:** `PropertyQueryResult<string>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getelementmaterialname"></a>
+
+**Implemented behavior and alternatives:** Use for name discovery before a named material query. This returns a name, not constants, an index, a property ID or a new assignment. Native spelling/case/whitespace are preserved. Empty or native-null text is EmptyOrUnavailable because the help supplies no way to distinguish no assignment from a missing/unavailable member. Non-string responses are rejected; no guessed material name is returned.
+
+**Current native call sites:** [EntityMaterialName](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L208). See [usage and qualification](../Property-Porting.md#getbeammaterialname).
 
 ### 150. GetElementMaterialName
 
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#ga44859f04996f6facbe39d62d67594b8c) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#ga44859f04996f6facbe39d62d67594b8c) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga44859f04996f6facbe39d62d67594b8c)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<string> GetElementMaterialName(int plateId)`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetElementMaterialName(const VARIANT FAR&varnPlateNo)
@@ -6474,21 +6508,25 @@ VARIANT OSPropertyUI::GetElementMaterialName(const VARIANT FAR&varnPlateNo)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetElementMaterialName(MaterialQuery request)`<br>
-**Proposed named result:** `MaterialNameResult`
+**Implemented managed entry:** `PropertyQueryResult<string> GetElementMaterialName(int plateId)`<br>
+**Implemented result:** `PropertyQueryResult<string>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getisotropicmaterialcount"></a>
+
+**Implemented behavior and alternatives:** This native element query takes a plate ID. Use GetBeamMaterialName for members; do not pass a node, solid ID or material-list index. It returns the exact name, not constants or thickness. Empty/native-null text is EmptyOrUnavailable because the contract does not distinguish unassigned and unavailable entities. No fallback to a similarly named plate/material API is attempted.
+
+**Current native call sites:** [EntityMaterialName](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L208). See [usage and qualification](../Property-Porting.md#getelementmaterialname).
 
 ### 151. GetIsotropicMaterialCount
 
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#gaa8e5a0c6288ae8d53eded96a1fb0c114) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#gaa8e5a0c6288ae8d53eded96a1fb0c114) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gaa8e5a0c6288ae8d53eded96a1fb0c114)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<int> GetIsotropicMaterialCount()`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetIsotropicMaterialCount()
@@ -6509,21 +6547,25 @@ No parameters.
 **Main adapter targets:** [GetAllIsotropicMaterialProperties](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L331)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetIsotropicMaterialCount()`<br>
-**Proposed named result:** `PropertyCountResult`
+**Implemented managed entry:** `PropertyQueryResult<int> GetIsotropicMaterialCount()`<br>
+**Implemented result:** `PropertyQueryResult<int>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getisotropicmaterialproperties"></a>
+
+**Implemented behavior and alternatives:** Use to bound the zero-based materialIndex accepted by GetIsotropicMaterialProperty and GetExtendedIsotropicMaterialProperty. This is not a member/plate assignment count. Zero is a valid empty definition inventory; undocumented negative or nonintegral counts are rejected. A count is only an observation, not a stable reservation of material identities.
+
+**Current native call sites:** [GetIsotropicMaterialCount](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L217); [IndexedMaterial](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L293); [IndexedMaterial](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L303). See [usage and qualification](../Property-Porting.md#getisotropicmaterialcount).
 
 ### 152. GetIsotropicMaterialProperties
 
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#gaeead1ecb0ed0c1587d432a1e3b9887b5) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#gaeead1ecb0ed0c1587d432a1e3b9887b5) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gaeead1ecb0ed0c1587d432a1e3b9887b5)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<MaterialProperties> GetIsotropicMaterialProperty(int materialIndex)`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetIsotropicMaterialProperties(const VARIANT FAR&varMatNo,VARIANT FAR&varE,VARIANT FAR&varPoisson,VARIANT FAR&varG,VARIANT FAR&varDensity,VARIANT FAR&varAlpha,VARIANT FAR&varCrDamp)
@@ -6554,21 +6596,25 @@ VARIANT OSPropertyUI::GetIsotropicMaterialProperties(const VARIANT FAR&varMatNo,
 **Main adapter targets:** [GetIsotropicMaterialProperty](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L374)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetIsotropicMaterialProperties(MaterialQuery request)`<br>
-**Proposed named result:** `MaterialQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<MaterialProperties> GetIsotropicMaterialProperty(int materialIndex)`<br>
+**Implemented result:** `PropertyQueryResult<MaterialProperties>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getmaterialpropertyex"></a>
+
+**Implemented behavior and alternatives:** Use for material enumeration, unlike GetMaterialProperty which selects by name. materialIndex is zero-based, not a native property ID or member ID. This function returns G directly; that native value is retained instead of the main MaterialProperty computed E/(2*(1+Poisson)) substitute. The native return is the material name, not a success flag. Null/empty name or an index outside the observed count is NotFound. Before/after material counts detect observed changes but not same-count reorderings. Strengths and AssignmentState are null.
+
+**Current native call sites:** [IndexedMaterial](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L298). See [usage and qualification](../Property-Porting.md#getisotropicmaterialproperty).
 
 ### 153. GetMaterialPropertyEx
 
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#ga02bbaecea45e8ab88558707f439acbe1) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#ga02bbaecea45e8ab88558707f439acbe1) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga02bbaecea45e8ab88558707f439acbe1)<br>
 **Classification:** Type/meaning clarification<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<MaterialProperties> GetExtendedMaterialProperty(string materialName)`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetMaterialPropertyEx(const VARIANT FAR&varstrMaterialName,VARIANT FAR&vardElasticity,VARIANT FAR&vardPoisson,VARIANT FAR&vardDensity,VARIANT FAR&vardAlpha,VARIANT FAR&vardDamp,VARIANT FAR&varFy,VARIANT FAR&varFu,VARIANT FAR&varRy,VARIANT FAR&varRt,VARIANT FAR&varFcu)
@@ -6609,11 +6655,11 @@ VARIANT OSPropertyUI::GetMaterialPropertyEx(const VARIANT FAR&varstrMaterialName
 **Main adapter targets:** [GetExtendedMaterialProperty](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L151)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetMaterial(string materialName)`<br>
-**Proposed named result:** `MaterialQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<MaterialProperties> GetExtendedMaterialProperty(string materialName)`<br>
+**Implemented result:** `PropertyQueryResult<MaterialProperties>`
 
 Status plus extended outputs; Fcu compressive strength, name-based form does not expose G. Do not invent a zero shear modulus.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 **2024 versus 2025/2026:**
 
@@ -6624,13 +6670,17 @@ The result payload must carry the qualified native output fields above (or direc
 
 <a id="property-getisotropicmaterialpropertiesex"></a>
 
+**Implemented behavior and alternatives:** Choose over GetMaterialProperty when Fy/Fu/Ry/Rt/Fcu are needed. GetExtendedIsotropicMaterialProperty selects a zero-based index and additionally returns native G; this name-based function omits G, so ShearModulus is null. Unlike basic named GetMaterialProperty, native Boolean true means success and false means failure. Strength stresses retain native force/area units; Ry/Rt are dimensionless. No material classification, design pass/fail, default strength or computed shear modulus is inferred.
+
+**Current native call sites:** [NamedMaterial](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L272). See [usage and qualification](../Property-Porting.md#getextendedmaterialproperty).
+
 ### 154. GetIsotropicMaterialPropertiesEx
 
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#gab82a93e375ef05e9f893b5ba272b7ad5) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#gab82a93e375ef05e9f893b5ba272b7ad5) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#gab82a93e375ef05e9f893b5ba272b7ad5)<br>
 **Classification:** Type/meaning clarification<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<MaterialProperties> GetExtendedIsotropicMaterialProperty(int materialIndex)`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetIsotropicMaterialPropertiesEx(const VARIANT FAR&varMatNo,VARIANT FAR&varE,VARIANT FAR&varPoisson,VARIANT FAR&varG,VARIANT FAR&varDensity,VARIANT FAR&varAlpha,VARIANT FAR&varCrDamp,VARIANT FAR&varFy,VARIANT FAR&varFu,VARIANT FAR&varRy,VARIANT FAR&varRt,VARIANT FAR&varFcu)
@@ -6670,11 +6720,11 @@ VARIANT OSPropertyUI::GetIsotropicMaterialPropertiesEx(const VARIANT FAR&varMatN
 **Main adapter targets:** [GetExtendedIsotropicMaterialProperty](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L348)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetMaterialByIndex(int materialIndex)`<br>
-**Proposed named result:** `MaterialQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<MaterialProperties> GetExtendedIsotropicMaterialProperty(int materialIndex)`<br>
+**Implemented result:** `PropertyQueryResult<MaterialProperties>`
 
 Zero-based index; native returns material name with eleven outputs, not an ID or Boolean. Fcu compressive strength.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 **2024 versus 2025/2026:**
 
@@ -6685,13 +6735,17 @@ The result payload must carry the qualified native output fields above (or direc
 
 <a id="property-getisotropicmaterialpropertiesassigned"></a>
 
+**Implemented behavior and alternatives:** Use for enumeration with native G and Fy/Fu/Ry/Rt/Fcu. GetExtendedMaterialProperty selects by name and lacks G; GetIsotropicMaterialProperty omits strengths. The native return is the material name, not a Boolean or numeric status. Null/empty name or an out-of-range observed index is NotFound. Coupled counts are checked before/after; no atomic snapshot or stable same-count ordering is promised. All supplied constants and strength fields must be written and finite; optional AssignmentState remains null.
+
+**Current native call sites:** [IndexedMaterial](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L297). See [usage and qualification](../Property-Porting.md#getextendedisotropicmaterialproperty).
+
 ### 155. GetIsotropicMaterialPropertiesAssigned
 
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#ga74438ad3dd2db13772443598f8ee1707) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#ga74438ad3dd2db13772443598f8ee1707) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga74438ad3dd2db13772443598f8ee1707)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<MaterialProperties> GetIsotropicMaterialPropertiesAssigned(int nativeMaterialNumber)`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetIsotropicMaterialPropertiesAssigned(const VARIANT FAR&varMatNo,VARIANT FAR&varE,VARIANT FAR&varPoisson,VARIANT FAR&varG,VARIANT FAR&varDensity,VARIANT FAR&varAlpha,VARIANT FAR&varCrDamp,VARIANT FAR&varAssigned)
@@ -6723,21 +6777,25 @@ VARIANT OSPropertyUI::GetIsotropicMaterialPropertiesAssigned(const VARIANT FAR&v
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetIsotropicMaterialPropertiesAssigned(MaterialQuery request)`<br>
-**Proposed named result:** `MaterialQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<MaterialProperties> GetIsotropicMaterialPropertiesAssigned(int nativeMaterialNumber)`<br>
+**Implemented result:** `PropertyQueryResult<MaterialProperties>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getorthotropic2dmaterialcount"></a>
+
+**Implemented behavior and alternatives:** Use when the native assignment observation is required; the ordinary and extended indexed functions do not return it. nativeMaterialNumber is forwarded unchanged: this help says material number ID, unlike the explicitly zero-based indexed methods. Nonnegative input is accepted without guessed rebasing or a count-based ID/index conversion; qualify the selector on the acquired build. Native string name supplies success; null/empty means NotFound. Assignment output 1 means Unassigned and 2 Assigned, not Boolean 0/1; documented Double or integral forms are decoded exactly. Strengths remain null.
+
+**Current native call sites:** [GetIsotropicMaterialPropertiesAssigned](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L315). See [usage and qualification](../Property-Porting.md#getisotropicmaterialpropertiesassigned).
 
 ### 156. GetOrthotropic2DMaterialCount
 
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#ga34d6f21ac2f41814c0a2ca78f0d387ed) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#ga34d6f21ac2f41814c0a2ca78f0d387ed) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga34d6f21ac2f41814c0a2ca78f0d387ed)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<int> GetOrthotropic2DMaterialCount()`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetOrthotropic2DMaterialCount()
@@ -6758,21 +6816,25 @@ No parameters.
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetOrthotropic2DMaterialCount()`<br>
-**Proposed named result:** `PropertyCountResult`
+**Implemented managed entry:** `PropertyQueryResult<int> GetOrthotropic2DMaterialCount()`<br>
+**Implemented result:** `PropertyQueryResult<int>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getorthotropic2dmaterialproperties"></a>
+
+**Implemented behavior and alternatives:** Use for the 2D orthotropic inventory, not isotropic or 3D material counts and not element assignments. Zero is valid. The associated property getter documents a native material number rather than an explicit zero-based list index; this count does not establish a selector rebasing rule. Undocumented negative/nonintegral counts are rejected.
+
+**Current native call sites:** [GetOrthotropic2DMaterialCount](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L222). See [usage and qualification](../Property-Porting.md#getorthotropic2dmaterialcount).
 
 ### 157. GetOrthotropic2DMaterialProperties
 
 **Section:** Material: Get and Remove Material Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_mat.html#ga04b76b162db405e4a289b71f05b7e673) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_mat.html#ga04b76b162db405e4a289b71f05b7e673) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_mat.html#ga04b76b162db405e4a289b71f05b7e673)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P3 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<Orthotropic2DMaterialProperties> GetOrthotropic2DMaterialProperties(int nativeMaterialNumber)`.<br>
+**Plan:** P3 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetOrthotropic2DMaterialProperties(const VARIANT FAR&varMatNo,VARIANT FAR&varE,VARIANT FAR&varPoisson,VARIANT FAR&varG,VARIANT FAR&varDensity,VARIANT FAR&varAlpha,VARIANT FAR&varCrDamp)
@@ -6803,13 +6865,17 @@ VARIANT OSPropertyUI::GetOrthotropic2DMaterialProperties(const VARIANT FAR&varMa
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetOrthotropic2DMaterialProperties(MaterialQuery request)`<br>
-**Proposed named result:** `MaterialQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<Orthotropic2DMaterialProperties> GetOrthotropic2DMaterialProperties(int nativeMaterialNumber)`<br>
+**Implemented result:** `PropertyQueryResult<Orthotropic2DMaterialProperties>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getorthotropic3dmaterialcount"></a>
+
+**Implemented behavior and alternatives:** Use for independent directional material constants; isotropic queries cannot substitute for them. nativeMaterialNumber is forwarded unchanged and must be qualified on the acquired build because the help does not establish its base. Native string name indicates success; null/empty is NotFound. Buffer sizes are E=2, Poisson=2, G=3, weight density=2, thermal expansion=2 and damping=2; each output must be finite and owned. Named first/second/third fields preserve native order because the help does not identify physical axis/plane ordering. Do not assume global X/Y or XY/YZ/ZX, derive G, or replace missing values with isotropic defaults.
+
+**Current native call sites:** [GetOrthotropic2DMaterialProperties](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L331). See [usage and qualification](../Property-Porting.md#getorthotropic2dmaterialproperties).
 
 ### 158. GetOrthotropic3DMaterialCount
 
@@ -8081,8 +8147,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** ElementProperty: Functions Get Property information through Element Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_ele_property.html#ga87a6522925d50ef55f783c90659e0180) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_ele_property.html#ga87a6522925d50ef55f783c90659e0180) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga87a6522925d50ef55f783c90659e0180)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<MemberReleaseSpecification> GetMemberReleaseSpecification(int memberId, MemberEnd memberEnd)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetMemberReleaseSpec(const VARIANT FAR&varnBeamNo,const VARIANT FAR&varnEnd,VARIANT FAR&varnReleaseArray,VARIANT FAR&varfSpringConstArray)
@@ -8110,21 +8176,25 @@ VARIANT OSPropertyUI::GetMemberReleaseSpec(const VARIANT FAR&varnBeamNo,const VA
 **Main adapter targets:** [GetMemberReleaseSpecification](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L916)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetMemberRelease(int memberId, MemberEnd memberEnd)`<br>
-**Proposed named result:** `MemberReleaseQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<MemberReleaseSpecification> GetMemberReleaseSpecification(int memberId, MemberEnd memberEnd)`<br>
+**Implemented result:** `PropertyQueryResult<MemberReleaseSpecification>`
 
 Six integer release flags and six Double springs; preserve DOF order. No public reference parameters.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getmemberlocaloffset"></a>
+
+**Implemented behavior and alternatives:** Use for basic release/spring observations. Choose GetMemberReleaseSpecificationExtended for separate common MP and MPX/MPY/MPZ outputs; this basic query never invents zero for those missing outputs. Native 1/true succeeds and 0/false fails. FX/FY/FZ/MX/MY/MZ mode order and 0/1/-1/-2/-3 codes are preserved. Only applicable parameter slots are consumed; a spring or directional partial-factor slot must be finite. These are model specifications, not support reactions or member-end Output forces.
+
+**Current native call sites:** [Release](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L142). See [usage and qualification](../Property-Porting.md#getmemberreleasespecification).
 
 ### 192. GetMemberLocalOffSet
 
 **Section:** ElementProperty: Functions Get Property information through Element Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_ele_property.html#gafdd6f4200ccd7a34763427950ff01281) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_ele_property.html#gafdd6f4200ccd7a34763427950ff01281) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#gafdd6f4200ccd7a34763427950ff01281)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<Vector3D> GetMemberLocalOffset(int memberId, MemberEnd memberEnd)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetMemberLocalOffSet(const VARIANT FAR&varnBeamNo,const VARIANT FAR&varnEnd,VARIANT FAR&varfxOffSet,VARIANT FAR&varfyOffSet,VARIANT FAR&varfzOffSet)
@@ -8155,21 +8225,25 @@ VARIANT OSPropertyUI::GetMemberLocalOffSet(const VARIANT FAR&varnBeamNo,const VA
 **Main adapter targets:** [GetBeamOffsetSpecification](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L709)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetMemberOffset(int memberId, MemberEnd memberEnd, OffsetCoordinateSystem coordinateSystem)`<br>
-**Proposed named result:** `OffsetQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<Vector3D> GetMemberLocalOffset(int memberId, MemberEnd memberEnd)`<br>
+**Implemented result:** `PropertyQueryResult<Vector3D>`
 
 Local coordinates are a deliberate selector, not an arbitrary non-global fallback. Validate enum domain and unit context.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getmemberglobaloffset"></a>
+
+**Implemented behavior and alternatives:** Choose this query when a local-coordinate offset is needed; GetMemberGlobalOffset asks STAAD for global components. The vector is an offset in native length units, not a position, displacement result or beta rotation. Native 0 succeeds; -6027 is NoSpecification, -3001 NotFound and -6026 InvalidReference. A successful zero vector stays successful and is not replaced by a shared no-offset singleton. No coordinate conversion or sign change is applied.
+
+**Current native call sites:** [MemberOffset](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L80). See [usage and qualification](../Property-Porting.md#getmemberlocaloffset).
 
 ### 193. GetMemberGlobalOffSet
 
 **Section:** ElementProperty: Functions Get Property information through Element Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_ele_property.html#gaf5e75d28dc527fdefb40ac84111caaa3) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_ele_property.html#gaf5e75d28dc527fdefb40ac84111caaa3) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#gaf5e75d28dc527fdefb40ac84111caaa3)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<Vector3D> GetMemberGlobalOffset(int memberId, MemberEnd memberEnd)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetMemberGlobalOffSet(const VARIANT FAR&varnBeamNo,const VARIANT FAR&varnEnd,VARIANT FAR&varfxOffSet,VARIANT FAR&varfyOffSet,VARIANT FAR&varfzOffSet)
@@ -8200,21 +8274,25 @@ VARIANT OSPropertyUI::GetMemberGlobalOffSet(const VARIANT FAR&varnBeamNo,const V
 **Main adapter targets:** [GetBeamOffsetSpecification](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L707)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetMemberOffset(int memberId, MemberEnd memberEnd, OffsetCoordinateSystem coordinateSystem)`<br>
-**Proposed named result:** `OffsetQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<Vector3D> GetMemberGlobalOffset(int memberId, MemberEnd memberEnd)`<br>
+**Implemented result:** `PropertyQueryResult<Vector3D>`
 
 Global coordinates; verify native flag before interpreting a zero vector as NoOffset. Shared service with local form, preserve end/axes/native status.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getbeamproperty"></a>
+
+**Implemented behavior and alternatives:** Choose this query for global components; GetMemberLocalOffset requests member-local components. No managed rotation is substituted. Native 0 succeeds; -6027 is NoSpecification, -3001 NotFound and -6026 InvalidReference. A successful zero vector differs from an absent specification. The returned Vector3D is an independent value in native length units. These are modeling offsets, not Output displacements.
+
+**Current native call sites:** [MemberOffset](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L81). See [usage and qualification](../Property-Porting.md#getmemberglobaloffset).
 
 ### 194. GetBeamProperty
 
 **Section:** ElementProperty: Functions Get Property information through Element Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_ele_property.html#ga185a7f1dd1d7576097df4e187e23bfe3) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_ele_property.html#ga185a7f1dd1d7576097df4e187e23bfe3) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga185a7f1dd1d7576097df4e187e23bfe3)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<BeamSectionProperties> GetMemberSectionProperties(int memberId)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetBeamProperty(const VARIANT FAR&varnBeamNo,VARIANT FAR&varfWidth,VARIANT FAR&varfDepth,VARIANT FAR&varfAx,VARIANT FAR&varfAy,VARIANT FAR&varfAz,VARIANT FAR&varfIx,VARIANT FAR&varfIy,VARIANT FAR&varfIz)
@@ -8249,21 +8327,25 @@ VARIANT OSPropertyUI::GetBeamProperty(const VARIANT FAR&varnBeamNo,VARIANT FAR&v
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetBeamProperty(SectionQuery request)`<br>
-**Proposed named result:** `SectionDefinitionResult`
+**Implemented managed entry:** `PropertyQueryResult<BeamSectionProperties> GetMemberSectionProperties(int memberId)`<br>
+**Implemented result:** `PropertyQueryResult<BeamSectionProperties>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getbeampropertyall"></a>
+
+**Implemented behavior and alternatives:** Use for width, depth, axial/shear areas and the three named native inertia slots. GetMemberSectionPropertiesExtended additionally returns flange/web thickness; those fields are null here. This does not hydrate a section catalog or select a section shape. Native 1/true succeeds; 0/false cannot distinguish a missing member, unassigned property and general failure, so it returns NativeFailure without fabricated data. Native Ix/Iz descriptions conflict with conventional physical-axis labels; their slot names/order are preserved without assuming a torsion or principal-axis mapping. Length, area and inertia slots retain their respective native length, length-squared and length-to-the-fourth units.
+
+**Current native call sites:** [Section](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L177). See [usage and qualification](../Property-Porting.md#getmembersectionproperties).
 
 ### 195. GetBeamPropertyAll
 
 **Section:** ElementProperty: Functions Get Property information through Element Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_ele_property.html#ga2ecc4ba0fec2945bfdda017ed702cbea) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_ele_property.html#ga2ecc4ba0fec2945bfdda017ed702cbea) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga2ecc4ba0fec2945bfdda017ed702cbea)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<BeamSectionProperties> GetMemberSectionPropertiesExtended(int memberId)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetBeamPropertyAll(const VARIANT FAR&varnBeamNo,VARIANT FAR&varfWidth,VARIANT FAR&varfDepth,VARIANT FAR&varfAx,VARIANT FAR&varfAy,VARIANT FAR&varfAz,VARIANT FAR&varfIx,VARIANT FAR&varfIy,VARIANT FAR&varfIz,VARIANT FAR&varfTf,VARIANT FAR&varfTw)
@@ -8299,21 +8381,25 @@ VARIANT OSPropertyUI::GetBeamPropertyAll(const VARIANT FAR&varnBeamNo,VARIANT FA
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetBeamPropertyAll(SectionQuery request)`<br>
-**Proposed named result:** `SectionDefinitionResult`
+**Implemented managed entry:** `PropertyQueryResult<BeamSectionProperties> GetMemberSectionPropertiesExtended(int memberId)`<br>
+**Implemented result:** `PropertyQueryResult<BeamSectionProperties>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getbeamconstants"></a>
+
+**Implemented behavior and alternatives:** Use instead of GetMemberSectionProperties when the two additional thickness outputs are required. No section shape, catalog identity, material or new property is inferred. Native 1/true succeeds; 0/false is an ambiguous failure and exposes no packet. All returned slots must be finite. Native Ix/Iz prose is inconsistent, so NativeIx/NativeIy/NativeIz retain native slot identity rather than a guessed torsional/principal interpretation. Values retain native length, area and fourth-power length units.
+
+**Current native call sites:** [Section](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L176). See [usage and qualification](../Property-Porting.md#getmembersectionpropertiesextended).
 
 ### 196. GetBeamConstants
 
 **Section:** ElementProperty: Functions Get Property information through Element Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_ele_property.html#ga13b2745c44a68596591a21b578efa331) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_ele_property.html#ga13b2745c44a68596591a21b578efa331) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga13b2745c44a68596591a21b578efa331)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<MaterialConstants> GetMemberMaterialConstants(int memberId)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetBeamConstants(const VARIANT FAR&varnBeamNo,VARIANT FAR&vardElasticity,VARIANT FAR&vardPoisson,VARIANT FAR&vardDensity,VARIANT FAR&vardAlpha,VARIANT FAR&vardDamp)
@@ -8343,21 +8429,25 @@ VARIANT OSPropertyUI::GetBeamConstants(const VARIANT FAR&varnBeamNo,VARIANT FAR&
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetBeamConstants(SpecificationQuery request)`<br>
-**Proposed named result:** `SpecificationQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<MaterialConstants> GetMemberMaterialConstants(int memberId)`<br>
+**Implemented result:** `PropertyQueryResult<MaterialConstants>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getelementlocaloffset"></a>
+
+**Implemented behavior and alternatives:** Use when the member is known but its material name is not. GetMaterialProperty instead selects a material by exact name; indexed isotropic queries select a material-list index and additionally return G. This native call returns E, Poisson ratio, weight density, thermal expansion and damping, not G or strength fields. ShearModulus is therefore null, never computed from E/Poisson. Native Boolean true succeeds; false does not distinguish a missing member from unavailable constants. WeightDensity is weight per volume, not mass density.
+
+**Current native call sites:** [GetMemberMaterialConstants](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L191). See [usage and qualification](../Property-Porting.md#getmembermaterialconstants).
 
 ### 197. GetElementLocalOffset
 
 **Section:** ElementProperty: Functions Get Property information through Element Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_ele_property.html#gaef9c6cdae820d578c8a9a093edc8ae91) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_ele_property.html#gaef9c6cdae820d578c8a9a093edc8ae91) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#gaef9c6cdae820d578c8a9a093edc8ae91)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<Vector3D> GetPlateLocalOffset(int plateId, int cornerIndex)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetElementLocalOffset(const VARIANT FAR&varnPlateNo,const VARIANT FAR&varnPlateNodeIndex,VARIANT FAR&varfOffsetX,VARIANT FAR&varfOffsetY,VARIANT FAR&varfOffsetZ)
@@ -8397,21 +8487,25 @@ VARIANT OSPropertyUI::GetElementLocalOffset(const VARIANT FAR&varnPlateNo,const 
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetElementLocalOffset(OffsetQuery request)`<br>
-**Proposed named result:** `OffsetQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<Vector3D> GetPlateLocalOffset(int plateId, int cornerIndex)`<br>
+**Implemented result:** `PropertyQueryResult<Vector3D>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getelementglobaloffset"></a>
+
+**Implemented behavior and alternatives:** Choose this query for local components, GetPlateGlobalOffset for global components, or GetPlateOffsetSpecification for the stored selector and vector. cornerIndex is native incidence position 1/2/3/4, never a node ID; triangular-corner validity remains STAAD-controlled. Native 0 succeeds, -4001 is NotFound and -6027 NoSpecification. A successful zero vector is retained. No incidence lookup, coordinate transform or unit conversion occurs.
+
+**Current native call sites:** [PlateOffset](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L93). See [usage and qualification](../Property-Porting.md#getplatelocaloffset).
 
 ### 198. GetElementGlobalOffset
 
 **Section:** ElementProperty: Functions Get Property information through Element Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_ele_property.html#ga4cc99a4ac6ee14397d95e411c515f1d8) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_ele_property.html#ga4cc99a4ac6ee14397d95e411c515f1d8) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga4cc99a4ac6ee14397d95e411c515f1d8)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<Vector3D> GetPlateGlobalOffset(int plateId, int cornerIndex)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetElementGlobalOffset(const VARIANT FAR&varnPlateNo,const VARIANT FAR&varnPlateNodeIndex,VARIANT FAR&varfOffsetX,VARIANT FAR&varfOffsetY,VARIANT FAR&varfOffsetZ)
@@ -8451,21 +8545,25 @@ VARIANT OSPropertyUI::GetElementGlobalOffset(const VARIANT FAR&varnPlateNo,const
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetElementGlobalOffset(OffsetQuery request)`<br>
-**Proposed named result:** `OffsetQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<Vector3D> GetPlateGlobalOffset(int plateId, int cornerIndex)`<br>
+**Implemented result:** `PropertyQueryResult<Vector3D>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getelementoffsetspec"></a>
+
+**Implemented behavior and alternatives:** Use for global components; GetPlateLocalOffset returns local components and GetPlateOffsetSpecification returns the stored convention. The native Global function is called despite its help summary mistakenly saying local. cornerIndex is a one-based incidence position 1-4, not a node number. Native 0 succeeds, -4001 is NotFound and -6027 NoSpecification. A successful zero vector is not absence; no conversion or sign change occurs.
+
+**Current native call sites:** [PlateOffset](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L94). See [usage and qualification](../Property-Porting.md#getplateglobaloffset).
 
 ### 199. GetElementOffsetSpec
 
 **Section:** ElementProperty: Functions Get Property information through Element Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_ele_property.html#ga94a58d54353f25487a5127b28f6f83ec) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_ele_property.html#ga94a58d54353f25487a5127b28f6f83ec) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga94a58d54353f25487a5127b28f6f83ec)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<ElementOffsetSpecification> GetPlateOffsetSpecification(int plateId, int cornerIndex)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetElementOffsetSpec(const VARIANT FAR&varnPlateNo,const VARIANT FAR&varnPlateNodeIndex,VARIANT FAR&varnDirection,VARIANT FAR&varfxOffSet,VARIANT FAR&varfyOffSet,VARIANT FAR&varfzOffSet)
@@ -8507,21 +8605,25 @@ VARIANT OSPropertyUI::GetElementOffsetSpec(const VARIANT FAR&varnPlateNo,const V
 **Main adapter targets:** [GetElementNodeOffset](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1195)<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetElementOffsetSpec(OffsetQuery request)`<br>
-**Proposed named result:** `OffsetQueryResult`
+**Implemented managed entry:** `PropertyQueryResult<ElementOffsetSpecification> GetPlateOffsetSpecification(int plateId, int cornerIndex)`<br>
+**Implemented result:** `PropertyQueryResult<ElementOffsetSpecification>`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getplatesectionpropertyrefno"></a>
+
+**Implemented behavior and alternatives:** Use when the original Local/Global/Z selector is needed; the local/global offset queries instead request components in a particular coordinate frame. Native 1 supplies an offset, native 0 explicitly means NoSpecification, and -4001 means NotFound. This differs from the local/global getters, where 0 is success. Stored selectors are Local=0, Global=1 and Z=2, matching the main ElementNodeOffsetAxis enum; they must not be cast from its opposite member OffsetAxis numbering. No physical meaning or conversion beyond the native Z selector is inferred. A code-1 zero vector remains valid data.
+
+**Current native call sites:** [GetPlateOffsetSpecification](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L104). See [usage and qualification](../Property-Porting.md#getplateoffsetspecification).
 
 ### 200. GetPlateSectionPropertyRefNo
 
 **Section:** ElementProperty: Functions Get Property information through Element Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_ele_property.html#ga365e1db0fa5a9fde9ff8ba9359f81cc3) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_ele_property.html#ga365e1db0fa5a9fde9ff8ba9359f81cc3) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html#ga365e1db0fa5a9fde9ff8ba9359f81cc3)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P2 — Pending; contract verification before implementation
+**Current typed coverage:** Implemented as `PropertyQueryResult<int> GetPlateSectionPropertyId(int plateId)`.<br>
+**Plan:** P2 — Implemented; native qualification remains pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetPlateSectionPropertyRefNo(const VARIANT FAR&varnPlateNo)
@@ -8553,13 +8655,17 @@ VARIANT OSPropertyUI::GetPlateSectionPropertyRefNo(const VARIANT FAR&varnPlateNo
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetPlatePropertyReference(int plateId)`<br>
-**Proposed named result:** `PropertyReferenceResult`
+**Implemented managed entry:** `PropertyQueryResult<int> GetPlateSectionPropertyId(int plateId)`<br>
+**Implemented result:** `PropertyQueryResult<int>`
 
 Help name differs from interop GetPlateThicknessPropertyRefNo. Verify alias and returned ID semantics rather than automatically substituting.
-The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
+The implemented result guards Data by status and exposes no public ref/out, tuples or raw VARIANT data.
 
 <a id="property-getpublishedprofilename"></a>
+
+**Implemented behavior and alternatives:** Use to identify an assigned property, not to read its thickness values or count property definitions. Positive return values are property IDs; -4001 is NotFound and -6022 NotAssigned. Zero is undocumented and rejected. The method is documented in all three reviewed help sets but absent from inspected 2025/2026 CLR interfaces: a missing acquired dispatch member returns Unsupported. No alternate function name, different entity type or fallback call is attempted; other transport errors propagate.
+
+**Current native call sites:** [GetPlateSectionPropertyId](../../src/StaadPro.Interop/Services/Property/PropertyQueryReader.cs#L121). See [usage and qualification](../Property-Porting.md#getplatesectionpropertyid).
 
 ### 201. GetPublishedProfileName
 
@@ -9501,3 +9607,9 @@ Both identities are `StaadPro.Interop, Version=1.0.0.0, Culture=neutral, PublicK
 This inventory compared installed documentation and passive metadata and parsed current/private source. No COM object was activated, no model was edited, no native call was executed and no private project was built. No library tests, source implementation, targets or NuGet contents changed. Offline static analysis cannot certify marshaling, engineering semantics or version compatibility.
 
 Local help/main-source links require the corresponding files on the reader’s computer. The repository reports and comparison data remain readable independently; native verification requires a suitable licensed installation.
+
+## 10. First Property implementation outcome
+
+Implemented **25 typed Property queries** through IOSProperty and the single non-partial OSPropertyAdapter: all 13 P2 native names and the first 12 P3 names in the documented allocation. Shared 2024–2026 contracts use one internal reader and strict value decoder. The 212-name union contains eight excluded entries, leaving 204 active candidates; **25 have managed routes and 179 remain pending**. GetPlateSectionPropertyRefNo is documented but absent from inspected vendor CLR metadata, so its acquired receiver may return Unsupported. Implementation coverage does not certify live COM or engineering behavior.
+
+Passed 3,313 offline tests (413 new Property cases). Fifty expanded XML examples are included in the package-consumer validation inventory. See [the Property guide](../Property-Porting.md) for native qualification limits and source model reuse. Load remains parked behind its separate explicit approval checkpoint.

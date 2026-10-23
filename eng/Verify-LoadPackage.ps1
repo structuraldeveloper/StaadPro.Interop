@@ -228,6 +228,27 @@ try {
         }
         if ($expansionSnippets.Count -ne 72) { throw 'Expected 72 expansion XML examples.' }
     }
+    $propertySnippets = @()
+    $hasPropertyFoundation = @($xml.doc.members.member | Where-Object name -eq 'M:StaadPro.Interop.Adapters.Interfaces.IOSProperty.GetBetaAngle(System.Int32)').Count -eq 1
+    if ($hasPropertyFoundation) {
+        $propertyGuide = Read-PackageEntry 'docs/Property-Porting.md'
+        foreach ($owner in @('Adapters.Interfaces.IOSProperty', 'Adapters.Models.OSPropertyAdapter')) {
+            $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+            if ($entries.Count -ne 25) { throw "Expected 25 Property method contracts for $owner." }
+            foreach ($entry in $entries) {
+                foreach ($tag in @('summary', 'returns', 'remarks', 'example/code')) {
+                    $node = $entry.SelectSingleNode($tag)
+                    if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete Property $tag for $($entry.name)" }
+                }
+                if ($entry.SelectSingleNode('remarks').InnerText -notmatch 'When to use:') { throw "Missing comparative Property IntelliSense for $($entry.name)" }
+                $methodName = [regex]::Match($entry.name, '\.([^.()]+)(?:\(|$)').Groups[1].Value
+                if ($propertyGuide -notmatch $methodName) { throw "Missing Property guidance for $methodName" }
+                $binding = if ($owner.EndsWith('IOSProperty')) { 'IOSProperty property = wrapper.Property;' } else { 'var property = new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper);' }
+                $propertySnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyQueryFixture.Root { Property = new PackageVerification.PropertyQueryFixture.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
+            }
+        }
+        if ($propertySnippets.Count -ne 50) { throw 'Expected 50 Property XML examples.' }
+    }
 } finally { $archive.Dispose() }
 
 # Unique project and package cache: no project references or previously installed library.
@@ -489,7 +510,8 @@ public static class Program
         }
         RunInspectionDocumentationExamples();
         RunExpansionDocumentationExamples();
-        Console.WriteLine("PASS: __EXAMPLE_COUNT__ packaged XML examples and Geometry/Load/Root/Output IntelliSense.");
+        RunPropertyDocumentationExamples();
+        Console.WriteLine("PASS: __EXAMPLE_COUNT__ packaged XML examples and Geometry/Load/Root/Output/Property IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -507,6 +529,10 @@ __INSPECTION_EXAMPLES__
     private static void RunExpansionDocumentationExamples()
     {
 __EXPANSION_EXAMPLES__
+    }
+    private static void RunPropertyDocumentationExamples()
+    {
+__PROPERTY_EXAMPLES__
     }
     public sealed class FakeOutputRoot
     {
@@ -702,9 +728,11 @@ $program = $program.Replace('__EXAMPLES__', ($snippets -join "`n"))
 $program = $program.Replace('__OUTPUT_EXAMPLES__', ($outputSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__INSPECTION_EXAMPLES__', ($inspectionSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__EXPANSION_EXAMPLES__', ($expansionSnippets -join [Environment]::NewLine))
-$program = $program.Replace('__EXAMPLE_COUNT__', [string](340 + $inspectionSnippets.Count + $expansionSnippets.Count))
+$program = $program.Replace('__PROPERTY_EXAMPLES__', ($propertySnippets -join [Environment]::NewLine))
+$program = $program.Replace('__EXAMPLE_COUNT__', [string](340 + $inspectionSnippets.Count + $expansionSnippets.Count + $propertySnippets.Count))
 if ($hasLoadExpansion) { $program = 'using StaadPro.Interop.Models.Loads.Contracts;' + [Environment]::NewLine + 'using StaadPro.Interop.Models.Loads.Queries;' + [Environment]::NewLine + $program }
 if ($hasLoadInspection) { $program = 'using StaadPro.Interop.Enums.Loads;' + [Environment]::NewLine + $program }
+if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyQueryFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyQueryFixture.cs') }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/LoadInspectionFixture.cs') -Destination (Join-Path $consumerRoot 'LoadInspectionFixture.cs')
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'NuGet.Config'), $config)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Consumer.csproj'), $project)
