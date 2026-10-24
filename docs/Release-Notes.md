@@ -1,5 +1,45 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261024.11 - 24 October 2026 (prepared preview)
+
+Incorporated **25 Property operations**: all five remaining P9 catalog queries and twenty P10 removal/deletion functions. The current surface has **245 common overloads plus five separately acquired catalog queries**, covering **191 of 204 active native routes**, with **13 remaining**. P9 is complete; P10 has twenty of twenty-four routes. The nine earlier P7/P8 contract gaps remain pending. See [all 25 catalog/cleanup contracts](Property-Catalog-Capabilities-and-Cleanup.md).
+
+Passed a Release build with zero warnings/errors and **5,156 offline tests**, including **197 new cases**. The isolated PackageReference-only consumer verifies **944 selected XML examples**: 490 common Property examples plus twelve optional catalog/acquisition examples, alongside the existing groups. Separate managed checks exercise all twenty new mutations and five catalog queries through both public surfaces. Live native mutation and engineering qualification remain pending.
+
+Added a passive version/signature acquisition boundary for the newer catalog group on exact native profiles **25.00.01.424** and **26.00.00.340**. Retained operation-specific zero-success, Boolean-success and explicit no-specification removal outcomes, owned bounded bulk targets, and separate member-end, cable-definition and analytical-node selectors. No native model is modified by verification.
+
+Renamed **17 public UPT methods** to PascalCase, including **AddUptPropertyChannel**, **AddUptPropertyWideFlange** and **CreateUptTable**. This preview requires callers to update those method names. Parameter names, types, ordering, defaults and return types are preserved. Bentley native dispatch names and recorded contract evidence retain their original spelling.
+
+Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. README prose retains neutral bold API references and standard documentation links. See [all 17 API renames](Property-API-Naming.md).
+
+- Incorporated `RemovePropertyFromPlate`: Remove Thickness Property From the specific Plate.
+- Incorporated `RemoveMaterialFromPlate`: Remove Material From the specific Plates.
+- Incorporated `RemoveMaterialFromSolid`: Remove Material From the specific Solids.
+- Incorporated `DeleteMemberReleaseSpec`: Delete MEMBER RELEASE specification.
+- Incorporated `DeleteAllControlDependentRelations`: Delete all control/dependent joint specifications from model.
+- Incorporated `RemoveAllElementOffsetSpec`: Remove all element node offset specification from the model.
+- Incorporated `RemovePropertyFromBeam`: Remove property from beam.
+- Incorporated `DeleteProperty`: Delete property based the on the property ID passed.
+- Incorporated `DeleteMemberSpec`: Delete specification based on the specification number passed.
+- Incorporated `RemoveMemberReleaseSpecFromBeam`: Removes the member specification from a particular member at the provided location (Start or End)..
+- Incorporated `RemoveMemberOffsetSpecFromBeam`: Removes the member offset specification from a particular member at the provided location (Start or End).
+- Incorporated `RemoveMemberTrussSpecFromBeam`: Remove member truss specification from beam.
+- Incorporated `RemoveMemberInactiveSpecFromBeam`: Remove member inactive specification from beam.
+- Incorporated `RemoveMemberTensionSpecFromBeam`: Remove member tension specification from beam.
+- Incorporated `RemoveMemberCompressionSpecFromBeam`: Remove member compression specification from beam.
+- Incorporated `RemoveMemberIgnoreStiffSpecFromBeam`: Remove member ignore stiff specification from beam.
+- Incorporated `RemoveMemberCableSpecFromBeam`: Removes the member cable specification from a particular member at the provided location type (Tension or Length).
+- Incorporated `RemoveElementPlaneStressSpecFromPlate`: Remove element plane stress specification from plate.
+- Incorporated `RemoveElementIgnoreInplaneRotnSpecFromPlate`: Remove element ignore in plane rotation specification from plate.
+- Incorporated `RemoveElementNodeReleaseSpecFromPlate`: Remove element node release specification from plate.
+- Incorporated `GetDefaultStandardProfileDBFolder`: Gets standard profile default database folder path.
+- Incorporated `IsStandardDatabaseSection`: Checks if the specified section property reference number is from standard section database source or not.
+- Incorporated `GetStandardSectionDatabaseName`: Gets standard section database name for the specified section property reference number.
+- Incorporated `GetStandardSectionTableName`: Get the table name from the standard section database for the specified standard section property reference number.
+- Incorporated `GetStandardSectionName`: Get the section name from the standard section database and table for the specified standard section property reference number.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.11.nupkg` for manual upload.
+
 ## 1.0.0-preview.20261024.10 - 24 October 2026 (prepared preview)
 
 Incorporated **25 Property functions**: 22 reviewed P8 user-provided-table operations and the next three P9 catalog/database-folder operations. Property now exposes **225 overloads**, covering **166 of 204 active native routes**, with **38 remaining**. Five P8 transport contracts and four earlier P7 contracts remain pending. P8 has 25 of 30 routes; P9 has four of nine. See [all 25 UPT/catalog contracts](Property-UPT-Profiles-and-Catalogs.md).

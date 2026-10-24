@@ -2,11 +2,11 @@
 
 ## Package and runtime
 
-Updated package and assembly copyright to **Copyright (c) 2026 TensorStruct**. Authors remains **Srinivasa Rao Masanam** and assembly Company remains **TensorStruct**. This preview adds 25 reviewed UPT/catalog functions with matching interface/concrete XML IntelliSense.
+Updated package and assembly copyright to **Copyright (c) 2026 TensorStruct**. Authors remains **Srinivasa Rao Masanam** and assembly Company remains **TensorStruct**. This preview adds 25 reviewed catalog/cleanup functions with matching interface/concrete XML IntelliSense.
 
-Preview `1.0.0-preview.20261024.10` includes 25 UPT/catalog additions while retaining five P8 and four earlier P7 qualification gaps and retains the correction for `GetLoadCasesFromIds` and related primary/combination discovery throwing `invalid integer result` when native number retrieval returns Boolean success. Update the installed package and rebuild/restart the consuming application to use the corrected DLL. The [Load query guide](Load-Queries.md) explains the distinct Boolean and integer contracts.
+Preview `1.0.0-preview.20261024.11` includes 25 catalog/cleanup additions while retaining five P8 and four earlier P7 qualification gaps and retains the correction for `GetLoadCasesFromIds` and related primary/combination discovery throwing `invalid integer result` when native number retrieval returns Boolean success. Update the installed package and rebuild/restart the consuming application to use the corrected DLL. The [Load query guide](Load-Queries.md) explains the distinct Boolean and integer contracts.
 
-The locally prepared preview is `1.0.0-preview.20261024.10`, including the approved wrapper surface, all 143 reference Geometry overloads, 171 Load overloads and 225 Property overloads, 15 typed Output queries, 53 common Root operations and three optional Root operations. Use this exact version with the local-feed instructions below. This local build does not establish a new public publication. Public-feed examples retain the previously verified version; consult [release notes](Release-Notes.md), [Load contracts](Load-Porting.md), [Output usage](Output-Porting.md) and [Root capabilities](Root-Completion-and-Capabilities.md) for scope and limits.
+The locally prepared preview is `1.0.0-preview.20261024.11`, including the approved wrapper surface, all 143 reference Geometry overloads, 171 Load overloads and 245 common Property overloads plus five optional catalog queries, 15 typed Output queries, 53 common Root operations and three optional Root operations. Use this exact version with the local-feed instructions below. This local build does not establish a new public publication. Public-feed examples retain the previously verified version; consult [release notes](Release-Notes.md), [Load contracts](Load-Porting.md), [Output usage](Output-Porting.md) and [Root capabilities](Root-Completion-and-Capabilities.md) for scope and limits.
 
 This guide uses preview version `1.0.0-preview.20261012.1` of package `StaadPro.Interop`. Public-feed commands apply after that exact version is accepted and available on NuGet.org; [Publishing.md](Publishing.md) explains upload and verification. The same verified archive can be installed immediately through a local feed.
 
@@ -20,7 +20,9 @@ This guide uses preview version `1.0.0-preview.20261012.1` of package `StaadPro.
 
 Installation and managed package checks do not require a STAAD license. Native STAAD operations do. Bentley software/binaries are separately installed and licensed. The package targets `net481`; this release does not advertise .NET 8/9/10 application compatibility. SDK version and the consuming application's target framework are different things.
 
-Newtonsoft.Json is restored as a package dependency. Expanded XML documentation is included beside the DLL for IntelliSense on interfaces and concrete adapters, including all 225 `IOSProperty`/`OSPropertyAdapter` overloads. The [UPT/catalog guide](Property-UPT-Profiles-and-Catalogs.md) covers the latest 25 functions and guarded mutations; the [fireproofing/attribute/UPT guide](Property-Fireproofing-Attributes-and-UPT.md), the [creation/specification guide](Property-Section-and-Specification-Creation.md), the [material/member-section guide](Property-Materials-and-Member-Sections.md), the [section completion guide](Property-Sections.md), the [workflow](Property-Workflows.md), [management](Property-Management-Ports.md) and [inventory](Property-Main-Ports.md) guides record earlier increments.
+Newtonsoft.Json is restored as a package dependency. Expanded XML documentation is included beside the DLL for IntelliSense on interfaces and concrete adapters, including all 245 common `IOSProperty`/`OSPropertyAdapter` overloads and the five acquired catalog queries. The [UPT/catalog guide](Property-UPT-Profiles-and-Catalogs.md) covers the latest 25 functions and guarded mutations; the [fireproofing/attribute/UPT guide](Property-Fireproofing-Attributes-and-UPT.md), the [creation/specification guide](Property-Section-and-Specification-Creation.md), the [material/member-section guide](Property-Materials-and-Member-Sections.md), the [section completion guide](Property-Sections.md), the [workflow](Property-Workflows.md), [management](Property-Management-Ports.md) and [inventory](Property-Main-Ports.md) guides record earlier increments.
+
+The newer catalog group requires `property.Capabilities.GetStandardCatalog()` acquisition. Update the 17 renamed public UPT methods using [the migration table](Property-API-Naming.md); see [all new contracts](Property-Catalog-Capabilities-and-Cleanup.md).
 
 ## Install from the public feed
 
@@ -102,7 +104,7 @@ In the consumer directory, use a project-scoped `NuGet.Config`:
 NuGet.org remains configured for dependencies. Add the exact package reference with:
 
 ```powershell
-dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261024.10
+dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261024.11
 dotnet restore ./YourApp.csproj --configfile ./NuGet.Config --packages ./packages
 dotnet build ./YourApp.csproj -c Release --no-restore
 ```

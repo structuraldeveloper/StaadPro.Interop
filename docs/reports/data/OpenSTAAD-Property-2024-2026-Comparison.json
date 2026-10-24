@@ -29,8 +29,8 @@
     "unchangedCommonContracts": 188,
     "changedCommonExamples": 75,
     "changes2025To2026": 0,
-    "currentPropertyMethods": 225,
-    "currentPropertyNativeDispatches": 166,
+    "currentPropertyMethods": 250,
+    "currentPropertyNativeDispatches": 191,
     "referenceInterfaceOverloads": 103,
     "referencePublicAdapterMethods": 107,
     "referenceAdapterOnlyMethods": 4,
@@ -48,7 +48,9 @@
     "excludedClassOnlyHelperNames": 22,
     "groupClassAndMetadataCandidateUnion": 227,
     "referenceActiveCandidatesWithoutTarget": 129,
-    "remainingActiveCandidateNames": 38
+    "remainingActiveCandidateNames": 13,
+    "currentCommonPropertyMethods": 245,
+    "currentOptionalPropertyCatalogMethods": 5
   },
   "manualEvidence": {
     "2024": {
@@ -24966,11 +24968,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented native route; managed verification passed; live qualification pending",
-        "proposedMethod": "CreateUPTTable",
+        "proposedMethod": "CreateUptTable",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableCreationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "CreateUPTTable(UserTableRequest request)"
+        "proposedSignature": "CreateUptTable(UserTableRequest request)"
       },
       "versions": {
         "2024": {
@@ -25227,7 +25229,8 @@
         "reader": "PropertyAttributeReader",
         "qualification": "Managed fixture verified; live COM/engineering qualification pending",
         "mutation": true
-      }
+      },
+      "publicManagedMethod": "CreateUptTable"
     },
     {
       "name": "AddUPTPropertyWIDEFLANGE",
@@ -25262,11 +25265,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented native route; managed verification passed; live qualification pending",
-        "proposedMethod": "AddUPTPropertyWIDEFLANGE",
+        "proposedMethod": "AddUptPropertyWideFlange",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "AddUPTPropertyWIDEFLANGE(UserTableRequest request)"
+        "proposedSignature": "AddUptPropertyWideFlange(UserTableRequest request)"
       },
       "versions": {
         "2024": {
@@ -25775,7 +25778,8 @@
         "reader": "PropertyAttributeReader",
         "qualification": "Managed fixture verified; live COM/engineering qualification pending",
         "mutation": true
-      }
+      },
+      "publicManagedMethod": "AddUptPropertyWideFlange"
     },
     {
       "name": "AddUPTPropertyWIDEFLANGEUNEQUAL",
@@ -25787,11 +25791,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented native route; managed verification passed; live qualification pending",
-        "proposedMethod": "AddUPTPropertyWIDEFLANGEUNEQUAL",
+        "proposedMethod": "AddUptPropertyWideFlangeUnequal",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "AddUPTPropertyWIDEFLANGEUNEQUAL(UserTableRequest request)"
+        "proposedSignature": "AddUptPropertyWideFlangeUnequal(UserTableRequest request)"
       },
       "versions": {
         "2024": {
@@ -26138,7 +26142,8 @@
         "reader": "PropertyAttributeReader",
         "qualification": "Managed fixture verified; live COM/engineering qualification pending",
         "mutation": true
-      }
+      },
+      "publicManagedMethod": "AddUptPropertyWideFlangeUnequal"
     },
     {
       "name": "AddUPTPropertyWIDEFLANGECOMPOSITE",
@@ -26150,11 +26155,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "AddUPTPropertyWIDEFLANGECOMPOSITE",
+        "proposedMethod": "AddUptPropertyWideFlangeComposite",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult AddUPTPropertyWIDEFLANGECOMPOSITE(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition)"
+        "proposedSignature": "PropertyMutationResult AddUptPropertyWideFlangeComposite(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition)"
       },
       "versions": {
         "2024": {
@@ -26579,7 +26584,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "AddUptPropertyWideFlangeComposite"
     },
     {
       "name": "AddUPTPropertyCHANNEL",
@@ -26615,11 +26621,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "AddUPTPropertyCHANNEL",
+        "proposedMethod": "AddUptPropertyChannel",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult AddUPTPropertyCHANNEL(int tableId, string sectionName, UptChannelDefinition definition)"
+        "proposedSignature": "PropertyMutationResult AddUptPropertyChannel(int tableId, string sectionName, UptChannelDefinition definition)"
       },
       "versions": {
         "2024": {
@@ -27155,7 +27161,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "AddUptPropertyChannel"
     },
     {
       "name": "AddUPTPropertyANGLE",
@@ -27186,11 +27193,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "AddUPTPropertyANGLE",
+        "proposedMethod": "AddUptPropertyAngle",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult AddUPTPropertyANGLE(int tableId, string sectionName, UptAngleDefinition definition)"
+        "proposedSignature": "PropertyMutationResult AddUptPropertyAngle(int tableId, string sectionName, UptAngleDefinition definition)"
       },
       "versions": {
         "2024": {
@@ -27561,7 +27568,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "AddUptPropertyAngle"
     },
     {
       "name": "AddUPTPropertyDOUBLEANGLE",
@@ -27596,11 +27604,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "AddUPTPropertyDOUBLEANGLE",
+        "proposedMethod": "AddUptPropertyDoubleAngle",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult AddUPTPropertyDOUBLEANGLE(int tableId, string sectionName, UptDoubleAngleDefinition definition)"
+        "proposedSignature": "PropertyMutationResult AddUptPropertyDoubleAngle(int tableId, string sectionName, UptDoubleAngleDefinition definition)"
       },
       "versions": {
         "2024": {
@@ -28103,7 +28111,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "AddUptPropertyDoubleAngle"
     },
     {
       "name": "AddUPTPropertyTEE",
@@ -28139,11 +28148,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "AddUPTPropertyTEE",
+        "proposedMethod": "AddUptPropertyTee",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult AddUPTPropertyTEE(int tableId, string sectionName, UptTeeDefinition definition)"
+        "proposedSignature": "PropertyMutationResult AddUptPropertyTee(int tableId, string sectionName, UptTeeDefinition definition)"
       },
       "versions": {
         "2024": {
@@ -28679,7 +28688,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "AddUptPropertyTee"
     },
     {
       "name": "AddUPTPropertyPIPE",
@@ -28708,11 +28718,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "AddUPTPropertyPIPE",
+        "proposedMethod": "AddUptPropertyPipe",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult AddUPTPropertyPIPE(int tableId, string sectionName, UptPipeDefinition definition)"
+        "proposedSignature": "PropertyMutationResult AddUptPropertyPipe(int tableId, string sectionName, UptPipeDefinition definition)"
       },
       "versions": {
         "2024": {
@@ -29017,7 +29027,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "AddUptPropertyPipe"
     },
     {
       "name": "AddUPTPropertyTUBE",
@@ -29051,11 +29062,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "AddUPTPropertyTUBE",
+        "proposedMethod": "AddUptPropertyTube",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult AddUPTPropertyTUBE(int tableId, string sectionName, UptTubeDefinition definition)"
+        "proposedSignature": "PropertyMutationResult AddUptPropertyTube(int tableId, string sectionName, UptTubeDefinition definition)"
       },
       "versions": {
         "2024": {
@@ -29525,7 +29536,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "AddUptPropertyTube"
     },
     {
       "name": "AddUPTPropertyGENERAL",
@@ -29566,11 +29578,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "AddUPTPropertyGENERAL",
+        "proposedMethod": "AddUptPropertyGeneral",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult AddUPTPropertyGENERAL(int tableId, string sectionName, UptGeneralDefinition definition)"
+        "proposedSignature": "PropertyMutationResult AddUptPropertyGeneral(int tableId, string sectionName, UptGeneralDefinition definition)"
       },
       "versions": {
         "2024": {
@@ -30271,7 +30283,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "AddUptPropertyGeneral"
     },
     {
       "name": "AddUPTPropertyISECTION",
@@ -30306,11 +30319,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "AddUPTPropertyISECTION",
+        "proposedMethod": "AddUptPropertyISection",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult AddUPTPropertyISECTION(int tableId, string sectionName, UptISectionDefinition definition)"
+        "proposedSignature": "PropertyMutationResult AddUptPropertyISection(int tableId, string sectionName, UptISectionDefinition definition)"
       },
       "versions": {
         "2024": {
@@ -30813,7 +30826,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "AddUptPropertyISection"
     },
     {
       "name": "AddUPTPropertyPRISMATIC",
@@ -30846,11 +30860,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "AddUPTPropertyPRISMATIC",
+        "proposedMethod": "AddUptPropertyPrismatic",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult AddUPTPropertyPRISMATIC(int tableId, string sectionName, UptPrismaticDefinition definition)"
+        "proposedSignature": "PropertyMutationResult AddUptPropertyPrismatic(int tableId, string sectionName, UptPrismaticDefinition definition)"
       },
       "versions": {
         "2024": {
@@ -31287,7 +31301,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "AddUptPropertyPrismatic"
     },
     {
       "name": "CreatePropertyFromUPTTable",
@@ -31360,11 +31375,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "CreatePropertyFromUPTTable",
+        "proposedMethod": "CreatePropertyFromUptTable",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableCreationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult CreatePropertyFromUPTTable(int tableId, string sectionName)"
+        "proposedSignature": "PropertyMutationResult CreatePropertyFromUptTable(int tableId, string sectionName)"
       },
       "versions": {
         "2024": {
@@ -31525,7 +31540,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "CreatePropertyFromUptTable"
     },
     {
       "name": "GetUptGeneralProfilePointsCount",
@@ -39111,17 +39127,17 @@
       "name": "RemovePropertyFromPlate",
       "category": "Section: Get and Remove General Section Profile Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemovePropertyFromPlate",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemovePropertyFromPlate(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult RemovePropertyFromPlate(int plateId)"
       },
       "versions": {
         "2024": {
@@ -39248,23 +39264,24 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveMaterialFromPlate",
       "category": "Section: Get and Remove General Section Profile Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveMaterialFromPlate",
         "proposedRequest": "MaterialDefinitionRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveMaterialFromPlate(MaterialDefinitionRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveMaterialFromPlate(IEnumerable<int> plateIds)"
       },
       "versions": {
         "2024": {
@@ -39391,23 +39408,24 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveMaterialFromSolid",
       "category": "Section: Get and Remove General Section Profile Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveMaterialFromSolid",
         "proposedRequest": "MaterialDefinitionRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveMaterialFromSolid(MaterialDefinitionRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveMaterialFromSolid(IEnumerable<int> solidIds)"
       },
       "versions": {
         "2024": {
@@ -39534,7 +39552,8 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "GetIsotropicMaterialAssignedPlateList",
@@ -40109,11 +40128,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "CreateUPTTableEx",
+        "proposedMethod": "CreateUptTableEx",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableCreationResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult CreateUPTTableEx(int requestedTableId, UserProvidedTableType tableType)"
+        "proposedSignature": "PropertyMutationResult CreateUptTableEx(int requestedTableId, UserProvidedTableType tableType)"
       },
       "versions": {
         "2024": {
@@ -40274,7 +40293,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "CreateUptTableEx"
     },
     {
       "name": "RemoveUPTTable",
@@ -40286,11 +40306,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "RemoveUPTTable",
+        "proposedMethod": "RemoveUptTable",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult RemoveUPTTable(int tableId)"
+        "proposedSignature": "PropertyMutationResult RemoveUptTable(int tableId)"
       },
       "versions": {
         "2024": {
@@ -40418,7 +40438,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "RemoveUptTable"
     },
     {
       "name": "RemovePropertyFromUPTTable",
@@ -40430,11 +40451,11 @@
       "plan": {
         "phase": "P8",
         "disposition": "Implemented managed route; live qualification pending",
-        "proposedMethod": "RemovePropertyFromUPTTable",
+        "proposedMethod": "RemovePropertyFromUptTable",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "PropertyMutationResult RemovePropertyFromUPTTable(int tableId, string sectionName)"
+        "proposedSignature": "PropertyMutationResult RemovePropertyFromUptTable(int tableId, string sectionName)"
       },
       "versions": {
         "2024": {
@@ -40607,7 +40628,8 @@
         }
       },
       "currentRepositoryNativeRoute": true,
-      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json"
+      "managedContractIndex": "docs/contracts/PropertyUptContractIndex.json",
+      "publicManagedMethod": "RemovePropertyFromUptTable"
     },
     {
       "name": "CreatePropertyFromUserTable",
@@ -45666,17 +45688,17 @@
       "name": "DeleteMemberReleaseSpec",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "DeleteMemberReleaseSpec",
         "proposedRequest": "MemberReleaseRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "DeleteMemberReleaseSpec(MemberReleaseRequest request)"
+        "proposedSignature": "PropertyMutationResult DeleteMemberReleaseSpec(int memberId, MemberEnd memberEnd)"
       },
       "versions": {
         "2024": {
@@ -45836,23 +45858,24 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "DeleteAllControlDependentRelations",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "DeleteAllControlDependentRelations",
         "proposedRequest": "ControlDependentRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "DeleteAllControlDependentRelations()"
+        "proposedSignature": "PropertyMutationResult DeleteAllControlDependentRelations()"
       },
       "versions": {
         "2024": {
@@ -45940,7 +45963,8 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "GetElementOffsetSpecCount",
@@ -46040,17 +46064,17 @@
       "name": "RemoveAllElementOffsetSpec",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveAllElementOffsetSpec",
         "proposedRequest": "OffsetSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveAllElementOffsetSpec()"
+        "proposedSignature": "PropertyMutationResult RemoveAllElementOffsetSpec()"
       },
       "versions": {
         "2024": {
@@ -46138,7 +46162,8 @@
           "exampleCount": 3
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "GetMemberSpecCode",
@@ -46407,17 +46432,17 @@
       "name": "RemovePropertyFromBeam",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemovePropertyFromBeam",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemovePropertyFromBeam(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult RemovePropertyFromBeam(int memberId)"
       },
       "versions": {
         "2024": {
@@ -46544,7 +46569,8 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveBeamPropertyHelper",
@@ -46692,17 +46718,17 @@
       "name": "DeleteProperty",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "DeleteProperty",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "DeleteProperty(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult DeleteProperty(int propertyId)"
       },
       "versions": {
         "2024": {
@@ -46829,7 +46855,8 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "GetPropertyUniqueID",
@@ -47114,17 +47141,17 @@
       "name": "DeleteMemberSpec",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "DeleteMemberSpec",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "DeleteMemberSpec(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult DeleteMemberSpec(int specificationId)"
       },
       "versions": {
         "2024": {
@@ -47251,23 +47278,24 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveMemberReleaseSpecFromBeam",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveMemberReleaseSpecFromBeam",
         "proposedRequest": "MemberReleaseRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveMemberReleaseSpecFromBeam(MemberReleaseRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveMemberReleaseSpecFromBeam(int memberId, MemberEnd memberEnd)"
       },
       "versions": {
         "2024": {
@@ -47427,23 +47455,24 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveMemberOffsetSpecFromBeam",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveMemberOffsetSpecFromBeam",
         "proposedRequest": "OffsetSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveMemberOffsetSpecFromBeam(OffsetSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveMemberOffsetSpecFromBeam(int memberId, MemberEnd memberEnd)"
       },
       "versions": {
         "2024": {
@@ -47603,23 +47632,24 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveMemberTrussSpecFromBeam",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveMemberTrussSpecFromBeam",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveMemberTrussSpecFromBeam(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveMemberTrussSpecFromBeam(int memberId)"
       },
       "versions": {
         "2024": {
@@ -47746,23 +47776,24 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveMemberInactiveSpecFromBeam",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveMemberInactiveSpecFromBeam",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveMemberInactiveSpecFromBeam(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveMemberInactiveSpecFromBeam(int memberId)"
       },
       "versions": {
         "2024": {
@@ -47889,23 +47920,24 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveMemberTensionSpecFromBeam",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveMemberTensionSpecFromBeam",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveMemberTensionSpecFromBeam(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveMemberTensionSpecFromBeam(int memberId)"
       },
       "versions": {
         "2024": {
@@ -48032,23 +48064,24 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveMemberCompressionSpecFromBeam",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveMemberCompressionSpecFromBeam",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveMemberCompressionSpecFromBeam(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveMemberCompressionSpecFromBeam(int memberId)"
       },
       "versions": {
         "2024": {
@@ -48175,23 +48208,24 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveMemberIgnoreStiffSpecFromBeam",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveMemberIgnoreStiffSpecFromBeam",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveMemberIgnoreStiffSpecFromBeam(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveMemberIgnoreStiffSpecFromBeam(int memberId)"
       },
       "versions": {
         "2024": {
@@ -48318,23 +48352,24 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveMemberCableSpecFromBeam",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveMemberCableSpecFromBeam",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveMemberCableSpecFromBeam(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveMemberCableSpecFromBeam(int memberId, CableDefinitionKind definitionKind)"
       },
       "versions": {
         "2024": {
@@ -48494,23 +48529,24 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveElementPlaneStressSpecFromPlate",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveElementPlaneStressSpecFromPlate",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveElementPlaneStressSpecFromPlate(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveElementPlaneStressSpecFromPlate(int plateId)"
       },
       "versions": {
         "2024": {
@@ -48637,23 +48673,24 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveElementIgnoreInplaneRotnSpecFromPlate",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveElementIgnoreInplaneRotnSpecFromPlate",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveElementIgnoreInplaneRotnSpecFromPlate(MemberSpecificationRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveElementIgnoreInplaneRotnSpecFromPlate(int plateId)"
       },
       "versions": {
         "2024": {
@@ -48780,23 +48817,24 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveElementNodeReleaseSpecFromPlate",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented managed route; live qualification pending",
         "proposedMethod": "RemoveElementNodeReleaseSpecFromPlate",
         "proposedRequest": "MemberReleaseRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveElementNodeReleaseSpecFromPlate(MemberReleaseRequest request)"
+        "proposedSignature": "PropertyMutationResult RemoveElementNodeReleaseSpecFromPlate(int plateId, int nodeId)"
       },
       "versions": {
         "2024": {
@@ -48956,7 +48994,8 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     },
     {
       "name": "RemoveAllElementNodeReleaseSpec",
@@ -68282,17 +68321,17 @@
       "name": "GetDefaultStandardProfileDBFolder",
       "category": "Standard Section: Functions related to standard section Property",
       "classification": "Newly documented in 2025",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P9",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented acquired catalog route; live qualification pending",
         "proposedMethod": "GetDefaultStandardProfileDBFolder",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "ProfileDatabaseFolderResult",
         "notes": "New help member 2025+; gate with acquired member/profile evidence, never synthesize from current folder.",
-        "proposedSignature": "GetDefaultStandardProfileDatabaseFolder()"
+        "proposedSignature": "PropertyQueryResult<string> GetDefaultStandardProfileDBFolder()"
       },
       "versions": {
         "2024": null,
@@ -68335,23 +68374,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json",
+      "managedCapability": "IOSPropertyStandardCatalog"
     },
     {
       "name": "IsStandardDatabaseSection",
       "category": "Standard Section: Functions related to standard section Property",
       "classification": "Newly documented in 2025",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P9",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented acquired catalog route; live qualification pending",
         "proposedMethod": "IsStandardDatabaseSection",
         "proposedRequest": "SectionQuery",
         "proposedResult": "StandardSectionSourceResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "IsStandardDatabaseSection(SectionQuery request)"
+        "proposedSignature": "PropertyQueryResult<StandardSectionSource> IsStandardDatabaseSection(int propertyId)"
       },
       "versions": {
         "2024": null,
@@ -68438,23 +68479,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json",
+      "managedCapability": "IOSPropertyStandardCatalog"
     },
     {
       "name": "GetStandardSectionDatabaseName",
       "category": "Standard Section: Functions related to standard section Property",
       "classification": "Newly documented in 2025",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P9",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented acquired catalog route; live qualification pending",
         "proposedMethod": "GetStandardSectionDatabaseName",
         "proposedRequest": "SectionQuery",
         "proposedResult": "StandardSectionIdentityResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "GetStandardSectionDatabaseName(SectionQuery request)"
+        "proposedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionDatabaseName(int propertyId)"
       },
       "versions": {
         "2024": null,
@@ -68541,23 +68584,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json",
+      "managedCapability": "IOSPropertyStandardCatalog"
     },
     {
       "name": "GetStandardSectionTableName",
       "category": "Standard Section: Functions related to standard section Property",
       "classification": "Newly documented in 2025",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P9",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented acquired catalog route; live qualification pending",
         "proposedMethod": "GetStandardSectionTableName",
         "proposedRequest": "SectionQuery",
         "proposedResult": "StandardSectionIdentityResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "GetStandardSectionTableName(SectionQuery request)"
+        "proposedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionTableName(int propertyId)"
       },
       "versions": {
         "2024": null,
@@ -68644,23 +68689,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json",
+      "managedCapability": "IOSPropertyStandardCatalog"
     },
     {
       "name": "GetStandardSectionName",
       "category": "Standard Section: Functions related to standard section Property",
       "classification": "Newly documented in 2025",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P9",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented acquired catalog route; live qualification pending",
         "proposedMethod": "GetStandardSectionName",
         "proposedRequest": "SectionQuery",
         "proposedResult": "StandardSectionIdentityResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "GetStandardSectionName(SectionQuery request)"
+        "proposedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionName(int propertyId)"
       },
       "versions": {
         "2024": null,
@@ -68747,7 +68794,9 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "managedContractIndex": "docs/contracts/PropertyCleanupContractIndex.json",
+      "managedCapability": "IOSPropertyStandardCatalog"
     },
     {
       "name": "GetProfileBoundaryInformation",
@@ -74222,11 +74271,13 @@
   ],
   "implementationUpdate": {
     "date": "2026-10-24",
-    "parentCommit": "b03aa55cd78e5cd3c349cacc9339850f42ab9ab8",
-    "interfaceMethods": 225,
-    "adapterMethods": 225,
-    "nativeRoutes": 166,
-    "activeCandidatesRemaining": 38,
+    "parentCommit": "a863d75776529dacc41e50c9803baf578db0470a",
+    "interfaceMethods": 245,
+    "adapterMethods": 245,
+    "optionalCatalogMethods": 5,
+    "totalPropertyOperations": 250,
+    "nativeRoutes": 191,
+    "activeCandidatesRemaining": 13,
     "workstreams": {
       "P2": 13,
       "P3": 23,
@@ -74235,167 +74286,169 @@
       "P6": 18,
       "P7": 42,
       "P8": 25,
-      "P9": 4
+      "P9": 9,
+      "P10": 20
     },
     "contracts": [
       {
-        "native": "AddUPTPropertyCHANNEL",
-        "managedSignature": "PropertyMutationResult AddUPTPropertyCHANNEL(int tableId, string sectionName, UptChannelDefinition definition)",
-        "phase": "P8",
+        "native": "RemovePropertyFromPlate",
+        "managedSignature": "PropertyMutationResult RemovePropertyFromPlate(int plateId)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "AddUPTPropertyANGLE",
-        "managedSignature": "PropertyMutationResult AddUPTPropertyANGLE(int tableId, string sectionName, UptAngleDefinition definition)",
-        "phase": "P8",
+        "native": "RemoveMaterialFromPlate",
+        "managedSignature": "PropertyMutationResult RemoveMaterialFromPlate(IEnumerable<int> plateIds)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "AddUPTPropertyDOUBLEANGLE",
-        "managedSignature": "PropertyMutationResult AddUPTPropertyDOUBLEANGLE(int tableId, string sectionName, UptDoubleAngleDefinition definition)",
-        "phase": "P8",
+        "native": "RemoveMaterialFromSolid",
+        "managedSignature": "PropertyMutationResult RemoveMaterialFromSolid(IEnumerable<int> solidIds)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "AddUPTPropertyTEE",
-        "managedSignature": "PropertyMutationResult AddUPTPropertyTEE(int tableId, string sectionName, UptTeeDefinition definition)",
-        "phase": "P8",
+        "native": "DeleteMemberReleaseSpec",
+        "managedSignature": "PropertyMutationResult DeleteMemberReleaseSpec(int memberId, MemberEnd memberEnd)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "AddUPTPropertyPIPE",
-        "managedSignature": "PropertyMutationResult AddUPTPropertyPIPE(int tableId, string sectionName, UptPipeDefinition definition)",
-        "phase": "P8",
+        "native": "DeleteAllControlDependentRelations",
+        "managedSignature": "PropertyMutationResult DeleteAllControlDependentRelations()",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "AddUPTPropertyTUBE",
-        "managedSignature": "PropertyMutationResult AddUPTPropertyTUBE(int tableId, string sectionName, UptTubeDefinition definition)",
-        "phase": "P8",
+        "native": "RemoveAllElementOffsetSpec",
+        "managedSignature": "PropertyMutationResult RemoveAllElementOffsetSpec()",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "AddUPTPropertyGENERAL",
-        "managedSignature": "PropertyMutationResult AddUPTPropertyGENERAL(int tableId, string sectionName, UptGeneralDefinition definition)",
-        "phase": "P8",
+        "native": "RemovePropertyFromBeam",
+        "managedSignature": "PropertyMutationResult RemovePropertyFromBeam(int memberId)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "AddUPTPropertyISECTION",
-        "managedSignature": "PropertyMutationResult AddUPTPropertyISECTION(int tableId, string sectionName, UptISectionDefinition definition)",
-        "phase": "P8",
+        "native": "DeleteProperty",
+        "managedSignature": "PropertyMutationResult DeleteProperty(int propertyId)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "AddUPTPropertyPRISMATIC",
-        "managedSignature": "PropertyMutationResult AddUPTPropertyPRISMATIC(int tableId, string sectionName, UptPrismaticDefinition definition)",
-        "phase": "P8",
+        "native": "DeleteMemberSpec",
+        "managedSignature": "PropertyMutationResult DeleteMemberSpec(int specificationId)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "AddUPTPropertyWIDEFLANGECOMPOSITE",
-        "managedSignature": "PropertyMutationResult AddUPTPropertyWIDEFLANGECOMPOSITE(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition)",
-        "phase": "P8",
+        "native": "RemoveMemberReleaseSpecFromBeam",
+        "managedSignature": "PropertyMutationResult RemoveMemberReleaseSpecFromBeam(int memberId, MemberEnd memberEnd)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "CreatePropertyFromUPTTable",
-        "managedSignature": "PropertyMutationResult CreatePropertyFromUPTTable(int tableId, string sectionName)",
-        "phase": "P8",
+        "native": "RemoveMemberOffsetSpecFromBeam",
+        "managedSignature": "PropertyMutationResult RemoveMemberOffsetSpecFromBeam(int memberId, MemberEnd memberEnd)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "CreatePropertyFromUserTable",
-        "managedSignature": "PropertyMutationResult CreatePropertyFromUserTable(string sectionName, int tableId)",
-        "phase": "P8",
+        "native": "RemoveMemberTrussSpecFromBeam",
+        "managedSignature": "PropertyMutationResult RemoveMemberTrussSpecFromBeam(int memberId)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "CreateUPTTableEx",
-        "managedSignature": "PropertyMutationResult CreateUPTTableEx(int requestedTableId, UserProvidedTableType tableType)",
-        "phase": "P8",
+        "native": "RemoveMemberInactiveSpecFromBeam",
+        "managedSignature": "PropertyMutationResult RemoveMemberInactiveSpecFromBeam(int memberId)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "RemoveUPTTable",
-        "managedSignature": "PropertyMutationResult RemoveUPTTable(int tableId)",
-        "phase": "P8",
+        "native": "RemoveMemberTensionSpecFromBeam",
+        "managedSignature": "PropertyMutationResult RemoveMemberTensionSpecFromBeam(int memberId)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "RemovePropertyFromUPTTable",
-        "managedSignature": "PropertyMutationResult RemovePropertyFromUPTTable(int tableId, string sectionName)",
-        "phase": "P8",
+        "native": "RemoveMemberCompressionSpecFromBeam",
+        "managedSignature": "PropertyMutationResult RemoveMemberCompressionSpecFromBeam(int memberId)",
+        "phase": "P10",
         "mutation": true
       },
       {
-        "native": "GetUserProvidedTableCount",
-        "managedSignature": "PropertyQueryResult<int> GetUserProvidedTableCount()",
-        "phase": "P8",
-        "mutation": false
+        "native": "RemoveMemberIgnoreStiffSpecFromBeam",
+        "managedSignature": "PropertyMutationResult RemoveMemberIgnoreStiffSpecFromBeam(int memberId)",
+        "phase": "P10",
+        "mutation": true
       },
       {
-        "native": "GetUserProvidedTableList",
-        "managedSignature": "PropertyQueryResult<IReadOnlyList<int>> GetUserProvidedTableList(int maximumResults = 100000)",
-        "phase": "P8",
-        "mutation": false
+        "native": "RemoveMemberCableSpecFromBeam",
+        "managedSignature": "PropertyMutationResult RemoveMemberCableSpecFromBeam(int memberId, CableDefinitionKind definitionKind)",
+        "phase": "P10",
+        "mutation": true
       },
       {
-        "native": "GetUserProvidedTableSectionCount",
-        "managedSignature": "PropertyQueryResult<UptTableSectionCount> GetUserProvidedTableSectionCount(int tableId)",
-        "phase": "P8",
-        "mutation": false
+        "native": "RemoveElementPlaneStressSpecFromPlate",
+        "managedSignature": "PropertyMutationResult RemoveElementPlaneStressSpecFromPlate(int plateId)",
+        "phase": "P10",
+        "mutation": true
       },
       {
-        "native": "GetUserProvidedTableSectionType",
-        "managedSignature": "PropertyQueryResult<UptTableSectionType> GetUserProvidedTableSectionType(int tableId)",
-        "phase": "P8",
-        "mutation": false
+        "native": "RemoveElementIgnoreInplaneRotnSpecFromPlate",
+        "managedSignature": "PropertyMutationResult RemoveElementIgnoreInplaneRotnSpecFromPlate(int plateId)",
+        "phase": "P10",
+        "mutation": true
       },
       {
-        "native": "GetUserProvidedTableSectionPropertyCount",
-        "managedSignature": "PropertyQueryResult<UptNamedSectionCount> GetUserProvidedTableSectionPropertyCount(int tableId, string sectionName)",
-        "phase": "P8",
-        "mutation": false
+        "native": "RemoveElementNodeReleaseSpecFromPlate",
+        "managedSignature": "PropertyMutationResult RemoveElementNodeReleaseSpecFromPlate(int plateId, int nodeId)",
+        "phase": "P10",
+        "mutation": true
       },
       {
-        "native": "GetUserProvidedTableSectionProperties",
-        "managedSignature": "PropertyQueryResult<UptSectionProperties> GetUserProvidedTableSectionProperties(int tableId, string sectionName)",
-        "phase": "P8",
-        "mutation": false
-      },
-      {
-        "native": "GetUserProvidedTableNo",
-        "managedSignature": "PropertyQueryResult<UptTableReference> GetUserProvidedTableNo(int nativeTableIndex)",
-        "phase": "P8",
-        "mutation": false
-      },
-      {
-        "native": "GetShapeCode",
-        "managedSignature": "PropertyQueryResult<SectionShapeCode> GetShapeCode(Country country, string sectionName)",
+        "native": "GetDefaultStandardProfileDBFolder",
+        "managedSignature": "PropertyQueryResult<string> GetDefaultStandardProfileDBFolder()",
         "phase": "P9",
         "mutation": false
       },
       {
-        "native": "SetStandardProfileDBFolder",
-        "managedSignature": "PropertyMutationResult SetStandardProfileDBFolder(string folderPath)",
+        "native": "IsStandardDatabaseSection",
+        "managedSignature": "PropertyQueryResult<StandardSectionSource> IsStandardDatabaseSection(int propertyId)",
         "phase": "P9",
-        "mutation": true
+        "mutation": false
       },
       {
-        "native": "GetStandardProfileDBFolder",
-        "managedSignature": "PropertyQueryResult<string> GetStandardProfileDBFolder()",
+        "native": "GetStandardSectionDatabaseName",
+        "managedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionDatabaseName(int propertyId)",
+        "phase": "P9",
+        "mutation": false
+      },
+      {
+        "native": "GetStandardSectionTableName",
+        "managedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionTableName(int propertyId)",
+        "phase": "P9",
+        "mutation": false
+      },
+      {
+        "native": "GetStandardSectionName",
+        "managedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionName(int propertyId)",
         "phase": "P9",
         "mutation": false
       }
     ],
-    "offlineTests": 4959,
-    "newCases": 213,
-    "selectedXmlExamples": 892,
-    "propertyXmlExamples": 450,
+    "offlineTests": 5156,
+    "newCases": 197,
+    "selectedXmlExamples": 944,
+    "propertyXmlExamples": 490,
+    "catalogAndAcquisitionXmlExamples": 12,
     "liveMutationQualified": false,
-    "nextPhase": "P9",
-    "nextNativeFunction": "GetDefaultStandardProfileDBFolder",
+    "nextPhase": "P10",
+    "nextNativeFunction": "RemoveAllElementNodeReleaseSpec",
     "gatedP7Functions": {
       "GetInactiveMemberList": "Void by-value Object transport is marked unusable in reference source; a live native written-buffer fixture is missing.",
       "GetAlphaAngleForSection": "Native help supplies no interpretable return-status contract; no finite default/output is promoted to certified success.",
@@ -74409,13 +74462,27 @@
       "FindUPTTable": "Documented member is absent from inspected 2025/2026 exported IOSPropertyUI metadata; no qualified dispatch receiver is established.",
       "GetUserProvidedTableSectionList": "Help specifies indexed CSStringList output without a verified CLR representation; no guessed String array or index mapping is exposed."
     },
-    "reviewedNativeProfiles": [
-      "24.00.02.354",
-      "25.00.01.424",
-      "26.00.00.340"
-    ],
-    "guide": "docs/Property-UPT-Profiles-and-Catalogs.md",
-    "contractIndex": "docs/contracts/PropertyUptContractIndex.json"
+    "managedApiRenames": {
+      "AddUPTPropertyWIDEFLANGE": "AddUptPropertyWideFlange",
+      "AddUPTPropertyWIDEFLANGEUNEQUAL": "AddUptPropertyWideFlangeUnequal",
+      "AddUPTPropertyWIDEFLANGECOMPOSITE": "AddUptPropertyWideFlangeComposite",
+      "AddUPTPropertyCHANNEL": "AddUptPropertyChannel",
+      "AddUPTPropertyANGLE": "AddUptPropertyAngle",
+      "AddUPTPropertyDOUBLEANGLE": "AddUptPropertyDoubleAngle",
+      "AddUPTPropertyTEE": "AddUptPropertyTee",
+      "AddUPTPropertyPIPE": "AddUptPropertyPipe",
+      "AddUPTPropertyTUBE": "AddUptPropertyTube",
+      "AddUPTPropertyGENERAL": "AddUptPropertyGeneral",
+      "AddUPTPropertyISECTION": "AddUptPropertyISection",
+      "AddUPTPropertyPRISMATIC": "AddUptPropertyPrismatic",
+      "CreateUPTTable": "CreateUptTable",
+      "CreateUPTTableEx": "CreateUptTableEx",
+      "CreatePropertyFromUPTTable": "CreatePropertyFromUptTable",
+      "RemoveUPTTable": "RemoveUptTable",
+      "RemovePropertyFromUPTTable": "RemovePropertyFromUptTable"
+    },
+    "guide": "docs/Property-Catalog-Capabilities-and-Cleanup.md",
+    "contractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
   },
   "implementationHistory": [
     {
@@ -75666,6 +75733,203 @@
       },
       "guide": "docs/Property-Fireproofing-Attributes-and-UPT.md",
       "contractIndex": "docs/contracts/PropertyAttributeContractIndex.json"
+    },
+    {
+      "date": "2026-10-24",
+      "parentCommit": "b03aa55cd78e5cd3c349cacc9339850f42ab9ab8",
+      "interfaceMethods": 225,
+      "adapterMethods": 225,
+      "nativeRoutes": 166,
+      "activeCandidatesRemaining": 38,
+      "workstreams": {
+        "P2": 13,
+        "P3": 23,
+        "P4": 24,
+        "P5": 17,
+        "P6": 18,
+        "P7": 42,
+        "P8": 25,
+        "P9": 4
+      },
+      "contracts": [
+        {
+          "native": "AddUPTPropertyCHANNEL",
+          "managedSignature": "PropertyMutationResult AddUPTPropertyCHANNEL(int tableId, string sectionName, UptChannelDefinition definition)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "AddUPTPropertyANGLE",
+          "managedSignature": "PropertyMutationResult AddUPTPropertyANGLE(int tableId, string sectionName, UptAngleDefinition definition)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "AddUPTPropertyDOUBLEANGLE",
+          "managedSignature": "PropertyMutationResult AddUPTPropertyDOUBLEANGLE(int tableId, string sectionName, UptDoubleAngleDefinition definition)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "AddUPTPropertyTEE",
+          "managedSignature": "PropertyMutationResult AddUPTPropertyTEE(int tableId, string sectionName, UptTeeDefinition definition)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "AddUPTPropertyPIPE",
+          "managedSignature": "PropertyMutationResult AddUPTPropertyPIPE(int tableId, string sectionName, UptPipeDefinition definition)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "AddUPTPropertyTUBE",
+          "managedSignature": "PropertyMutationResult AddUPTPropertyTUBE(int tableId, string sectionName, UptTubeDefinition definition)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "AddUPTPropertyGENERAL",
+          "managedSignature": "PropertyMutationResult AddUPTPropertyGENERAL(int tableId, string sectionName, UptGeneralDefinition definition)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "AddUPTPropertyISECTION",
+          "managedSignature": "PropertyMutationResult AddUPTPropertyISECTION(int tableId, string sectionName, UptISectionDefinition definition)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "AddUPTPropertyPRISMATIC",
+          "managedSignature": "PropertyMutationResult AddUPTPropertyPRISMATIC(int tableId, string sectionName, UptPrismaticDefinition definition)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "AddUPTPropertyWIDEFLANGECOMPOSITE",
+          "managedSignature": "PropertyMutationResult AddUPTPropertyWIDEFLANGECOMPOSITE(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "CreatePropertyFromUPTTable",
+          "managedSignature": "PropertyMutationResult CreatePropertyFromUPTTable(int tableId, string sectionName)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "CreatePropertyFromUserTable",
+          "managedSignature": "PropertyMutationResult CreatePropertyFromUserTable(string sectionName, int tableId)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "CreateUPTTableEx",
+          "managedSignature": "PropertyMutationResult CreateUPTTableEx(int requestedTableId, UserProvidedTableType tableType)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "RemoveUPTTable",
+          "managedSignature": "PropertyMutationResult RemoveUPTTable(int tableId)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "RemovePropertyFromUPTTable",
+          "managedSignature": "PropertyMutationResult RemovePropertyFromUPTTable(int tableId, string sectionName)",
+          "phase": "P8",
+          "mutation": true
+        },
+        {
+          "native": "GetUserProvidedTableCount",
+          "managedSignature": "PropertyQueryResult<int> GetUserProvidedTableCount()",
+          "phase": "P8",
+          "mutation": false
+        },
+        {
+          "native": "GetUserProvidedTableList",
+          "managedSignature": "PropertyQueryResult<IReadOnlyList<int>> GetUserProvidedTableList(int maximumResults = 100000)",
+          "phase": "P8",
+          "mutation": false
+        },
+        {
+          "native": "GetUserProvidedTableSectionCount",
+          "managedSignature": "PropertyQueryResult<UptTableSectionCount> GetUserProvidedTableSectionCount(int tableId)",
+          "phase": "P8",
+          "mutation": false
+        },
+        {
+          "native": "GetUserProvidedTableSectionType",
+          "managedSignature": "PropertyQueryResult<UptTableSectionType> GetUserProvidedTableSectionType(int tableId)",
+          "phase": "P8",
+          "mutation": false
+        },
+        {
+          "native": "GetUserProvidedTableSectionPropertyCount",
+          "managedSignature": "PropertyQueryResult<UptNamedSectionCount> GetUserProvidedTableSectionPropertyCount(int tableId, string sectionName)",
+          "phase": "P8",
+          "mutation": false
+        },
+        {
+          "native": "GetUserProvidedTableSectionProperties",
+          "managedSignature": "PropertyQueryResult<UptSectionProperties> GetUserProvidedTableSectionProperties(int tableId, string sectionName)",
+          "phase": "P8",
+          "mutation": false
+        },
+        {
+          "native": "GetUserProvidedTableNo",
+          "managedSignature": "PropertyQueryResult<UptTableReference> GetUserProvidedTableNo(int nativeTableIndex)",
+          "phase": "P8",
+          "mutation": false
+        },
+        {
+          "native": "GetShapeCode",
+          "managedSignature": "PropertyQueryResult<SectionShapeCode> GetShapeCode(Country country, string sectionName)",
+          "phase": "P9",
+          "mutation": false
+        },
+        {
+          "native": "SetStandardProfileDBFolder",
+          "managedSignature": "PropertyMutationResult SetStandardProfileDBFolder(string folderPath)",
+          "phase": "P9",
+          "mutation": true
+        },
+        {
+          "native": "GetStandardProfileDBFolder",
+          "managedSignature": "PropertyQueryResult<string> GetStandardProfileDBFolder()",
+          "phase": "P9",
+          "mutation": false
+        }
+      ],
+      "offlineTests": 4959,
+      "newCases": 213,
+      "selectedXmlExamples": 892,
+      "propertyXmlExamples": 450,
+      "liveMutationQualified": false,
+      "nextPhase": "P9",
+      "nextNativeFunction": "GetDefaultStandardProfileDBFolder",
+      "gatedP7Functions": {
+        "GetInactiveMemberList": "Void by-value Object transport is marked unusable in reference source; a live native written-buffer fixture is missing.",
+        "GetAlphaAngleForSection": "Native help supplies no interpretable return-status contract; no finite default/output is promoted to certified success.",
+        "GetCentroidLocationForSection": "Native return status is undocumented; qualification must establish success/absence before exposing engineering data.",
+        "GetAssignedAttributeByIndex": "Index base and native observation-context relationship are not verified; no guessed mapping to a requested entity."
+      },
+      "gatedP8Functions": {
+        "GetUptGeneralProfilePointsCount": "Reviewed CLR metadata passes output count values by value, unlike the help declaration; compatible native transport is not qualified.",
+        "GetUptGeneralProfileBoundaryPoints": "Newer optional coordinate API requires a compatible acquired capability; reviewed by-value output metadata does not establish safe returned buffers.",
+        "GetUptGeneralStressLocationPoints": "Newer optional coordinate output metadata is not qualified for safe paired buffer retrieval.",
+        "FindUPTTable": "Documented member is absent from inspected 2025/2026 exported IOSPropertyUI metadata; no qualified dispatch receiver is established.",
+        "GetUserProvidedTableSectionList": "Help specifies indexed CSStringList output without a verified CLR representation; no guessed String array or index mapping is exposed."
+      },
+      "reviewedNativeProfiles": [
+        "24.00.02.354",
+        "25.00.01.424",
+        "26.00.00.340"
+      ],
+      "guide": "docs/Property-UPT-Profiles-and-Catalogs.md",
+      "contractIndex": "docs/contracts/PropertyUptContractIndex.json"
     }
   ]
 }

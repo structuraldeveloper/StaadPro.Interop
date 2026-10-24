@@ -85,8 +85,8 @@ namespace PackageVerification
                 throw new InvalidOperationException("Installed attribute/fireproofing query verification failed.");
             var writes = new[] { property.CreateMemberAttribute(attribute), property.CreateElementAttribute(attribute), property.DeleteMemberAttribute(attribute),
                 property.DeleteElementAttribute(attribute), property.RemoveAttribute(attribute, new[] { 17, 41 }), property.AssignMemberAttribute(attribute, new[] { 17, 41 }),
-                property.AssignElementAttribute(attribute, new[] { 31, 47 }), property.CreateUPTTable(UserProvidedTableType.WideFlange),
-                property.AddUPTPropertyWIDEFLANGE(7, " EXACT_WF ", definition), property.AddUPTPropertyWIDEFLANGEUNEQUAL(7, " EXACT_UNEQUAL ", unequal) };
+                property.AssignElementAttribute(attribute, new[] { 31, 47 }), property.CreateUptTable(UserProvidedTableType.WideFlange),
+                property.AddUptPropertyWideFlange(7, " EXACT_WF ", definition), property.AddUptPropertyWideFlangeUnequal(7, " EXACT_UNEQUAL ", unequal) };
             if (writes.Any(r => !r.IsSuccessful) || writes[7].CreatedTableId != 7 || writes[8].CreatedPropertyId.HasValue || writes[9].CreatedPropertyId.HasValue)
                 throw new InvalidOperationException("Installed attribute/UPT mutation evidence failed.");
             var args = native.Arguments[native.Calls.IndexOf("AddUPTPropertyWIDEFLANGE")];

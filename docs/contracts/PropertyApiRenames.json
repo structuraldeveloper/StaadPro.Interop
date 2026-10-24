@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-24",
+  "publicNames": {
+    "AddUPTPropertyWIDEFLANGE": "AddUptPropertyWideFlange",
+    "AddUPTPropertyWIDEFLANGEUNEQUAL": "AddUptPropertyWideFlangeUnequal",
+    "AddUPTPropertyWIDEFLANGECOMPOSITE": "AddUptPropertyWideFlangeComposite",
+    "AddUPTPropertyCHANNEL": "AddUptPropertyChannel",
+    "AddUPTPropertyANGLE": "AddUptPropertyAngle",
+    "AddUPTPropertyDOUBLEANGLE": "AddUptPropertyDoubleAngle",
+    "AddUPTPropertyTEE": "AddUptPropertyTee",
+    "AddUPTPropertyPIPE": "AddUptPropertyPipe",
+    "AddUPTPropertyTUBE": "AddUptPropertyTube",
+    "AddUPTPropertyGENERAL": "AddUptPropertyGeneral",
+    "AddUPTPropertyISECTION": "AddUptPropertyISection",
+    "AddUPTPropertyPRISMATIC": "AddUptPropertyPrismatic",
+    "CreateUPTTable": "CreateUptTable",
+    "CreateUPTTableEx": "CreateUptTableEx",
+    "CreatePropertyFromUPTTable": "CreatePropertyFromUptTable",
+    "RemoveUPTTable": "RemoveUptTable",
+    "RemovePropertyFromUPTTable": "RemovePropertyFromUptTable"
+  },
+  "nativeDispatchNamesChanged": false
+}

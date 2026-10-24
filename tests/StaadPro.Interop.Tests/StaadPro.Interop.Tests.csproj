@@ -28,6 +28,7 @@
     <Compile Include="..\..\eng\Fixtures\PropertyCreationFixture.cs" Link="Fixtures\PropertyCreationFixture.cs" />
     <Compile Include="..\..\eng\Fixtures\PropertyAttributeFixture.cs" Link="Fixtures\PropertyAttributeFixture.cs" />
     <Compile Include="..\..\eng\Fixtures\PropertyUptFixture.cs" Link="Fixtures\PropertyUptFixture.cs" />
+    <Compile Include="..\..\eng\Fixtures\PropertyCleanupFixture.cs" Link="Fixtures\PropertyCleanupFixture.cs" />
     <None Include="..\..\docs\contracts\LoadExpansionContractIndex.json" Link="ContractReview\LoadExpansionContractIndex.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

@@ -77,19 +77,19 @@ namespace PackageVerification
         {
             var primary = Primary();
             var mutations = new[] {
-                property.AddUPTPropertyWIDEFLANGECOMPOSITE(7, "WF_COMPOSITE", Composite()),
-                property.AddUPTPropertyCHANNEL(7, "CHANNEL", new UptChannelDefinition(primary, 11)),
-                property.AddUPTPropertyANGLE(7, "ANGLE", new UptAngleDefinition(1, 2, 3, 4, 5, 6)),
-                property.AddUPTPropertyDOUBLEANGLE(7, "DOUBLE", new UptDoubleAngleDefinition(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
-                property.AddUPTPropertyTEE(7, "TEE", new UptTeeDefinition(primary, 11)),
-                property.AddUPTPropertyPIPE(7, "PIPE", new UptPipeDefinition(2, 1, 3, 4)),
-                property.AddUPTPropertyTUBE(7, "TUBE", new UptTubeDefinition(1, 2, 3, 4, 5, 6, 7, 8, 9)),
-                property.AddUPTPropertyGENERAL(7, "GENERAL", new UptGeneralDefinition(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)),
-                property.AddUPTPropertyISECTION(7, "ISECTION", new UptISectionDefinition(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
-                property.AddUPTPropertyPRISMATIC(7, "PRISMATIC", new UptPrismaticDefinition(1, 2, 3, 4, 5, 6, 7, 8)),
-                property.CreatePropertyFromUPTTable(7, "WF_COMPOSITE"), property.CreatePropertyFromUserTable("WF_COMPOSITE", 7),
-                property.CreateUPTTableEx(7, UserProvidedTableType.WideFlange), property.RemoveUPTTable(13),
-                property.RemovePropertyFromUPTTable(7, "WF_COMPOSITE"), property.SetStandardProfileDBFolder(@"C:\STAAD\Profiles") };
+                property.AddUptPropertyWideFlangeComposite(7, "WF_COMPOSITE", Composite()),
+                property.AddUptPropertyChannel(7, "CHANNEL", new UptChannelDefinition(primary, 11)),
+                property.AddUptPropertyAngle(7, "ANGLE", new UptAngleDefinition(1, 2, 3, 4, 5, 6)),
+                property.AddUptPropertyDoubleAngle(7, "DOUBLE", new UptDoubleAngleDefinition(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+                property.AddUptPropertyTee(7, "TEE", new UptTeeDefinition(primary, 11)),
+                property.AddUptPropertyPipe(7, "PIPE", new UptPipeDefinition(2, 1, 3, 4)),
+                property.AddUptPropertyTube(7, "TUBE", new UptTubeDefinition(1, 2, 3, 4, 5, 6, 7, 8, 9)),
+                property.AddUptPropertyGeneral(7, "GENERAL", new UptGeneralDefinition(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)),
+                property.AddUptPropertyISection(7, "ISECTION", new UptISectionDefinition(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+                property.AddUptPropertyPrismatic(7, "PRISMATIC", new UptPrismaticDefinition(1, 2, 3, 4, 5, 6, 7, 8)),
+                property.CreatePropertyFromUptTable(7, "WF_COMPOSITE"), property.CreatePropertyFromUserTable("WF_COMPOSITE", 7),
+                property.CreateUptTableEx(7, UserProvidedTableType.WideFlange), property.RemoveUptTable(13),
+                property.RemovePropertyFromUptTable(7, "WF_COMPOSITE"), property.SetStandardProfileDBFolder(@"C:\STAAD\Profiles") };
             if (mutations.Length != 16 || mutations.Any(r => !r.IsSuccessful)) throw new InvalidOperationException("Installed UPT mutation acknowledgement failed.");
             if (mutations[10].CreatedPropertyId != 801 || mutations[11].CreatedPropertyId != 802 || mutations[12].CreatedTableId != 13 || mutations[12].TableId != 7 || mutations[0].CreatedPropertyId.HasValue)
                 throw new InvalidOperationException("Installed UPT requested/created identity failed.");

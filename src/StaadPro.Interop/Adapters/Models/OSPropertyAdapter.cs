@@ -1,3 +1,6 @@
+using StaadPro.Interop.Adapters.Models.Capabilities;
+using StaadPro.Interop.Services.Property.Capabilities;
+using StaadPro.Interop.Adapters.Interfaces.Capabilities;
 using StaadPro.Interop.Enums.Property;
 using StaadPro.Interop.Interfaces;
 using StaadPro.Interop.Common.Units;
@@ -26,6 +29,8 @@ namespace StaadPro.Interop.Adapters.Models
         private readonly PropertyCreationReader creation;
         private readonly PropertyAttributeReader attributes;
         private readonly PropertyUptReader upt;
+        private readonly PropertyCleanupReader cleanup;
+        private readonly PropertyCatalogAccess catalogAccess;
         /// <summary>Captures the wrapper's Property interface without invoking Property domain functions.</summary>
         /// <param name="wrapper">Connected wrapper with a non-null RawProperty receiver.</param>
         /// <exception cref="ArgumentNullException">The wrapper or its RawProperty binding is null.</exception>
@@ -41,6 +46,8 @@ namespace StaadPro.Interop.Adapters.Models
             creation = new PropertyCreationReader(queries);
             attributes = new PropertyAttributeReader(queries);
             upt = new PropertyUptReader(wrapper, queries);
+            cleanup = new PropertyCleanupReader(queries);
+            catalogAccess = new PropertyCatalogAccess(wrapper, queries);
         }
         /// <summary>Gets the captured native Property binding; direct calls bypass typed validation and coordination.</summary>
         /// <value>The acquired automation receiver; no readiness or compatibility is implied.</value>
@@ -3102,12 +3109,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
         /// if (applyChanges)
         /// {
-        ///     var result = property.CreateUPTTable(StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);
+        ///     var result = property.CreateUptTable(StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult CreateUPTTable(UserProvidedTableType tableType) => attributes.CreateUPTTable(tableType);
+        public PropertyMutationResult CreateUptTable(UserProvidedTableType tableType) => attributes.CreateUPTTable(tableType);
 
         /// <summary>Adds an explicit wide-flange section to an existing native UPT table.</summary>
         /// <param name="tableId">Positive existing native UPT table ID, not an analytical member or section property ID. Caller must establish that the table type supports the requested insertion.</param>
@@ -3123,12 +3130,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// if (applyChanges)
         /// {
         ///     var definition = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
-        ///     var result = property.AddUPTPropertyWIDEFLANGE(7, &quot;EXPLICIT_WF&quot;, definition);
+        ///     var result = property.AddUptPropertyWideFlange(7, &quot;EXPLICIT_WF&quot;, definition);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyWIDEFLANGE(int tableId, string sectionName, UptWideFlangeDefinition definition) => attributes.AddUPTPropertyWIDEFLANGE(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyWideFlange(int tableId, string sectionName, UptWideFlangeDefinition definition) => attributes.AddUPTPropertyWIDEFLANGE(tableId, sectionName, definition);
 
         /// <summary>Adds an explicit unequal wide-flange section through the native twelve-double UPT route.</summary>
         /// <param name="tableId">Positive existing native UPT table ID, not an analytical member or section property ID. Caller must establish that the table type supports the requested insertion.</param>
@@ -3145,12 +3152,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// {
         ///     var definition = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
         ///     var unequal = new StaadPro.Interop.Models.Property.UptUnequalWideFlangeDefinition(definition, 0.2, 0.015);
-        ///     var result = property.AddUPTPropertyWIDEFLANGEUNEQUAL(7, &quot;EXPLICIT_UNEQUAL&quot;, unequal);
+        ///     var result = property.AddUptPropertyWideFlangeUnequal(7, &quot;EXPLICIT_UNEQUAL&quot;, unequal);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyWIDEFLANGEUNEQUAL(int tableId, string sectionName, UptUnequalWideFlangeDefinition definition) => attributes.AddUPTPropertyWIDEFLANGEUNEQUAL(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyWideFlangeUnequal(int tableId, string sectionName, UptUnequalWideFlangeDefinition definition) => attributes.AddUPTPropertyWIDEFLANGEUNEQUAL(tableId, sectionName, definition);
 
         #endregion
 
@@ -3172,12 +3179,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// {
         ///     var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
         ///     var definition = new StaadPro.Interop.Models.Property.UptChannelDefinition(primary, 0.04);
-        ///     var result = property.AddUPTPropertyCHANNEL(7, &quot;EXPLICIT_CHANNEL&quot;, definition);
+        ///     var result = property.AddUptPropertyChannel(7, &quot;EXPLICIT_CHANNEL&quot;, definition);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyCHANNEL(int tableId, string sectionName, UptChannelDefinition definition) => upt.AddUPTPropertyCHANNEL(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyChannel(int tableId, string sectionName, UptChannelDefinition definition) => upt.AddUPTPropertyCHANNEL(tableId, sectionName, definition);
 
         /// <summary>Adds explicit angle data to an existing native UPT table.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3194,12 +3201,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// if (applyChanges)
         /// {
         ///     var definition = new StaadPro.Interop.Models.Property.UptAngleDefinition(0.2, 0.15, 0.01, 0.03, 0.002, 0.003);
-        ///     var result = property.AddUPTPropertyANGLE(7, &quot;EXPLICIT_ANGLE&quot;, definition);
+        ///     var result = property.AddUptPropertyAngle(7, &quot;EXPLICIT_ANGLE&quot;, definition);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyANGLE(int tableId, string sectionName, UptAngleDefinition definition) => upt.AddUPTPropertyANGLE(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyAngle(int tableId, string sectionName, UptAngleDefinition definition) => upt.AddUPTPropertyANGLE(tableId, sectionName, definition);
 
         /// <summary>Adds explicit double angle data to an existing native UPT table.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3216,12 +3223,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// if (applyChanges)
         /// {
         ///     var definition = new StaadPro.Interop.Models.Property.UptDoubleAngleDefinition(0.2, 0.15, 0.01, 0.02, 0.000001, 0.00001, 0.0001, 0.04, 0.002, 0.003);
-        ///     var result = property.AddUPTPropertyDOUBLEANGLE(7, &quot;EXPLICIT_DOUBLEANGLE&quot;, definition);
+        ///     var result = property.AddUptPropertyDoubleAngle(7, &quot;EXPLICIT_DOUBLEANGLE&quot;, definition);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyDOUBLEANGLE(int tableId, string sectionName, UptDoubleAngleDefinition definition) => upt.AddUPTPropertyDOUBLEANGLE(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyDoubleAngle(int tableId, string sectionName, UptDoubleAngleDefinition definition) => upt.AddUPTPropertyDOUBLEANGLE(tableId, sectionName, definition);
 
         /// <summary>Adds explicit tee data to an existing native UPT table.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3239,12 +3246,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// {
         ///     var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
         ///     var definition = new StaadPro.Interop.Models.Property.UptTeeDefinition(primary, 0.04);
-        ///     var result = property.AddUPTPropertyTEE(7, &quot;EXPLICIT_TEE&quot;, definition);
+        ///     var result = property.AddUptPropertyTee(7, &quot;EXPLICIT_TEE&quot;, definition);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyTEE(int tableId, string sectionName, UptTeeDefinition definition) => upt.AddUPTPropertyTEE(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyTee(int tableId, string sectionName, UptTeeDefinition definition) => upt.AddUPTPropertyTEE(tableId, sectionName, definition);
 
         /// <summary>Adds explicit pipe data to an existing native UPT table.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3261,12 +3268,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// if (applyChanges)
         /// {
         ///     var definition = new StaadPro.Interop.Models.Property.UptPipeDefinition(0.2, 0.18, 0.002, 0.003);
-        ///     var result = property.AddUPTPropertyPIPE(7, &quot;EXPLICIT_PIPE&quot;, definition);
+        ///     var result = property.AddUptPropertyPipe(7, &quot;EXPLICIT_PIPE&quot;, definition);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyPIPE(int tableId, string sectionName, UptPipeDefinition definition) => upt.AddUPTPropertyPIPE(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyPipe(int tableId, string sectionName, UptPipeDefinition definition) => upt.AddUPTPropertyPIPE(tableId, sectionName, definition);
 
         /// <summary>Adds explicit tube data to an existing native UPT table.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3283,12 +3290,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// if (applyChanges)
         /// {
         ///     var definition = new StaadPro.Interop.Models.Property.UptTubeDefinition(0.01, 0.3, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
-        ///     var result = property.AddUPTPropertyTUBE(7, &quot;EXPLICIT_TUBE&quot;, definition);
+        ///     var result = property.AddUptPropertyTube(7, &quot;EXPLICIT_TUBE&quot;, definition);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyTUBE(int tableId, string sectionName, UptTubeDefinition definition) => upt.AddUPTPropertyTUBE(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyTube(int tableId, string sectionName, UptTubeDefinition definition) => upt.AddUPTPropertyTUBE(tableId, sectionName, definition);
 
         /// <summary>Adds explicit general profile data to an existing native UPT table.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3305,12 +3312,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// if (applyChanges)
         /// {
         ///     var definition = new StaadPro.Interop.Models.Property.UptGeneralDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.0002, 0.0003, 0.002, 0.003, 0.0004, 0.0005, 0.00000001, 0.28);
-        ///     var result = property.AddUPTPropertyGENERAL(7, &quot;EXPLICIT_GENERAL&quot;, definition);
+        ///     var result = property.AddUptPropertyGeneral(7, &quot;EXPLICIT_GENERAL&quot;, definition);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyGENERAL(int tableId, string sectionName, UptGeneralDefinition definition) => upt.AddUPTPropertyGENERAL(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyGeneral(int tableId, string sectionName, UptGeneralDefinition definition) => upt.AddUPTPropertyGENERAL(tableId, sectionName, definition);
 
         /// <summary>Adds explicit I-section data to an existing native UPT table.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3327,12 +3334,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// if (applyChanges)
         /// {
         ///     var definition = new StaadPro.Interop.Models.Property.UptISectionDefinition(0.4, 0.006, 0.3, 0.2, 0.01, 0.15, 0.01, 0.002, 0.003, 0.000001);
-        ///     var result = property.AddUPTPropertyISECTION(7, &quot;EXPLICIT_ISECTION&quot;, definition);
+        ///     var result = property.AddUptPropertyISection(7, &quot;EXPLICIT_ISECTION&quot;, definition);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyISECTION(int tableId, string sectionName, UptISectionDefinition definition) => upt.AddUPTPropertyISECTION(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyISection(int tableId, string sectionName, UptISectionDefinition definition) => upt.AddUPTPropertyISECTION(tableId, sectionName, definition);
 
         /// <summary>Adds explicit prismatic profile data to an existing native UPT table.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3349,12 +3356,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// if (applyChanges)
         /// {
         ///     var definition = new StaadPro.Interop.Models.Property.UptPrismaticDefinition(0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003, 0.3, 0.15);
-        ///     var result = property.AddUPTPropertyPRISMATIC(7, &quot;EXPLICIT_PRISMATIC&quot;, definition);
+        ///     var result = property.AddUptPropertyPrismatic(7, &quot;EXPLICIT_PRISMATIC&quot;, definition);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyPRISMATIC(int tableId, string sectionName, UptPrismaticDefinition definition) => upt.AddUPTPropertyPRISMATIC(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyPrismatic(int tableId, string sectionName, UptPrismaticDefinition definition) => upt.AddUPTPropertyPRISMATIC(tableId, sectionName, definition);
 
         /// <summary>Adds an explicit 12-, 16- or 19-slot composite wide-flange UPT section.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3375,12 +3382,12 @@ namespace StaadPro.Interop.Adapters.Models
         ///     var slab = new StaadPro.Interop.Models.Property.UptCompositeSlab(0.5, 0.6, 0.12, 8.0);
         ///     var plate = new StaadPro.Interop.Models.Property.UptCompositeBottomPlate(0.1, 0.11, 0.01);
         ///     var definition = new StaadPro.Interop.Models.Property.UptCompositeWideFlangeDefinition(steel, slab, plate);
-        ///     var result = property.AddUPTPropertyWIDEFLANGECOMPOSITE(7, &quot;EXPLICIT_COMPOSITE&quot;, definition);
+        ///     var result = property.AddUptPropertyWideFlangeComposite(7, &quot;EXPLICIT_COMPOSITE&quot;, definition);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult AddUPTPropertyWIDEFLANGECOMPOSITE(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition) => upt.AddUPTPropertyWIDEFLANGECOMPOSITE(tableId, sectionName, definition);
+        public PropertyMutationResult AddUptPropertyWideFlangeComposite(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition) => upt.AddUPTPropertyWIDEFLANGECOMPOSITE(tableId, sectionName, definition);
 
         /// <summary>Creates an assigned section-property reference from an existing named UPT entry.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3395,18 +3402,18 @@ namespace StaadPro.Interop.Adapters.Models
         /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
         /// if (applyChanges)
         /// {
-        ///     var result = property.CreatePropertyFromUPTTable(7, &quot;EXPLICIT_WF&quot;);
+        ///     var result = property.CreatePropertyFromUptTable(7, &quot;EXPLICIT_WF&quot;);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult CreatePropertyFromUPTTable(int tableId, string sectionName) => upt.CreatePropertyFromUPTTable(tableId, sectionName);
+        public PropertyMutationResult CreatePropertyFromUptTable(int tableId, string sectionName) => upt.CreatePropertyFromUPTTable(tableId, sectionName);
 
         /// <summary>Obtains a positive section-property reference through the native section-name-first user-table route.</summary>
         /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
         /// <returns>Created with separate positive CreatedPropertyId and requested table/name identity. No failure return code is documented: nonpositive/malformed responses throw without an inferred failure mapping.</returns>
-        /// <remarks>When to use: use the distinct CreatePropertyFromUserTable route and its native sectionName,tableId order. It does not fall back to CreatePropertyFromUPTTable, create the table/entry, assign geometry or establish a new-unique allocation. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <remarks>When to use: use the distinct CreatePropertyFromUserTable route and its native sectionName,tableId order. It does not fall back to CreatePropertyFromUptTable, create the table/entry, assign geometry or establish a new-unique allocation. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
         /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
         /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
         /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
@@ -3435,12 +3442,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
         /// if (applyChanges)
         /// {
-        ///     var result = property.CreateUPTTableEx(7, StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);
+        ///     var result = property.CreateUptTableEx(7, StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult CreateUPTTableEx(int requestedTableId, UserProvidedTableType tableType) => upt.CreateUPTTableEx(requestedTableId, tableType);
+        public PropertyMutationResult CreateUptTableEx(int requestedTableId, UserProvidedTableType tableType) => upt.CreateUPTTableEx(requestedTableId, tableType);
 
         /// <summary>Requests native removal of an explicitly identified UPT table.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3454,12 +3461,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
         /// if (applyChanges)
         /// {
-        ///     var result = property.RemoveUPTTable(7);
+        ///     var result = property.RemoveUptTable(7);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult RemoveUPTTable(int tableId) => upt.RemoveUPTTable(tableId);
+        public PropertyMutationResult RemoveUptTable(int tableId) => upt.RemoveUPTTable(tableId);
 
         /// <summary>Requests deletion of an exact named section from a UPT table.</summary>
         /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
@@ -3474,12 +3481,12 @@ namespace StaadPro.Interop.Adapters.Models
         /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
         /// if (applyChanges)
         /// {
-        ///     var result = property.RemovePropertyFromUPTTable(7, &quot;EXPLICIT_WF&quot;);
+        ///     var result = property.RemovePropertyFromUptTable(7, &quot;EXPLICIT_WF&quot;);
         ///     System.Console.WriteLine(result.Status);
         ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
         /// }
         /// </code></example>
-        public PropertyMutationResult RemovePropertyFromUPTTable(int tableId, string sectionName) => upt.RemovePropertyFromUPTTable(tableId, sectionName);
+        public PropertyMutationResult RemovePropertyFromUptTable(int tableId, string sectionName) => upt.RemovePropertyFromUPTTable(tableId, sectionName);
 
         /// <summary>Reads the native user-provided table count.</summary>
         /// <returns>Success with the actual nonnegative integral count, including zero; Boolean/fractional/text/null and undocumented negative returns throw.</returns>
@@ -3638,5 +3645,332 @@ namespace StaadPro.Interop.Adapters.Models
 
         #endregion
 
+        /// <summary>Remove Thickness Property From the specific Plate.</summary>
+        /// <param name="plateId">Positive existing native analytical plate ID.</param>
+        /// <returns>Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemovePropertyFromPlate(101);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemovePropertyFromPlate(int plateId) => cleanup.RemovePropertyFromPlate(plateId);
+        /// <summary>Remove Material From the specific Plates.</summary>
+        /// <param name="plateIds">Non-null sequence of 1..100000 positive analytical IDs, enumerated once; input order and duplicates are preserved in an owned copy. No inferred member/plate/solid conversion or deduplication.</param>
+        /// <returns>Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveMaterialFromPlate(new[] { 101, 102 });
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveMaterialFromPlate(IEnumerable<int> plateIds) => cleanup.RemoveMaterialFromPlate(plateIds);
+        /// <summary>Remove Material From the specific Solids.</summary>
+        /// <param name="solidIds">Non-null sequence of 1..100000 positive analytical IDs, enumerated once; input order and duplicates are preserved in an owned copy. No inferred member/plate/solid conversion or deduplication.</param>
+        /// <returns>Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveMaterialFromSolid(new[] { 101, 102 });
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveMaterialFromSolid(IEnumerable<int> solidIds) => cleanup.RemoveMaterialFromSolid(solidIds);
+        /// <summary>Delete MEMBER RELEASE specification.</summary>
+        /// <param name="memberId">Positive existing native analytical member ID.</param>
+        /// <param name="memberEnd">Native Start=0 or End=1 selector. Other values are rejected; no both-ends or whole-member default is inferred.</param>
+        /// <returns>Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.DeleteMemberReleaseSpec(101, StaadPro.Interop.Enums.MemberEnd.Start);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult DeleteMemberReleaseSpec(int memberId, MemberEnd memberEnd) => cleanup.DeleteMemberReleaseSpec(memberId, memberEnd);
+        /// <summary>Delete all control/dependent joint specifications from model.</summary>
+        /// <returns>Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.</returns>
+        /// <remarks>When to use: Applies to all native control/dependent relations in the acquired model; no selective filter, confirmation dialog or implicit undo is supplied. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.DeleteAllControlDependentRelations();
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult DeleteAllControlDependentRelations() => cleanup.DeleteAllControlDependentRelations();
+        /// <summary>Remove all element node offset specification from the model.</summary>
+        /// <returns>Succeeded for integral one; NoSpecification for integral zero, which explicitly reports that no element offset specification is present. IsSuccessful is false for NoSpecification; no success is fabricated.</returns>
+        /// <remarks>When to use: Applies to all element offsets in the acquired model; zero is documented absence, not a failed engineering read. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveAllElementOffsetSpec();
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveAllElementOffsetSpec() => cleanup.RemoveAllElementOffsetSpec();
+        /// <summary>Remove property from beam.</summary>
+        /// <param name="memberId">Positive existing native analytical member ID.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemovePropertyFromBeam(101);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemovePropertyFromBeam(int memberId) => cleanup.RemovePropertyFromBeam(memberId);
+        /// <summary>Delete property based the on the property ID passed.</summary>
+        /// <param name="propertyId">Positive existing native section property reference, distinct from analytical entity IDs.</param>
+        /// <returns>Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.</returns>
+        /// <remarks>When to use: Deletes a definition using its native ID; do not confuse this with merely removing one assignment. Native dependencies may prevent deletion. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.DeleteProperty(7);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult DeleteProperty(int propertyId) => cleanup.DeleteProperty(propertyId);
+        /// <summary>Delete specification based on the specification number passed.</summary>
+        /// <param name="specificationId">Positive existing native specification definition ID, distinct from assigned analytical member IDs.</param>
+        /// <returns>Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.</returns>
+        /// <remarks>When to use: Deletes a definition using its native ID; do not confuse this with merely removing one assignment. Native dependencies may prevent deletion. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.DeleteMemberSpec(7);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult DeleteMemberSpec(int specificationId) => cleanup.DeleteMemberSpec(specificationId);
+        /// <summary>Removes the member specification from a particular member at the provided location (Start or End)..</summary>
+        /// <param name="memberId">Positive existing native analytical member ID.</param>
+        /// <param name="memberEnd">Native Start=0 or End=1 selector. Other values are rejected; no both-ends or whole-member default is inferred.</param>
+        /// <returns>Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveMemberReleaseSpecFromBeam(101, StaadPro.Interop.Enums.MemberEnd.Start);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveMemberReleaseSpecFromBeam(int memberId, MemberEnd memberEnd) => cleanup.RemoveMemberReleaseSpecFromBeam(memberId, memberEnd);
+        /// <summary>Removes the member offset specification from a particular member at the provided location (Start or End).</summary>
+        /// <param name="memberId">Positive existing native analytical member ID.</param>
+        /// <param name="memberEnd">Native Start=0 or End=1 selector. Other values are rejected; no both-ends or whole-member default is inferred.</param>
+        /// <returns>Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveMemberOffsetSpecFromBeam(101, StaadPro.Interop.Enums.MemberEnd.Start);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveMemberOffsetSpecFromBeam(int memberId, MemberEnd memberEnd) => cleanup.RemoveMemberOffsetSpecFromBeam(memberId, memberEnd);
+        /// <summary>Remove member truss specification from beam.</summary>
+        /// <param name="memberId">Positive existing native analytical member ID.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveMemberTrussSpecFromBeam(101);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveMemberTrussSpecFromBeam(int memberId) => cleanup.RemoveMemberTrussSpecFromBeam(memberId);
+        /// <summary>Remove member inactive specification from beam.</summary>
+        /// <param name="memberId">Positive existing native analytical member ID.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveMemberInactiveSpecFromBeam(101);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveMemberInactiveSpecFromBeam(int memberId) => cleanup.RemoveMemberInactiveSpecFromBeam(memberId);
+        /// <summary>Remove member tension specification from beam.</summary>
+        /// <param name="memberId">Positive existing native analytical member ID.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveMemberTensionSpecFromBeam(101);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveMemberTensionSpecFromBeam(int memberId) => cleanup.RemoveMemberTensionSpecFromBeam(memberId);
+        /// <summary>Remove member compression specification from beam.</summary>
+        /// <param name="memberId">Positive existing native analytical member ID.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveMemberCompressionSpecFromBeam(101);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveMemberCompressionSpecFromBeam(int memberId) => cleanup.RemoveMemberCompressionSpecFromBeam(memberId);
+        /// <summary>Remove member ignore stiff specification from beam.</summary>
+        /// <param name="memberId">Positive existing native analytical member ID.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveMemberIgnoreStiffSpecFromBeam(101);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveMemberIgnoreStiffSpecFromBeam(int memberId) => cleanup.RemoveMemberIgnoreStiffSpecFromBeam(memberId);
+        /// <summary>Removes the member cable specification from a particular member at the provided location type (Tension or Length).</summary>
+        /// <param name="memberId">Positive existing native analytical member ID.</param>
+        /// <param name="definitionKind">Native InitialTension=0 or UnstressedLength=1 cable-definition selector. This is not a member-end location despite the native parameter label.</param>
+        /// <returns>Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveMemberCableSpecFromBeam(101, StaadPro.Interop.Enums.Property.CableDefinitionKind.InitialTension);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveMemberCableSpecFromBeam(int memberId, CableDefinitionKind definitionKind) => cleanup.RemoveMemberCableSpecFromBeam(memberId, definitionKind);
+        /// <summary>Remove element plane stress specification from plate.</summary>
+        /// <param name="plateId">Positive existing native analytical plate ID.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveElementPlaneStressSpecFromPlate(101);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveElementPlaneStressSpecFromPlate(int plateId) => cleanup.RemoveElementPlaneStressSpecFromPlate(plateId);
+        /// <summary>Remove element ignore in plane rotation specification from plate.</summary>
+        /// <param name="plateId">Positive existing native analytical plate ID.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveElementIgnoreInplaneRotnSpecFromPlate(101);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveElementIgnoreInplaneRotnSpecFromPlate(int plateId) => cleanup.RemoveElementIgnoreInplaneRotnSpecFromPlate(plateId);
+        /// <summary>Remove element node release specification from plate.</summary>
+        /// <param name="plateId">Positive existing native analytical plate ID.</param>
+        /// <param name="nodeId">Positive analytical node ID associated with the intended plate. This is not a plate corner index; no membership check or local/global conversion is inferred.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.</returns>
+        /// <remarks>When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">An ID, bounded input sequence or selector is invalid; no native mutation is made.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or a native response is malformed or undocumented.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original exception propagates without retry.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveElementNodeReleaseSpecFromPlate(101, 11);
+        ///     System.Console.WriteLine(result.Status);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveElementNodeReleaseSpecFromPlate(int plateId, int nodeId) => cleanup.RemoveElementNodeReleaseSpecFromPlate(plateId, nodeId);
+        /// <summary>Gets the captured Property capability acquisition boundary without invoking catalog operations.</summary>
+        /// <value>A version/signature-qualified acquisition interface for newer catalog functions.</value>
+        /// <remarks>Acquire GetStandardCatalog before calling newer APIs; the common adapter does not implement that optional interface.</remarks>
+        public IOSPropertyCapabilities Capabilities => new OSPropertyCapabilitiesAdapter(catalogAccess);
     }
 }

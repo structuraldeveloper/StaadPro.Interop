@@ -28,7 +28,9 @@ namespace StaadPro.Interop.Tests.Adapter
             "GetMemberCountByAttribute", "GetMemberListByAttribute", "GetMemberAttributeCount", "GetMemberAttributeList", "GetElementCountByAttribute", "GetElementListByAttribute",
             "GetAssignedAttributeCount", "RemoveAttribute", "AssignMemberAttribute", "AssignElementAttribute", "CreateUPTTable", "AddUPTPropertyWIDEFLANGE", "AddUPTPropertyWIDEFLANGEUNEQUAL" };
         public static IEnumerable<TestCaseData> Ports => Names.Select(n => new TestCaseData(n));
-        private static MethodInfo Method(string name) => typeof(IOSProperty).GetMethods().Single(m => m.Name == name);
+        private static string ManagedName(string native)
+        { switch (native) { case "AddUPTPropertyWIDEFLANGE": return "AddUptPropertyWideFlange"; case "AddUPTPropertyWIDEFLANGEUNEQUAL": return "AddUptPropertyWideFlangeUnequal"; case "AddUPTPropertyWIDEFLANGECOMPOSITE": return "AddUptPropertyWideFlangeComposite"; case "AddUPTPropertyCHANNEL": return "AddUptPropertyChannel"; case "AddUPTPropertyANGLE": return "AddUptPropertyAngle"; case "AddUPTPropertyDOUBLEANGLE": return "AddUptPropertyDoubleAngle"; case "AddUPTPropertyTEE": return "AddUptPropertyTee"; case "AddUPTPropertyPIPE": return "AddUptPropertyPipe"; case "AddUPTPropertyTUBE": return "AddUptPropertyTube"; case "AddUPTPropertyGENERAL": return "AddUptPropertyGeneral"; case "AddUPTPropertyISECTION": return "AddUptPropertyISection"; case "AddUPTPropertyPRISMATIC": return "AddUptPropertyPrismatic"; case "CreateUPTTable": return "CreateUptTable"; case "CreateUPTTableEx": return "CreateUptTableEx"; case "CreatePropertyFromUPTTable": return "CreatePropertyFromUptTable"; case "RemoveUPTTable": return "RemoveUptTable"; case "RemovePropertyFromUPTTable": return "RemovePropertyFromUptTable"; default: return native; } }
+        private static MethodInfo Method(string name) => typeof(IOSProperty).GetMethods().Single(m => m.Name == ManagedName(name));
         private static PropertyAttribute Attribute() => new PropertyAttribute(" Purpose ", " VALUE ");
         private static UptWideFlangeDefinition Wide() => new UptWideFlangeDefinition(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         private static OpenStaadWrapper Wrap(PropertyAttributeFixture.Native n) => new OpenStaadWrapper(new PropertyAttributeFixture.Root { Property = n });
@@ -44,15 +46,15 @@ namespace StaadPro.Interop.Tests.Adapter
         [Test]
         public void AddsExactlyTwentyFiveTypedContractsAndLeavesUnverifiedFunctionsPending()
         {
-            Assert.That(Names.Distinct().Count(), Is.EqualTo(25)); Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(225));
+            Assert.That(Names.Distinct().Count(), Is.EqualTo(25)); Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(245));
             foreach (string name in Names)
             {
-                var m = Method(name); var impl = typeof(OSPropertyAdapter).GetMethod(name, m.GetParameters().Select(p => p.ParameterType).ToArray());
+                var m = Method(name); var impl = typeof(OSPropertyAdapter).GetMethod(ManagedName(name), m.GetParameters().Select(p => p.ParameterType).ToArray());
                 Assert.That(impl.ReturnType, Is.EqualTo(m.ReturnType)); Assert.That(impl.GetParameters().Select(p => p.Name), Is.EqualTo(m.GetParameters().Select(p => p.Name)));
                 Assert.That(impl.GetParameters().Select(p => p.DefaultValue), Is.EqualTo(m.GetParameters().Select(p => p.DefaultValue)));
                 Assert.That(m.GetParameters().Any(p => p.IsOut || p.ParameterType.IsByRef || p.ParameterType.IsArray || p.ParameterType == typeof(object)), Is.False);
             }
-            foreach (string name in new[] { "GetInactiveMemberList", "GetAlphaAngleForSection", "GetCentroidLocationForSection", "GetAssignedAttributeByIndex" }) Assert.That(typeof(IOSProperty).GetMethods().Any(m => m.Name == name), Is.False);
+            foreach (string name in new[] { "GetInactiveMemberList", "GetAlphaAngleForSection", "GetCentroidLocationForSection", "GetAssignedAttributeByIndex" }) Assert.That(typeof(IOSProperty).GetMethods().Any(m => m.Name == ManagedName(name)), Is.False);
         }
         [TestCaseSource(nameof(Ports))]
         public void EveryRouteRunsWithQualifiedEvidenceOnTheCallerThread(string name)
@@ -78,7 +80,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [TestCaseSource(nameof(Ports))]
         public void BothPublicSurfacesShipIdenticalExpandedXmlAndGuardedMutationExamples(string name)
         {
-            var xml = XDocument.Load(Path.ChangeExtension(typeof(IOSProperty).Assembly.Location, ".xml")); string prefix = "M:StaadPro.Interop.Adapters.Interfaces.IOSProperty." + name;
+            var xml = XDocument.Load(Path.ChangeExtension(typeof(IOSProperty).Assembly.Location, ".xml")); string prefix = "M:StaadPro.Interop.Adapters.Interfaces.IOSProperty." + ManagedName(name);
             var entry = xml.Descendants("member").Single(e => (string)e.Attribute("name") == prefix || ((string)e.Attribute("name")).StartsWith(prefix + "("));
             var impl = xml.Descendants("member").Single(e => (string)e.Attribute("name") == ((string)entry.Attribute("name")).Replace("Interfaces.IOSProperty", "Models.OSPropertyAdapter"));
             Assert.That(impl.Elements().Select(e => e.ToString()), Is.EqualTo(entry.Elements().Select(e => e.ToString())));
@@ -218,13 +220,13 @@ namespace StaadPro.Interop.Tests.Adapter
         {
             var n = new PropertyAttributeFixture.Native(); using (var w = Wrap(n))
             {
-                Respond(n, "CreateUPTTable", 7, -6031, 0); var table = w.Property.CreateUPTTable(UserProvidedTableType.WideFlange); Assert.That(table.CreatedTableId, Is.EqualTo(7)); Assert.That(table.TableType, Is.EqualTo(UserProvidedTableType.WideFlange)); Assert.That(table.CreatedPropertyId, Is.Null); Assert.That(table.CreatedSpecificationId, Is.Null);
-                Assert.That(w.Property.CreateUPTTable(UserProvidedTableType.WideFlange).Status, Is.EqualTo(PropertyMutationStatus.InvalidInput)); Assert.Throws<InvalidOperationException>(() => w.Property.CreateUPTTable(UserProvidedTableType.WideFlange));
-                Respond(n, "AddUPTPropertyWIDEFLANGE", 0, -6045, -6032); var r = w.Property.AddUPTPropertyWIDEFLANGE(7, " EXACT ", Wide()); Assert.That(r.Status, Is.EqualTo(PropertyMutationStatus.Succeeded)); Assert.That(r.TableId, Is.EqualTo(7)); Assert.That(r.SectionName, Is.EqualTo(" EXACT ")); Assert.That(r.CreatedTableId, Is.Null); Assert.That(r.CreatedPropertyId, Is.Null);
-                Assert.That(n.Arguments.Last().Skip(2), Is.EqualTo(Enumerable.Range(1, 10).Select(i => (double)i))); Assert.That(w.Property.AddUPTPropertyWIDEFLANGE(7, "X", Wide()).Status, Is.EqualTo(PropertyMutationStatus.AlreadyExists)); Assert.That(w.Property.AddUPTPropertyWIDEFLANGE(7, "X", Wide()).Status, Is.EqualTo(PropertyMutationStatus.NativeFailure));
+                Respond(n, "CreateUPTTable", 7, -6031, 0); var table = w.Property.CreateUptTable(UserProvidedTableType.WideFlange); Assert.That(table.CreatedTableId, Is.EqualTo(7)); Assert.That(table.TableType, Is.EqualTo(UserProvidedTableType.WideFlange)); Assert.That(table.CreatedPropertyId, Is.Null); Assert.That(table.CreatedSpecificationId, Is.Null);
+                Assert.That(w.Property.CreateUptTable(UserProvidedTableType.WideFlange).Status, Is.EqualTo(PropertyMutationStatus.InvalidInput)); Assert.Throws<InvalidOperationException>(() => w.Property.CreateUptTable(UserProvidedTableType.WideFlange));
+                Respond(n, "AddUPTPropertyWIDEFLANGE", 0, -6045, -6032); var r = w.Property.AddUptPropertyWideFlange(7, " EXACT ", Wide()); Assert.That(r.Status, Is.EqualTo(PropertyMutationStatus.Succeeded)); Assert.That(r.TableId, Is.EqualTo(7)); Assert.That(r.SectionName, Is.EqualTo(" EXACT ")); Assert.That(r.CreatedTableId, Is.Null); Assert.That(r.CreatedPropertyId, Is.Null);
+                Assert.That(n.Arguments.Last().Skip(2), Is.EqualTo(Enumerable.Range(1, 10).Select(i => (double)i))); Assert.That(w.Property.AddUptPropertyWideFlange(7, "X", Wide()).Status, Is.EqualTo(PropertyMutationStatus.AlreadyExists)); Assert.That(w.Property.AddUptPropertyWideFlange(7, "X", Wide()).Status, Is.EqualTo(PropertyMutationStatus.NativeFailure));
                 var d = new UptUnequalWideFlangeDefinition(Wide(), 11, 12); Respond(n, "AddUPTPropertyWIDEFLANGEUNEQUAL", true, false, 0, 1);
-                r = w.Property.AddUPTPropertyWIDEFLANGEUNEQUAL(7, "X", d); Assert.That(r.NativeBooleanReturn, Is.True); Assert.That(r.NativeReturnCode, Is.Null); Assert.That(n.Arguments.Last()[2], Is.EqualTo(Enumerable.Range(1, 12).Select(i => (double)i)));
-                ((double[])n.Arguments.Last()[2])[0] = 999; Assert.That(d.PrimaryValues.AxialArea, Is.EqualTo(1)); Assert.That(w.Property.AddUPTPropertyWIDEFLANGEUNEQUAL(7, "X", d).IsSuccessful, Is.False); Assert.That(w.Property.AddUPTPropertyWIDEFLANGEUNEQUAL(7, "X", d).IsSuccessful, Is.False); Assert.That(w.Property.AddUPTPropertyWIDEFLANGEUNEQUAL(7, "X", d).NativeReturnCode, Is.EqualTo(1));
+                r = w.Property.AddUptPropertyWideFlangeUnequal(7, "X", d); Assert.That(r.NativeBooleanReturn, Is.True); Assert.That(r.NativeReturnCode, Is.Null); Assert.That(n.Arguments.Last()[2], Is.EqualTo(Enumerable.Range(1, 12).Select(i => (double)i)));
+                ((double[])n.Arguments.Last()[2])[0] = 999; Assert.That(d.PrimaryValues.AxialArea, Is.EqualTo(1)); Assert.That(w.Property.AddUptPropertyWideFlangeUnequal(7, "X", d).IsSuccessful, Is.False); Assert.That(w.Property.AddUptPropertyWideFlangeUnequal(7, "X", d).IsSuccessful, Is.False); Assert.That(w.Property.AddUptPropertyWideFlangeUnequal(7, "X", d).NativeReturnCode, Is.EqualTo(1));
             }
         }
         [TestCase("GetInactiveMemberCount")][TestCase("GetFireProofedBeamCount")][TestCase("GetFireProofingSpecCount")][TestCase("GetMemberAttributeCount")]
@@ -243,9 +245,9 @@ namespace StaadPro.Interop.Tests.Adapter
             {
                 Assert.Throws<ArgumentNullException>(() => w.Property.CreateMemberAttribute(null)); Assert.Throws<ArgumentOutOfRangeException>(() => w.Property.GetFireProofingSpecDetails(0)); Assert.Throws<ArgumentOutOfRangeException>(() => w.Property.GetAssignedAttributeCount(0));
                 Assert.Throws<ArgumentOutOfRangeException>(() => w.Property.GetFireProofedBeamList(100001)); Assert.Throws<ArgumentOutOfRangeException>(() => w.Property.GetMemberAttributeList(0)); Assert.Throws<ArgumentOutOfRangeException>(() => w.Property.GetMemberListByAttribute(Attribute(), 100001));
-                Assert.Throws<ArgumentOutOfRangeException>(() => w.Property.CreateUPTTable((UserProvidedTableType)0)); Assert.Throws<ArgumentOutOfRangeException>(() => w.Property.CreateUPTTable((UserProvidedTableType)11));
-                Assert.Throws<ArgumentOutOfRangeException>(() => w.Property.AddUPTPropertyWIDEFLANGE(0, "X", Wide())); Assert.Throws<ArgumentNullException>(() => w.Property.AddUPTPropertyWIDEFLANGE(7, "X", null));
-                Assert.Throws<ArgumentException>(() => w.Property.AddUPTPropertyWIDEFLANGEUNEQUAL(7, "a\0b", new UptUnequalWideFlangeDefinition(Wide(), 11, 12))); Assert.That(n.Calls, Is.Empty);
+                Assert.Throws<ArgumentOutOfRangeException>(() => w.Property.CreateUptTable((UserProvidedTableType)0)); Assert.Throws<ArgumentOutOfRangeException>(() => w.Property.CreateUptTable((UserProvidedTableType)11));
+                Assert.Throws<ArgumentOutOfRangeException>(() => w.Property.AddUptPropertyWideFlange(0, "X", Wide())); Assert.Throws<ArgumentNullException>(() => w.Property.AddUptPropertyWideFlange(7, "X", null));
+                Assert.Throws<ArgumentException>(() => w.Property.AddUptPropertyWideFlangeUnequal(7, "a\0b", new UptUnequalWideFlangeDefinition(Wide(), 11, 12))); Assert.That(n.Calls, Is.Empty);
             }
             Assert.Throws<ArgumentNullException>(() => new PropertyAttribute(null, "X")); Assert.Throws<ArgumentException>(() => new PropertyAttribute("X", "a\0b")); Assert.That(new PropertyAttribute("", " ").Value, Is.EqualTo(" "));
             Assert.Throws<ArgumentOutOfRangeException>(() => new UptWideFlangeDefinition(0, 2, 3, 4, 5, 6, 7, 8, 9, 10)); Assert.Throws<ArgumentOutOfRangeException>(() => new UptUnequalWideFlangeDefinition(Wide(), double.NaN, 12)); Assert.Throws<ArgumentNullException>(() => new UptUnequalWideFlangeDefinition(null, 11, 12));

@@ -19,7 +19,7 @@ The [roadmap](reports/OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md)
 | `GetCentroidLocationForSection` | Native return status is undocumented; qualification must establish success/absence before exposing engineering data. |
 | `GetAssignedAttributeByIndex` | Index base and native observation-context relationship are not verified; no guessed mapping to a requested entity. |
 
-The 25 implemented contracts therefore cover the other 22 pending P7 functions, then CreateUPTTable, AddUPTPropertyWIDEFLANGE and AddUPTPropertyWIDEFLANGEUNEQUAL in P8 order. The [exact contract index](contracts/PropertyAttributeContractIndex.json) records every signature and deferred reason. Native declarations, parameter descriptions, tables and operation-specific outcomes come from the separate Bentley 2024/2025/2026 [comparison evidence](reports/data/OpenSTAAD-Property-2024-2026-Comparison.json), supplemented by the installed vendor 2025 help and passive CLR metadata.
+The 25 implemented contracts therefore cover the other 22 pending P7 functions, then CreateUptTable, AddUptPropertyWideFlange and AddUptPropertyWideFlangeUnequal in P8 order. The [exact contract index](contracts/PropertyAttributeContractIndex.json) records every signature and deferred reason. Native declarations, parameter descriptions, tables and operation-specific outcomes come from the separate Bentley 2024/2025/2026 [comparison evidence](reports/data/OpenSTAAD-Property-2024-2026-Comparison.json), supplemented by the installed vendor 2025 help and passive CLR metadata.
 
 ## Data, units and native identities
 
@@ -48,7 +48,7 @@ Vendor CLR metadata makes attribute query values ref String inputs, despite inpu
 
 Fireproofing specification details use a scalar Long assignment count, as shown by the vendor VBA example. The parameter table's array-of-Long wording is not used to guess or unwrap a buffer. A malformed or unwritten scalar fails.
 
-CreateUPTTable returns a positive table ID; -6031 is InvalidInput. Scalar wide-flange insertion returns zero success, -6032 failure and -6045 duplicate. Unequal insertion returns true/1 success and false/0 failure, without a duplicate-specific distinction. No insertion acknowledgement is treated as a created section property ID. Table creation and insertion are separate mutations, with no automatic cleanup when a later stage fails.
+CreateUptTable returns a positive table ID; -6031 is InvalidInput. Scalar wide-flange insertion returns zero success, -6032 failure and -6045 duplicate. Unequal insertion returns true/1 success and false/0 failure, without a duplicate-specific distinction. No insertion acknowledgement is treated as a created section property ID. Table creation and insertion are separate mutations, with no automatic cleanup when a later stage fails.
 
 ## Functions
 
@@ -565,13 +565,13 @@ if (applyChanges)
 }
 ```
 
-### CreateUPTTable
+### CreateUptTable
 
 ```csharp
-PropertyMutationResult CreateUPTTable(UserProvidedTableType tableType)
+PropertyMutationResult CreateUptTable(UserProvidedTableType tableType)
 ```
 
-Native route: `CreateUPTTable` (P8). Creates a native user-provided table of an explicit reviewed type.
+Native route: `CreateUptTable` (P8). Creates a native user-provided table of an explicit reviewed type.
 
 Parameters:
 
@@ -585,19 +585,19 @@ When to use: create an empty UPT table independently from adding a named section
 bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
 if (applyChanges)
 {
-    var result = property.CreateUPTTable(StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);
+    var result = property.CreateUptTable(StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### AddUPTPropertyWIDEFLANGE
+### AddUptPropertyWideFlange
 
 ```csharp
-PropertyMutationResult AddUPTPropertyWIDEFLANGE(int tableId, string sectionName, UptWideFlangeDefinition definition)
+PropertyMutationResult AddUptPropertyWideFlange(int tableId, string sectionName, UptWideFlangeDefinition definition)
 ```
 
-Native route: `AddUPTPropertyWIDEFLANGE` (P8). Adds an explicit wide-flange section to an existing native UPT table.
+Native route: `AddUptPropertyWideFlange` (P8). Adds an explicit wide-flange section to an existing native UPT table.
 
 Parameters:
 
@@ -614,19 +614,19 @@ bool applyChanges = false; // Enable only for the intended/disposable model and 
 if (applyChanges)
 {
     var definition = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
-    var result = property.AddUPTPropertyWIDEFLANGE(7, "EXPLICIT_WF", definition);
+    var result = property.AddUptPropertyWideFlange(7, "EXPLICIT_WF", definition);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### AddUPTPropertyWIDEFLANGEUNEQUAL
+### AddUptPropertyWideFlangeUnequal
 
 ```csharp
-PropertyMutationResult AddUPTPropertyWIDEFLANGEUNEQUAL(int tableId, string sectionName, UptUnequalWideFlangeDefinition definition)
+PropertyMutationResult AddUptPropertyWideFlangeUnequal(int tableId, string sectionName, UptUnequalWideFlangeDefinition definition)
 ```
 
-Native route: `AddUPTPropertyWIDEFLANGEUNEQUAL` (P8). Adds an explicit unequal wide-flange section through the native twelve-double UPT route.
+Native route: `AddUptPropertyWideFlangeUnequal` (P8). Adds an explicit unequal wide-flange section through the native twelve-double UPT route.
 
 Parameters:
 
@@ -644,7 +644,7 @@ if (applyChanges)
 {
     var definition = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
     var unequal = new StaadPro.Interop.Models.Property.UptUnequalWideFlangeDefinition(definition, 0.2, 0.015);
-    var result = property.AddUPTPropertyWIDEFLANGEUNEQUAL(7, "EXPLICIT_UNEQUAL", unequal);
+    var result = property.AddUptPropertyWideFlangeUnequal(7, "EXPLICIT_UNEQUAL", unequal);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
@@ -656,4 +656,4 @@ Offline checks cover every new route, exact interface/adapter XML, binding repla
 
 Live native transport, actual attribute deletion/assignment effects, UPT persistence, model units and engineering behavior remain unqualified. Mutation failures may leave partial changes; no implicit save, retry or rollback is supplied. Guarded XML examples are supplemented by dedicated managed mutation checks; no live model is changed by verification.
 
-Four gated P7 routes remain, followed by 27 P8, eight P9 and 24 P10 routes (63 total). The next reviewed sequence continues at P8 AddUPTPropertyWIDEFLANGECOMPOSITE while the four gaps await evidence. Custom IOSProperty implementations must implement these 25 additional methods.
+Four gated P7 routes remain, followed by 27 P8, eight P9 and 24 P10 routes (63 total). The next reviewed sequence continues at P8 AddUptPropertyWideFlangeComposite while the four gaps await evidence. Custom IOSProperty implementations must implement these 25 additional methods.

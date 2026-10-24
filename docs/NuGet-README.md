@@ -2,15 +2,27 @@
 
 A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD
 
-## Version 1.0.0-preview.20261024.10
+## Version 1.0.0-preview.20261024.11
 
 Package author: **Srinivasa Rao Masanam**. Company: **TensorStruct**. Copyright (c) 2026 TensorStruct.
 
 StaadPro.Interop provides typed adapters and managed models for working with an existing Bentley STAAD.Pro application through OpenSTAAD. It includes geometry and load operations, model information and lifecycle functions, application-window controls, and native analysis requests.
 
-This preview includes 225 Property overloads, all 171 current Load overloads, the completed reference Geometry ports, 15 typed Output queries, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
+This preview includes 245 common Property overloads and five optional catalog queries, all 171 current Load overloads, the completed reference Geometry ports, 15 typed Output queries, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
 
-## Property UPT profiles and catalogs
+## Property catalog capabilities and cleanup
+
+Incorporated **25 Property operations**: all five remaining P9 catalog queries and twenty P10 removal/deletion functions. The current surface has **245 common overloads plus five separately acquired catalog queries**, covering **191 of 204 active native routes**, with **13 remaining**. P9 is complete; P10 has twenty of twenty-four routes. The nine earlier P7/P8 contract gaps remain pending. See [all 25 catalog/cleanup contracts](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Property-Catalog-Capabilities-and-Cleanup.md).
+
+Passed a Release build with zero warnings/errors and **5,156 offline tests**, including **197 new cases**. The isolated PackageReference-only consumer verifies **944 selected XML examples**: 490 common Property examples plus twelve optional catalog/acquisition examples, alongside the existing groups. Separate managed checks exercise all twenty new mutations and five catalog queries through both public surfaces. Live native mutation and engineering qualification remain pending.
+
+Added a passive version/signature acquisition boundary for the newer catalog group on exact native profiles **25.00.01.424** and **26.00.00.340**. Retained operation-specific zero-success, Boolean-success and explicit no-specification removal outcomes, owned bounded bulk targets, and separate member-end, cable-definition and analytical-node selectors. No native model is modified by verification.
+
+Renamed **17 public UPT methods** to PascalCase, including **AddUptPropertyChannel**, **AddUptPropertyWideFlange** and **CreateUptTable**. This preview requires callers to update those method names. Parameter names, types, ordering, defaults and return types are preserved. Bentley native dispatch names and recorded contract evidence retain their original spelling.
+
+Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. README prose retains neutral bold API references and standard documentation links. See [the API rename table](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Property-API-Naming.md).
+
+## Earlier Property UPT profiles and catalogs
 
 Incorporated **25 Property functions**: 22 reviewed P8 user-provided-table operations and the next three P9 catalog/database-folder operations. Property now exposes **225 overloads**, covering **166 of 204 active native routes**, with **38 remaining**. Five P8 transport contracts and four earlier P7 contracts remain pending. P8 has 25 of 30 routes; P9 has four of nine. See [all 25 UPT/catalog contracts](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Property-UPT-Profiles-and-Catalogs.md).
 
@@ -90,7 +102,7 @@ Load exposes **120 overloads: all 115 main-interface signatures plus five conven
 
 Output provides **15 typed queries** for analysis/buckling result availability, node displacements, support reactions, local member-end forces, static checks, seven plate-center operations, member design section names and steel utilization ratios. Named status/data results preserve native units, documented failure/sentinel distinctions and immutable owned data. Inspect IsSuccessful before Data. These observations do not run analysis or establish result freshness. See the [Output guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Porting.md). Forty-five documented native Output mappings remain pending.
 
-The approved wrapper surface is complete. This archive includes all 225 Property overloads described above. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
+The approved wrapper surface is complete. This archive includes all 245 common Property overloads and five acquired catalog queries described above. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
 ## Requirements
 
@@ -212,13 +224,13 @@ See the [root guide](https://github.com/structuraldeveloper/StaadPro.Interop/blo
 
 ## IntelliSense and included documentation
 
-Expanded XML IntelliSense is included for **143 Geometry overloads, 171 Load overloads, 225 Property overloads, 15 Output queries, 53 common Root operations and three optional Root operation interfaces**, on both interfaces and concrete adapters. Keep **StaadPro.Interop.xml** beside the library when distributing assemblies outside normal NuGet restore.
+Expanded XML IntelliSense is included for **143 Geometry overloads, 171 Load overloads, 245 common Property overloads plus five optional catalog queries, 15 Output queries, 53 common Root operations and three optional Root operation interfaces**, on both interfaces and concrete adapters. Keep **StaadPro.Interop.xml** beside the library when distributing assemblies outside normal NuGet restore.
 
 The archive includes Property, Geometry, Load, Output and Root guides, installation and publishing instructions, and the release history. The package metadata identifies **Srinivasa Rao Masanam** as the author; company is **TensorStruct** and copyright is **TensorStruct**. NuGet.org Owners are managed separately by the registry.
 
 ## Preview validation and operating limits
 
-The current implementation passed **4,959 offline tests**. Installed-package verification checks **892 selected XML example blocks**, including all 450 Property examples, compiles a fresh consumer and exercises managed native stand-ins; window-changing examples are guarded off. These checks do not certify every native COM response, STAAD release or engineering-unit convention.
+The current implementation passed **5,156 offline tests**. Installed-package verification checks **944 selected XML example blocks**, including 490 common Property and twelve optional catalog/acquisition examples, compiles a fresh consumer and exercises managed native stand-ins; window-changing examples are guarded off. These checks do not certify every native COM response, STAAD release or engineering-unit convention.
 
 Silent and hidden options do not guarantee unattended operation. Synchronous native calls can block beyond logical polling budgets, and mutations can leave partial effects when a later step fails. Validate native behavior against controlled models and the STAAD versions used by your application before production deployment.
 

@@ -1,0 +1,671 @@
+{
+  "date": "2026-10-24",
+  "commonMethods": 20,
+  "optionalCatalogMethods": 5,
+  "contracts": [
+    {
+      "name": "RemovePropertyFromPlate",
+      "nativeFunction": "RemovePropertyFromPlate",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemovePropertyFromPlate(int plateId)",
+      "parameters": [
+        [
+          "plateId",
+          "Positive existing native analytical plate ID."
+        ]
+      ],
+      "summary": "Remove Thickness Property From the specific Plate.",
+      "returns": "Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemovePropertyFromPlate(101);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "flag",
+      "typedParameters": [
+        [
+          "int",
+          "plateId",
+          "Positive existing native analytical plate ID."
+        ]
+      ],
+      "nativeArguments": [
+        "plateId"
+      ]
+    },
+    {
+      "name": "RemoveMaterialFromPlate",
+      "nativeFunction": "RemoveMaterialFromPlate",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveMaterialFromPlate(IEnumerable<int> plateIds)",
+      "parameters": [
+        [
+          "plateIds",
+          "Non-null sequence of 1..100000 positive analytical IDs, enumerated once; input order and duplicates are preserved in an owned copy. No inferred member/plate/solid conversion or deduplication."
+        ]
+      ],
+      "summary": "Remove Material From the specific Plates.",
+      "returns": "Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveMaterialFromPlate(new[] { 101, 102 });\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "flag",
+      "typedParameters": [
+        [
+          "IEnumerable<int>",
+          "plateIds",
+          "Non-null sequence of 1..100000 positive analytical IDs, enumerated once; input order and duplicates are preserved in an owned copy. No inferred member/plate/solid conversion or deduplication."
+        ]
+      ],
+      "nativeArguments": [
+        "copy"
+      ]
+    },
+    {
+      "name": "RemoveMaterialFromSolid",
+      "nativeFunction": "RemoveMaterialFromSolid",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveMaterialFromSolid(IEnumerable<int> solidIds)",
+      "parameters": [
+        [
+          "solidIds",
+          "Non-null sequence of 1..100000 positive analytical IDs, enumerated once; input order and duplicates are preserved in an owned copy. No inferred member/plate/solid conversion or deduplication."
+        ]
+      ],
+      "summary": "Remove Material From the specific Solids.",
+      "returns": "Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveMaterialFromSolid(new[] { 101, 102 });\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "flag",
+      "typedParameters": [
+        [
+          "IEnumerable<int>",
+          "solidIds",
+          "Non-null sequence of 1..100000 positive analytical IDs, enumerated once; input order and duplicates are preserved in an owned copy. No inferred member/plate/solid conversion or deduplication."
+        ]
+      ],
+      "nativeArguments": [
+        "copy"
+      ]
+    },
+    {
+      "name": "DeleteMemberReleaseSpec",
+      "nativeFunction": "DeleteMemberReleaseSpec",
+      "phase": "P10",
+      "signature": "PropertyMutationResult DeleteMemberReleaseSpec(int memberId, MemberEnd memberEnd)",
+      "parameters": [
+        [
+          "memberId",
+          "Positive existing native analytical member ID."
+        ],
+        [
+          "memberEnd",
+          "Native Start=0 or End=1 selector. Other values are rejected; no both-ends or whole-member default is inferred."
+        ]
+      ],
+      "summary": "Delete MEMBER RELEASE specification.",
+      "returns": "Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.DeleteMemberReleaseSpec(101, StaadPro.Interop.Enums.MemberEnd.Start);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "flag",
+      "typedParameters": [
+        [
+          "int",
+          "memberId",
+          "Positive existing native analytical member ID."
+        ],
+        [
+          "MemberEnd",
+          "memberEnd",
+          "Native Start=0 or End=1 selector. Other values are rejected; no both-ends or whole-member default is inferred."
+        ]
+      ],
+      "nativeArguments": [
+        "memberId",
+        "(int)memberEnd"
+      ]
+    },
+    {
+      "name": "DeleteAllControlDependentRelations",
+      "nativeFunction": "DeleteAllControlDependentRelations",
+      "phase": "P10",
+      "signature": "PropertyMutationResult DeleteAllControlDependentRelations()",
+      "parameters": [],
+      "summary": "Delete all control/dependent joint specifications from model.",
+      "returns": "Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.",
+      "remarks": "When to use: Applies to all native control/dependent relations in the acquired model; no selective filter, confirmation dialog or implicit undo is supplied. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.DeleteAllControlDependentRelations();\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "zero",
+      "typedParameters": [],
+      "nativeArguments": []
+    },
+    {
+      "name": "RemoveAllElementOffsetSpec",
+      "nativeFunction": "RemoveAllElementOffsetSpec",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveAllElementOffsetSpec()",
+      "parameters": [],
+      "summary": "Remove all element node offset specification from the model.",
+      "returns": "Succeeded for integral one; NoSpecification for integral zero, which explicitly reports that no element offset specification is present. IsSuccessful is false for NoSpecification; no success is fabricated.",
+      "remarks": "When to use: Applies to all element offsets in the acquired model; zero is documented absence, not a failed engineering read. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveAllElementOffsetSpec();\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "empty",
+      "typedParameters": [],
+      "nativeArguments": []
+    },
+    {
+      "name": "RemovePropertyFromBeam",
+      "nativeFunction": "RemovePropertyFromBeam",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemovePropertyFromBeam(int memberId)",
+      "parameters": [
+        [
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "summary": "Remove property from beam.",
+      "returns": "Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemovePropertyFromBeam(101);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "zero",
+      "typedParameters": [
+        [
+          "int",
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "nativeArguments": [
+        "memberId"
+      ]
+    },
+    {
+      "name": "DeleteProperty",
+      "nativeFunction": "DeleteProperty",
+      "phase": "P10",
+      "signature": "PropertyMutationResult DeleteProperty(int propertyId)",
+      "parameters": [
+        [
+          "propertyId",
+          "Positive existing native section property reference, distinct from analytical entity IDs."
+        ]
+      ],
+      "summary": "Delete property based the on the property ID passed.",
+      "returns": "Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.",
+      "remarks": "When to use: Deletes a definition using its native ID; do not confuse this with merely removing one assignment. Native dependencies may prevent deletion. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.DeleteProperty(7);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "flag",
+      "typedParameters": [
+        [
+          "int",
+          "propertyId",
+          "Positive existing native section property reference, distinct from analytical entity IDs."
+        ]
+      ],
+      "nativeArguments": [
+        "propertyId"
+      ]
+    },
+    {
+      "name": "DeleteMemberSpec",
+      "nativeFunction": "DeleteMemberSpec",
+      "phase": "P10",
+      "signature": "PropertyMutationResult DeleteMemberSpec(int specificationId)",
+      "parameters": [
+        [
+          "specificationId",
+          "Positive existing native specification definition ID, distinct from assigned analytical member IDs."
+        ]
+      ],
+      "summary": "Delete specification based on the specification number passed.",
+      "returns": "Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.",
+      "remarks": "When to use: Deletes a definition using its native ID; do not confuse this with merely removing one assignment. Native dependencies may prevent deletion. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.DeleteMemberSpec(7);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "flag",
+      "typedParameters": [
+        [
+          "int",
+          "specificationId",
+          "Positive existing native specification definition ID, distinct from assigned analytical member IDs."
+        ]
+      ],
+      "nativeArguments": [
+        "specificationId"
+      ]
+    },
+    {
+      "name": "RemoveMemberReleaseSpecFromBeam",
+      "nativeFunction": "RemoveMemberReleaseSpecFromBeam",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveMemberReleaseSpecFromBeam(int memberId, MemberEnd memberEnd)",
+      "parameters": [
+        [
+          "memberId",
+          "Positive existing native analytical member ID."
+        ],
+        [
+          "memberEnd",
+          "Native Start=0 or End=1 selector. Other values are rejected; no both-ends or whole-member default is inferred."
+        ]
+      ],
+      "summary": "Removes the member specification from a particular member at the provided location (Start or End)..",
+      "returns": "Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveMemberReleaseSpecFromBeam(101, StaadPro.Interop.Enums.MemberEnd.Start);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "flag",
+      "typedParameters": [
+        [
+          "int",
+          "memberId",
+          "Positive existing native analytical member ID."
+        ],
+        [
+          "MemberEnd",
+          "memberEnd",
+          "Native Start=0 or End=1 selector. Other values are rejected; no both-ends or whole-member default is inferred."
+        ]
+      ],
+      "nativeArguments": [
+        "memberId",
+        "(int)memberEnd"
+      ]
+    },
+    {
+      "name": "RemoveMemberOffsetSpecFromBeam",
+      "nativeFunction": "RemoveMemberOffsetSpecFromBeam",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveMemberOffsetSpecFromBeam(int memberId, MemberEnd memberEnd)",
+      "parameters": [
+        [
+          "memberId",
+          "Positive existing native analytical member ID."
+        ],
+        [
+          "memberEnd",
+          "Native Start=0 or End=1 selector. Other values are rejected; no both-ends or whole-member default is inferred."
+        ]
+      ],
+      "summary": "Removes the member offset specification from a particular member at the provided location (Start or End).",
+      "returns": "Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveMemberOffsetSpecFromBeam(101, StaadPro.Interop.Enums.MemberEnd.Start);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "flag",
+      "typedParameters": [
+        [
+          "int",
+          "memberId",
+          "Positive existing native analytical member ID."
+        ],
+        [
+          "MemberEnd",
+          "memberEnd",
+          "Native Start=0 or End=1 selector. Other values are rejected; no both-ends or whole-member default is inferred."
+        ]
+      ],
+      "nativeArguments": [
+        "memberId",
+        "(int)memberEnd"
+      ]
+    },
+    {
+      "name": "RemoveMemberTrussSpecFromBeam",
+      "nativeFunction": "RemoveMemberTrussSpecFromBeam",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveMemberTrussSpecFromBeam(int memberId)",
+      "parameters": [
+        [
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "summary": "Remove member truss specification from beam.",
+      "returns": "Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveMemberTrussSpecFromBeam(101);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "zero",
+      "typedParameters": [
+        [
+          "int",
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "nativeArguments": [
+        "memberId"
+      ]
+    },
+    {
+      "name": "RemoveMemberInactiveSpecFromBeam",
+      "nativeFunction": "RemoveMemberInactiveSpecFromBeam",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveMemberInactiveSpecFromBeam(int memberId)",
+      "parameters": [
+        [
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "summary": "Remove member inactive specification from beam.",
+      "returns": "Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveMemberInactiveSpecFromBeam(101);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "zero",
+      "typedParameters": [
+        [
+          "int",
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "nativeArguments": [
+        "memberId"
+      ]
+    },
+    {
+      "name": "RemoveMemberTensionSpecFromBeam",
+      "nativeFunction": "RemoveMemberTensionSpecFromBeam",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveMemberTensionSpecFromBeam(int memberId)",
+      "parameters": [
+        [
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "summary": "Remove member tension specification from beam.",
+      "returns": "Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveMemberTensionSpecFromBeam(101);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "zero",
+      "typedParameters": [
+        [
+          "int",
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "nativeArguments": [
+        "memberId"
+      ]
+    },
+    {
+      "name": "RemoveMemberCompressionSpecFromBeam",
+      "nativeFunction": "RemoveMemberCompressionSpecFromBeam",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveMemberCompressionSpecFromBeam(int memberId)",
+      "parameters": [
+        [
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "summary": "Remove member compression specification from beam.",
+      "returns": "Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveMemberCompressionSpecFromBeam(101);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "zero",
+      "typedParameters": [
+        [
+          "int",
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "nativeArguments": [
+        "memberId"
+      ]
+    },
+    {
+      "name": "RemoveMemberIgnoreStiffSpecFromBeam",
+      "nativeFunction": "RemoveMemberIgnoreStiffSpecFromBeam",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveMemberIgnoreStiffSpecFromBeam(int memberId)",
+      "parameters": [
+        [
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "summary": "Remove member ignore stiff specification from beam.",
+      "returns": "Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveMemberIgnoreStiffSpecFromBeam(101);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "zero",
+      "typedParameters": [
+        [
+          "int",
+          "memberId",
+          "Positive existing native analytical member ID."
+        ]
+      ],
+      "nativeArguments": [
+        "memberId"
+      ]
+    },
+    {
+      "name": "RemoveMemberCableSpecFromBeam",
+      "nativeFunction": "RemoveMemberCableSpecFromBeam",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveMemberCableSpecFromBeam(int memberId, CableDefinitionKind definitionKind)",
+      "parameters": [
+        [
+          "memberId",
+          "Positive existing native analytical member ID."
+        ],
+        [
+          "definitionKind",
+          "Native InitialTension=0 or UnstressedLength=1 cable-definition selector. This is not a member-end location despite the native parameter label."
+        ]
+      ],
+      "summary": "Removes the member cable specification from a particular member at the provided location type (Tension or Length).",
+      "returns": "Succeeded for actual Boolean true or integral one; NativeFailure for Boolean false or integral zero. Other scalar shapes/codes are rejected. The actual native Boolean/integer response and requested target identity are retained separately.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveMemberCableSpecFromBeam(101, StaadPro.Interop.Enums.Property.CableDefinitionKind.InitialTension);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "flag",
+      "typedParameters": [
+        [
+          "int",
+          "memberId",
+          "Positive existing native analytical member ID."
+        ],
+        [
+          "CableDefinitionKind",
+          "definitionKind",
+          "Native InitialTension=0 or UnstressedLength=1 cable-definition selector. This is not a member-end location despite the native parameter label."
+        ]
+      ],
+      "nativeArguments": [
+        "memberId",
+        "(int)definitionKind"
+      ]
+    },
+    {
+      "name": "RemoveElementPlaneStressSpecFromPlate",
+      "nativeFunction": "RemoveElementPlaneStressSpecFromPlate",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveElementPlaneStressSpecFromPlate(int plateId)",
+      "parameters": [
+        [
+          "plateId",
+          "Positive existing native analytical plate ID."
+        ]
+      ],
+      "summary": "Remove element plane stress specification from plate.",
+      "returns": "Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveElementPlaneStressSpecFromPlate(101);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "zero",
+      "typedParameters": [
+        [
+          "int",
+          "plateId",
+          "Positive existing native analytical plate ID."
+        ]
+      ],
+      "nativeArguments": [
+        "plateId"
+      ]
+    },
+    {
+      "name": "RemoveElementIgnoreInplaneRotnSpecFromPlate",
+      "nativeFunction": "RemoveElementIgnoreInplaneRotnSpecFromPlate",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveElementIgnoreInplaneRotnSpecFromPlate(int plateId)",
+      "parameters": [
+        [
+          "plateId",
+          "Positive existing native analytical plate ID."
+        ]
+      ],
+      "summary": "Remove element ignore in plane rotation specification from plate.",
+      "returns": "Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveElementIgnoreInplaneRotnSpecFromPlate(101);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "zero",
+      "typedParameters": [
+        [
+          "int",
+          "plateId",
+          "Positive existing native analytical plate ID."
+        ]
+      ],
+      "nativeArguments": [
+        "plateId"
+      ]
+    },
+    {
+      "name": "RemoveElementNodeReleaseSpecFromPlate",
+      "nativeFunction": "RemoveElementNodeReleaseSpecFromPlate",
+      "phase": "P10",
+      "signature": "PropertyMutationResult RemoveElementNodeReleaseSpecFromPlate(int plateId, int nodeId)",
+      "parameters": [
+        [
+          "plateId",
+          "Positive existing native analytical plate ID."
+        ],
+        [
+          "nodeId",
+          "Positive analytical node ID associated with the intended plate. This is not a plate corner index; no membership check or local/global conversion is inferred."
+        ]
+      ],
+      "summary": "Remove element node release specification from plate.",
+      "returns": "Succeeded for integral zero and NativeFailure for integral -1. Boolean, floating/string/null and undocumented integral responses are rejected.",
+      "remarks": "When to use: Removes the specified assignment/specification using the named native route; it does not imply deletion of a shared section/material/specification definition. Uses the captured Property receiver and shared serialization gate on the caller thread. Invalid input is rejected before native mutation. No save, analysis, retry, implicit assignment or rollback is added. Failure or a transport/stale-binding exception can leave partial native changes. A successful acknowledgement does not establish persistence, definition deletion, model-wide atomicity or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed targets.\nif (applyChanges)\n{\n    var result = property.RemoveElementNodeReleaseSpecFromPlate(101, 11);\n    System.Console.WriteLine(result.Status);\n}",
+      "mutation": true,
+      "policy": "zero",
+      "typedParameters": [
+        [
+          "int",
+          "plateId",
+          "Positive existing native analytical plate ID."
+        ],
+        [
+          "int",
+          "nodeId",
+          "Positive analytical node ID associated with the intended plate. This is not a plate corner index; no membership check or local/global conversion is inferred."
+        ]
+      ],
+      "nativeArguments": [
+        "plateId",
+        "nodeId"
+      ]
+    },
+    {
+      "name": "GetDefaultStandardProfileDBFolder",
+      "nativeFunction": "GetDefaultStandardProfileDBFolder",
+      "phase": "P9",
+      "signature": "PropertyQueryResult<string> GetDefaultStandardProfileDBFolder()",
+      "parameters": [],
+      "summary": "Gets standard profile default database folder path.",
+      "returns": "Exact native default-folder text; native null/DBNull/empty returns EmptyOrUnavailable with no Data. Non-string/NUL text is rejected; no filesystem existence or fallback is inferred.",
+      "remarks": "When to use: observe the native standard-section catalog through the separately acquired property.Capabilities.GetStandardCatalog capability. Acquisition requires exact native 25.00.01.424 or 26.00.00.340 and all five compatible member signatures, without invoking catalog functions. Every call rechecks the captured binding and native version under the shared Property gate. The host version does not enable native APIs. No catalog parsing, profile normalization, file probing, unit conversion, model mutation, retry or engineering inference occurs. A grant is metadata qualification, not live runtime certification.",
+      "example": "var grant = property.Capabilities.GetStandardCatalog();\nif (grant.IsAvailable)\n{\n    var result = grant.Capability.GetDefaultStandardProfileDBFolder();\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.Data);\n}",
+      "mutation": false
+    },
+    {
+      "name": "IsStandardDatabaseSection",
+      "nativeFunction": "IsStandardDatabaseSection",
+      "phase": "P9",
+      "signature": "PropertyQueryResult<StandardSectionSource> IsStandardDatabaseSection(int propertyId)",
+      "parameters": [
+        [
+          "propertyId",
+          "Positive native section property reference ID, distinct from analytical member IDs, table IDs and native indices."
+        ]
+      ],
+      "summary": "Checks if the specified section property reference number is from standard section database source or not.",
+      "returns": "Success with requested property identity and the actual Boolean/integral 0/1 origin observation. False is valid data identifying a nonstandard source, not a native failure or a missing-reference proof.",
+      "remarks": "When to use: observe the native standard-section catalog through the separately acquired property.Capabilities.GetStandardCatalog capability. Acquisition requires exact native 25.00.01.424 or 26.00.00.340 and all five compatible member signatures, without invoking catalog functions. Every call rechecks the captured binding and native version under the shared Property gate. The host version does not enable native APIs. No catalog parsing, profile normalization, file probing, unit conversion, model mutation, retry or engineering inference occurs. A grant is metadata qualification, not live runtime certification.",
+      "example": "var grant = property.Capabilities.GetStandardCatalog();\nif (grant.IsAvailable)\n{\n    var result = grant.Capability.IsStandardDatabaseSection(7);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.Data.IsStandardDatabase);\n}",
+      "mutation": false
+    },
+    {
+      "name": "GetStandardSectionDatabaseName",
+      "nativeFunction": "GetStandardSectionDatabaseName",
+      "phase": "P9",
+      "signature": "PropertyQueryResult<StandardSectionText> GetStandardSectionDatabaseName(int propertyId)",
+      "parameters": [
+        [
+          "propertyId",
+          "Positive native section property reference ID, distinct from analytical member IDs, table IDs and native indices."
+        ]
+      ],
+      "summary": "Gets standard section database name for the specified section property reference number.",
+      "returns": "Success with requested property identity and exact nonempty native text. Empty string returns EmptyOrUnavailable because the property is not in the applicable standard database/table. Undocumented null/DBNull, non-string and embedded NUL responses are rejected. Whitespace is preserved, not trimmed.",
+      "remarks": "When to use: observe the native standard-section catalog through the separately acquired property.Capabilities.GetStandardCatalog capability. Acquisition requires exact native 25.00.01.424 or 26.00.00.340 and all five compatible member signatures, without invoking catalog functions. Every call rechecks the captured binding and native version under the shared Property gate. The host version does not enable native APIs. No catalog parsing, profile normalization, file probing, unit conversion, model mutation, retry or engineering inference occurs. A grant is metadata qualification, not live runtime certification.",
+      "example": "var grant = property.Capabilities.GetStandardCatalog();\nif (grant.IsAvailable)\n{\n    var result = grant.Capability.GetStandardSectionDatabaseName(7);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.Data.Text);\n}",
+      "mutation": false
+    },
+    {
+      "name": "GetStandardSectionTableName",
+      "nativeFunction": "GetStandardSectionTableName",
+      "phase": "P9",
+      "signature": "PropertyQueryResult<StandardSectionText> GetStandardSectionTableName(int propertyId)",
+      "parameters": [
+        [
+          "propertyId",
+          "Positive native section property reference ID, distinct from analytical member IDs, table IDs and native indices."
+        ]
+      ],
+      "summary": "Get the table name from the standard section database for the specified standard section property reference number.",
+      "returns": "Success with requested property identity and exact nonempty native text. Empty string returns EmptyOrUnavailable because the property is not in the applicable standard database/table. Undocumented null/DBNull, non-string and embedded NUL responses are rejected. Whitespace is preserved, not trimmed.",
+      "remarks": "When to use: observe the native standard-section catalog through the separately acquired property.Capabilities.GetStandardCatalog capability. Acquisition requires exact native 25.00.01.424 or 26.00.00.340 and all five compatible member signatures, without invoking catalog functions. Every call rechecks the captured binding and native version under the shared Property gate. The host version does not enable native APIs. No catalog parsing, profile normalization, file probing, unit conversion, model mutation, retry or engineering inference occurs. A grant is metadata qualification, not live runtime certification.",
+      "example": "var grant = property.Capabilities.GetStandardCatalog();\nif (grant.IsAvailable)\n{\n    var result = grant.Capability.GetStandardSectionTableName(7);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.Data.Text);\n}",
+      "mutation": false
+    },
+    {
+      "name": "GetStandardSectionName",
+      "nativeFunction": "GetStandardSectionName",
+      "phase": "P9",
+      "signature": "PropertyQueryResult<StandardSectionText> GetStandardSectionName(int propertyId)",
+      "parameters": [
+        [
+          "propertyId",
+          "Positive native section property reference ID, distinct from analytical member IDs, table IDs and native indices."
+        ]
+      ],
+      "summary": "Get the section name from the standard section database and table for the specified standard section property reference number.",
+      "returns": "Success with requested property identity and exact nonempty native text. Empty string returns EmptyOrUnavailable because the property is not in the applicable standard database/table. Undocumented null/DBNull, non-string and embedded NUL responses are rejected. Whitespace is preserved, not trimmed.",
+      "remarks": "When to use: observe the native standard-section catalog through the separately acquired property.Capabilities.GetStandardCatalog capability. Acquisition requires exact native 25.00.01.424 or 26.00.00.340 and all five compatible member signatures, without invoking catalog functions. Every call rechecks the captured binding and native version under the shared Property gate. The host version does not enable native APIs. No catalog parsing, profile normalization, file probing, unit conversion, model mutation, retry or engineering inference occurs. A grant is metadata qualification, not live runtime certification.",
+      "example": "var grant = property.Capabilities.GetStandardCatalog();\nif (grant.IsAvailable)\n{\n    var result = grant.Capability.GetStandardSectionName(7);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.Data.Text);\n}",
+      "mutation": false
+    }
+  ]
+}

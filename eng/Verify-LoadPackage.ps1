@@ -254,8 +254,10 @@ try {
         $propertyGuide += Read-PackageEntry 'docs/Property-Section-and-Specification-Creation.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-Fireproofing-Attributes-and-UPT.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-UPT-Profiles-and-Catalogs.md'
-        $uptPortNames = @('AddUPTPropertyCHANNEL', 'AddUPTPropertyANGLE', 'AddUPTPropertyDOUBLEANGLE', 'AddUPTPropertyTEE', 'AddUPTPropertyPIPE', 'AddUPTPropertyTUBE', 'AddUPTPropertyGENERAL', 'AddUPTPropertyISECTION', 'AddUPTPropertyPRISMATIC', 'AddUPTPropertyWIDEFLANGECOMPOSITE', 'CreatePropertyFromUPTTable', 'CreatePropertyFromUserTable', 'CreateUPTTableEx', 'RemoveUPTTable', 'RemovePropertyFromUPTTable', 'GetUserProvidedTableCount', 'GetUserProvidedTableList', 'GetUserProvidedTableSectionCount', 'GetUserProvidedTableSectionType', 'GetUserProvidedTableSectionPropertyCount', 'GetUserProvidedTableSectionProperties', 'GetUserProvidedTableNo', 'GetShapeCode', 'SetStandardProfileDBFolder', 'GetStandardProfileDBFolder')
-        $attributePortNames = @('GetInactiveMemberCount', 'GetFireProofedBeamCount', 'GetFireProofedBeamList', 'GetFireProofDataForBeam', 'GetFireProofingSpecCount', 'GetFireProofingSpecDetails', 'GetFireProofingSpecAssignedBeamCount', 'GetFireProofingSpecAssignedBeamList', 'CreateMemberAttribute', 'CreateElementAttribute', 'DeleteMemberAttribute', 'DeleteElementAttribute', 'GetMemberCountByAttribute', 'GetMemberListByAttribute', 'GetMemberAttributeCount', 'GetMemberAttributeList', 'GetElementCountByAttribute', 'GetElementListByAttribute', 'GetAssignedAttributeCount', 'RemoveAttribute', 'AssignMemberAttribute', 'AssignElementAttribute', 'CreateUPTTable', 'AddUPTPropertyWIDEFLANGE', 'AddUPTPropertyWIDEFLANGEUNEQUAL')
+        $propertyGuide += Read-PackageEntry 'docs/Property-Catalog-Capabilities-and-Cleanup.md'
+        $cleanupPortNames = @('RemovePropertyFromPlate', 'RemoveMaterialFromPlate', 'RemoveMaterialFromSolid', 'DeleteMemberReleaseSpec', 'DeleteAllControlDependentRelations', 'RemoveAllElementOffsetSpec', 'RemovePropertyFromBeam', 'DeleteProperty', 'DeleteMemberSpec', 'RemoveMemberReleaseSpecFromBeam', 'RemoveMemberOffsetSpecFromBeam', 'RemoveMemberTrussSpecFromBeam', 'RemoveMemberInactiveSpecFromBeam', 'RemoveMemberTensionSpecFromBeam', 'RemoveMemberCompressionSpecFromBeam', 'RemoveMemberIgnoreStiffSpecFromBeam', 'RemoveMemberCableSpecFromBeam', 'RemoveElementPlaneStressSpecFromPlate', 'RemoveElementIgnoreInplaneRotnSpecFromPlate', 'RemoveElementNodeReleaseSpecFromPlate')
+        $uptPortNames = @('AddUptPropertyChannel', 'AddUptPropertyAngle', 'AddUptPropertyDoubleAngle', 'AddUptPropertyTee', 'AddUptPropertyPipe', 'AddUptPropertyTube', 'AddUptPropertyGeneral', 'AddUptPropertyISection', 'AddUptPropertyPrismatic', 'AddUptPropertyWideFlangeComposite', 'CreatePropertyFromUptTable', 'CreatePropertyFromUserTable', 'CreateUptTableEx', 'RemoveUptTable', 'RemovePropertyFromUptTable', 'GetUserProvidedTableCount', 'GetUserProvidedTableList', 'GetUserProvidedTableSectionCount', 'GetUserProvidedTableSectionType', 'GetUserProvidedTableSectionPropertyCount', 'GetUserProvidedTableSectionProperties', 'GetUserProvidedTableNo', 'GetShapeCode', 'SetStandardProfileDBFolder', 'GetStandardProfileDBFolder')
+        $attributePortNames = @('GetInactiveMemberCount', 'GetFireProofedBeamCount', 'GetFireProofedBeamList', 'GetFireProofDataForBeam', 'GetFireProofingSpecCount', 'GetFireProofingSpecDetails', 'GetFireProofingSpecAssignedBeamCount', 'GetFireProofingSpecAssignedBeamList', 'CreateMemberAttribute', 'CreateElementAttribute', 'DeleteMemberAttribute', 'DeleteElementAttribute', 'GetMemberCountByAttribute', 'GetMemberListByAttribute', 'GetMemberAttributeCount', 'GetMemberAttributeList', 'GetElementCountByAttribute', 'GetElementListByAttribute', 'GetAssignedAttributeCount', 'RemoveAttribute', 'AssignMemberAttribute', 'AssignElementAttribute', 'CreateUptTable', 'AddUptPropertyWideFlange', 'AddUptPropertyWideFlangeUnequal')
         $creationPortNames = @('CreateWideFlangePropertyFromTable', 'CreateBeamPropertyFromTableEx', 'CreatePrismaticRectangleProperty', 'CreatePrismaticCircleProperty', 'CreatePrismaticTeeProperty', 'CreatePrismaticTrapezoidalProperty', 'CreatePrismaticGeneralProperty', 'CreateTaperedTubeProperty', 'CreateMemberPartialReleaseSpec', 'CreateMemberTrussSpec', 'CreateMemberInactiveSpec', 'CreateMemberTensionSpec', 'CreateMemberCompressionSpec', 'CreateMemberIgnoreStiffSpec', 'CreateMemberCableSpec', 'CreateMemberCableSpecEx', 'CreateElementNodeReleaseSpec', 'CreateElementPlaneStressSpec', 'CreateElementIgnoreInplaneRotnSpec', 'AddControlDependentRelation', 'CreateElementOffsetSpec', 'CreateElementLocalZOffsetSpec', 'CreateMemberFireProofingSpec', 'GetPropertyUniqueID', 'SetPropertyUniqueID')
         $roadmapPortNames = @('GetOrthotropic3DMaterialCount', 'GetOrthotropic3DMaterialProperties', 'RemoveMaterialFromBeam', 'GetSolidMaterialName', 'GetIsotropicMaterialAssignedSolidCount', 'GetIsotropicMaterialAssignedSolidIds', 'SetTypeToIsotropicMaterial', 'GetTypeForIsotropicMaterial', 'GetSectionPropertiesForProfile', 'GetBeamSectionPropertyRefNo', 'GetBeamSectionPropertyValuesEx', 'GetSectionTableNo', 'GetBeamSectionPropertyTypeNo', 'GetBeamSectionName', 'GetBeamSectionDisplayName', 'GetCountryTableNo', 'CreateAssignProfileProperty', 'AssignElementSpecToPlate', 'UpdatePropertiesToDesignSection', 'CreateIsotropicMaterialPropertiesEx', 'CreateIsotropicMaterialSteel', 'CreateIsotropicMaterialConcrete', 'CreateIsotropicMaterialAluminum', 'CreateIsotropicMaterialTimber', 'AssignMaterialToSolid')
         $sectionPortNames = @('AssignSectionProperties', 'AssignSectionProperty', 'CreateAndAssignSectionProperties', 'CreateMaterialProperties', 'CreateMaterialProperty', 'CreatePlateThicknessProperty', 'CreateSectionProperties', 'CreateSectionProperty', 'GetAllSections', 'GetAllSectionsWithAssignedBeamsList', 'GetSectionalArea', 'GetSectionBy', 'GetSectionByPropertyIdWithAssignedBeamsList', 'GetSectionPropertyCount', 'GetThicknessPropertyCount', 'GetCountofSectionPropertyValuesEx', 'GetSectionPropertyType', 'GetSectionPropertyCountry', 'GetRecordForSection')
@@ -264,7 +266,7 @@ try {
         $mainPortNames += @('AssignMaterialProperties', 'AssignMaterialProperty', 'CreateMaterialProperties', 'CreateMaterialPropertiesNoConversion', 'CreateMaterialProperty', 'CreateMaterialPropertyNoConversion', 'GetAllExtendedIsotropicMaterialProperties', 'GetAllIsotropicMaterialProperties', 'GetAllExtendedIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllExtendedMaterialPropertiesWithPopulatedAssignments', 'GetAllMaterialPropertiesWithPopulatedAssignments', 'CreatePlateThicknessProperties', 'AssignThicknessProperties', 'AssignThicknessProperty', 'AssignOffsetSpecification', 'CreateAndAssignOffsetSpecifications', 'PopulateMemberReleases', 'CreateAndAssignMemberEndReleases')
         foreach ($owner in @('Adapters.Interfaces.IOSProperty', 'Adapters.Models.OSPropertyAdapter')) {
             $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-            if ($entries.Count -ne 225) { throw "Expected 225 Property method contracts for $owner." }
+            if ($entries.Count -ne 245) { throw "Expected 245 Property method contracts for $owner." }
             foreach ($entry in $entries) {
                 $methodName = [regex]::Match($entry.name, '\.([^.()]+)(?:\(|$)').Groups[1].Value
                 $requiredTags = @('summary', 'remarks', 'example/code')
@@ -276,11 +278,39 @@ try {
                 if ($entry.SelectSingleNode('remarks').InnerText -notmatch 'When to use:') { throw "Missing comparative Property IntelliSense for $($entry.name)" }
                 if ($propertyGuide -notmatch $methodName) { throw "Missing Property guidance for $methodName" }
                 $binding = if ($owner.EndsWith('IOSProperty')) { 'IOSProperty property = wrapper.Property;' } else { 'var property = new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper);' }
-                $fixture = if ($methodName -in $uptPortNames) { 'PropertyUptFixture' } elseif ($methodName -in $attributePortNames) { 'PropertyAttributeFixture' } elseif ($methodName -in $creationPortNames) { 'PropertyCreationFixture' } elseif ($methodName -in $roadmapPortNames) { 'PropertyRoadmapFixture' } elseif ($methodName -in $sectionPortNames) { 'PropertySectionFixture' } elseif ($methodName -in $mainPortNames) { 'PropertyPortFixture' } else { 'PropertyQueryFixture' }
+                $fixture = if ($methodName -in $cleanupPortNames) { 'PropertyCleanupFixture' } elseif ($methodName -in $uptPortNames) { 'PropertyUptFixture' } elseif ($methodName -in $attributePortNames) { 'PropertyAttributeFixture' } elseif ($methodName -in $creationPortNames) { 'PropertyCreationFixture' } elseif ($methodName -in $roadmapPortNames) { 'PropertyRoadmapFixture' } elseif ($methodName -in $sectionPortNames) { 'PropertySectionFixture' } elseif ($methodName -in $mainPortNames) { 'PropertyPortFixture' } else { 'PropertyQueryFixture' }
                 $propertySnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.' + $fixture + '.Root { Property = new PackageVerification.' + $fixture + '.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
             }
         }
-        if ($propertySnippets.Count -ne 450) { throw 'Expected 450 Property XML examples.' }
+        if ($propertySnippets.Count -ne 490) { throw 'Expected 490 common Property XML examples.' }
+        foreach ($owner in @('Adapters.Interfaces.Capabilities.IOSPropertyStandardCatalog',
+            'Adapters.Models.Capabilities.OSPropertyStandardCatalogAdapter',
+            'Adapters.Interfaces.Capabilities.IOSPropertyCapabilities',
+            'Adapters.Models.Capabilities.OSPropertyCapabilitiesAdapter')) {
+            $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+            $expected = if ($owner.EndsWith('IOSPropertyCapabilities') -or $owner.EndsWith('OSPropertyCapabilitiesAdapter')) { 1 } else { 5 }
+            if ($entries.Count -ne $expected) { throw "Incorrect optional Property contract count for $owner." }
+            foreach ($entry in $entries) {
+                foreach ($tag in @('summary','returns','remarks','example/code')) {
+                    $node = $entry.SelectSingleNode($tag)
+                    if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete optional Property $tag for $($entry.name)." }
+                }
+                $propertySnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyCleanupFixture.Root { Property = new PackageVerification.PropertyCleanupFixture.Native() })) {' + $newLine + 'IOSProperty property = wrapper.Property;' + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
+            }
+        }
+        if ($propertySnippets.Count -ne 502) { throw 'Expected 490 common and twelve optional Property XML examples.' }
+        $namingGuide = Read-PackageEntry 'docs/Property-API-Naming.md'
+        $renames = (Read-PackageEntry 'docs/contracts/PropertyApiRenames.json' | ConvertFrom-Json).publicNames
+        foreach ($rename in $renames.PSObject.Properties) {
+            foreach ($owner in @('Adapters.Interfaces.IOSProperty', 'Adapters.Models.OSPropertyAdapter')) {
+                $previous = "M:StaadPro.Interop.$owner.$($rename.Name)"
+                $current = "M:StaadPro.Interop.$owner.$($rename.Value)"
+                if (@($xml.doc.members.member | Where-Object { $_.name -eq $previous -or $_.name.StartsWith($previous + '(') }).Count -ne 0) { throw 'An old all-caps public UPT name remains.' }
+                if (@($xml.doc.members.member | Where-Object { $_.name -eq $current -or $_.name.StartsWith($current + '(') }).Count -ne 1) { throw 'A renamed public UPT contract is missing.' }
+            }
+            if ($namingGuide -notmatch $rename.Value) { throw 'The API naming guide is incomplete.' }
+        }
+
     }
 } finally { $archive.Dispose() }
 
@@ -581,6 +611,12 @@ __PROPERTY_EXAMPLES__
         var creationAdapterNative = new PackageVerification.PropertyCreationFixture.Native();
         using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyCreationFixture.Root { Property = creationAdapterNative }))
             PackageVerification.PropertyCreationFixture.VerifyCalls(new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper), creationAdapterNative);
+        var cleanupInterfaceNative = new PackageVerification.PropertyCleanupFixture.Native();
+        using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyCleanupFixture.Root { Property = cleanupInterfaceNative }))
+            PackageVerification.PropertyCleanupFixture.VerifyCalls(wrapper.Property, cleanupInterfaceNative);
+        var cleanupAdapterNative = new PackageVerification.PropertyCleanupFixture.Native();
+        using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyCleanupFixture.Root { Property = cleanupAdapterNative }))
+            PackageVerification.PropertyCleanupFixture.VerifyCalls(new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper), cleanupAdapterNative);
         var uptInterfaceNative = new PackageVerification.PropertyUptFixture.Native();
         using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyUptFixture.Root { Property = uptInterfaceNative }))
             PackageVerification.PropertyUptFixture.VerifyCalls(wrapper.Property, uptInterfaceNative);
@@ -799,6 +835,7 @@ if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'F
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCreationFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCreationFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyAttributeFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyAttributeFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyUptFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyUptFixture.cs') }
+if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCleanupFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCleanupFixture.cs') }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/LoadInspectionFixture.cs') -Destination (Join-Path $consumerRoot 'LoadInspectionFixture.cs')
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'NuGet.Config'), $config)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Consumer.csproj'), $project)

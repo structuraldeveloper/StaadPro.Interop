@@ -16,7 +16,9 @@ namespace StaadPro.Interop.Enums.Property
         /// <summary>A void native setter returned without a transport error; it supplied no success acknowledgement or read-back.</summary>
         InvokedWithoutAcknowledgement,
         /// <summary>The requested named UPT section already exists, as explicitly reported by the native operation.</summary>
-        AlreadyExists
+        AlreadyExists,
+        /// <summary>The native removal explicitly reported that no applicable specification is present; this is not a success acknowledgement.</summary>
+        NoSpecification
     }
 
     /// <summary>Identifies the scope of a requested Property mutation.</summary>

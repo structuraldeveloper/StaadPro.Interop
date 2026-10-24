@@ -48,12 +48,12 @@ The [exact managed contract index](contracts/PropertyUptContractIndex.json) reco
 
 Examples assume `IOSProperty property = wrapper.Property;` for a caller-owned wrapper. Concrete adapter documentation contains the same complete contract. Mutation examples default to disabled.
 
-### 1. AddUPTPropertyCHANNEL
+### 1. AddUptPropertyChannel
 
 Adds explicit channel data to an existing native UPT table.
 
 ```csharp
-PropertyMutationResult AddUPTPropertyCHANNEL(int tableId, string sectionName, UptChannelDefinition definition);
+PropertyMutationResult AddUptPropertyChannel(int tableId, string sectionName, UptChannelDefinition definition);
 ```
 
 | Parameter | Contract |
@@ -74,18 +74,18 @@ if (applyChanges)
 {
     var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
     var definition = new StaadPro.Interop.Models.Property.UptChannelDefinition(primary, 0.04);
-    var result = property.AddUPTPropertyCHANNEL(7, "EXPLICIT_CHANNEL", definition);
+    var result = property.AddUptPropertyChannel(7, "EXPLICIT_CHANNEL", definition);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 2. AddUPTPropertyANGLE
+### 2. AddUptPropertyAngle
 
 Adds explicit angle data to an existing native UPT table.
 
 ```csharp
-PropertyMutationResult AddUPTPropertyANGLE(int tableId, string sectionName, UptAngleDefinition definition);
+PropertyMutationResult AddUptPropertyAngle(int tableId, string sectionName, UptAngleDefinition definition);
 ```
 
 | Parameter | Contract |
@@ -105,18 +105,18 @@ bool applyChanges = false; // Enable only for the intended/disposable model and 
 if (applyChanges)
 {
     var definition = new StaadPro.Interop.Models.Property.UptAngleDefinition(0.2, 0.15, 0.01, 0.03, 0.002, 0.003);
-    var result = property.AddUPTPropertyANGLE(7, "EXPLICIT_ANGLE", definition);
+    var result = property.AddUptPropertyAngle(7, "EXPLICIT_ANGLE", definition);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 3. AddUPTPropertyDOUBLEANGLE
+### 3. AddUptPropertyDoubleAngle
 
 Adds explicit double angle data to an existing native UPT table.
 
 ```csharp
-PropertyMutationResult AddUPTPropertyDOUBLEANGLE(int tableId, string sectionName, UptDoubleAngleDefinition definition);
+PropertyMutationResult AddUptPropertyDoubleAngle(int tableId, string sectionName, UptDoubleAngleDefinition definition);
 ```
 
 | Parameter | Contract |
@@ -136,18 +136,18 @@ bool applyChanges = false; // Enable only for the intended/disposable model and 
 if (applyChanges)
 {
     var definition = new StaadPro.Interop.Models.Property.UptDoubleAngleDefinition(0.2, 0.15, 0.01, 0.02, 0.000001, 0.00001, 0.0001, 0.04, 0.002, 0.003);
-    var result = property.AddUPTPropertyDOUBLEANGLE(7, "EXPLICIT_DOUBLEANGLE", definition);
+    var result = property.AddUptPropertyDoubleAngle(7, "EXPLICIT_DOUBLEANGLE", definition);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 4. AddUPTPropertyTEE
+### 4. AddUptPropertyTee
 
 Adds explicit tee data to an existing native UPT table.
 
 ```csharp
-PropertyMutationResult AddUPTPropertyTEE(int tableId, string sectionName, UptTeeDefinition definition);
+PropertyMutationResult AddUptPropertyTee(int tableId, string sectionName, UptTeeDefinition definition);
 ```
 
 | Parameter | Contract |
@@ -168,18 +168,18 @@ if (applyChanges)
 {
     var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
     var definition = new StaadPro.Interop.Models.Property.UptTeeDefinition(primary, 0.04);
-    var result = property.AddUPTPropertyTEE(7, "EXPLICIT_TEE", definition);
+    var result = property.AddUptPropertyTee(7, "EXPLICIT_TEE", definition);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 5. AddUPTPropertyPIPE
+### 5. AddUptPropertyPipe
 
 Adds explicit pipe data to an existing native UPT table.
 
 ```csharp
-PropertyMutationResult AddUPTPropertyPIPE(int tableId, string sectionName, UptPipeDefinition definition);
+PropertyMutationResult AddUptPropertyPipe(int tableId, string sectionName, UptPipeDefinition definition);
 ```
 
 | Parameter | Contract |
@@ -199,18 +199,18 @@ bool applyChanges = false; // Enable only for the intended/disposable model and 
 if (applyChanges)
 {
     var definition = new StaadPro.Interop.Models.Property.UptPipeDefinition(0.2, 0.18, 0.002, 0.003);
-    var result = property.AddUPTPropertyPIPE(7, "EXPLICIT_PIPE", definition);
+    var result = property.AddUptPropertyPipe(7, "EXPLICIT_PIPE", definition);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 6. AddUPTPropertyTUBE
+### 6. AddUptPropertyTube
 
 Adds explicit tube data to an existing native UPT table.
 
 ```csharp
-PropertyMutationResult AddUPTPropertyTUBE(int tableId, string sectionName, UptTubeDefinition definition);
+PropertyMutationResult AddUptPropertyTube(int tableId, string sectionName, UptTubeDefinition definition);
 ```
 
 | Parameter | Contract |
@@ -230,18 +230,18 @@ bool applyChanges = false; // Enable only for the intended/disposable model and 
 if (applyChanges)
 {
     var definition = new StaadPro.Interop.Models.Property.UptTubeDefinition(0.01, 0.3, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
-    var result = property.AddUPTPropertyTUBE(7, "EXPLICIT_TUBE", definition);
+    var result = property.AddUptPropertyTube(7, "EXPLICIT_TUBE", definition);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 7. AddUPTPropertyGENERAL
+### 7. AddUptPropertyGeneral
 
 Adds explicit general profile data to an existing native UPT table.
 
 ```csharp
-PropertyMutationResult AddUPTPropertyGENERAL(int tableId, string sectionName, UptGeneralDefinition definition);
+PropertyMutationResult AddUptPropertyGeneral(int tableId, string sectionName, UptGeneralDefinition definition);
 ```
 
 | Parameter | Contract |
@@ -261,18 +261,18 @@ bool applyChanges = false; // Enable only for the intended/disposable model and 
 if (applyChanges)
 {
     var definition = new StaadPro.Interop.Models.Property.UptGeneralDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.0002, 0.0003, 0.002, 0.003, 0.0004, 0.0005, 0.00000001, 0.28);
-    var result = property.AddUPTPropertyGENERAL(7, "EXPLICIT_GENERAL", definition);
+    var result = property.AddUptPropertyGeneral(7, "EXPLICIT_GENERAL", definition);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 8. AddUPTPropertyISECTION
+### 8. AddUptPropertyISection
 
 Adds explicit I-section data to an existing native UPT table.
 
 ```csharp
-PropertyMutationResult AddUPTPropertyISECTION(int tableId, string sectionName, UptISectionDefinition definition);
+PropertyMutationResult AddUptPropertyISection(int tableId, string sectionName, UptISectionDefinition definition);
 ```
 
 | Parameter | Contract |
@@ -292,18 +292,18 @@ bool applyChanges = false; // Enable only for the intended/disposable model and 
 if (applyChanges)
 {
     var definition = new StaadPro.Interop.Models.Property.UptISectionDefinition(0.4, 0.006, 0.3, 0.2, 0.01, 0.15, 0.01, 0.002, 0.003, 0.000001);
-    var result = property.AddUPTPropertyISECTION(7, "EXPLICIT_ISECTION", definition);
+    var result = property.AddUptPropertyISection(7, "EXPLICIT_ISECTION", definition);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 9. AddUPTPropertyPRISMATIC
+### 9. AddUptPropertyPrismatic
 
 Adds explicit prismatic profile data to an existing native UPT table.
 
 ```csharp
-PropertyMutationResult AddUPTPropertyPRISMATIC(int tableId, string sectionName, UptPrismaticDefinition definition);
+PropertyMutationResult AddUptPropertyPrismatic(int tableId, string sectionName, UptPrismaticDefinition definition);
 ```
 
 | Parameter | Contract |
@@ -323,18 +323,18 @@ bool applyChanges = false; // Enable only for the intended/disposable model and 
 if (applyChanges)
 {
     var definition = new StaadPro.Interop.Models.Property.UptPrismaticDefinition(0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003, 0.3, 0.15);
-    var result = property.AddUPTPropertyPRISMATIC(7, "EXPLICIT_PRISMATIC", definition);
+    var result = property.AddUptPropertyPrismatic(7, "EXPLICIT_PRISMATIC", definition);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 10. AddUPTPropertyWIDEFLANGECOMPOSITE
+### 10. AddUptPropertyWideFlangeComposite
 
 Adds an explicit 12-, 16- or 19-slot composite wide-flange UPT section.
 
 ```csharp
-PropertyMutationResult AddUPTPropertyWIDEFLANGECOMPOSITE(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition);
+PropertyMutationResult AddUptPropertyWideFlangeComposite(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition);
 ```
 
 | Parameter | Contract |
@@ -358,18 +358,18 @@ if (applyChanges)
     var slab = new StaadPro.Interop.Models.Property.UptCompositeSlab(0.5, 0.6, 0.12, 8.0);
     var plate = new StaadPro.Interop.Models.Property.UptCompositeBottomPlate(0.1, 0.11, 0.01);
     var definition = new StaadPro.Interop.Models.Property.UptCompositeWideFlangeDefinition(steel, slab, plate);
-    var result = property.AddUPTPropertyWIDEFLANGECOMPOSITE(7, "EXPLICIT_COMPOSITE", definition);
+    var result = property.AddUptPropertyWideFlangeComposite(7, "EXPLICIT_COMPOSITE", definition);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 11. CreatePropertyFromUPTTable
+### 11. CreatePropertyFromUptTable
 
 Creates an assigned section-property reference from an existing named UPT entry.
 
 ```csharp
-PropertyMutationResult CreatePropertyFromUPTTable(int tableId, string sectionName);
+PropertyMutationResult CreatePropertyFromUptTable(int tableId, string sectionName);
 ```
 
 | Parameter | Contract |
@@ -387,7 +387,7 @@ When to use: obtain a property reference after the table and named entry already
 bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
 if (applyChanges)
 {
-    var result = property.CreatePropertyFromUPTTable(7, "EXPLICIT_WF");
+    var result = property.CreatePropertyFromUptTable(7, "EXPLICIT_WF");
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
@@ -408,7 +408,7 @@ PropertyMutationResult CreatePropertyFromUserTable(string sectionName, int table
 
 **Returns:** Created with separate positive CreatedPropertyId and requested table/name identity. No failure return code is documented: nonpositive/malformed responses throw without an inferred failure mapping.
 
-When to use: use the distinct CreatePropertyFromUserTable route and its native sectionName,tableId order. It does not fall back to CreatePropertyFromUPTTable, create the table/entry, assign geometry or establish a new-unique allocation. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.
+When to use: use the distinct CreatePropertyFromUserTable route and its native sectionName,tableId order. It does not fall back to CreatePropertyFromUptTable, create the table/entry, assign geometry or establish a new-unique allocation. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.
 
 **Exceptions:** Invalid inputs fail before dispatch. Disposed or replaced bindings, malformed/undocumented native results and transport failures abort without retry. Layout-dependent reads and the folder setter reject unreviewed native profiles before their operation; an unsupported returned layout is rejected rather than decoded.
 
@@ -422,12 +422,12 @@ if (applyChanges)
 }
 ```
 
-### 13. CreateUPTTableEx
+### 13. CreateUptTableEx
 
 Creates a UPT table using an explicit requested table number and type.
 
 ```csharp
-PropertyMutationResult CreateUPTTableEx(int requestedTableId, UserProvidedTableType tableType);
+PropertyMutationResult CreateUptTableEx(int requestedTableId, UserProvidedTableType tableType);
 ```
 
 | Parameter | Contract |
@@ -445,18 +445,18 @@ When to use: request a specific table number without hiding native renumbering, 
 bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
 if (applyChanges)
 {
-    var result = property.CreateUPTTableEx(7, StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);
+    var result = property.CreateUptTableEx(7, StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 14. RemoveUPTTable
+### 14. RemoveUptTable
 
 Requests native removal of an explicitly identified UPT table.
 
 ```csharp
-PropertyMutationResult RemoveUPTTable(int tableId);
+PropertyMutationResult RemoveUptTable(int tableId);
 ```
 
 | Parameter | Contract |
@@ -473,18 +473,18 @@ When to use: deliberately remove the native table only after reviewing its curre
 bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
 if (applyChanges)
 {
-    var result = property.RemoveUPTTable(7);
+    var result = property.RemoveUptTable(7);
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }
 ```
 
-### 15. RemovePropertyFromUPTTable
+### 15. RemovePropertyFromUptTable
 
 Requests deletion of an exact named section from a UPT table.
 
 ```csharp
-PropertyMutationResult RemovePropertyFromUPTTable(int tableId, string sectionName);
+PropertyMutationResult RemovePropertyFromUptTable(int tableId, string sectionName);
 ```
 
 | Parameter | Contract |
@@ -502,7 +502,7 @@ When to use: deliberately remove one native UPT entry, retaining the table/name 
 bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
 if (applyChanges)
 {
-    var result = property.RemovePropertyFromUPTTable(7, "EXPLICIT_WF");
+    var result = property.RemovePropertyFromUptTable(7, "EXPLICIT_WF");
     System.Console.WriteLine(result.Status);
     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
 }

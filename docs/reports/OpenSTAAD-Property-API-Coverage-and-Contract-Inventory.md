@@ -2,19 +2,21 @@
 
 **Review date:** 23 October 2026<br>
 **Baseline:** `3b94e637839f0c3e28c1486d8f03f0a8af230b43`<br>
-**Status:** Updated route coverage: 225 overloads, 166/204 active native routes; live qualification remains pending.
+**Status:** Updated route coverage: 245 common + five optional operations, 191/204 active native routes; live qualification remains pending.
 
 Read the [comparison and architecture plan](OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md) for policy decisions and sequencing. The [comparison JSON](data/OpenSTAAD-Property-2024-2026-Comparison.json) preserves all three years separately, exact declarations, complete parameter descriptions, native tables, vendor metadata, source mappings and file fingerprints.
 
-## Current implementation - UPT profiles and catalogs
+## Current implementation - catalog capabilities and cleanup
 
-Incorporated **25 Property functions**: 22 reviewed P8 user-provided-table operations and the next three P9 catalog/database-folder operations. Property now exposes **225 overloads**, covering **166 of 204 active native routes**, with **38 remaining**. Five P8 transport contracts and four earlier P7 contracts remain pending. P8 has 25 of 30 routes; P9 has four of nine. See [all 25 UPT/catalog contracts](../Property-UPT-Profiles-and-Catalogs.md).
+Incorporated **25 Property operations**: all five remaining P9 catalog queries and twenty P10 removal/deletion functions. The current surface has **245 common overloads plus five separately acquired catalog queries**, covering **191 of 204 active native routes**, with **13 remaining**. P9 is complete; P10 has twenty of twenty-four routes. The nine earlier P7/P8 contract gaps remain pending. See [all 25 catalog/cleanup contracts](../Property-Catalog-Capabilities-and-Cleanup.md).
 
-Passed a Release build with zero warnings/errors and **4,959 offline tests**, including **213 new cases**. The isolated PackageReference-only consumer verifies **892 selected XML examples**, including all **450 Property interface/adapter examples**. All sixteen new mutation examples are guarded; separate managed checks execute all 25 routes through both public surfaces. Live native mutation and engineering qualification remain pending.
+Passed a Release build with zero warnings/errors and **5,156 offline tests**, including **197 new cases**. The isolated PackageReference-only consumer verifies **944 selected XML examples**: 490 common Property examples plus twelve optional catalog/acquisition examples, alongside the existing groups. Separate managed checks exercise all twenty new mutations and five catalog queries through both public surfaces. Live native mutation and engineering qualification remain pending.
 
-Added immutable explicit UPT profile inputs, owned table inventories and named section observations. Kept operation-specific creation, insertion and removal outcomes separate. Qualified ten UPT read-back layouts and the database-folder setter against exact acquired native profiles 24.00.02.354, 25.00.01.424 and 26.00.00.340, retaining their different folder return conventions. Unreviewed builds cannot select those policies. Table numbers, native indices and property references retain separate identities.
+Added a passive version/signature acquisition boundary for the newer catalog group on exact native profiles **25.00.01.424** and **26.00.00.340**. Retained operation-specific zero-success, Boolean-success and explicit no-specification removal outcomes, owned bounded bulk targets, and separate member-end, cable-definition and analytical-node selectors. No native model is modified by verification.
 
-Replaced legacy publisher branding throughout the package with **TensorStruct**, including assembly Company, copyright and shipped documentation. Package Authors remains exactly **Srinivasa Rao Masanam**. Registry ownership remains separately managed. See [exact contracts and gates](../contracts/PropertyUptContractIndex.json). Archived evidence and historical checkpoints below are retained.
+Renamed **17 public UPT methods** to PascalCase, including **AddUptPropertyChannel**, **AddUptPropertyWideFlange** and **CreateUptTable**. This preview requires callers to update those method names. Parameter names, types, ordering, defaults and return types are preserved. Bentley native dispatch names and recorded contract evidence retain their original spelling.
+
+Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. README prose retains neutral bold API references and standard documentation links. See [the naming migration](../Property-API-Naming.md). Native evidence and historical checkpoints are retained.
 
 | Phase | Implemented native routes | Remaining |
 | --- | ---: | ---: |
@@ -25,10 +27,10 @@ Replaced legacy publisher branding throughout the package with **TensorStruct**,
 | P6 | 18 | 0 |
 | P7 | 42 | 4 |
 | P8 | 25 | 5 |
-| P9 | 4 | 5 |
-| P10 | 0 | 24 |
+| P9 | 9 | 0 |
+| P10 | 20 | 4 |
 
-Four pending P7 gates: `GetInactiveMemberList`, `GetAlphaAngleForSection`, `GetCentroidLocationForSection`, `GetAssignedAttributeByIndex`. Five additional P8 transport gates remain: `GetUptGeneralProfilePointsCount`, `GetUptGeneralProfileBoundaryPoints`, `GetUptGeneralStressLocationPoints`, `FindUPTTable` and `GetUserProvidedTableSectionList`. The next pending P9 entry is `GetDefaultStandardProfileDBFolder`. None of these gates is counted as implemented.
+Four pending P7 gates: `GetInactiveMemberList`, `GetAlphaAngleForSection`, `GetCentroidLocationForSection`, `GetAssignedAttributeByIndex`. Five additional P8 transport gates remain: `GetUptGeneralProfilePointsCount`, `GetUptGeneralProfileBoundaryPoints`, `GetUptGeneralStressLocationPoints`, `FindUPTTable` and `GetUserProvidedTableSectionList`. P9 is complete; the next pending allocation is P10 `RemoveAllElementNodeReleaseSpec`. None of these gates is counted as implemented.
 
 
 ## 1. Scope and counting rules
@@ -37,11 +39,11 @@ The Property group tree has 204 / 209 / 209 names in 2024/2025/2026, with 199 / 
 
 There are 18 group pages per year. All were traversed, and a scan of the other group pages found no additional OSPropertyUI-owned function rows. Class-level native listings and generated headers are supplemental evidence. Thirteen surface-related class summaries, fourteen metadata names outside the group tree, and their overlaps form fifteen supplemental candidates; twenty-two additional class-only implementation helpers are excluded.
 
-Current IOSProperty and OSPropertyAdapter contain 225 domain overloads and 166 distinct Property native dispatch routes (reviewed observations/mutations plus compatibility ports). ComObject and inherited Wrapper are binding properties, not domain implementations. The main IOSProperty has 103 overloads; its adapter implements all of them and adds four assignment-query conveniences. It has seven private helpers.
+Current IOSProperty and OSPropertyAdapter contain 245 common domain overloads plus five optional catalog operations and 191 distinct Property native dispatch routes (reviewed observations/mutations plus compatibility ports). ComObject and inherited Wrapper are binding properties, not domain implementations. The main IOSProperty has 103 overloads; its adapter implements all of them and adds four assignment-query conveniences. It has seven private helpers.
 
 Source coverage counts actual native invocation names, not managed name matches: 56 direct adapter targets plus nineteen additional delegated section-model targets, 75 in total. A source method named GetBeamProperty discovers a property ID by enumerating assignments; it does not call the native eight-output GetBeamProperty. A name-only coverage search would incorrectly mark that native API complete.
 
-The remaining 38 active candidates have no managed native route. Named request/result families in the original proposal remain design guidance; the latest guide records the exact exported immutable types. Closely related methods should reuse a few cohesive models or typed request subclasses; this is not a plan to create one class per native function. All new public outputs avoid ref/out and tuples.
+The remaining 13 active candidates have no managed native route. Named request/result families in the original proposal remain design guidance; the latest guide records the exact exported immutable types. Closely related methods should reuse a few cohesive models or typed request subclasses; this is not a plan to create one class per native function. All new public outputs avoid ref/out and tuples.
 
 ## 2. Complete cross-version function matrix
 
@@ -65,20 +67,20 @@ The remaining 38 active candidates have no managed native route. Named request/r
 | [CreateTaperedIProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gad01c26661a6e9a588c4e5cfb46ce9403) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/TaperISection.cs#L71) | P6 | Implemented route; live qualification pending |
 | [CreateTaperedTubeProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga558bd4cf571d37c5f3520b2e7e56b9e5) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/TaperTubeSection.cs#L52) | P6 | `CreateTaperedTubeProperty`; managed verified |
 | [CreatePlateThicknessProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga4ab7a973986b611d748302e8dcdc0154) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1167) | P6 | Implemented route; live qualification pending |
-| [CreateUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gacffe1377c08a287a4b95c1fc315f4127) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptAngleSection.cs#L49) | P8 | `CreateUPTTable`; managed verified |
-| [AddUPTPropertyWIDEFLANGE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gaf8641a9ec57a7ad52f1f4ee44c4f5168) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptWideFlangeSection.cs#L56) | P8 | `AddUPTPropertyWIDEFLANGE`; managed verified |
-| [AddUPTPropertyWIDEFLANGEUNEQUAL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga416ce6e066c01171353a67dceb72d404) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `AddUPTPropertyWIDEFLANGEUNEQUAL`; managed verified |
-| [AddUPTPropertyWIDEFLANGECOMPOSITE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gad0aeaec8b6052eaa4e713b184506e935) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `AddUPTPropertyWIDEFLANGECOMPOSITE`; managed verified, live pending |
-| [AddUPTPropertyCHANNEL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga762e3143fd9fa6d9ffc3f213af23d57f) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptChannelSection.cs#L53) | P8 | `AddUPTPropertyCHANNEL`; managed verified, live pending |
-| [AddUPTPropertyANGLE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d33b8f55788d2d6a28d75542179a38e) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptAngleSection.cs#L50) | P8 | `AddUPTPropertyANGLE`; managed verified, live pending |
-| [AddUPTPropertyDOUBLEANGLE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga7659bafc3884233e8006403264df40b2) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptDoubleAngleSection.cs#L53) | P8 | `AddUPTPropertyDOUBLEANGLE`; managed verified, live pending |
-| [AddUPTPropertyTEE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga6657114c7f25e838f5189e45571532d2) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTeeSection.cs#L53) | P8 | `AddUPTPropertyTEE`; managed verified, live pending |
-| [AddUPTPropertyPIPE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga927bbbce72db4a45e0006b936840ffea) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPipeSection.cs#L56) | P8 | `AddUPTPropertyPIPE`; managed verified, live pending |
-| [AddUPTPropertyTUBE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga3a2f714b28bce009a5df574409915b70) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTubeSection.cs#L43) | P8 | `AddUPTPropertyTUBE`; managed verified, live pending |
-| [AddUPTPropertyGENERAL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gaa701fb0dc527b5cd73cb0c0d6616487f) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptGeneralSection.cs#L89) | P8 | `AddUPTPropertyGENERAL`; managed verified, live pending |
-| [AddUPTPropertyISECTION](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga192963517f316eef4bf5cb2822d78424) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptISection.cs#L89) | P8 | `AddUPTPropertyISECTION`; managed verified, live pending |
-| [AddUPTPropertyPRISMATIC](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga828f857560168eb9d6a9809950454017) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPrismaticSection.cs#L57) | P8 | `AddUPTPropertyPRISMATIC`; managed verified, live pending |
-| [CreatePropertyFromUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d6c2edb2612f542b9a1596221a9f784) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptGeneralSection.cs#L91) | P8 | `CreatePropertyFromUPTTable`; managed verified, live pending |
+| [CreateUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gacffe1377c08a287a4b95c1fc315f4127) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptAngleSection.cs#L49) | P8 | `CreateUptTable`; managed renamed route, live pending |
+| [AddUPTPropertyWIDEFLANGE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gaf8641a9ec57a7ad52f1f4ee44c4f5168) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptWideFlangeSection.cs#L56) | P8 | `AddUptPropertyWideFlange`; managed renamed route, live pending |
+| [AddUPTPropertyWIDEFLANGEUNEQUAL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga416ce6e066c01171353a67dceb72d404) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `AddUptPropertyWideFlangeUnequal`; managed renamed route, live pending |
+| [AddUPTPropertyWIDEFLANGECOMPOSITE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gad0aeaec8b6052eaa4e713b184506e935) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `AddUptPropertyWideFlangeComposite`; managed renamed route, live pending |
+| [AddUPTPropertyCHANNEL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga762e3143fd9fa6d9ffc3f213af23d57f) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptChannelSection.cs#L53) | P8 | `AddUptPropertyChannel`; managed renamed route, live pending |
+| [AddUPTPropertyANGLE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d33b8f55788d2d6a28d75542179a38e) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptAngleSection.cs#L50) | P8 | `AddUptPropertyAngle`; managed renamed route, live pending |
+| [AddUPTPropertyDOUBLEANGLE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga7659bafc3884233e8006403264df40b2) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptDoubleAngleSection.cs#L53) | P8 | `AddUptPropertyDoubleAngle`; managed renamed route, live pending |
+| [AddUPTPropertyTEE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga6657114c7f25e838f5189e45571532d2) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTeeSection.cs#L53) | P8 | `AddUptPropertyTee`; managed renamed route, live pending |
+| [AddUPTPropertyPIPE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga927bbbce72db4a45e0006b936840ffea) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPipeSection.cs#L56) | P8 | `AddUptPropertyPipe`; managed renamed route, live pending |
+| [AddUPTPropertyTUBE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga3a2f714b28bce009a5df574409915b70) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTubeSection.cs#L43) | P8 | `AddUptPropertyTube`; managed renamed route, live pending |
+| [AddUPTPropertyGENERAL](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gaa701fb0dc527b5cd73cb0c0d6616487f) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptGeneralSection.cs#L89) | P8 | `AddUptPropertyGeneral`; managed renamed route, live pending |
+| [AddUPTPropertyISECTION](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga192963517f316eef4bf5cb2822d78424) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptISection.cs#L89) | P8 | `AddUptPropertyISection`; managed renamed route, live pending |
+| [AddUPTPropertyPRISMATIC](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga828f857560168eb9d6a9809950454017) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPrismaticSection.cs#L57) | P8 | `AddUptPropertyPrismatic`; managed renamed route, live pending |
+| [CreatePropertyFromUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d6c2edb2612f542b9a1596221a9f784) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptGeneralSection.cs#L91) | P8 | `CreatePropertyFromUptTable`; managed renamed route, live pending |
 | [GetUptGeneralProfilePointsCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gac11402eeb7ce630b8a4b40b0a63cb83e) | Absent | `VARIANT` | Newly documented in 2025 | No target | P8 | Pending; Reviewed CLR metadata passes output count values by value, unlike the help declaration; compatible native transport is not qualified. |
 | [GetUptGeneralProfileBoundaryPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga9f135f3a5b84d9041a60bf5c276699c2) | Absent | `VARIANT` | Newly documented in 2025 | No target | P8 | Pending; Newer optional coordinate API requires a compatible acquired capability; reviewed by-value output metadata does not establish safe returned buffers. |
 | [GetUptGeneralStressLocationPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga206fc2be959408948d3e81aa6751ed7a) | Absent | `VARIANT` | Newly documented in 2025 | No target | P8 | Pending; Newer optional coordinate output metadata is not qualified for safe paired buffer retrieval. |
@@ -108,15 +110,15 @@ The remaining 38 active candidates have no managed native route. Named request/r
 | [GetThicknessPropertyAssignedPlateCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga6b405e7c6b5a5a294277ffc910dbe42e) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1294) | P4 | Implemented route; live qualification pending |
 | [GetThicknessPropertyAssignedPlateList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gacec0dbd476ed855f50796f7bb4166d2d) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1296) | P4 | Implemented route; live qualification pending |
 | [GetThicknessPropertyValues](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gafd3b17a65417534a41a8f1497e4517c6) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1270) | P4 | Implemented route; live qualification pending |
-| [RemovePropertyFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga99c86bf4b01408c684ff009e0e00079b) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveMaterialFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaa8489347df16c3ea9aea52ca421e4e53) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveMaterialFromSolid](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaefebf74d842cbed7e39736e94abb8ea4) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemovePropertyFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga99c86bf4b01408c684ff009e0e00079b) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemovePropertyFromPlate`; managed verified, live pending |
+| [RemoveMaterialFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaa8489347df16c3ea9aea52ca421e4e53) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveMaterialFromPlate`; managed verified, live pending |
+| [RemoveMaterialFromSolid](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaefebf74d842cbed7e39736e94abb8ea4) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveMaterialFromSolid`; managed verified, live pending |
 | [GetIsotropicMaterialAssignedPlateList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaf6b9b9403e5b7e0ae90ba797491f17af) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L411) | P4 | Implemented route; live qualification pending |
 | [GetCountofSectionPropertyValuesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga2e1e4793b70cdd102f55d878b92685cc) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1015) | P4 | Implemented route; live qualification pending |
 | [FindUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gac238a7c187f6e53ca29b25f2331b20a3) | `long` | `long` | Unchanged | No target | P8 | Pending; Documented member is absent from inspected 2025/2026 exported IOSPropertyUI metadata; no qualified dispatch receiver is established. |
-| [CreateUPTTableEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga0fb2e9ebe08ff961ce2e620616ceefa0) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `CreateUPTTableEx`; managed verified, live pending |
-| [RemoveUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gaf713bf43b402d4efc3af2b5296ede180) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `RemoveUPTTable`; managed verified, live pending |
-| [RemovePropertyFromUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gaf6f7c76255b453edb2cf220fb297ec72) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `RemovePropertyFromUPTTable`; managed verified, live pending |
+| [CreateUPTTableEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga0fb2e9ebe08ff961ce2e620616ceefa0) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `CreateUptTableEx`; managed renamed route, live pending |
+| [RemoveUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gaf713bf43b402d4efc3af2b5296ede180) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `RemoveUptTable`; managed renamed route, live pending |
+| [RemovePropertyFromUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gaf6f7c76255b453edb2cf220fb297ec72) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `RemovePropertyFromUptTable`; managed renamed route, live pending |
 | [CreatePropertyFromUserTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gabb8beaa20258b93f62714c9672415350) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `CreatePropertyFromUserTable`; managed verified, live pending |
 | [GetUserProvidedTableCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga32c6d22bc1d698ce9e1ea6b2f8473cd9) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `GetUserProvidedTableCount`; managed verified, live pending |
 | [GetUserProvidedTableList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga76a5e72dc10bf0cb788454375ef3717b) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | `GetUserProvidedTableList`; managed verified, live pending |
@@ -143,28 +145,28 @@ The remaining 38 active candidates have no managed native route. Named request/r
 | [CreateElementOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd77251b4fa48baa9491672bf3a3a3ca) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateElementOffsetSpec`; managed verified |
 | [CreateElementLocalZOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gac1057cd910b775a08d6c2c7df22e2781) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateElementLocalZOffsetSpec`; managed verified |
 | [CreateMemberFireProofingSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga6792430dddf478392843d424059c8730) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateMemberFireProofingSpec`; managed verified |
-| [DeleteMemberReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gafe30a2d90280de4c4fd6149959730507) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [DeleteAllControlDependentRelations](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gad780df368b309c15dec931245113040c) | `long` | `long` | Unchanged | No target | P10 | Pending |
+| [DeleteMemberReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gafe30a2d90280de4c4fd6149959730507) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `DeleteMemberReleaseSpec`; managed verified, live pending |
+| [DeleteAllControlDependentRelations](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gad780df368b309c15dec931245113040c) | `long` | `long` | Unchanged | No target | P10 | `DeleteAllControlDependentRelations`; managed verified, live pending |
 | [GetElementOffsetSpecCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5facbddbfb9ea2ad0b48c454a122cf24) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 | Implemented route; live qualification pending |
-| [RemoveAllElementOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaa7bdd908c360ccf8ca9e41ee0e894b5a) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemoveAllElementOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaa7bdd908c360ccf8ca9e41ee0e894b5a) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveAllElementOffsetSpec`; managed verified, live pending |
 | [GetMemberSpecCode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga6b19b83068026b147eeb88a3528328d0) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L874) | P7 | Implemented route; live qualification pending |
-| [RemovePropertyFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga551c8845b034009e68a16ec2813c50bc) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [RemovePropertyFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga551c8845b034009e68a16ec2813c50bc) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemovePropertyFromBeam`; managed verified, live pending |
 | [RemoveBeamPropertyHelper](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gadb028ea4f8477119ab50eb4881ebef61) | `BOOL` | `BOOL` | Native private helper: excluded | No target | P0 | Excluded |
-| [DeleteProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga26852ecd49fc5ea7657d2b5198a1c7ba) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [DeleteProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga26852ecd49fc5ea7657d2b5198a1c7ba) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `DeleteProperty`; managed verified, live pending |
 | [GetPropertyUniqueID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5aa6aa08217095c0a0eb65530dd867e8) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `GetPropertyUniqueID`; managed verified |
 | [SetPropertyUniqueID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gac7758ac39ea94bba561989b4898e59bb) | `void` | `void` | Unchanged | No target | P7 | `SetPropertyUniqueID`; managed verified |
-| [DeleteMemberSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1956ce5d3c9487681c3dcca8c2a7f4a4) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveMemberReleaseSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaaee16932dc7a02f3d707576fc2d009a0) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveMemberOffsetSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga76d69608bda66b72f7a1c9011b68a46d) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveMemberTrussSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga01e39b8ece2146ea7aa09b7ff33423cd) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveMemberInactiveSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaec27f611f0d02de6278bdb6601d106f8) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveMemberTensionSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga22be38efdbc61ef92dabf2b7eb25ad89) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveMemberCompressionSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1fac54088e17dbc9a7e7e93a5a9d1d45) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveMemberIgnoreStiffSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga159089ba705d76f58988ecd3cd052be3) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveMemberCableSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga2b82e36f819c8df67990bdc88da6dd6f) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveElementPlaneStressSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gafc527399dbd62917400f8922ba0b4294) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveElementIgnoreInplaneRotnSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga9b1e19ac200b1c62409785f5c80dd845) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [RemoveElementNodeReleaseSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga6503cab6a999f8024fe606c4e32c614a) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
+| [DeleteMemberSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1956ce5d3c9487681c3dcca8c2a7f4a4) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `DeleteMemberSpec`; managed verified, live pending |
+| [RemoveMemberReleaseSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaaee16932dc7a02f3d707576fc2d009a0) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveMemberReleaseSpecFromBeam`; managed verified, live pending |
+| [RemoveMemberOffsetSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga76d69608bda66b72f7a1c9011b68a46d) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveMemberOffsetSpecFromBeam`; managed verified, live pending |
+| [RemoveMemberTrussSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga01e39b8ece2146ea7aa09b7ff33423cd) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveMemberTrussSpecFromBeam`; managed verified, live pending |
+| [RemoveMemberInactiveSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaec27f611f0d02de6278bdb6601d106f8) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveMemberInactiveSpecFromBeam`; managed verified, live pending |
+| [RemoveMemberTensionSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga22be38efdbc61ef92dabf2b7eb25ad89) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveMemberTensionSpecFromBeam`; managed verified, live pending |
+| [RemoveMemberCompressionSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1fac54088e17dbc9a7e7e93a5a9d1d45) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveMemberCompressionSpecFromBeam`; managed verified, live pending |
+| [RemoveMemberIgnoreStiffSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga159089ba705d76f58988ecd3cd052be3) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveMemberIgnoreStiffSpecFromBeam`; managed verified, live pending |
+| [RemoveMemberCableSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga2b82e36f819c8df67990bdc88da6dd6f) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveMemberCableSpecFromBeam`; managed verified, live pending |
+| [RemoveElementPlaneStressSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gafc527399dbd62917400f8922ba0b4294) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveElementPlaneStressSpecFromPlate`; managed verified, live pending |
+| [RemoveElementIgnoreInplaneRotnSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga9b1e19ac200b1c62409785f5c80dd845) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveElementIgnoreInplaneRotnSpecFromPlate`; managed verified, live pending |
+| [RemoveElementNodeReleaseSpecFromPlate](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga6503cab6a999f8024fe606c4e32c614a) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | `RemoveElementNodeReleaseSpecFromPlate`; managed verified, live pending |
 | [RemoveAllElementNodeReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga8a3da913ec174caaa00066aac9ac2cad) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
 | [GetMemberReleaseSpecEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga8ba58d357fc17509602aff5e2e99c9d4) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L968) | P2 | Implemented route; live qualification pending |
 | [GetInactiveMemberCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1b96f8f630976e634b4906f1a1bb60b3) | `long` | `long` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L832) | P7 | `GetInactiveMemberCount`; managed verified |
@@ -251,11 +253,11 @@ The remaining 38 active candidates have no managed native route. Named request/r
 | [GetSTAADProfileName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_publish.html#ga505bb1119e1751bc9006263b43016121) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
 | [SetStandardProfileDBFolder](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga4e87d6b72233137048da0333c8565781) | `long` | `long` | Version policy candidate | No target | P9 | `SetStandardProfileDBFolder`; managed verified, live pending |
 | [GetStandardProfileDBFolder](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaa29514922cc9ae65f0d92da202144f5f) | `VARIANT` | `VARIANT` | Formatting/cross-reference only | No target | P9 | `GetStandardProfileDBFolder`; managed verified, live pending |
-| [GetDefaultStandardProfileDBFolder](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaf3c05fdd108cc02b0269073ae1543663) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | Pending |
-| [IsStandardDatabaseSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaeb4bb81496f3d6451e9a126ea0a6d3a6) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | Pending |
-| [GetStandardSectionDatabaseName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga527cf81f6e5369eec3076be58fde90cc) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | Pending |
-| [GetStandardSectionTableName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga45b152c818ab6a2b89be7d90892d0ded) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | Pending |
-| [GetStandardSectionName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga87dfe66234b751a9c9f5914de89e2fb1) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | Pending |
+| [GetDefaultStandardProfileDBFolder](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaf3c05fdd108cc02b0269073ae1543663) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | `GetDefaultStandardProfileDBFolder`; acquired catalog verified, live pending |
+| [IsStandardDatabaseSection](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaeb4bb81496f3d6451e9a126ea0a6d3a6) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | `IsStandardDatabaseSection`; acquired catalog verified, live pending |
+| [GetStandardSectionDatabaseName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga527cf81f6e5369eec3076be58fde90cc) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | `GetStandardSectionDatabaseName`; acquired catalog verified, live pending |
+| [GetStandardSectionTableName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga45b152c818ab6a2b89be7d90892d0ded) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | `GetStandardSectionTableName`; acquired catalog verified, live pending |
+| [GetStandardSectionName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga87dfe66234b751a9c9f5914de89e2fb1) | Absent | `VARIANT` | Newly documented in 2025 | No target | P9 | `GetStandardSectionName`; acquired catalog verified, live pending |
 | [GetProfileBoundaryInformation](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga97b4352067b45df2388452488c772be1) | `VARIANT` (summary only) | Absent | Reserved: do not use | No target | P0 | Excluded |
 | [GetProfileNoOfPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga32bba6cd08a1fb0c8b776376e6306c2f) | `VARIANT` (summary only) | Absent | Reserved: do not use | No target | P0 | Excluded |
 | [GetProfileBoundaryPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga51857b4c21c7bec5391a0a26f34a6a40) | `VARIANT` (summary only) | Absent | Reserved: do not use | No target | P0 | Excluded |
@@ -1046,7 +1048,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#gacffe1377c08a287a4b95c1fc315f4127) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#gacffe1377c08a287a4b95c1fc315f4127) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gacffe1377c08a287a4b95c1fc315f4127)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** `PropertyMutationResult CreateUPTTable(UserProvidedTableType tableType)`<br>
-**Plan:** P8 - Implemented route; live native/engineering qualification pending.
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `CreateUptTable(UserTableRequest request)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateUPTTable(VARIANT FAR&nTableType)
@@ -1071,13 +1076,16 @@ VARIANT OSPropertyUI::CreateUPTTable(VARIANT FAR&nTableType)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptAngleSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptAngleSection.cs#L49), [UptChannelSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptChannelSection.cs#L52), [UptDoubleAngleSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptDoubleAngleSection.cs#L52), [UptGeneralSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptGeneralSection.cs#L88), [UptISection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptISection.cs#L88), [UptPipeSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPipeSection.cs#L55), [UptPrismaticSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPrismaticSection.cs#L56), [UptTeeSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTeeSection.cs#L52), [UptTubeSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTubeSection.cs#L42), [UptWideFlangeSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptWideFlangeSection.cs#L55)
 
-**Proposed managed entry:** `CreateUPTTable(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableCreationResult`
+**Original design proposal:** `CreateUPTTable(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableCreationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertywideflange"></a>
+
+
+Current public name: `CreateUptTable`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 20. AddUPTPropertyWIDEFLANGE
 
@@ -1085,7 +1093,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#gaf8641a9ec57a7ad52f1f4ee44c4f5168) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#gaf8641a9ec57a7ad52f1f4ee44c4f5168) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gaf8641a9ec57a7ad52f1f4ee44c4f5168)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** `PropertyMutationResult AddUPTPropertyWIDEFLANGE(int tableId, string sectionName, UptWideFlangeDefinition definition)`<br>
-**Plan:** P8 - Implemented route; live native/engineering qualification pending.
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `AddUptPropertyWideFlange(UserTableRequest request)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyWIDEFLANGE(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName,VARIANT FAR&varAX,VARIANT FAR&varD,VARIANT FAR&varTW,VARIANT FAR&varWF,VARIANT FAR&varTF,VARIANT FAR&varIZ,VARIANT FAR&varIY,VARIANT FAR&varIX,VARIANT FAR&varAY,VARIANT FAR&varAZ)
@@ -1122,13 +1133,16 @@ VARIANT OSPropertyUI::AddUPTPropertyWIDEFLANGE(VARIANT FAR&nTableRef,VARIANT FAR
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptWideFlangeSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptWideFlangeSection.cs#L56)
 
-**Proposed managed entry:** `AddUPTPropertyWIDEFLANGE(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyWIDEFLANGE(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertywideflangeunequal"></a>
+
+
+Current public name: `AddUptPropertyWideFlange`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 21. AddUPTPropertyWIDEFLANGEUNEQUAL
 
@@ -1136,7 +1150,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga416ce6e066c01171353a67dceb72d404) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#ga416ce6e066c01171353a67dceb72d404) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga416ce6e066c01171353a67dceb72d404)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** `PropertyMutationResult AddUPTPropertyWIDEFLANGEUNEQUAL(int tableId, string sectionName, UptUnequalWideFlangeDefinition definition)`<br>
-**Plan:** P8 - Implemented route; live native/engineering qualification pending.
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `AddUptPropertyWideFlangeUnequal(UserTableRequest request)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyWIDEFLANGEUNEQUAL(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName,VARIANT FAR&varPropSpecArray)
@@ -1163,13 +1180,16 @@ VARIANT OSPropertyUI::AddUPTPropertyWIDEFLANGEUNEQUAL(VARIANT FAR&nTableRef,VARI
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `AddUPTPropertyWIDEFLANGEUNEQUAL(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyWIDEFLANGEUNEQUAL(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertywideflangecomposite"></a>
+
+
+Current public name: `AddUptPropertyWideFlangeUnequal`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 22. AddUPTPropertyWIDEFLANGECOMPOSITE
 
@@ -1177,7 +1197,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#gad0aeaec8b6052eaa4e713b184506e935) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#gad0aeaec8b6052eaa4e713b184506e935) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gad0aeaec8b6052eaa4e713b184506e935)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult AddUptPropertyWideFlangeComposite(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyWIDEFLANGECOMPOSITE(const VARIANT FAR&nTableRef,const VARIANT FAR&varSectionName,const VARIANT FAR&varPropSpecArray)
@@ -1210,13 +1233,16 @@ VARIANT OSPropertyUI::AddUPTPropertyWIDEFLANGECOMPOSITE(const VARIANT FAR&nTable
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `AddUPTPropertyWIDEFLANGECOMPOSITE(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyWIDEFLANGECOMPOSITE(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertychannel"></a>
+
+
+Current public name: `AddUptPropertyWideFlangeComposite`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 23. AddUPTPropertyCHANNEL
 
@@ -1224,7 +1250,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga762e3143fd9fa6d9ffc3f213af23d57f) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#ga762e3143fd9fa6d9ffc3f213af23d57f) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga762e3143fd9fa6d9ffc3f213af23d57f)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult AddUptPropertyChannel(int tableId, string sectionName, UptChannelDefinition definition)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyCHANNEL(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName,VARIANT FAR&varAX,VARIANT FAR&varD,VARIANT FAR&varTW,VARIANT FAR&varWF,VARIANT FAR&varTF,VARIANT FAR&varIZ,VARIANT FAR&varIY,VARIANT FAR&varIX,VARIANT FAR&varCZ,VARIANT FAR&varAY,VARIANT FAR&varAZ)
@@ -1262,13 +1291,16 @@ VARIANT OSPropertyUI::AddUPTPropertyCHANNEL(VARIANT FAR&nTableRef,VARIANT FAR&va
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptChannelSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptChannelSection.cs#L53)
 
-**Proposed managed entry:** `AddUPTPropertyCHANNEL(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyCHANNEL(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertyangle"></a>
+
+
+Current public name: `AddUptPropertyChannel`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 24. AddUPTPropertyANGLE
 
@@ -1276,7 +1308,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d33b8f55788d2d6a28d75542179a38e) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d33b8f55788d2d6a28d75542179a38e) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d33b8f55788d2d6a28d75542179a38e)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult AddUptPropertyAngle(int tableId, string sectionName, UptAngleDefinition definition)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyANGLE(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName,VARIANT FAR&varD,VARIANT FAR&varWF,VARIANT FAR&varTF,VARIANT FAR&varR,VARIANT FAR&varAY,VARIANT FAR&varAZ)
@@ -1309,13 +1344,16 @@ VARIANT OSPropertyUI::AddUPTPropertyANGLE(VARIANT FAR&nTableRef,VARIANT FAR&varS
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptAngleSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptAngleSection.cs#L50)
 
-**Proposed managed entry:** `AddUPTPropertyANGLE(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyANGLE(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertydoubleangle"></a>
+
+
+Current public name: `AddUptPropertyAngle`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 25. AddUPTPropertyDOUBLEANGLE
 
@@ -1323,7 +1361,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga7659bafc3884233e8006403264df40b2) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#ga7659bafc3884233e8006403264df40b2) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga7659bafc3884233e8006403264df40b2)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult AddUptPropertyDoubleAngle(int tableId, string sectionName, UptDoubleAngleDefinition definition)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyDOUBLEANGLE(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName,VARIANT FAR&varD,VARIANT FAR&varWF,VARIANT FAR&varTF,VARIANT FAR&varSP,VARIANT FAR&varIZ,VARIANT FAR&varIY,VARIANT FAR&varIX,VARIANT FAR&varCY,VARIANT FAR&varAY,VARIANT FAR&varAZ)
@@ -1360,13 +1401,16 @@ VARIANT OSPropertyUI::AddUPTPropertyDOUBLEANGLE(VARIANT FAR&nTableRef,VARIANT FA
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptDoubleAngleSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptDoubleAngleSection.cs#L53)
 
-**Proposed managed entry:** `AddUPTPropertyDOUBLEANGLE(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyDOUBLEANGLE(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertytee"></a>
+
+
+Current public name: `AddUptPropertyDoubleAngle`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 26. AddUPTPropertyTEE
 
@@ -1374,7 +1418,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga6657114c7f25e838f5189e45571532d2) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#ga6657114c7f25e838f5189e45571532d2) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga6657114c7f25e838f5189e45571532d2)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult AddUptPropertyTee(int tableId, string sectionName, UptTeeDefinition definition)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyTEE(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName,VARIANT FAR&varAX,VARIANT FAR&varD,VARIANT FAR&varWF,VARIANT FAR&varTF,VARIANT FAR&varTW,VARIANT FAR&varIZ,VARIANT FAR&varIY,VARIANT FAR&varIX,VARIANT FAR&varCY,VARIANT FAR&varAY,VARIANT FAR&varAZ)
@@ -1412,13 +1459,16 @@ VARIANT OSPropertyUI::AddUPTPropertyTEE(VARIANT FAR&nTableRef,VARIANT FAR&varSec
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptTeeSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTeeSection.cs#L53)
 
-**Proposed managed entry:** `AddUPTPropertyTEE(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyTEE(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertypipe"></a>
+
+
+Current public name: `AddUptPropertyTee`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 27. AddUPTPropertyPIPE
 
@@ -1426,7 +1476,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga927bbbce72db4a45e0006b936840ffea) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#ga927bbbce72db4a45e0006b936840ffea) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga927bbbce72db4a45e0006b936840ffea)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult AddUptPropertyPipe(int tableId, string sectionName, UptPipeDefinition definition)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyPIPE(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName,VARIANT FAR&varOD,VARIANT FAR&varID,VARIANT FAR&varAY,VARIANT FAR&varAZ)
@@ -1457,13 +1510,16 @@ VARIANT OSPropertyUI::AddUPTPropertyPIPE(VARIANT FAR&nTableRef,VARIANT FAR&varSe
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptPipeSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPipeSection.cs#L56)
 
-**Proposed managed entry:** `AddUPTPropertyPIPE(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyPIPE(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertytube"></a>
+
+
+Current public name: `AddUptPropertyPipe`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 28. AddUPTPropertyTUBE
 
@@ -1471,7 +1527,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga3a2f714b28bce009a5df574409915b70) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#ga3a2f714b28bce009a5df574409915b70) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga3a2f714b28bce009a5df574409915b70)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult AddUptPropertyTube(int tableId, string sectionName, UptTubeDefinition definition)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyTUBE(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName,VARIANT FAR&varAX,VARIANT FAR&varD,VARIANT FAR&varWF,VARIANT FAR&varTF,VARIANT FAR&varIZ,VARIANT FAR&varIY,VARIANT FAR&varIX,VARIANT FAR&varAY,VARIANT FAR&varAZ)
@@ -1507,13 +1566,16 @@ VARIANT OSPropertyUI::AddUPTPropertyTUBE(VARIANT FAR&nTableRef,VARIANT FAR&varSe
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptTubeSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptTubeSection.cs#L43)
 
-**Proposed managed entry:** `AddUPTPropertyTUBE(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyTUBE(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertygeneral"></a>
+
+
+Current public name: `AddUptPropertyTube`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 29. AddUPTPropertyGENERAL
 
@@ -1521,7 +1583,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#gaa701fb0dc527b5cd73cb0c0d6616487f) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#gaa701fb0dc527b5cd73cb0c0d6616487f) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gaa701fb0dc527b5cd73cb0c0d6616487f)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult AddUptPropertyGeneral(int tableId, string sectionName, UptGeneralDefinition definition)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyGENERAL(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName,VARIANT FAR&varAX,VARIANT FAR&varD,VARIANT FAR&varTD,VARIANT FAR&varB,VARIANT FAR&varTB,VARIANT FAR&varIZ,VARIANT FAR&varIY,VARIANT FAR&varIX,VARIANT FAR&varSZ,VARIANT FAR&varSY,VARIANT FAR&varAY,VARIANT FAR&varAZ,VARIANT FAR&varPZ,VARIANT FAR&varPY,VARIANT FAR&varHSS,VARIANT FAR&varDEE)
@@ -1564,13 +1629,16 @@ VARIANT OSPropertyUI::AddUPTPropertyGENERAL(VARIANT FAR&nTableRef,VARIANT FAR&va
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptGeneralSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptGeneralSection.cs#L89)
 
-**Proposed managed entry:** `AddUPTPropertyGENERAL(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyGENERAL(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertyisection"></a>
+
+
+Current public name: `AddUptPropertyGeneral`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 30. AddUPTPropertyISECTION
 
@@ -1578,7 +1646,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga192963517f316eef4bf5cb2822d78424) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#ga192963517f316eef4bf5cb2822d78424) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga192963517f316eef4bf5cb2822d78424)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult AddUptPropertyISection(int tableId, string sectionName, UptISectionDefinition definition)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyISECTION(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName,VARIANT FAR&varDWW,VARIANT FAR&varTWW,VARIANT FAR&varDWW1,VARIANT FAR&varBFF,VARIANT FAR&varTFF,VARIANT FAR&varBFF1,VARIANT FAR&varTFF1,VARIANT FAR&varAYF,VARIANT FAR&varAZF,VARIANT FAR&varXIF)
@@ -1615,13 +1686,16 @@ VARIANT OSPropertyUI::AddUPTPropertyISECTION(VARIANT FAR&nTableRef,VARIANT FAR&v
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptISection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptISection.cs#L89)
 
-**Proposed managed entry:** `AddUPTPropertyISECTION(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyISECTION(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-adduptpropertyprismatic"></a>
+
+
+Current public name: `AddUptPropertyISection`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 31. AddUPTPropertyPRISMATIC
 
@@ -1629,7 +1703,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga828f857560168eb9d6a9809950454017) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#ga828f857560168eb9d6a9809950454017) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga828f857560168eb9d6a9809950454017)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult AddUptPropertyPrismatic(int tableId, string sectionName, UptPrismaticDefinition definition)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddUPTPropertyPRISMATIC(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName,VARIANT FAR&varAX,VARIANT FAR&varIZ,VARIANT FAR&varIY,VARIANT FAR&varIX,VARIANT FAR&varAY,VARIANT FAR&varAZ,VARIANT FAR&varYD,VARIANT FAR&varZD)
@@ -1664,13 +1741,16 @@ VARIANT OSPropertyUI::AddUPTPropertyPRISMATIC(VARIANT FAR&nTableRef,VARIANT FAR&
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptPrismaticSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPrismaticSection.cs#L57)
 
-**Proposed managed entry:** `AddUPTPropertyPRISMATIC(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableSectionMutationResult`
+**Original design proposal:** `AddUPTPropertyPRISMATIC(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableSectionMutationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-createpropertyfromupttable"></a>
+
+
+Current public name: `AddUptPropertyPrismatic`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 32. CreatePropertyFromUPTTable
 
@@ -1678,7 +1758,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d6c2edb2612f542b9a1596221a9f784) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d6c2edb2612f542b9a1596221a9f784) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#ga4d6c2edb2612f542b9a1596221a9f784)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult CreatePropertyFromUptTable(int tableId, string sectionName)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreatePropertyFromUPTTable(VARIANT FAR&nTableID,LPCTSTR strSectionName)
@@ -1704,13 +1787,16 @@ VARIANT OSPropertyUI::CreatePropertyFromUPTTable(VARIANT FAR&nTableID,LPCTSTR st
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** [UptGeneralSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptGeneralSection.cs#L91), [UptISection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptISection.cs#L91), [UptPipeSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPipeSection.cs#L58), [UptPrismaticSection.CreateSectionInStaadInternal](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptPrismaticSection.cs#L59), [UptSection.CreatePropertyFromUptTable](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Base/OSProperty/UptSection.cs#L39)
 
-**Proposed managed entry:** `CreatePropertyFromUPTTable(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableCreationResult`
+**Original design proposal:** `CreatePropertyFromUPTTable(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableCreationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-getuptgeneralprofilepointscount"></a>
+
+
+Current public name: `CreatePropertyFromUptTable`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 33. GetUptGeneralProfilePointsCount
 
@@ -2933,7 +3019,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_section.html#ga99c86bf4b01408c684ff009e0e00079b) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_section.html#ga99c86bf4b01408c684ff009e0e00079b) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#ga99c86bf4b01408c684ff009e0e00079b)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemovePropertyFromPlate(int plateId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemovePropertyFromPlate(const VARIANT FAR&nPlateNo)
@@ -2958,8 +3047,8 @@ VARIANT OSPropertyUI::RemovePropertyFromPlate(const VARIANT FAR&nPlateNo)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemovePropertyFromPlate(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemovePropertyFromPlate(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -2972,7 +3061,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_section.html#gaa8489347df16c3ea9aea52ca421e4e53) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_section.html#gaa8489347df16c3ea9aea52ca421e4e53) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaa8489347df16c3ea9aea52ca421e4e53)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveMaterialFromPlate(IEnumerable<int> plateIds)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveMaterialFromPlate(const VARIANT FAR&nPlateNo)
@@ -2997,8 +3089,8 @@ VARIANT OSPropertyUI::RemoveMaterialFromPlate(const VARIANT FAR&nPlateNo)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveMaterialFromPlate(MaterialDefinitionRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveMaterialFromPlate(MaterialDefinitionRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -3011,7 +3103,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_section.html#gaefebf74d842cbed7e39736e94abb8ea4) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_section.html#gaefebf74d842cbed7e39736e94abb8ea4) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_section.html#gaefebf74d842cbed7e39736e94abb8ea4)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveMaterialFromSolid(IEnumerable<int> solidIds)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveMaterialFromSolid(const VARIANT FAR&nSolidNo)
@@ -3036,8 +3131,8 @@ VARIANT OSPropertyUI::RemoveMaterialFromSolid(const VARIANT FAR&nSolidNo)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveMaterialFromSolid(MaterialDefinitionRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveMaterialFromSolid(MaterialDefinitionRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -3164,7 +3259,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_u_p_t_section.html#ga0fb2e9ebe08ff961ce2e620616ceefa0) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_u_p_t_section.html#ga0fb2e9ebe08ff961ce2e620616ceefa0) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga0fb2e9ebe08ff961ce2e620616ceefa0)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult CreateUptTableEx(int requestedTableId, UserProvidedTableType tableType)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateUPTTableEx(VARIANT FAR&nTableNo,VARIANT FAR&nTableType)
@@ -3196,13 +3294,16 @@ VARIANT OSPropertyUI::CreateUPTTableEx(VARIANT FAR&nTableNo,VARIANT FAR&nTableTy
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `CreateUPTTableEx(UserTableRequest request)`<br>
-**Proposed named result:** `UserTableCreationResult`
+**Original design proposal:** `CreateUPTTableEx(UserTableRequest request)`<br>
+**Original proposed result:** `UserTableCreationResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-removeupttable"></a>
+
+
+Current public name: `CreateUptTableEx`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 69. RemoveUPTTable
 
@@ -3210,7 +3311,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_u_p_t_section.html#gaf713bf43b402d4efc3af2b5296ede180) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_u_p_t_section.html#gaf713bf43b402d4efc3af2b5296ede180) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gaf713bf43b402d4efc3af2b5296ede180)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveUptTable(int tableId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveUPTTable(VARIANT FAR&nTableRef)
@@ -3235,13 +3339,16 @@ VARIANT OSPropertyUI::RemoveUPTTable(VARIANT FAR&nTableRef)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveUPTTable(UserTableRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveUPTTable(UserTableRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-removepropertyfromupttable"></a>
+
+
+Current public name: `RemoveUptTable`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 70. RemovePropertyFromUPTTable
 
@@ -3249,7 +3356,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_u_p_t_section.html#gaf6f7c76255b453edb2cf220fb297ec72) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_u_p_t_section.html#gaf6f7c76255b453edb2cf220fb297ec72) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#gaf6f7c76255b453edb2cf220fb297ec72)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P8 — Pending; contract verification before implementation
+**Plan (current):** P8 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemovePropertyFromUptTable(int tableId, string sectionName)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemovePropertyFromUPTTable(VARIANT FAR&nTableRef,VARIANT FAR&varSectionName)
@@ -3276,13 +3386,16 @@ VARIANT OSPropertyUI::RemovePropertyFromUPTTable(VARIANT FAR&nTableRef,VARIANT F
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemovePropertyFromUPTTable(UserTableRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemovePropertyFromUPTTable(UserTableRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
 
 <a id="property-createpropertyfromusertable"></a>
+
+
+Current public name: `RemovePropertyFromUptTable`. Native contract names above retain Bentley's original spelling. See [the naming migration](../Property-API-Naming.md).
 
 ### 71. CreatePropertyFromUserTable
 
@@ -4319,7 +4432,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#gafe30a2d90280de4c4fd6149959730507) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#gafe30a2d90280de4c4fd6149959730507) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gafe30a2d90280de4c4fd6149959730507)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult DeleteMemberReleaseSpec(int memberId, MemberEnd memberEnd)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::DeleteMemberReleaseSpec(const VARIANT FAR&varnBeamNo,const VARIANT FAR&varLocation)
@@ -4345,8 +4461,8 @@ VARIANT OSPropertyUI::DeleteMemberReleaseSpec(const VARIANT FAR&varnBeamNo,const
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `DeleteMemberReleaseSpec(MemberReleaseRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `DeleteMemberReleaseSpec(MemberReleaseRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4359,7 +4475,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#gad780df368b309c15dec931245113040c) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#gad780df368b309c15dec931245113040c) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gad780df368b309c15dec931245113040c)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult DeleteAllControlDependentRelations()`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 long OSPropertyUI::DeleteAllControlDependentRelations()
@@ -4381,8 +4500,8 @@ No parameters.
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `DeleteAllControlDependentRelations()`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `DeleteAllControlDependentRelations()`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4434,7 +4553,10 @@ The implemented result guards Data by status and exposes no public ref/out, tupl
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#gaa7bdd908c360ccf8ca9e41ee0e894b5a) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#gaa7bdd908c360ccf8ca9e41ee0e894b5a) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaa7bdd908c360ccf8ca9e41ee0e894b5a)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveAllElementOffsetSpec()`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveAllElementOffsetSpec()
@@ -4456,8 +4578,8 @@ No parameters.
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveAllElementOffsetSpec()`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveAllElementOffsetSpec()`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4510,7 +4632,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga551c8845b034009e68a16ec2813c50bc) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga551c8845b034009e68a16ec2813c50bc) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga551c8845b034009e68a16ec2813c50bc)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemovePropertyFromBeam(int memberId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemovePropertyFromBeam(const VARIANT FAR&nBeamNo)
@@ -4535,8 +4660,8 @@ VARIANT OSPropertyUI::RemovePropertyFromBeam(const VARIANT FAR&nBeamNo)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemovePropertyFromBeam(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemovePropertyFromBeam(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4584,7 +4709,10 @@ BOOL OSPropertyUI::RemoveBeamPropertyHelper(long&beamNo)private
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga26852ecd49fc5ea7657d2b5198a1c7ba) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga26852ecd49fc5ea7657d2b5198a1c7ba) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga26852ecd49fc5ea7657d2b5198a1c7ba)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult DeleteProperty(int propertyId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::DeleteProperty(const VARIANT FAR&nProperty)
@@ -4609,8 +4737,8 @@ VARIANT OSPropertyUI::DeleteProperty(const VARIANT FAR&nProperty)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `DeleteProperty(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `DeleteProperty(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4692,7 +4820,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga1956ce5d3c9487681c3dcca8c2a7f4a4) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga1956ce5d3c9487681c3dcca8c2a7f4a4) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1956ce5d3c9487681c3dcca8c2a7f4a4)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult DeleteMemberSpec(int specificationId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::DeleteMemberSpec(const VARIANT FAR&varnSpecNo)
@@ -4717,8 +4848,8 @@ VARIANT OSPropertyUI::DeleteMemberSpec(const VARIANT FAR&varnSpecNo)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `DeleteMemberSpec(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `DeleteMemberSpec(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4731,7 +4862,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#gaaee16932dc7a02f3d707576fc2d009a0) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#gaaee16932dc7a02f3d707576fc2d009a0) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaaee16932dc7a02f3d707576fc2d009a0)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveMemberReleaseSpecFromBeam(int memberId, MemberEnd memberEnd)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveMemberReleaseSpecFromBeam(const VARIANT FAR&varnBeamNo,const VARIANT FAR&varLocation)
@@ -4757,8 +4891,8 @@ VARIANT OSPropertyUI::RemoveMemberReleaseSpecFromBeam(const VARIANT FAR&varnBeam
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveMemberReleaseSpecFromBeam(MemberReleaseRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveMemberReleaseSpecFromBeam(MemberReleaseRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4771,7 +4905,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga76d69608bda66b72f7a1c9011b68a46d) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga76d69608bda66b72f7a1c9011b68a46d) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga76d69608bda66b72f7a1c9011b68a46d)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveMemberOffsetSpecFromBeam(int memberId, MemberEnd memberEnd)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveMemberOffsetSpecFromBeam(const VARIANT FAR&varnBeamNo,const VARIANT FAR&varLocation)
@@ -4797,8 +4934,8 @@ VARIANT OSPropertyUI::RemoveMemberOffsetSpecFromBeam(const VARIANT FAR&varnBeamN
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveMemberOffsetSpecFromBeam(OffsetSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveMemberOffsetSpecFromBeam(OffsetSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4811,7 +4948,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga01e39b8ece2146ea7aa09b7ff33423cd) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga01e39b8ece2146ea7aa09b7ff33423cd) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga01e39b8ece2146ea7aa09b7ff33423cd)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveMemberTrussSpecFromBeam(int memberId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveMemberTrussSpecFromBeam(const VARIANT FAR&varnBeamNo)
@@ -4836,8 +4976,8 @@ VARIANT OSPropertyUI::RemoveMemberTrussSpecFromBeam(const VARIANT FAR&varnBeamNo
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveMemberTrussSpecFromBeam(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveMemberTrussSpecFromBeam(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4850,7 +4990,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#gaec27f611f0d02de6278bdb6601d106f8) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#gaec27f611f0d02de6278bdb6601d106f8) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaec27f611f0d02de6278bdb6601d106f8)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveMemberInactiveSpecFromBeam(int memberId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveMemberInactiveSpecFromBeam(const VARIANT FAR&varnBeamNo)
@@ -4875,8 +5018,8 @@ VARIANT OSPropertyUI::RemoveMemberInactiveSpecFromBeam(const VARIANT FAR&varnBea
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveMemberInactiveSpecFromBeam(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveMemberInactiveSpecFromBeam(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4889,7 +5032,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga22be38efdbc61ef92dabf2b7eb25ad89) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga22be38efdbc61ef92dabf2b7eb25ad89) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga22be38efdbc61ef92dabf2b7eb25ad89)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveMemberTensionSpecFromBeam(int memberId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveMemberTensionSpecFromBeam(const VARIANT FAR&varnBeamNo)
@@ -4914,8 +5060,8 @@ VARIANT OSPropertyUI::RemoveMemberTensionSpecFromBeam(const VARIANT FAR&varnBeam
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveMemberTensionSpecFromBeam(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveMemberTensionSpecFromBeam(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4928,7 +5074,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga1fac54088e17dbc9a7e7e93a5a9d1d45) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga1fac54088e17dbc9a7e7e93a5a9d1d45) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1fac54088e17dbc9a7e7e93a5a9d1d45)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveMemberCompressionSpecFromBeam(int memberId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveMemberCompressionSpecFromBeam(const VARIANT FAR&varnBeamNo)
@@ -4953,8 +5102,8 @@ VARIANT OSPropertyUI::RemoveMemberCompressionSpecFromBeam(const VARIANT FAR&varn
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveMemberCompressionSpecFromBeam(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveMemberCompressionSpecFromBeam(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -4967,7 +5116,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga159089ba705d76f58988ecd3cd052be3) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga159089ba705d76f58988ecd3cd052be3) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga159089ba705d76f58988ecd3cd052be3)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveMemberIgnoreStiffSpecFromBeam(int memberId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveMemberIgnoreStiffSpecFromBeam(const VARIANT FAR&varnBeamNo)
@@ -4992,8 +5144,8 @@ VARIANT OSPropertyUI::RemoveMemberIgnoreStiffSpecFromBeam(const VARIANT FAR&varn
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveMemberIgnoreStiffSpecFromBeam(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveMemberIgnoreStiffSpecFromBeam(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -5006,7 +5158,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga2b82e36f819c8df67990bdc88da6dd6f) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga2b82e36f819c8df67990bdc88da6dd6f) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga2b82e36f819c8df67990bdc88da6dd6f)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveMemberCableSpecFromBeam(int memberId, CableDefinitionKind definitionKind)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveMemberCableSpecFromBeam(const VARIANT FAR&varnBeamNo,const VARIANT FAR&varLocation)
@@ -5032,8 +5187,8 @@ VARIANT OSPropertyUI::RemoveMemberCableSpecFromBeam(const VARIANT FAR&varnBeamNo
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveMemberCableSpecFromBeam(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveMemberCableSpecFromBeam(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -5046,7 +5201,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#gafc527399dbd62917400f8922ba0b4294) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#gafc527399dbd62917400f8922ba0b4294) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gafc527399dbd62917400f8922ba0b4294)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveElementPlaneStressSpecFromPlate(int plateId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveElementPlaneStressSpecFromPlate(const VARIANT FAR&varnPlateNo)
@@ -5071,8 +5229,8 @@ VARIANT OSPropertyUI::RemoveElementPlaneStressSpecFromPlate(const VARIANT FAR&va
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveElementPlaneStressSpecFromPlate(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveElementPlaneStressSpecFromPlate(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -5085,7 +5243,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga9b1e19ac200b1c62409785f5c80dd845) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga9b1e19ac200b1c62409785f5c80dd845) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga9b1e19ac200b1c62409785f5c80dd845)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveElementIgnoreInplaneRotnSpecFromPlate(int plateId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveElementIgnoreInplaneRotnSpecFromPlate(const VARIANT FAR&varnPlateNo)
@@ -5110,8 +5271,8 @@ VARIANT OSPropertyUI::RemoveElementIgnoreInplaneRotnSpecFromPlate(const VARIANT 
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveElementIgnoreInplaneRotnSpecFromPlate(MemberSpecificationRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveElementIgnoreInplaneRotnSpecFromPlate(MemberSpecificationRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -5124,7 +5285,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga6503cab6a999f8024fe606c4e32c614a) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga6503cab6a999f8024fe606c4e32c614a) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga6503cab6a999f8024fe606c4e32c614a)<br>
 **Classification:** Unchanged<br>
 **Current typed coverage:** None.<br>
-**Plan:** P10 — Pending; contract verification before implementation
+**Plan (current):** P10 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyMutationResult RemoveElementNodeReleaseSpecFromPlate(int plateId, int nodeId)`<br>
+Common IOSProperty / OSPropertyAdapter route; live native qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::RemoveElementNodeReleaseSpecFromPlate(const VARIANT FAR&varnPlateNo,const VARIANT FAR&varNodeNo)
@@ -5150,8 +5314,8 @@ VARIANT OSPropertyUI::RemoveElementNodeReleaseSpecFromPlate(const VARIANT FAR&va
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `RemoveElementNodeReleaseSpecFromPlate(MemberReleaseRequest request)`<br>
-**Proposed named result:** `PropertyRemovalResult`
+**Original design proposal:** `RemoveElementNodeReleaseSpecFromPlate(MemberReleaseRequest request)`<br>
+**Original proposed result:** `PropertyRemovalResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -8856,7 +9020,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** 2024 absent · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_standard_section.html#gaf3c05fdd108cc02b0269073ae1543663) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaf3c05fdd108cc02b0269073ae1543663)<br>
 **Classification:** Newly documented in 2025<br>
 **Current typed coverage:** None.<br>
-**Plan:** P9 — Pending; contract verification before implementation
+**Plan (current):** P9 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyQueryResult<string> GetDefaultStandardProfileDBFolder()`<br>
+Acquired through IOSPropertyStandardCatalog; exact version/signature qualification required.
 
 ```cpp
 VARIANT OSPropertyUI::GetDefaultStandardProfileDBFolder()
@@ -8873,8 +9040,8 @@ No parameters.
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetDefaultStandardProfileDatabaseFolder()`<br>
-**Proposed named result:** `ProfileDatabaseFolderResult`
+**Original design proposal:** `GetDefaultStandardProfileDatabaseFolder()`<br>
+**Original proposed result:** `ProfileDatabaseFolderResult`
 
 New help member 2025+; gate with acquired member/profile evidence, never synthesize from current folder.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -8887,7 +9054,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** 2024 absent · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_standard_section.html#gaeb4bb81496f3d6451e9a126ea0a6d3a6) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#gaeb4bb81496f3d6451e9a126ea0a6d3a6)<br>
 **Classification:** Newly documented in 2025<br>
 **Current typed coverage:** None.<br>
-**Plan:** P9 — Pending; contract verification before implementation
+**Plan (current):** P9 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyQueryResult<StandardSectionSource> IsStandardDatabaseSection(int propertyId)`<br>
+Acquired through IOSPropertyStandardCatalog; exact version/signature qualification required.
 
 ```cpp
 VARIANT OSPropertyUI::IsStandardDatabaseSection(const VARIANT FAR&varSecRefNo)
@@ -8918,8 +9088,8 @@ VARIANT OSPropertyUI::IsStandardDatabaseSection(const VARIANT FAR&varSecRefNo)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `IsStandardDatabaseSection(SectionQuery request)`<br>
-**Proposed named result:** `StandardSectionSourceResult`
+**Original design proposal:** `IsStandardDatabaseSection(SectionQuery request)`<br>
+**Original proposed result:** `StandardSectionSourceResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -8932,7 +9102,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** 2024 absent · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_standard_section.html#ga527cf81f6e5369eec3076be58fde90cc) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga527cf81f6e5369eec3076be58fde90cc)<br>
 **Classification:** Newly documented in 2025<br>
 **Current typed coverage:** None.<br>
-**Plan:** P9 — Pending; contract verification before implementation
+**Plan (current):** P9 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyQueryResult<StandardSectionText> GetStandardSectionDatabaseName(int propertyId)`<br>
+Acquired through IOSPropertyStandardCatalog; exact version/signature qualification required.
 
 ```cpp
 VARIANT OSPropertyUI::GetStandardSectionDatabaseName(const VARIANT FAR&varSecRefNo)
@@ -8957,8 +9130,8 @@ VARIANT OSPropertyUI::GetStandardSectionDatabaseName(const VARIANT FAR&varSecRef
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetStandardSectionDatabaseName(SectionQuery request)`<br>
-**Proposed named result:** `StandardSectionIdentityResult`
+**Original design proposal:** `GetStandardSectionDatabaseName(SectionQuery request)`<br>
+**Original proposed result:** `StandardSectionIdentityResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -8971,7 +9144,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** 2024 absent · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_standard_section.html#ga45b152c818ab6a2b89be7d90892d0ded) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga45b152c818ab6a2b89be7d90892d0ded)<br>
 **Classification:** Newly documented in 2025<br>
 **Current typed coverage:** None.<br>
-**Plan:** P9 — Pending; contract verification before implementation
+**Plan (current):** P9 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyQueryResult<StandardSectionText> GetStandardSectionTableName(int propertyId)`<br>
+Acquired through IOSPropertyStandardCatalog; exact version/signature qualification required.
 
 ```cpp
 VARIANT OSPropertyUI::GetStandardSectionTableName(const VARIANT FAR&varSecRefNo)
@@ -8996,8 +9172,8 @@ VARIANT OSPropertyUI::GetStandardSectionTableName(const VARIANT FAR&varSecRefNo)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetStandardSectionTableName(SectionQuery request)`<br>
-**Proposed named result:** `StandardSectionIdentityResult`
+**Original design proposal:** `GetStandardSectionTableName(SectionQuery request)`<br>
+**Original proposed result:** `StandardSectionIdentityResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.
@@ -9010,7 +9186,10 @@ The result payload must carry the qualified native output fields above (or direc
 **Help availability:** 2024 absent · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_standard_section.html#ga87dfe66234b751a9c9f5914de89e2fb1) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html#ga87dfe66234b751a9c9f5914de89e2fb1)<br>
 **Classification:** Newly documented in 2025<br>
 **Current typed coverage:** None.<br>
-**Plan:** P9 — Pending; contract verification before implementation
+**Plan (current):** P9 - Implemented managed route; live qualification pending.
+
+**Current managed entry:** `PropertyQueryResult<StandardSectionText> GetStandardSectionName(int propertyId)`<br>
+Acquired through IOSPropertyStandardCatalog; exact version/signature qualification required.
 
 ```cpp
 VARIANT OSPropertyUI::GetStandardSectionName(const VARIANT FAR&varSecRefNo)
@@ -9035,8 +9214,8 @@ VARIANT OSPropertyUI::GetStandardSectionName(const VARIANT FAR&varSecRefNo)
 **Main adapter targets:** None found.<br>
 **Main delegated targets:** None found.
 
-**Proposed managed entry:** `GetStandardSectionName(SectionQuery request)`<br>
-**Proposed named result:** `StandardSectionIdentityResult`
+**Original design proposal:** `GetStandardSectionName(SectionQuery request)`<br>
+**Original proposed result:** `StandardSectionIdentityResult`
 
 Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.
 The result payload must carry the qualified native output fields above (or direct returned data), together with a correctly interpreted operation status. Argument/request shape remains subject to typed API review; never forward unknown VARIANT objects through the new managed surface.

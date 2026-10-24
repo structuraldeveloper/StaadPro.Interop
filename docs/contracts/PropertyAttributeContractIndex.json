@@ -388,8 +388,8 @@
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult CreateUPTTable(UserProvidedTableType tableType)",
-      "name": "CreateUPTTable",
+      "signature": "PropertyMutationResult CreateUptTable(UserProvidedTableType tableType)",
+      "name": "CreateUptTable",
       "nativeFunction": "CreateUPTTable",
       "summary": "Creates a native user-provided table of an explicit reviewed type.",
       "parameters": [
@@ -400,13 +400,13 @@
       ],
       "returns": "Created with a separate positive CreatedTableId for a positive integral native result. -6031 gives InvalidInput; zero/other undocumented responses throw. No section property/specification ID is populated.",
       "remarks": "When to use: create an empty UPT table independently from adding a named section or assigning members. Requests run on the captured native receiver using the reviewed metadata's by-value input, despite C++ VARIANT-reference spelling. No staged workflow/cleanup or table-type lookup is hidden. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateUPTTable(StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateUptTable(StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyWIDEFLANGE(int tableId, string sectionName, UptWideFlangeDefinition definition)",
-      "name": "AddUPTPropertyWIDEFLANGE",
+      "signature": "PropertyMutationResult AddUptPropertyWideFlange(int tableId, string sectionName, UptWideFlangeDefinition definition)",
+      "name": "AddUptPropertyWideFlange",
       "nativeFunction": "AddUPTPropertyWIDEFLANGE",
       "summary": "Adds an explicit wide-flange section to an existing native UPT table.",
       "parameters": [
@@ -425,13 +425,13 @@
       ],
       "returns": "Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045. Retains actual response and requested TableId/SectionName. No created section property reference or table ID is fabricated.",
       "remarks": "When to use: insert explicit scalar UPT values without silently changing a duplicate named section. Table creation and insertion are separate model mutations; an insertion failure does not remove the table. Vendor metadata accepts inputs by value. Native success does not prove a new definition rather than an accepted insertion and does not assign members. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var result = property.AddUPTPropertyWIDEFLANGE(7, \"EXPLICIT_WF\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var result = property.AddUptPropertyWideFlange(7, \"EXPLICIT_WF\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyWIDEFLANGEUNEQUAL(int tableId, string sectionName, UptUnequalWideFlangeDefinition definition)",
-      "name": "AddUPTPropertyWIDEFLANGEUNEQUAL",
+      "signature": "PropertyMutationResult AddUptPropertyWideFlangeUnequal(int tableId, string sectionName, UptUnequalWideFlangeDefinition definition)",
+      "name": "AddUptPropertyWideFlangeUnequal",
       "nativeFunction": "AddUPTPropertyWIDEFLANGEUNEQUAL",
       "summary": "Adds an explicit unequal wide-flange section through the native twelve-double UPT route.",
       "parameters": [
@@ -450,7 +450,7 @@
       ],
       "returns": "Succeeded for true/integral one and NativeFailure for false/integral zero. Actual Boolean/integral evidence is retained separately with requested TableId/SectionName; no duplicate-specific status or created section ID is inferred.",
       "remarks": "When to use: insert the unequal shape using its distinct Boolean-returning native route; zero is failure here, unlike the scalar wide-flange route. Input values remain immutable even if a native buffer is altered. Does not create a table, replace a duplicate by fallback, create an assigned property or assign members. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var unequal = new StaadPro.Interop.Models.Property.UptUnequalWideFlangeDefinition(definition, 0.2, 0.015);\n    var result = property.AddUPTPropertyWIDEFLANGEUNEQUAL(7, \"EXPLICIT_UNEQUAL\", unequal);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var unequal = new StaadPro.Interop.Models.Property.UptUnequalWideFlangeDefinition(definition, 0.2, 0.015);\n    var result = property.AddUptPropertyWideFlangeUnequal(7, \"EXPLICIT_UNEQUAL\", unequal);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     }
   ]

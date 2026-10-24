@@ -16,8 +16,8 @@
   "contracts": [
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyCHANNEL(int tableId, string sectionName, UptChannelDefinition definition)",
-      "name": "AddUPTPropertyCHANNEL",
+      "signature": "PropertyMutationResult AddUptPropertyChannel(int tableId, string sectionName, UptChannelDefinition definition)",
+      "name": "AddUptPropertyChannel",
       "nativeFunction": "AddUPTPropertyCHANNEL",
       "summary": "Adds explicit channel data to an existing native UPT table.",
       "parameters": [
@@ -36,13 +36,13 @@
       ],
       "returns": "Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.",
       "remarks": "When to use: insert the channel using its specific scalar native route. Channel CZ is retained in the native convention without guessing a centroid axis/dimension. Native IZ/IY/IX labels retain this UPT route's documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var definition = new StaadPro.Interop.Models.Property.UptChannelDefinition(primary, 0.04);\n    var result = property.AddUPTPropertyCHANNEL(7, \"EXPLICIT_CHANNEL\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var definition = new StaadPro.Interop.Models.Property.UptChannelDefinition(primary, 0.04);\n    var result = property.AddUptPropertyChannel(7, \"EXPLICIT_CHANNEL\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyANGLE(int tableId, string sectionName, UptAngleDefinition definition)",
-      "name": "AddUPTPropertyANGLE",
+      "signature": "PropertyMutationResult AddUptPropertyAngle(int tableId, string sectionName, UptAngleDefinition definition)",
+      "name": "AddUptPropertyAngle",
       "nativeFunction": "AddUPTPropertyANGLE",
       "summary": "Adds explicit angle data to an existing native UPT table.",
       "parameters": [
@@ -61,13 +61,13 @@
       ],
       "returns": "Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.",
       "remarks": "When to use: insert the angle using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route's documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptAngleDefinition(0.2, 0.15, 0.01, 0.03, 0.002, 0.003);\n    var result = property.AddUPTPropertyANGLE(7, \"EXPLICIT_ANGLE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptAngleDefinition(0.2, 0.15, 0.01, 0.03, 0.002, 0.003);\n    var result = property.AddUptPropertyAngle(7, \"EXPLICIT_ANGLE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyDOUBLEANGLE(int tableId, string sectionName, UptDoubleAngleDefinition definition)",
-      "name": "AddUPTPropertyDOUBLEANGLE",
+      "signature": "PropertyMutationResult AddUptPropertyDoubleAngle(int tableId, string sectionName, UptDoubleAngleDefinition definition)",
+      "name": "AddUptPropertyDoubleAngle",
       "nativeFunction": "AddUPTPropertyDOUBLEANGLE",
       "summary": "Adds explicit double angle data to an existing native UPT table.",
       "parameters": [
@@ -86,13 +86,13 @@
       ],
       "returns": "Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.",
       "remarks": "When to use: insert the double angle using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route's documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptDoubleAngleDefinition(0.2, 0.15, 0.01, 0.02, 0.000001, 0.00001, 0.0001, 0.04, 0.002, 0.003);\n    var result = property.AddUPTPropertyDOUBLEANGLE(7, \"EXPLICIT_DOUBLEANGLE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptDoubleAngleDefinition(0.2, 0.15, 0.01, 0.02, 0.000001, 0.00001, 0.0001, 0.04, 0.002, 0.003);\n    var result = property.AddUptPropertyDoubleAngle(7, \"EXPLICIT_DOUBLEANGLE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyTEE(int tableId, string sectionName, UptTeeDefinition definition)",
-      "name": "AddUPTPropertyTEE",
+      "signature": "PropertyMutationResult AddUptPropertyTee(int tableId, string sectionName, UptTeeDefinition definition)",
+      "name": "AddUptPropertyTee",
       "nativeFunction": "AddUPTPropertyTEE",
       "summary": "Adds explicit tee data to an existing native UPT table.",
       "parameters": [
@@ -111,13 +111,13 @@
       ],
       "returns": "Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.",
       "remarks": "When to use: insert the tee using its specific scalar native route. The tee native order sends WF/TF before TW; it does not reuse the common wide-flange slot order blindly. Native IZ/IY/IX labels retain this UPT route's documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var definition = new StaadPro.Interop.Models.Property.UptTeeDefinition(primary, 0.04);\n    var result = property.AddUPTPropertyTEE(7, \"EXPLICIT_TEE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var definition = new StaadPro.Interop.Models.Property.UptTeeDefinition(primary, 0.04);\n    var result = property.AddUptPropertyTee(7, \"EXPLICIT_TEE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyPIPE(int tableId, string sectionName, UptPipeDefinition definition)",
-      "name": "AddUPTPropertyPIPE",
+      "signature": "PropertyMutationResult AddUptPropertyPipe(int tableId, string sectionName, UptPipeDefinition definition)",
+      "name": "AddUptPropertyPipe",
       "nativeFunction": "AddUPTPropertyPIPE",
       "summary": "Adds explicit pipe data to an existing native UPT table.",
       "parameters": [
@@ -136,13 +136,13 @@
       ],
       "returns": "Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.",
       "remarks": "When to use: insert the pipe using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route's documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptPipeDefinition(0.2, 0.18, 0.002, 0.003);\n    var result = property.AddUPTPropertyPIPE(7, \"EXPLICIT_PIPE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptPipeDefinition(0.2, 0.18, 0.002, 0.003);\n    var result = property.AddUptPropertyPipe(7, \"EXPLICIT_PIPE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyTUBE(int tableId, string sectionName, UptTubeDefinition definition)",
-      "name": "AddUPTPropertyTUBE",
+      "signature": "PropertyMutationResult AddUptPropertyTube(int tableId, string sectionName, UptTubeDefinition definition)",
+      "name": "AddUptPropertyTube",
       "nativeFunction": "AddUPTPropertyTUBE",
       "summary": "Adds explicit tube data to an existing native UPT table.",
       "parameters": [
@@ -161,13 +161,13 @@
       ],
       "returns": "Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.",
       "remarks": "When to use: insert the tube using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route's documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptTubeDefinition(0.01, 0.3, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var result = property.AddUPTPropertyTUBE(7, \"EXPLICIT_TUBE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptTubeDefinition(0.01, 0.3, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var result = property.AddUptPropertyTube(7, \"EXPLICIT_TUBE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyGENERAL(int tableId, string sectionName, UptGeneralDefinition definition)",
-      "name": "AddUPTPropertyGENERAL",
+      "signature": "PropertyMutationResult AddUptPropertyGeneral(int tableId, string sectionName, UptGeneralDefinition definition)",
+      "name": "AddUptPropertyGeneral",
       "nativeFunction": "AddUPTPropertyGENERAL",
       "summary": "Adds explicit general profile data to an existing native UPT table.",
       "parameters": [
@@ -186,13 +186,13 @@
       ],
       "returns": "Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.",
       "remarks": "When to use: insert the general profile using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route's documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptGeneralDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.0002, 0.0003, 0.002, 0.003, 0.0004, 0.0005, 0.00000001, 0.28);\n    var result = property.AddUPTPropertyGENERAL(7, \"EXPLICIT_GENERAL\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptGeneralDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.0002, 0.0003, 0.002, 0.003, 0.0004, 0.0005, 0.00000001, 0.28);\n    var result = property.AddUptPropertyGeneral(7, \"EXPLICIT_GENERAL\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyISECTION(int tableId, string sectionName, UptISectionDefinition definition)",
-      "name": "AddUPTPropertyISECTION",
+      "signature": "PropertyMutationResult AddUptPropertyISection(int tableId, string sectionName, UptISectionDefinition definition)",
+      "name": "AddUptPropertyISection",
       "nativeFunction": "AddUPTPropertyISECTION",
       "summary": "Adds explicit I-section data to an existing native UPT table.",
       "parameters": [
@@ -211,13 +211,13 @@
       ],
       "returns": "Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.",
       "remarks": "When to use: insert the I-section using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route's documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptISectionDefinition(0.4, 0.006, 0.3, 0.2, 0.01, 0.15, 0.01, 0.002, 0.003, 0.000001);\n    var result = property.AddUPTPropertyISECTION(7, \"EXPLICIT_ISECTION\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptISectionDefinition(0.4, 0.006, 0.3, 0.2, 0.01, 0.15, 0.01, 0.002, 0.003, 0.000001);\n    var result = property.AddUptPropertyISection(7, \"EXPLICIT_ISECTION\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyPRISMATIC(int tableId, string sectionName, UptPrismaticDefinition definition)",
-      "name": "AddUPTPropertyPRISMATIC",
+      "signature": "PropertyMutationResult AddUptPropertyPrismatic(int tableId, string sectionName, UptPrismaticDefinition definition)",
+      "name": "AddUptPropertyPrismatic",
       "nativeFunction": "AddUPTPropertyPRISMATIC",
       "summary": "Adds explicit prismatic profile data to an existing native UPT table.",
       "parameters": [
@@ -236,13 +236,13 @@
       ],
       "returns": "Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.",
       "remarks": "When to use: insert the prismatic profile using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route's documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptPrismaticDefinition(0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003, 0.3, 0.15);\n    var result = property.AddUPTPropertyPRISMATIC(7, \"EXPLICIT_PRISMATIC\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.UptPrismaticDefinition(0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003, 0.3, 0.15);\n    var result = property.AddUptPropertyPrismatic(7, \"EXPLICIT_PRISMATIC\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult AddUPTPropertyWIDEFLANGECOMPOSITE(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition)",
-      "name": "AddUPTPropertyWIDEFLANGECOMPOSITE",
+      "signature": "PropertyMutationResult AddUptPropertyWideFlangeComposite(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition)",
+      "name": "AddUptPropertyWideFlangeComposite",
       "nativeFunction": "AddUPTPropertyWIDEFLANGECOMPOSITE",
       "summary": "Adds an explicit 12-, 16- or 19-slot composite wide-flange UPT section.",
       "parameters": [
@@ -261,13 +261,13 @@
       ],
       "returns": "Succeeded for true/integral one and NativeFailure for false/integral zero. Actual Boolean/integral evidence and requested table/name are retained; no insertion ID or duplicate-specific status is inferred.",
       "remarks": "When to use: insert a supported composite layout without guessing optional-buffer length. Sends a fresh owned double array. CFR/CFL retain documented right/left meanings; BPR/BPL labels retain the help's duplicated side-description ambiguity. No automatic table creation, material conversion or staged cleanup occurs. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var steel = new StaadPro.Interop.Models.Property.UptUnequalWideFlangeDefinition(primary, 0.2, 0.015);\n    var slab = new StaadPro.Interop.Models.Property.UptCompositeSlab(0.5, 0.6, 0.12, 8.0);\n    var plate = new StaadPro.Interop.Models.Property.UptCompositeBottomPlate(0.1, 0.11, 0.01);\n    var definition = new StaadPro.Interop.Models.Property.UptCompositeWideFlangeDefinition(steel, slab, plate);\n    var result = property.AddUPTPropertyWIDEFLANGECOMPOSITE(7, \"EXPLICIT_COMPOSITE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);\n    var steel = new StaadPro.Interop.Models.Property.UptUnequalWideFlangeDefinition(primary, 0.2, 0.015);\n    var slab = new StaadPro.Interop.Models.Property.UptCompositeSlab(0.5, 0.6, 0.12, 8.0);\n    var plate = new StaadPro.Interop.Models.Property.UptCompositeBottomPlate(0.1, 0.11, 0.01);\n    var definition = new StaadPro.Interop.Models.Property.UptCompositeWideFlangeDefinition(steel, slab, plate);\n    var result = property.AddUptPropertyWideFlangeComposite(7, \"EXPLICIT_COMPOSITE\", definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult CreatePropertyFromUPTTable(int tableId, string sectionName)",
-      "name": "CreatePropertyFromUPTTable",
+      "signature": "PropertyMutationResult CreatePropertyFromUptTable(int tableId, string sectionName)",
+      "name": "CreatePropertyFromUptTable",
       "nativeFunction": "CreatePropertyFromUPTTable",
       "summary": "Creates an assigned section-property reference from an existing named UPT entry.",
       "parameters": [
@@ -282,7 +282,7 @@
       ],
       "returns": "Created with a positive CreatedPropertyId; native -1 gives NativeFailure. TableId/SectionName and actual code are retained separately. Zero and other undocumented nonpositive results throw.",
       "remarks": "When to use: obtain a property reference after the table and named entry already exist. A positive return does not certify a new globally unique allocation. This native route sends tableId before sectionName and does not insert a section, assign members or synthesize a table lookup. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreatePropertyFromUPTTable(7, \"EXPLICIT_WF\");\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreatePropertyFromUptTable(7, \"EXPLICIT_WF\");\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
@@ -308,8 +308,8 @@
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult CreateUPTTableEx(int requestedTableId, UserProvidedTableType tableType)",
-      "name": "CreateUPTTableEx",
+      "signature": "PropertyMutationResult CreateUptTableEx(int requestedTableId, UserProvidedTableType tableType)",
+      "name": "CreateUptTableEx",
       "nativeFunction": "CreateUPTTableEx",
       "summary": "Creates a UPT table using an explicit requested table number and type.",
       "parameters": [
@@ -324,13 +324,13 @@
       ],
       "returns": "Created for a positive integral native table ID, NativeFailure for zero; undocumented negatives throw. Requested and actual returned table IDs remain separate even if they differ. No section property ID is populated.",
       "remarks": "When to use: request a specific table number without hiding native renumbering, overwrite behavior or collisions. No table/section deletion, insertion or rollback is performed automatically. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateUPTTableEx(7, StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateUptTableEx(7, StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult RemoveUPTTable(int tableId)",
-      "name": "RemoveUPTTable",
+      "signature": "PropertyMutationResult RemoveUptTable(int tableId)",
+      "name": "RemoveUptTable",
       "nativeFunction": "RemoveUPTTable",
       "summary": "Requests native removal of an explicitly identified UPT table.",
       "parameters": [
@@ -341,13 +341,13 @@
       ],
       "returns": "Succeeded for true/integral one and NativeFailure for false/integral zero. Actual return representation and requested TableId are retained; no completion report for dependent sections/properties is fabricated.",
       "remarks": "When to use: deliberately remove the native table only after reviewing its current contents and references. Effects on dependent native data are not inferred or rolled back; no automatic replacement or force-removal fallback is attempted. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.RemoveUPTTable(7);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.RemoveUptTable(7);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {
       "phase": "P8",
-      "signature": "PropertyMutationResult RemovePropertyFromUPTTable(int tableId, string sectionName)",
-      "name": "RemovePropertyFromUPTTable",
+      "signature": "PropertyMutationResult RemovePropertyFromUptTable(int tableId, string sectionName)",
+      "name": "RemovePropertyFromUptTable",
       "nativeFunction": "RemovePropertyFromUPTTable",
       "summary": "Requests deletion of an exact named section from a UPT table.",
       "parameters": [
@@ -362,7 +362,7 @@
       ],
       "returns": "Succeeded for integral one, NativeFailure for zero and InvalidInput for -100 (invalid table or name). Actual integral code and requested identity are retained; Boolean and undocumented responses throw.",
       "remarks": "When to use: deliberately remove one native UPT entry, retaining the table/name identity. Zero is failure here; the scalar insertion zero-success convention is not reused. No dependent-property cleanup, cascade guarantee or force-removal fallback is supplied. Uses the captured receiver and shared serialization gate on the caller's thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.",
-      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.RemovePropertyFromUPTTable(7, \"EXPLICIT_WF\");\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "example": "bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.RemovePropertyFromUptTable(7, \"EXPLICIT_WF\");\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
       "mutation": true
     },
     {

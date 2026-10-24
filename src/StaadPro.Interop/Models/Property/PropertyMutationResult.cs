@@ -16,7 +16,7 @@ namespace StaadPro.Interop.Models.Property
             int? propertyId = null, string uniqueId = null, int? plateNodeIndex = null,
             PropertyAttribute attribute = null, PropertyAttributeScope? attributeScope = null,
             int? tableId = null, int? createdTableId = null, UserProvidedTableType? tableType = null, string sectionName = null,
-            string folderPath = null, Version nativeContractVersion = null)
+            string folderPath = null, Version nativeContractVersion = null, StaadPro.Interop.Enums.MemberEnd? memberEnd = null, CableDefinitionKind? cableDefinitionKind = null, int? nodeId = null)
         {
             NativeFunction = operation; Status = status; TargetKind = targetKind;
             TargetIds = Array.AsReadOnly(targetIds == null ? new int[0] : (int[])targetIds.Clone());
@@ -27,6 +27,7 @@ namespace StaadPro.Interop.Models.Property
             Attribute = attribute; AttributeScope = attributeScope; TableId = tableId; CreatedTableId = createdTableId;
             TableType = tableType; SectionName = sectionName;
             FolderPath = folderPath; NativeContractVersion = nativeContractVersion;
+            MemberEnd = memberEnd; CableDefinitionKind = cableDefinitionKind; NodeId = nodeId;
             if (response is bool flag) NativeBooleanReturn = flag;
             else if (response != null) NativeReturnCode = Services.Property.PropertyValueReader.Integer(response, operation);
         }
@@ -46,7 +47,7 @@ namespace StaadPro.Interop.Models.Property
         public IReadOnlyList<int> TargetIds { get; }
         /// <summary>Gets the exact requested material name for material operations and solid material assignment; otherwise null.</summary>
         public string MaterialName { get; }
-        /// <summary>Gets the requested existing specification ID for plate specification assignment; otherwise null.</summary>
+        /// <summary>Gets the requested existing specification definition ID for assignment or definition deletion; otherwise null. It is not an analytical member ID.</summary>
         public int? SpecificationId { get; }
         /// <summary>Gets the requested ASSIGN profile selector for profile creation; otherwise null.</summary>
         public AssignedSectionProfile? ProfileType { get; }
@@ -58,7 +59,7 @@ namespace StaadPro.Interop.Models.Property
         public int? CreatedSpecificationIndex { get; }
         /// <summary>Gets the positive requested control-node ID for a control/dependent relation; otherwise null. TargetIds then contains dependent nodes only.</summary>
         public int? ControlNodeId { get; }
-        /// <summary>Gets the positive requested native property reference for unique-ID metadata writes; otherwise null. It is not a member number or created identity.</summary>
+        /// <summary>Gets the positive requested native property reference for metadata writes or definition deletion; otherwise null. It is not a member number or created identity.</summary>
         public int? PropertyId { get; }
         /// <summary>Gets the exact requested unique-ID text for metadata writes; otherwise null. No GUID syntax, uniqueness or persistence is implied.</summary>
         public string UniqueId { get; }
@@ -80,5 +81,12 @@ namespace StaadPro.Interop.Models.Property
         public string FolderPath { get; }
         /// <summary>Gets the immutable exact acquired native version selecting the database-folder return policy; otherwise null.</summary>
         public Version NativeContractVersion { get; }
+        /// <summary>Gets the requested native member-end selector for release/offset removal; otherwise null.</summary>
+        public StaadPro.Interop.Enums.MemberEnd? MemberEnd { get; }
+        /// <summary>Gets the requested tension/unstressed-length cable-definition selector; otherwise null. This is not a member end.</summary>
+        public CableDefinitionKind? CableDefinitionKind { get; }
+        /// <summary>Gets the requested analytical node ID for plate node-release removal; otherwise null. This is not a corner index.</summary>
+        public int? NodeId { get; }
+
     }
 }
