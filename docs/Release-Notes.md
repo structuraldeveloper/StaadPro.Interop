@@ -1,5 +1,13 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261024.1 - 24 October 2026 (prepared preview)
+
+Updated the package author and assembly company to **IngeneStructs**. Updated both package and assembly copyright to **Copyright (c) 2026 IngeneStructs**, and aligned the packaged README, publishing guide and release metadata. NuGet.org account ownership is configured separately through the portal; the archive metadata does not transfer it.
+
+This metadata update retains the preceding Boolean case-number fix and the existing public API/target-framework inventory. Earlier release entries retain their historical metadata. Built a new net481 archive and verified its manifest, installed assembly company/copyright, DLL/XML assets, shipped guides and all **542 selected XML examples** through isolated PackageReference restore/build/runtime verification. The implementation's preceding **3,574-test** verification and scoped STAAD.Pro 25.00.00.539 live query validation are recorded below.
+
+The archive is prepared for manual upload as a new version; earlier archives are retained. Author/company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
+
 ## 1.0.0-preview.20261024 - 24 October 2026 (prepared preview)
 
 Fixed primary and combination discovery rejecting the Boolean `true` returned by `GetPrimaryLoadCaseNumbers` and `GetLoadCombinationCaseNumbers` on the observed STAAD.Pro 25.00.00.539 build. The shared readers now handle Boolean success separately from integral case counts, validate the complete ID array, and recheck the separate count before reading metadata. Boolean false, malformed arrays and inconsistent counts still fail. Reference discovery retains its integer-count contract; matching documented integral primary/combination results remain supported.

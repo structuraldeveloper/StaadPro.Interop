@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("StaadPro.Interop")]
 [assembly: AssemblyDescription("Modern strongly-typed .NET wrapper for Bentley STAAD.Pro OpenSTAAD COM API.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Srinivasa Rao Masanam")]
+[assembly: AssemblyCompany("IngeneStructs")]
 [assembly: AssemblyProduct("StaadPro.Interop")]
-[assembly: AssemblyCopyright("Copyright (c) 2026 StaadDev")]
+[assembly: AssemblyCopyright("Copyright (c) 2026 IngeneStructs")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

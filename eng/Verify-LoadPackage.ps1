@@ -41,11 +41,12 @@ try {
     $metadata = $nuspec.package.metadata
     if ($metadata.id -ne 'StaadPro.Interop' -or $metadata.license.InnerText -ne 'MIT' -or $metadata.readme -ne 'README.md') { throw 'Invalid package identity, license or README metadata.' }
     if ($metadata.repository.url -ne 'https://github.com/structuraldeveloper/StaadPro.Interop') { throw 'Missing repository metadata.' }
-    if ([string]$metadata.authors -ne 'Srinivasa Rao Masanam') { throw 'Incorrect package author.' }
-    if ([string]$metadata.copyright -ne 'Copyright (c) 2026 StaadDev') { throw 'Incorrect package copyright.' }
+    if ([string]$metadata.authors -cne 'IngeneStructs') { throw 'Incorrect package author.' }
+    if ([string]$metadata.copyright -cne 'Copyright (c) 2026 IngeneStructs') { throw 'Incorrect package copyright.' }
+    if ($readme -notmatch 'IngeneStructs' -or $readme -notmatch 'Copyright \(c\) 2026 IngeneStructs') { throw 'Incorrect packaged README publisher metadata.' }
     if ([string]$metadata.description -ne 'A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD') { throw 'Incorrect package description.' }
     if ([string]::IsNullOrWhiteSpace([string]$metadata.releaseNotes)) { throw 'Missing release notes in package metadata.' }
-    if ($releaseNotes -notmatch '1.0.0-preview.20261012' -or $releaseNotes -notmatch 'Srinivasa Rao Masanam' -or $releaseNotes -notmatch 'GetLoadCasesFromIds') { throw 'Incomplete packaged release notes.' }
+    if ($releaseNotes -notmatch '1.0.0-preview.20261012' -or $releaseNotes -notmatch 'IngeneStructs' -or $releaseNotes -notmatch 'GetLoadCasesFromIds') { throw 'Incomplete packaged release notes.' }
     $version = [string]$metadata.version
     $readmeVersion = [regex]::Match($readme, '(?m)^## Version ([^\r\n]+)').Groups[1].Value.Trim()
     $releaseVersion = [regex]::Match($releaseNotes, '(?m)^## ([^ \r\n]+)').Groups[1].Value
@@ -284,7 +285,10 @@ public static class Program
     {
         var copyright = (System.Reflection.AssemblyCopyrightAttribute)typeof(OpenStaadWrapper).Assembly
             .GetCustomAttributes(typeof(System.Reflection.AssemblyCopyrightAttribute), false)[0];
-        Check(copyright.Copyright == "Copyright (c) 2026 StaadDev", "installed assembly copyright");
+        Check(copyright.Copyright == "Copyright (c) 2026 IngeneStructs", "installed assembly copyright");
+        var company = (System.Reflection.AssemblyCompanyAttribute)typeof(OpenStaadWrapper).Assembly
+            .GetCustomAttributes(typeof(System.Reflection.AssemblyCompanyAttribute), false)[0];
+        Check(company.Company == "IngeneStructs", "installed assembly company");
         var fake = new FakeLoad();
         using (var wrapper = new OpenStaadWrapper(new FakeRoot(fake)))
         {

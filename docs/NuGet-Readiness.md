@@ -1,6 +1,12 @@
 # NuGet readiness assessment
 
-## Latest prepared preview — 1.0.0-preview.20261024
+## Latest prepared preview — 1.0.0-preview.20261024.1
+
+Updated package Authors and assembly Company to **IngeneStructs**, and both copyright fields to **Copyright (c) 2026 IngeneStructs**. Aligned the README and publishing instructions. NuGet.org account ownership is configured separately under **Manage package → Owners**; the manifest does not transfer ownership.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.1.nupkg`. Verification checks exact manifest/installed-DLL branding, metadata, net481 assets, expanded XML, guide/version consistency, restored archive identity and all **542 selected XML examples** in an isolated consumer. API implementation and native behavior match the preceding preview, whose offline and live verification is recorded below. The metadata-only increment requires no native model changes. The package is prepared for manual upload.
+
+## Earlier prepared preview — 1.0.0-preview.20261024
 
 Fixed primary and combination discovery rejecting the Boolean `true` returned by `GetPrimaryLoadCaseNumbers` and `GetLoadCombinationCaseNumbers` on the observed STAAD.Pro 25.00.00.539 build. The shared readers now handle Boolean success separately from integral case counts, validate the complete ID array, and recheck the separate count before reading metadata. Boolean false, malformed arrays and inconsistent counts still fail. Reference discovery retains its integer-count contract; matching documented integral primary/combination results remain supported.
 
