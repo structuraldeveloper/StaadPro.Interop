@@ -5,12 +5,14 @@
 | Item | Value |
 | --- | --- |
 | Package ID | `StaadPro.Interop` |
-| Preview version | `1.0.0-preview.20261024.1` |
-| Author | IngeneStructs |
+| Preview version | `1.0.0-preview.20261024.2` |
+| Author | Srinivasa Rao Masanam |
+| Company | IngeneStructs |
+| Intended NuGet.org owner | IngeneStructs (managed in the registry) |
 | Copyright | Copyright (c) 2026 IngeneStructs |
 | Release notes | [Release-Notes.md](Release-Notes.md), also included in package metadata and the archive |
 | Target | .NET Framework 4.8.1 (`net481`), Windows |
-| Upload artifact | `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.1.nupkg` |
+| Upload artifact | `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.2.nupkg` |
 | Public feed | `https://api.nuget.org/v3/index.json` |
 | Source | [structuraldeveloper/StaadPro.Interop](https://github.com/structuraldeveloper/StaadPro.Interop) |
 
@@ -20,7 +22,7 @@ The package contains the `net481` DLL, expanded XML IntelliSense, a NuGet README
 
 ## Publisher metadata and NuGet.org ownership
 
-This archive declares `IngeneStructs` in package Authors and assembly Company, with `Copyright (c) 2026 IngeneStructs` in package and assembly copyright metadata. NuGet.org account ownership is managed separately from the archive: its Authors/Owners manifest fields do not transfer portal ownership. To display IngeneStructs as an owner, an existing owner must add the intended IngeneStructs account or organization through the package's **Manage package → Owners** page and complete the required confirmation. See Microsoft's [ownership instructions](https://learn.microsoft.com/en-us/nuget/nuget-org/publish-a-package#manage-package-owners-on-nugetorg).
+This archive declares `Srinivasa Rao Masanam` in package Authors and `IngeneStructs` in assembly Company, with `Copyright (c) 2026 IngeneStructs` in package and assembly copyright metadata. NuGet.org account ownership is managed separately from the archive: its Authors/Owners manifest fields do not transfer portal ownership. To display IngeneStructs as an owner, an existing owner must add the intended IngeneStructs account or organization through the package's **Manage package → Owners** page and complete the required confirmation. See Microsoft's [ownership instructions](https://learn.microsoft.com/en-us/nuget/nuget-org/publish-a-package#manage-package-owners-on-nugetorg).
 
 ## 1. Build the exact release artifact
 
@@ -36,7 +38,7 @@ dotnet build StaadPro.Interop.sln -c Release --no-restore
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release --no-build --logger "trx;LogFileName=load-port.trx" --results-directory artifacts/load-port/tests
 dotnet list src/StaadPro.Interop/StaadPro.Interop.csproj package --vulnerable --include-transitive
 
-$releaseVersion = '1.0.0-preview.20261024.1'
+$releaseVersion = '1.0.0-preview.20261024.2'
 $releaseCommit = git rev-parse HEAD
 dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=$releaseVersion -p:RepositoryCommit=$releaseCommit -o artifacts/release
 ./eng/Verify-LoadPackage.ps1 -PackagePath "artifacts/release/StaadPro.Interop.$releaseVersion.nupkg"
@@ -51,8 +53,8 @@ The verifier restores through a fresh temporary PackageReference-only consumer/c
 
 This is the selected route for this release. Open [NuGet.org](https://www.nuget.org/) in the browser where you signed in:
 
-1. Choose **Upload** and select `StaadPro.Interop.1.0.0-preview.20261024.1.nupkg` from `artifacts/release`.
-2. Review the package ID, exact version, author **IngeneStructs**, copyright, release notes, `net481` target, MIT license, repository link, dependency and README preview. Choose the intended owner account/organization if the page offers that selection. Leave the version listed for public discovery.
+1. Choose **Upload** and select `StaadPro.Interop.1.0.0-preview.20261024.2.nupkg` from `artifacts/release`.
+2. Review the package ID, exact version, author **Srinivasa Rao Masanam**, copyright, release notes, `net481` target, MIT license, repository link, dependency and README preview. Choose the intended owner account/organization if the page offers that selection. Leave the version listed for public discovery.
 3. Choose **Submit** after the metadata matches the verified artifact.
 4. Inspect the resulting package status, wait for validation/indexing, then perform the public-feed checks below.
 
@@ -66,12 +68,12 @@ If Upload reports an unavailable ID, ownership problem, or rejected metadata, re
 
 The expected public page, once accepted, is:
 
-`https://www.nuget.org/packages/StaadPro.Interop/1.0.0-preview.20261024.1`
+`https://www.nuget.org/packages/StaadPro.Interop/1.0.0-preview.20261024.2`
 
 Check the exact version in the public feed:
 
 ```powershell
-$releaseVersion = '1.0.0-preview.20261024.1'
+$releaseVersion = '1.0.0-preview.20261024.2'
 $index = Invoke-RestMethod 'https://api.nuget.org/v3-flatcontainer/staadpro.interop/index.json'
 if ($index.versions -notcontains $releaseVersion) {
     throw 'The exact preview version is not available from the public flat-container feed yet.'
@@ -83,7 +85,7 @@ Also inspect the NuGet.org page and search with prerelease results enabled. An e
 For a download check:
 
 ```powershell
-$releaseVersion = '1.0.0-preview.20261024.1'
+$releaseVersion = '1.0.0-preview.20261024.2'
 $downloadDirectory = Join-Path ([IO.Path]::GetTempPath()) ('StaadPublicPackage-' + [Guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $downloadDirectory | Out-Null
 $downloadPath = Join-Path $downloadDirectory "StaadPro.Interop.$releaseVersion.nupkg"
@@ -98,7 +100,7 @@ The verifier checks a downloaded archive using its temporary local feed. To prov
 Web upload needs no API key. For later CLI publication, create a scoped Push key in your NuGet.org account for `StaadPro.Interop`, allowing new packages/versions as needed. Configure it locally as `NUGET_API_KEY`, never in source files or chat. Pass the value explicitly for compatibility with SDKs that do not read it from the environment:
 
 ```powershell
-$releaseVersion = '1.0.0-preview.20261024.1'
+$releaseVersion = '1.0.0-preview.20261024.2'
 if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) {
     throw 'Configure a scoped NUGET_API_KEY in this local terminal first.'
 }

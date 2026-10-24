@@ -1,6 +1,12 @@
 # NuGet readiness assessment
 
-## Latest prepared preview — 1.0.0-preview.20261024.1
+## Latest prepared preview — 1.0.0-preview.20261024.2
+
+Corrected package **Authors** to **Srinivasa Rao Masanam**, retaining **IngeneStructs** for assembly Company and **Copyright (c) 2026 IngeneStructs** for package/assembly copyright. Intended NuGet.org ownership is IngeneStructs and requires authenticated registry management independently of these archive fields.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.2.nupkg`. Checked exact author/copyright values, installed company/copyright, net481 DLL/XML, guide/version consistency, exact restored archive identity and all **542 selected XML examples** in an isolated consumer. API and native behavior match the preceding preview. Historical verification and release entries remain below.
+
+## Earlier prepared preview — 1.0.0-preview.20261024.1
 
 Updated package Authors and assembly Company to **IngeneStructs**, and both copyright fields to **Copyright (c) 2026 IngeneStructs**. Aligned the README and publishing instructions. NuGet.org account ownership is configured separately under **Manage package → Owners**; the manifest does not transfer ownership.
 

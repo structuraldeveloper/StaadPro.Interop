@@ -2,9 +2,9 @@
 
 A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD
 
-## Version 1.0.0-preview.20261024.1
+## Version 1.0.0-preview.20261024.2
 
-Package author/company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
+Package author: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
 
 StaadPro.Interop provides typed adapters and managed models for working with an existing Bentley STAAD.Pro application through OpenSTAAD. It includes geometry and load operations, model information and lifecycle functions, application-window controls, and native analysis requests.
 
@@ -57,7 +57,7 @@ The package does not include Bentley executables, COM binaries or a STAAD.Pro li
 After this version is available on NuGet.org:
 
 ```powershell
-dotnet add package StaadPro.Interop --version 1.0.0-preview.20261024.1
+dotnet add package StaadPro.Interop --version 1.0.0-preview.20261024.2
 ```
 
 For a .NET Framework project, the package reference is:
@@ -67,7 +67,7 @@ For a .NET Framework project, the package reference is:
   <TargetFramework>net481</TargetFramework>
 </PropertyGroup>
 <ItemGroup>
-  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261024.1" />
+  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261024.2" />
 </ItemGroup>
 ```
 
@@ -166,7 +166,7 @@ See the [root guide](https://github.com/structuraldeveloper/StaadPro.Interop/blo
 
 Expanded XML IntelliSense is included for **143 Geometry overloads, 171 Load overloads, 50 Property overloads, 15 Output queries, 53 common Root operations and three optional Root operation interfaces**, on both interfaces and concrete adapters. Keep `StaadPro.Interop.xml` beside the library when distributing assemblies outside normal NuGet restore.
 
-The archive includes Geometry, Load, Output and Root guides, installation and publishing instructions, and the release history. The package metadata identifies **IngeneStructs** as the author.
+The archive includes Geometry, Load, Output and Root guides, installation and publishing instructions, and the release history. The package metadata identifies **Srinivasa Rao Masanam** as the author; company and copyright use **IngeneStructs**. NuGet.org Owners are managed separately by the registry.
 
 ## Preview validation and operating limits
 

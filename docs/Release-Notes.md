@@ -1,5 +1,11 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261024.2 - 24 October 2026 (prepared preview)
+
+Restored **Authors: Srinivasa Rao Masanam**. Retained **Company: IngeneStructs** and **Copyright (c) 2026 IngeneStructs** in the package/assembly metadata as applicable. Corrected the current README, publishing guide and verification checks to distinguish author credit from registry ownership. The intended NuGet.org owner is **IngeneStructs**; registry ownership is changed separately by an authenticated current owner and is not asserted by the archive.
+
+Retained the existing API implementation, Boolean case-number fix and expanded XML IntelliSense. Built a new net481 archive and verified exact author/copyright metadata, installed company/copyright attributes, DLL/XML assets, packaged guidance and all **542 selected XML examples** through isolated PackageReference restore/build/runtime checks. Previous version entries retain their historical metadata.
+
 ## 1.0.0-preview.20261024.1 - 24 October 2026 (prepared preview)
 
 Updated the package author and assembly company to **IngeneStructs**. Updated both package and assembly copyright to **Copyright (c) 2026 IngeneStructs**, and aligned the packaged README, publishing guide and release metadata. NuGet.org account ownership is configured separately through the portal; the archive metadata does not transfer it.
