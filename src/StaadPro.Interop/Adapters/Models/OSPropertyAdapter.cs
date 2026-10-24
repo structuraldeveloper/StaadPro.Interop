@@ -24,6 +24,7 @@ namespace StaadPro.Interop.Adapters.Models
         private readonly PropertySectionReader sections;
         private readonly PropertyRoadmapReader roadmap;
         private readonly PropertyCreationReader creation;
+        private readonly PropertyAttributeReader attributes;
         /// <summary>Captures the wrapper's Property interface without invoking Property domain functions.</summary>
         /// <param name="wrapper">Connected wrapper with a non-null RawProperty receiver.</param>
         /// <exception cref="ArgumentNullException">The wrapper or its RawProperty binding is null.</exception>
@@ -37,6 +38,7 @@ namespace StaadPro.Interop.Adapters.Models
             sections = new PropertySectionReader(wrapper, queries, ports);
             roadmap = new PropertyRoadmapReader(wrapper, queries);
             creation = new PropertyCreationReader(queries);
+            attributes = new PropertyAttributeReader(queries);
         }
         /// <summary>Gets the captured native Property binding; direct calls bypass typed validation and coordination.</summary>
         /// <value>The acquired automation receiver; no readiness or compatibility is implied.</value>
@@ -2733,6 +2735,420 @@ namespace StaadPro.Interop.Adapters.Models
         /// }
         /// </code></example>
         public PropertyMutationResult SetPropertyUniqueID(int propertyId, string uniqueId) => creation.SetPropertyUniqueID(propertyId, uniqueId);
+
+        #endregion
+
+        #region Fireproofing attributes and user-provided tables
+
+        /// <summary>Reads the native inactive-member count without relying on the gated list transport.</summary>
+        /// <returns>Success with the actual nonnegative integral count, including zero; Boolean/fractional/text/null and undocumented negative counts throw.</returns>
+        /// <remarks>When to use: inspect this inventory size without deriving IDs or inferring model engineering behavior. A count is not a maximum entity ID or a guarantee of stable contents. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetInactiveMemberCount();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<int> GetInactiveMemberCount() => attributes.GetInactiveMemberCount();
+
+        /// <summary>Reads the native count of fireproofed members.</summary>
+        /// <returns>Success with the actual nonnegative integral count, including zero; Boolean/fractional/text/null and undocumented negative counts throw.</returns>
+        /// <remarks>When to use: inspect this inventory size without deriving IDs or inferring model engineering behavior. A count is not a maximum entity ID or a guarantee of stable contents. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetFireProofedBeamCount();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<int> GetFireProofedBeamCount() => attributes.GetFireProofedBeamCount();
+
+        /// <summary>Reads the native count of fireproofing specifications.</summary>
+        /// <returns>Success with the actual nonnegative integral count, including zero; Boolean/fractional/text/null and undocumented negative counts throw.</returns>
+        /// <remarks>When to use: inspect this inventory size without deriving IDs or inferring model engineering behavior. A count is not a maximum entity ID or a guarantee of stable contents. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetFireProofingSpecCount();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<int> GetFireProofingSpecCount() => attributes.GetFireProofingSpecCount();
+
+        /// <summary>Reads an owned bounded snapshot of native fireproofed member IDs.</summary>
+        /// <param name="maximumResults">Allocation limit from 1 through 100000, default 100000. Larger native counts give LimitExceeded before buffer allocation/retrieval.</param>
+        /// <returns>Success with a read-only ID list in native order, retaining duplicates. Zero count gives an empty list without list dispatch. False/zero list flag gives NativeFailure; changed counts give StateChanged; failures have no Data.</returns>
+        /// <remarks>When to use: enumerate fireproofed member IDs without loading beam objects. Uses GetFireProofedBeamCount before and after the flag-returning list call, validates exact rank-one Int32 shape/length and positive written IDs. Equal counts cannot exclude same-count external edits. No assumption about specification indices is made. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetFireProofedBeamList();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Count);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<IReadOnlyList<int>> GetFireProofedBeamList(int maximumResults = 100000) => attributes.GetFireProofedBeamList(maximumResults);
+
+        /// <summary>Reads a member&#x27;s native fireproofing type, thickness and density.</summary>
+        /// <param name="memberId">Positive analytical member ID; not a property reference or fireproofing specification index.</param>
+        /// <returns>Success for true/integral one with immutable requested member identity and validated fields; false/zero gives NativeFailure without Data. It does not distinguish missing member from no fireproofing.</returns>
+        /// <remarks>When to use: inspect one member without resolving a specification index. Requires written native type BFP=1/CFP=2 and finite nonnegative floating thickness/density, including explicit zero. Native density convention is retained without mass/weight assumptions. AssignedMemberCount and SpecificationIndex are null. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetFireProofDataForBeam(17);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Type);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<FireProofingData> GetFireProofDataForBeam(int memberId) => attributes.GetFireProofDataForBeam(memberId);
+
+        /// <summary>Reads native fireproofing definition data and its scalar assigned-member count.</summary>
+        /// <param name="specificationIndex">Positive nonzero-based native fireproofing getter index. Not a specification ID or the zero-based creation index; no +1 conversion is performed.</param>
+        /// <returns>Success for true/integral one with immutable requested getter index, verified type, finite nonnegative thickness/density and a nonnegative scalar assigned-member count. False/zero gives NativeFailure.</returns>
+        /// <remarks>When to use: inspect a fireproofing definition without converting the zero-based creation result into a getter index. The vendor VBA example declares varAssignCount as Long; the array-of-Long wording in one parameter row is a typo. Only a written scalar integral count is accepted; an array is not silently unwrapped. MemberId is null. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetFireProofingSpecDetails(1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.AssignedMemberCount);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<FireProofingData> GetFireProofingSpecDetails(int specificationIndex) => attributes.GetFireProofingSpecDetails(specificationIndex);
+
+        /// <summary>Reads the member count assigned to a native fireproofing getter index.</summary>
+        /// <param name="specificationIndex">Positive nonzero-based native fireproofing getter index. Not a specification ID or the zero-based creation index; no +1 conversion is performed.</param>
+        /// <returns>Success with the nonnegative native count, including zero. Undocumented negatives/malformed counts throw; no specification-existence flag is inferred from zero.</returns>
+        /// <remarks>When to use: inspect assignment size for an explicitly established positive native getter index. It is not an assignment ID or a conversion of CreatedSpecificationIndex. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetFireProofingSpecAssignedBeamCount(1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<int> GetFireProofingSpecAssignedBeamCount(int specificationIndex) => attributes.GetFireProofingSpecAssignedBeamCount(specificationIndex);
+
+        /// <summary>Reads a bounded owned member-ID list for a native fireproofing getter index.</summary>
+        /// <param name="specificationIndex">Positive nonzero-based native fireproofing getter index. Not a specification ID or the zero-based creation index; no +1 conversion is performed.</param>
+        /// <param name="maximumResults">Allocation limit from 1 through 100000, default 100000. Larger native counts give LimitExceeded before buffer allocation/retrieval.</param>
+        /// <returns>Success with a read-only native-order ID list, including duplicates; zero count gives empty data without retrieval. False/zero gives NativeFailure, count changes StateChanged, and oversize counts LimitExceeded.</returns>
+        /// <remarks>When to use: enumerate a specification&#x27;s assignments without synthesizing a specification ID. Uses the indexed count before/after retrieval and exact rank-one Int32 positive-ID validation. Every dependent dispatch rechecks binding. Count equality does not establish a model-wide atomic snapshot. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetFireProofingSpecAssignedBeamList(1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Count);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<IReadOnlyList<int>> GetFireProofingSpecAssignedBeamList(int specificationIndex, int maximumResults = 100000) => attributes.GetFireProofingSpecAssignedBeamList(specificationIndex, maximumResults);
+
+        /// <summary>Creates/updates an exact native member attribute definition.</summary>
+        /// <param name="attribute">Non-null immutable exact attribute name/value pair. Both strings are non-null without NUL; empty/whitespace strings and case are preserved, with no normalization or numeric/GUID parsing.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for -1; retains actual code, immutable pair and explicit native member scope. No attribute ID or Created/Updated distinction is fabricated.</returns>
+        /// <remarks>When to use: request an exact name/value definition without assuming that zero means a newly allocated ID or distinguishing creation from update. Does not implicitly assign entities, trim text or convert strings. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var attribute = new StaadPro.Interop.Models.Property.PropertyAttribute(&quot;Purpose&quot;, &quot; REVIEWED &quot;);
+        ///     var result = property.CreateMemberAttribute(attribute);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult CreateMemberAttribute(PropertyAttribute attribute) => attributes.CreateMemberAttribute(attribute);
+
+        /// <summary>Creates/updates an exact native element attribute definition.</summary>
+        /// <param name="attribute">Non-null immutable exact attribute name/value pair. Both strings are non-null without NUL; empty/whitespace strings and case are preserved, with no normalization or numeric/GUID parsing.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for -1; retains actual code, immutable pair and explicit native element scope. No attribute ID or Created/Updated distinction is fabricated.</returns>
+        /// <remarks>When to use: request an exact name/value definition without assuming that zero means a newly allocated ID or distinguishing creation from update. Does not implicitly assign entities, trim text or convert strings. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var attribute = new StaadPro.Interop.Models.Property.PropertyAttribute(&quot;Purpose&quot;, &quot; REVIEWED &quot;);
+        ///     var result = property.CreateElementAttribute(attribute);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult CreateElementAttribute(PropertyAttribute attribute) => attributes.CreateElementAttribute(attribute);
+
+        /// <summary>Deletes an exact native member attribute definition.</summary>
+        /// <param name="attribute">Non-null immutable exact attribute name/value pair. Both strings are non-null without NUL; empty/whitespace strings and case are preserved, with no normalization or numeric/GUID parsing.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for -1; retains actual code, immutable pair and explicit native member scope. No attribute ID or Created/Updated distinction is fabricated.</returns>
+        /// <remarks>When to use: deliberately remove the exact definition; existing native assignments/effects are subject to STAAD and no recreation/rollback is attempted. Does not implicitly assign entities, trim text or convert strings. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var attribute = new StaadPro.Interop.Models.Property.PropertyAttribute(&quot;Purpose&quot;, &quot; REVIEWED &quot;);
+        ///     var result = property.DeleteMemberAttribute(attribute);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult DeleteMemberAttribute(PropertyAttribute attribute) => attributes.DeleteMemberAttribute(attribute);
+
+        /// <summary>Deletes an exact native element attribute definition.</summary>
+        /// <param name="attribute">Non-null immutable exact attribute name/value pair. Both strings are non-null without NUL; empty/whitespace strings and case are preserved, with no normalization or numeric/GUID parsing.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for -1; retains actual code, immutable pair and explicit native element scope. No attribute ID or Created/Updated distinction is fabricated.</returns>
+        /// <remarks>When to use: deliberately remove the exact definition; existing native assignments/effects are subject to STAAD and no recreation/rollback is attempted. Does not implicitly assign entities, trim text or convert strings. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var attribute = new StaadPro.Interop.Models.Property.PropertyAttribute(&quot;Purpose&quot;, &quot; REVIEWED &quot;);
+        ///     var result = property.DeleteElementAttribute(attribute);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult DeleteElementAttribute(PropertyAttribute attribute) => attributes.DeleteElementAttribute(attribute);
+
+        /// <summary>Reads the native member count for one exact attribute pair.</summary>
+        /// <param name="attribute">Non-null immutable exact attribute name/value pair. Both strings are non-null without NUL; empty/whitespace strings and case are preserved, with no normalization or numeric/GUID parsing.</param>
+        /// <returns>Success with an immutable requested pair/domain and nonnegative count, including zero. Native -1 gives NativeFailure. A rewritten by-reference input value gives StateChanged with no Data.</returns>
+        /// <remarks>When to use: inspect an attribute subset in the explicit member domain. Vendor metadata passes the value string by reference although the help describes it as input; a local copy is sent and compared ordinally afterward. No data is attributed to the original pair if native rewrites it. Zero does not prove a definition exists. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var attribute = new StaadPro.Interop.Models.Property.PropertyAttribute(&quot;Purpose&quot;, &quot; REVIEWED &quot;);
+        /// var result = property.GetMemberCountByAttribute(attribute);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Count);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<PropertyAttributeMatchCount> GetMemberCountByAttribute(PropertyAttribute attribute) => attributes.GetMemberCountByAttribute(attribute);
+
+        /// <summary>Reads a bounded owned native member ID snapshot for an exact attribute pair.</summary>
+        /// <param name="attribute">Non-null immutable exact attribute name/value pair. Both strings are non-null without NUL; empty/whitespace strings and case are preserved, with no normalization or numeric/GUID parsing.</param>
+        /// <param name="maximumResults">Allocation limit from 1 through 100000, default 100000. Larger native counts give LimitExceeded before buffer allocation/retrieval.</param>
+        /// <returns>Success with immutable pair/domain correspondence and read-only positive EntityIds in native order, retaining duplicates. Native -1 gives NativeFailure, oversize count LimitExceeded, and count/input-value changes StateChanged. Zero inventory is successful empty data without list retrieval.</returns>
+        /// <remarks>When to use: enumerate matching member IDs without geometry hydration. Uses the matching native count/list/count sequence within the shared gate; the list&#x27;s integral zero is success, not a returned count. Native metadata requires ref string and ref Object outputs; local copies keep caller text immutable. Exact Int32 rank/length and every written positive ID are validated. Count equality cannot exclude same-count external edits. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var attribute = new StaadPro.Interop.Models.Property.PropertyAttribute(&quot;Purpose&quot;, &quot; REVIEWED &quot;);
+        /// var result = property.GetMemberListByAttribute(attribute);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.EntityIds.Count);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<PropertyAttributeEntityIds> GetMemberListByAttribute(PropertyAttribute attribute, int maximumResults = 100000) => attributes.GetMemberListByAttribute(attribute, maximumResults);
+
+        /// <summary>Reads the native element count for one exact attribute pair.</summary>
+        /// <param name="attribute">Non-null immutable exact attribute name/value pair. Both strings are non-null without NUL; empty/whitespace strings and case are preserved, with no normalization or numeric/GUID parsing.</param>
+        /// <returns>Success with an immutable requested pair/domain and nonnegative count, including zero. Native -1 gives NativeFailure. A rewritten by-reference input value gives StateChanged with no Data.</returns>
+        /// <remarks>When to use: inspect an attribute subset in the explicit element domain. Vendor metadata passes the value string by reference although the help describes it as input; a local copy is sent and compared ordinally afterward. No data is attributed to the original pair if native rewrites it. Zero does not prove a definition exists. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var attribute = new StaadPro.Interop.Models.Property.PropertyAttribute(&quot;Purpose&quot;, &quot; REVIEWED &quot;);
+        /// var result = property.GetElementCountByAttribute(attribute);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Count);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<PropertyAttributeMatchCount> GetElementCountByAttribute(PropertyAttribute attribute) => attributes.GetElementCountByAttribute(attribute);
+
+        /// <summary>Reads a bounded owned native element ID snapshot for an exact attribute pair.</summary>
+        /// <param name="attribute">Non-null immutable exact attribute name/value pair. Both strings are non-null without NUL; empty/whitespace strings and case are preserved, with no normalization or numeric/GUID parsing.</param>
+        /// <param name="maximumResults">Allocation limit from 1 through 100000, default 100000. Larger native counts give LimitExceeded before buffer allocation/retrieval.</param>
+        /// <returns>Success with immutable pair/domain correspondence and read-only positive EntityIds in native order, retaining duplicates. Native -1 gives NativeFailure, oversize count LimitExceeded, and count/input-value changes StateChanged. Zero inventory is successful empty data without list retrieval.</returns>
+        /// <remarks>When to use: enumerate matching element IDs without geometry hydration. Uses the matching native count/list/count sequence within the shared gate; the list&#x27;s integral zero is success, not a returned count. Native metadata requires ref string and ref Object outputs; local copies keep caller text immutable. Exact Int32 rank/length and every written positive ID are validated. Count equality cannot exclude same-count external edits. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var attribute = new StaadPro.Interop.Models.Property.PropertyAttribute(&quot;Purpose&quot;, &quot; REVIEWED &quot;);
+        /// var result = property.GetElementListByAttribute(attribute);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.EntityIds.Count);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<PropertyAttributeEntityIds> GetElementListByAttribute(PropertyAttribute attribute, int maximumResults = 100000) => attributes.GetElementListByAttribute(attribute, maximumResults);
+
+        /// <summary>Reads the native member-attribute definition count.</summary>
+        /// <returns>Success with an actual nonnegative integral count, including zero; malformed/negative counts throw.</returns>
+        /// <remarks>When to use: size the paired name/value inventory without assuming attributes have numerical definition IDs or that the count represents assignment count. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetMemberAttributeCount();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<int> GetMemberAttributeCount() => attributes.GetMemberAttributeCount();
+
+        /// <summary>Reads a bounded owned paired inventory of native member attribute names and values.</summary>
+        /// <param name="maximumResults">Allocation limit from 1 through 100000, default 100000. Larger native counts give LimitExceeded before buffer allocation/retrieval.</param>
+        /// <returns>Success with read-only immutable pairs in native order, retaining duplicates and empty/whitespace strings. Count/input state changes give StateChanged and allocation excess LimitExceeded. Zero count skips list dispatch.</returns>
+        /// <remarks>When to use: enumerate paired metadata without losing name/value correspondence. GetMemberAttributeList returns an integral count, not a success flag; it must equal the preflight count and separate postflight count. Both output buffers must be rank-one String arrays of exactly that size, with every string written and free of NUL. Null sentinels detect unwritten output. No deduplication, case folding or numerical parsing occurs. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetMemberAttributeList();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Count);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<IReadOnlyList<PropertyAttribute>> GetMemberAttributeList(int maximumResults = 100000) => attributes.GetMemberAttributeList(maximumResults);
+
+        /// <summary>Reads the native assigned-attribute count under member-first/plate-fallback identity rules.</summary>
+        /// <param name="memberOrPlateId">Positive native integer ID. STAAD resolves an existing member with that ID first, or a plate if no member exists; the wrapper cannot force plate selection when IDs overlap.</param>
+        /// <returns>Success with immutable requested integer identity and a nonnegative count, including zero. Resolved geometry kind, assigned-index base and enumeration context are not certified.</returns>
+        /// <remarks>When to use: observe assignment count with native identity priority made explicit. No GetAssignedAttributeByIndex call follows automatically: its index context/base remain gated. This getter can affect native observation context, but no model write is requested. All native calls use the shared captured-binding gate with before/after lifetime checks. No native model mutation, geometry hydration, unit conversion, save or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetAssignedAttributeCount(17);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Count);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        public PropertyQueryResult<AssignedAttributeSummary> GetAssignedAttributeCount(int memberOrPlateId) => attributes.GetAssignedAttributeCount(memberOrPlateId);
+
+        /// <summary>Removes native attribute assignments from explicit ambiguous member/plate IDs.</summary>
+        /// <param name="attribute">Non-null immutable exact attribute name/value pair. Both strings are non-null without NUL; empty/whitespace strings and case are preserved, with no normalization or numeric/GUID parsing.</param>
+        /// <param name="memberOrPlateIds">Finite sequence of 1..100000 positive native ambiguous member/plate integer IDs. Enumerated once with a hard limit, copied, and sent as an Int32 array even for one ID. Order/duplicates retained; empty/null/invalid input is rejected before native writes.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for -1; retains actual code, immutable requested pair/domain and owned requested TargetIds. No per-entity completion result or created identity is inferred.</returns>
+        /// <remarks>When to use: deliberately remove the pair from supplied native identities. The help calls these member IDs while vendor metadata names a member/plate list; the result preserves this ambiguity and does not claim a resolved entity kind. Native failure may leave a partially applied change. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var attribute = new StaadPro.Interop.Models.Property.PropertyAttribute(&quot;Purpose&quot;, &quot; REVIEWED &quot;);
+        ///     var result = property.RemoveAttribute(attribute, new[] { 17, 41 });
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult RemoveAttribute(PropertyAttribute attribute, IEnumerable<int> memberOrPlateIds) => attributes.RemoveAttribute(attribute, memberOrPlateIds);
+
+        /// <summary>Assigns an exact native attribute to explicit member IDs.</summary>
+        /// <param name="attribute">Non-null immutable exact attribute name/value pair. Both strings are non-null without NUL; empty/whitespace strings and case are preserved, with no normalization or numeric/GUID parsing.</param>
+        /// <param name="memberIds">Finite sequence of 1..100000 positive native member integer IDs. Enumerated once with a hard limit, copied, and sent as an Int32 array even for one ID. Order/duplicates retained; empty/null/invalid input is rejected before native writes.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for -1; retains actual code, immutable requested pair/domain and owned requested TargetIds. No per-entity completion result or created identity is inferred.</returns>
+        /// <remarks>When to use: deliberately assign the existing pair in the explicitly named native member domain without creating a definition or hydrating entities. Native failure may leave a partially applied change. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var attribute = new StaadPro.Interop.Models.Property.PropertyAttribute(&quot;Purpose&quot;, &quot; REVIEWED &quot;);
+        ///     var result = property.AssignMemberAttribute(attribute, new[] { 17, 41 });
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult AssignMemberAttribute(PropertyAttribute attribute, IEnumerable<int> memberIds) => attributes.AssignMemberAttribute(attribute, memberIds);
+
+        /// <summary>Assigns an exact native attribute to explicit element IDs.</summary>
+        /// <param name="attribute">Non-null immutable exact attribute name/value pair. Both strings are non-null without NUL; empty/whitespace strings and case are preserved, with no normalization or numeric/GUID parsing.</param>
+        /// <param name="elementIds">Finite sequence of 1..100000 positive native element integer IDs. Enumerated once with a hard limit, copied, and sent as an Int32 array even for one ID. Order/duplicates retained; empty/null/invalid input is rejected before native writes.</param>
+        /// <returns>Succeeded for integral zero and NativeFailure for -1; retains actual code, immutable requested pair/domain and owned requested TargetIds. No per-entity completion result or created identity is inferred.</returns>
+        /// <remarks>When to use: deliberately assign the existing pair in the explicitly named native element domain without creating a definition or hydrating entities. Native failure may leave a partially applied change. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var attribute = new StaadPro.Interop.Models.Property.PropertyAttribute(&quot;Purpose&quot;, &quot; REVIEWED &quot;);
+        ///     var result = property.AssignElementAttribute(attribute, new[] { 17, 41 });
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult AssignElementAttribute(PropertyAttribute attribute, IEnumerable<int> elementIds) => attributes.AssignElementAttribute(attribute, elementIds);
+
+        /// <summary>Creates a native user-provided table of an explicit reviewed type.</summary>
+        /// <param name="tableType">Defined native type 1..10: WideFlange, Channel, Angle, DoubleAngle, Tee, Pipe, Tube, General, ISection or Prismatic. This is not a section property reference or country code.</param>
+        /// <returns>Created with a separate positive CreatedTableId for a positive integral native result. -6031 gives InvalidInput; zero/other undocumented responses throw. No section property/specification ID is populated.</returns>
+        /// <remarks>When to use: create an empty UPT table independently from adding a named section or assigning members. Requests run on the captured native receiver using the reviewed metadata&#x27;s by-value input, despite C++ VARIANT-reference spelling. No staged workflow/cleanup or table-type lookup is hidden. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.CreateUPTTable(StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult CreateUPTTable(UserProvidedTableType tableType) => attributes.CreateUPTTable(tableType);
+
+        /// <summary>Adds an explicit wide-flange section to an existing native UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table ID, not an analytical member or section property ID. Caller must establish that the table type supports the requested insertion.</param>
+        /// <param name="sectionName">Exact nonblank native UPT section name without NUL. Case/whitespace preserved; no catalog normalization or automatic replacement.</param>
+        /// <param name="definition">Non-null immutable AX,D,TW,WF,TF,IZ,IY,IX,AY,AZ values in this native order. Required area/dimensions are finite positive; inertias/shear areas finite nonnegative. Areas use length squared, inertia slots length to fourth power, dimensions length. This route documents IZ as torsional constant and IX about local Z; no relabeling from another layout.</param>
+        /// <returns>Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045. Retains actual response and requested TableId/SectionName. No created section property reference or table ID is fabricated.</returns>
+        /// <remarks>When to use: insert explicit scalar UPT values without silently changing a duplicate named section. Table creation and insertion are separate model mutations; an insertion failure does not remove the table. Vendor metadata accepts inputs by value. Native success does not prove a new definition rather than an accepted insertion and does not assign members. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var definition = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
+        ///     var result = property.AddUPTPropertyWIDEFLANGE(7, &quot;EXPLICIT_WF&quot;, definition);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult AddUPTPropertyWIDEFLANGE(int tableId, string sectionName, UptWideFlangeDefinition definition) => attributes.AddUPTPropertyWIDEFLANGE(tableId, sectionName, definition);
+
+        /// <summary>Adds an explicit unequal wide-flange section through the native twelve-double UPT route.</summary>
+        /// <param name="tableId">Positive existing native UPT table ID, not an analytical member or section property ID. Caller must establish that the table type supports the requested insertion.</param>
+        /// <param name="sectionName">Exact nonblank native UPT section name without NUL. Case/whitespace preserved; no catalog normalization or automatic replacement.</param>
+        /// <param name="definition">Non-null immutable primary AX,D,TW,WF,TF,IZ,IY,IX,AY,AZ values followed by explicit WF1 and TF1 in native slots ten/eleven. A fresh exact twelve-double array is sent by value per reviewed vendor metadata. WF1/TF1 retain native second-flange labels without guessing their physical orientation.</param>
+        /// <returns>Succeeded for true/integral one and NativeFailure for false/integral zero. Actual Boolean/integral evidence is retained separately with requested TableId/SectionName; no duplicate-specific status or created section ID is inferred.</returns>
+        /// <remarks>When to use: insert the unequal shape using its distinct Boolean-returning native route; zero is failure here, unlike the scalar wide-flange route. Input values remain immutable even if a native buffer is altered. Does not create a table, replace a duplicate by fallback, create an assigned property or assign members. Input snapshots are validated before native writes. Native acknowledgement is not persistence read-back; partial changes may remain after failure or a stale-binding/transport exception. No hidden save, retry, transaction, unit conversion or rollback occurs.</remarks>
+        /// <exception cref="ArgumentException">A required packet, selector, identity, bounded sequence, text or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed or a native count, flag, status, output buffer or field violates this operation's contract; earlier native changes may remain.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var definition = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
+        ///     var unequal = new StaadPro.Interop.Models.Property.UptUnequalWideFlangeDefinition(definition, 0.2, 0.015);
+        ///     var result = property.AddUPTPropertyWIDEFLANGEUNEQUAL(7, &quot;EXPLICIT_UNEQUAL&quot;, unequal);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        public PropertyMutationResult AddUPTPropertyWIDEFLANGEUNEQUAL(int tableId, string sectionName, UptUnequalWideFlangeDefinition definition) => attributes.AddUPTPropertyWIDEFLANGEUNEQUAL(tableId, sectionName, definition);
 
         #endregion
 

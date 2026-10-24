@@ -29,8 +29,8 @@
     "unchangedCommonContracts": 188,
     "changedCommonExamples": 75,
     "changes2025To2026": 0,
-    "currentPropertyMethods": 175,
-    "currentPropertyNativeDispatches": 116,
+    "currentPropertyMethods": 200,
+    "currentPropertyNativeDispatches": 141,
     "referenceInterfaceOverloads": 103,
     "referencePublicAdapterMethods": 107,
     "referenceAdapterOnlyMethods": 4,
@@ -48,7 +48,7 @@
     "excludedClassOnlyHelperNames": 22,
     "groupClassAndMetadataCandidateUnion": 227,
     "referenceActiveCandidatesWithoutTarget": 129,
-    "remainingActiveCandidateNames": 88
+    "remainingActiveCandidateNames": 63
   },
   "manualEvidence": {
     "2024": {
@@ -24849,7 +24849,7 @@
       "name": "CreateUPTTable",
       "category": "Section: Create Profile from UPT Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [
         {
@@ -24965,7 +24965,7 @@
       ],
       "plan": {
         "phase": "P8",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateUPTTable",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableCreationResult",
@@ -25220,13 +25220,20 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateUPTTable(UserProvidedTableType tableType)",
+        "nativeFunction": "CreateUPTTable",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "AddUPTPropertyWIDEFLANGE",
       "category": "Section: Create Profile from UPT Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [
         {
@@ -25254,7 +25261,7 @@
       ],
       "plan": {
         "phase": "P8",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "AddUPTPropertyWIDEFLANGE",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
@@ -25761,18 +25768,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult AddUPTPropertyWIDEFLANGE(int tableId, string sectionName, UptWideFlangeDefinition definition)",
+        "nativeFunction": "AddUPTPropertyWIDEFLANGE",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "AddUPTPropertyWIDEFLANGEUNEQUAL",
       "category": "Section: Create Profile from UPT Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P8",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "AddUPTPropertyWIDEFLANGEUNEQUAL",
         "proposedRequest": "UserTableRequest",
         "proposedResult": "UserTableSectionMutationResult",
@@ -26117,7 +26131,14 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult AddUPTPropertyWIDEFLANGEUNEQUAL(int tableId, string sectionName, UptUnequalWideFlangeDefinition definition)",
+        "nativeFunction": "AddUPTPropertyWIDEFLANGEUNEQUAL",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "AddUPTPropertyWIDEFLANGECOMPOSITE",
@@ -49348,7 +49369,7 @@
       "name": "GetInactiveMemberCount",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [
         {
           "managedName": "GetInactiveMembersList",
@@ -49362,7 +49383,7 @@
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetInactiveMemberCount",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyCountResult",
@@ -49443,7 +49464,14 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<int> GetInactiveMemberCount()",
+        "nativeFunction": "GetInactiveMemberCount",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetInactiveMemberList",
@@ -49470,7 +49498,8 @@
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyIdentifierListResult",
         "notes": "Main source marks both wrappers Obsolete(error=true). Native metadata is Void(Object) by value; require count/buffer/native fixtures, do not treat source presence as verified functionality.",
-        "proposedSignature": "GetInactiveMemberIds()"
+        "proposedSignature": "GetInactiveMemberIds()",
+        "currentGate": "Void by-value Object transport is marked unusable in reference source; a live native written-buffer fixture is missing."
       },
       "versions": {
         "2024": {
@@ -49586,7 +49615,8 @@
         "proposedRequest": "SectionQuery",
         "proposedResult": "SectionAngleResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "GetAlphaAngleForSection(SectionQuery request)"
+        "proposedSignature": "GetAlphaAngleForSection(SectionQuery request)",
+        "currentGate": "Native help supplies no interpretable return-status contract; no finite default/output is promoted to certified success."
       },
       "versions": {
         "2024": {
@@ -49735,7 +49765,8 @@
         "proposedRequest": "SectionQuery",
         "proposedResult": "SectionCentroidResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "GetCentroidLocationForSection(SectionQuery request)"
+        "proposedSignature": "GetCentroidLocationForSection(SectionQuery request)",
+        "currentGate": "Native return status is undocumented; qualification must establish success/absence before exposing engineering data."
       },
       "versions": {
         "2024": {
@@ -49907,12 +49938,12 @@
       "name": "GetFireProofedBeamCount",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetFireProofedBeamCount",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyCountResult",
@@ -49993,18 +50024,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<int> GetFireProofedBeamCount()",
+        "nativeFunction": "GetFireProofedBeamCount",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetFireProofedBeamList",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetFireProofedBeamList",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyIdentifierListResult",
@@ -50136,18 +50174,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<IReadOnlyList<int>> GetFireProofedBeamList(int maximumResults = 100000)",
+        "nativeFunction": "GetFireProofedBeamList",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetFireProofDataForBeam",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Type/meaning clarification",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetFireProofDataForBeam",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "SpecificationQueryResult",
@@ -50378,18 +50423,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<FireProofingData> GetFireProofDataForBeam(int memberId)",
+        "nativeFunction": "GetFireProofDataForBeam",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetFireProofingSpecCount",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetFireProofingSpecCount",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyCountResult",
@@ -50470,18 +50522,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<int> GetFireProofingSpecCount()",
+        "nativeFunction": "GetFireProofingSpecCount",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetFireProofingSpecDetails",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Type/meaning clarification",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetFireProofingSpecDetails",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "SpecificationQueryResult",
@@ -50745,18 +50804,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<FireProofingData> GetFireProofingSpecDetails(int specificationIndex)",
+        "nativeFunction": "GetFireProofingSpecDetails",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetFireProofingSpecAssignedBeamCount",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetFireProofingSpecAssignedBeamCount",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyCountResult",
@@ -50876,18 +50942,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<int> GetFireProofingSpecAssignedBeamCount(int specificationIndex)",
+        "nativeFunction": "GetFireProofingSpecAssignedBeamCount",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetFireProofingSpecAssignedBeamList",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetFireProofingSpecAssignedBeamList",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyIdentifierListResult",
@@ -51052,7 +51125,14 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<IReadOnlyList<int>> GetFireProofingSpecAssignedBeamList(int specificationIndex, int maximumResults = 100000)",
+        "nativeFunction": "GetFireProofingSpecAssignedBeamList",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "RemoveMemberFireProofingSpecFromBeam",
@@ -61631,12 +61711,12 @@
       "name": "CreateMemberAttribute",
       "category": "Attribute: Create Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateMemberAttribute",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SectionCreationResult",
@@ -61801,18 +61881,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateMemberAttribute(PropertyAttribute attribute)",
+        "nativeFunction": "CreateMemberAttribute",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateElementAttribute",
       "category": "Attribute: Create Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateElementAttribute",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SectionCreationResult",
@@ -61977,18 +62064,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateElementAttribute(PropertyAttribute attribute)",
+        "nativeFunction": "CreateElementAttribute",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "DeleteMemberAttribute",
       "category": "Attribute: Get and Remove Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "DeleteMemberAttribute",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
@@ -62153,18 +62247,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult DeleteMemberAttribute(PropertyAttribute attribute)",
+        "nativeFunction": "DeleteMemberAttribute",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "GetMemberCountByAttribute",
       "category": "Attribute: Get and Remove Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetMemberCountByAttribute",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyCountResult",
@@ -62329,18 +62430,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<PropertyAttributeMatchCount> GetMemberCountByAttribute(PropertyAttribute attribute)",
+        "nativeFunction": "GetMemberCountByAttribute",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetMemberListByAttribute",
       "category": "Attribute: Get and Remove Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetMemberListByAttribute",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyIdentifierListResult",
@@ -62538,18 +62646,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<PropertyAttributeEntityIds> GetMemberListByAttribute(PropertyAttribute attribute, int maximumResults = 100000)",
+        "nativeFunction": "GetMemberListByAttribute",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetMemberAttributeCount",
       "category": "Attribute: Get and Remove Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetMemberAttributeCount",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyCountResult",
@@ -62630,18 +62745,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<int> GetMemberAttributeCount()",
+        "nativeFunction": "GetMemberAttributeCount",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetMemberAttributeList",
       "category": "Attribute: Get and Remove Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetMemberAttributeList",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyIdentifierListResult",
@@ -62794,18 +62916,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<IReadOnlyList<PropertyAttribute>> GetMemberAttributeList(int maximumResults = 100000)",
+        "nativeFunction": "GetMemberAttributeList",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "DeleteElementAttribute",
       "category": "Attribute: Get and Remove Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "DeleteElementAttribute",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
@@ -62970,18 +63099,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult DeleteElementAttribute(PropertyAttribute attribute)",
+        "nativeFunction": "DeleteElementAttribute",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "GetElementCountByAttribute",
       "category": "Attribute: Get and Remove Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetElementCountByAttribute",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyCountResult",
@@ -63146,18 +63282,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<PropertyAttributeMatchCount> GetElementCountByAttribute(PropertyAttribute attribute)",
+        "nativeFunction": "GetElementCountByAttribute",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetElementListByAttribute",
       "category": "Attribute: Get and Remove Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetElementListByAttribute",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyIdentifierListResult",
@@ -63355,18 +63498,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<PropertyAttributeEntityIds> GetElementListByAttribute(PropertyAttribute attribute, int maximumResults = 100000)",
+        "nativeFunction": "GetElementListByAttribute",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetAssignedAttributeCount",
       "category": "Attribute: Get and Remove Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetAssignedAttributeCount",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyCountResult",
@@ -63471,7 +63621,14 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<AssignedAttributeSummary> GetAssignedAttributeCount(int memberOrPlateId)",
+        "nativeFunction": "GetAssignedAttributeCount",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "GetAssignedAttributeByIndex",
@@ -63487,7 +63644,8 @@
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "SpecificationQueryResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "GetAssignedAttributeByIndex(SpecificationQuery request)"
+        "proposedSignature": "GetAssignedAttributeByIndex(SpecificationQuery request)",
+        "currentGate": "Index base and native observation-context relationship are not verified; no guessed mapping to a requested entity."
       },
       "versions": {
         "2024": {
@@ -63686,12 +63844,12 @@
       "name": "RemoveAttribute",
       "category": "Attribute: Get and Remove Attribute Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "RemoveAttribute",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyRemovalResult",
@@ -63889,18 +64047,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult RemoveAttribute(PropertyAttribute attribute, IEnumerable<int> memberOrPlateIds)",
+        "nativeFunction": "RemoveAttribute",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "AssignMemberAttribute",
       "category": "Attribute: Assign Attribute to Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "AssignMemberAttribute",
         "proposedRequest": "PropertyAssignmentRequest",
         "proposedResult": "PropertyAssignmentResult",
@@ -64098,18 +64263,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult AssignMemberAttribute(PropertyAttribute attribute, IEnumerable<int> memberIds)",
+        "nativeFunction": "AssignMemberAttribute",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "AssignElementAttribute",
       "category": "Attribute: Assign Attribute to Element Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "AssignElementAttribute",
         "proposedRequest": "PropertyAssignmentRequest",
         "proposedResult": "PropertyAssignmentResult",
@@ -64307,7 +64479,14 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult AssignElementAttribute(PropertyAttribute attribute, IEnumerable<int> elementIds)",
+        "nativeFunction": "AssignElementAttribute",
+        "reader": "PropertyAttributeReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "GetMemberReleaseSpec",
@@ -74018,181 +74197,188 @@
   ],
   "implementationUpdate": {
     "date": "2026-10-24",
-    "parentCommit": "bc7d737029ceb629e140ba4b67dcc03a40e216ed",
-    "interfaceMethods": 175,
-    "adapterMethods": 175,
-    "nativeRoutes": 116,
-    "activeCandidatesRemaining": 88,
+    "parentCommit": "718e077fec9a0832affc2046d40056b1a8736552",
+    "interfaceMethods": 200,
+    "adapterMethods": 200,
+    "nativeRoutes": 141,
+    "activeCandidatesRemaining": 63,
     "workstreams": {
       "P6": 18,
+      "P8": 3,
       "P5": 17,
       "P2": 13,
       "P4": 24,
       "P9": 1,
-      "P7": 20,
+      "P7": 42,
       "P3": 23
     },
     "contracts": [
       {
-        "native": "CreateWideFlangePropertyFromTable",
-        "managedSignature": "PropertyMutationResult CreateWideFlangePropertyFromTable(WideFlangeTableDefinition definition)",
-        "phase": "P6",
-        "mutation": true
-      },
-      {
-        "native": "CreateBeamPropertyFromTableEx",
-        "managedSignature": "PropertyMutationResult CreateBeamPropertyFromTableEx(Country country, string sectionName, TableSolidShape shape)",
-        "phase": "P6",
-        "mutation": true
-      },
-      {
-        "native": "CreatePrismaticRectangleProperty",
-        "managedSignature": "PropertyMutationResult CreatePrismaticRectangleProperty(double depthY, double widthZ)",
-        "phase": "P6",
-        "mutation": true
-      },
-      {
-        "native": "CreatePrismaticCircleProperty",
-        "managedSignature": "PropertyMutationResult CreatePrismaticCircleProperty(double diameter)",
-        "phase": "P6",
-        "mutation": true
-      },
-      {
-        "native": "CreatePrismaticTeeProperty",
-        "managedSignature": "PropertyMutationResult CreatePrismaticTeeProperty(double totalDepth, double flangeWidth, double stemDepth, double stemWidth)",
-        "phase": "P6",
-        "mutation": true
-      },
-      {
-        "native": "CreatePrismaticTrapezoidalProperty",
-        "managedSignature": "PropertyMutationResult CreatePrismaticTrapezoidalProperty(double depth, double topWidth, double bottomWidth)",
-        "phase": "P6",
-        "mutation": true
-      },
-      {
-        "native": "CreatePrismaticGeneralProperty",
-        "managedSignature": "PropertyMutationResult CreatePrismaticGeneralProperty(GeneralPrismaticSectionDefinition definition)",
-        "phase": "P6",
-        "mutation": true
-      },
-      {
-        "native": "CreateTaperedTubeProperty",
-        "managedSignature": "PropertyMutationResult CreateTaperedTubeProperty(TaperedTubeShape shape, double startDepth, double endDepth, double thickness)",
-        "phase": "P6",
-        "mutation": true
-      },
-      {
-        "native": "CreateMemberPartialReleaseSpec",
-        "managedSignature": "PropertyMutationResult CreateMemberPartialReleaseSpec(MemberEnd memberEnd, DegreeOfFreedomSelection releasedDofs, PartialReleaseFactors factors)",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateMemberTrussSpec",
-        "managedSignature": "PropertyMutationResult CreateMemberTrussSpec()",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateMemberInactiveSpec",
-        "managedSignature": "PropertyMutationResult CreateMemberInactiveSpec()",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateMemberTensionSpec",
-        "managedSignature": "PropertyMutationResult CreateMemberTensionSpec()",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateMemberCompressionSpec",
-        "managedSignature": "PropertyMutationResult CreateMemberCompressionSpec()",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateMemberIgnoreStiffSpec",
-        "managedSignature": "PropertyMutationResult CreateMemberIgnoreStiffSpec()",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateMemberCableSpec",
-        "managedSignature": "PropertyMutationResult CreateMemberCableSpec(CableDefinitionKind definitionKind, double value)",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateMemberCableSpecEx",
-        "managedSignature": "PropertyMutationResult CreateMemberCableSpecEx(CableDefinitionKind definitionKind, double value, CableTensionEnd tensionEnd, double selfWeightFactorX, double selfWeightFactorY, double selfWeightFactorZ)",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateElementNodeReleaseSpec",
-        "managedSignature": "PropertyMutationResult CreateElementNodeReleaseSpec(int nodeId, DegreeOfFreedomSelection releasedDofs)",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateElementPlaneStressSpec",
-        "managedSignature": "PropertyMutationResult CreateElementPlaneStressSpec()",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateElementIgnoreInplaneRotnSpec",
-        "managedSignature": "PropertyMutationResult CreateElementIgnoreInplaneRotnSpec()",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "AddControlDependentRelation",
-        "managedSignature": "PropertyMutationResult AddControlDependentRelation(int controlNodeId, ControlDependencyMode mode, DegreeOfFreedomSelection rigidDofs, IEnumerable<int> dependentNodeIds)",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateElementOffsetSpec",
-        "managedSignature": "PropertyMutationResult CreateElementOffsetSpec(ElementNodeOffsetAxis coordinateSystem, int plateNodeIndex, double offsetX, double offsetY, double offsetZ)",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateElementLocalZOffsetSpec",
-        "managedSignature": "PropertyMutationResult CreateElementLocalZOffsetSpec(double node1Offset, double node2Offset, double node3Offset, double node4Offset)",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "CreateMemberFireProofingSpec",
-        "managedSignature": "PropertyMutationResult CreateMemberFireProofingSpec(FireProofingType fireProofingType, double thickness, double density)",
-        "phase": "P7",
-        "mutation": true
-      },
-      {
-        "native": "GetPropertyUniqueID",
-        "managedSignature": "PropertyQueryResult<PropertyUniqueIdentifier> GetPropertyUniqueID(int propertyId)",
+        "native": "GetInactiveMemberCount",
+        "managedSignature": "PropertyQueryResult<int> GetInactiveMemberCount()",
         "phase": "P7",
         "mutation": false
       },
       {
-        "native": "SetPropertyUniqueID",
-        "managedSignature": "PropertyMutationResult SetPropertyUniqueID(int propertyId, string uniqueId)",
+        "native": "GetFireProofedBeamCount",
+        "managedSignature": "PropertyQueryResult<int> GetFireProofedBeamCount()",
         "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetFireProofingSpecCount",
+        "managedSignature": "PropertyQueryResult<int> GetFireProofingSpecCount()",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetFireProofedBeamList",
+        "managedSignature": "PropertyQueryResult<IReadOnlyList<int>> GetFireProofedBeamList(int maximumResults = 100000)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetFireProofDataForBeam",
+        "managedSignature": "PropertyQueryResult<FireProofingData> GetFireProofDataForBeam(int memberId)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetFireProofingSpecDetails",
+        "managedSignature": "PropertyQueryResult<FireProofingData> GetFireProofingSpecDetails(int specificationIndex)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetFireProofingSpecAssignedBeamCount",
+        "managedSignature": "PropertyQueryResult<int> GetFireProofingSpecAssignedBeamCount(int specificationIndex)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetFireProofingSpecAssignedBeamList",
+        "managedSignature": "PropertyQueryResult<IReadOnlyList<int>> GetFireProofingSpecAssignedBeamList(int specificationIndex, int maximumResults = 100000)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "CreateMemberAttribute",
+        "managedSignature": "PropertyMutationResult CreateMemberAttribute(PropertyAttribute attribute)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateElementAttribute",
+        "managedSignature": "PropertyMutationResult CreateElementAttribute(PropertyAttribute attribute)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "DeleteMemberAttribute",
+        "managedSignature": "PropertyMutationResult DeleteMemberAttribute(PropertyAttribute attribute)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "DeleteElementAttribute",
+        "managedSignature": "PropertyMutationResult DeleteElementAttribute(PropertyAttribute attribute)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "GetMemberCountByAttribute",
+        "managedSignature": "PropertyQueryResult<PropertyAttributeMatchCount> GetMemberCountByAttribute(PropertyAttribute attribute)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetMemberListByAttribute",
+        "managedSignature": "PropertyQueryResult<PropertyAttributeEntityIds> GetMemberListByAttribute(PropertyAttribute attribute, int maximumResults = 100000)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetElementCountByAttribute",
+        "managedSignature": "PropertyQueryResult<PropertyAttributeMatchCount> GetElementCountByAttribute(PropertyAttribute attribute)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetElementListByAttribute",
+        "managedSignature": "PropertyQueryResult<PropertyAttributeEntityIds> GetElementListByAttribute(PropertyAttribute attribute, int maximumResults = 100000)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetMemberAttributeCount",
+        "managedSignature": "PropertyQueryResult<int> GetMemberAttributeCount()",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetMemberAttributeList",
+        "managedSignature": "PropertyQueryResult<IReadOnlyList<PropertyAttribute>> GetMemberAttributeList(int maximumResults = 100000)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "GetAssignedAttributeCount",
+        "managedSignature": "PropertyQueryResult<AssignedAttributeSummary> GetAssignedAttributeCount(int memberOrPlateId)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "RemoveAttribute",
+        "managedSignature": "PropertyMutationResult RemoveAttribute(PropertyAttribute attribute, IEnumerable<int> memberOrPlateIds)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "AssignMemberAttribute",
+        "managedSignature": "PropertyMutationResult AssignMemberAttribute(PropertyAttribute attribute, IEnumerable<int> memberIds)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "AssignElementAttribute",
+        "managedSignature": "PropertyMutationResult AssignElementAttribute(PropertyAttribute attribute, IEnumerable<int> elementIds)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateUPTTable",
+        "managedSignature": "PropertyMutationResult CreateUPTTable(UserProvidedTableType tableType)",
+        "phase": "P8",
+        "mutation": true
+      },
+      {
+        "native": "AddUPTPropertyWIDEFLANGE",
+        "managedSignature": "PropertyMutationResult AddUPTPropertyWIDEFLANGE(int tableId, string sectionName, UptWideFlangeDefinition definition)",
+        "phase": "P8",
+        "mutation": true
+      },
+      {
+        "native": "AddUPTPropertyWIDEFLANGEUNEQUAL",
+        "managedSignature": "PropertyMutationResult AddUPTPropertyWIDEFLANGEUNEQUAL(int tableId, string sectionName, UptUnequalWideFlangeDefinition definition)",
+        "phase": "P8",
         "mutation": true
       }
     ],
-    "offlineTests": 4551,
-    "newCases": 205,
-    "selectedXmlExamples": 792,
-    "propertyXmlExamples": 350,
+    "offlineTests": 4746,
+    "newCases": 195,
+    "selectedXmlExamples": 842,
+    "propertyXmlExamples": 400,
     "liveMutationQualified": false,
-    "nextPhase": "P7",
-    "nextNativeFunction": "GetInactiveMemberCount",
-    "guide": "docs/Property-Section-and-Specification-Creation.md",
-    "contractIndex": "docs/contracts/PropertyCreationContractIndex.json"
+    "nextPhase": "P8",
+    "nextNativeFunction": "AddUPTPropertyWIDEFLANGECOMPOSITE",
+    "gatedP7Functions": {
+      "GetInactiveMemberList": "Void by-value Object transport is marked unusable in reference source; a live native written-buffer fixture is missing.",
+      "GetAlphaAngleForSection": "Native help supplies no interpretable return-status contract; no finite default/output is promoted to certified success.",
+      "GetCentroidLocationForSection": "Native return status is undocumented; qualification must establish success/absence before exposing engineering data.",
+      "GetAssignedAttributeByIndex": "Index base and native observation-context relationship are not verified; no guessed mapping to a requested entity."
+    },
+    "guide": "docs/Property-Fireproofing-Attributes-and-UPT.md",
+    "contractIndex": "docs/contracts/PropertyAttributeContractIndex.json"
   },
   "implementationHistory": [
     {
@@ -75080,6 +75266,184 @@
       "nextPhase": "P6",
       "guide": "docs/Property-Materials-and-Member-Sections.md",
       "contractIndex": "docs/contracts/PropertyRoadmapContractIndex.json"
+    },
+    {
+      "date": "2026-10-24",
+      "parentCommit": "bc7d737029ceb629e140ba4b67dcc03a40e216ed",
+      "interfaceMethods": 175,
+      "adapterMethods": 175,
+      "nativeRoutes": 116,
+      "activeCandidatesRemaining": 88,
+      "workstreams": {
+        "P6": 18,
+        "P5": 17,
+        "P2": 13,
+        "P4": 24,
+        "P9": 1,
+        "P7": 20,
+        "P3": 23
+      },
+      "contracts": [
+        {
+          "native": "CreateWideFlangePropertyFromTable",
+          "managedSignature": "PropertyMutationResult CreateWideFlangePropertyFromTable(WideFlangeTableDefinition definition)",
+          "phase": "P6",
+          "mutation": true
+        },
+        {
+          "native": "CreateBeamPropertyFromTableEx",
+          "managedSignature": "PropertyMutationResult CreateBeamPropertyFromTableEx(Country country, string sectionName, TableSolidShape shape)",
+          "phase": "P6",
+          "mutation": true
+        },
+        {
+          "native": "CreatePrismaticRectangleProperty",
+          "managedSignature": "PropertyMutationResult CreatePrismaticRectangleProperty(double depthY, double widthZ)",
+          "phase": "P6",
+          "mutation": true
+        },
+        {
+          "native": "CreatePrismaticCircleProperty",
+          "managedSignature": "PropertyMutationResult CreatePrismaticCircleProperty(double diameter)",
+          "phase": "P6",
+          "mutation": true
+        },
+        {
+          "native": "CreatePrismaticTeeProperty",
+          "managedSignature": "PropertyMutationResult CreatePrismaticTeeProperty(double totalDepth, double flangeWidth, double stemDepth, double stemWidth)",
+          "phase": "P6",
+          "mutation": true
+        },
+        {
+          "native": "CreatePrismaticTrapezoidalProperty",
+          "managedSignature": "PropertyMutationResult CreatePrismaticTrapezoidalProperty(double depth, double topWidth, double bottomWidth)",
+          "phase": "P6",
+          "mutation": true
+        },
+        {
+          "native": "CreatePrismaticGeneralProperty",
+          "managedSignature": "PropertyMutationResult CreatePrismaticGeneralProperty(GeneralPrismaticSectionDefinition definition)",
+          "phase": "P6",
+          "mutation": true
+        },
+        {
+          "native": "CreateTaperedTubeProperty",
+          "managedSignature": "PropertyMutationResult CreateTaperedTubeProperty(TaperedTubeShape shape, double startDepth, double endDepth, double thickness)",
+          "phase": "P6",
+          "mutation": true
+        },
+        {
+          "native": "CreateMemberPartialReleaseSpec",
+          "managedSignature": "PropertyMutationResult CreateMemberPartialReleaseSpec(MemberEnd memberEnd, DegreeOfFreedomSelection releasedDofs, PartialReleaseFactors factors)",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateMemberTrussSpec",
+          "managedSignature": "PropertyMutationResult CreateMemberTrussSpec()",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateMemberInactiveSpec",
+          "managedSignature": "PropertyMutationResult CreateMemberInactiveSpec()",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateMemberTensionSpec",
+          "managedSignature": "PropertyMutationResult CreateMemberTensionSpec()",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateMemberCompressionSpec",
+          "managedSignature": "PropertyMutationResult CreateMemberCompressionSpec()",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateMemberIgnoreStiffSpec",
+          "managedSignature": "PropertyMutationResult CreateMemberIgnoreStiffSpec()",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateMemberCableSpec",
+          "managedSignature": "PropertyMutationResult CreateMemberCableSpec(CableDefinitionKind definitionKind, double value)",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateMemberCableSpecEx",
+          "managedSignature": "PropertyMutationResult CreateMemberCableSpecEx(CableDefinitionKind definitionKind, double value, CableTensionEnd tensionEnd, double selfWeightFactorX, double selfWeightFactorY, double selfWeightFactorZ)",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateElementNodeReleaseSpec",
+          "managedSignature": "PropertyMutationResult CreateElementNodeReleaseSpec(int nodeId, DegreeOfFreedomSelection releasedDofs)",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateElementPlaneStressSpec",
+          "managedSignature": "PropertyMutationResult CreateElementPlaneStressSpec()",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateElementIgnoreInplaneRotnSpec",
+          "managedSignature": "PropertyMutationResult CreateElementIgnoreInplaneRotnSpec()",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "AddControlDependentRelation",
+          "managedSignature": "PropertyMutationResult AddControlDependentRelation(int controlNodeId, ControlDependencyMode mode, DegreeOfFreedomSelection rigidDofs, IEnumerable<int> dependentNodeIds)",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateElementOffsetSpec",
+          "managedSignature": "PropertyMutationResult CreateElementOffsetSpec(ElementNodeOffsetAxis coordinateSystem, int plateNodeIndex, double offsetX, double offsetY, double offsetZ)",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateElementLocalZOffsetSpec",
+          "managedSignature": "PropertyMutationResult CreateElementLocalZOffsetSpec(double node1Offset, double node2Offset, double node3Offset, double node4Offset)",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "CreateMemberFireProofingSpec",
+          "managedSignature": "PropertyMutationResult CreateMemberFireProofingSpec(FireProofingType fireProofingType, double thickness, double density)",
+          "phase": "P7",
+          "mutation": true
+        },
+        {
+          "native": "GetPropertyUniqueID",
+          "managedSignature": "PropertyQueryResult<PropertyUniqueIdentifier> GetPropertyUniqueID(int propertyId)",
+          "phase": "P7",
+          "mutation": false
+        },
+        {
+          "native": "SetPropertyUniqueID",
+          "managedSignature": "PropertyMutationResult SetPropertyUniqueID(int propertyId, string uniqueId)",
+          "phase": "P7",
+          "mutation": true
+        }
+      ],
+      "offlineTests": 4551,
+      "newCases": 205,
+      "selectedXmlExamples": 792,
+      "propertyXmlExamples": 350,
+      "liveMutationQualified": false,
+      "nextPhase": "P7",
+      "nextNativeFunction": "GetInactiveMemberCount",
+      "guide": "docs/Property-Section-and-Specification-Creation.md",
+      "contractIndex": "docs/contracts/PropertyCreationContractIndex.json"
     }
   ]
 }

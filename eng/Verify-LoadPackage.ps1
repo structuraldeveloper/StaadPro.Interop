@@ -239,6 +239,8 @@ try {
         $propertyGuide += Read-PackageEntry 'docs/Property-Sections.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-Materials-and-Member-Sections.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-Section-and-Specification-Creation.md'
+        $propertyGuide += Read-PackageEntry 'docs/Property-Fireproofing-Attributes-and-UPT.md'
+        $attributePortNames = @('GetInactiveMemberCount', 'GetFireProofedBeamCount', 'GetFireProofedBeamList', 'GetFireProofDataForBeam', 'GetFireProofingSpecCount', 'GetFireProofingSpecDetails', 'GetFireProofingSpecAssignedBeamCount', 'GetFireProofingSpecAssignedBeamList', 'CreateMemberAttribute', 'CreateElementAttribute', 'DeleteMemberAttribute', 'DeleteElementAttribute', 'GetMemberCountByAttribute', 'GetMemberListByAttribute', 'GetMemberAttributeCount', 'GetMemberAttributeList', 'GetElementCountByAttribute', 'GetElementListByAttribute', 'GetAssignedAttributeCount', 'RemoveAttribute', 'AssignMemberAttribute', 'AssignElementAttribute', 'CreateUPTTable', 'AddUPTPropertyWIDEFLANGE', 'AddUPTPropertyWIDEFLANGEUNEQUAL')
         $creationPortNames = @('CreateWideFlangePropertyFromTable', 'CreateBeamPropertyFromTableEx', 'CreatePrismaticRectangleProperty', 'CreatePrismaticCircleProperty', 'CreatePrismaticTeeProperty', 'CreatePrismaticTrapezoidalProperty', 'CreatePrismaticGeneralProperty', 'CreateTaperedTubeProperty', 'CreateMemberPartialReleaseSpec', 'CreateMemberTrussSpec', 'CreateMemberInactiveSpec', 'CreateMemberTensionSpec', 'CreateMemberCompressionSpec', 'CreateMemberIgnoreStiffSpec', 'CreateMemberCableSpec', 'CreateMemberCableSpecEx', 'CreateElementNodeReleaseSpec', 'CreateElementPlaneStressSpec', 'CreateElementIgnoreInplaneRotnSpec', 'AddControlDependentRelation', 'CreateElementOffsetSpec', 'CreateElementLocalZOffsetSpec', 'CreateMemberFireProofingSpec', 'GetPropertyUniqueID', 'SetPropertyUniqueID')
         $roadmapPortNames = @('GetOrthotropic3DMaterialCount', 'GetOrthotropic3DMaterialProperties', 'RemoveMaterialFromBeam', 'GetSolidMaterialName', 'GetIsotropicMaterialAssignedSolidCount', 'GetIsotropicMaterialAssignedSolidIds', 'SetTypeToIsotropicMaterial', 'GetTypeForIsotropicMaterial', 'GetSectionPropertiesForProfile', 'GetBeamSectionPropertyRefNo', 'GetBeamSectionPropertyValuesEx', 'GetSectionTableNo', 'GetBeamSectionPropertyTypeNo', 'GetBeamSectionName', 'GetBeamSectionDisplayName', 'GetCountryTableNo', 'CreateAssignProfileProperty', 'AssignElementSpecToPlate', 'UpdatePropertiesToDesignSection', 'CreateIsotropicMaterialPropertiesEx', 'CreateIsotropicMaterialSteel', 'CreateIsotropicMaterialConcrete', 'CreateIsotropicMaterialAluminum', 'CreateIsotropicMaterialTimber', 'AssignMaterialToSolid')
         $sectionPortNames = @('AssignSectionProperties', 'AssignSectionProperty', 'CreateAndAssignSectionProperties', 'CreateMaterialProperties', 'CreateMaterialProperty', 'CreatePlateThicknessProperty', 'CreateSectionProperties', 'CreateSectionProperty', 'GetAllSections', 'GetAllSectionsWithAssignedBeamsList', 'GetSectionalArea', 'GetSectionBy', 'GetSectionByPropertyIdWithAssignedBeamsList', 'GetSectionPropertyCount', 'GetThicknessPropertyCount', 'GetCountofSectionPropertyValuesEx', 'GetSectionPropertyType', 'GetSectionPropertyCountry', 'GetRecordForSection')
@@ -247,7 +249,7 @@ try {
         $mainPortNames += @('AssignMaterialProperties', 'AssignMaterialProperty', 'CreateMaterialProperties', 'CreateMaterialPropertiesNoConversion', 'CreateMaterialProperty', 'CreateMaterialPropertyNoConversion', 'GetAllExtendedIsotropicMaterialProperties', 'GetAllIsotropicMaterialProperties', 'GetAllExtendedIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllExtendedMaterialPropertiesWithPopulatedAssignments', 'GetAllMaterialPropertiesWithPopulatedAssignments', 'CreatePlateThicknessProperties', 'AssignThicknessProperties', 'AssignThicknessProperty', 'AssignOffsetSpecification', 'CreateAndAssignOffsetSpecifications', 'PopulateMemberReleases', 'CreateAndAssignMemberEndReleases')
         foreach ($owner in @('Adapters.Interfaces.IOSProperty', 'Adapters.Models.OSPropertyAdapter')) {
             $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-            if ($entries.Count -ne 175) { throw "Expected 175 Property method contracts for $owner." }
+            if ($entries.Count -ne 200) { throw "Expected 200 Property method contracts for $owner." }
             foreach ($entry in $entries) {
                 $methodName = [regex]::Match($entry.name, '\.([^.()]+)(?:\(|$)').Groups[1].Value
                 $requiredTags = @('summary', 'remarks', 'example/code')
@@ -259,11 +261,11 @@ try {
                 if ($entry.SelectSingleNode('remarks').InnerText -notmatch 'When to use:') { throw "Missing comparative Property IntelliSense for $($entry.name)" }
                 if ($propertyGuide -notmatch $methodName) { throw "Missing Property guidance for $methodName" }
                 $binding = if ($owner.EndsWith('IOSProperty')) { 'IOSProperty property = wrapper.Property;' } else { 'var property = new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper);' }
-                $fixture = if ($methodName -in $creationPortNames) { 'PropertyCreationFixture' } elseif ($methodName -in $roadmapPortNames) { 'PropertyRoadmapFixture' } elseif ($methodName -in $sectionPortNames) { 'PropertySectionFixture' } elseif ($methodName -in $mainPortNames) { 'PropertyPortFixture' } else { 'PropertyQueryFixture' }
+                $fixture = if ($methodName -in $attributePortNames) { 'PropertyAttributeFixture' } elseif ($methodName -in $creationPortNames) { 'PropertyCreationFixture' } elseif ($methodName -in $roadmapPortNames) { 'PropertyRoadmapFixture' } elseif ($methodName -in $sectionPortNames) { 'PropertySectionFixture' } elseif ($methodName -in $mainPortNames) { 'PropertyPortFixture' } else { 'PropertyQueryFixture' }
                 $propertySnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.' + $fixture + '.Root { Property = new PackageVerification.' + $fixture + '.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
             }
         }
-        if ($propertySnippets.Count -ne 350) { throw 'Expected 350 Property XML examples.' }
+        if ($propertySnippets.Count -ne 400) { throw 'Expected 400 Property XML examples.' }
     }
 } finally { $archive.Dispose() }
 
@@ -564,6 +566,12 @@ __PROPERTY_EXAMPLES__
         var creationAdapterNative = new PackageVerification.PropertyCreationFixture.Native();
         using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyCreationFixture.Root { Property = creationAdapterNative }))
             PackageVerification.PropertyCreationFixture.VerifyCalls(new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper), creationAdapterNative);
+        var attributeInterfaceNative = new PackageVerification.PropertyAttributeFixture.Native();
+        using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyAttributeFixture.Root { Property = attributeInterfaceNative }))
+            PackageVerification.PropertyAttributeFixture.VerifyCalls(wrapper.Property, attributeInterfaceNative);
+        var attributeAdapterNative = new PackageVerification.PropertyAttributeFixture.Native();
+        using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyAttributeFixture.Root { Property = attributeAdapterNative }))
+            PackageVerification.PropertyAttributeFixture.VerifyCalls(new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper), attributeAdapterNative);
     }
     public sealed class FakeOutputRoot
     {
@@ -768,6 +776,7 @@ if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'F
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertySectionFixture.cs') -Destination (Join-Path $consumerRoot 'PropertySectionFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyRoadmapFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyRoadmapFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCreationFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCreationFixture.cs') }
+if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyAttributeFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyAttributeFixture.cs') }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/LoadInspectionFixture.cs') -Destination (Join-Path $consumerRoot 'LoadInspectionFixture.cs')
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'NuGet.Config'), $config)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Consumer.csproj'), $project)

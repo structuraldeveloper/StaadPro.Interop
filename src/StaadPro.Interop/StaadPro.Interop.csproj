@@ -12,11 +12,11 @@
     <RootNamespace>StaadPro.Interop</RootNamespace>
     <PackageId>StaadPro.Interop</PackageId>
     <Version>1.0.0</Version>
-    <ReleaseDocumentationVersion>1.0.0-preview.20261024.7</ReleaseDocumentationVersion>
+    <ReleaseDocumentationVersion>1.0.0-preview.20261024.8</ReleaseDocumentationVersion>
     <PackageVersion>$(ReleaseDocumentationVersion)</PackageVersion>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 IngeneStructs</Copyright>
-    <PackageReleaseNotes>Incorporated 25 Property functions for wide-flange/solid/prismatic/tapered section creation, member/element specifications, cable and fireproofing definitions, control/dependent relations and property unique-ID metadata. Property now has 175 overloads and 116 of 204 native routes. Preserved separate section/specification IDs, zero-based fireproofing indices, status-only creation and void invocation evidence. Added immutable inputs, complete interface/adapter XML IntelliSense and guarded examples. Authors Srinivasa Rao Masanam; Copyright (c) 2026 IngeneStructs. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Incorporated 25 Property functions for inactive/fireproofing counts and readback, member/element attribute definitions and assignments, paired attribute inventories, UPT table creation and wide-flange insertion. Property now has 200 overloads and 141 of 204 native routes. Added bounded owned snapshots, immutable pair/UPT inputs, by-reference input checks and separate table identity/duplicate outcomes, with complete XML IntelliSense. Four unverified P7 contracts remain pending. Authors Srinivasa Rao Masanam; Copyright (c) 2026 IngeneStructs. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
@@ -57,6 +57,7 @@
     <None Include="..\..\docs\Property-Sections.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Property-Materials-and-Member-Sections.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Property-Section-and-Specification-Creation.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Property-Fireproofing-Attributes-and-UPT.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Output-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Analysis-Queries.md" Pack="true" PackagePath="docs\" />

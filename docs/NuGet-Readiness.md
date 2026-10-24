@@ -1,6 +1,18 @@
 # NuGet readiness assessment
 
-## Latest prepared preview - 1.0.0-preview.20261024.7
+## Latest prepared preview - 1.0.0-preview.20261024.8
+
+Incorporated **25 Property functions**: 22 reviewed P7 inactive/fireproofing/attribute operations and the first three P8 UPT operations. Property now exposes **200 overloads** and reaches **141 of 204 active native routes**, with **63 remaining**. P7 has 42 of 46 routes; four contract gaps remain explicitly pending. P8 has three of thirty routes. See [the 25 fireproofing/attribute/UPT contracts](Property-Fireproofing-Attributes-and-UPT.md).
+
+Passed a Release build with zero warnings/errors and **4,746 offline tests**, including **195 new cases**. The fresh PackageReference-only consumer verifies **842 selected XML examples**, including all **400 Property interface/adapter examples**. All ten new mutation examples are guarded; dedicated managed checks execute every new route through both public surfaces. Verification does not change a live STAAD model.
+
+Added immutable exact attribute pairs, pair/domain/ID snapshots, fireproofing correspondence and explicit UPT value packets. Bounded count/list/count reads validate written outputs and preserve order/duplicates. By-reference native attribute-value rewriting returns StateChanged rather than data for the wrong pair. UPT table IDs, insertion acknowledgements and duplicate outcomes remain separate; scalar and unequal wide-flange routes retain their different return conventions.
+
+Package Authors remains exactly **Srinivasa Rao Masanam**; company and copyright remain **IngeneStructs**. Existing author packing/verification safeguards remain in place.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.8.nupkg` for manual upload. Verified exact author/copyright, installed DLL/XML, shipped fireproofing/attribute/UPT guide and restored archive identity. Four P7 contract qualifications and live native validation remain pending.
+
+## Earlier prepared preview - 1.0.0-preview.20261024.7
 
 Incorporated **25 Property functions**: the eight remaining P6 section creators and the next seventeen P7 specification/property operations. Property now exposes **175 overloads** and reaches **116 of 204 active native routes**, with **88 remaining**. All P2/P3/P4/P5/P6 allocations have managed routes; P7 has 20 of 46. Route coverage does not establish live native or engineering qualification. See [all 25 creation/specification contracts](Property-Section-and-Specification-Creation.md).
 

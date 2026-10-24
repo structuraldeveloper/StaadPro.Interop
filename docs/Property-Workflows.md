@@ -1,6 +1,6 @@
 # Property material, thickness, offset and release workflows
 
-This guide records the preceding 25-workflow checkpoint. Property now exposes 175 overloads; see [the section completion](Property-Sections.md) and [the material/member-section routes](Property-Materials-and-Member-Sections.md) and [the latest section/specification creators](Property-Section-and-Specification-Creation.md). The basic material converter overloads deferred at this checkpoint are now included using the repository UnitsConverter.
+This guide records the preceding 25-workflow checkpoint. Property now exposes 200 overloads; see [the section completion](Property-Sections.md) and [the material/member-section routes](Property-Materials-and-Member-Sections.md) and [the section/specification creators](Property-Section-and-Specification-Creation.md) and [the latest fireproofing/attribute/UPT routes](Property-Fireproofing-Attributes-and-UPT.md). The basic material converter overloads deferred at this checkpoint are now included using the repository UnitsConverter.
 
 
 This increment ports 25 further main-interface overloads while preserving names, parameter types/names/order and defaults after adapting namespaces. Property now exposes 100 overloads: 25 qualified observations and 75 main-project compatibility ports. Three additional native names have routes, reaching 57 of 204 active candidates with 147 pending. This is dispatch coverage, not native qualification.

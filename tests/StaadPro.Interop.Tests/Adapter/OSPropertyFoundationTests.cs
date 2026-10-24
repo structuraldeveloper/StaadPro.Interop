@@ -187,7 +187,7 @@ namespace StaadPro.Interop.Tests.Adapter
         public void NewPayloadPropertiesAreNamedImmutableAndFullyDocumented()
         {
             var types=typeof(IOSProperty).Assembly.GetExportedTypes().Where(t=>t.Namespace=="StaadPro.Interop.Models.Property"||t.Namespace=="StaadPro.Interop.Enums.Property").ToArray();
-            Assert.That(types.Length,Is.EqualTo(36));var docs=XDocument.Load(Path.ChangeExtension(typeof(IOSProperty).Assembly.Location,".xml")).Descendants("member").ToDictionary(m=>(string)m.Attribute("name"));
+            Assert.That(types.Length,Is.EqualTo(45));var docs=XDocument.Load(Path.ChangeExtension(typeof(IOSProperty).Assembly.Location,".xml")).Descendants("member").ToDictionary(m=>(string)m.Attribute("name"));
             foreach(var type in types)
             {
                 Assert.That(docs["T:"+type.FullName].Element("summary")?.Value,Is.Not.Null.And.Not.Empty);

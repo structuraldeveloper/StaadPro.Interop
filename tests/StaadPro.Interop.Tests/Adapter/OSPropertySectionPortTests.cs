@@ -68,7 +68,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [Test]
         public void AddsExactlyNineteenMainAndSixNativeSignaturesOnBothSurfaces()
         {
-            Assert.That(Methods.Count(), Is.EqualTo(25)); Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(175));
+            Assert.That(Methods.Count(), Is.EqualTo(25)); Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(200));
             foreach (var m in Methods)
             {
                 var impl = typeof(OSPropertyAdapter).GetMethod(m.Name, m.GetParameters().Select(p => p.ParameterType).ToArray());

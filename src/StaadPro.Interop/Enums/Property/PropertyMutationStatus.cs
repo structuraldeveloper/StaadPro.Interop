@@ -14,7 +14,9 @@ namespace StaadPro.Interop.Enums.Property
         /// <summary>The native operation rejected the profile selector or array representation.</summary>
         InvalidInput,
         /// <summary>A void native setter returned without a transport error; it supplied no success acknowledgement or read-back.</summary>
-        InvokedWithoutAcknowledgement
+        InvokedWithoutAcknowledgement,
+        /// <summary>The requested named UPT section already exists, as explicitly reported by the native operation.</summary>
+        AlreadyExists
     }
 
     /// <summary>Identifies the scope of a requested Property mutation.</summary>
@@ -37,7 +39,17 @@ namespace StaadPro.Interop.Enums.Property
         /// <summary>The operation affects the listed dependent analytical nodes and a separately identified control node.</summary>
         Node,
         /// <summary>The operation writes metadata for a separately identified native property reference.</summary>
-        PropertyDefinition
+        PropertyDefinition,
+        /// <summary>The operation affects an explicitly named native member/element attribute definition.</summary>
+        AttributeDefinition,
+        /// <summary>The operation affects native elements without guessing their geometry type.</summary>
+        Element,
+        /// <summary>The native operation accepts ambiguous member/plate integers; no resolved kind is inferred.</summary>
+        MemberOrPlate,
+        /// <summary>The operation creates a user-provided table, independently of section and specification IDs.</summary>
+        UserProvidedTable,
+        /// <summary>The operation adds a named section to an existing user-provided table.</summary>
+        UserProvidedSection
     }
 
     /// <summary>Identifies the five native ASSIGN profile selectors; these are not section property reference IDs.</summary>

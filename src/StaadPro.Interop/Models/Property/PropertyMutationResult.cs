@@ -13,7 +13,9 @@ namespace StaadPro.Interop.Models.Property
             PropertyMutationTargetKind targetKind, int[] targetIds = null, string materialName = null,
             int? specificationId = null, AssignedSectionProfile? profileType = null, int? createdPropertyId = null,
             int? createdSpecificationId = null, int? createdSpecificationIndex = null, int? controlNodeId = null,
-            int? propertyId = null, string uniqueId = null, int? plateNodeIndex = null)
+            int? propertyId = null, string uniqueId = null, int? plateNodeIndex = null,
+            PropertyAttribute attribute = null, PropertyAttributeScope? attributeScope = null,
+            int? tableId = null, int? createdTableId = null, UserProvidedTableType? tableType = null, string sectionName = null)
         {
             NativeFunction = operation; Status = status; TargetKind = targetKind;
             TargetIds = Array.AsReadOnly(targetIds == null ? new int[0] : (int[])targetIds.Clone());
@@ -21,6 +23,8 @@ namespace StaadPro.Interop.Models.Property
             CreatedPropertyId = createdPropertyId;
             CreatedSpecificationId = createdSpecificationId; CreatedSpecificationIndex = createdSpecificationIndex;
             ControlNodeId = controlNodeId; PropertyId = propertyId; UniqueId = uniqueId; PlateNodeIndex = plateNodeIndex;
+            Attribute = attribute; AttributeScope = attributeScope; TableId = tableId; CreatedTableId = createdTableId;
+            TableType = tableType; SectionName = sectionName;
             if (response is bool flag) NativeBooleanReturn = flag;
             else if (response != null) NativeReturnCode = Services.Property.PropertyValueReader.Integer(response, operation);
         }
@@ -58,5 +62,17 @@ namespace StaadPro.Interop.Models.Property
         public string UniqueId { get; }
         /// <summary>Gets the requested plate corner index 1..4 for local/global offset creation; otherwise null. This is not an analytical node ID.</summary>
         public int? PlateNodeIndex { get; }
+        /// <summary>Gets the exact immutable requested attribute pair for definition/assignment/removal operations; otherwise null.</summary>
+        public PropertyAttribute Attribute { get; }
+        /// <summary>Gets the native member, element or ambiguous member/plate attribute domain; otherwise null.</summary>
+        public PropertyAttributeScope? AttributeScope { get; }
+        /// <summary>Gets the requested positive existing UPT table ID for section insertion; otherwise null. Not a section property ID.</summary>
+        public int? TableId { get; }
+        /// <summary>Gets the positive created UPT table ID only for successful table creation; otherwise null. Never inferred from an insertion acknowledgement.</summary>
+        public int? CreatedTableId { get; }
+        /// <summary>Gets the requested native UPT table type for table creation; otherwise null.</summary>
+        public UserProvidedTableType? TableType { get; }
+        /// <summary>Gets the exact requested section name for UPT insertion; otherwise null. No created section property reference is fabricated.</summary>
+        public string SectionName { get; }
     }
 }

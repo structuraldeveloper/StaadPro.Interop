@@ -12,7 +12,17 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Property section and specification creation
+## Property fireproofing, attributes and UPT
+
+Incorporated **25 Property functions**: 22 reviewed P7 inactive/fireproofing/attribute operations and the first three P8 UPT operations. Property now exposes **200 overloads** and reaches **141 of 204 active native routes**, with **63 remaining**. P7 has 42 of 46 routes; four contract gaps remain explicitly pending. P8 has three of thirty routes. See [the 25 fireproofing/attribute/UPT contracts](docs/Property-Fireproofing-Attributes-and-UPT.md).
+
+Passed a Release build with zero warnings/errors and **4,746 offline tests**, including **195 new cases**. The fresh PackageReference-only consumer verifies **842 selected XML examples**, including all **400 Property interface/adapter examples**. All ten new mutation examples are guarded; dedicated managed checks execute every new route through both public surfaces. Verification does not change a live STAAD model.
+
+Added immutable exact attribute pairs, pair/domain/ID snapshots, fireproofing correspondence and explicit UPT value packets. Bounded count/list/count reads validate written outputs and preserve order/duplicates. By-reference native attribute-value rewriting returns StateChanged rather than data for the wrong pair. UPT table IDs, insertion acknowledgements and duplicate outcomes remain separate; scalar and unequal wide-flange routes retain their different return conventions.
+
+Package Authors remains exactly **Srinivasa Rao Masanam**; company and copyright remain **IngeneStructs**. Existing author packing/verification safeguards remain in place.
+
+## Earlier Property section and specification creation
 
 Incorporated **25 Property functions**: the eight remaining P6 section creators and the next seventeen P7 specification/property operations. Property now exposes **175 overloads** and reaches **116 of 204 active native routes**, with **88 remaining**. All P2/P3/P4/P5/P6 allocations have managed routes; P7 has 20 of 46. Route coverage does not establish live native or engineering qualification. See [all 25 creation/specification contracts](docs/Property-Section-and-Specification-Creation.md).
 
@@ -46,13 +56,13 @@ All 36 methods include comparative IntelliSense explaining scope, alternatives, 
 
 Implemented 15 additional Load observations with complete XML contracts, named status/data results, bounded eager snapshots and an internal shared service. Source now exposes 135 Load overloads and dispatches 88/129 documented native names. Remaining undispatched names total 41: one existing alternative, one derived capability, four partial overlaps and 35 absent operations, plus three separate metadata-only candidates. Passed 2,448 offline tests (189 new cases) and all 30 new XML examples. See [Load inspection usage](docs/Load-Inspection-Queries.md). These changes postdate the prepared archive below; live native qualification remains pending.
 
-## Prepared preview: 1.0.0-preview.20261024.7
+## Prepared preview: 1.0.0-preview.20261024.8
 
 Package author: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
 
-The local archive includes 175 Property overloads, 171 Load overloads, all 143 reference Geometry overloads, 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
+The local archive includes 200 Property overloads, 171 Load overloads, all 143 reference Geometry overloads, 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
-Validated a Release solution build, 4,551 offline tests and isolated installation with 792 compiled/executed XML examples (new mutation examples are guarded). The archive is prepared for manual upload and has not been published to NuGet.org. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
+Validated a Release solution build, 4,746 offline tests and isolated installation with 842 compiled/executed XML examples (new mutation examples are guarded). The archive is prepared for manual upload and has not been published to NuGet.org. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
 
 ## Output comparison and planned work
 
@@ -60,7 +70,7 @@ The [Output guide](docs/Output-Porting.md) documents 15 implemented typed querie
 
 ## Property implementation and comparison
 
-The [Property review](docs/Property-Porting.md) records 175 managed overloads and routes to 116 of the 204 active native candidates, with 88 remaining. The [main-project ports guide](docs/Property-Main-Ports.md) lists the preceding 25 signatures and explains compatibility sentinels, no-op inputs, native status checks, raw section-buffer limits and mutation behavior. The [multi-version inventory](docs/reports/OpenSTAAD-Property-API-Coverage-and-Contract-Inventory.md) remains the earlier contract evidence; dispatch coverage does not certify complete typed payloads or live compatibility.
+The [Property review](docs/Property-Porting.md) records 200 managed overloads and routes to 141 of the 204 active native candidates, with 63 remaining. The [main-project ports guide](docs/Property-Main-Ports.md) lists the preceding 25 signatures and explains compatibility sentinels, no-op inputs, native status checks, raw section-buffer limits and mutation behavior. The [multi-version inventory](docs/reports/OpenSTAAD-Property-API-Coverage-and-Contract-Inventory.md) remains the earlier contract evidence; dispatch coverage does not certify complete typed payloads or live compatibility.
 
 ## Support comparison and planned work
 
@@ -228,8 +238,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261024.7 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.7.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261024.8 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.8.nupkg
 ```
 
 ---
