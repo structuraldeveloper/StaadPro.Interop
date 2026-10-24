@@ -8,6 +8,12 @@ Passed a Release build with zero warnings/errors and **3,574 offline tests**, in
 
 Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.nupkg` for manual upload. Verification checks the net481 DLL/XML pair, expanded interface/adapter contracts, guide/version consistency and exact restored package identity in a fresh consumer/cache. Includes the earlier Property and Load expansion increments. Public API counts are unchanged. The consumer application must install this new version and rebuild; an older loaded DLL retains the exception. No public upload is performed by this task.
 
+### Post-package live verification
+
+On 24 October 2026, verified the exact DLL extracted from `StaadPro.Interop.1.0.0-preview.20261024.nupkg` against a connected named model in **STAAD.Pro 25.00.00.539**. `GetLoadCasesFromIds` and `GetPrimaryLoadCasesFromIds` both returned the requested cases 1, 2 and 3. Full primary, reference and combination discovery returned the observed inventory counts of 74, 25 and 230; primary family/list queries also returned 74. Native primary/combination number retrieval returned Boolean true, and reference number retrieval returned its integer count.
+
+The probe invoked only attachment and read APIs. Model path, active case, node count and all three case-inventory counts were unchanged afterward. This confirms the reported Boolean-return correction on this build/model; it does not qualify other builds, concurrent edits, native mutation APIs or engineering results. This verification record was added after the archive was built; the existing archive and its repository commit remain unchanged.
+
 ## Earlier prepared preview — 1.0.0-preview.20261023.1
 
 Added 25 main-project Property overloads for section/thickness inventories, assignment discovery, material context and assignment, member specifications, and global-Y member-end offsets. Property now exposes **50 overloads**: the existing 25 typed observations and these 25 signature-compatible ports. All new interface and adapter methods include expanded XML IntelliSense with parameters, return values, examples, units, side effects and failure contracts. Shared locking/lifetime checks, bounded native buffers and checked operation-specific statuses are included. Passed **3,531 offline tests**, including **209 new Property cases**, with zero build warnings/errors. The installed-package verifier compiles and runs **542 selected XML examples**, including all **100 Property examples**, against managed stand-ins. Live COM and engineering qualification remain pending.
