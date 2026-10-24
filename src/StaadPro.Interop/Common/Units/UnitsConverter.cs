@@ -56,6 +56,18 @@ namespace StaadPro.Interop.Common.Units
         /// <include file="../../Documentation/ApiMembers.xml" path="doc/members/member[@name='UnitsConverter.P:StressConversionFactor']/*" />
         public double StressConversionFactor => ForceConversionFactor / AreaConversionFactor;
 
+        /// <summary>Gets the elastic-modulus factor, equal to force divided by length squared.</summary>
+        /// <remarks>This is an alias of StressConversionFactor. It does not establish the native unit convention or convert temperature-dependent fields.</remarks>
+        public double ElasticModulusConversionFactor => StressConversionFactor;
+
+        /// <summary>Gets the shear-modulus factor, equal to force divided by length squared.</summary>
+        /// <remarks>Uses the same dimensional factor as elastic modulus without deriving a native G value.</remarks>
+        public double ShearModulusConversionFactor => StressConversionFactor;
+
+        /// <summary>Gets the weight-density factor, equal to force divided by length cubed.</summary>
+        /// <remarks>This is force/volume, not a mass-density conversion. Uses this repository's unit constants.</remarks>
+        public double DensityConversionFactor => ForceConversionFactor / VolumeConversionFactor;
+
         #endregion
 
         #region Helpers

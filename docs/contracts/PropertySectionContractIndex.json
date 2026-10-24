@@ -1,0 +1,573 @@
+{
+  "date": "2026-10-24",
+  "mainMethods": 19,
+  "nativeMethods": 6,
+  "contracts": [
+    {
+      "signature": "IOSProperty AssignSectionProperties(HashSet<IGenericSection> gsSet)",
+      "name": "AssignSectionProperties",
+      "summary": "Assigns native section IDs from retrieved section packets to their candidate beams.",
+      "parameters": [
+        [
+          "gsSet",
+          "Null/empty is a no-op. Non-null packets with nonempty AssignedBeams require positive existing section/member IDs; empty assignments are skipped."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use with GetAllSections/GetSectionBy results when section definitions already exist. Copies candidate IDs before dispatch and calls AssignBeamProperty once per section with an Int32 array, requiring integral zero success. Does not create sections, hydrate geometry, change managed beam section references, save or roll back earlier writes.",
+      "example": "var section = property.GetSectionBy(37);\nsection.AssignedBeams.Add(new Beam { Id = 17 });\nproperty.AssignSectionProperties(new System.Collections.Generic.HashSet<StaadPro.Interop.Interfaces.IGenericSection> { section });",
+      "native": [
+        "AssignBeamProperty"
+      ],
+      "body": null,
+      "origin": "main"
+    },
+    {
+      "signature": "IOSProperty AssignSectionProperties(HashSet<SectionProperty> spSet)",
+      "name": "AssignSectionProperties",
+      "summary": "Assigns existing section definition IDs to their managed member candidates.",
+      "parameters": [
+        [
+          "spSet",
+          "Null/empty is a no-op. Non-null packets with nonempty Beams require positive existing section/member IDs; creation definitions are not required for assignment."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use after resolving or creating positive native IDs. All target IDs are validated and copied before the first native write. Calls AssignBeamProperty with each packet's member-ID array. Integral zero is success; nonzero codes throw and may describe partial assignment. Does not create definitions, infer materials, populate beam references, save, retry or roll back earlier writes.",
+      "example": "var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();\ndefinition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = \"ISMB300\", Designation = \"ISMB300\" };\nvar section = new SectionProperty { Id = 37, SectionDefinition = definition };\nsection.Beams.Add(new Beam { Id = 17 });\nproperty.AssignSectionProperties(new System.Collections.Generic.HashSet<SectionProperty> { section });",
+      "native": [
+        "AssignBeamProperty"
+      ],
+      "body": "AssignSectionProperties(spSet, 1, false)",
+      "origin": "main"
+    },
+    {
+      "signature": "IOSProperty AssignSectionProperties(HashSet<SectionProperty> sectionProperties, int nThreads)",
+      "name": "AssignSectionProperties",
+      "summary": "Assigns existing section definition IDs to their managed member candidates.",
+      "parameters": [
+        [
+          "sectionProperties",
+          "Null/empty is a no-op. Non-null packets with nonempty Beams require positive existing section/member IDs; creation definitions are not required for assignment."
+        ],
+        [
+          "nThreads",
+          "Source-compatible degree from 1 through 512. All COM calls remain serialized on the caller apartment; no worker-thread COM dispatch occurs."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use after resolving or creating positive native IDs. All target IDs are validated and copied before the first native write. Calls AssignBeamProperty for each individual member, preserving the source scalar route. Integral zero is success; nonzero codes throw and may describe partial assignment. Does not create definitions, infer materials, populate beam references, save, retry or roll back earlier writes.",
+      "example": "var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();\ndefinition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = \"ISMB300\", Designation = \"ISMB300\" };\nvar section = new SectionProperty { Id = 37, SectionDefinition = definition };\nsection.Beams.Add(new Beam { Id = 17 });\nproperty.AssignSectionProperties(new System.Collections.Generic.HashSet<SectionProperty> { section }, 2);",
+      "native": [
+        "AssignBeamProperty"
+      ],
+      "body": "AssignSectionProperties(sectionProperties, nThreads, true)",
+      "origin": "main"
+    },
+    {
+      "signature": "IOSProperty AssignSectionProperty(SectionProperty sp)",
+      "name": "AssignSectionProperty",
+      "summary": "Assigns existing section definition IDs to their managed member candidates.",
+      "parameters": [
+        [
+          "sp",
+          "Null/empty is a no-op. Non-null packets with nonempty Beams require positive existing section/member IDs; creation definitions are not required for assignment."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use after resolving or creating positive native IDs. All target IDs are validated and copied before the first native write. Calls AssignBeamProperty with each packet's member-ID array. Integral zero is success; nonzero codes throw and may describe partial assignment. Does not create definitions, infer materials, populate beam references, save, retry or roll back earlier writes.",
+      "example": "var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();\ndefinition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = \"ISMB300\", Designation = \"ISMB300\" };\nvar section = new SectionProperty { Id = 37, SectionDefinition = definition };\nsection.Beams.Add(new Beam { Id = 17 });\nproperty.AssignSectionProperty(section);",
+      "native": [
+        "AssignBeamProperty"
+      ],
+      "body": "AssignSectionProperty(sp, 1, false)",
+      "origin": "main"
+    },
+    {
+      "signature": "IOSProperty AssignSectionProperty(SectionProperty sectionProperty, int nThreads)",
+      "name": "AssignSectionProperty",
+      "summary": "Assigns existing section definition IDs to their managed member candidates.",
+      "parameters": [
+        [
+          "sectionProperty",
+          "Null/empty is a no-op. Non-null packets with nonempty Beams require positive existing section/member IDs; creation definitions are not required for assignment."
+        ],
+        [
+          "nThreads",
+          "Source-compatible degree from 1 through 512. All COM calls remain serialized on the caller apartment; no worker-thread COM dispatch occurs."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use after resolving or creating positive native IDs. All target IDs are validated and copied before the first native write. Calls AssignBeamProperty for each individual member, preserving the source scalar route. Integral zero is success; nonzero codes throw and may describe partial assignment. Does not create definitions, infer materials, populate beam references, save, retry or roll back earlier writes.",
+      "example": "var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();\ndefinition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = \"ISMB300\", Designation = \"ISMB300\" };\nvar section = new SectionProperty { Id = 37, SectionDefinition = definition };\nsection.Beams.Add(new Beam { Id = 17 });\nproperty.AssignSectionProperty(section, 2);",
+      "native": [
+        "AssignBeamProperty"
+      ],
+      "body": "AssignSectionProperty(sectionProperty, nThreads, true)",
+      "origin": "main"
+    },
+    {
+      "signature": "IOSProperty CreateAndAssignSectionProperties(HashSet<Beam> beams)",
+      "name": "CreateAndAssignSectionProperties",
+      "summary": "Groups explicit beam section definitions, creates them and assigns their members.",
+      "parameters": [
+        [
+          "beams",
+          "Non-null set of non-null positive-ID beams. Null SectionProperty references are ignored. Complete H/C/L/O/Box selections and valid additional values are required for non-null definitions."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use to apply managed SectionProperty definitions in one ordered workflow. Groups equal selected profile identities, modifiers and additional values; retains canonical existing Beams and adds supplied beam references. Validates/snapshots all requests and target IDs first, creates every grouped definition, propagates each positive native ID to all equal source packets, then assigns grouped member-ID arrays. Set the intended existing current material beforehand. A later creation/assignment failure leaves earlier native changes and successful IDs applied; no transaction, cleanup, save, implicit material selection or conversion occurs. Empty input/no definitions is a no-op. Private catalog/UI services are not imported.",
+      "example": "var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();\ndefinition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = \"ISMB300\", Designation = \"ISMB300\" };\nvar section = new SectionProperty { Id = 37, SectionDefinition = definition };\nsection.Beams.Add(new Beam { Id = 17 });\nproperty.SetMaterialName(\"STEEL\");\nvar beam = new Beam { Id = 17, SectionProperty = section };\nproperty.CreateAndAssignSectionProperties(new System.Collections.Generic.HashSet<Beam> { beam });",
+      "native": [
+        "CreateBeamPropertyFromTable",
+        "CreateTeePropertyFromTable",
+        "CreateBeamPropertyFromTableWithCoverPlates",
+        "CreateBeamPropertyFromTableComposite",
+        "CreateChannelPropertyFromTable",
+        "CreateAnglePropertyFromTable",
+        "CreatePipePropertyFromTable",
+        "CreateTubePropertyFromTable",
+        "AssignBeamProperty"
+      ],
+      "body": "CreateAndAssignSectionProperties(beams, 1, false)",
+      "origin": "main"
+    },
+    {
+      "signature": "IOSProperty CreateAndAssignSectionProperties(HashSet<Beam> beams, int nThreads)",
+      "name": "CreateAndAssignSectionProperties",
+      "summary": "Groups explicit beam section definitions, creates them and assigns their members.",
+      "parameters": [
+        [
+          "beams",
+          "Non-null set of non-null positive-ID beams. Null SectionProperty references are ignored. Complete H/C/L/O/Box selections and valid additional values are required for non-null definitions."
+        ],
+        [
+          "nThreads",
+          "Source-compatible degree from 1 through 512. All COM calls remain serialized on the caller apartment; no worker-thread COM dispatch occurs."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use to apply managed SectionProperty definitions in one ordered workflow. Groups equal selected profile identities, modifiers and additional values; retains canonical existing Beams and adds supplied beam references. Validates/snapshots all requests and target IDs first, creates every grouped definition, propagates each positive native ID to all equal source packets, then assigns individual member IDs. Set the intended existing current material beforehand. A later creation/assignment failure leaves earlier native changes and successful IDs applied; no transaction, cleanup, save, implicit material selection or conversion occurs. Empty input/no definitions is a no-op. Private catalog/UI services are not imported.",
+      "example": "var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();\ndefinition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = \"ISMB300\", Designation = \"ISMB300\" };\nvar section = new SectionProperty { Id = 37, SectionDefinition = definition };\nsection.Beams.Add(new Beam { Id = 17 });\nproperty.SetMaterialName(\"STEEL\");\nvar beam = new Beam { Id = 17, SectionProperty = section };\nproperty.CreateAndAssignSectionProperties(new System.Collections.Generic.HashSet<Beam> { beam }, 2);",
+      "native": [
+        "CreateBeamPropertyFromTable",
+        "CreateTeePropertyFromTable",
+        "CreateBeamPropertyFromTableWithCoverPlates",
+        "CreateBeamPropertyFromTableComposite",
+        "CreateChannelPropertyFromTable",
+        "CreateAnglePropertyFromTable",
+        "CreatePipePropertyFromTable",
+        "CreateTubePropertyFromTable",
+        "AssignBeamProperty"
+      ],
+      "body": "CreateAndAssignSectionProperties(beams, nThreads, true)",
+      "origin": "main"
+    },
+    {
+      "signature": "IOSProperty CreateMaterialProperties(HashSet<MaterialProperty> mpSet, UnitsConverter uc)",
+      "name": "CreateMaterialProperties",
+      "summary": "Creates or updates isotropic materials using explicit dimensional conversion factors.",
+      "parameters": [
+        [
+          "mpSet",
+          "Non-null material packet, or non-null nonempty set without null packets. Finite named creation inputs are required; all packets are validated before native writes."
+        ],
+        [
+          "uc",
+          "Non-null repository UnitsConverter. Valid source/target length/force selectors are copied once; E/G use force/length-squared and weight density uses force/length-cubed."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use when caller constants need explicit conversion to the acquired native creation convention. Multiplies E, derived G and weight density by the copied corresponding factors, matching the source overload's dimensions; Poisson, alpha and damping pass unchanged. Does not apply the legacy E/G x1000 scale, alter the source packet or change native input units. Uses repository double-precision unit constants rather than the private decimal units library. Native 0=Created and 1=Updated are recorded in LastCreationStatus; Id remains unchanged. Strength fields are not sent. Earlier successes survive later failure; no assignment, save or rollback occurs.",
+      "example": "var material = new MaterialProperty(\"STEEL\") { E = 200000000.0, Poisson = 0.3, Density = 77.0 };\nvar converter = new StaadPro.Interop.Common.Units.UnitsConverter(LengthInputUnit.Meter, ForceInputUnit.KiloNewton, LengthInputUnit.MilliMeter, ForceInputUnit.Newton);\nproperty.CreateMaterialProperties(new System.Collections.Generic.HashSet<MaterialProperty> { material }, converter);",
+      "native": [
+        "CreateIsotropicMaterialProperties"
+      ],
+      "body": null,
+      "origin": "main-converter"
+    },
+    {
+      "signature": "IOSProperty CreateMaterialProperty(MaterialProperty mp, UnitsConverter uc)",
+      "name": "CreateMaterialProperty",
+      "summary": "Creates or updates isotropic materials using explicit dimensional conversion factors.",
+      "parameters": [
+        [
+          "mp",
+          "Non-null material packet, or non-null nonempty set without null packets. Finite named creation inputs are required; all packets are validated before native writes."
+        ],
+        [
+          "uc",
+          "Non-null repository UnitsConverter. Valid source/target length/force selectors are copied once; E/G use force/length-squared and weight density uses force/length-cubed."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use when caller constants need explicit conversion to the acquired native creation convention. Multiplies E, derived G and weight density by the copied corresponding factors, matching the source overload's dimensions; Poisson, alpha and damping pass unchanged. Does not apply the legacy E/G x1000 scale, alter the source packet or change native input units. Uses repository double-precision unit constants rather than the private decimal units library. Native 0=Created and 1=Updated are recorded in LastCreationStatus; Id remains unchanged. Strength fields are not sent. Earlier successes survive later failure; no assignment, save or rollback occurs.",
+      "example": "var material = new MaterialProperty(\"STEEL\") { E = 200000000.0, Poisson = 0.3, Density = 77.0 };\nvar converter = new StaadPro.Interop.Common.Units.UnitsConverter(LengthInputUnit.Meter, ForceInputUnit.KiloNewton, LengthInputUnit.MilliMeter, ForceInputUnit.Newton);\nproperty.CreateMaterialProperty(material, converter);",
+      "native": [
+        "CreateIsotropicMaterialProperties"
+      ],
+      "body": null,
+      "origin": "main-converter"
+    },
+    {
+      "signature": "IOSProperty CreatePlateThicknessProperty(dynamic property, PlateThickness pt)",
+      "name": "CreatePlateThicknessProperty",
+      "summary": "Creates a uniform thickness definition through the explicitly supplied captured receiver.",
+      "parameters": [
+        [
+          "property",
+          "This adapter's ComObject instance. The proprietary OSPropertyUI parameter is adapted to dynamic (System.Object) to avoid a vendor assembly dependency; null and foreign receivers are rejected before native access."
+        ],
+        [
+          "pt",
+          "Non-null packet with finite positive scalar Thickness in the acquired native length convention. Creation does not use its candidate set."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use for source compatibility with the explicit-receiver overload. Requires reference identity with this adapter's captured Property binding, so a foreign model cannot be modified through the wrapper accidentally. Sends the scalar thickness unchanged and stores only a positive created definition ID; failure preserves the prior ID. Does not assign plates, convert dimensions, save or roll back native creation.",
+      "example": "var thickness = new PlateThickness { Thickness = 0.2 };\nproperty.CreatePlateThicknessProperty(property.ComObject, thickness);\nSystem.Console.WriteLine(thickness.Id);",
+      "native": [
+        "CreatePlateThicknessProperty"
+      ],
+      "body": "CreatePlateThicknessProperty((object)property, pt)",
+      "origin": "main-sdk-free-receiver"
+    },
+    {
+      "signature": "IOSProperty CreateSectionProperties(HashSet<SectionProperty> spSet)",
+      "name": "CreateSectionProperties",
+      "summary": "Creates native section definitions from explicit H/C/L/O/Box profile selections.",
+      "parameters": [
+        [
+          "spSet",
+          "Non-null complete section definition, or non-null nonempty set without null definitions. All selected names/country/modifier codes and applicable additional values are validated/copied before dispatch."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use for the main table-selection creation graph. H supports ST/T/D/TC/BC/TB/CM, C supports ST/D/FR/BA, L supports ST/RA/SA/LD/SD, and pipe/tube support ST/UserDefined. Uses the corresponding native table routine and actual BC code with Bottom dimensions. Composite creation forwards source CT/FC/CW/CD values unchanged; acquired-build support requires qualification. Unsupported families/modifiers throw before native writes instead of silently doing nothing. Set the intended existing material first. Only positive native results replace packet IDs; earlier successful creations remain on later failure. No assignment, private catalog lookup, conversion, implicit save or rollback.",
+      "example": "var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();\ndefinition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = \"ISMB300\", Designation = \"ISMB300\" };\nvar section = new SectionProperty { Id = 37, SectionDefinition = definition };\nsection.Beams.Add(new Beam { Id = 17 });\nproperty.SetMaterialName(\"STEEL\");\nproperty.CreateSectionProperties(new System.Collections.Generic.HashSet<SectionProperty> { section });\nSystem.Console.WriteLine(section.Id);",
+      "native": [
+        "CreateBeamPropertyFromTable",
+        "CreateTeePropertyFromTable",
+        "CreateBeamPropertyFromTableWithCoverPlates",
+        "CreateBeamPropertyFromTableComposite",
+        "CreateChannelPropertyFromTable",
+        "CreateAnglePropertyFromTable",
+        "CreatePipePropertyFromTable",
+        "CreateTubePropertyFromTable"
+      ],
+      "body": null,
+      "origin": "main"
+    },
+    {
+      "signature": "IOSProperty CreateSectionProperty(SectionProperty sp)",
+      "name": "CreateSectionProperty",
+      "summary": "Creates native section definitions from explicit H/C/L/O/Box profile selections.",
+      "parameters": [
+        [
+          "sp",
+          "Non-null complete section definition, or non-null nonempty set without null definitions. All selected names/country/modifier codes and applicable additional values are validated/copied before dispatch."
+        ]
+      ],
+      "returns": "The same Property adapter for fluent chaining after the requested operations complete.",
+      "remarks": "When to use: Use for the main table-selection creation graph. H supports ST/T/D/TC/BC/TB/CM, C supports ST/D/FR/BA, L supports ST/RA/SA/LD/SD, and pipe/tube support ST/UserDefined. Uses the corresponding native table routine and actual BC code with Bottom dimensions. Composite creation forwards source CT/FC/CW/CD values unchanged; acquired-build support requires qualification. Unsupported families/modifiers throw before native writes instead of silently doing nothing. Set the intended existing material first. Only positive native results replace packet IDs; earlier successful creations remain on later failure. No assignment, private catalog lookup, conversion, implicit save or rollback.",
+      "example": "var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();\ndefinition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = \"ISMB300\", Designation = \"ISMB300\" };\nvar section = new SectionProperty { Id = 37, SectionDefinition = definition };\nsection.Beams.Add(new Beam { Id = 17 });\nproperty.SetMaterialName(\"STEEL\");\nproperty.CreateSectionProperty(section);\nSystem.Console.WriteLine(section.Id);",
+      "native": [
+        "CreateBeamPropertyFromTable",
+        "CreateTeePropertyFromTable",
+        "CreateBeamPropertyFromTableWithCoverPlates",
+        "CreateBeamPropertyFromTableComposite",
+        "CreateChannelPropertyFromTable",
+        "CreateAnglePropertyFromTable",
+        "CreatePipePropertyFromTable",
+        "CreateTubePropertyFromTable"
+      ],
+      "body": null,
+      "origin": "main"
+    },
+    {
+      "signature": "HashSet<IGenericSection> GetAllSections()",
+      "name": "GetAllSections",
+      "summary": "Reads native section definitions into owned version-decoded section packets.",
+      "parameters": [],
+      "returns": "A new mutable set of section packets with native IDs, identity, raw-capacity values, applicable field labels, area availability and empty AssignedBeams sets. Empty inventory returns an empty set.",
+      "remarks": "When to use: Use to enumerate definitions without loading geometry. Uses bounded section inventory/count checks, reads each version-specific packet, then rechecks inventory IDs/order. Supports all 47 reviewed top-level layouts for acquired STAAD 24/25/26; unknown versions/types fail explicitly. Native identity is retained without private catalog naming/area substitutions. Count/order checks cannot rule out same-ID external edits. No native mutation, inferred units or hidden member lookup occurs.",
+      "example": "foreach (var section in property.GetAllSections()) System.Console.WriteLine(section.StaadName);",
+      "native": [
+        "GetSectionPropertyCount",
+        "GetSectionPropertyList",
+        "GetSectionPropertyType",
+        "GetCountofSectionPropertyValuesEx",
+        "GetSectionPropertyValuesEx",
+        "GetSectionPropertyName",
+        "GetSectionPropertyCountry",
+        "GetRecordForSection"
+      ],
+      "body": null,
+      "origin": "main"
+    },
+    {
+      "signature": "HashSet<IGenericSection> GetAllSectionsWithAssignedBeamsList(IEnumerable<Beam> allBeams)",
+      "name": "GetAllSectionsWithAssignedBeamsList",
+      "summary": "Reads section packets and populates their candidate member references.",
+      "parameters": [
+        [
+          "allBeams",
+          "Non-null finite sequence of non-null positive-ID candidate beams. Enumerated once and matching original references are reused."
+        ]
+      ],
+      "returns": "A new mutable set of section packets whose AssignedBeams contain matching candidate/hydrated references; unknown native IDs are not synthesized.",
+      "remarks": "When to use: Use the candidate overload when beams are already loaded; use Geometry for full hydration. Reads checked version-specific definitions and each native assignment subset using bounded count/list contracts. Does not assign members or alter supplied beam objects. Geometry/candidate provenance must match the model; separate observations are not a model-wide atomic snapshot. No private catalog graph, save or unit conversion is used.",
+      "example": "var sections = property.GetAllSectionsWithAssignedBeamsList(new[] { new Beam { Id = 17 } });\nSystem.Console.WriteLine(sections.Count);",
+      "native": [
+        "GetSectionPropertyCount",
+        "GetSectionPropertyList",
+        "GetSectionPropertyValuesEx",
+        "GetSectionPropertyType",
+        "GetSectionPropertyName",
+        "GetSectionPropertyCountry",
+        "GetRecordForSection",
+        "GetSectionPropertyAssignedBeamCount",
+        "GetSectionPropertyAssignedBeamList"
+      ],
+      "body": null,
+      "origin": "main"
+    },
+    {
+      "signature": "HashSet<IGenericSection> GetAllSectionsWithAssignedBeamsList(IOSGeometry geometry)",
+      "name": "GetAllSectionsWithAssignedBeamsList",
+      "summary": "Reads section packets and populates their candidate member references.",
+      "parameters": [
+        [
+          "geometry",
+          "Non-null Geometry adapter for the same model; hydrates all beams using GetAllEntities<Beam>(1)."
+        ]
+      ],
+      "returns": "A new mutable set of section packets whose AssignedBeams contain matching candidate/hydrated references; unknown native IDs are not synthesized.",
+      "remarks": "When to use: Use the candidate overload when beams are already loaded; use Geometry for full hydration. Reads checked version-specific definitions and each native assignment subset using bounded count/list contracts. Does not assign members or alter supplied beam objects. Geometry/candidate provenance must match the model; separate observations are not a model-wide atomic snapshot. No private catalog graph, save or unit conversion is used.",
+      "example": "var sections = property.GetAllSectionsWithAssignedBeamsList(wrapper.Geometry);\nSystem.Console.WriteLine(sections.Count);",
+      "native": [
+        "GetSectionPropertyCount",
+        "GetSectionPropertyList",
+        "GetSectionPropertyValuesEx",
+        "GetSectionPropertyType",
+        "GetSectionPropertyName",
+        "GetSectionPropertyCountry",
+        "GetRecordForSection",
+        "GetSectionPropertyAssignedBeamCount",
+        "GetSectionPropertyAssignedBeamList"
+      ],
+      "body": null,
+      "origin": "main"
+    },
+    {
+      "signature": "double? GetSectionalArea(int propId)",
+      "name": "GetSectionalArea",
+      "summary": "Reads an available native section area, or the source mean tapered-I plate area.",
+      "parameters": [
+        [
+          "propId",
+          "Positive native section property reference ID; not a member ID or section type code."
+        ]
+      ],
+      "returns": "Ax in native length-squared units where supplied, or the source mean start/end tapered-I area. Returns null for BeamD and UPT ISECTION, whose native layouts omit Ax; zero is retained only when explicitly returned/calculated.",
+      "remarks": "When to use: Use when a nullable area is needed without touching an assigned member. The source already returns null for BeamD; this port also avoids its fabricated default-zero UPT ISECTION area. Does not fetch a private catalog area or infer an exact double-beam area from rectangular dimensions. Version/type/required-output failures throw. No unit conversion, native mutation or engineering adequacy check occurs.",
+      "example": "double? area = property.GetSectionalArea(37);\nSystem.Console.WriteLine(area);",
+      "native": [
+        "GetSectionPropertyType",
+        "GetCountofSectionPropertyValuesEx",
+        "GetSectionPropertyValuesEx",
+        "GetSectionPropertyName",
+        "GetSectionPropertyCountry",
+        "GetRecordForSection"
+      ],
+      "body": null,
+      "origin": "main"
+    },
+    {
+      "signature": "IGenericSection GetSectionBy(int propId)",
+      "name": "GetSectionBy",
+      "summary": "Reads one native section definition with the acquired version-specific value layout.",
+      "parameters": [
+        [
+          "propId",
+          "Positive native section property reference ID, not an analytical member number."
+        ]
+      ],
+      "returns": "A new owned GenericSection implementing IGenericSection. Id/native name/country/type/record and raw-capacity values are retained; AssignedBeams is empty. Native record -1 means unavailable/not applicable. Ax throws for missing area layouts; inspect GenericSection.HasSectionalArea or GetSectionalArea first.",
+      "remarks": "When to use: Use before reading a section's identity/field values or populating its assignments. Selects one of 47 native layouts from wrapper.StaadVersion.Major 24, 25 or 26, never the host ApplicationVersion. All required slots must be explicitly written and finite; unused unwritten padding becomes zero. Capacity is bounded to 100000 and rechecked with type/country. Preserves native labels and inertia slot identities without axis reinterpretation. Non-table records are -1; table lookup -1 is retained without failing an otherwise valid packet. Native Ax is used where present; tapered-I mean area follows source plate geometry; BeamD/UPT ISECTION have no substituted area. Unknown profiles fail explicitly. No private catalog, raw COM methods on models, model writes or unit conversion.",
+      "example": "var section = property.GetSectionBy(37);\nSystem.Console.WriteLine(section.StaadName);",
+      "native": [
+        "GetSectionPropertyType",
+        "GetCountofSectionPropertyValuesEx",
+        "GetSectionPropertyValuesEx",
+        "GetSectionPropertyName",
+        "GetSectionPropertyCountry",
+        "GetRecordForSection"
+      ],
+      "body": null,
+      "origin": "main"
+    },
+    {
+      "signature": "IGenericSection GetSectionByPropertyIdWithAssignedBeamsList(int propId, IEnumerable<Beam> allBeams)",
+      "name": "GetSectionByPropertyIdWithAssignedBeamsList",
+      "summary": "Reads one native section and fills its actual candidate member assignment subset.",
+      "parameters": [
+        [
+          "propId",
+          "Positive native section property reference ID."
+        ],
+        [
+          "allBeams",
+          "Non-null finite sequence of non-null positive-ID candidate beams; enumerated once. Matching original references are reused."
+        ]
+      ],
+      "returns": "A new section packet with AssignedBeams populated from the actual checked native assignment list; unmatched native IDs do not create new candidate objects.",
+      "remarks": "When to use: Use to obtain identity/values and assignments for one section. Corrects the main candidate overload filtering an allocated but unfilled zero array: both overloads now use the actual returned assignment IDs. Reads the reviewed version-specific section packet and bounded assignment list, rechecking positive counts. Does not change supplied beams, assign sections, save or convert units; external edits across observations remain possible.",
+      "example": "var section = property.GetSectionByPropertyIdWithAssignedBeamsList(37, new[] { new Beam { Id = 17 } });\nSystem.Console.WriteLine(section.AssignedBeams.Count);",
+      "native": [
+        "GetSectionPropertyValuesEx",
+        "GetSectionPropertyType",
+        "GetSectionPropertyCountry",
+        "GetSectionPropertyName",
+        "GetRecordForSection",
+        "GetSectionPropertyAssignedBeamCount",
+        "GetSectionPropertyAssignedBeamList"
+      ],
+      "body": null,
+      "origin": "main"
+    },
+    {
+      "signature": "IGenericSection GetSectionByPropertyIdWithAssignedBeamsList(int propId, IOSGeometry geometry)",
+      "name": "GetSectionByPropertyIdWithAssignedBeamsList",
+      "summary": "Reads one native section and fills its actual candidate member assignment subset.",
+      "parameters": [
+        [
+          "propId",
+          "Positive native section property reference ID."
+        ],
+        [
+          "geometry",
+          "Non-null Geometry adapter for the same model; hydrates all beams with degree one."
+        ]
+      ],
+      "returns": "A new section packet with AssignedBeams populated from the actual checked native assignment list; unmatched native IDs do not create new candidate objects.",
+      "remarks": "When to use: Use to obtain identity/values and assignments for one section. Corrects the main candidate overload filtering an allocated but unfilled zero array: both overloads now use the actual returned assignment IDs. Reads the reviewed version-specific section packet and bounded assignment list, rechecking positive counts. Does not change supplied beams, assign sections, save or convert units; external edits across observations remain possible.",
+      "example": "var section = property.GetSectionByPropertyIdWithAssignedBeamsList(37, wrapper.Geometry);\nSystem.Console.WriteLine(section.AssignedBeams.Count);",
+      "native": [
+        "GetSectionPropertyValuesEx",
+        "GetSectionPropertyType",
+        "GetSectionPropertyCountry",
+        "GetSectionPropertyName",
+        "GetRecordForSection",
+        "GetSectionPropertyAssignedBeamCount",
+        "GetSectionPropertyAssignedBeamList"
+      ],
+      "body": null,
+      "origin": "main"
+    },
+    {
+      "signature": "int GetSectionPropertyCount()",
+      "name": "GetSectionPropertyCount",
+      "summary": "Counts native section definitions.",
+      "parameters": [],
+      "returns": "The actual nonnegative native Int32-range count/capacity; zero is retained. This scalar observation does not allocate or return values.",
+      "remarks": "When to use: Use to observe native inventory size/capacity directly. Does not enumerate definitions, infer assigned entity counts or provide a universal section schema. Rejects Boolean, floating-point, text and negative count responses instead of coercing them. Section packet retrieval applies its own allocation and positive-capacity limits. No writes, unit conversion or save occur.",
+      "example": "System.Console.WriteLine(property.GetSectionPropertyCount());",
+      "native": [
+        "GetSectionPropertyCount"
+      ],
+      "body": null,
+      "origin": "native"
+    },
+    {
+      "signature": "int GetThicknessPropertyCount()",
+      "name": "GetThicknessPropertyCount",
+      "summary": "Counts native thickness definitions.",
+      "parameters": [],
+      "returns": "The actual nonnegative native Int32-range count/capacity; zero is retained. This scalar observation does not allocate or return values.",
+      "remarks": "When to use: Use to observe native inventory size/capacity directly. Does not enumerate definitions, infer assigned entity counts or provide a universal section schema. Rejects Boolean, floating-point, text and negative count responses instead of coercing them. Section packet retrieval applies its own allocation and positive-capacity limits. No writes, unit conversion or save occur.",
+      "example": "System.Console.WriteLine(property.GetThicknessPropertyCount());",
+      "native": [
+        "GetThicknessPropertyCount"
+      ],
+      "body": null,
+      "origin": "native"
+    },
+    {
+      "signature": "int GetCountofSectionPropertyValuesEx()",
+      "name": "GetCountofSectionPropertyValuesEx",
+      "summary": "Reads the native section-value buffer capacity.",
+      "parameters": [],
+      "returns": "The actual nonnegative native Int32-range count/capacity; zero is retained. This scalar observation does not allocate or return values.",
+      "remarks": "When to use: Use to observe native inventory size/capacity directly. Does not enumerate definitions, infer assigned entity counts or provide a universal section schema. Rejects Boolean, floating-point, text and negative count responses instead of coercing them. Section packet retrieval applies its own allocation and positive-capacity limits. No writes, unit conversion or save occur.",
+      "example": "System.Console.WriteLine(property.GetCountofSectionPropertyValuesEx());",
+      "native": [
+        "GetCountofSectionPropertyValuesEx"
+      ],
+      "body": null,
+      "origin": "native"
+    },
+    {
+      "signature": "int GetSectionPropertyType(int varSecRefNo)",
+      "name": "GetSectionPropertyType",
+      "summary": "Reads one native section type code by section definition ID.",
+      "parameters": [
+        [
+          "varSecRefNo",
+          "Positive native section property reference ID, preserving the documented native parameter name."
+        ]
+      ],
+      "returns": "The native integral section type code unchanged. Only positive type codes succeed; unfamiliar positive codes remain observable. Native negative errors such as -6025 throw.",
+      "remarks": "When to use: Use for direct metadata discovery without parsing a buffer. Does not identify an analytical member, resolve a catalog profile, convert codes into a guessed shape, create definitions or save. Boolean/floating/text responses are rejected. GetSectionBy separately requires a reviewed native version/type layout.",
+      "example": "System.Console.WriteLine(property.GetSectionPropertyType(37));",
+      "native": [
+        "GetSectionPropertyType"
+      ],
+      "body": null,
+      "origin": "native"
+    },
+    {
+      "signature": "int GetSectionPropertyCountry(int varSecRefNo)",
+      "name": "GetSectionPropertyCountry",
+      "summary": "Reads one native country code by section definition ID.",
+      "parameters": [
+        [
+          "varSecRefNo",
+          "Positive native section property reference ID, preserving the documented native parameter name."
+        ]
+      ],
+      "returns": "The native integral country code unchanged. Nonnegative country codes succeed; zero/non-enum codes are retained for non-table/future definitions. Native negative errors such as -6025 throw.",
+      "remarks": "When to use: Use for direct metadata discovery without parsing a buffer. Does not identify an analytical member, resolve a catalog profile, convert codes into a guessed shape, create definitions or save. Boolean/floating/text responses are rejected. GetSectionBy separately requires a reviewed native version/type layout.",
+      "example": "System.Console.WriteLine(property.GetSectionPropertyCountry(37));",
+      "native": [
+        "GetSectionPropertyCountry"
+      ],
+      "body": null,
+      "origin": "native"
+    },
+    {
+      "signature": "int GetRecordForSection(int Country, string SectionName)",
+      "name": "GetRecordForSection",
+      "summary": "Looks up a native section database record for an exact table designation.",
+      "parameters": [
+        [
+          "Country",
+          "Positive native table country code; integer parameter name/type preserves the documented native input and allows future country codes."
+        ],
+        [
+          "SectionName",
+          "Exact nonblank native table designation without NUL; case and whitespace pass unchanged."
+        ]
+      ],
+      "returns": "The native nonnegative database record, including zero, or documented -1 when lookup fails. A record is not a model section property ID.",
+      "remarks": "When to use: Use for table record identity, not to create or assign a model property. Preserves -1 without throwing or substituting a guessed record. Other negative codes and malformed nonintegral responses throw. Database/build record conventions are native-controlled; no assumed one-based adjustment, private catalog fallback, model mutation or save.",
+      "example": "System.Console.WriteLine(property.GetRecordForSection((int)Country.Indian, \"ISMB300\"));",
+      "native": [
+        "GetRecordForSection"
+      ],
+      "body": null,
+      "origin": "native"
+    }
+  ]
+}

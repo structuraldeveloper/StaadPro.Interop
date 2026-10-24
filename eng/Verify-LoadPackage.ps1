@@ -236,12 +236,14 @@ try {
         $propertyGuide += Read-PackageEntry 'docs/Property-Main-Ports.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-Management-Ports.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-Workflows.md'
+        $propertyGuide += Read-PackageEntry 'docs/Property-Sections.md'
+        $sectionPortNames = @('AssignSectionProperties', 'AssignSectionProperty', 'CreateAndAssignSectionProperties', 'CreateMaterialProperties', 'CreateMaterialProperty', 'CreatePlateThicknessProperty', 'CreateSectionProperties', 'CreateSectionProperty', 'GetAllSections', 'GetAllSectionsWithAssignedBeamsList', 'GetSectionalArea', 'GetSectionBy', 'GetSectionByPropertyIdWithAssignedBeamsList', 'GetSectionPropertyCount', 'GetThicknessPropertyCount', 'GetCountofSectionPropertyValuesEx', 'GetSectionPropertyType', 'GetSectionPropertyCountry', 'GetRecordForSection')
         $mainPortNames = @('GetUnusedSectionsCount', 'GetUnusedSectionsIds', 'GetBeamProperty', 'GetPlateMaterialName', 'GetSectionPropertyList', 'GetSectionPropertyName', 'GetSectionPropertyValues', 'GetSectionPropertyAssignedBeams', 'GetThicknessPropertyList', 'GetThicknessPropertyAssignedPlates', 'GetAveragePlateThickness', 'GetBeamsWithMissingSectionProperty', 'GetPlatesWithMissingThicknessProperty', 'GetMemberSpecification', 'AssignBeamProperty', 'AssignMaterialToMember', 'SetMaterialName', 'AssignMemberEndOffsets', 'AssignMemberEndOffset')
         $mainPortNames += @('DeleteMaterial', 'CreateBeamPropertyFromTable', 'CreateCompositeBeamPropertyFromTable', 'CreateBuiltUpBeamProperty', 'AssignBetaAnglesToBeams', 'PopulateBetaAngles', 'GetIsotropicMaterialAssignedBeams', 'GetIsotropicMaterialAssignedPlates', 'CreatePlateElementThickness', 'CreatePlateElementThicknesses', 'AssignPlateElementThickness', 'AssignPlateElementThicknesses', 'GetPlateThicknessByPlateId', 'GetPlateThicknessByThicknessPropertyId', 'GetAllPlateElementThicknesses', 'GetAllPlateElementThicknessesWithPopulatedAssignments', 'GetBeamOffsetSpecification', 'PopulateMemberOffsets', 'CreateOffsetSpecification', 'CreateOffsetSpecifications', 'AssignOffsetSpecifications')
         $mainPortNames += @('AssignMaterialProperties', 'AssignMaterialProperty', 'CreateMaterialProperties', 'CreateMaterialPropertiesNoConversion', 'CreateMaterialProperty', 'CreateMaterialPropertyNoConversion', 'GetAllExtendedIsotropicMaterialProperties', 'GetAllIsotropicMaterialProperties', 'GetAllExtendedIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllExtendedMaterialPropertiesWithPopulatedAssignments', 'GetAllMaterialPropertiesWithPopulatedAssignments', 'CreatePlateThicknessProperties', 'AssignThicknessProperties', 'AssignThicknessProperty', 'AssignOffsetSpecification', 'CreateAndAssignOffsetSpecifications', 'PopulateMemberReleases', 'CreateAndAssignMemberEndReleases')
         foreach ($owner in @('Adapters.Interfaces.IOSProperty', 'Adapters.Models.OSPropertyAdapter')) {
             $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-            if ($entries.Count -ne 100) { throw "Expected 100 Property method contracts for $owner." }
+            if ($entries.Count -ne 125) { throw "Expected 125 Property method contracts for $owner." }
             foreach ($entry in $entries) {
                 $methodName = [regex]::Match($entry.name, '\.([^.()]+)(?:\(|$)').Groups[1].Value
                 $requiredTags = @('summary', 'remarks', 'example/code')
@@ -253,11 +255,11 @@ try {
                 if ($entry.SelectSingleNode('remarks').InnerText -notmatch 'When to use:') { throw "Missing comparative Property IntelliSense for $($entry.name)" }
                 if ($propertyGuide -notmatch $methodName) { throw "Missing Property guidance for $methodName" }
                 $binding = if ($owner.EndsWith('IOSProperty')) { 'IOSProperty property = wrapper.Property;' } else { 'var property = new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper);' }
-                $fixture = if ($methodName -in $mainPortNames) { 'PropertyPortFixture' } else { 'PropertyQueryFixture' }
+                $fixture = if ($methodName -in $sectionPortNames) { 'PropertySectionFixture' } elseif ($methodName -in $mainPortNames) { 'PropertyPortFixture' } else { 'PropertyQueryFixture' }
                 $propertySnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.' + $fixture + '.Root { Property = new PackageVerification.' + $fixture + '.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
             }
         }
-        if ($propertySnippets.Count -ne 200) { throw 'Expected 200 Property XML examples.' }
+        if ($propertySnippets.Count -ne 250) { throw 'Expected 250 Property XML examples.' }
     }
 } finally { $archive.Dispose() }
 
@@ -747,6 +749,7 @@ if ($hasLoadExpansion) { $program = 'using StaadPro.Interop.Models.Loads.Contrac
 if ($hasLoadInspection) { $program = 'using StaadPro.Interop.Enums.Loads;' + [Environment]::NewLine + $program }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyQueryFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyQueryFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyPortFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyPortFixture.cs') }
+if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertySectionFixture.cs') -Destination (Join-Path $consumerRoot 'PropertySectionFixture.cs') }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/LoadInspectionFixture.cs') -Destination (Join-Path $consumerRoot 'LoadInspectionFixture.cs')
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'NuGet.Config'), $config)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Consumer.csproj'), $project)

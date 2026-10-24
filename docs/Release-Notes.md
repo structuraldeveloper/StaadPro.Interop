@@ -1,5 +1,21 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261024.5 - 24 October 2026 (prepared preview)
+
+Incorporated the remaining **19 active, nonconflicting main-interface Property signatures** plus **six documented native observations**, bringing Property to **125 overloads**. Added section creation/assignment/read-back, explicit material conversion and captured-receiver uniform-thickness creation with complete matching XML IntelliSense. Native dispatch now covers **66 of 204 active candidates**, with **138 remaining**. See [all 25 section-completion contracts](Property-Sections.md).
+
+Passed a Release build with zero warnings/errors and **4,156 offline tests**, including **225 new section cases**. Isolated installed-package verification compiles and runs **692 selected XML examples**, including all **250 Property interface/adapter examples**, through a fresh PackageReference-only consumer and cache. Managed stand-ins perform every example; live native mutation and engineering qualification remain pending.
+
+Selected 47 reviewed section layouts per acquired STAAD 24/25/26 profile, reading native version metadata after wrapper initialization and rechecking it before returning packets. Corrected the source assignment query filtering an unfilled array. Preserved native identity/field labels, explicit missing-area results, operation-specific statuses and partial-write behavior. Added small section selection/data models without importing private catalog/UI services; reused the repository UnitsConverter for explicit modulus/weight-density conversion. Existing typed-return collisions (eight) and obsolete source overloads (five) remain documented exceptions.
+
+- Incorporated five section assignment, two create-and-assign, two explicit material conversion, one captured-receiver thickness creation, two section creation and seven section read-back/area/assignment overloads.
+- Added the six standalone native observations listed in the section guide; retained raw country/type codes and database record zero/-1 semantics.
+- Added reviewed section layout profiles, small table-definition carriers, owned section packets, Beam.SectionProperty and dimensional converter aliases. Kept unsupported layouts/families and missing areas explicit.
+- Strengthened inventory dispatch lifetime checks and preserved caller-apartment writes, prevalidated input snapshots and nontransactional failure behavior.
+- Updated shipped guides, coverage, package metadata and all interface/adapter XML examples.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.5.nupkg` for manual upload; no NuGet.org upload or registry ownership change is performed. Authors: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
+
 ## 1.0.0-preview.20261024.4 - 24 October 2026 (prepared preview)
 
 Incorporated 25 further main-interface Property overloads for material collections, material creation/assignment, uniform plate thicknesses, grouped offset pipelines and member releases. Property now exposes **100 overloads**: 25 qualified observations and 75 main-project compatibility ports. Added detailed matching interface/adapter XML IntelliSense and examples, mutable material/thickness/release packets and member-end release references. Native dispatch reaches **57 of 204 active Property candidates**, with **147 remaining**. See [all 25 workflow signatures](Property-Workflows.md) for parameters, units, native statuses, side effects and deliberate source corrections.

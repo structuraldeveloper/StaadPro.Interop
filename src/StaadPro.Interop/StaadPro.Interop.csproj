@@ -12,11 +12,11 @@
     <RootNamespace>StaadPro.Interop</RootNamespace>
     <PackageId>StaadPro.Interop</PackageId>
     <Version>1.0.0</Version>
-    <ReleaseDocumentationVersion>1.0.0-preview.20261024.4</ReleaseDocumentationVersion>
+    <ReleaseDocumentationVersion>1.0.0-preview.20261024.5</ReleaseDocumentationVersion>
     <PackageVersion>$(ReleaseDocumentationVersion)</PackageVersion>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 IngeneStructs</Copyright>
-    <PackageReleaseNotes>Incorporated 25 further Property overloads for material collections/creation/assignment, uniform plate thicknesses, offset pipelines and member releases, bringing Property to 100 overloads. Included complete interface/adapter XML IntelliSense, supporting mutable packets, separate material creation statuses, lossless native release evidence and checked caller-apartment workflows. Retained prior fixes and metadata: Authors Srinivasa Rao Masanam; Copyright (c) 2026 IngeneStructs. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Incorporated the remaining 19 active main Property signatures plus six documented native observations, bringing Property to 125 overloads. Added section creation/assignment/read-back, explicit material conversion, SDK-free thickness receiver handling and 47 reviewed native layouts per version profile with complete XML IntelliSense. Corrected assignment population and native-version initialization timing. Authors Srinivasa Rao Masanam; Copyright (c) 2026 IngeneStructs. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
@@ -54,6 +54,7 @@
     <None Include="..\..\docs\Property-Main-Ports.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Property-Management-Ports.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Property-Workflows.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Property-Sections.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Output-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Analysis-Queries.md" Pack="true" PackagePath="docs\" />

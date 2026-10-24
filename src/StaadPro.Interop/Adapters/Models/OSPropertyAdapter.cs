@@ -1,3 +1,5 @@
+using StaadPro.Interop.Interfaces;
+using StaadPro.Interop.Common.Units;
 using System;
 using System.Collections.Generic;
 using StaadPro.Interop.Entities;
@@ -18,6 +20,7 @@ namespace StaadPro.Interop.Adapters.Models
         private readonly PropertyPortReader ports;
         private readonly PropertyManagementReader management;
         private readonly PropertyWorkflowReader workflows;
+        private readonly PropertySectionReader sections;
         /// <summary>Captures the wrapper's Property interface without invoking Property domain functions.</summary>
         /// <param name="wrapper">Connected wrapper with a non-null RawProperty receiver.</param>
         /// <exception cref="ArgumentNullException">The wrapper or its RawProperty binding is null.</exception>
@@ -28,6 +31,7 @@ namespace StaadPro.Interop.Adapters.Models
             ports = new PropertyPortReader(queries);
             management = new PropertyManagementReader(queries, ports);
             workflows = new PropertyWorkflowReader(queries, management, ports);
+            sections = new PropertySectionReader(wrapper, queries, ports);
         }
         /// <summary>Gets the captured native Property binding; direct calls bypass typed validation and coordination.</summary>
         /// <value>The acquired automation receiver; no readiness or compatibility is implied.</value>
@@ -1418,6 +1422,394 @@ namespace StaadPro.Interop.Adapters.Models
         /// property.CreateAndAssignMemberEndReleases(new System.Collections.Generic.HashSet&lt;Beam&gt; { beam }, 2);
         /// </code></example>
         public IOSProperty CreateAndAssignMemberEndReleases(HashSet<Beam> beams, int nThreads) { workflows.CreateAndAssignMemberEndReleases(beams, nThreads); return this; }
+
+        #endregion
+
+        #region Section completion and native observations
+
+        /// <summary>Assigns native section IDs from retrieved section packets to their candidate beams.</summary>
+        /// <param name="gsSet">Null/empty is a no-op. Non-null packets with nonempty AssignedBeams require positive existing section/member IDs; empty assignments are skipped.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use with GetAllSections/GetSectionBy results when section definitions already exist. Copies candidate IDs before dispatch and calls AssignBeamProperty once per section with an Int32 array, requiring integral zero success. Does not create sections, hydrate geometry, change managed beam section references, save or roll back earlier writes.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var section = property.GetSectionBy(37);
+        /// section.AssignedBeams.Add(new Beam { Id = 17 });
+        /// property.AssignSectionProperties(new System.Collections.Generic.HashSet&lt;StaadPro.Interop.Interfaces.IGenericSection&gt; { section });
+        /// </code></example>
+        public IOSProperty AssignSectionProperties(HashSet<IGenericSection> gsSet) { sections.AssignSectionProperties(gsSet); return this; }
+
+        /// <summary>Assigns existing section definition IDs to their managed member candidates.</summary>
+        /// <param name="spSet">Null/empty is a no-op. Non-null packets with nonempty Beams require positive existing section/member IDs; creation definitions are not required for assignment.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use after resolving or creating positive native IDs. All target IDs are validated and copied before the first native write. Calls AssignBeamProperty with each packet&#x27;s member-ID array. Integral zero is success; nonzero codes throw and may describe partial assignment. Does not create definitions, infer materials, populate beam references, save, retry or roll back earlier writes.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();
+        /// definition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = &quot;ISMB300&quot;, Designation = &quot;ISMB300&quot; };
+        /// var section = new SectionProperty { Id = 37, SectionDefinition = definition };
+        /// section.Beams.Add(new Beam { Id = 17 });
+        /// property.AssignSectionProperties(new System.Collections.Generic.HashSet&lt;SectionProperty&gt; { section });
+        /// </code></example>
+        public IOSProperty AssignSectionProperties(HashSet<SectionProperty> spSet) { sections.AssignSectionProperties(spSet, 1, false); return this; }
+
+        /// <summary>Assigns existing section definition IDs to their managed member candidates.</summary>
+        /// <param name="sectionProperties">Null/empty is a no-op. Non-null packets with nonempty Beams require positive existing section/member IDs; creation definitions are not required for assignment.</param>
+        /// <param name="nThreads">Source-compatible degree from 1 through 512. All COM calls remain serialized on the caller apartment; no worker-thread COM dispatch occurs.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use after resolving or creating positive native IDs. All target IDs are validated and copied before the first native write. Calls AssignBeamProperty for each individual member, preserving the source scalar route. Integral zero is success; nonzero codes throw and may describe partial assignment. Does not create definitions, infer materials, populate beam references, save, retry or roll back earlier writes.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();
+        /// definition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = &quot;ISMB300&quot;, Designation = &quot;ISMB300&quot; };
+        /// var section = new SectionProperty { Id = 37, SectionDefinition = definition };
+        /// section.Beams.Add(new Beam { Id = 17 });
+        /// property.AssignSectionProperties(new System.Collections.Generic.HashSet&lt;SectionProperty&gt; { section }, 2);
+        /// </code></example>
+        public IOSProperty AssignSectionProperties(HashSet<SectionProperty> sectionProperties, int nThreads) { sections.AssignSectionProperties(sectionProperties, nThreads, true); return this; }
+
+        /// <summary>Assigns existing section definition IDs to their managed member candidates.</summary>
+        /// <param name="sp">Null/empty is a no-op. Non-null packets with nonempty Beams require positive existing section/member IDs; creation definitions are not required for assignment.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use after resolving or creating positive native IDs. All target IDs are validated and copied before the first native write. Calls AssignBeamProperty with each packet&#x27;s member-ID array. Integral zero is success; nonzero codes throw and may describe partial assignment. Does not create definitions, infer materials, populate beam references, save, retry or roll back earlier writes.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();
+        /// definition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = &quot;ISMB300&quot;, Designation = &quot;ISMB300&quot; };
+        /// var section = new SectionProperty { Id = 37, SectionDefinition = definition };
+        /// section.Beams.Add(new Beam { Id = 17 });
+        /// property.AssignSectionProperty(section);
+        /// </code></example>
+        public IOSProperty AssignSectionProperty(SectionProperty sp) { sections.AssignSectionProperty(sp, 1, false); return this; }
+
+        /// <summary>Assigns existing section definition IDs to their managed member candidates.</summary>
+        /// <param name="sectionProperty">Null/empty is a no-op. Non-null packets with nonempty Beams require positive existing section/member IDs; creation definitions are not required for assignment.</param>
+        /// <param name="nThreads">Source-compatible degree from 1 through 512. All COM calls remain serialized on the caller apartment; no worker-thread COM dispatch occurs.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use after resolving or creating positive native IDs. All target IDs are validated and copied before the first native write. Calls AssignBeamProperty for each individual member, preserving the source scalar route. Integral zero is success; nonzero codes throw and may describe partial assignment. Does not create definitions, infer materials, populate beam references, save, retry or roll back earlier writes.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();
+        /// definition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = &quot;ISMB300&quot;, Designation = &quot;ISMB300&quot; };
+        /// var section = new SectionProperty { Id = 37, SectionDefinition = definition };
+        /// section.Beams.Add(new Beam { Id = 17 });
+        /// property.AssignSectionProperty(section, 2);
+        /// </code></example>
+        public IOSProperty AssignSectionProperty(SectionProperty sectionProperty, int nThreads) { sections.AssignSectionProperty(sectionProperty, nThreads, true); return this; }
+
+        /// <summary>Groups explicit beam section definitions, creates them and assigns their members.</summary>
+        /// <param name="beams">Non-null set of non-null positive-ID beams. Null SectionProperty references are ignored. Complete H/C/L/O/Box selections and valid additional values are required for non-null definitions.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use to apply managed SectionProperty definitions in one ordered workflow. Groups equal selected profile identities, modifiers and additional values; retains canonical existing Beams and adds supplied beam references. Validates/snapshots all requests and target IDs first, creates every grouped definition, propagates each positive native ID to all equal source packets, then assigns grouped member-ID arrays. Set the intended existing current material beforehand. A later creation/assignment failure leaves earlier native changes and successful IDs applied; no transaction, cleanup, save, implicit material selection or conversion occurs. Empty input/no definitions is a no-op. Private catalog/UI services are not imported.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();
+        /// definition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = &quot;ISMB300&quot;, Designation = &quot;ISMB300&quot; };
+        /// var section = new SectionProperty { Id = 37, SectionDefinition = definition };
+        /// section.Beams.Add(new Beam { Id = 17 });
+        /// property.SetMaterialName(&quot;STEEL&quot;);
+        /// var beam = new Beam { Id = 17, SectionProperty = section };
+        /// property.CreateAndAssignSectionProperties(new System.Collections.Generic.HashSet&lt;Beam&gt; { beam });
+        /// </code></example>
+        public IOSProperty CreateAndAssignSectionProperties(HashSet<Beam> beams) { sections.CreateAndAssignSectionProperties(beams, 1, false); return this; }
+
+        /// <summary>Groups explicit beam section definitions, creates them and assigns their members.</summary>
+        /// <param name="beams">Non-null set of non-null positive-ID beams. Null SectionProperty references are ignored. Complete H/C/L/O/Box selections and valid additional values are required for non-null definitions.</param>
+        /// <param name="nThreads">Source-compatible degree from 1 through 512. All COM calls remain serialized on the caller apartment; no worker-thread COM dispatch occurs.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use to apply managed SectionProperty definitions in one ordered workflow. Groups equal selected profile identities, modifiers and additional values; retains canonical existing Beams and adds supplied beam references. Validates/snapshots all requests and target IDs first, creates every grouped definition, propagates each positive native ID to all equal source packets, then assigns individual member IDs. Set the intended existing current material beforehand. A later creation/assignment failure leaves earlier native changes and successful IDs applied; no transaction, cleanup, save, implicit material selection or conversion occurs. Empty input/no definitions is a no-op. Private catalog/UI services are not imported.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();
+        /// definition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = &quot;ISMB300&quot;, Designation = &quot;ISMB300&quot; };
+        /// var section = new SectionProperty { Id = 37, SectionDefinition = definition };
+        /// section.Beams.Add(new Beam { Id = 17 });
+        /// property.SetMaterialName(&quot;STEEL&quot;);
+        /// var beam = new Beam { Id = 17, SectionProperty = section };
+        /// property.CreateAndAssignSectionProperties(new System.Collections.Generic.HashSet&lt;Beam&gt; { beam }, 2);
+        /// </code></example>
+        public IOSProperty CreateAndAssignSectionProperties(HashSet<Beam> beams, int nThreads) { sections.CreateAndAssignSectionProperties(beams, nThreads, true); return this; }
+
+        /// <summary>Creates or updates isotropic materials using explicit dimensional conversion factors.</summary>
+        /// <param name="mpSet">Non-null material packet, or non-null nonempty set without null packets. Finite named creation inputs are required; all packets are validated before native writes.</param>
+        /// <param name="uc">Non-null repository UnitsConverter. Valid source/target length/force selectors are copied once; E/G use force/length-squared and weight density uses force/length-cubed.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use when caller constants need explicit conversion to the acquired native creation convention. Multiplies E, derived G and weight density by the copied corresponding factors, matching the source overload&#x27;s dimensions; Poisson, alpha and damping pass unchanged. Does not apply the legacy E/G x1000 scale, alter the source packet or change native input units. Uses repository double-precision unit constants rather than the private decimal units library. Native 0=Created and 1=Updated are recorded in LastCreationStatus; Id remains unchanged. Strength fields are not sent. Earlier successes survive later failure; no assignment, save or rollback occurs.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var material = new MaterialProperty(&quot;STEEL&quot;) { E = 200000000.0, Poisson = 0.3, Density = 77.0 };
+        /// var converter = new StaadPro.Interop.Common.Units.UnitsConverter(LengthInputUnit.Meter, ForceInputUnit.KiloNewton, LengthInputUnit.MilliMeter, ForceInputUnit.Newton);
+        /// property.CreateMaterialProperties(new System.Collections.Generic.HashSet&lt;MaterialProperty&gt; { material }, converter);
+        /// </code></example>
+        public IOSProperty CreateMaterialProperties(HashSet<MaterialProperty> mpSet, UnitsConverter uc) { workflows.CreateMaterialProperties(mpSet, uc); return this; }
+
+        /// <summary>Creates or updates isotropic materials using explicit dimensional conversion factors.</summary>
+        /// <param name="mp">Non-null material packet, or non-null nonempty set without null packets. Finite named creation inputs are required; all packets are validated before native writes.</param>
+        /// <param name="uc">Non-null repository UnitsConverter. Valid source/target length/force selectors are copied once; E/G use force/length-squared and weight density uses force/length-cubed.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use when caller constants need explicit conversion to the acquired native creation convention. Multiplies E, derived G and weight density by the copied corresponding factors, matching the source overload&#x27;s dimensions; Poisson, alpha and damping pass unchanged. Does not apply the legacy E/G x1000 scale, alter the source packet or change native input units. Uses repository double-precision unit constants rather than the private decimal units library. Native 0=Created and 1=Updated are recorded in LastCreationStatus; Id remains unchanged. Strength fields are not sent. Earlier successes survive later failure; no assignment, save or rollback occurs.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var material = new MaterialProperty(&quot;STEEL&quot;) { E = 200000000.0, Poisson = 0.3, Density = 77.0 };
+        /// var converter = new StaadPro.Interop.Common.Units.UnitsConverter(LengthInputUnit.Meter, ForceInputUnit.KiloNewton, LengthInputUnit.MilliMeter, ForceInputUnit.Newton);
+        /// property.CreateMaterialProperty(material, converter);
+        /// </code></example>
+        public IOSProperty CreateMaterialProperty(MaterialProperty mp, UnitsConverter uc) { workflows.CreateMaterialProperty(mp, uc); return this; }
+
+        /// <summary>Creates a uniform thickness definition through the explicitly supplied captured receiver.</summary>
+        /// <param name="property">This adapter&#x27;s ComObject instance. The proprietary OSPropertyUI parameter is adapted to dynamic (System.Object) to avoid a vendor assembly dependency; null and foreign receivers are rejected before native access.</param>
+        /// <param name="pt">Non-null packet with finite positive scalar Thickness in the acquired native length convention. Creation does not use its candidate set.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use for source compatibility with the explicit-receiver overload. Requires reference identity with this adapter&#x27;s captured Property binding, so a foreign model cannot be modified through the wrapper accidentally. Sends the scalar thickness unchanged and stores only a positive created definition ID; failure preserves the prior ID. Does not assign plates, convert dimensions, save or roll back native creation.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var thickness = new PlateThickness { Thickness = 0.2 };
+        /// property.CreatePlateThicknessProperty(property.ComObject, thickness);
+        /// System.Console.WriteLine(thickness.Id);
+        /// </code></example>
+        public IOSProperty CreatePlateThicknessProperty(dynamic property, PlateThickness pt) { sections.CreatePlateThicknessProperty((object)property, pt); return this; }
+
+        /// <summary>Creates native section definitions from explicit H/C/L/O/Box profile selections.</summary>
+        /// <param name="spSet">Non-null complete section definition, or non-null nonempty set without null definitions. All selected names/country/modifier codes and applicable additional values are validated/copied before dispatch.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use for the main table-selection creation graph. H supports ST/T/D/TC/BC/TB/CM, C supports ST/D/FR/BA, L supports ST/RA/SA/LD/SD, and pipe/tube support ST/UserDefined. Uses the corresponding native table routine and actual BC code with Bottom dimensions. Composite creation forwards source CT/FC/CW/CD values unchanged; acquired-build support requires qualification. Unsupported families/modifiers throw before native writes instead of silently doing nothing. Set the intended existing material first. Only positive native results replace packet IDs; earlier successful creations remain on later failure. No assignment, private catalog lookup, conversion, implicit save or rollback.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();
+        /// definition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = &quot;ISMB300&quot;, Designation = &quot;ISMB300&quot; };
+        /// var section = new SectionProperty { Id = 37, SectionDefinition = definition };
+        /// section.Beams.Add(new Beam { Id = 17 });
+        /// property.SetMaterialName(&quot;STEEL&quot;);
+        /// property.CreateSectionProperties(new System.Collections.Generic.HashSet&lt;SectionProperty&gt; { section });
+        /// System.Console.WriteLine(section.Id);
+        /// </code></example>
+        public IOSProperty CreateSectionProperties(HashSet<SectionProperty> spSet) { sections.CreateSectionProperties(spSet); return this; }
+
+        /// <summary>Creates native section definitions from explicit H/C/L/O/Box profile selections.</summary>
+        /// <param name="sp">Non-null complete section definition, or non-null nonempty set without null definitions. All selected names/country/modifier codes and applicable additional values are validated/copied before dispatch.</param>
+        /// <returns>The same Property adapter for fluent chaining after the requested operations complete.</returns>
+        /// <remarks><para>When to use: Use for the main table-selection creation graph. H supports ST/T/D/TC/BC/TB/CM, C supports ST/D/FR/BA, L supports ST/RA/SA/LD/SD, and pipe/tube support ST/UserDefined. Uses the corresponding native table routine and actual BC code with Bottom dimensions. Composite creation forwards source CT/FC/CW/CD values unchanged; acquired-build support requires qualification. Unsupported families/modifiers throw before native writes instead of silently doing nothing. Set the intended existing material first. Only positive native results replace packet IDs; earlier successful creations remain on later failure. No assignment, private catalog lookup, conversion, implicit save or rollback.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var definition = new StaadPro.Interop.Models.Sections.SectionDefinition();
+        /// definition.SectionProfile.SelectedSection = new StaadPro.Interop.Models.Sections.RolledSectionHShape { Country = Country.Indian, StaadName = &quot;ISMB300&quot;, Designation = &quot;ISMB300&quot; };
+        /// var section = new SectionProperty { Id = 37, SectionDefinition = definition };
+        /// section.Beams.Add(new Beam { Id = 17 });
+        /// property.SetMaterialName(&quot;STEEL&quot;);
+        /// property.CreateSectionProperty(section);
+        /// System.Console.WriteLine(section.Id);
+        /// </code></example>
+        public IOSProperty CreateSectionProperty(SectionProperty sp) { sections.CreateSectionProperty(sp); return this; }
+
+        /// <summary>Reads native section definitions into owned version-decoded section packets.</summary>
+        /// <returns>A new mutable set of section packets with native IDs, identity, raw-capacity values, applicable field labels, area availability and empty AssignedBeams sets. Empty inventory returns an empty set.</returns>
+        /// <remarks><para>When to use: Use to enumerate definitions without loading geometry. Uses bounded section inventory/count checks, reads each version-specific packet, then rechecks inventory IDs/order. Supports all 47 reviewed top-level layouts for acquired STAAD 24/25/26; unknown versions/types fail explicitly. Native identity is retained without private catalog naming/area substitutions. Count/order checks cannot rule out same-ID external edits. No native mutation, inferred units or hidden member lookup occurs.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// foreach (var section in property.GetAllSections()) System.Console.WriteLine(section.StaadName);
+        /// </code></example>
+        public HashSet<IGenericSection> GetAllSections() => sections.GetAllSections();
+
+        /// <summary>Reads section packets and populates their candidate member references.</summary>
+        /// <param name="allBeams">Non-null finite sequence of non-null positive-ID candidate beams. Enumerated once and matching original references are reused.</param>
+        /// <returns>A new mutable set of section packets whose AssignedBeams contain matching candidate/hydrated references; unknown native IDs are not synthesized.</returns>
+        /// <remarks><para>When to use: Use the candidate overload when beams are already loaded; use Geometry for full hydration. Reads checked version-specific definitions and each native assignment subset using bounded count/list contracts. Does not assign members or alter supplied beam objects. Geometry/candidate provenance must match the model; separate observations are not a model-wide atomic snapshot. No private catalog graph, save or unit conversion is used.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var sections = property.GetAllSectionsWithAssignedBeamsList(new[] { new Beam { Id = 17 } });
+        /// System.Console.WriteLine(sections.Count);
+        /// </code></example>
+        public HashSet<IGenericSection> GetAllSectionsWithAssignedBeamsList(IEnumerable<Beam> allBeams) => sections.GetAllSectionsWithAssignedBeamsList(allBeams);
+
+        /// <summary>Reads section packets and populates their candidate member references.</summary>
+        /// <param name="geometry">Non-null Geometry adapter for the same model; hydrates all beams using GetAllEntities&lt;Beam&gt;(1).</param>
+        /// <returns>A new mutable set of section packets whose AssignedBeams contain matching candidate/hydrated references; unknown native IDs are not synthesized.</returns>
+        /// <remarks><para>When to use: Use the candidate overload when beams are already loaded; use Geometry for full hydration. Reads checked version-specific definitions and each native assignment subset using bounded count/list contracts. Does not assign members or alter supplied beam objects. Geometry/candidate provenance must match the model; separate observations are not a model-wide atomic snapshot. No private catalog graph, save or unit conversion is used.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var sections = property.GetAllSectionsWithAssignedBeamsList(wrapper.Geometry);
+        /// System.Console.WriteLine(sections.Count);
+        /// </code></example>
+        public HashSet<IGenericSection> GetAllSectionsWithAssignedBeamsList(IOSGeometry geometry) => sections.GetAllSectionsWithAssignedBeamsList(geometry);
+
+        /// <summary>Reads an available native section area, or the source mean tapered-I plate area.</summary>
+        /// <param name="propId">Positive native section property reference ID; not a member ID or section type code.</param>
+        /// <returns>Ax in native length-squared units where supplied, or the source mean start/end tapered-I area. Returns null for BeamD and UPT ISECTION, whose native layouts omit Ax; zero is retained only when explicitly returned/calculated.</returns>
+        /// <remarks><para>When to use: Use when a nullable area is needed without touching an assigned member. The source already returns null for BeamD; this port also avoids its fabricated default-zero UPT ISECTION area. Does not fetch a private catalog area or infer an exact double-beam area from rectangular dimensions. Version/type/required-output failures throw. No unit conversion, native mutation or engineering adequacy check occurs.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// double? area = property.GetSectionalArea(37);
+        /// System.Console.WriteLine(area);
+        /// </code></example>
+        public double? GetSectionalArea(int propId) => sections.GetSectionalArea(propId);
+
+        /// <summary>Reads one native section definition with the acquired version-specific value layout.</summary>
+        /// <param name="propId">Positive native section property reference ID, not an analytical member number.</param>
+        /// <returns>A new owned GenericSection implementing IGenericSection. Id/native name/country/type/record and raw-capacity values are retained; AssignedBeams is empty. Native record -1 means unavailable/not applicable. Ax throws for missing area layouts; inspect GenericSection.HasSectionalArea or GetSectionalArea first.</returns>
+        /// <remarks><para>When to use: Use before reading a section&#x27;s identity/field values or populating its assignments. Selects one of 47 native layouts from wrapper.StaadVersion.Major 24, 25 or 26, never the host ApplicationVersion. All required slots must be explicitly written and finite; unused unwritten padding becomes zero. Capacity is bounded to 100000 and rechecked with type/country. Preserves native labels and inertia slot identities without axis reinterpretation. Non-table records are -1; table lookup -1 is retained without failing an otherwise valid packet. Native Ax is used where present; tapered-I mean area follows source plate geometry; BeamD/UPT ISECTION have no substituted area. Unknown profiles fail explicitly. No private catalog, raw COM methods on models, model writes or unit conversion.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var section = property.GetSectionBy(37);
+        /// System.Console.WriteLine(section.StaadName);
+        /// </code></example>
+        public IGenericSection GetSectionBy(int propId) => sections.GetSectionBy(propId);
+
+        /// <summary>Reads one native section and fills its actual candidate member assignment subset.</summary>
+        /// <param name="propId">Positive native section property reference ID.</param>
+        /// <param name="allBeams">Non-null finite sequence of non-null positive-ID candidate beams; enumerated once. Matching original references are reused.</param>
+        /// <returns>A new section packet with AssignedBeams populated from the actual checked native assignment list; unmatched native IDs do not create new candidate objects.</returns>
+        /// <remarks><para>When to use: Use to obtain identity/values and assignments for one section. Corrects the main candidate overload filtering an allocated but unfilled zero array: both overloads now use the actual returned assignment IDs. Reads the reviewed version-specific section packet and bounded assignment list, rechecking positive counts. Does not change supplied beams, assign sections, save or convert units; external edits across observations remain possible.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var section = property.GetSectionByPropertyIdWithAssignedBeamsList(37, new[] { new Beam { Id = 17 } });
+        /// System.Console.WriteLine(section.AssignedBeams.Count);
+        /// </code></example>
+        public IGenericSection GetSectionByPropertyIdWithAssignedBeamsList(int propId, IEnumerable<Beam> allBeams) => sections.GetSectionByPropertyIdWithAssignedBeamsList(propId, allBeams);
+
+        /// <summary>Reads one native section and fills its actual candidate member assignment subset.</summary>
+        /// <param name="propId">Positive native section property reference ID.</param>
+        /// <param name="geometry">Non-null Geometry adapter for the same model; hydrates all beams with degree one.</param>
+        /// <returns>A new section packet with AssignedBeams populated from the actual checked native assignment list; unmatched native IDs do not create new candidate objects.</returns>
+        /// <remarks><para>When to use: Use to obtain identity/values and assignments for one section. Corrects the main candidate overload filtering an allocated but unfilled zero array: both overloads now use the actual returned assignment IDs. Reads the reviewed version-specific section packet and bounded assignment list, rechecking positive counts. Does not change supplied beams, assign sections, save or convert units; external edits across observations remain possible.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// var section = property.GetSectionByPropertyIdWithAssignedBeamsList(37, wrapper.Geometry);
+        /// System.Console.WriteLine(section.AssignedBeams.Count);
+        /// </code></example>
+        public IGenericSection GetSectionByPropertyIdWithAssignedBeamsList(int propId, IOSGeometry geometry) => sections.GetSectionByPropertyIdWithAssignedBeamsList(propId, geometry);
+
+        /// <summary>Counts native section definitions.</summary>
+        /// <returns>The actual nonnegative native Int32-range count/capacity; zero is retained. This scalar observation does not allocate or return values.</returns>
+        /// <remarks><para>When to use: Use to observe native inventory size/capacity directly. Does not enumerate definitions, infer assigned entity counts or provide a universal section schema. Rejects Boolean, floating-point, text and negative count responses instead of coercing them. Section packet retrieval applies its own allocation and positive-capacity limits. No writes, unit conversion or save occur.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetSectionPropertyCount());
+        /// </code></example>
+        public int GetSectionPropertyCount() => sections.GetSectionPropertyCount();
+
+        /// <summary>Counts native thickness definitions.</summary>
+        /// <returns>The actual nonnegative native Int32-range count/capacity; zero is retained. This scalar observation does not allocate or return values.</returns>
+        /// <remarks><para>When to use: Use to observe native inventory size/capacity directly. Does not enumerate definitions, infer assigned entity counts or provide a universal section schema. Rejects Boolean, floating-point, text and negative count responses instead of coercing them. Section packet retrieval applies its own allocation and positive-capacity limits. No writes, unit conversion or save occur.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetThicknessPropertyCount());
+        /// </code></example>
+        public int GetThicknessPropertyCount() => sections.GetThicknessPropertyCount();
+
+        /// <summary>Reads the native section-value buffer capacity.</summary>
+        /// <returns>The actual nonnegative native Int32-range count/capacity; zero is retained. This scalar observation does not allocate or return values.</returns>
+        /// <remarks><para>When to use: Use to observe native inventory size/capacity directly. Does not enumerate definitions, infer assigned entity counts or provide a universal section schema. Rejects Boolean, floating-point, text and negative count responses instead of coercing them. Section packet retrieval applies its own allocation and positive-capacity limits. No writes, unit conversion or save occur.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetCountofSectionPropertyValuesEx());
+        /// </code></example>
+        public int GetCountofSectionPropertyValuesEx() => sections.GetCountofSectionPropertyValuesEx();
+
+        /// <summary>Reads one native section type code by section definition ID.</summary>
+        /// <param name="varSecRefNo">Positive native section property reference ID, preserving the documented native parameter name.</param>
+        /// <returns>The native integral section type code unchanged. Only positive type codes succeed; unfamiliar positive codes remain observable. Native negative errors such as -6025 throw.</returns>
+        /// <remarks><para>When to use: Use for direct metadata discovery without parsing a buffer. Does not identify an analytical member, resolve a catalog profile, convert codes into a guessed shape, create definitions or save. Boolean/floating/text responses are rejected. GetSectionBy separately requires a reviewed native version/type layout.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetSectionPropertyType(37));
+        /// </code></example>
+        public int GetSectionPropertyType(int varSecRefNo) => sections.GetSectionPropertyType(varSecRefNo);
+
+        /// <summary>Reads one native country code by section definition ID.</summary>
+        /// <param name="varSecRefNo">Positive native section property reference ID, preserving the documented native parameter name.</param>
+        /// <returns>The native integral country code unchanged. Nonnegative country codes succeed; zero/non-enum codes are retained for non-table/future definitions. Native negative errors such as -6025 throw.</returns>
+        /// <remarks><para>When to use: Use for direct metadata discovery without parsing a buffer. Does not identify an analytical member, resolve a catalog profile, convert codes into a guessed shape, create definitions or save. Boolean/floating/text responses are rejected. GetSectionBy separately requires a reviewed native version/type layout.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetSectionPropertyCountry(37));
+        /// </code></example>
+        public int GetSectionPropertyCountry(int varSecRefNo) => sections.GetSectionPropertyCountry(varSecRefNo);
+
+        /// <summary>Looks up a native section database record for an exact table designation.</summary>
+        /// <param name="Country">Positive native table country code; integer parameter name/type preserves the documented native input and allows future country codes.</param>
+        /// <param name="SectionName">Exact nonblank native table designation without NUL; case and whitespace pass unchanged.</param>
+        /// <returns>The native nonnegative database record, including zero, or documented -1 when lookup fails. A record is not a model section property ID.</returns>
+        /// <remarks><para>When to use: Use for table record identity, not to create or assign a model property. Preserves -1 without throwing or substituting a guessed record. Other negative codes and malformed nonintegral responses throw. Database/build record conventions are native-controlled; no assumed one-based adjustment, private catalog fallback, model mutation or save.</para><para>Shares this Property adapter&#x27;s serialization and captured-binding checks; reacquire wrapper.Property after refresh. Native writes are checked around each dispatch and execute synchronously on the caller COM apartment. Other wrappers/raw calls and external edits are not locked out. Native writes may partially complete; no implicit save, analysis, retry or rollback occurs. Only the explicit material converter overloads transform units. Native/engineering qualification remains necessary.</para></remarks>
+        /// <exception cref="ArgumentException">A required entity, name, ID, selector, converter, definition, receiver or creation value violates the documented preconditions.</exception>
+        /// <exception cref="InvalidOperationException">A required creation packet/set is null/empty, the captured binding is stale/disposed, or a native status/count/buffer/metadata response violates this operation's contract.</exception>
+        /// <exception cref="NotSupportedException">A requested section layout/version, profile family or modifier has no reviewed implementation. No guessed geometry/catalog result is substituted.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; earlier successful native writes may remain.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetRecordForSection((int)Country.Indian, &quot;ISMB300&quot;));
+        /// </code></example>
+        public int GetRecordForSection(int Country, string SectionName) => sections.GetRecordForSection(Country, SectionName);
 
         #endregion
     }

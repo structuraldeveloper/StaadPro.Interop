@@ -107,6 +107,11 @@ namespace StaadPro.Interop.Entities
         [JsonIgnore]
         public MemberReleases EndRelease { get => Get<MemberReleases>(); set => Set(value); }
 
+        /// <summary>Gets or sets the managed section creation/assignment packet; changing the reference alone does not modify STAAD.</summary>
+        /// <remarks>CreateAndAssignSectionProperties groups equal non-null definitions and assigns the supplied beam references.</remarks>
+        [JsonIgnore]
+        public SectionProperty SectionProperty { get => Get<SectionProperty>(); set => Set(value); }
+
         /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Beam.P:MemberLoadItems']/*" />
         [JsonIgnore]
         public List<MemberLoad> MemberLoadItems { get => Get<List<MemberLoad>>(); private set => Set(value); }

@@ -30,7 +30,7 @@ namespace StaadPro.Interop.Tests.Adapter
             "CreatePlateThicknessProperties", "AssignThicknessProperties", "AssignThicknessProperty", "AssignOffsetSpecification", "AssignOffsetSpecifications",
             "CreateAndAssignOffsetSpecifications", "PopulateMemberReleases", "CreateAndAssignMemberEndReleases"
         };
-        private static IEnumerable<MethodInfo> Methods => typeof(IOSProperty).GetMethods().Where(m => Names.Contains(m.Name) && (m.Name != "AssignOffsetSpecifications" || m.GetParameters().Length == 2));
+        private static IEnumerable<MethodInfo> Methods => typeof(IOSProperty).GetMethods().Where(m => Names.Contains(m.Name) && (m.Name != "AssignOffsetSpecifications" || m.GetParameters().Length == 2) && (!m.Name.StartsWith("CreateMaterialPropert") || m.GetParameters().Length == 1));
         public static IEnumerable<TestCaseData> Ports => Methods.Select(m => new TestCaseData(m).SetName("{m}_" + m));
         private static OpenStaadWrapper Wrap(PropertyPortFixture.Native p) => new OpenStaadWrapper(new PropertyPortFixture.Root { Property = p });
         private static MemberReleases Release() { var r = new MemberReleases(); r.Releases.My = true; r.Releases.Mz = true; return r; }
@@ -59,7 +59,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [Test]
         public void AddsExactlyTwentyFiveSourceSignaturesOnBothSurfaces()
         {
-            Assert.That(Methods.Count(), Is.EqualTo(25)); Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(100));
+            Assert.That(Methods.Count(), Is.EqualTo(25)); Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(125));
             foreach (var method in Methods)
             {
                 var implementation = typeof(OSPropertyAdapter).GetMethod(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray());

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StaadPro.Interop.Common;
+using StaadPro.Interop.Common.Units;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Enums.Property;
@@ -144,6 +145,26 @@ namespace StaadPro.Interop.Services.Property
             var inputs = Packets(mpSet, nameof(mpSet), true).Select(mp => MaterialRequest(mp, legacy)).ToArray();
             Write(p => { foreach (var input in inputs) CreateMaterial(p, input); });
         }
+        private static double[] Conversion(UnitsConverter uc)
+        {
+            if (uc == null) throw new ArgumentNullException(nameof(uc));
+            var copy = new UnitsConverter(uc.FromLength, uc.FromForce, uc.ToLength, uc.ToForce);
+            if (!Enum.IsDefined(typeof(LengthInputUnit), copy.FromLength) || !Enum.IsDefined(typeof(LengthInputUnit), copy.ToLength) ||
+                !Enum.IsDefined(typeof(ForceInputUnit), copy.FromForce) || !Enum.IsDefined(typeof(ForceInputUnit), copy.ToForce)) throw new ArgumentException("Use recognized converter unit selectors.", nameof(uc));
+            var factors = new[] { copy.ElasticModulusConversionFactor, copy.ShearModulusConversionFactor, copy.DensityConversionFactor };
+            if (factors.Any(f => double.IsNaN(f) || double.IsInfinity(f) || f <= 0)) throw new ArgumentException("Conversion factors must be finite and positive.", nameof(uc));
+            return factors;
+        }
+        private static MaterialInput ConvertedMaterial(MaterialProperty mp, double[] factors)
+        {
+            var input = MaterialRequest(mp, false); input.E *= factors[0]; input.G *= factors[1]; input.Density *= factors[2];
+            Finite(input.E, nameof(mp)); Finite(input.G, nameof(mp)); Finite(input.Density, nameof(mp));
+            if (input.E <= 0 || input.G <= 0) throw new ArgumentOutOfRangeException(nameof(mp), "Converted moduli must remain positive."); return input;
+        }
+        internal void CreateMaterialProperty(MaterialProperty mp, UnitsConverter uc)
+        { var input = ConvertedMaterial(mp, Conversion(uc)); Write(p => CreateMaterial(p, input)); }
+        internal void CreateMaterialProperties(HashSet<MaterialProperty> mpSet, UnitsConverter uc)
+        { var factors = Conversion(uc); var inputs = Packets(mpSet, nameof(mpSet), true).Select(mp => ConvertedMaterial(mp, factors)).ToArray(); Write(p => { foreach (var input in inputs) CreateMaterial(p, input); }); }
         private sealed class MaterialAssignment
         { internal string Name; internal int[] Beams, Plates; }
         private static MaterialAssignment MaterialAssignmentRequest(MaterialProperty mp)

@@ -9621,3 +9621,7 @@ On 24 October 2026 the managed surface reached 75 overloads: 25 qualified observ
 ## 12. Subsequent material and release workflow checkpoint
 
 On 24 October 2026 the next 25 main-interface ports brought Property to 100 managed overloads and 57/204 active native routes, leaving 147 pending. The new material, uniform-thickness, offset and member-release workflows retain signatures and document operation-specific statuses, the legacy E/G scale, retained release modes and nontransactional mutations. Earlier per-function coverage/plans above remain archived evidence. See [the current Property guide](../Property-Porting.md) and [all 25 workflow contracts](../Property-Workflows.md) for current behavior and qualification limits.
+
+## 13. Active main section completion checkpoint
+
+On 24 October 2026, 19 remaining active/nonconflicting main-interface methods and six documented native observations brought Property to 125 overloads and 66/204 active native routes, with 138 pending. All active main signatures that can coexist with the established qualified APIs are ported; eight return-type collisions and five obsolete source overloads remain explicitly excluded. Small section data/selection models use reviewed native 24/25/26 layouts without importing private catalog/UI dependencies. Earlier per-function coverage/plans above are archived evidence. See [current Property status](../Property-Porting.md) and [all 25 section contracts](../Property-Sections.md) for behavior and qualification limits.

@@ -2,7 +2,17 @@
 
 **Updated:** 24 October 2026
 
-## Current increment: 25 material and release workflows
+## Current increment: 19 main signatures and six native observations
+
+Incorporated the remaining **19 active, nonconflicting main-interface Property signatures** plus **six documented native observations**, bringing Property to **125 overloads**. Added section creation/assignment/read-back, explicit material conversion and captured-receiver uniform-thickness creation with complete matching XML IntelliSense. Native dispatch now covers **66 of 204 active candidates**, with **138 remaining**. See [all 25 section-completion contracts](Property-Sections.md).
+
+Passed a Release build with zero warnings/errors and **4,156 offline tests**, including **225 new section cases**. Isolated installed-package verification compiles and runs **692 selected XML examples**, including all **250 Property interface/adapter examples**, through a fresh PackageReference-only consumer and cache. Managed stand-ins perform every example; live native mutation and engineering qualification remain pending.
+
+Selected 47 reviewed section layouts per acquired STAAD 24/25/26 profile, reading native version metadata after wrapper initialization and rechecking it before returning packets. Corrected the source assignment query filtering an unfilled array. Preserved native identity/field labels, explicit missing-area results, operation-specific statuses and partial-write behavior. Added small section selection/data models without importing private catalog/UI services; reused the repository UnitsConverter for explicit modulus/weight-density conversion. Existing typed-return collisions (eight) and obsolete source overloads (five) remain documented exceptions.
+
+The six native observations are GetSectionPropertyCount, GetThicknessPropertyCount, GetCountofSectionPropertyValuesEx, GetSectionPropertyType, GetSectionPropertyCountry and GetRecordForSection. All active main signatures that can coexist with the established API are now ported. This does not imply full private model/UI API parity or complete native dispatch coverage. Custom IOSProperty implementations must implement the additions.
+
+## Previous increment: 25 material and release workflows
 
 Incorporated 25 further main-interface Property overloads for material collections, material creation/assignment, uniform plate thicknesses, grouped offset pipelines and member releases. Property now exposes **100 overloads**: 25 qualified observations and 75 main-project compatibility ports. Added detailed matching interface/adapter XML IntelliSense and examples, mutable material/thickness/release packets and member-end release references. Native dispatch reaches **57 of 204 active Property candidates**, with **147 remaining**. See [all 25 workflow signatures](Property-Workflows.md) for parameters, units, native statuses, side effects and deliberate source corrections.
 

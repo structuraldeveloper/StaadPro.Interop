@@ -24,7 +24,7 @@ namespace PackageVerification
             public void GetPlateIncidence(int id, ref object a, ref object b, ref object c, ref object d) { a = 1; b = 2; c = 3; d = 4; }
             public void GetNodeCoordinates(int id, ref object x, ref object y, ref object z) { x = (double)id; y = 0.0; z = id == 3 ? 1.0 : 0.0; }
         }
-        public sealed class Native
+        public class Native
         {
             public readonly List<string> Calls = new List<string>();
             public readonly List<object[]> Arguments = new List<object[]>();

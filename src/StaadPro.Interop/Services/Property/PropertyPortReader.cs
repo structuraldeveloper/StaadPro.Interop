@@ -18,6 +18,7 @@ namespace StaadPro.Interop.Services.Property
         private readonly PropertyQueryReader shared;
         internal PropertyPortReader(PropertyQueryReader shared) { this.shared = shared; }
         private T Run<T>(Func<object, T> body) => shared.WithBinding(body);
+        private object Call(Func<dynamic, object> body) => shared.WithBinding(p => body(p));
         private static int BoundedCount(object raw, string op)
         {
             int count = Count(raw, op);
@@ -44,15 +45,15 @@ namespace StaadPro.Interop.Services.Property
             if (ids.Any(id => id <= 0)) throw new InvalidOperationException(op + " returned an unwritten or nonpositive ID.");
             return ids;
         }
-        private static int[] PropertyIds(dynamic native, bool section)
+        private int[] PropertyIds(dynamic native, bool section)
         {
             string op = section ? "GetSectionPropertyList" : "GetThicknessPropertyList";
-            int count = BoundedCount(section ? (object)native.GetSectionPropertyCount() : (object)native.GetThicknessPropertyCount(), op);
+            int count = BoundedCount(Call(p => section ? (object)p.GetSectionPropertyCount() : (object)p.GetThicknessPropertyCount()), op);
             if (count == 0) return new int[0];
             object buffer = new int[count];
-            Succeeded(section ? (object)native.GetSectionPropertyList(ref buffer) : (object)native.GetThicknessPropertyList(ref buffer), op);
+            Succeeded(Call(p => section ? (object)p.GetSectionPropertyList(ref buffer) : (object)p.GetThicknessPropertyList(ref buffer)), op);
             int[] result = Ids(buffer, count, op);
-            int after = BoundedCount(section ? (object)native.GetSectionPropertyCount() : (object)native.GetThicknessPropertyCount(), op);
+            int after = BoundedCount(Call(p => section ? (object)p.GetSectionPropertyCount() : (object)p.GetThicknessPropertyCount()), op);
             if (after != count) throw new InvalidOperationException(op + " count changed during retrieval.");
             return result;
         }

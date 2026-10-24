@@ -1,6 +1,6 @@
 # Property creation, assignments and managed population
 
-This guide records the preceding management increment. Property now exposes 100 overloads; see [the latest 25 material and release workflows](Property-Workflows.md).
+This guide records the preceding management increment. Property now exposes 125 overloads; see [the material and release workflows](Property-Workflows.md) and [the latest section completion](Property-Sections.md).
 
 
 This increment adds 25 main-project methods to IOSProperty and the single OSPropertyAdapter. Twenty-one are main-interface methods; the four material-assignment subset overloads were public adapter methods in the main project. Return types, parameter names/order and optional defaults are preserved after namespace adaptation. Private catalog and unit-library dependencies are not imported.

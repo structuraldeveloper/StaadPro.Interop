@@ -1,6 +1,6 @@
 # Property main-project ports
 
-This guide records the preceding 25-method increment. Property now has 100 overloads; see [the management ports](Property-Management-Ports.md) and [the latest 25 workflows](Property-Workflows.md) for subsequent creation, assignment and population methods.
+This guide records the preceding 25-method increment. Property now has 125 overloads; see [the management ports](Property-Management-Ports.md) and [the workflows](Property-Workflows.md) and [the latest section completion](Property-Sections.md) for subsequent creation, assignment and population methods.
 
 
 **Updated:** 23 October 2026
