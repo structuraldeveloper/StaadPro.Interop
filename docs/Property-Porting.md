@@ -1,12 +1,20 @@
 # Property observations and main-project ports
 
-**Updated:** 23 October 2026
+**Updated:** 24 October 2026
 
-## Current increment: 25 main-project ports
+## Current increment: 25 management ports
+
+Incorporated 25 further Property overloads for table/composite/built-up section creation, beta-angle assignment and population, material assignment subsets, four-corner plate thickness creation/retrieval/assignment, and member-offset creation/population/assignment. Property now exposes **75 overloads**: 25 typed observations and 50 main-project compatibility ports. Added detailed, matching interface/adapter XML IntelliSense and examples, the required thickness/offset packets, member offset references and preserved table/offset enum codes. Native dispatch covers **54 of 204 active Property candidates**, with **150 remaining**. See [the 25-method guide](Property-Management-Ports.md) for all signatures, units, statuses, mutation behavior and compatibility corrections.
+
+Passed a Release solution build with zero warnings/errors and **3,763 offline tests**, including **189 new Property management cases**. The isolated installed-package verifier compiles and runs **592 selected XML examples**, including all **150 Property interface/adapter examples**, through a fresh PackageReference-only consumer and cache. Managed stand-ins exercise the examples without changing a native STAAD model. Live creation/assignment and engineering qualification for this increment remain pending.
+
+The four material subset overloads originate in the main adapter; the other 21 originate in its interface as well. Signature defaults and parameter names are preserved. The expanded supporting packets omit the private unit-converter helpers. Interface expansion requires custom IOSProperty implementations to implement the new methods. Existing 25 typed observations keep their return packets and signatures.
+
+## Previous increment: 25 inventory and assignment ports
 
 Added 25 main-project Property overloads for section/thickness inventories, assignment discovery, material context and assignment, member specifications, and global-Y member-end offsets. Property now exposes **50 overloads**: the existing 25 typed observations and these 25 signature-compatible ports. All new interface and adapter methods include expanded XML IntelliSense with parameters, return values, examples, units, side effects and failure contracts. Shared locking/lifetime checks, bounded native buffers and checked operation-specific statuses are included. Passed **3,531 offline tests**, including **209 new Property cases**, with zero build warnings/errors. The installed-package verifier compiles and runs **542 selected XML examples**, including all **100 Property examples**, against managed stand-ins. Live COM and engineering qualification remain pending. See [all 25 added signatures and usage contracts](Property-Main-Ports.md).
 
-The current adapter exposes **50 public overloads** and adds routes to **19 further native names**, for **44 of 204 active native candidates** with **160 remaining**. Eight of the 212-name union remain excluded. This is dispatch-route coverage, not a claim of complete typed parsing or native qualification: the raw section-buffer route deliberately does not decode a version-specific layout. The archived multi-version review retains its original preimplementation coverage labels.
+At that preceding checkpoint the adapter exposed **50 public overloads** and adds routes to **19 further native names**, for **44 of 204 active native candidates** with **160 remaining**. Eight of the 212-name union remain excluded. This is dispatch-route coverage, not a claim of complete typed parsing or native qualification: the raw section-buffer route deliberately does not decode a version-specific layout. The archived multi-version review retains its original preimplementation coverage labels.
 
 The compatibility methods preserve main-project signatures and direct return types; the original 25 observation methods retain their status/data contracts. Both sets share one adapter lock and captured-binding checks. Assignment and material-context operations mutate native state without implicit saving; read methods remain read-only.
 

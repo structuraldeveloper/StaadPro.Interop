@@ -1,5 +1,18 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261024.3 - 24 October 2026 (prepared preview)
+
+Incorporated 25 further Property overloads for table/composite/built-up section creation, beta-angle assignment and population, material assignment subsets, four-corner plate thickness creation/retrieval/assignment, and member-offset creation/population/assignment. Property now exposes **75 overloads**: 25 typed observations and 50 main-project compatibility ports. Added detailed, matching interface/adapter XML IntelliSense and examples, the required thickness/offset packets, member offset references and preserved table/offset enum codes. Native dispatch covers **54 of 204 active Property candidates**, with **150 remaining**. See [the 25-method guide](Property-Management-Ports.md) for all signatures, units, statuses, mutation behavior and compatibility corrections.
+
+Passed a Release solution build with zero warnings/errors and **3,763 offline tests**, including **189 new Property management cases**. The isolated installed-package verifier compiles and runs **592 selected XML examples**, including all **150 Property interface/adapter examples**, through a fresh PackageReference-only consumer and cache. Managed stand-ins exercise the examples without changing a native STAAD model. Live creation/assignment and engineering qualification for this increment remain pending.
+
+- Preserved 25 main-project signatures, including the Global default for PopulateMemberOffsets and the nThreads beta-assignment overload. Retained caller-apartment dispatch and a shared Property binding/serialization gate.
+- Decoded GetThicknessPropertyValues success as 4, AssignPlateThickness/AssignMemberSpecToBeam as 0 and AssignBetaAngle as true/1. Retained direct signed section-creation results, checked positive packet IDs before updating them and documented partial native writes without rollback.
+- Added bounded material count/list retrieval, four-slot buffer validation, staged managed population and independent zero-offset packets retaining their end/frame. Corrected the bulk offset null guard.
+- Added the packaged Property-Management-Ports.md guide and updated coverage, installation, publishing and expanded XML verification.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.3.nupkg` for manual upload; this task does not publish it to NuGet.org or change registry owners. Authors: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
+
 ## 1.0.0-preview.20261024.2 - 24 October 2026 (prepared preview)
 
 Restored **Authors: Srinivasa Rao Masanam**. Retained **Company: IngeneStructs** and **Copyright (c) 2026 IngeneStructs** in the package/assembly metadata as applicable. Corrected the current README, publishing guide and verification checks to distinguish author credit from registry ownership. The intended NuGet.org owner is **IngeneStructs**; registry ownership is changed separately by an authenticated current owner and is not asserted by the archive.

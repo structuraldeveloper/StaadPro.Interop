@@ -16,6 +16,7 @@ namespace StaadPro.Interop.Adapters.Models
     {
         private readonly PropertyQueryReader queries;
         private readonly PropertyPortReader ports;
+        private readonly PropertyManagementReader management;
         /// <summary>Captures the wrapper's Property interface without invoking Property domain functions.</summary>
         /// <param name="wrapper">Connected wrapper with a non-null RawProperty receiver.</param>
         /// <exception cref="ArgumentNullException">The wrapper or its RawProperty binding is null.</exception>
@@ -24,6 +25,7 @@ namespace StaadPro.Interop.Adapters.Models
             ComObject = wrapper.RawProperty ?? throw new ArgumentNullException(nameof(wrapper.RawProperty));
             queries = new PropertyQueryReader(wrapper, (object)ComObject);
             ports = new PropertyPortReader(queries);
+            management = new PropertyManagementReader(queries, ports);
         }
         /// <summary>Gets the captured native Property binding; direct calls bypass typed validation and coordination.</summary>
         /// <value>The acquired automation receiver; no readiness or compatibility is implied.</value>
@@ -702,5 +704,353 @@ namespace StaadPro.Interop.Adapters.Models
         /// <example><code>System.Console.WriteLine(property.AssignMemberEndOffset(new[] { 17, 41 }, OffsetLocation.End, -0.20));</code></example>
         public bool AssignMemberEndOffset(int[] memberIds, OffsetLocation location, double offsetY) =>
             ports.AssignMemberEndOffset(memberIds, (int)location, offsetY);
+
+        #region Property management ports
+
+        /// <summary>Deletes a native material definition by its exact name.</summary>
+        /// <param name="mName">Nonblank existing native material name; case and whitespace are passed unchanged.</param>
+        /// <returns>The native success flag: true for deletion and false for native refusal or failure; no cause is inferred from false.</returns>
+        /// <remarks><para>When to use: Use only when a material should be removed from the model. This mutates native state. Unlike material queries this does not retrieve or reassign entities, and it does not save. Boolean or documented integral 0/1 evidence is decoded without treating arbitrary nonzero codes as success.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.DeleteMaterial(&quot;UNUSED_STEEL&quot;));
+        /// </code></example>
+        public bool DeleteMaterial(string mName) => management.DeleteMaterial(mName);
+
+        /// <summary>Creates a beam section definition from an installed native section table.</summary>
+        /// <param name="country">Named table selector with the preserved main-project integer code; database availability is native-controlled.</param>
+        /// <param name="sectionName">Exact nonblank native database section designation.</param>
+        /// <param name="typeSpec">Preserved native section modifier. The reviewed function documents ST, D and T; other named codes require acquired-build support.</param>
+        /// <param name="additionalSpec1">Finite extra specification in the native creation length convention; clear spacing for a double profile, otherwise as defined by STAAD.</param>
+        /// <param name="additionalSpec2">Finite second extra specification; the reviewed contract requests 0.0.</param>
+        /// <returns>The native signed integral result unchanged. Only a positive result is a created property ID; zero is a documented creation failure. Never assign a nonpositive result.</returns>
+        /// <remarks><para>When to use: Use for a table-defined section and call SetMaterialName with the intended existing material immediately beforehand. Does not choose or create material, assign the section, convert dimensions or save. The enum is a catalog of codes, not a per-build capability check. Prefer the composite helper for TC/BC/TB cover plates.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// property.SetMaterialName(&quot;STEEL&quot;);
+        /// int id = property.CreateBeamPropertyFromTable(Country.Indian, &quot;ISMB300&quot;, TypeSpecification.ST, 0.0, 0.0);
+        /// System.Console.WriteLine(id);
+        /// </code></example>
+        public int CreateBeamPropertyFromTable(Country country, string sectionName, TypeSpecification typeSpec, double additionalSpec1, double additionalSpec2) => management.CreateBeamPropertyFromTable(country, sectionName, typeSpec, additionalSpec1, additionalSpec2);
+
+        /// <summary>Creates a rolled-table section with top, bottom or both cover plates.</summary>
+        /// <param name="country">Preserved native table country selector.</param>
+        /// <param name="baseStaadName">Exact nonblank rolled base section name in that table.</param>
+        /// <param name="typeSpecification">TC for top, BC for bottom, or TB for both; all other values are rejected.</param>
+        /// <param name="plateValuesMetres">Owned-copy input: exactly two positive finite values [width, thickness] for TC/BC, or four [top width, top thickness, bottom width, bottom thickness] for TB. The source parameter name is retained; values pass unchanged and must match the acquired creation-unit convention.</param>
+        /// <returns>The signed native result unchanged. Positive values are created property IDs; 0, -6004, -6005 and -6006 represent documented creation/database/type failures.</returns>
+        /// <remarks><para>When to use: Use after SetMaterialName for an existing intended material. Calls CreateBeamPropertyFromTableWithCoverPlates with the supplied TC/BC/TB code; BC is never substituted with TC. The wrapper does not set units, infer plate geometry, assign members or save. Do not infer the native unit convention solely from the Metres parameter suffix.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// property.SetMaterialName(&quot;STEEL&quot;);
+        /// int id = property.CreateCompositeBeamPropertyFromTable(Country.Indian, &quot;ISMB300&quot;, TypeSpecification.BC, new[] { 0.2, 0.01 });
+        /// System.Console.WriteLine(id);
+        /// </code></example>
+        public int CreateCompositeBeamPropertyFromTable(Country country, string baseStaadName, TypeSpecification typeSpecification, double[] plateValuesMetres) => management.CreateCompositeBeamPropertyFromTable(country, baseStaadName, typeSpecification, plateValuesMetres);
+
+        /// <summary>Creates a fabricated or tapered I-section from seven explicit plate dimensions.</summary>
+        /// <param name="designation">Source-compatible display designation parameter. The main tapered-I path derives its designation; this argument is not sent to STAAD or used to rename the definition.</param>
+        /// <param name="propertyValuesMetres">Exactly seven finite positive values: start depth, web thickness, end depth, top flange width, top flange thickness, bottom flange width, bottom flange thickness. Copied and passed unchanged; verify the acquired native creation units despite the retained Metres suffix.</param>
+        /// <returns>The native signed integral result unchanged: a positive property ID, zero for creation failure, or a native error such as -106/-108. Nonpositive results must not be assigned.</returns>
+        /// <remarks><para>When to use: Use when no rolled table lookup is needed. Dispatches the same CreateTaperedIProperty route as the main TaperISection without importing its private catalog graph. Equal start/end depths describe a prismatic fabricated I-section. Set the intended existing material beforehand. No engineering adequacy check, unit conversion, member assignment or save is performed.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// property.SetMaterialName(&quot;STEEL&quot;);
+        /// System.Console.WriteLine(property.CreateBuiltUpBeamProperty(&quot;Fabricated I&quot;, new[] { 0.6, 0.01, 0.6, 0.25, 0.02, 0.25, 0.02 }));
+        /// </code></example>
+        public int CreateBuiltUpBeamProperty(string designation, double[] propertyValuesMetres) => management.CreateBuiltUpBeamProperty(designation, propertyValuesMetres);
+
+        /// <summary>Assigns each supplied beam its managed beta angle in degrees.</summary>
+        /// <param name="beams">Non-null set of non-null beams with positive analytical IDs and finite BetaAngle values in degrees. The set and angles are snapshotted before dispatch.</param>
+        /// <returns>The same Property adapter for fluent chaining, after all requested operations complete.</returns>
+        /// <remarks><para>When to use: Use to write Beam.BetaAngle values into STAAD; PopulateBetaAngles reads in the opposite direction. Calls AssignBetaAngle once per beam and requires native true/1; false/0 fails. Empty sets are valid no-ops. Stops at the first failure and does not roll back earlier assignments. The degree argument is retained without copying the unsafe worker-thread COM dispatch of the reference implementation.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var beams = new System.Collections.Generic.HashSet&lt;Beam&gt; { new Beam { Id = 17, BetaAngle = 25.0 } };
+        /// property.AssignBetaAnglesToBeams(beams);
+        /// </code></example>
+        public IOSProperty AssignBetaAnglesToBeams(HashSet<Beam> beams) { management.AssignBetaAnglesToBeams(beams, 1); return this; }
+
+        /// <summary>Assigns each supplied beam its managed beta angle in degrees.</summary>
+        /// <param name="beams">Non-null set of non-null beams with positive analytical IDs and finite BetaAngle values in degrees. The set and angles are snapshotted before dispatch.</param>
+        /// <param name="nThreads">Source-compatible degree argument, 1 through 512. Native calls remain synchronous and serialized on the caller COM apartment; no worker COM calls are created.</param>
+        /// <returns>The same Property adapter for fluent chaining, after all requested operations complete.</returns>
+        /// <remarks><para>When to use: Use to write Beam.BetaAngle values into STAAD; PopulateBetaAngles reads in the opposite direction. Calls AssignBetaAngle once per beam and requires native true/1; false/0 fails. Empty sets are valid no-ops. Stops at the first failure and does not roll back earlier assignments. The degree argument is retained without copying the unsafe worker-thread COM dispatch of the reference implementation.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var beams = new System.Collections.Generic.HashSet&lt;Beam&gt; { new Beam { Id = 17, BetaAngle = 25.0 } };
+        /// property.AssignBetaAnglesToBeams(beams, 2);
+        /// </code></example>
+        public IOSProperty AssignBetaAnglesToBeams(HashSet<Beam> beams, int nThreads) { management.AssignBetaAnglesToBeams(beams, nThreads); return this; }
+
+        /// <summary>Reads native beta angles into the supplied managed beam objects.</summary>
+        /// <param name="forBeams">Non-null finite sequence of non-null positive-ID beams. Equal beams are queried once; original instances are retained.</param>
+        /// <returns>The same Property adapter for fluent chaining, after all requested operations complete.</returns>
+        /// <remarks><para>When to use: Use before inspecting Beam.BetaAngle. Stages all successful finite observations before updating the supplied objects, so a native read failure leaves their angles unchanged. Changes managed beam angles/local-axis caches only; no STAAD assignments, save or analysis. Native -3001 is a failure to populate, not an angle.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var beams = new[] { new Beam { Id = 17 } };
+        /// property.PopulateBetaAngles(beams);
+        /// System.Console.WriteLine(beams[0].BetaAngle);
+        /// </code></example>
+        public IOSProperty PopulateBetaAngles(IEnumerable<Beam> forBeams) { management.PopulateBetaAngles(forBeams); return this; }
+
+        /// <summary>Finds supplied or hydrated beams assigned to one isotropic material.</summary>
+        /// <param name="mName">Exact nonblank material name; passed unchanged, not a list index.</param>
+        /// <param name="allBeams">Non-null sequence of non-null positive-ID candidates. Results reference the first supplied object matching each native ID.</param>
+        /// <returns>A new mutable set of matching Beam references; empty when native assignment count is zero. Native IDs absent from the candidates are not fabricated.</returns>
+        /// <remarks><para>When to use: Use the candidate overload when geometry is already loaded, or the Geometry overload for full hydration. Bounds native counts to 100000, validates positive Int32 IDs and exact array shape, then rechecks positive counts. Zero skips fetching. The member count follows native purpose and main usage despite an inconsistent help return table; the member list requires integral zero success. No entity assignments or native edits occur. Geometry must refer to the same model; the wrapper cannot prove the provenance of arbitrary candidates. Same-count external changes remain possible.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetIsotropicMaterialAssignedBeams(&quot;STEEL&quot;, new[] { new Beam { Id = 17 } }).Count);
+        /// </code></example>
+        public HashSet<Beam> GetIsotropicMaterialAssignedBeams(string mName, IEnumerable<Beam> allBeams) => management.GetIsotropicMaterialAssignedBeams(mName, allBeams);
+
+        /// <summary>Finds supplied or hydrated beams assigned to one isotropic material.</summary>
+        /// <param name="mName">Exact nonblank material name; passed unchanged, not a list index.</param>
+        /// <param name="geometry">Non-null Geometry adapter for the same model/binding. Retrieves all candidate entities with GetAllEntities&lt;T&gt;(1); node/incidence hydration may be expensive.</param>
+        /// <returns>A new mutable set of matching Beam references; empty when native assignment count is zero. Native IDs absent from the candidates are not fabricated.</returns>
+        /// <remarks><para>When to use: Use the candidate overload when geometry is already loaded, or the Geometry overload for full hydration. Bounds native counts to 100000, validates positive Int32 IDs and exact array shape, then rechecks positive counts. Zero skips fetching. The member count follows native purpose and main usage despite an inconsistent help return table; the member list requires integral zero success. No entity assignments or native edits occur. Geometry must refer to the same model; the wrapper cannot prove the provenance of arbitrary candidates. Same-count external changes remain possible.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetIsotropicMaterialAssignedBeams(&quot;STEEL&quot;, wrapper.Geometry).Count);
+        /// </code></example>
+        public HashSet<Beam> GetIsotropicMaterialAssignedBeams(string mName, IOSGeometry geometry) => management.GetIsotropicMaterialAssignedBeams(mName, geometry);
+
+        /// <summary>Finds supplied or hydrated plates assigned to one isotropic material.</summary>
+        /// <param name="mName">Exact nonblank material name; passed unchanged, not a list index.</param>
+        /// <param name="allPlates">Non-null sequence of non-null positive-ID candidates. Results reference the first supplied object matching each native ID.</param>
+        /// <returns>A new mutable set of matching Plate references; empty when native assignment count is zero. Native IDs absent from the candidates are not fabricated.</returns>
+        /// <remarks><para>When to use: Use the candidate overload when geometry is already loaded, or the Geometry overload for full hydration. Bounds native counts to 100000, validates positive Int32 IDs and exact array shape, then rechecks positive counts. Zero skips fetching. The plate count must be nonnegative; its list requires true/1 success. No entity assignments or native edits occur. Geometry must refer to the same model; the wrapper cannot prove the provenance of arbitrary candidates. Same-count external changes remain possible.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetIsotropicMaterialAssignedPlates(&quot;STEEL&quot;, new[] { new Plate { Id = 17 } }).Count);
+        /// </code></example>
+        public HashSet<Plate> GetIsotropicMaterialAssignedPlates(string mName, IEnumerable<Plate> allPlates) => management.GetIsotropicMaterialAssignedPlates(mName, allPlates);
+
+        /// <summary>Finds supplied or hydrated plates assigned to one isotropic material.</summary>
+        /// <param name="mName">Exact nonblank material name; passed unchanged, not a list index.</param>
+        /// <param name="geometry">Non-null Geometry adapter for the same model/binding. Retrieves all candidate entities with GetAllEntities&lt;T&gt;(1); node/incidence hydration may be expensive.</param>
+        /// <returns>A new mutable set of matching Plate references; empty when native assignment count is zero. Native IDs absent from the candidates are not fabricated.</returns>
+        /// <remarks><para>When to use: Use the candidate overload when geometry is already loaded, or the Geometry overload for full hydration. Bounds native counts to 100000, validates positive Int32 IDs and exact array shape, then rechecks positive counts. Zero skips fetching. The plate count must be nonnegative; its list requires true/1 success. No entity assignments or native edits occur. Geometry must refer to the same model; the wrapper cannot prove the provenance of arbitrary candidates. Same-count external changes remain possible.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetIsotropicMaterialAssignedPlates(&quot;STEEL&quot;, wrapper.Geometry).Count);
+        /// </code></example>
+        public HashSet<Plate> GetIsotropicMaterialAssignedPlates(string mName, IOSGeometry geometry) => management.GetIsotropicMaterialAssignedPlates(mName, geometry);
+
+        /// <summary>Creates native plate thickness definitions and stores their IDs in the supplied packets.</summary>
+        /// <param name="pet">Non-null thickness packet. A/B/C must be finite positive lengths; D may be zero for the native triangular fourth slot. No corner substitution occurs.</param>
+        /// <returns>The same Property adapter for fluent chaining, after all requested operations complete.</returns>
+        /// <remarks><para>When to use: Use before AssignPlateElementThickness. Copies A/B/C/D in incidence order into CreatePlateThicknessProperty and stores only a positive native ID. Zero or a negative creation error throws without replacing that packet&#x27;s prior ID. Repeated calls create definitions again. Earlier successful creations survive a later failure; no rollback, assignment, save or unit conversion occurs.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var pet = new PlateElementThickness(0.2);
+        /// property.CreatePlateElementThickness(pet);
+        /// System.Console.WriteLine(pet.Id);
+        /// </code></example>
+        public IOSProperty CreatePlateElementThickness(PlateElementThickness pet) { management.CreatePlateElementThickness(pet); return this; }
+
+        /// <summary>Creates native plate thickness definitions and stores their IDs in the supplied packets.</summary>
+        /// <param name="petSet">Non-null, nonempty set without null entries. All packets are validated before the first native call.</param>
+        /// <returns>The same Property adapter for fluent chaining, after all requested operations complete.</returns>
+        /// <remarks><para>When to use: Use before AssignPlateElementThickness. Copies A/B/C/D in incidence order into CreatePlateThicknessProperty and stores only a positive native ID. Zero or a negative creation error throws without replacing that packet&#x27;s prior ID. Repeated calls create definitions again. Earlier successful creations survive a later failure; no rollback, assignment, save or unit conversion occurs.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var pet = new PlateElementThickness(0.2);
+        /// property.CreatePlateElementThicknesses(new System.Collections.Generic.HashSet&lt;PlateElementThickness&gt; { pet });
+        /// System.Console.WriteLine(pet.Id);
+        /// </code></example>
+        public IOSProperty CreatePlateElementThicknesses(HashSet<PlateElementThickness> petSet) { management.CreatePlateElementThicknesses(petSet); return this; }
+
+        /// <summary>Assigns existing native thickness definitions to their candidate plate sets.</summary>
+        /// <param name="pet">Null or no AssignedPlates is a no-op. Otherwise Id must identify an existing positive native thickness definition and candidates must be non-null positive-ID plates.</param>
+        /// <returns>The same Property adapter for fluent chaining, after all requested operations complete.</returns>
+        /// <remarks><para>When to use: Use after creating or resolving thickness IDs. Snapshots assignment IDs before dispatch, calls AssignPlateThickness and requires integral zero success. Native -4008 can report partial assignment and is surfaced as an exception; already applied changes are not undone. Does not create definitions, alter managed geometry, save or retry.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var pet = new PlateElementThickness(0.2) { Id = 45 };
+        /// pet.AssignedPlates.Add(new Plate { Id = 17 });
+        /// property.AssignPlateElementThickness(pet);
+        /// </code></example>
+        public IOSProperty AssignPlateElementThickness(PlateElementThickness pet) { management.AssignPlateElementThickness(pet); return this; }
+
+        /// <summary>Assigns existing native thickness definitions to their candidate plate sets.</summary>
+        /// <param name="petSet">Null or empty is a no-op. Null entries and packets with no assignments are skipped; nonempty assignments require positive packet and plate IDs.</param>
+        /// <returns>The same Property adapter for fluent chaining, after all requested operations complete.</returns>
+        /// <remarks><para>When to use: Use after creating or resolving thickness IDs. Snapshots assignment IDs before dispatch, calls AssignPlateThickness and requires integral zero success. Native -4008 can report partial assignment and is surfaced as an exception; already applied changes are not undone. Does not create definitions, alter managed geometry, save or retry.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var pet = new PlateElementThickness(0.2) { Id = 45 };
+        /// pet.AssignedPlates.Add(new Plate { Id = 17 });
+        /// property.AssignPlateElementThicknesses(new System.Collections.Generic.HashSet&lt;PlateElementThickness&gt; { pet });
+        /// </code></example>
+        public IOSProperty AssignPlateElementThicknesses(HashSet<PlateElementThickness> petSet) { management.AssignPlateElementThicknesses(petSet); return this; }
+
+        /// <summary>Reads four native thickness slots by analytical plate ID.</summary>
+        /// <param name="plateId">Positive analytical plate ID; not a thickness definition ID.</param>
+        /// <returns>A new independent packet with four finite nonnegative native length values, no assigned plates and Id zero because the query does not resolve a definition ID.</returns>
+        /// <remarks><para>When to use: Use the property-ID method for definitions or the plate-ID method for effective plate values. GetPlateThickness must return integral zero success. All four output slots must be written and finite. No uniformity assumption, triangular fourth-slot replacement, averaging, conversion or assignment occurs.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var pet = property.GetPlateThicknessByPlateId(17);
+        /// System.Console.WriteLine(pet.D);
+        /// </code></example>
+        public PlateElementThickness GetPlateThicknessByPlateId(int plateId) => management.GetPlateThicknessByPlateId(plateId);
+
+        /// <summary>Reads four native thickness slots by definition ID.</summary>
+        /// <param name="petId">Positive native thickness definition ID; not a plate ID.</param>
+        /// <returns>A new independent packet with four finite nonnegative native length values, no assigned plates and Id set to petId.</returns>
+        /// <remarks><para>When to use: Use the property-ID method for definitions or the plate-ID method for effective plate values. GetThicknessPropertyValues must return exactly integral 4; zero is failure. All four output slots must be written and finite. No uniformity assumption, triangular fourth-slot replacement, averaging, conversion or assignment occurs.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var pet = property.GetPlateThicknessByThicknessPropertyId(45);
+        /// System.Console.WriteLine(pet.D);
+        /// </code></example>
+        public PlateElementThickness GetPlateThicknessByThicknessPropertyId(int petId) => management.GetPlateThicknessByThicknessPropertyId(petId);
+
+        /// <summary>Reads all native thickness definitions and their four corner values.</summary>
+        /// <returns>A new mutable set of independent packets with native definition IDs and empty AssignedPlates sets; empty for an empty inventory.</returns>
+        /// <remarks><para>When to use: Use to inspect definitions without hydrating plates. Uses the bounded thickness inventory and four-value read contract, then rereads inventory IDs to reject an observed reorder/replacement. Duplicate inventory IDs retain separate packets as in the reference type&#x27;s identity equality. Other receivers can still make same-ID edits. No model changes, defaults or unit conversion occur.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// foreach (var pet in property.GetAllPlateElementThicknesses()) System.Console.WriteLine(pet.Id);
+        /// </code></example>
+        public HashSet<PlateElementThickness> GetAllPlateElementThicknesses() => management.GetAllPlateElementThicknesses();
+
+        /// <summary>Reads thickness definitions and populates their candidate plate references.</summary>
+        /// <param name="allPlates">Non-null sequence of non-null positive-ID candidate plates. Matching references are reused; no unknown plates are synthesized.</param>
+        /// <returns>A new set of thickness packets whose AssignedPlates sets contain the matching original or hydrated candidate instances.</returns>
+        /// <remarks><para>When to use: Use when thickness assignments are needed alongside values. The candidate overload avoids geometry hydration. Uses checked native thickness inventories, four-value reads and assignment count/list contracts; positive list counts are rechecked. No thickness or native assignment is created. External edits across separate observations can still prevent a model-wide atomic snapshot.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetAllPlateElementThicknessesWithPopulatedAssignments(new[] { new Plate { Id = 17 } }).Count);
+        /// </code></example>
+        public HashSet<PlateElementThickness> GetAllPlateElementThicknessesWithPopulatedAssignments(IEnumerable<Plate> allPlates) => management.GetAllPlateElementThicknessesWithPopulatedAssignments(allPlates);
+
+        /// <summary>Reads thickness definitions and populates their candidate plate references.</summary>
+        /// <param name="geometry">Non-null Geometry adapter for the same model. Hydrates plates using GetAllEntities&lt;Plate&gt;(1).</param>
+        /// <returns>A new set of thickness packets whose AssignedPlates sets contain the matching original or hydrated candidate instances.</returns>
+        /// <remarks><para>When to use: Use when thickness assignments are needed alongside values. The candidate overload avoids geometry hydration. Uses checked native thickness inventories, four-value reads and assignment count/list contracts; positive list counts are rechecked. No thickness or native assignment is created. External edits across separate observations can still prevent a model-wide atomic snapshot.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// System.Console.WriteLine(property.GetAllPlateElementThicknessesWithPopulatedAssignments(wrapper.Geometry).Count);
+        /// </code></example>
+        public HashSet<PlateElementThickness> GetAllPlateElementThicknessesWithPopulatedAssignments(IOSGeometry geometry) => management.GetAllPlateElementThicknessesWithPopulatedAssignments(geometry);
+
+        /// <summary>Reads the components of one member-end offset in the requested frame.</summary>
+        /// <param name="bId">Positive analytical beam/member ID.</param>
+        /// <param name="location">Start=0 or End=1; not an incidence node ID.</param>
+        /// <param name="offsetAxis">Global=0 or Local=1. No managed coordinate transform is substituted.</param>
+        /// <returns>An independent unnumbered packet preserving the requested end/frame and native components. Native NoSpecification is represented by zero components for compatibility; other failures throw.</returns>
+        /// <remarks><para>When to use: Use for a direct mutable compatibility packet; use GetMemberGlobalOffset/GetMemberLocalOffset when absence must remain distinct from successful zero. Checks the existing typed native contract (0 success, -6027 no specification). Unlike the shared None shortcut in the main implementation, zero packets remain independent and retain end/frame. No native ID, candidate assignments, unit conversion or model edits are inferred.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var offset = property.GetBeamOffsetSpecification(17, OffsetLocation.End, OffsetAxis.Local);
+        /// System.Console.WriteLine(offset.Y);
+        /// </code></example>
+        public OffsetSpecification GetBeamOffsetSpecification(int bId, OffsetLocation location, OffsetAxis offsetAxis) => management.GetBeamOffsetSpecification(bId, location, offsetAxis);
+
+        /// <summary>Populates the supplied beams with independent start/end offset packets.</summary>
+        /// <param name="forBeams">Non-null finite sequence of non-null positive-ID beams. Equal beams are read once; original references are updated.</param>
+        /// <param name="offsetAxis">Requested component frame, Global by default; only Global or Local is accepted.</param>
+        /// <returns>The same Property adapter for fluent chaining, after all requested operations complete.</returns>
+        /// <remarks><para>When to use: Use before reading Beam.StartOffset/EndOffset. Stages every native read before updating the supplied objects. NoSpecification yields a zero compatibility packet; use the typed observations to retain absence status. Failure leaves managed offset references unchanged. Does not create native specifications, assign members, save or convert units.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var beams = new[] { new Beam { Id = 17 } };
+        /// property.PopulateMemberOffsets(beams);
+        /// System.Console.WriteLine(beams[0].EndOffset.Y);
+        /// </code></example>
+        public IOSProperty PopulateMemberOffsets(IEnumerable<Beam> forBeams, OffsetAxis offsetAxis = OffsetAxis.Global) { management.PopulateMemberOffsets(forBeams, offsetAxis); return this; }
+
+        /// <summary>Creates nonzero member-end offset definitions and stores their native IDs.</summary>
+        /// <param name="oSpec">Non-null definition with Start/End location, Global/Local frame and finite signed components in native length units.</param>
+        /// <returns>The same Property adapter for fluent chaining, after all requested operations complete.</returns>
+        /// <remarks><para>When to use: Use before AssignOffsetSpecifications. A packet is zero when every component magnitude is below 1e-9 native units; zero packets skip creation and retain their prior IDs. Nonzero CreateMemberOffsetSpec must return a positive ID before that packet is updated. Repeated creation may add new native definitions. Earlier successes survive later failure; no rollback, assignment, conversion or save. The bulk null guard is corrected from the reference&#x27;s unsafe null dereference.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var offset = OffsetSpecification.GlobalYEnd(-0.15);
+        /// property.CreateOffsetSpecification(offset);
+        /// System.Console.WriteLine(offset.Id);
+        /// </code></example>
+        public IOSProperty CreateOffsetSpecification(OffsetSpecification oSpec) { management.CreateOffsetSpecification(oSpec); return this; }
+
+        /// <summary>Creates nonzero member-end offset definitions and stores their native IDs.</summary>
+        /// <param name="osSet">Non-null nonempty set of non-null definitions. Location/frame and finite components are validated before native dispatch; do not change definition values while in the set.</param>
+        /// <returns>The same Property adapter for fluent chaining, after all requested operations complete.</returns>
+        /// <remarks><para>When to use: Use before AssignOffsetSpecifications. A packet is zero when every component magnitude is below 1e-9 native units; zero packets skip creation and retain their prior IDs. Nonzero CreateMemberOffsetSpec must return a positive ID before that packet is updated. Repeated creation may add new native definitions. Earlier successes survive later failure; no rollback, assignment, conversion or save. The bulk null guard is corrected from the reference&#x27;s unsafe null dereference.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var offset = OffsetSpecification.GlobalYEnd(-0.15);
+        /// property.CreateOffsetSpecifications(new System.Collections.Generic.HashSet&lt;OffsetSpecification&gt; { offset });
+        /// System.Console.WriteLine(offset.Id);
+        /// </code></example>
+        public IOSProperty CreateOffsetSpecifications(HashSet<OffsetSpecification> osSet) { management.CreateOffsetSpecifications(osSet); return this; }
+
+        /// <summary>Assigns nonzero existing offset specifications to their candidate members.</summary>
+        /// <param name="osSet">Null or empty is a no-op; otherwise non-null valid definitions. Zero definitions or empty Beams sets are skipped. Other definitions require positive existing specification/member IDs.</param>
+        /// <returns>The same Property adapter for fluent chaining, after all requested operations complete.</returns>
+        /// <remarks><para>When to use: Use after CreateOffsetSpecifications or resolving native IDs. Snapshots each member ID set before dispatch and requires integral zero from AssignMemberSpecToBeam. Stops at the first failure; earlier native assignments remain applied. Does not create or delete specifications, save, retry or repair stale native IDs.</para><para>Executes synchronously on the caller&#x27;s established COM apartment and shares this adapter&#x27;s serialization and captured-binding checks with typed observations. Reacquire wrapper.Property after refresh. Raw calls, other adapters/wrappers and external edits are not excluded. No automatic analysis, save, retry or rollback occurs. Inputs and native dimensions are not converted. Source compatibility does not certify live native or engineering behavior.</para></remarks>
+        /// <exception cref="ArgumentException">An input collection, name, selector, dimension or entity ID is invalid. Validation occurs before the corresponding native operation.</exception>
+        /// <exception cref="InvalidOperationException">A required definition is null/empty, the captured binding is stale/disposed, or native status, count, shape or output values violate this method's contract. Direct section-creation methods retain their signed native failure results instead.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; the original error propagates and earlier successful writes may remain applied.</exception>
+        /// <example><code>
+        /// var offset = OffsetSpecification.GlobalYEnd(-0.15);
+        /// offset.Id = 72;
+        /// offset.Beams.Add(new Beam { Id = 17 });
+        /// property.AssignOffsetSpecifications(new System.Collections.Generic.HashSet&lt;OffsetSpecification&gt; { offset });
+        /// </code></example>
+        public IOSProperty AssignOffsetSpecifications(HashSet<OffsetSpecification> osSet) { management.AssignOffsetSpecifications(osSet); return this; }
+
+        #endregion
     }
 }

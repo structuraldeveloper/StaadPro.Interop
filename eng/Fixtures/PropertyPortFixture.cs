@@ -10,9 +10,19 @@ namespace PackageVerification
         public sealed class Root
         {
             public object Property { get; set; }
-            public object Geometry => null;
+            public object Geometry { get; } = new GeometryNative();
             public object GetApplicationVersion(ref object major, ref object update, ref object revision, ref object build)
             { major = 26; update = 0; revision = 0; build = 340; return "26.00.00.340"; }
+        }
+        public sealed class GeometryNative
+        {
+            public int GetMemberCount() => 2;
+            public int GetPlateCount() => 1;
+            public void GetBeamList(ref object ids) { ids = new[] { 17, 41 }; }
+            public void GetPlateList(ref object ids) { ids = new[] { 17 }; }
+            public void GetMemberIncidence(int id, ref object start, ref object end) { start = 1; end = 2; }
+            public void GetPlateIncidence(int id, ref object a, ref object b, ref object c, ref object d) { a = 1; b = 2; c = 3; d = 4; }
+            public void GetNodeCoordinates(int id, ref object x, ref object y, ref object z) { x = (double)id; y = 0.0; z = id == 3 ? 1.0 : 0.0; }
         }
         public sealed class Native
         {
@@ -67,6 +77,33 @@ namespace PackageVerification
             public object CreateMemberOffsetSpec(int location, int axis, double x, double y, double z) => R(nameof(CreateMemberOffsetSpec), location == 0 ? 71 : 72, location, axis, x, y, z);
             public object AssignMemberSpecToBeam(object ids, int spec) => R(nameof(AssignMemberSpecToBeam), 0, ids, spec);
             public object GetBetaAngle(int id) => R(nameof(GetBetaAngle), -12.5, id);
+            public object DeleteMaterial(string name) => R(nameof(DeleteMaterial), true, name);
+            public object CreateBeamPropertyFromTable(int country, string name, int type, double first, double second)
+                => R(nameof(CreateBeamPropertyFromTable), 91, country, name, type, first, second);
+            public object CreateBeamPropertyFromTableWithCoverPlates(int country, string name, int type, double[] values)
+                => R(nameof(CreateBeamPropertyFromTableWithCoverPlates), 92, country, name, type, values);
+            public object CreateTaperedIProperty(double[] values) => R(nameof(CreateTaperedIProperty), 93, values);
+            public object AssignBetaAngle(int id, double angle) => R(nameof(AssignBetaAngle), 1, id, angle);
+            public object GetIsotropicMaterialAssignedBeamCount(string name) => R(nameof(GetIsotropicMaterialAssignedBeamCount), 2, name);
+            public object GetIsotropicMaterialAssignedPlateCount(string name) => R(nameof(GetIsotropicMaterialAssignedPlateCount), 1, name);
+            public object GetIsotropicMaterialAssignedBeamList(string name, ref object ids)
+            { var status = R(nameof(GetIsotropicMaterialAssignedBeamList), 0, name); Fill(nameof(GetIsotropicMaterialAssignedBeamList), ref ids, new[] { 41, 17 }); return status; }
+            public object GetIsotropicMaterialAssignedPlateList(string name, ref object ids)
+            { var status = R(nameof(GetIsotropicMaterialAssignedPlateList), true, name); Fill(nameof(GetIsotropicMaterialAssignedPlateList), ref ids, new[] { 17 }); return status; }
+            public object CreatePlateThicknessProperty(double[] values) => R(nameof(CreatePlateThicknessProperty), 94, values);
+            public object AssignPlateThickness(int[] ids, int propertyId) => R(nameof(AssignPlateThickness), 0, ids, propertyId);
+            public object GetThicknessPropertyValues(int id, ref object values)
+            { var status = R(nameof(GetThicknessPropertyValues), 4, id); Fill(nameof(GetThicknessPropertyValues), ref values, new[] { 0.1, 0.2, 0.3, 0.0 }); return status; }
+            public object GetMemberGlobalOffSet(int id, int location, ref object x, ref object y, ref object z)
+            {
+                var status = R(nameof(GetMemberGlobalOffSet), 0, id, location);
+                x = O("offsetX", -0.1); y = O("offsetY", 0.0); z = O("offsetZ", 0.3); return status;
+            }
+            public object GetMemberLocalOffSet(int id, int location, ref object x, ref object y, ref object z)
+            {
+                var status = R(nameof(GetMemberLocalOffSet), 0, id, location);
+                x = O("offsetX", -0.2); y = O("offsetY", 0.0); z = O("offsetZ", 0.4); return status;
+            }
         }
     }
 }

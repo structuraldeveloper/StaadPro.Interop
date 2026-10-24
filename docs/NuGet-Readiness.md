@@ -1,6 +1,14 @@
 # NuGet readiness assessment
 
-## Latest prepared preview — 1.0.0-preview.20261024.2
+## Latest prepared preview — 1.0.0-preview.20261024.3
+
+Incorporated 25 further Property overloads for table/composite/built-up section creation, beta-angle assignment and population, material assignment subsets, four-corner plate thickness creation/retrieval/assignment, and member-offset creation/population/assignment. Property now exposes **75 overloads**: 25 typed observations and 50 main-project compatibility ports. Added detailed, matching interface/adapter XML IntelliSense and examples, the required thickness/offset packets, member offset references and preserved table/offset enum codes. Native dispatch covers **54 of 204 active Property candidates**, with **150 remaining**. See [the 25-method guide](Property-Management-Ports.md) for all signatures, units, statuses, mutation behavior and compatibility corrections.
+
+Passed a Release solution build with zero warnings/errors and **3,763 offline tests**, including **189 new Property management cases**. The isolated installed-package verifier compiles and runs **592 selected XML examples**, including all **150 Property interface/adapter examples**, through a fresh PackageReference-only consumer and cache. Managed stand-ins exercise the examples without changing a native STAAD model. Live creation/assignment and engineering qualification for this increment remain pending.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.3.nupkg` for manual upload. Verified exact author/copyright metadata, installed assembly branding, matching net481 DLL/XML, the new shipped management guide, version consistency and restored archive identity. Native mutation/engineering qualification remains pending. Registry ownership is managed separately by the package owner. Earlier verification and live Load diagnosis records remain below.
+
+## Earlier prepared preview — 1.0.0-preview.20261024.2
 
 Corrected package **Authors** to **Srinivasa Rao Masanam**, retaining **IngeneStructs** for assembly Company and **Copyright (c) 2026 IngeneStructs** for package/assembly copyright. Intended NuGet.org ownership is IngeneStructs and requires authenticated registry management independently of these archive fields.
 

@@ -87,6 +87,16 @@ namespace StaadPro.Interop.Entities
         [JsonIgnore]
         public Member Member { get => Get<Member>(); set => Set(value); }
 
+        /// <summary>Gets or sets the managed start-offset packet; null until populated or explicitly assigned.</summary>
+        /// <remarks>Setting this reference does not change STAAD. PopulateMemberOffsets reads it; native creation and assignment are separate operations.</remarks>
+        [JsonIgnore]
+        public OffsetSpecification StartOffset { get => Get<OffsetSpecification>(); set => Set(value); }
+
+        /// <summary>Gets or sets the managed end-offset packet; null until populated or explicitly assigned.</summary>
+        /// <remarks>Setting this reference does not change STAAD. Values retain the packet's frame and native length units.</remarks>
+        [JsonIgnore]
+        public OffsetSpecification EndOffset { get => Get<OffsetSpecification>(); set => Set(value); }
+
         /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Beam.P:MemberLoadItems']/*" />
         [JsonIgnore]
         public List<MemberLoad> MemberLoadItems { get => Get<List<MemberLoad>>(); private set => Set(value); }

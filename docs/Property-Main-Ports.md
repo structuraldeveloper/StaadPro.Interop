@@ -1,5 +1,8 @@
 # Property main-project ports
 
+This guide records the preceding 25-method increment. Property now has 75 overloads; see [the next 25 management ports](Property-Management-Ports.md) for the latest creation, assignment and population methods.
+
+
 **Updated:** 23 October 2026
 
 This increment adds **25 main-project method overloads** to both `IOSProperty` and the single `OSPropertyAdapter`, preserving function names, parameter names/types/order and return types. The existing 25 typed observations remain available, giving **50 public Property overloads**. The main project was inspected read-only.
