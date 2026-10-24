@@ -6,8 +6,6 @@ Passed a Release build with zero warnings/errors and **4,959 offline tests**, in
 
 Added immutable explicit UPT profile inputs, owned table inventories and named section observations. Kept operation-specific creation, insertion and removal outcomes separate. Qualified ten UPT read-back layouts and the database-folder setter against exact acquired native profiles 24.00.02.354, 25.00.01.424 and 26.00.00.340, retaining their different folder return conventions. Unreviewed builds cannot select those policies. Table numbers, native indices and property references retain separate identities.
 
-Replaced legacy publisher branding throughout the package with **TensorStruct**, including assembly Company, copyright and shipped documentation. Package Authors remains exactly **Srinivasa Rao Masanam**. Registry ownership remains separately managed.
-
 ## Deferred contracts
 
 The roadmap permits reviewed work to continue while unqualified transport remains pending. No placeholder method or guessed native representation is counted as implemented.

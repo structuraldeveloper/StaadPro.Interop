@@ -16,7 +16,7 @@ Added a passive version/signature acquisition boundary for the newer catalog gro
 
 Renamed **17 public UPT methods** to PascalCase, including **AddUptPropertyChannel**, **AddUptPropertyWideFlange** and **CreateUptTable**. This preview requires callers to update those method names. Parameter names, types, ordering, defaults and return types are preserved. Bentley native dispatch names and recorded contract evidence retain their original spelling.
 
-Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. README prose retains neutral bold API references and standard documentation links. See [the naming migration](../Property-API-Naming.md). Native evidence and historical checkpoints are retained.
+See [the naming migration](../Property-API-Naming.md). Native evidence and historical checkpoints are retained.
 
 | Phase | Implemented native routes | Remaining |
 | --- | ---: | ---: |

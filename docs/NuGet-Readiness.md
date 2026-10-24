@@ -1,6 +1,12 @@
 # NuGet readiness assessment
 
-## Latest prepared preview - 1.0.0-preview.20261024.11
+## Latest prepared preview - 1.0.0-preview.20261024.12
+
+Retains the preceding preview's API surface and compiled XML IntelliSense. Release package verification covers all 944 selected examples through a fresh PackageReference consumer. The preceding implementation regression suite passed 5,156 offline tests; this release changes packaged documentation only.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.12.nupkg` for manual upload.
+
+## Earlier prepared preview - 1.0.0-preview.20261024.11
 
 Incorporated **25 Property operations**: all five remaining P9 catalog queries and twenty P10 removal/deletion functions. The current surface has **245 common overloads plus five separately acquired catalog queries**, covering **191 of 204 active native routes**, with **13 remaining**. P9 is complete; P10 has twenty of twenty-four routes. The nine earlier P7/P8 contract gaps remain pending. See [all 25 catalog/cleanup contracts](Property-Catalog-Capabilities-and-Cleanup.md).
 
@@ -9,8 +15,6 @@ Passed a Release build with zero warnings/errors and **5,156 offline tests**, in
 Added a passive version/signature acquisition boundary for the newer catalog group on exact native profiles **25.00.01.424** and **26.00.00.340**. Retained operation-specific zero-success, Boolean-success and explicit no-specification removal outcomes, owned bounded bulk targets, and separate member-end, cable-definition and analytical-node selectors. No native model is modified by verification.
 
 Renamed **17 public UPT methods** to PascalCase, including **AddUptPropertyChannel**, **AddUptPropertyWideFlange** and **CreateUptTable**. This preview requires callers to update those method names. Parameter names, types, ordering, defaults and return types are preserved. Bentley native dispatch names and recorded contract evidence retain their original spelling.
-
-Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. README prose retains neutral bold API references and standard documentation links.
 
 Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.11.nupkg` for manual upload.
 
@@ -22,17 +26,7 @@ Passed a Release build with zero warnings/errors and **4,959 offline tests**, in
 
 Added immutable explicit UPT profile inputs, owned table inventories and named section observations. Kept operation-specific creation, insertion and removal outcomes separate. Qualified ten UPT read-back layouts and the database-folder setter against exact acquired native profiles 24.00.02.354, 25.00.01.424 and 26.00.00.340, retaining their different folder return conventions. Unreviewed builds cannot select those policies. Table numbers, native indices and property references retain separate identities.
 
-Replaced legacy publisher branding throughout the package with **TensorStruct**, including assembly Company, copyright and shipped documentation. Package Authors remains exactly **Srinivasa Rao Masanam**. Registry ownership remains separately managed.
-
 Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.10.nupkg` for manual upload.
-
-## Earlier prepared preview - 1.0.0-preview.20261024.9
-
-Updated package and assembly copyright to **Copyright (c) 2026 TensorStruct**. Authors remains **Srinivasa Rao Masanam** and assembly Company remains **TensorStruct**. Updated README prose to neutral bold API names and standard blue documentation links, removing the red inline-code badges. Preserved runnable fenced examples, the existing API surface and XML IntelliSense.
-
-Rebuilt the Release package with zero warnings/errors. Verified the generated manifest and installed assembly copyright, exact Authors/Company metadata, DLL/XML and shipped guides through a fresh PackageReference-only consumer, including **842 selected XML examples**. The preceding source regression record remains 4,746 passing offline tests; this metadata update adds no API behavior.
-
-Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.9.nupkg` for manual upload.
 
 ## Earlier prepared preview - 1.0.0-preview.20261024.8
 
@@ -41,8 +35,6 @@ Incorporated **25 Property functions**: 22 reviewed P7 inactive/fireproofing/att
 Passed a Release build with zero warnings/errors and **4,746 offline tests**, including **195 new cases**. The fresh PackageReference-only consumer verifies **842 selected XML examples**, including all **400 Property interface/adapter examples**. All ten new mutation examples are guarded; dedicated managed checks execute every new route through both public surfaces. Verification does not change a live STAAD model.
 
 Added immutable exact attribute pairs, pair/domain/ID snapshots, fireproofing correspondence and explicit UPT value packets. Bounded count/list/count reads validate written outputs and preserve order/duplicates. By-reference native attribute-value rewriting returns StateChanged rather than data for the wrong pair. UPT table IDs, insertion acknowledgements and duplicate outcomes remain separate; scalar and unequal wide-flange routes retain their different return conventions.
-
-Package Authors remains exactly **Srinivasa Rao Masanam**; company and copyright remain **TensorStruct**. Existing author packing/verification safeguards remain in place.
 
 Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.8.nupkg` for manual upload. Verified exact author/copyright, installed DLL/XML, shipped fireproofing/attribute/UPT guide and restored archive identity. Four P7 contract qualifications and live native validation remain pending.
 
@@ -53,8 +45,6 @@ Incorporated **25 Property functions**: the eight remaining P6 section creators 
 Passed a Release build with zero warnings/errors and **4,551 offline tests**, including **205 new cases**. The isolated PackageReference-only consumer verifies **792 selected XML examples**, including all **350 Property interface/adapter examples**. All 24 new mutation examples are guarded; dedicated managed checks exercise every new route through both the interface and concrete adapter. Verification does not change a live STAAD model.
 
 Added explicit immutable wide-flange, general-prismatic, six-DOF and partial-factor inputs. Retained separate created section IDs, created specification IDs, zero-based fireproofing indices and zero-success status-only results. The void unique-ID setter returns InvokedWithoutAcknowledgement with no fabricated native code and IsSuccessful false; its exact requested property/text identity is retained. Existing signatures, current-material context and native units remain explicit.
-
-Package Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. Packing rejects a different Authors value, and installed-package verification checks the exact manifest value. NuGet.org registry ownership is managed separately.
 
 Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.7.nupkg` for manual upload. Verified exact author/copyright, installed DLL/XML, shipped creation guide and restored archive identity. Registry search attribution depends on the NuGet client and registry owner metadata.
 
@@ -95,18 +85,6 @@ Incorporated 25 further Property overloads for table/composite/built-up section 
 Passed a Release solution build with zero warnings/errors and **3,763 offline tests**, including **189 new Property management cases**. The isolated installed-package verifier compiles and runs **592 selected XML examples**, including all **150 Property interface/adapter examples**, through a fresh PackageReference-only consumer and cache. Managed stand-ins exercise the examples without changing a native STAAD model. Live creation/assignment and engineering qualification for this increment remain pending.
 
 Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.3.nupkg` for manual upload. Verified exact author/copyright metadata, installed assembly branding, matching net481 DLL/XML, the new shipped management guide, version consistency and restored archive identity. Native mutation/engineering qualification remains pending. Registry ownership is managed separately by the package owner. Earlier verification and live Load diagnosis records remain below.
-
-## Earlier prepared preview — 1.0.0-preview.20261024.2
-
-Corrected package **Authors** to **Srinivasa Rao Masanam**, retaining **TensorStruct** for assembly Company and **Copyright (c) 2026 TensorStruct** for package/assembly copyright. Intended NuGet.org ownership is TensorStruct and requires authenticated registry management independently of these archive fields.
-
-Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.2.nupkg`. Checked exact author/copyright values, installed company/copyright, net481 DLL/XML, guide/version consistency, exact restored archive identity and all **542 selected XML examples** in an isolated consumer. API and native behavior match the preceding preview. Historical verification and release entries remain below.
-
-## Earlier prepared preview — 1.0.0-preview.20261024.1
-
-Updated publisher branding and assembly Company to **TensorStruct**, with both copyright fields set to **Copyright (c) 2026 TensorStruct**. Current package Authors is **Srinivasa Rao Masanam**. Aligned the README and publishing instructions. NuGet.org account ownership is configured separately under **Manage package → Owners**; the manifest does not transfer ownership.
-
-Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.1.nupkg`. Verification checks exact manifest/installed-DLL branding, metadata, net481 assets, expanded XML, guide/version consistency, restored archive identity and all **542 selected XML examples** in an isolated consumer. API implementation and native behavior match the preceding preview, whose offline and live verification is recorded below. The metadata-only increment requires no native model changes. The package is prepared for manual upload.
 
 ## Earlier prepared preview — 1.0.0-preview.20261024
 

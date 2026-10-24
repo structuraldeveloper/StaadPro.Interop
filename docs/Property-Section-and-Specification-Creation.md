@@ -6,8 +6,6 @@ Passed a Release build with zero warnings/errors and **4,551 offline tests**, in
 
 Added explicit immutable wide-flange, general-prismatic, six-DOF and partial-factor inputs. Retained separate created section IDs, created specification IDs, zero-based fireproofing indices and zero-success status-only results. The void unique-ID setter returns InvokedWithoutAcknowledgement with no fabricated native code and IsSuccessful false; its exact requested property/text identity is retained. Existing signatures, current-material context and native units remain explicit.
 
-Package Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. Packing rejects a different Authors value, and installed-package verification checks the exact manifest value. NuGet.org registry ownership is managed separately.
-
 ## Native contracts and common implementation
 
 This increment completes the eight remaining P6 routes and follows the P7 allocation through SetPropertyUniqueID in the [roadmap](reports/OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md). The [exact contract index](contracts/PropertyCreationContractIndex.json) records all managed signatures and native mappings. The separately preserved Bentley 2024/2025/2026 help in the [comparison evidence](reports/data/OpenSTAAD-Property-2024-2026-Comparison.json) supplies the native declarations, parameter descriptions, selector tables and operation-specific returns. All 25 reviewed non-example contracts agree across the three years; shared implementation avoids a speculative year switch.

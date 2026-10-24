@@ -15,7 +15,7 @@ Added a passive version/signature acquisition boundary for the newer catalog gro
 
 Renamed **17 public UPT methods** to PascalCase, including **AddUptPropertyChannel**, **AddUptPropertyWideFlange** and **CreateUptTable**. This preview requires callers to update those method names. Parameter names, types, ordering, defaults and return types are preserved. Bentley native dispatch names and recorded contract evidence retain their original spelling.
 
-Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. README prose retains neutral bold API references and standard documentation links. See [the naming migration](../Property-API-Naming.md). Native evidence and historical checkpoints are retained.
+See [the naming migration](../Property-API-Naming.md).
 
 | Phase | Implemented native routes | Remaining |
 | --- | ---: | ---: |
@@ -30,7 +30,6 @@ Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain 
 | P10 | 20 | 4 |
 
 Four pending P7 gates: `GetInactiveMemberList`, `GetAlphaAngleForSection`, `GetCentroidLocationForSection`, `GetAssignedAttributeByIndex`. Five additional P8 transport gates remain: `GetUptGeneralProfilePointsCount`, `GetUptGeneralProfileBoundaryPoints`, `GetUptGeneralStressLocationPoints`, `FindUPTTable` and `GetUserProvidedTableSectionList`. P9 is complete; the next pending allocation is P10 `RemoveAllElementNodeReleaseSpec`. None of these gates is counted as implemented.
-
 
 ## 1. Findings and recommended direction
 
@@ -110,7 +109,6 @@ The [contract annex](OpenSTAAD-Property-API-Coverage-and-Contract-Inventory.md) 
 | [ElementProperty: Functions Get Property information through Element Property](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_ele_property.html) | 10 / 10 | 10 / 10 | 10 / 10 |
 | [Publish: Functions Related to Publish Information Property](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_publish.html) | 2 / 2 | 2 / 2 | 2 / 2 |
 | [Standard Section: Functions related to standard section Property](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_standard_section.html) | 2 / 2 | 7 / 7 | 7 / 7 |
-
 
 The review followed all Property subgroup links and scanned the other group pages for OSPropertyUI ownership. No additional Property-owned group function rows were found outside this tree. Similar filenames for Load or Support are not evidence that those interfaces belong to Property.
 
@@ -341,7 +339,6 @@ Every row is a reviewed native Property name. “Summary only” means no detail
 | [GetProfileNoOfPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga32bba6cd08a1fb0c8b776376e6306c2f) | `VARIANT` (summary only) | Absent | Reserved: do not use | No target | P0 | Excluded |
 | [GetProfileBoundaryPoints](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_u_p_t_section.html#ga51857b4c21c7bec5391a0a26f34a6a40) | `VARIANT` (summary only) | Absent | Reserved: do not use | No target | P0 | Excluded |
 
-
 The annex expands all 212 entries and identifies their proposed managed request/result families. Preliminary families should be refined into a few cohesive classes or typed request variants during API review; the plan does not require one new model class for every native function.
 
 ## 4. Actual version differences
@@ -361,7 +358,6 @@ The annex expands all 212 entries and identifies their proposed managed request/
 | ZEES COLD ST / 662 | `Ax D B T LIP <LIP R Iz Iy Ix Ay Az` | `Ax D B T R Iz Iy Ix Ay Az` |
 | ZEES COLD ST WITH LIPS / 663 | `Ax D B T LIP <LIP R Iz Iy Ix Ay Az` | `Ax D B T LIP LIP_Angle R Iz Iy Ix Ay Az` |
 | SOLID ROUND / 668 | `Ax OD Tw Iz Iy Ix` | `Ax OD Tw Iz Iy Ix Z` |
-
 
 These differences affect field positions, omitted dimensions and cardinality. Examples include adding channel depth before subsequent values, adding composite CD, omitting plate-strip thickness and changing cold-formed lip fields. Treat the 2024 literal "<LIP" text as an ambiguity, not a mathematical operation.
 
@@ -519,7 +515,6 @@ Fourteen metadata names fall outside the detailed group inventory. Thirteen clas
 | `GetThicknessPropertyAssignedSurfaceList` | Summary in all three years | Present in 2025/2026 |
 | `RemoveMaterialFromSurface` | Summary in all three years | Present in 2025/2026 |
 | `RemovePropertyFromSurface` | Summary in all three years | Present in 2025/2026 |
-
 
 Class help uses GetPlateSectionPropertyRefNo / GetSurfaceSectionPropertyRefNo; metadata uses GetPlateThicknessPropertyRefNo / GetSurfaceThicknessPropertyRefNo. Treat these as candidate aliases requiring proof, not interchangeable strings. Physical surfaces, parametric surfaces and mesh plates are distinct identities. A summary-only surface call cannot inherit a plate array contract by analogy.
 
@@ -703,7 +698,6 @@ This partitions the 212 reviewed group names: eight exclusions plus 204 active c
 | P8 | 30 | `CreateUPTTable`, `AddUPTPropertyWIDEFLANGE`, `AddUPTPropertyWIDEFLANGEUNEQUAL`, `AddUPTPropertyWIDEFLANGECOMPOSITE`, `AddUPTPropertyCHANNEL`, `AddUPTPropertyANGLE`, `AddUPTPropertyDOUBLEANGLE`, `AddUPTPropertyTEE`, `AddUPTPropertyPIPE`, `AddUPTPropertyTUBE`, `AddUPTPropertyGENERAL`, `AddUPTPropertyISECTION`, `AddUPTPropertyPRISMATIC`, `CreatePropertyFromUPTTable`, `GetUptGeneralProfilePointsCount`, `GetUptGeneralProfileBoundaryPoints`, `GetUptGeneralStressLocationPoints`, `FindUPTTable`, `CreateUPTTableEx`, `RemoveUPTTable`, `RemovePropertyFromUPTTable`, `CreatePropertyFromUserTable`, `GetUserProvidedTableCount`, `GetUserProvidedTableList`, `GetUserProvidedTableSectionCount`, `GetUserProvidedTableSectionList`, `GetUserProvidedTableSectionType`, `GetUserProvidedTableSectionPropertyCount`, `GetUserProvidedTableSectionProperties`, `GetUserProvidedTableNo` |
 | P9 | 9 | `GetShapeCode`, `GetRecordForSection`, `SetStandardProfileDBFolder`, `GetStandardProfileDBFolder`, `GetDefaultStandardProfileDBFolder`, `IsStandardDatabaseSection`, `GetStandardSectionDatabaseName`, `GetStandardSectionTableName`, `GetStandardSectionName` |
 | P10 | 24 | `RemovePropertyFromPlate`, `RemoveMaterialFromPlate`, `RemoveMaterialFromSolid`, `DeleteMemberReleaseSpec`, `DeleteAllControlDependentRelations`, `RemoveAllElementOffsetSpec`, `RemovePropertyFromBeam`, `DeleteProperty`, `DeleteMemberSpec`, `RemoveMemberReleaseSpecFromBeam`, `RemoveMemberOffsetSpecFromBeam`, `RemoveMemberTrussSpecFromBeam`, `RemoveMemberInactiveSpecFromBeam`, `RemoveMemberTensionSpecFromBeam`, `RemoveMemberCompressionSpecFromBeam`, `RemoveMemberIgnoreStiffSpecFromBeam`, `RemoveMemberCableSpecFromBeam`, `RemoveElementPlaneStressSpecFromPlate`, `RemoveElementIgnoreInplaneRotnSpecFromPlate`, `RemoveElementNodeReleaseSpecFromPlate`, `RemoveAllElementNodeReleaseSpec`, `RemoveMemberFireProofingSpecFromBeam`, `GetPublishedProfileName`, `GetSTAADProfileName` |
-
 
 The current implementation includes P1 and all native routes allocated to P2, P3, P4, P5 and P6. P7 has forty-two routes and four gated contracts remaining; P8 has three routes, with the next sequence starting at AddUPTPropertyWIDEFLANGECOMPOSITE. Later phases retain their original allocation order. Live COM, mutation persistence and engineering qualification remain separate completion gates.
 

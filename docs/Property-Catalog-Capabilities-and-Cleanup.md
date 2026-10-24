@@ -8,8 +8,6 @@ Added a passive version/signature acquisition boundary for the newer catalog gro
 
 Renamed **17 public UPT methods** to PascalCase, including **AddUptPropertyChannel**, **AddUptPropertyWideFlange** and **CreateUptTable**. This preview requires callers to update those method names. Parameter names, types, ordering, defaults and return types are preserved. Bentley native dispatch names and recorded contract evidence retain their original spelling.
 
-Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. README prose retains neutral bold API references and standard documentation links.
-
 ## Acquiring newer catalog APIs
 
 The five newer catalog calls live on IOSPropertyStandardCatalog, obtained through property.Capabilities.GetStandardCatalog(). They are not members of the common IOSProperty interface or OSPropertyAdapter. The acquisition interface and optional adapter implementations have matching complete XML documentation.

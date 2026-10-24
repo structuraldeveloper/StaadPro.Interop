@@ -59,7 +59,10 @@ try {
     if ($readme -notmatch 'Srinivasa Rao Masanam' -or $readme -notmatch 'TensorStruct' -or $readme -notmatch 'Copyright \(c\) 2026 TensorStruct') { throw 'Incorrect packaged README author/publisher metadata.' }
     if ([string]$metadata.description -ne 'A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD') { throw 'Incorrect package description.' }
     if ([string]::IsNullOrWhiteSpace([string]$metadata.releaseNotes)) { throw 'Missing release notes in package metadata.' }
-    if ($releaseNotes -notmatch '1.0.0-preview.20261012' -or $releaseNotes -notmatch 'TensorStruct' -or $releaseNotes -notmatch 'GetLoadCasesFromIds') { throw 'Incomplete packaged release notes.' }
+    if ($releaseNotes -notmatch '1.0.0-preview.20261012' -or $releaseNotes -notmatch 'GetLoadCasesFromIds') { throw 'Incomplete packaged release notes.' }
+    if (!$readme.Contains('`GetApplicationVersion`') -or !$readme.Contains('`AddUptPropertyChannel`')) { throw 'README function references must retain inline-code styling.' }
+    $publicReleaseText = $readme + $releaseNotes + [string]$metadata.releaseNotes
+    if ($publicReleaseText -match 'Updated package and assembly copyright|Authors remains|Company remains|neutral bold|inline-code badges|legacy publisher branding') { throw 'Public README/release notes contain internal publishing or formatting change narratives.' }
     $version = [string]$metadata.version
     $readmeVersion = [regex]::Match($readme, '(?m)^## Version ([^\r\n]+)').Groups[1].Value.Trim()
     $releaseVersion = [regex]::Match($releaseNotes, '(?m)^## ([^ \r\n]+)').Groups[1].Value
