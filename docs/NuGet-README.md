@@ -2,15 +2,21 @@
 
 A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD
 
-## Version 1.0.0-preview.20261024.8
+## Version 1.0.0-preview.20261024.9
 
-Package author: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
+Package author: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 TensorStruct.
 
 StaadPro.Interop provides typed adapters and managed models for working with an existing Bentley STAAD.Pro application through OpenSTAAD. It includes geometry and load operations, model information and lifecycle functions, application-window controls, and native analysis requests.
 
 This preview includes 200 Property overloads, all 171 current Load overloads, the completed reference Geometry ports, 15 typed Output queries, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
 
-## Property fireproofing, attributes and UPT
+## Package copyright update
+
+Updated package and assembly copyright to **Copyright (c) 2026 TensorStruct**. Authors remains **Srinivasa Rao Masanam** and assembly Company remains **IngeneStructs**. Updated README API references to neutral bold text with standard blue documentation links, removing inline-code badges from prose. Retained the preceding preview's API surface, runnable fenced examples and XML IntelliSense.
+
+Rebuilt the Release package with zero warnings/errors. Verified the generated manifest and installed assembly copyright, exact Authors/Company metadata, DLL/XML and shipped guides through a fresh PackageReference-only consumer, including **842 selected XML examples**. The preceding source regression record remains 4,746 passing offline tests; this metadata update adds no API behavior.
+
+## Earlier Property fireproofing, attributes and UPT
 
 Incorporated **25 Property functions**: 22 reviewed P7 inactive/fireproofing/attribute operations and the first three P8 UPT operations. Property now exposes **200 overloads** and reaches **141 of 204 active native routes**, with **63 remaining**. P7 has 42 of 46 routes; four contract gaps remain explicitly pending. P8 has three of thirty routes. See [the 25 fireproofing/attribute/UPT contracts](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Property-Fireproofing-Attributes-and-UPT.md).
 
@@ -40,7 +46,7 @@ Added immutable explicit material definitions/strengths, orthotropic constants, 
 
 ## Primary and combination case enumeration fix
 
-Fixed primary and combination discovery rejecting the Boolean `true` returned by `GetPrimaryLoadCaseNumbers` and `GetLoadCombinationCaseNumbers` on the observed STAAD.Pro 25.00.00.539 build. The shared readers now handle Boolean success separately from integral case counts, validate the complete ID array, and recheck the separate count before reading metadata. Boolean false, malformed arrays and inconsistent counts still fail. Reference discovery retains its integer-count contract; matching documented integral primary/combination results remain supported.
+Fixed primary and combination discovery rejecting the Boolean **true** returned by **GetPrimaryLoadCaseNumbers** and **GetLoadCombinationCaseNumbers** on the observed STAAD.Pro 25.00.00.539 build. The shared readers now handle Boolean success separately from integral case counts, validate the complete ID array, and recheck the separate count before reading metadata. Boolean false, malformed arrays and inconsistent counts still fail. Reference discovery retains its integer-count contract; matching documented integral primary/combination results remain supported.
 
 Passed a Release build with zero warnings/errors and **4,346 offline tests**, including the preceding **43 case-number return regressions**. Isolated PackageReference verification compiles and executes **742 selected XML examples**; the packaged primary and combination stand-ins now return Boolean success. Native return shapes were observed read-only during diagnosis; wider native/version and engineering qualification remains pending. Upgrade the consuming application to this exact package version and rebuild to load the corrected DLL. Existing Load API signatures are unchanged.
 
@@ -48,7 +54,7 @@ Passed a Release build with zero warnings/errors and **4,346 offline tests**, in
 
 Incorporated the remaining **19 active, nonconflicting main-interface Property signatures** plus **six documented native observations**, bringing Property to **125 overloads**. Added section creation/assignment/read-back, explicit material conversion and captured-receiver uniform-thickness creation with complete matching XML IntelliSense. Native dispatch now covers **66 of 204 active candidates**, with **138 remaining**. See [all 25 section-completion contracts](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Property-Sections.md).
 
-Passed a Release build with zero warnings/errors and **4,156 offline tests**, including **225 new section cases**. Isolated installed-package verification compiles and runs **692 selected XML examples**, including all **250 Property interface/adapter examples**, through a fresh PackageReference-only consumer and cache. Managed stand-ins perform every example; live native mutation and engineering qualification remain pending.
+Passed a Release build with zero warnings/errors and **4,746 offline tests**, including **225 new section cases**. Isolated installed-package verification compiles and runs **692 selected XML examples**, including all **250 Property interface/adapter examples**, through a fresh PackageReference-only consumer and cache. Managed stand-ins perform every example; live native mutation and engineering qualification remain pending.
 
 Selected 47 reviewed section layouts per acquired STAAD 24/25/26 profile, reading native version metadata after wrapper initialization and rechecking it before returning packets. Corrected the source assignment query filtering an unfilled array. Preserved native identity/field labels, explicit missing-area results, operation-specific statuses and partial-write behavior. Added small section selection/data models without importing private catalog/UI services; reused the repository UnitsConverter for explicit modulus/weight-density conversion. Existing typed-return collisions (eight) and obsolete source overloads (five) remain documented exceptions.
 
@@ -58,13 +64,13 @@ The current source includes 171 Load overloads, comprising all 115 main-referenc
 
 ## Root and wrapper APIs included in this preview
 
-This preview includes the completed wrapper bindings and five additional Root metadata queries: `GetApplicationVersion`, `GetBaseUnit`, `GetInputUnitForForce`, `GetInputUnitForLength` and `GetMainWindowHandle`. Wrapper-owned queries reuse cached properties; directly constructed Root adapters read their supplied native root. Unit compatibility fallbacks are documented in the [Root guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Porting.md). Analysis observation also adds `IsAnalyzing()`, `GetAnalysisStatus()` and `GetAnalysisStatus(string modelFilePath)`, with immutable status/data results and no public reference outputs. See the [analysis guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Analysis-Queries.md). Common reads also add `GetStaadFileFolder()`, `IsPhysicalModel()` and `GetErrorMessage()`; see the [common query guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Common-Queries.md). This preview also includes `GetProcessId()`, `SetInputUnitForLength(LengthInputUnit)`, `SetInputUnitForForce(ForceInputUnit)`, `SetShortJobInfo(...)` (including a ShortJobInfo overload) and `UpdateStructure()`. See the [model setup guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Model-Setup.md). These APIs are included in this preview archive.
+This preview includes the completed wrapper bindings and five additional Root metadata queries: **GetApplicationVersion**, **GetBaseUnit**, **GetInputUnitForForce**, **GetInputUnitForLength** and **GetMainWindowHandle**. Wrapper-owned queries reuse cached properties; directly constructed Root adapters read their supplied native root. Unit compatibility fallbacks are documented in the [Root guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Porting.md). Analysis observation also adds **IsAnalyzing()**, **GetAnalysisStatus()** and **GetAnalysisStatus(string modelFilePath)**, with immutable status/data results and no public reference outputs. See the [analysis guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Analysis-Queries.md). Common reads also add **GetStaadFileFolder()**, **IsPhysicalModel()** and **GetErrorMessage()**; see the [common query guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Common-Queries.md). This preview also includes **GetProcessId()**, **SetInputUnitForLength(LengthInputUnit)**, **SetInputUnitForForce(ForceInputUnit)**, **SetShortJobInfo(...)** (including a ShortJobInfo overload) and **UpdateStructure()**. See the [model setup guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Model-Setup.md). These APIs are included in this preview archive.
 
-Additional operations are `SetFullJobInfo(...)`, `Analyze()`, `AnalyzeModel(AnalysisEngine)`, `GetConnectedProjectInfo()` and `SetConnectedProjectInfo(...)`, including a project-data overload. They provide literal native date text, a typed analysis-engine selector and immutable project query results with no public reference outputs. Complete contracts, examples and native-validation limits are in the [job/analysis/project guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Job-Analysis-Projects.md). These APIs are included in this preview archive.
+Additional operations are **SetFullJobInfo(...)**, **Analyze()**, **AnalyzeModel(AnalysisEngine)**, **GetConnectedProjectInfo()** and **SetConnectedProjectInfo(...)**, including a project-data overload. They provide literal native date text, a typed analysis-engine selector and immutable project query results with no public reference outputs. Complete contracts, examples and native-validation limits are in the [job/analysis/project guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Job-Analysis-Projects.md). These APIs are included in this preview archive.
 
-This preview also adds `NewSTAADFile(...)`, `CreateNamedView(string, int)`, `SaveNamedView(string)`, `GetProcessHandle()` and explicit `Quit()`. These include guarded native creation, inspected view signatures and opaque handle data. See the [creation/view/lifecycle guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Creation-Views-and-Lifecycle.md) for concurrency limits, native signature discrepancies, raw flag policy and shutdown behavior. These APIs are included in this preview archive.
+This preview also adds **NewSTAADFile(...)**, **CreateNamedView(string, int)**, **SaveNamedView(string)**, **GetProcessHandle()** and explicit **Quit()**. These include guarded native creation, inspected view signatures and opaque handle data. See the [creation/view/lifecycle guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Creation-Views-and-Lifecycle.md) for concurrency limits, native signature discrepancies, raw flag policy and shutdown behavior. These APIs are included in this preview archive.
 
-The reviewed Root port is complete: all 39 reviewed native Root functions and all 23 private-source Root methods have managed mappings. The final additions include `RemoveNamedView`, `ModifyNamedView`, `RetrieveMemberForces`, and separately acquired `ExportModelToAdina`, `GetAnalysisErrorMessages` and `GetAnalysisWarningMessages`. Access optional operations through `Capabilities.GetAdinaExport()`, `GetAnalysisErrorMessages()` and `GetAnalysisWarningMessages()`. Exact candidate profiles and compatible member metadata are required. See the [completion and capability guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Completion-and-Capabilities.md) for usage, named results, limits and native validation gates. The package exposes 53 common Root operations and three optional operations. Native runtime validation remains pending; capability availability is not runtime certification.
+The reviewed Root port is complete: all 39 reviewed native Root functions and all 23 private-source Root methods have managed mappings. The final additions include **RemoveNamedView**, **ModifyNamedView**, **RetrieveMemberForces**, and separately acquired **ExportModelToAdina**, **GetAnalysisErrorMessages** and **GetAnalysisWarningMessages**. Access optional operations through **Capabilities.GetAdinaExport()**, **GetAnalysisErrorMessages()** and **GetAnalysisWarningMessages()**. Exact candidate profiles and compatible member metadata are required. See the [completion and capability guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Root-Completion-and-Capabilities.md) for usage, named results, limits and native validation gates. The package exposes 53 common Root operations and three optional operations. Native runtime validation remains pending; capability availability is not runtime certification.
 
 ## Geometry, Load and Output included in this preview
 
@@ -74,11 +80,11 @@ Load exposes **120 overloads: all 115 main-interface signatures plus five conven
 
 Output provides **15 typed queries** for analysis/buckling result availability, node displacements, support reactions, local member-end forces, static checks, seven plate-center operations, member design section names and steel utilization ratios. Named status/data results preserve native units, documented failure/sentinel distinctions and immutable owned data. Inspect IsSuccessful before Data. These observations do not run analysis or establish result freshness. See the [Output guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Porting.md). Forty-five documented native Output mappings remain pending.
 
-The approved wrapper surface is complete. This archive includes all 125 Property overloads described above. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
+The approved wrapper surface is complete. This archive includes all 200 Property overloads described above. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
 ## Requirements
 
-- Windows and **.NET Framework 4.8.1** (`net481`).
+- Windows and **.NET Framework 4.8.1** (**net481**).
 - A separately installed and licensed STAAD.Pro application exposing the OpenSTAAD functions used by your application.
 - OpenSTAAD access from an appropriate STA thread, with shared model and application operations coordinated by the caller.
 
@@ -89,7 +95,7 @@ The package does not include Bentley executables, COM binaries or a STAAD.Pro li
 After this version is available on NuGet.org:
 
 ```powershell
-dotnet add package StaadPro.Interop --version 1.0.0-preview.20261024.8
+dotnet add package StaadPro.Interop --version 1.0.0-preview.20261024.9
 ```
 
 For a .NET Framework project, the package reference is:
@@ -99,7 +105,7 @@ For a .NET Framework project, the package reference is:
   <TargetFramework>net481</TargetFramework>
 </PropertyGroup>
 <ItemGroup>
-  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261024.8" />
+  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261024.9" />
 </ItemGroup>
 ```
 
@@ -137,9 +143,9 @@ Keep acquisition and subsequent COM operations on the appropriate session thread
 
 ## Geometry and connectivity
 
-`IOSGeometry` and `OSGeometryAdapter` expose typed geometry operations. Managed connectivity grouping is available through `SegregateBeamsByConnectivity`, `SegregateMembersByConnectivity` and `SegregatePlatesByConnectivity`, including the standalone `ConnectivityService`.
+**IOSGeometry** and **OSGeometryAdapter** expose typed geometry operations. Managed connectivity grouping is available through **SegregateBeamsByConnectivity**, **SegregateMembersByConnectivity** and **SegregatePlatesByConnectivity**, including the standalone **ConnectivityService**.
 
-Extended root-bound operations include `CreateMultipleNodesExtended`, `CreateMultipleBeamsExtended` and `MergeNodesExtended`. These operations use the supplied root session; mutations can have partial native effects and do not automatically refresh managed geometry or roll back earlier changes.
+Extended root-bound operations include **CreateMultipleNodesExtended**, **CreateMultipleBeamsExtended** and **MergeNodesExtended**. These operations use the supplied root session; mutations can have partial native effects and do not automatically refresh managed geometry or roll back earlier changes.
 
 See the [geometry guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Geometry-Porting.md) for signatures, connectivity rules and mutation contracts.
 
@@ -147,48 +153,48 @@ See the [geometry guide](https://github.com/structuraldeveloper/StaadPro.Interop
 
 Assignment readers include:
 
-- `GetNodalLoads`
-- `GetMemberUniformlyDistributedLoads`
-- `GetMemberConcentratedLoads`
-- `GetMemberConcentratedMoments`
-- `GetMemberLinearVaryingLoads`
-- `GetMemberTrapezoidalLoads`
-- `GetMemberUniformMoments`
+- **GetNodalLoads**
+- **GetMemberUniformlyDistributedLoads**
+- **GetMemberConcentratedLoads**
+- **GetMemberConcentratedMoments**
+- **GetMemberLinearVaryingLoads**
+- **GetMemberTrapezoidalLoads**
+- **GetMemberUniformMoments**
 
 Returned values preserve native signs and units. Assignment reads can activate the selected case; they are distinct from analysis-result retrieval.
 
-Case discovery and filtering include `GetAllPrimaryLoadCases`, `GetAllReferenceLoadCases`, `GetAllLoadCombinationCases`, `GetRepeatLoadCases`, `GetAllLoadCasesOfType`, `GetLoadCase`, `GetLoadCases`, `GetLoadCasesFromIds` and `GetLoadCasesOfType`. Direct and collection lookups include `GetPrimaryLoadCaseFromId`, `GetReferenceLoadCaseFromId`, `GetLoadCombinationCaseFromId`, `GetPrimaryLoadCasesFromIds`, `GetReferenceLoadCasesFromIds` and `GetLoadCombinationCasesFromIds`.
+Case discovery and filtering include **GetAllPrimaryLoadCases**, **GetAllReferenceLoadCases**, **GetAllLoadCombinationCases**, **GetRepeatLoadCases**, **GetAllLoadCasesOfType**, **GetLoadCase**, **GetLoadCases**, **GetLoadCasesFromIds** and **GetLoadCasesOfType**. Direct and collection lookups include **GetPrimaryLoadCaseFromId**, **GetReferenceLoadCaseFromId**, **GetLoadCombinationCaseFromId**, **GetPrimaryLoadCasesFromIds**, **GetReferenceLoadCasesFromIds** and **GetLoadCombinationCasesFromIds**.
 
-Envelope queries include `GetEnvelopeIds`, `GetLoadEnvelopeDetail` and `GetAllLoadEnvelopeDetails`. Combination definition read-back is available through `GetLoadCombination`.
+Envelope queries include **GetEnvelopeIds**, **GetLoadEnvelopeDetail** and **GetAllLoadEnvelopeDetails**. Combination definition read-back is available through **GetLoadCombination**.
 
-Assignment and creation operations include `AddReferenceLoadsTo`, `AddRepeatLoadsTo`, `AddAxialThermalGradientTo`, `AddSelfweightInXYZTo`, `CreateLoadCombinations`, `CreateLoadEnvelopExt` and `CreateLoadList`. Grouped operations include `GetMemberLoadsGroupedByLoadCase`, `GetNodalLoadsGroupedByLoadCase`, `AddMemberLoadsFromGroupsByLoadCase` and `AddNodalLoadsFromGroupsByLoadCase`.
+Assignment and creation operations include **AddReferenceLoadsTo**, **AddRepeatLoadsTo**, **AddAxialThermalGradientTo**, **AddSelfweightInXYZTo**, **CreateLoadCombinations**, **CreateLoadEnvelopExt** and **CreateLoadList**. Grouped operations include **GetMemberLoadsGroupedByLoadCase**, **GetNodalLoadsGroupedByLoadCase**, **AddMemberLoadsFromGroupsByLoadCase** and **AddNodalLoadsFromGroupsByLoadCase**.
 
-Managed member-load population is available through `PopulateMemberConcentratedLoads`, `PopulateMemberConcentratedMoments`, `PopulateMemberLinearVaryingLoads`, `PopulateMemberTrapezoidalLoads` and `PopulateMemberLoads`. Individual-family population and full refresh have different append/replacement behavior; see their XML documentation before combining calls.
+Managed member-load population is available through **PopulateMemberConcentratedLoads**, **PopulateMemberConcentratedMoments**, **PopulateMemberLinearVaryingLoads**, **PopulateMemberTrapezoidalLoads** and **PopulateMemberLoads**. Individual-family population and full refresh have different append/replacement behavior; see their XML documentation before combining calls.
 
 Additional included operations are:
 
 | Area | Managed operations |
 | --- | --- |
-| Population | `PopulateMemberUniformlyDistributedLoads`, `PopulateMemberUniformMoments`, `PopulateNodalLoads` |
-| Wind definitions and profiles | `AddWindDefinition`, `AddWindExposure`, `AddWindIntensity`, `DeleteWindDefinition`, `DeleteAllWindDefinitions`, `AddWindDefinitionASCE7Parameters`, `ComputeWallWindPressureProfile`, `ComputeWallWindPressureProfileASCE72016` |
-| Seismic definitions and weights | `AddSeismicDefinition`, `ModifySeismicDefinitionParam`, `ModifySeismicDefinitionParams`, `AddSeismicDefSelfWeight`, `AddSeismicDefJointWeight`, `AddSeismicDefMemberWeight`, `AddSeismicDefMemberUniformWeight`, `AddSeismicDefMemberConcentratedWeight`, `AddSeismicDefWallArea` |
-| Response spectra | `AddRSLoad`, `AddResponseSpectrumLoadEx` |
-| Direct analysis | `AddDirectAnalysisDefinitionParameter`, `AddDirectAnalysisFlexParameter`, `AddDirectAnalysisAxialParameter`, `DeleteDirectAnalysisDefinitionParameter`, `DeleteDirectAnalysisDefinition` |
+| Population | **PopulateMemberUniformlyDistributedLoads**, **PopulateMemberUniformMoments**, **PopulateNodalLoads** |
+| Wind definitions and profiles | **AddWindDefinition**, **AddWindExposure**, **AddWindIntensity**, **DeleteWindDefinition**, **DeleteAllWindDefinitions**, **AddWindDefinitionASCE7Parameters**, **ComputeWallWindPressureProfile**, **ComputeWallWindPressureProfileASCE72016** |
+| Seismic definitions and weights | **AddSeismicDefinition**, **ModifySeismicDefinitionParam**, **ModifySeismicDefinitionParams**, **AddSeismicDefSelfWeight**, **AddSeismicDefJointWeight**, **AddSeismicDefMemberWeight**, **AddSeismicDefMemberUniformWeight**, **AddSeismicDefMemberConcentratedWeight**, **AddSeismicDefWallArea** |
+| Response spectra | **AddRSLoad**, **AddResponseSpectrumLoadEx** |
+| Direct analysis | **AddDirectAnalysisDefinitionParameter**, **AddDirectAnalysisFlexParameter**, **AddDirectAnalysisAxialParameter**, **DeleteDirectAnalysisDefinitionParameter**, **DeleteDirectAnalysisDefinition** |
 
 The [load-query guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Load-Queries.md) and [load-operation guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Load-Porting.md) explain native mappings, activation, validation, units and partial-failure behavior.
 
 ## Model and application operations
 
-`OpenStaadWrapper.Root` exposes `IOSRoot`, implemented by `OSRootAdapter`.
+**OpenStaadWrapper.Root** exposes **IOSRoot**, implemented by **OSRootAdapter**.
 
 | Area | Functions |
 | --- | --- |
-| Filenames and model identity | `GetStaadFileFullPath`, `GetStaadFileNameOnly`, `GetAnlFileFullPath`, `GetOpenedStaadFilename`, `IsTarget`, `ModelIsOpen` |
-| Job information and units | `GetShortJobInfo`, `GetFullJobInfo`, `SetInputUnitsEx` |
-| Saving and closing | `SetSilentMode`, `SaveModel`, `CloseSTAADFile`, `CloseCurrentStaadModel`, `CloseWriteReopenStaadFile` |
-| Opening and model waiting | `OpenSTAADFile`, `OpenStaadModel`, `AwaitModelHandle` |
-| Application presentation | `ShowApplication`, `MinimizeStaadMainWindow`, `MaximizeStaadMainWindow`, `RestoreStaadMainWindow` |
-| Analysis | `AnalyzeEx`, with `SilentMode`, `HiddenMode`, `WaitAnalysisMode` and `AnalysisResult` |
+| Filenames and model identity | **GetStaadFileFullPath**, **GetStaadFileNameOnly**, **GetAnlFileFullPath**, **GetOpenedStaadFilename**, **IsTarget**, **ModelIsOpen** |
+| Job information and units | **GetShortJobInfo**, **GetFullJobInfo**, **SetInputUnitsEx** |
+| Saving and closing | **SetSilentMode**, **SaveModel**, **CloseSTAADFile**, **CloseCurrentStaadModel**, **CloseWriteReopenStaadFile** |
+| Opening and model waiting | **OpenSTAADFile**, **OpenStaadModel**, **AwaitModelHandle** |
+| Application presentation | **ShowApplication**, **MinimizeStaadMainWindow**, **MaximizeStaadMainWindow**, **RestoreStaadMainWindow** |
+| Analysis | **AnalyzeEx**, with **SilentMode**, **HiddenMode**, **WaitAnalysisMode** and **AnalysisResult** |
 
 Filename identity does not establish geometry/load readiness. Saving, closing, opening, rewriting and analysis are explicit native mutations that can affect unsaved work, files or captured interfaces. Window requests do not independently verify final state or focus. Inspect analysis status explicitly; asynchronous return mode does not mean analysis has completed.
 
@@ -196,18 +202,18 @@ See the [root guide](https://github.com/structuraldeveloper/StaadPro.Interop/blo
 
 ## IntelliSense and included documentation
 
-Expanded XML IntelliSense is included for **143 Geometry overloads, 171 Load overloads, 125 Property overloads, 15 Output queries, 53 common Root operations and three optional Root operation interfaces**, on both interfaces and concrete adapters. Keep `StaadPro.Interop.xml` beside the library when distributing assemblies outside normal NuGet restore.
+Expanded XML IntelliSense is included for **143 Geometry overloads, 171 Load overloads, 200 Property overloads, 15 Output queries, 53 common Root operations and three optional Root operation interfaces**, on both interfaces and concrete adapters. Keep **StaadPro.Interop.xml** beside the library when distributing assemblies outside normal NuGet restore.
 
-The archive includes Geometry, Load, Output and Root guides, installation and publishing instructions, and the release history. The package metadata identifies **Srinivasa Rao Masanam** as the author; company and copyright use **IngeneStructs**. NuGet.org Owners are managed separately by the registry.
+The archive includes Geometry, Load, Output and Root guides, installation and publishing instructions, and the release history. The package metadata identifies **Srinivasa Rao Masanam** as the author; company is **IngeneStructs** and copyright is **TensorStruct**. NuGet.org Owners are managed separately by the registry.
 
 ## Preview validation and operating limits
 
-The current implementation passed **4,156 offline tests**. Installed-package verification checks **692 selected XML example blocks**, including all 250 Property examples, compiles a fresh consumer and exercises managed native stand-ins; window-changing examples are guarded off. These checks do not certify every native COM response, STAAD release or engineering-unit convention.
+The current implementation passed **4,746 offline tests**. Installed-package verification checks **842 selected XML example blocks**, including all 400 Property examples, compiles a fresh consumer and exercises managed native stand-ins; window-changing examples are guarded off. These checks do not certify every native COM response, STAAD release or engineering-unit convention.
 
 Silent and hidden options do not guarantee unattended operation. Synchronous native calls can block beyond logical polling budgets, and mutations can leave partial effects when a later step fails. Validate native behavior against controlled models and the STAAD versions used by your application before production deployment.
 
 ## Licence
 
-MIT. Copyright (c) 2026 IngeneStructs. Bentley STAAD.Pro is a separate product.
+MIT. Package copyright (c) 2026 TensorStruct. Bentley STAAD.Pro is a separate product.
 
 For package submission and availability checks, see the [publishing guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Publishing.md).

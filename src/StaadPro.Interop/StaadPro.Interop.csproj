@@ -12,11 +12,11 @@
     <RootNamespace>StaadPro.Interop</RootNamespace>
     <PackageId>StaadPro.Interop</PackageId>
     <Version>1.0.0</Version>
-    <ReleaseDocumentationVersion>1.0.0-preview.20261024.8</ReleaseDocumentationVersion>
+    <ReleaseDocumentationVersion>1.0.0-preview.20261024.9</ReleaseDocumentationVersion>
     <PackageVersion>$(ReleaseDocumentationVersion)</PackageVersion>
     <Authors>Srinivasa Rao Masanam</Authors>
-    <Copyright>Copyright (c) 2026 IngeneStructs</Copyright>
-    <PackageReleaseNotes>Incorporated 25 Property functions for inactive/fireproofing counts and readback, member/element attribute definitions and assignments, paired attribute inventories, UPT table creation and wide-flange insertion. Property now has 200 overloads and 141 of 204 native routes. Added bounded owned snapshots, immutable pair/UPT inputs, by-reference input checks and separate table identity/duplicate outcomes, with complete XML IntelliSense. Four unverified P7 contracts remain pending. Authors Srinivasa Rao Masanam; Copyright (c) 2026 IngeneStructs. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <Copyright>Copyright (c) 2026 TensorStruct</Copyright>
+    <PackageReleaseNotes>Updated package and assembly copyright to Copyright (c) 2026 TensorStruct. Retained Authors as Srinivasa Rao Masanam and assembly Company as IngeneStructs. Replaced README inline-code badges in prose with neutral bold API references and standard documentation links. Retained the 200 Property overloads, 141 of 204 native Property routes and complete XML IntelliSense from the preceding preview. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>

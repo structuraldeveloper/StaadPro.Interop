@@ -8,11 +8,17 @@ A strongly typed .NET Framework 4.8.1 library providing high-level abstractions 
 
 See [NuGet readiness](docs/NuGet-Readiness.md) for package verification results and remaining release gates.
 
-Use the [installation guide](docs/Installation.md) for public/local NuGet feeds and `net481` consumer examples, and the [publishing guide](docs/Publishing.md) for verified web upload and public availability checks.
+Use the [installation guide](docs/Installation.md) for public/local NuGet feeds and **net481** consumer examples, and the [publishing guide](docs/Publishing.md) for verified web upload and public availability checks.
 
 ---
 
-## Property fireproofing, attributes and UPT
+## Package copyright update
+
+Updated package and assembly copyright to **Copyright (c) 2026 TensorStruct**. Authors remains **Srinivasa Rao Masanam** and assembly Company remains **IngeneStructs**. Updated README API references to neutral bold text with standard blue documentation links, removing inline-code badges from prose. Retained the preceding preview's API surface, runnable fenced examples and XML IntelliSense.
+
+Rebuilt the Release package with zero warnings/errors. Verified the generated manifest and installed assembly copyright, exact Authors/Company metadata, DLL/XML and shipped guides through a fresh PackageReference-only consumer, including **842 selected XML examples**. The preceding source regression record remains 4,746 passing offline tests; this metadata update adds no API behavior.
+
+## Earlier Property fireproofing, attributes and UPT
 
 Incorporated **25 Property functions**: 22 reviewed P7 inactive/fireproofing/attribute operations and the first three P8 UPT operations. Property now exposes **200 overloads** and reaches **141 of 204 active native routes**, with **63 remaining**. P7 has 42 of 46 routes; four contract gaps remain explicitly pending. P8 has three of thirty routes. See [the 25 fireproofing/attribute/UPT contracts](docs/Property-Fireproofing-Attributes-and-UPT.md).
 
@@ -34,7 +40,7 @@ Package Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright
 
 ## Case enumeration correction
 
-Fixed primary and combination discovery rejecting the Boolean `true` returned by `GetPrimaryLoadCaseNumbers` and `GetLoadCombinationCaseNumbers` on the observed STAAD.Pro 25.00.00.539 build. The shared readers now handle Boolean success separately from integral case counts, validate the complete ID array, and recheck the separate count before reading metadata. Boolean false, malformed arrays and inconsistent counts still fail. Reference discovery retains its integer-count contract; matching documented integral primary/combination results remain supported.
+Fixed primary and combination discovery rejecting the Boolean **true** returned by **GetPrimaryLoadCaseNumbers** and **GetLoadCombinationCaseNumbers** on the observed STAAD.Pro 25.00.00.539 build. The shared readers now handle Boolean success separately from integral case counts, validate the complete ID array, and recheck the separate count before reading metadata. Boolean false, malformed arrays and inconsistent counts still fail. Reference discovery retains its integer-count contract; matching documented integral primary/combination results remain supported.
 
 Passed a Release build with zero warnings/errors and **4,156 offline tests**, including the preceding **43 case-number return regressions**. Isolated PackageReference verification compiles and executes **692 selected XML examples**; the packaged primary and combination stand-ins now return Boolean success. Native return shapes were observed read-only during diagnosis; wider native/version and engineering qualification remains pending. See the [Load query contracts](docs/Load-Queries.md) and [release notes](docs/Release-Notes.md).
 
@@ -56,9 +62,9 @@ All 36 methods include comparative IntelliSense explaining scope, alternatives, 
 
 Implemented 15 additional Load observations with complete XML contracts, named status/data results, bounded eager snapshots and an internal shared service. Source now exposes 135 Load overloads and dispatches 88/129 documented native names. Remaining undispatched names total 41: one existing alternative, one derived capability, four partial overlaps and 35 absent operations, plus three separate metadata-only candidates. Passed 2,448 offline tests (189 new cases) and all 30 new XML examples. See [Load inspection usage](docs/Load-Inspection-Queries.md). These changes postdate the prepared archive below; live native qualification remains pending.
 
-## Prepared preview: 1.0.0-preview.20261024.8
+## Prepared preview: 1.0.0-preview.20261024.9
 
-Package author: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
+Package author: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 TensorStruct.
 
 The local archive includes 200 Property overloads, 171 Load overloads, all 143 reference Geometry overloads, 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
@@ -82,35 +88,35 @@ Completed the comparison series for [Design](docs/Design-Porting.md), [Commands]
 
 ## Published preview: 1.0.0-preview.20261015
 
-This preview includes the completed wrapper bindings and five additional Root metadata queries: `GetApplicationVersion`, `GetBaseUnit`, `GetInputUnitForForce`, `GetInputUnitForLength` and `GetMainWindowHandle`. Wrapper-owned queries reuse cached properties; directly constructed Root adapters read their supplied native root. Unit compatibility fallbacks are documented in the [Root guide](docs/Root-Porting.md). Analysis observation also adds `IsAnalyzing()`, `GetAnalysisStatus()` and `GetAnalysisStatus(string modelFilePath)`, with immutable status/data results and no public reference outputs. See the [analysis guide](docs/Root-Analysis-Queries.md). Common reads also add `GetStaadFileFolder()`, `IsPhysicalModel()` and `GetErrorMessage()`; see the [common query guide](docs/Root-Common-Queries.md). This preview also includes `GetProcessId()`, `SetInputUnitForLength(LengthInputUnit)`, `SetInputUnitForForce(ForceInputUnit)`, `SetShortJobInfo(...)` (including a ShortJobInfo overload) and `UpdateStructure()`. See the [model setup guide](docs/Root-Model-Setup.md). These APIs are included in this preview archive.
+This preview includes the completed wrapper bindings and five additional Root metadata queries: **GetApplicationVersion**, **GetBaseUnit**, **GetInputUnitForForce**, **GetInputUnitForLength** and **GetMainWindowHandle**. Wrapper-owned queries reuse cached properties; directly constructed Root adapters read their supplied native root. Unit compatibility fallbacks are documented in the [Root guide](docs/Root-Porting.md). Analysis observation also adds **IsAnalyzing()**, **GetAnalysisStatus()** and **GetAnalysisStatus(string modelFilePath)**, with immutable status/data results and no public reference outputs. See the [analysis guide](docs/Root-Analysis-Queries.md). Common reads also add **GetStaadFileFolder()**, **IsPhysicalModel()** and **GetErrorMessage()**; see the [common query guide](docs/Root-Common-Queries.md). This preview also includes **GetProcessId()**, **SetInputUnitForLength(LengthInputUnit)**, **SetInputUnitForForce(ForceInputUnit)**, **SetShortJobInfo(...)** (including a ShortJobInfo overload) and **UpdateStructure()**. See the [model setup guide](docs/Root-Model-Setup.md). These APIs are included in this preview archive.
 
-Additional operations are `SetFullJobInfo(...)`, `Analyze()`, `AnalyzeModel(AnalysisEngine)`, `GetConnectedProjectInfo()` and `SetConnectedProjectInfo(...)`, including a project-data overload. They provide literal native date text, a typed analysis-engine selector and immutable project query results with no public reference outputs. Complete contracts, examples and native-validation limits are in the [job/analysis/project guide](docs/Root-Job-Analysis-Projects.md). These APIs are included in this preview archive.
+Additional operations are **SetFullJobInfo(...)**, **Analyze()**, **AnalyzeModel(AnalysisEngine)**, **GetConnectedProjectInfo()** and **SetConnectedProjectInfo(...)**, including a project-data overload. They provide literal native date text, a typed analysis-engine selector and immutable project query results with no public reference outputs. Complete contracts, examples and native-validation limits are in the [job/analysis/project guide](docs/Root-Job-Analysis-Projects.md). These APIs are included in this preview archive.
 
-This preview also adds `NewSTAADFile(...)`, `CreateNamedView(string, int)`, `SaveNamedView(string)`, `GetProcessHandle()` and explicit `Quit()`. These include guarded native creation, inspected view signatures and opaque handle data. See the [creation/view/lifecycle guide](docs/Root-Creation-Views-and-Lifecycle.md) for concurrency limits, native signature discrepancies, raw flag policy and shutdown behavior. These APIs are included in this preview archive.
+This preview also adds **NewSTAADFile(...)**, **CreateNamedView(string, int)**, **SaveNamedView(string)**, **GetProcessHandle()** and explicit **Quit()**. These include guarded native creation, inspected view signatures and opaque handle data. See the [creation/view/lifecycle guide](docs/Root-Creation-Views-and-Lifecycle.md) for concurrency limits, native signature discrepancies, raw flag policy and shutdown behavior. These APIs are included in this preview archive.
 
-The reviewed Root port is complete: all 39 reviewed native Root functions and all 23 private-source Root methods have managed mappings. The final additions include `RemoveNamedView`, `ModifyNamedView`, `RetrieveMemberForces`, and separately acquired `ExportModelToAdina`, `GetAnalysisErrorMessages` and `GetAnalysisWarningMessages`. Access optional operations through `Capabilities.GetAdinaExport()`, `GetAnalysisErrorMessages()` and `GetAnalysisWarningMessages()`. Exact candidate profiles and compatible member metadata are required. See the [completion and capability guide](docs/Root-Completion-and-Capabilities.md) for usage, named results, limits and native validation gates. The package exposes 53 common Root operations and three optional operations. Native runtime validation remains pending; capability availability is not runtime certification.
+The reviewed Root port is complete: all 39 reviewed native Root functions and all 23 private-source Root methods have managed mappings. The final additions include **RemoveNamedView**, **ModifyNamedView**, **RetrieveMemberForces**, and separately acquired **ExportModelToAdina**, **GetAnalysisErrorMessages** and **GetAnalysisWarningMessages**. Access optional operations through **Capabilities.GetAdinaExport()**, **GetAnalysisErrorMessages()** and **GetAnalysisWarningMessages()**. Exact candidate profiles and compatible member metadata are required. See the [completion and capability guide](docs/Root-Completion-and-Capabilities.md) for usage, named results, limits and native validation gates. The package exposes 53 common Root operations and three optional operations. Native runtime validation remains pending; capability availability is not runtime certification.
 
 This preview is publicly listed on NuGet.org. It predates the final three Geometry operations. See the [release notes](docs/Release-Notes.md).
 
 ## Highlights
 
-- **OpenStaadWrapper & Provider**: Flexible acquisition via `OpenStaadWrapperProvider.Get()` and `GetRunning()` using Windows Running Object Table (ROT) lookup, active instance attachment, or automated background launching.
+- **OpenStaadWrapper & Provider**: Flexible acquisition via **OpenStaadWrapperProvider.Get()** and **GetRunning()** using Windows Running Object Table (ROT) lookup, active instance attachment, or automated background launching.
 - **Fluent API Design**: Chain node, beam, and plate creation operations seamlessly.
-- **Managed Connectivity Groups**: Group beams, physical members and plates with `SegregateBeamsByConnectivity`, `SegregateMembersByConnectivity` and `SegregatePlatesByConnectivity`. See [geometry API comparison and grouping](docs/Geometry-Porting.md) for scope defaults, semantics and the completed reference Geometry coverage.
-- **Extended Geometry Mutations**: Create nodes, create beams and merge nodes with `CreateMultipleNodesExtended`, `CreateMultipleBeamsExtended` and `MergeNodesExtended`, using `wrapper.Root` and the original public signatures.
-- **Factored and Thermal Loads**: Add reference, repeat and synchronous axial thermal assignments with `AddReferenceLoadsTo`, `AddRepeatLoadsTo` and `AddAxialThermalGradientTo`. See [load porting and contracts](docs/Load-Porting.md).
-- **Grouped Load Assignments**: Apply member/nodal tuples by load case with `AddMemberLoadsFromGroupsByLoadCase` and `AddNodalLoadsFromGroupsByLoadCase`. The four-parameter thermal overload preserves per-entity calls on the caller's COM thread.
+- **Managed Connectivity Groups**: Group beams, physical members and plates with **SegregateBeamsByConnectivity**, **SegregateMembersByConnectivity** and **SegregatePlatesByConnectivity**. See [geometry API comparison and grouping](docs/Geometry-Porting.md) for scope defaults, semantics and the completed reference Geometry coverage.
+- **Extended Geometry Mutations**: Create nodes, create beams and merge nodes with **CreateMultipleNodesExtended**, **CreateMultipleBeamsExtended** and **MergeNodesExtended**, using **wrapper.Root** and the original public signatures.
+- **Factored and Thermal Loads**: Add reference, repeat and synchronous axial thermal assignments with **AddReferenceLoadsTo**, **AddRepeatLoadsTo** and **AddAxialThermalGradientTo**. See [load porting and contracts](docs/Load-Porting.md).
+- **Grouped Load Assignments**: Apply member/nodal tuples by load case with **AddMemberLoadsFromGroupsByLoadCase** and **AddNodalLoadsFromGroupsByLoadCase**. The four-parameter thermal overload preserves per-entity calls on the caller's COM thread.
 - **Package IntelliSense**: Expanded XML documentation covers all geometry/load overloads on interfaces and concrete adapters and accompanies the NuGet DLL.
 - **Parametric Surface & Meshing Tools**: Complete support for annular surfaces, solid circular surfaces, density lines, density control points, and polygonal openings.
-- **Load Case Creation & Management**: Create primary/reference cases, discover their metadata (`GetAllPrimaryLoadCases`, `GetAllReferenceLoadCases`), look up known cases (`GetPrimaryLoadCaseFromId`, `GetReferenceLoadCaseFromId`, `GetPrimaryLoadCasesFromIds`), query titles, and clear cases.
-- **Reference Batches & Combination Metadata**: Read ordered reference batches (`GetReferenceLoadCasesFromIds`), discover combinations (`GetAllLoadCombinationCases`) and verify individual combination metadata (`GetLoadCombinationCaseFromId`) without changing the active case.
-- **Case Selection**: Read distinct combination batches (`GetLoadCombinationCasesFromIds`), select a metadata family (`GetAllLoadCasesOfType`) and find a case with nullable results (`GetLoadCase`). All preserve active-case state.
-- **Case Filters & Lists**: Filter inclusive ranges (`GetLoadCases`) or requested IDs (`GetLoadCasesFromIds`), and materialize family metadata (`GetLoadCasesOfType`) with eager validation and unchanged active-case state.
+- **Load Case Creation & Management**: Create primary/reference cases, discover their metadata (**GetAllPrimaryLoadCases**, **GetAllReferenceLoadCases**), look up known cases (**GetPrimaryLoadCaseFromId**, **GetReferenceLoadCaseFromId**, **GetPrimaryLoadCasesFromIds**), query titles, and clear cases.
+- **Reference Batches & Combination Metadata**: Read ordered reference batches (**GetReferenceLoadCasesFromIds**), discover combinations (**GetAllLoadCombinationCases**) and verify individual combination metadata (**GetLoadCombinationCaseFromId**) without changing the active case.
+- **Case Selection**: Read distinct combination batches (**GetLoadCombinationCasesFromIds**), select a metadata family (**GetAllLoadCasesOfType**) and find a case with nullable results (**GetLoadCase**). All preserve active-case state.
+- **Case Filters & Lists**: Filter inclusive ranges (**GetLoadCases**) or requested IDs (**GetLoadCasesFromIds**), and materialize family metadata (**GetLoadCasesOfType**) with eager validation and unchanged active-case state.
 - **Load Assignment Read-Back**: Query nodal loads, uniform and concentrated member forces, concentrated and uniform member moments, linearly varying forces, and trapezoidal forces with complete interface/concrete IntelliSense. See [Load queries](docs/Load-Queries.md).
 - **Zero Proprietary Binary Dependencies**: Completely decoupled from registered COM TypeLibs at build time. Compiles cleanly on any machine and CI environment.
-- **Strongly-Typed Structural Entities**: Rich domain models for `Node`, `Beam`, `Plate`, `Member`, `LoadCase`, and generic/non-generic `EntityGroup<T>`.
+- **Strongly-Typed Structural Entities**: Rich domain models for **Node**, **Beam**, **Plate**, **Member**, **LoadCase**, and generic/non-generic **EntityGroup&lt;T&gt;**.
 - **Batch & Async Geometry APIs**: The library includes batch and asynchronous helpers. Coordinate shared STAAD session access and COM apartment requirements in the calling application; these helpers do not establish a library-wide thread-safety guarantee.
-- **Model Coordinate & Unit Conventions**: Query active model vertical-axis orientation (`Y-Up` vs `Z-Up`) and base unit systems (`Imperial` vs `Metric`).
+- **Model Coordinate & Unit Conventions**: Query active model vertical-axis orientation (**Y-Up** vs **Z-Up**) and base unit systems (**Imperial** vs **Metric**).
 - **Comprehensive Unit Testing**: Offline test suite covering analytical vector math, surface boundary algorithms, load case operations, and wrapper life-cycle without requiring live STAAD hardware licenses.
 
 ---
@@ -228,7 +234,7 @@ StaadPro.Interop/
 
 The current source adapters expose all 143 reference Geometry methods, 135 Load overloads and 15 typed Output queries. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
 
-The Root port maps all 39 reviewed native functions and all 23 private-source Root methods through 53 common operations and three optional capability operations. Access them through `wrapper.Root`; see [root porting progress and examples](docs/Root-Porting.md).
+The Root port maps all 39 reviewed native functions and all 23 private-source Root methods through 53 common operations and three optional capability operations. Access them through **wrapper.Root**; see [root porting progress and examples](docs/Root-Porting.md).
 
 ```powershell
 # Restore & Build
@@ -238,8 +244,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261024.8 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.8.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261024.9 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.9.nupkg
 ```
 
 ---

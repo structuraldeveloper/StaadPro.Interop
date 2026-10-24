@@ -6,7 +6,7 @@ Passed a Release build with zero warnings/errors and **4,746 offline tests**, in
 
 Added immutable exact attribute pairs, pair/domain/ID snapshots, fireproofing correspondence and explicit UPT value packets. Bounded count/list/count reads validate written outputs and preserve order/duplicates. By-reference native attribute-value rewriting returns StateChanged rather than data for the wrong pair. UPT table IDs, insertion acknowledgements and duplicate outcomes remain separate; scalar and unequal wide-flange routes retain their different return conventions.
 
-Package Authors remains exactly **Srinivasa Rao Masanam**; company and copyright remain **IngeneStructs**. Existing author packing/verification safeguards remain in place.
+Package Authors remains exactly **Srinivasa Rao Masanam**; company remains **IngeneStructs** and the current package copyright is **TensorStruct**. Existing author packing/verification safeguards remain in place.
 
 ## Scope and deferred contracts
 

@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("IngeneStructs")]
 [assembly: AssemblyProduct("StaadPro.Interop")]
-[assembly: AssemblyCopyright("Copyright (c) 2026 IngeneStructs")]
+[assembly: AssemblyCopyright("Copyright (c) 2026 TensorStruct")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -1,5 +1,13 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261024.9 - 24 October 2026 (prepared preview)
+
+Updated package and assembly copyright to **Copyright (c) 2026 TensorStruct**. Authors remains **Srinivasa Rao Masanam** and assembly Company remains **IngeneStructs**. Updated README prose to neutral bold API names and standard blue documentation links, removing the red inline-code badges. Preserved runnable fenced examples, the existing API surface and XML IntelliSense.
+
+Rebuilt the Release package with zero warnings/errors. Verified the generated manifest and installed assembly copyright, exact Authors/Company metadata, DLL/XML and shipped guides through a fresh PackageReference-only consumer, including **842 selected XML examples**. The preceding source regression record remains 4,746 passing offline tests; this metadata update adds no API behavior.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.9.nupkg` for manual upload. Registry ownership is managed separately.
+
 ## 1.0.0-preview.20261024.8 - 24 October 2026 (prepared preview)
 
 Incorporated **25 Property functions**: 22 reviewed P7 inactive/fireproofing/attribute operations and the first three P8 UPT operations. Property now exposes **200 overloads** and reaches **141 of 204 active native routes**, with **63 remaining**. P7 has 42 of 46 routes; four contract gaps remain explicitly pending. P8 has three of thirty routes. See [the 25 fireproofing/attribute/UPT contracts](Property-Fireproofing-Attributes-and-UPT.md).
