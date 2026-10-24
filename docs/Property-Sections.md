@@ -1,6 +1,6 @@
 # Property section completion and native observations
 
-This increment ports the 19 remaining active main-interface signatures plus six documented native Property observations. Property now exposes 125 overloads. Existing typed return collisions and five obsolete source overloads remain excluded; they cannot be represented as duplicate C# signatures or treated as working APIs.
+This increment ports the 19 remaining active main-interface signatures plus six documented native Property observations. This checkpoint reached 125 overloads; the [latest material/member-section increment](Property-Materials-and-Member-Sections.md) brings the current total to 150. Existing typed return collisions and five obsolete source overloads remain excluded; they cannot be represented as duplicate C# signatures or treated as working APIs.
 
 ## Supporting boundary and deliberate corrections
 
