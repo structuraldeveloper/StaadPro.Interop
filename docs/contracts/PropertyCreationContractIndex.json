@@ -1,0 +1,528 @@
+{
+  "date": "2026-10-24",
+  "description": "Eight remaining P6 routes and next seventeen P7 routes; 24 mutations plus one metadata query. Live mutation qualification remains pending.",
+  "contracts": [
+    {
+      "phase": "P6",
+      "signature": "PropertyMutationResult CreateWideFlangePropertyFromTable(WideFlangeTableDefinition definition)",
+      "name": "CreateWideFlangePropertyFromTable",
+      "nativeFunction": "CreateWideFlangePropertyFromTable",
+      "summary": "Creates a wide-flange table definition using explicit applicable native specifications.",
+      "parameters": [
+        [
+          "definition",
+          "Non-null immutable selection created with a named factory: Standard, Double, Tee, Composite, WithTopPlate, WithBottomPlate or WithTopAndBottomPlates. Country codes 1..16, exact native name and applicable numeric inputs are validated before dispatch."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedPropertyId when STAAD returns a positive reference; the actual integral response and SectionDefinition scope are retained. Native -1 gives NativeFailure; zero and undocumented negatives throw.",
+      "remarks": "When to use: create through the four-slot wide-flange native route while retaining ST=0, D=2, T=5, CM=6, TC=7, BC=8 and TB=9. Copies SP/CT/WP, FC/TH, CW/BW, CD/BT in exact order; unused slots are zero buffer padding. BC sends bottom dimensions in slots zero/one with selector eight. Caller must establish the intended current material context beforehand; no material is selected implicitly. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = StaadPro.Interop.Models.Property.WideFlangeTableDefinition.WithBottomPlate(Country.Indian, \"ISMB300\", 0.2, 0.01);\n    var result = property.CreateWideFlangePropertyFromTable(definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P6",
+      "signature": "PropertyMutationResult CreateBeamPropertyFromTableEx(Country country, string sectionName, TableSolidShape shape)",
+      "name": "CreateBeamPropertyFromTableEx",
+      "nativeFunction": "CreateBeamPropertyFromTableEx",
+      "summary": "Creates a table property with the native solid-shape selector.",
+      "parameters": [
+        [
+          "country",
+          "Reviewed native country code 1..37. The source-only Country.Chilean=38 and undefined selectors are rejected; catalog availability is not inferred."
+        ],
+        [
+          "sectionName",
+          "Exact nonblank native table section name without NUL characters. Case/whitespace preserved; no database lookup."
+        ],
+        [
+          "shape",
+          "Defined native selector: PlateStrip=1, SolidRectangle=2, SolidRound=3, Round=4 or Cable=5. Not a TypeSpecification modifier or property ID."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedPropertyId when STAAD returns a positive reference; the actual integral response and SectionDefinition scope are retained. Native zero gives NativeFailure; negative/Boolean/fractional responses throw.",
+      "remarks": "When to use: use the native solid-shape table route, whose TypeSpec declaration is documented as TypeSolidShape in the parameter table. It is different from the existing CreateBeamPropertyFromTable modifier/value route. Caller must establish intended current material context beforehand. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateBeamPropertyFromTableEx(Country.Indian, \"ISMB300\", StaadPro.Interop.Enums.Property.TableSolidShape.SolidRectangle);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P6",
+      "signature": "PropertyMutationResult CreatePrismaticRectangleProperty(double depthY, double widthZ)",
+      "name": "CreatePrismaticRectangleProperty",
+      "nativeFunction": "CreatePrismaticRectangleProperty",
+      "summary": "Creates a rectangular prismatic section from local-axis dimensions.",
+      "parameters": [
+        [
+          "depthY",
+          "YD depth along local Y. Finite positive value in the acquired native length convention; no conversion."
+        ],
+        [
+          "widthZ",
+          "ZD width along local Z. Finite positive value in the acquired native length convention; no conversion."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedPropertyId when STAAD returns a positive reference; the actual integral response and SectionDefinition scope are retained. Zero gives NativeFailure; other nonpositive responses are undocumented and throw.",
+      "remarks": "When to use: create an explicit local-Y/local-Z rectangle without a table or private section catalog. Caller establishes the intended existing current material before creation. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreatePrismaticRectangleProperty(0.4, 0.2);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P6",
+      "signature": "PropertyMutationResult CreatePrismaticCircleProperty(double diameter)",
+      "name": "CreatePrismaticCircleProperty",
+      "nativeFunction": "CreatePrismaticCircleProperty",
+      "summary": "Creates a circular prismatic section from its explicit diameter.",
+      "parameters": [
+        [
+          "diameter",
+          "Circle diameter YD, not radius. Finite positive value in the acquired native length convention; no conversion."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedPropertyId when STAAD returns a positive reference; the actual integral response and SectionDefinition scope are retained. Zero gives NativeFailure; undocumented responses throw.",
+      "remarks": "When to use: create a circular section without converting diameter to radius or synthesizing section constants. Caller establishes current material beforehand. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreatePrismaticCircleProperty(0.3);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P6",
+      "signature": "PropertyMutationResult CreatePrismaticTeeProperty(double totalDepth, double flangeWidth, double stemDepth, double stemWidth)",
+      "name": "CreatePrismaticTeeProperty",
+      "nativeFunction": "CreatePrismaticTeeProperty",
+      "summary": "Creates a tee prismatic section from explicit flange/stem dimensions.",
+      "parameters": [
+        [
+          "totalDepth",
+          "YD total depth from top of flange to bottom of stem. Finite positive value in the acquired native length convention; no conversion."
+        ],
+        [
+          "flangeWidth",
+          "ZD flange width. Finite positive value in the acquired native length convention; no conversion."
+        ],
+        [
+          "stemDepth",
+          "YB stem depth; must be smaller than totalDepth. Finite positive value in the acquired native length convention; no conversion."
+        ],
+        [
+          "stemWidth",
+          "ZB stem width; must not exceed flangeWidth. Finite positive value in the acquired native length convention; no conversion."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedPropertyId when STAAD returns a positive reference; the actual integral response and SectionDefinition scope are retained. Zero gives NativeFailure; undocumented responses throw.",
+      "remarks": "When to use: create a tee using total depth, flange width, stem depth and stem width in exact native order. No flange-thickness or area/inertia input is fabricated. Caller establishes current material beforehand. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreatePrismaticTeeProperty(0.5, 0.3, 0.45, 0.02);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P6",
+      "signature": "PropertyMutationResult CreatePrismaticTrapezoidalProperty(double depth, double topWidth, double bottomWidth)",
+      "name": "CreatePrismaticTrapezoidalProperty",
+      "nativeFunction": "CreatePrismaticTrapezoidalProperty",
+      "summary": "Creates a trapezoidal prismatic section from explicit depth/top/bottom widths.",
+      "parameters": [
+        [
+          "depth",
+          "YD total depth. Finite positive value in the acquired native length convention; no conversion."
+        ],
+        [
+          "topWidth",
+          "ZD width at the top fiber. Finite positive value in the acquired native length convention; no conversion."
+        ],
+        [
+          "bottomWidth",
+          "ZB width at the bottom fiber. Finite positive value in the acquired native length convention; no conversion."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedPropertyId when STAAD returns a positive reference; the actual integral response and SectionDefinition scope are retained. Zero gives NativeFailure; undocumented responses throw.",
+      "remarks": "When to use: create a trapezoid without interchanging top and bottom widths or deriving an angle from them. Caller establishes current material beforehand. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreatePrismaticTrapezoidalProperty(0.5, 0.2, 0.4);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P6",
+      "signature": "PropertyMutationResult CreatePrismaticGeneralProperty(GeneralPrismaticSectionDefinition definition)",
+      "name": "CreatePrismaticGeneralProperty",
+      "nativeFunction": "CreatePrismaticGeneralProperty",
+      "summary": "Creates a general prismatic section from all ten named explicit constants.",
+      "parameters": [
+        [
+          "definition",
+          "Non-null immutable AX, AY, AZ, IX, IY, IZ, YD, ZD, YB, ZB packet in this native order. AX is finite positive; other inputs finite nonnegative. AY/AZ zero retains native ignore-shear-deformation semantics. Areas use length squared, inertia/torsion length to fourth power, dimensions length."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedPropertyId when STAAD returns a positive reference; the actual integral response and SectionDefinition scope are retained. Zero gives NativeFailure; -106/-108 give InvalidInput (native buffer representation/size rejected). Other undocumented responses throw.",
+      "remarks": "When to use: supply complete general-section constants independently from any catalog. Sends a fresh rank-one ten-double buffer. Here native IX is documented as torsional constant; IY/IZ are the local bending inertias. YB/ZB retain the native tee/trapezoid meanings. No area/inertia consistency or engineering-adequacy check is inferred. Caller establishes current material beforehand. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var definition = new StaadPro.Interop.Models.Property.GeneralPrismaticSectionDefinition(0.01, 0.002, 0.003, 0.000001, 0.00001, 0.0001, 0.3, 0.2, 0.25, 0.02);\n    var result = property.CreatePrismaticGeneralProperty(definition);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P6",
+      "signature": "PropertyMutationResult CreateTaperedTubeProperty(TaperedTubeShape shape, double startDepth, double endDepth, double thickness)",
+      "name": "CreateTaperedTubeProperty",
+      "nativeFunction": "CreateTaperedTubeProperty",
+      "summary": "Creates a tapered tube with constant explicit wall thickness.",
+      "parameters": [
+        [
+          "shape",
+          "Defined native shape: Round=0, Hexadecagonal=1, Dodecagonal=2, Octagonal=3, Hexagonal=4 or Square=5."
+        ],
+        [
+          "startDepth",
+          "Section depth at member start. Finite positive value in the acquired native length convention; no conversion."
+        ],
+        [
+          "endDepth",
+          "Section depth at member end. Finite positive value in the acquired native length convention; no conversion."
+        ],
+        [
+          "thickness",
+          "Constant section thickness; twice this value must be smaller than both endpoint depths. Finite positive value in the acquired native length convention; no conversion."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedPropertyId when STAAD returns a positive reference; the actual integral response and SectionDefinition scope are retained. Zero gives NativeFailure; undocumented responses throw.",
+      "remarks": "When to use: create a tapered tube while preserving native start/end ordering and shape code. Does not reinterpret polygon dimensions as radii or infer endpoint connectivity. Caller establishes current material beforehand. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateTaperedTubeProperty(StaadPro.Interop.Enums.Property.TaperedTubeShape.Round, 0.4, 0.2, 0.01);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateMemberPartialReleaseSpec(MemberEnd memberEnd, DegreeOfFreedomSelection releasedDofs, PartialReleaseFactors factors)",
+      "name": "CreateMemberPartialReleaseSpec",
+      "nativeFunction": "CreateMemberPartialReleaseSpec",
+      "summary": "Requests a native partial member release specification with explicit six-DOF inputs.",
+      "parameters": [
+        [
+          "memberEnd",
+          "Defined native START=0 or END=1 selector; no member ID or geometry is implied."
+        ],
+        [
+          "releasedDofs",
+          "Non-null immutable FX/FY/FZ/MX/MY/MZ selection. Sent as an owned six-Int32 array: false=0 (no release), true=1 (release); no basic/partial release-mode inference."
+        ],
+        [
+          "factors",
+          "Non-null immutable finite dimensionless six-factor packet in FX/FY/FZ/MX/MY/MZ order. Managed range is zero through one. Every explicit factor is forwarded, including entries for unselected flags; no MP/MPX/MPY/MPZ substitution."
+        ]
+      ],
+      "returns": "Succeeded for integral zero; -106/-108 give InvalidInput and -6020 NativeFailure. This reviewed contract returns status only, so CreatedSpecificationId and CreatedSpecificationIndex are always null. Positive returns are undocumented and throw.",
+      "remarks": "When to use: request this distinct native partial-release route. Nearby specification creators return IDs, but this function documents zero OK; do not assign a fabricated zero or discover a last-created ID by count arithmetic. This method creates no analytical-member assignment. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var dofs = new StaadPro.Interop.Models.Property.DegreeOfFreedomSelection(false, false, false, true, true, true);\n    var factors = new StaadPro.Interop.Models.Property.PartialReleaseFactors(0, 0, 0, 0.1, 0.2, 0.3);\n    var result = property.CreateMemberPartialReleaseSpec(MemberEnd.End, dofs, factors);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateMemberTrussSpec()",
+      "name": "CreateMemberTrussSpec",
+      "nativeFunction": "CreateMemberTrussSpec",
+      "summary": "Creates a native MEMBER TRUSS specification definition.",
+      "parameters": [],
+      "returns": "Created with a separate positive CreatedSpecificationId when STAAD returns a positive ID; the actual integral response and SpecificationDefinition scope are retained. Native -6010 gives NativeFailure. Zero is undocumented for this ID-returning function and throws rather than being exposed as an ID.",
+      "remarks": "When to use: create the MEMBER TRUSS definition independently of assigning any member. An existing specification may be reused by STAAD; no new-unique allocation or analytical behavior is certified. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateMemberTrussSpec();\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateMemberInactiveSpec()",
+      "name": "CreateMemberInactiveSpec",
+      "nativeFunction": "CreateMemberInactiveSpec",
+      "summary": "Creates a native MEMBER INACTIVE specification definition.",
+      "parameters": [],
+      "returns": "Created with a separate positive CreatedSpecificationId when STAAD returns a positive ID; the actual integral response and SpecificationDefinition scope are retained. Native -6011 gives NativeFailure. Zero is undocumented for this ID-returning function and throws rather than being exposed as an ID.",
+      "remarks": "When to use: create the MEMBER INACTIVE definition independently of assigning any member. An existing specification may be reused by STAAD; no new-unique allocation or analytical behavior is certified. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateMemberInactiveSpec();\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateMemberTensionSpec()",
+      "name": "CreateMemberTensionSpec",
+      "nativeFunction": "CreateMemberTensionSpec",
+      "summary": "Creates a native MEMBER TENSION specification definition.",
+      "parameters": [],
+      "returns": "Created with a separate positive CreatedSpecificationId when STAAD returns a positive ID; the actual integral response and SpecificationDefinition scope are retained. Native -6012 gives NativeFailure. Zero is undocumented for this ID-returning function and throws rather than being exposed as an ID.",
+      "remarks": "When to use: create the MEMBER TENSION definition independently of assigning any member. An existing specification may be reused by STAAD; no new-unique allocation or analytical behavior is certified. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateMemberTensionSpec();\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateMemberCompressionSpec()",
+      "name": "CreateMemberCompressionSpec",
+      "nativeFunction": "CreateMemberCompressionSpec",
+      "summary": "Creates a native MEMBER COMPRESSION specification definition.",
+      "parameters": [],
+      "returns": "Created with a separate positive CreatedSpecificationId when STAAD returns a positive ID; the actual integral response and SpecificationDefinition scope are retained. Native -6013 gives NativeFailure. Zero is undocumented for this ID-returning function and throws rather than being exposed as an ID.",
+      "remarks": "When to use: create the MEMBER COMPRESSION definition independently of assigning any member. An existing specification may be reused by STAAD; no new-unique allocation or analytical behavior is certified. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateMemberCompressionSpec();\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateMemberIgnoreStiffSpec()",
+      "name": "CreateMemberIgnoreStiffSpec",
+      "nativeFunction": "CreateMemberIgnoreStiffSpec",
+      "summary": "Creates a native IGNORE STIFFNESS specification definition.",
+      "parameters": [],
+      "returns": "Created with a separate positive CreatedSpecificationId when STAAD returns a positive ID; the actual integral response and SpecificationDefinition scope are retained. Native -6014 gives NativeFailure. Zero is undocumented for this ID-returning function and throws rather than being exposed as an ID.",
+      "remarks": "When to use: create the IGNORE STIFFNESS definition independently of assigning any member. An existing specification may be reused by STAAD; no new-unique allocation or analytical behavior is certified. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateMemberIgnoreStiffSpec();\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateMemberCableSpec(CableDefinitionKind definitionKind, double value)",
+      "name": "CreateMemberCableSpec",
+      "nativeFunction": "CreateMemberCableSpec",
+      "summary": "Creates a cable specification from an explicit tension-or-length value.",
+      "parameters": [
+        [
+          "definitionKind",
+          "InitialTension=0 or UnstressedLength=1. This selector changes the dimension of value; no Boolean inversion or unit conversion."
+        ],
+        [
+          "value",
+          "Finite nonnegative initial tension in native force units, or finite positive unstressed length in native length units, according to definitionKind."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedSpecificationId when STAAD returns a positive ID; the actual integral response and SpecificationDefinition scope are retained. Native -6015 gives NativeFailure. Zero is undocumented for this ID-returning function and throws rather than being exposed as an ID.",
+      "remarks": "When to use: create the basic cable definition without advanced tension-end/self-weight options. Does not activate cable analysis or assign a member. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateMemberCableSpec(StaadPro.Interop.Enums.Property.CableDefinitionKind.InitialTension, 25.0);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateMemberCableSpecEx(CableDefinitionKind definitionKind, double value, CableTensionEnd tensionEnd, double selfWeightFactorX, double selfWeightFactorY, double selfWeightFactorZ)",
+      "name": "CreateMemberCableSpecEx",
+      "nativeFunction": "CreateMemberCableSpecEx",
+      "summary": "Creates an advanced cable specification with explicit tension end and global self-weight factors.",
+      "parameters": [
+        [
+          "definitionKind",
+          "InitialTension=0 or UnstressedLength=1 as specified by all three reviewed native parameter tables; despite the declaration spelling varbTension, this is sent as an integral selector."
+        ],
+        [
+          "value",
+          "Finite nonnegative tension in native force units, or finite positive unstressed length in native length units."
+        ],
+        [
+          "tensionEnd",
+          "Unspecified=0, Start=1 or End=2 for initial tension. Must be Unspecified for UnstressedLength; not the MemberEnd 0/1 domain."
+        ],
+        [
+          "selfWeightFactorX",
+          "Finite signed dimensionless multiplier for the global-X self-weight component, forwarded unchanged."
+        ],
+        [
+          "selfWeightFactorY",
+          "Finite signed dimensionless multiplier for the global-Y self-weight component, forwarded unchanged."
+        ],
+        [
+          "selfWeightFactorZ",
+          "Finite signed dimensionless multiplier for the global-Z self-weight component, forwarded unchanged."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedSpecificationId when STAAD returns a positive ID; the actual integral response and SpecificationDefinition scope are retained. Native -6015 gives NativeFailure. Zero is undocumented for this ID-returning function and throws rather than being exposed as an ID.",
+      "remarks": "When to use: create the advanced cable definition without changing global vertical axis, enabling advanced analysis or assuming gravity direction. Explicit self-weight multipliers are not forces and are not normalized. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateMemberCableSpecEx(StaadPro.Interop.Enums.Property.CableDefinitionKind.InitialTension, 25.0, StaadPro.Interop.Enums.Property.CableTensionEnd.Start, 0.0, -1.0, 0.0);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateElementNodeReleaseSpec(int nodeId, DegreeOfFreedomSelection releasedDofs)",
+      "name": "CreateElementNodeReleaseSpec",
+      "nativeFunction": "CreateElementNodeReleaseSpec",
+      "summary": "Requests a native element-node release using explicit six-DOF flags.",
+      "parameters": [
+        [
+          "nodeId",
+          "Positive analytical node number as documented by this native function; not a plate corner index or member-end selector."
+        ],
+        [
+          "releasedDofs",
+          "Non-null immutable FX/FY/FZ/MX/MY/MZ selection. Sent as an owned six-Int32 array: false=0 (no release), true=1 (release); no basic/partial release-mode inference."
+        ]
+      ],
+      "returns": "Succeeded for integral zero; -106/-108 give InvalidInput and -6021 NativeFailure. TargetIds retains the requested node. No created specification ID/index is supplied; positive returns are undocumented and throw.",
+      "remarks": "When to use: request the native node release definition without borrowing another creator's ID-return convention. No implicit plate assignment or corner/node remapping occurs. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var dofs = new StaadPro.Interop.Models.Property.DegreeOfFreedomSelection(false, false, false, true, true, true);\n    var result = property.CreateElementNodeReleaseSpec(11, dofs);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateElementPlaneStressSpec()",
+      "name": "CreateElementPlaneStressSpec",
+      "nativeFunction": "CreateElementPlaneStressSpec",
+      "summary": "Creates a native ELEMENT PLANE STRESS specification definition.",
+      "parameters": [],
+      "returns": "Created with a separate positive CreatedSpecificationId when STAAD returns a positive ID; the actual integral response and SpecificationDefinition scope are retained. Native -6018 gives NativeFailure. Zero is undocumented for this ID-returning function and throws rather than being exposed as an ID.",
+      "remarks": "When to use: create the ELEMENT PLANE STRESS definition without assigning analytical elements. Use a separately reviewed assignment route and the returned positive specification ID when applying it. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateElementPlaneStressSpec();\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateElementIgnoreInplaneRotnSpec()",
+      "name": "CreateElementIgnoreInplaneRotnSpec",
+      "nativeFunction": "CreateElementIgnoreInplaneRotnSpec",
+      "summary": "Creates a native ELEMENT IGNORE INPLANE ROTATION specification definition.",
+      "parameters": [],
+      "returns": "Created with a separate positive CreatedSpecificationId when STAAD returns a positive ID; the actual integral response and SpecificationDefinition scope are retained. Native -6019 gives NativeFailure. Zero is undocumented for this ID-returning function and throws rather than being exposed as an ID.",
+      "remarks": "When to use: create the ELEMENT IGNORE INPLANE ROTATION definition without assigning analytical elements. Use a separately reviewed assignment route and the returned positive specification ID when applying it. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateElementIgnoreInplaneRotnSpec();\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult AddControlDependentRelation(int controlNodeId, ControlDependencyMode mode, DegreeOfFreedomSelection rigidDofs, IEnumerable<int> dependentNodeIds)",
+      "name": "AddControlDependentRelation",
+      "nativeFunction": "AddControlDependentRelation",
+      "summary": "Adds a control/dependent-node relation with explicit rigidity selection.",
+      "parameters": [
+        [
+          "controlNodeId",
+          "Positive analytical control-node ID. Must not appear in dependentNodeIds."
+        ],
+        [
+          "mode",
+          "AllDirections=0, RigidXY=1, RigidYZ=2, RigidZX=3 or SpecifiedDegreesOfFreedom=4. Four selects the documented other-values branch; no arbitrary native selector is guessed."
+        ],
+        [
+          "rigidDofs",
+          "Non-null immutable explicit FX/FY/FZ/MX/MY/MZ rigidity flags. Sent as six integral 0/1 scalars in that order for every mode; only the explicit-DOF native mode uses them as its selection."
+        ],
+        [
+          "dependentNodeIds",
+          "Finite sequence of 1..100000 positive analytical dependent-node IDs excluding controlNodeId. Enumerated once with a hard bound, copied and sent as a rank-one Int32 array. Input order/duplicates retained; no geometry lookup or deduplication."
+        ]
+      ],
+      "returns": "Succeeded for integral zero, InvalidInput for -106 and NativeFailure for -6029. Retains separate control-node identity and owned dependent TargetIds. No specification ID/index or per-node completion result is inferred.",
+      "remarks": "When to use: deliberately add the native relation to the acquired model, rather than creating a free-standing specification for later assignment. A native failure can leave part of the relation applied. The rigidity coordinate meanings follow the native selected mode; no transforms occur. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var dofs = new StaadPro.Interop.Models.Property.DegreeOfFreedomSelection(true, true, true, false, false, false);\n    var result = property.AddControlDependentRelation(11, StaadPro.Interop.Enums.Property.ControlDependencyMode.SpecifiedDegreesOfFreedom, dofs, new[] { 12, 13 });\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateElementOffsetSpec(ElementNodeOffsetAxis coordinateSystem, int plateNodeIndex, double offsetX, double offsetY, double offsetZ)",
+      "name": "CreateElementOffsetSpec",
+      "nativeFunction": "CreateElementOffsetSpec",
+      "summary": "Creates a local or global offset specification for one plate corner.",
+      "parameters": [
+        [
+          "coordinateSystem",
+          "ElementNodeOffsetAxis.Local=0 or Global=1 only. Z=2 is rejected; this numbering differs from member OffsetAxis."
+        ],
+        [
+          "plateNodeIndex",
+          "Native plate corner index 1..4, not an analytical node ID. The result retains this corner identity."
+        ],
+        [
+          "offsetX",
+          "Finite signed X offset in native length units and the explicit coordinateSystem."
+        ],
+        [
+          "offsetY",
+          "Finite signed Y offset in native length units and the explicit coordinateSystem."
+        ],
+        [
+          "offsetZ",
+          "Finite signed Z offset in native length units and the explicit coordinateSystem."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedSpecificationId when STAAD returns a positive ID; the actual integral response and SpecificationDefinition scope are retained. Native -6016 gives NativeFailure; zero and other undocumented values throw.",
+      "remarks": "When to use: create the per-corner local/global offset definition without transforming coordinates, inventing a plate incidence list or applying the definition to a plate. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateElementOffsetSpec(StaadPro.Interop.Enums.Property.ElementNodeOffsetAxis.Local, 2, 0.0, -0.1, 0.2);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateElementLocalZOffsetSpec(double node1Offset, double node2Offset, double node3Offset, double node4Offset)",
+      "name": "CreateElementLocalZOffsetSpec",
+      "nativeFunction": "CreateElementLocalZOffsetSpec",
+      "summary": "Creates a four-corner local-Z plate offset specification.",
+      "parameters": [
+        [
+          "node1Offset",
+          "Finite signed local-Z offset at native plate corner 1, in native length units. Corner order is retained; no analytical node ID is supplied."
+        ],
+        [
+          "node2Offset",
+          "Finite signed local-Z offset at native plate corner 2, in native length units. Corner order is retained; no analytical node ID is supplied."
+        ],
+        [
+          "node3Offset",
+          "Finite signed local-Z offset at native plate corner 3, in native length units. Corner order is retained; no analytical node ID is supplied."
+        ],
+        [
+          "node4Offset",
+          "Finite signed local-Z offset at native plate corner 4, in native length units. Corner order is retained; no analytical node ID is supplied."
+        ]
+      ],
+      "returns": "Created with a separate positive CreatedSpecificationId when STAAD returns a positive ID; the actual integral response and SpecificationDefinition scope are retained. Native -6016 gives NativeFailure; zero and undocumented values throw.",
+      "remarks": "When to use: create an explicit offset for all four native plate corner slots. All four inputs are mandatory; no triangle-corner duplication, uniform-thickness assumption or global/local transformation is inferred. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateElementLocalZOffsetSpec(0.1, 0.2, -0.3, 0.4);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult CreateMemberFireProofingSpec(FireProofingType fireProofingType, double thickness, double density)",
+      "name": "CreateMemberFireProofingSpec",
+      "nativeFunction": "CreateMemberFireProofingSpec",
+      "summary": "Creates a native block/contour fireproofing definition and retains its zero-based index.",
+      "parameters": [
+        [
+          "fireProofingType",
+          "Defined native Block/BFP=1 or Contour/CFP=2."
+        ],
+        [
+          "thickness",
+          "Fireproofing thickness. Finite positive value in the acquired native length convention; no conversion."
+        ],
+        [
+          "density",
+          "Finite nonnegative fireproofing density in the acquired native density convention; no mass/weight or force/length conversion is inferred."
+        ]
+      ],
+      "returns": "Created for any nonnegative integral return, including zero, with CreatedSpecificationIndex set to that exact zero-based index. -1 gives NativeFailure. CreatedSpecificationId is always null; undocumented negatives/Boolean/fractional responses throw.",
+      "remarks": "When to use: create a fireproofing definition without assuming its creation index is the ID or one-based index used by other native getters. Never add one or pass it as an assignment reference without separately qualified mapping. No member assignment or fire-analysis activation occurs. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.CreateMemberFireProofingSpec(StaadPro.Interop.Enums.Property.FireProofingType.Block, 0.03, 12.0);\n    System.Console.WriteLine(result.Status);\n    if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);\n}",
+      "mutation": true
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyQueryResult<PropertyUniqueIdentifier> GetPropertyUniqueID(int propertyId)",
+      "name": "GetPropertyUniqueID",
+      "nativeFunction": "GetPropertyUniqueID",
+      "summary": "Reads the exact native unique-ID metadata for a property reference.",
+      "parameters": [
+        [
+          "propertyId",
+          "Positive native property reference number, not a member ID or specification index."
+        ]
+      ],
+      "returns": "Success with an immutable requested property ID and exact nonempty string. Null/DBNull/empty gives EmptyOrUnavailable because missing metadata and missing property cannot be distinguished. Non-string values throw.",
+      "remarks": "When to use: inspect property metadata without assuming GUID syntax or global uniqueness. Case and whitespace are retained; the string is not parsed or converted into a numerical entity identity. Inspect IsSuccessful/Status before Data. Uses the captured binding/gate; no native mutation, conversion, save or hydration occurs.",
+      "example": "var result = property.GetPropertyUniqueID(37);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Value);\nelse System.Console.WriteLine(result.Status);",
+      "mutation": false
+    },
+    {
+      "phase": "P7",
+      "signature": "PropertyMutationResult SetPropertyUniqueID(int propertyId, string uniqueId)",
+      "name": "SetPropertyUniqueID",
+      "nativeFunction": "SetPropertyUniqueID",
+      "summary": "Invokes the native void unique-ID metadata setter without fabricating success.",
+      "parameters": [
+        [
+          "propertyId",
+          "Positive existing native property reference number, not a member ID or created specification index."
+        ],
+        [
+          "uniqueId",
+          "Exact non-null string without embedded NUL characters. Empty and whitespace strings are intentionally forwarded unchanged; no GUID format, generation, collision check or normalization is imposed."
+        ]
+      ],
+      "returns": "InvokedWithoutAcknowledgement after the native void call returns. IsSuccessful remains false because no success acknowledgement was supplied. NativeReturnCode/NativeBooleanReturn and all created identities are null. Requested PropertyId and UniqueId are retained; no persistence read-back is implied.",
+      "remarks": "When to use: deliberately write the exact property metadata string through the reviewed void setter. A completed invocation is not a reported failure, but cannot certify persistence. Call GetPropertyUniqueID separately when read-back is required; this method does not automatically read or overwrite more state. Every call uses the captured Property binding and shared serialization gate, checked before and after access. Native mutations may be partial after a failure or transport/lifetime exception. No retry, implicit save, analysis, unit conversion, assignment, read-back or rollback occurs unless explicitly stated. Native acknowledgement does not certify persistence or engineering adequacy.",
+      "example": "bool applyChanges = false; // Enable only for a disposable/intended model and reviewed inputs.\nif (applyChanges)\n{\n    var result = property.SetPropertyUniqueID(37, \"reviewed-property-identifier\");\n    System.Console.WriteLine(result.Status);\n    System.Console.WriteLine(result.PropertyId); // Void invocation supplies no success acknowledgement.\n}",
+      "mutation": true
+    }
+  ]
+}

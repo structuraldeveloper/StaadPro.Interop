@@ -2,17 +2,17 @@
 
 **Review date:** 23 October 2026<br>
 **Baseline:** `3b94e637839f0c3e28c1486d8f03f0a8af230b43`<br>
-**Status:** Updated route coverage: 150 overloads, 91/204 active native routes; live qualification remains pending.
+**Status:** Updated route coverage: 175 overloads, 116/204 active native routes; live qualification remains pending.
 
 Read the [comparison and architecture plan](OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md) for policy decisions and sequencing. The [comparison JSON](data/OpenSTAAD-Property-2024-2026-Comparison.json) preserves all three years separately, exact declarations, complete parameter descriptions, native tables, vendor metadata, source mappings and file fingerprints.
 
-## Current implementation - P3/P4/P5 completion
+## Current implementation - P6 and specification creation
 
-Incorporated **25 Property functions**: the eight remaining P3 material operations, eight remaining P4 member-section queries and nine remaining P5 mutations. Property now exposes **150 overloads** and reaches **91 of 204 active native routes**, with **113 remaining**. All P2/P3/P4/P5 allocations have managed routes; this is implementation coverage, not live native or engineering qualification.
+Incorporated **25 Property functions**: the eight remaining P6 section creators and the next seventeen P7 specification/property operations. Property now exposes **175 overloads** and reaches **116 of 204 active native routes**, with **88 remaining**. All P2/P3/P4/P5/P6 allocations have managed routes; P7 has 20 of 46. Route coverage does not establish live native or engineering qualification.
 
-Passed a Release build with zero warnings/errors and **4,346 offline tests**, including **190 new cases**. The isolated PackageReference-only consumer verifies **742 selected XML examples**, including all **300 Property interface/adapter examples**. New mutation examples are guarded; separate installed-consumer checks invoke all eleven mutations against managed stand-ins. No live STAAD model is changed by verification.
+Passed a Release build with zero warnings/errors and **4,551 offline tests**, including **205 new cases**. The isolated PackageReference-only consumer verifies **792 selected XML examples**, including all **350 Property interface/adapter examples**. All 24 new mutation examples are guarded; dedicated managed checks exercise every new route through both the interface and concrete adapter. Verification does not change a live STAAD model.
 
-Added immutable explicit material definitions/strengths, orthotropic constants, member-section snapshots and named mutation acknowledgements retaining actual native evidence and requested identity. Kept Steel Fu/Fy/Rt/Ry order distinct from extended Fy/Fu/Ry/Rt/Fcu order. Added bounded owned solid-ID snapshots, strict written-output checks, operation-specific absence/error handling and native-version section layouts. A successful mutation acknowledgement does not prove design-strength persistence, save the model or provide rollback. See [the detailed guide](../Property-Materials-and-Member-Sections.md) and [contract index](../contracts/PropertyRoadmapContractIndex.json). Historical native comparison/source evidence below is retained; current route status in the matrix is audited from actual dispatches.
+Added explicit immutable wide-flange, general-prismatic, six-DOF and partial-factor inputs. Retained separate created section IDs, created specification IDs, zero-based fireproofing indices and zero-success status-only results. The void unique-ID setter returns InvokedWithoutAcknowledgement with no fabricated native code and IsSuccessful false; its exact requested property/text identity is retained. Existing signatures, current-material context and native units remain explicit. See [the detailed creation guide](../Property-Section-and-Specification-Creation.md) and [contract index](../contracts/PropertyCreationContractIndex.json). Native comparison/source evidence and historical checkpoints below are retained.
 
 | Phase | Implemented native routes | Remaining |
 | --- | ---: | ---: |
@@ -20,8 +20,8 @@ Added immutable explicit material definitions/strengths, orthotropic constants, 
 | P3 | 23 | 0 |
 | P4 | 24 | 0 |
 | P5 | 17 | 0 |
-| P6 | 10 | 8 |
-| P7 | 3 | 43 |
+| P6 | 18 | 0 |
+| P7 | 20 | 26 |
 | P8 | 0 | 30 |
 | P9 | 1 | 8 |
 | P10 | 0 | 24 |
@@ -33,11 +33,11 @@ The Property group tree has 204 / 209 / 209 names in 2024/2025/2026, with 199 / 
 
 There are 18 group pages per year. All were traversed, and a scan of the other group pages found no additional OSPropertyUI-owned function rows. Class-level native listings and generated headers are supplemental evidence. Thirteen surface-related class summaries, fourteen metadata names outside the group tree, and their overlaps form fifteen supplemental candidates; twenty-two additional class-only implementation helpers are excluded.
 
-Current IOSProperty and OSPropertyAdapter contain 150 domain overloads and 91 distinct Property native dispatch routes (qualified observations/mutations plus compatibility ports). ComObject and inherited Wrapper are binding properties, not domain implementations. The main IOSProperty has 103 overloads; its adapter implements all of them and adds four assignment-query conveniences. It has seven private helpers.
+Current IOSProperty and OSPropertyAdapter contain 175 domain overloads and 116 distinct Property native dispatch routes (qualified observations/mutations plus compatibility ports). ComObject and inherited Wrapper are binding properties, not domain implementations. The main IOSProperty has 103 overloads; its adapter implements all of them and adds four assignment-query conveniences. It has seven private helpers.
 
 Source coverage counts actual native invocation names, not managed name matches: 56 direct adapter targets plus nineteen additional delegated section-model targets, 75 in total. A source method named GetBeamProperty discovers a property ID by enumerating assignments; it does not call the native eight-output GetBeamProperty. A name-only coverage search would incorrectly mark that native API complete.
 
-The remaining 113 active candidates have no managed native route. Named request/result families in the original proposal remain design guidance; the latest guide records the exact exported immutable types. Closely related methods should reuse a few cohesive models or typed request subclasses; this is not a plan to create one class per native function. All new public outputs avoid ref/out and tuples.
+The remaining 88 active candidates have no managed native route. Named request/result families in the original proposal remain design guidance; the latest guide records the exact exported immutable types. Closely related methods should reuse a few cohesive models or typed request subclasses; this is not a plan to create one class per native function. All new public outputs avoid ref/out and tuples.
 
 ## 2. Complete cross-version function matrix
 
@@ -46,20 +46,20 @@ The remaining 113 active candidates have no managed native route. Named request/
 | [CreateBeamPropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gaf2cc429be392fe527feed7dc33f78d6c) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1086) | P6 | Implemented route; live qualification pending |
 | [CreateBeamPropertyFromTableWithCoverPlates](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gab96ba7f158851c24a2eb289af7f17c6f) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L253) | P6 | Implemented route; live qualification pending |
 | [CreateBeamPropertyFromTableComposite](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga50040de9e0075880f3f7285284b7c79a) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1770) | P6 | Implemented route; live qualification pending |
-| [CreateWideFlangePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga78cec5f9be32c1061963f94ed050d331) | `VARIANT` | `VARIANT` | Unchanged | No target | P6 | Pending |
-| [CreateBeamPropertyFromTableEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gadce802ef32861d83b01a4226b234939c) | `VARIANT` | `VARIANT` | Unchanged | No target | P6 | Pending |
+| [CreateWideFlangePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga78cec5f9be32c1061963f94ed050d331) | `VARIANT` | `VARIANT` | Unchanged | No target | P6 | `CreateWideFlangePropertyFromTable`; managed verified |
+| [CreateBeamPropertyFromTableEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gadce802ef32861d83b01a4226b234939c) | `VARIANT` | `VARIANT` | Unchanged | No target | P6 | `CreateBeamPropertyFromTableEx`; managed verified |
 | [CreateTeePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga9623d2b80ee04d55f188772469ae23e7) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1740) | P6 | Implemented route; live qualification pending |
 | [CreateChannelPropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gaa08e9a925a2afa0ba3abde267f4eadb1) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1780) | P6 | Implemented route; live qualification pending |
 | [CreateAnglePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga6f1c73d26e890715030ddd5e1f765b20) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1803) | P6 | Implemented route; live qualification pending |
 | [CreateTubePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga64ab21d46e0b14bdb71c9bd0f1e84c29) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1835) | P6 | Implemented route; live qualification pending |
 | [CreatePipePropertyFromTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga8df35fc2730a95842893d45040aaa00b) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1819) | P6 | Implemented route; live qualification pending |
-| [CreatePrismaticRectangleProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga4ef3ab387d4b23c1c8e3d3e2d7b7783d) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticRectangleSection.cs#L47) | P6 | Pending |
-| [CreatePrismaticCircleProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga016cb17310c1214ad731ef8603f74fcc) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticCircleSection.cs#L38) | P6 | Pending |
-| [CreatePrismaticTeeProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga26721d08a647bddd960d0499b42ac5c9) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticTeeSection.cs#L57) | P6 | Pending |
-| [CreatePrismaticTrapezoidalProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga0fdc7ad624d8f07839d85b017b518350) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticTrapezoidalSection.cs#L52) | P6 | Pending |
-| [CreatePrismaticGeneralProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gae35d506434e6db9abd1edcb540a9d1cb) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticGeneralSection.cs#L63) | P6 | Pending |
+| [CreatePrismaticRectangleProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga4ef3ab387d4b23c1c8e3d3e2d7b7783d) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticRectangleSection.cs#L47) | P6 | `CreatePrismaticRectangleProperty`; managed verified |
+| [CreatePrismaticCircleProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga016cb17310c1214ad731ef8603f74fcc) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticCircleSection.cs#L38) | P6 | `CreatePrismaticCircleProperty`; managed verified |
+| [CreatePrismaticTeeProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga26721d08a647bddd960d0499b42ac5c9) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticTeeSection.cs#L57) | P6 | `CreatePrismaticTeeProperty`; managed verified |
+| [CreatePrismaticTrapezoidalProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga0fdc7ad624d8f07839d85b017b518350) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticTrapezoidalSection.cs#L52) | P6 | `CreatePrismaticTrapezoidalProperty`; managed verified |
+| [CreatePrismaticGeneralProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gae35d506434e6db9abd1edcb540a9d1cb) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/PrismaticGeneralSection.cs#L63) | P6 | `CreatePrismaticGeneralProperty`; managed verified |
 | [CreateTaperedIProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gad01c26661a6e9a588c4e5cfb46ce9403) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/TaperISection.cs#L71) | P6 | Implemented route; live qualification pending |
-| [CreateTaperedTubeProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga558bd4cf571d37c5f3520b2e7e56b9e5) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/TaperTubeSection.cs#L52) | P6 | Pending |
+| [CreateTaperedTubeProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga558bd4cf571d37c5f3520b2e7e56b9e5) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/TaperTubeSection.cs#L52) | P6 | `CreateTaperedTubeProperty`; managed verified |
 | [CreatePlateThicknessProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga4ab7a973986b611d748302e8dcdc0154) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1167) | P6 | Implemented route; live qualification pending |
 | [CreateUPTTable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gacffe1377c08a287a4b95c1fc315f4127) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptAngleSection.cs#L49) | P8 | Pending |
 | [AddUPTPropertyWIDEFLANGE](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_u_p_t_section.html#gaf8641a9ec57a7ad52f1f4ee44c4f5168) | `VARIANT` | `VARIANT` | Unchanged | [Delegated section](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OSProperty/UptWideFlangeSection.cs#L56) | P8 | Pending |
@@ -123,22 +123,22 @@ The remaining 113 active candidates have no managed native route. Named request/
 | [GetUserProvidedTableSectionProperties](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga6fa18da33cf823a4a528ddaa35d7aeb3) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
 | [GetUserProvidedTableNo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_u_p_t_section.html#ga778d97759d0fae3321f116992db15f50) | `VARIANT` | `VARIANT` | Unchanged | No target | P8 | Pending |
 | [CreateMemberReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gabfb89e094b1aa1a943716dfb7a0d4841) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L1585) | P7 | Implemented route; live qualification pending |
-| [CreateMemberPartialReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gae408d55746db59e4c22c2e505bb403a2) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateMemberTrussSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga19c64f2a9dc77cab9176f382524d17ca) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateMemberInactiveSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gabdcfbecf01cd5889eb04da0aa8102a41) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateMemberTensionSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga8db5109360921dde0350b2cdd4fe611a) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateMemberCompressionSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd9eeea22012202b700e42de2dae4dc0) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateMemberIgnoreStiffSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gad30bdd6dd57392faa1cf132df4819164) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateMemberCableSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga354fa1642399ba13018d1a610149589c) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateMemberCableSpecEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga1fe56e4b2b563db42107d0f2b68b8fb4) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateMemberPartialReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gae408d55746db59e4c22c2e505bb403a2) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateMemberPartialReleaseSpec`; managed verified |
+| [CreateMemberTrussSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga19c64f2a9dc77cab9176f382524d17ca) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateMemberTrussSpec`; managed verified |
+| [CreateMemberInactiveSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gabdcfbecf01cd5889eb04da0aa8102a41) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateMemberInactiveSpec`; managed verified |
+| [CreateMemberTensionSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga8db5109360921dde0350b2cdd4fe611a) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateMemberTensionSpec`; managed verified |
+| [CreateMemberCompressionSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd9eeea22012202b700e42de2dae4dc0) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateMemberCompressionSpec`; managed verified |
+| [CreateMemberIgnoreStiffSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gad30bdd6dd57392faa1cf132df4819164) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateMemberIgnoreStiffSpec`; managed verified |
+| [CreateMemberCableSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga354fa1642399ba13018d1a610149589c) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateMemberCableSpec`; managed verified |
+| [CreateMemberCableSpecEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga1fe56e4b2b563db42107d0f2b68b8fb4) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateMemberCableSpecEx`; managed verified |
 | [CreateMemberOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga452a2b2f15fcbf10a46a11e8dec7ef42) | `VARIANT` | `VARIANT` | Unchanged | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs#L732) | P7 | Implemented route; live qualification pending |
-| [CreateElementNodeReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd355c2d78879ae36eb5cabf7c0d99eb) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateElementPlaneStressSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gaec273848a190a0e1c308a4c770b45f1f) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateElementIgnoreInplaneRotnSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gade9e2bced8795b0cd4dab888244829b3) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [AddControlDependentRelation](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gacfbf4be0e4710af48fbbb2c08bec0cfd) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateElementOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd77251b4fa48baa9491672bf3a3a3ca) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateElementLocalZOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gac1057cd910b775a08d6c2c7df22e2781) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [CreateMemberFireProofingSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga6792430dddf478392843d424059c8730) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
+| [CreateElementNodeReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd355c2d78879ae36eb5cabf7c0d99eb) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateElementNodeReleaseSpec`; managed verified |
+| [CreateElementPlaneStressSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gaec273848a190a0e1c308a4c770b45f1f) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateElementPlaneStressSpec`; managed verified |
+| [CreateElementIgnoreInplaneRotnSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gade9e2bced8795b0cd4dab888244829b3) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateElementIgnoreInplaneRotnSpec`; managed verified |
+| [AddControlDependentRelation](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gacfbf4be0e4710af48fbbb2c08bec0cfd) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `AddControlDependentRelation`; managed verified |
+| [CreateElementOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd77251b4fa48baa9491672bf3a3a3ca) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateElementOffsetSpec`; managed verified |
+| [CreateElementLocalZOffsetSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gac1057cd910b775a08d6c2c7df22e2781) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateElementLocalZOffsetSpec`; managed verified |
+| [CreateMemberFireProofingSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga6792430dddf478392843d424059c8730) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `CreateMemberFireProofingSpec`; managed verified |
 | [DeleteMemberReleaseSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gafe30a2d90280de4c4fd6149959730507) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
 | [DeleteAllControlDependentRelations](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gad780df368b309c15dec931245113040c) | `long` | `long` | Unchanged | No target | P10 | Pending |
 | [GetElementOffsetSpecCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5facbddbfb9ea2ad0b48c454a122cf24) | `VARIANT` | `VARIANT` | Unchanged | No target | P2 | Implemented route; live qualification pending |
@@ -147,8 +147,8 @@ The remaining 113 active candidates have no managed native route. Named request/
 | [RemovePropertyFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga551c8845b034009e68a16ec2813c50bc) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
 | [RemoveBeamPropertyHelper](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gadb028ea4f8477119ab50eb4881ebef61) | `BOOL` | `BOOL` | Native private helper: excluded | No target | P0 | Excluded |
 | [DeleteProperty](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga26852ecd49fc5ea7657d2b5198a1c7ba) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
-| [GetPropertyUniqueID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5aa6aa08217095c0a0eb65530dd867e8) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | Pending |
-| [SetPropertyUniqueID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gac7758ac39ea94bba561989b4898e59bb) | `void` | `void` | Unchanged | No target | P7 | Pending |
+| [GetPropertyUniqueID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5aa6aa08217095c0a0eb65530dd867e8) | `VARIANT` | `VARIANT` | Unchanged | No target | P7 | `GetPropertyUniqueID`; managed verified |
+| [SetPropertyUniqueID](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gac7758ac39ea94bba561989b4898e59bb) | `void` | `void` | Unchanged | No target | P7 | `SetPropertyUniqueID`; managed verified |
 | [DeleteMemberSpec](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga1956ce5d3c9487681c3dcca8c2a7f4a4) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
 | [RemoveMemberReleaseSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gaaee16932dc7a02f3d707576fc2d009a0) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
 | [RemoveMemberOffsetSpecFromBeam](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga76d69608bda66b72f7a1c9011b68a46d) | `VARIANT` | `VARIANT` | Unchanged | No target | P10 | Pending |
@@ -402,8 +402,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Section: Create Profile Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_section.html#ga78cec5f9be32c1061963f94ed050d331) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_section.html#ga78cec5f9be32c1061963f94ed050d331) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga78cec5f9be32c1061963f94ed050d331)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P6 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateWideFlangePropertyFromTable(WideFlangeTableDefinition definition)`<br>
+**Plan:** P6 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateWideFlangePropertyFromTable(const VARIANT FAR&nCountry,const VARIANT FAR&SectionName,const VARIANT FAR&nTypeSpec,const VARIANT FAR&varSpecs)
@@ -444,8 +444,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Section: Create Profile Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_section.html#gadce802ef32861d83b01a4226b234939c) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_section.html#gadce802ef32861d83b01a4226b234939c) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gadce802ef32861d83b01a4226b234939c)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P6 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateBeamPropertyFromTableEx(Country country, string sectionName, TableSolidShape shape)`<br>
+**Plan:** P6 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateBeamPropertyFromTableEx(const VARIANT FAR&Country,const VARIANT FAR&SectionName,const VARIANT FAR&TypeSpec)
@@ -715,8 +715,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Section: Create Profile Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_section.html#ga4ef3ab387d4b23c1c8e3d3e2d7b7783d) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_section.html#ga4ef3ab387d4b23c1c8e3d3e2d7b7783d) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga4ef3ab387d4b23c1c8e3d3e2d7b7783d)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P6 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreatePrismaticRectangleProperty(double depthY, double widthZ)`<br>
+**Plan:** P6 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreatePrismaticRectangleProperty(const VARIANT FAR&varfYD,const VARIANT FAR&varfZD)
@@ -755,8 +755,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Section: Create Profile Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_section.html#ga016cb17310c1214ad731ef8603f74fcc) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_section.html#ga016cb17310c1214ad731ef8603f74fcc) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga016cb17310c1214ad731ef8603f74fcc)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P6 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreatePrismaticCircleProperty(double diameter)`<br>
+**Plan:** P6 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreatePrismaticCircleProperty(const VARIANT FAR&varfYD)
@@ -794,8 +794,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Section: Create Profile Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_section.html#ga26721d08a647bddd960d0499b42ac5c9) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_section.html#ga26721d08a647bddd960d0499b42ac5c9) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga26721d08a647bddd960d0499b42ac5c9)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P6 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreatePrismaticTeeProperty(double totalDepth, double flangeWidth, double stemDepth, double stemWidth)`<br>
+**Plan:** P6 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreatePrismaticTeeProperty(const VARIANT FAR&varfYD,const VARIANT FAR&varfZD,const VARIANT FAR&varfYB,const VARIANT FAR&varfZB)
@@ -836,8 +836,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Section: Create Profile Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_section.html#ga0fdc7ad624d8f07839d85b017b518350) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_section.html#ga0fdc7ad624d8f07839d85b017b518350) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga0fdc7ad624d8f07839d85b017b518350)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P6 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreatePrismaticTrapezoidalProperty(double depth, double topWidth, double bottomWidth)`<br>
+**Plan:** P6 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreatePrismaticTrapezoidalProperty(const VARIANT FAR&varfYD,const VARIANT FAR&varfZD,const VARIANT FAR&varfZB)
@@ -877,8 +877,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Section: Create Profile Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_section.html#gae35d506434e6db9abd1edcb540a9d1cb) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_section.html#gae35d506434e6db9abd1edcb540a9d1cb) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#gae35d506434e6db9abd1edcb540a9d1cb)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P6 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreatePrismaticGeneralProperty(GeneralPrismaticSectionDefinition definition)`<br>
+**Plan:** P6 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreatePrismaticGeneralProperty(const VARIANT FAR&varfaProperties)
@@ -959,8 +959,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Section: Create Profile Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_section.html#ga558bd4cf571d37c5f3520b2e7e56b9e5) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_section.html#ga558bd4cf571d37c5f3520b2e7e56b9e5) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_section.html#ga558bd4cf571d37c5f3520b2e7e56b9e5)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P6 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateTaperedTubeProperty(TaperedTubeShape shape, double startDepth, double endDepth, double thickness)`<br>
+**Plan:** P6 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateTaperedTubeProperty(const VARIANT FAR&varnTubeType,const VARIANT FAR&varfd1,const VARIANT FAR&varfd2,const VARIANT FAR&varfTh)
@@ -3659,8 +3659,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#gae408d55746db59e4c22c2e505bb403a2) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#gae408d55746db59e4c22c2e505bb403a2) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gae408d55746db59e4c22c2e505bb403a2)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateMemberPartialReleaseSpec(MemberEnd memberEnd, DegreeOfFreedomSelection releasedDofs, PartialReleaseFactors factors)`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateMemberPartialReleaseSpec(const VARIANT FAR&varLocation,const VARIANT FAR&varDOFRelease,const VARIANT FAR&varFactor)
@@ -3702,8 +3702,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#ga19c64f2a9dc77cab9176f382524d17ca) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#ga19c64f2a9dc77cab9176f382524d17ca) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga19c64f2a9dc77cab9176f382524d17ca)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateMemberTrussSpec()`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateMemberTrussSpec()
@@ -3738,8 +3738,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#gabdcfbecf01cd5889eb04da0aa8102a41) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#gabdcfbecf01cd5889eb04da0aa8102a41) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gabdcfbecf01cd5889eb04da0aa8102a41)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateMemberInactiveSpec()`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateMemberInactiveSpec()
@@ -3774,8 +3774,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#ga8db5109360921dde0350b2cdd4fe611a) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#ga8db5109360921dde0350b2cdd4fe611a) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga8db5109360921dde0350b2cdd4fe611a)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateMemberTensionSpec()`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateMemberTensionSpec()
@@ -3810,8 +3810,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#gafd9eeea22012202b700e42de2dae4dc0) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#gafd9eeea22012202b700e42de2dae4dc0) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd9eeea22012202b700e42de2dae4dc0)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateMemberCompressionSpec()`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateMemberCompressionSpec()
@@ -3846,8 +3846,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#gad30bdd6dd57392faa1cf132df4819164) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#gad30bdd6dd57392faa1cf132df4819164) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gad30bdd6dd57392faa1cf132df4819164)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateMemberIgnoreStiffSpec()`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateMemberIgnoreStiffSpec()
@@ -3882,8 +3882,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#ga354fa1642399ba13018d1a610149589c) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#ga354fa1642399ba13018d1a610149589c) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga354fa1642399ba13018d1a610149589c)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateMemberCableSpec(CableDefinitionKind definitionKind, double value)`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateMemberCableSpec(const VARIANT FAR&varnTension,const VARIANT FAR&varfValue)
@@ -3922,8 +3922,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#ga1fe56e4b2b563db42107d0f2b68b8fb4) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#ga1fe56e4b2b563db42107d0f2b68b8fb4) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga1fe56e4b2b563db42107d0f2b68b8fb4)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateMemberCableSpecEx(CableDefinitionKind definitionKind, double value, CableTensionEnd tensionEnd, double selfWeightFactorX, double selfWeightFactorY, double selfWeightFactorZ)`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateMemberCableSpecEx(const VARIANT FAR&varbTension,const VARIANT FAR&varfValue,const VARIANT FAR&varnAppliedEnd,const VARIANT FAR&varfFwX,const VARIANT FAR&varfFwY,const VARIANT FAR&varfFwZ)
@@ -4016,8 +4016,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#gafd355c2d78879ae36eb5cabf7c0d99eb) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#gafd355c2d78879ae36eb5cabf7c0d99eb) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd355c2d78879ae36eb5cabf7c0d99eb)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateElementNodeReleaseSpec(int nodeId, DegreeOfFreedomSelection releasedDofs)`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateElementNodeReleaseSpec(const VARIANT FAR&varNode,const VARIANT FAR&varDOFRelease)
@@ -4058,8 +4058,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#gaec273848a190a0e1c308a4c770b45f1f) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#gaec273848a190a0e1c308a4c770b45f1f) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gaec273848a190a0e1c308a4c770b45f1f)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateElementPlaneStressSpec()`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateElementPlaneStressSpec()
@@ -4094,8 +4094,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#gade9e2bced8795b0cd4dab888244829b3) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#gade9e2bced8795b0cd4dab888244829b3) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gade9e2bced8795b0cd4dab888244829b3)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateElementIgnoreInplaneRotnSpec()`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateElementIgnoreInplaneRotnSpec()
@@ -4130,8 +4130,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#gacfbf4be0e4710af48fbbb2c08bec0cfd) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#gacfbf4be0e4710af48fbbb2c08bec0cfd) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gacfbf4be0e4710af48fbbb2c08bec0cfd)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult AddControlDependentRelation(int controlNodeId, ControlDependencyMode mode, DegreeOfFreedomSelection rigidDofs, IEnumerable<int> dependentNodeIds)`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::AddControlDependentRelation(const VARIANT FAR&varControlNode,const VARIANT FAR&varRegid_XY_YZ_ZX,const VARIANT FAR&varFX,const VARIANT FAR&varFY,const VARIANT FAR&varFZ,const VARIANT FAR&varMX,const VARIANT FAR&varMY,const VARIANT FAR&varMZ,const VARIANT FAR&varDependentNodeArray)
@@ -4178,8 +4178,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#gafd77251b4fa48baa9491672bf3a3a3ca) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#gafd77251b4fa48baa9491672bf3a3a3ca) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gafd77251b4fa48baa9491672bf3a3a3ca)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateElementOffsetSpec(ElementNodeOffsetAxis coordinateSystem, int plateNodeIndex, double offsetX, double offsetY, double offsetZ)`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateElementOffsetSpec(const VARIANT FAR&varnDirection,const VARIANT FAR&varnPlateNodeIndex,const VARIANT FAR&varfOffsetX,const VARIANT FAR&varfOffsetY,const VARIANT FAR&varfOffsetZ)
@@ -4222,8 +4222,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#gac1057cd910b775a08d6c2c7df22e2781) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#gac1057cd910b775a08d6c2c7df22e2781) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#gac1057cd910b775a08d6c2c7df22e2781)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateElementLocalZOffsetSpec(double node1Offset, double node2Offset, double node3Offset, double node4Offset)`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateElementLocalZOffsetSpec(const VARIANT FAR&varfZOffsetNode1,const VARIANT FAR&varfZOffsetNode2,const VARIANT FAR&varfZOffsetNode3,const VARIANT FAR&varfZOffsetNode4)
@@ -4274,8 +4274,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Create Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_spec.html#ga6792430dddf478392843d424059c8730) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_spec.html#ga6792430dddf478392843d424059c8730) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_spec.html#ga6792430dddf478392843d424059c8730)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult CreateMemberFireProofingSpec(FireProofingType fireProofingType, double thickness, double density)`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::CreateMemberFireProofingSpec(const VARIANT FAR&varnFireProofType,const VARIANT FAR&varfThickness,const VARIANT FAR&varfDensity)
@@ -4618,8 +4618,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Get and Remove Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#ga5aa6aa08217095c0a0eb65530dd867e8) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#ga5aa6aa08217095c0a0eb65530dd867e8) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#ga5aa6aa08217095c0a0eb65530dd867e8)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyQueryResult<PropertyUniqueIdentifier> GetPropertyUniqueID(int propertyId)`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 VARIANT OSPropertyUI::GetPropertyUniqueID(const VARIANT FAR&nPropNo)
@@ -4652,8 +4652,8 @@ The result payload must carry the qualified native output fields above (or direc
 **Section:** Specification: Get and Remove Specification Property<br>
 **Help availability:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_spec.html#gac7758ac39ea94bba561989b4898e59bb) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_spec.html#gac7758ac39ea94bba561989b4898e59bb) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_spec.html#gac7758ac39ea94bba561989b4898e59bb)<br>
 **Classification:** Unchanged<br>
-**Current typed coverage:** None.<br>
-**Plan:** P7 — Pending; contract verification before implementation
+**Current typed coverage:** `PropertyMutationResult SetPropertyUniqueID(int propertyId, string uniqueId)`<br>
+**Plan:** P7 - Implemented route; live native/engineering qualification pending.
 
 ```cpp
 void OSPropertyUI::SetPropertyUniqueID(const VARIANT FAR&nPropNo,const VARIANT FAR&szID)
@@ -9644,3 +9644,7 @@ On 24 October 2026, 19 remaining active/nonconflicting main-interface methods an
 ## 14. P3/P4/P5 completion checkpoint
 
 On 24 October 2026, the next 25 native routes brought Property to 150 managed overloads and 91/204 native routes, leaving 113 pending. P3, P4 and P5 now have complete route coverage. The next allocation begins with eight P6 section creators. Detailed current status is at the start of this report and in [the material/member-section guide](../Property-Materials-and-Member-Sections.md). Native contracts and historical source fingerprints remain unchanged.
+
+## 15. Section and specification creation checkpoint
+
+On 24 October 2026, eight P6 and seventeen P7 routes brought Property to 175 overloads and 116/204 native routes, with 88 pending. Status-only creation, positive IDs, zero-based fireproofing indices and void setters retain separate evidence. P6 is complete; the next allocation begins at GetInactiveMemberCount. See [the creation guide](../Property-Section-and-Specification-Creation.md) for exact contracts and qualification limits.

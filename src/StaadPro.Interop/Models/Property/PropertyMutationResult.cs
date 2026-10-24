@@ -11,14 +11,18 @@ namespace StaadPro.Interop.Models.Property
     {
         internal PropertyMutationResult(string operation, PropertyMutationStatus status, object response,
             PropertyMutationTargetKind targetKind, int[] targetIds = null, string materialName = null,
-            int? specificationId = null, AssignedSectionProfile? profileType = null, int? createdPropertyId = null)
+            int? specificationId = null, AssignedSectionProfile? profileType = null, int? createdPropertyId = null,
+            int? createdSpecificationId = null, int? createdSpecificationIndex = null, int? controlNodeId = null,
+            int? propertyId = null, string uniqueId = null, int? plateNodeIndex = null)
         {
             NativeFunction = operation; Status = status; TargetKind = targetKind;
             TargetIds = Array.AsReadOnly(targetIds == null ? new int[0] : (int[])targetIds.Clone());
             MaterialName = materialName; SpecificationId = specificationId; ProfileType = profileType;
             CreatedPropertyId = createdPropertyId;
+            CreatedSpecificationId = createdSpecificationId; CreatedSpecificationIndex = createdSpecificationIndex;
+            ControlNodeId = controlNodeId; PropertyId = propertyId; UniqueId = uniqueId; PlateNodeIndex = plateNodeIndex;
             if (response is bool flag) NativeBooleanReturn = flag;
-            else NativeReturnCode = Services.Property.PropertyValueReader.Integer(response, operation);
+            else if (response != null) NativeReturnCode = Services.Property.PropertyValueReader.Integer(response, operation);
         }
         /// <summary>Gets the native function that acknowledged or rejected the requested mutation.</summary>
         public string NativeFunction { get; }
@@ -26,13 +30,13 @@ namespace StaadPro.Interop.Models.Property
         public PropertyMutationStatus Status { get; }
         /// <summary>Gets whether STAAD acknowledged success, creation or update.</summary>
         public bool IsSuccessful => Status == PropertyMutationStatus.Succeeded || Status == PropertyMutationStatus.Created || Status == PropertyMutationStatus.Updated;
-        /// <summary>Gets the actual integral native return, or null for an actual Boolean return.</summary>
+        /// <summary>Gets the actual integral native return, or null for Boolean and void returns; void invocation never fabricates a zero.</summary>
         public int? NativeReturnCode { get; }
-        /// <summary>Gets the actual Boolean native return, or null for an integral return.</summary>
+        /// <summary>Gets the actual Boolean native return, or null for integral and void returns.</summary>
         public bool? NativeBooleanReturn { get; }
         /// <summary>Gets the scope of the requested operation, independent of its success.</summary>
         public PropertyMutationTargetKind TargetKind { get; }
-        /// <summary>Gets an owned read-only sequence of requested member, plate or solid IDs in input order, including duplicates; empty for model/material/definition operations.</summary>
+        /// <summary>Gets owned requested member, plate, solid or dependent-node IDs in input order, including duplicates; empty for model/material/definition operations.</summary>
         public IReadOnlyList<int> TargetIds { get; }
         /// <summary>Gets the exact requested material name for material operations and solid material assignment; otherwise null.</summary>
         public string MaterialName { get; }
@@ -40,7 +44,19 @@ namespace StaadPro.Interop.Models.Property
         public int? SpecificationId { get; }
         /// <summary>Gets the requested ASSIGN profile selector for profile creation; otherwise null.</summary>
         public AssignedSectionProfile? ProfileType { get; }
-        /// <summary>Gets the positive created section reference only for successful assigned-profile creation; otherwise null. Material status zero/one is never exposed as an ID.</summary>
+        /// <summary>Gets the positive created section reference for successful section creation; otherwise null. Material status zero/one is never exposed as an ID.</summary>
         public int? CreatedPropertyId { get; }
+        /// <summary>Gets a positive created specification ID only for native functions whose reviewed contract returns an ID; status-only operations and fireproofing indices leave this null.</summary>
+        public int? CreatedSpecificationId { get; }
+        /// <summary>Gets the native zero-based fireproofing creation index, including zero, only on successful fireproofing creation. This is not a specification ID and must not be incremented or assigned by analogy.</summary>
+        public int? CreatedSpecificationIndex { get; }
+        /// <summary>Gets the positive requested control-node ID for a control/dependent relation; otherwise null. TargetIds then contains dependent nodes only.</summary>
+        public int? ControlNodeId { get; }
+        /// <summary>Gets the positive requested native property reference for unique-ID metadata writes; otherwise null. It is not a member number or created identity.</summary>
+        public int? PropertyId { get; }
+        /// <summary>Gets the exact requested unique-ID text for metadata writes; otherwise null. No GUID syntax, uniqueness or persistence is implied.</summary>
+        public string UniqueId { get; }
+        /// <summary>Gets the requested plate corner index 1..4 for local/global offset creation; otherwise null. This is not an analytical node ID.</summary>
+        public int? PlateNodeIndex { get; }
     }
 }

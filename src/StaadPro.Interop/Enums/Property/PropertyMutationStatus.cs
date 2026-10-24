@@ -12,7 +12,9 @@ namespace StaadPro.Interop.Enums.Property
         /// <summary>The operation returned its documented failure code or false flag; partial changes may remain.</summary>
         NativeFailure,
         /// <summary>The native operation rejected the profile selector or array representation.</summary>
-        InvalidInput
+        InvalidInput,
+        /// <summary>A void native setter returned without a transport error; it supplied no success acknowledgement or read-back.</summary>
+        InvokedWithoutAcknowledgement
     }
 
     /// <summary>Identifies the scope of a requested Property mutation.</summary>
@@ -28,8 +30,14 @@ namespace StaadPro.Interop.Enums.Property
         Plate,
         /// <summary>The operation affects the listed analytical solids.</summary>
         Solid,
-        /// <summary>The operation creates an assigned-profile section definition.</summary>
-        SectionDefinition
+        /// <summary>The operation creates a section definition.</summary>
+        SectionDefinition,
+        /// <summary>The operation creates a member/element specification definition, independently of analytical entity IDs.</summary>
+        SpecificationDefinition,
+        /// <summary>The operation affects the listed dependent analytical nodes and a separately identified control node.</summary>
+        Node,
+        /// <summary>The operation writes metadata for a separately identified native property reference.</summary>
+        PropertyDefinition
     }
 
     /// <summary>Identifies the five native ASSIGN profile selectors; these are not section property reference IDs.</summary>

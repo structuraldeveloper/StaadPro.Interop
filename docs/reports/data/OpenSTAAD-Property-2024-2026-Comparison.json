@@ -29,8 +29,8 @@
     "unchangedCommonContracts": 188,
     "changedCommonExamples": 75,
     "changes2025To2026": 0,
-    "currentPropertyMethods": 150,
-    "currentPropertyNativeDispatches": 91,
+    "currentPropertyMethods": 175,
+    "currentPropertyNativeDispatches": 116,
     "referenceInterfaceOverloads": 103,
     "referencePublicAdapterMethods": 107,
     "referenceAdapterOnlyMethods": 4,
@@ -48,7 +48,7 @@
     "excludedClassOnlyHelperNames": 22,
     "groupClassAndMetadataCandidateUnion": 227,
     "referenceActiveCandidatesWithoutTarget": 129,
-    "remainingActiveCandidateNames": 113
+    "remainingActiveCandidateNames": 88
   },
   "manualEvidence": {
     "2024": {
@@ -19313,12 +19313,12 @@
       "name": "CreateWideFlangePropertyFromTable",
       "category": "Section: Create Profile Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P6",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateWideFlangePropertyFromTable",
         "proposedRequest": "SectionDefinitionRequest",
         "proposedResult": "SectionCreationResult",
@@ -19612,18 +19612,25 @@
           "exampleCount": 3
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateWideFlangePropertyFromTable(WideFlangeTableDefinition definition)",
+        "nativeFunction": "CreateWideFlangePropertyFromTable",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateBeamPropertyFromTableEx",
       "category": "Section: Create Profile Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P6",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateBeamPropertyFromTableEx",
         "proposedRequest": "SectionDefinitionRequest",
         "proposedResult": "SectionCreationResult",
@@ -19884,7 +19891,14 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateBeamPropertyFromTableEx(Country country, string sectionName, TableSolidShape shape)",
+        "nativeFunction": "CreateBeamPropertyFromTableEx",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateTeePropertyFromTable",
@@ -22842,7 +22856,7 @@
       "name": "CreatePrismaticRectangleProperty",
       "category": "Section: Create Profile Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [
         {
@@ -22860,7 +22874,7 @@
       ],
       "plan": {
         "phase": "P6",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreatePrismaticRectangleProperty",
         "proposedRequest": "SectionDefinitionRequest",
         "proposedResult": "SectionCreationResult",
@@ -23025,13 +23039,20 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreatePrismaticRectangleProperty(double depthY, double widthZ)",
+        "nativeFunction": "CreatePrismaticRectangleProperty",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreatePrismaticCircleProperty",
       "category": "Section: Create Profile Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [
         {
@@ -23048,7 +23069,7 @@
       ],
       "plan": {
         "phase": "P6",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreatePrismaticCircleProperty",
         "proposedRequest": "SectionDefinitionRequest",
         "proposedResult": "SectionCreationResult",
@@ -23180,13 +23201,20 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreatePrismaticCircleProperty(double diameter)",
+        "nativeFunction": "CreatePrismaticCircleProperty",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreatePrismaticTeeProperty",
       "category": "Section: Create Profile Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [
         {
@@ -23206,7 +23234,7 @@
       ],
       "plan": {
         "phase": "P6",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreatePrismaticTeeProperty",
         "proposedRequest": "SectionDefinitionRequest",
         "proposedResult": "SectionCreationResult",
@@ -23437,13 +23465,20 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreatePrismaticTeeProperty(double totalDepth, double flangeWidth, double stemDepth, double stemWidth)",
+        "nativeFunction": "CreatePrismaticTeeProperty",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreatePrismaticTrapezoidalProperty",
       "category": "Section: Create Profile Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [
         {
@@ -23462,7 +23497,7 @@
       ],
       "plan": {
         "phase": "P6",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreatePrismaticTrapezoidalProperty",
         "proposedRequest": "SectionDefinitionRequest",
         "proposedResult": "SectionCreationResult",
@@ -23660,13 +23695,20 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreatePrismaticTrapezoidalProperty(double depth, double topWidth, double bottomWidth)",
+        "nativeFunction": "CreatePrismaticTrapezoidalProperty",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreatePrismaticGeneralProperty",
       "category": "Section: Create Profile Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [
         {
@@ -23683,7 +23725,7 @@
       ],
       "plan": {
         "phase": "P6",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreatePrismaticGeneralProperty",
         "proposedRequest": "SectionDefinitionRequest",
         "proposedResult": "SectionCreationResult",
@@ -23992,7 +24034,14 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreatePrismaticGeneralProperty(GeneralPrismaticSectionDefinition definition)",
+        "nativeFunction": "CreatePrismaticGeneralProperty",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateTaperedIProperty",
@@ -24285,7 +24334,7 @@
       "name": "CreateTaperedTubeProperty",
       "category": "Section: Create Profile Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [
         {
@@ -24305,7 +24354,7 @@
       ],
       "plan": {
         "phase": "P6",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateTaperedTubeProperty",
         "proposedRequest": "SectionDefinitionRequest",
         "proposedResult": "SectionCreationResult",
@@ -24611,7 +24660,14 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateTaperedTubeProperty(TaperedTubeShape shape, double startDepth, double endDepth, double thickness)",
+        "nativeFunction": "CreateTaperedTubeProperty",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreatePlateThicknessProperty",
@@ -42273,12 +42329,12 @@
       "name": "CreateMemberPartialReleaseSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateMemberPartialReleaseSpec",
         "proposedRequest": "MemberReleaseRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -42500,18 +42556,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateMemberPartialReleaseSpec(MemberEnd memberEnd, DegreeOfFreedomSelection releasedDofs, PartialReleaseFactors factors)",
+        "nativeFunction": "CreateMemberPartialReleaseSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateMemberTrussSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateMemberTrussSpec",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -42604,18 +42667,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateMemberTrussSpec()",
+        "nativeFunction": "CreateMemberTrussSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateMemberInactiveSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateMemberInactiveSpec",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -42708,18 +42778,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateMemberInactiveSpec()",
+        "nativeFunction": "CreateMemberInactiveSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateMemberTensionSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateMemberTensionSpec",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -42812,18 +42889,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateMemberTensionSpec()",
+        "nativeFunction": "CreateMemberTensionSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateMemberCompressionSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateMemberCompressionSpec",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -42916,18 +43000,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateMemberCompressionSpec()",
+        "nativeFunction": "CreateMemberCompressionSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateMemberIgnoreStiffSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateMemberIgnoreStiffSpec",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -43020,18 +43111,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateMemberIgnoreStiffSpec()",
+        "nativeFunction": "CreateMemberIgnoreStiffSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateMemberCableSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateMemberCableSpec",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -43196,18 +43294,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateMemberCableSpec(CableDefinitionKind definitionKind, double value)",
+        "nativeFunction": "CreateMemberCableSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateMemberCableSpecEx",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateMemberCableSpecEx",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -43504,7 +43609,14 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateMemberCableSpecEx(CableDefinitionKind definitionKind, double value, CableTensionEnd tensionEnd, double selfWeightFactorX, double selfWeightFactorY, double selfWeightFactorZ)",
+        "nativeFunction": "CreateMemberCableSpecEx",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateMemberOffsetSpec",
@@ -43896,12 +44008,12 @@
       "name": "CreateElementNodeReleaseSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateElementNodeReleaseSpec",
         "proposedRequest": "MemberReleaseRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -44090,18 +44202,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateElementNodeReleaseSpec(int nodeId, DegreeOfFreedomSelection releasedDofs)",
+        "nativeFunction": "CreateElementNodeReleaseSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateElementPlaneStressSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateElementPlaneStressSpec",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -44194,18 +44313,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateElementPlaneStressSpec()",
+        "nativeFunction": "CreateElementPlaneStressSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateElementIgnoreInplaneRotnSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateElementIgnoreInplaneRotnSpec",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -44298,18 +44424,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateElementIgnoreInplaneRotnSpec()",
+        "nativeFunction": "CreateElementIgnoreInplaneRotnSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "AddControlDependentRelation",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "AddControlDependentRelation",
         "proposedRequest": "ControlDependentRequest",
         "proposedResult": "ControlDependentMutationResult",
@@ -44717,18 +44850,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult AddControlDependentRelation(int controlNodeId, ControlDependencyMode mode, DegreeOfFreedomSelection rigidDofs, IEnumerable<int> dependentNodeIds)",
+        "nativeFunction": "AddControlDependentRelation",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateElementOffsetSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateElementOffsetSpec",
         "proposedRequest": "OffsetSpecificationRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -45004,18 +45144,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateElementOffsetSpec(ElementNodeOffsetAxis coordinateSystem, int plateNodeIndex, double offsetX, double offsetY, double offsetZ)",
+        "nativeFunction": "CreateElementOffsetSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateElementLocalZOffsetSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateElementLocalZOffsetSpec",
         "proposedRequest": "OffsetSpecificationRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -45258,18 +45405,25 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateElementLocalZOffsetSpec(double node1Offset, double node2Offset, double node3Offset, double node4Offset)",
+        "nativeFunction": "CreateElementLocalZOffsetSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "CreateMemberFireProofingSpec",
       "category": "Specification: Create Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "CreateMemberFireProofingSpec",
         "proposedRequest": "FireProofingRequest",
         "proposedResult": "SpecificationCreationResult",
@@ -45455,7 +45609,14 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult CreateMemberFireProofingSpec(FireProofingType fireProofingType, double thickness, double density)",
+        "nativeFunction": "CreateMemberFireProofingSpec",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "DeleteMemberReleaseSpec",
@@ -46630,12 +46791,12 @@
       "name": "GetPropertyUniqueID",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetPropertyUniqueID",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "SpecificationQueryResult",
@@ -46740,18 +46901,25 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyQueryResult<PropertyUniqueIdentifier> GetPropertyUniqueID(int propertyId)",
+        "nativeFunction": "GetPropertyUniqueID",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": false
+      }
     },
     {
       "name": "SetPropertyUniqueID",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P7",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "SetPropertyUniqueID",
         "proposedRequest": "MemberSpecificationRequest",
         "proposedResult": "PropertyContextChangeResult",
@@ -46889,7 +47057,14 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "currentRepositoryMapping": {
+        "managedSignature": "PropertyMutationResult SetPropertyUniqueID(int propertyId, string uniqueId)",
+        "nativeFunction": "SetPropertyUniqueID",
+        "reader": "PropertyCreationReader",
+        "qualification": "Managed fixture verified; live COM/engineering qualification pending",
+        "mutation": true
+      }
     },
     {
       "name": "DeleteMemberSpec",
@@ -73843,180 +74018,181 @@
   ],
   "implementationUpdate": {
     "date": "2026-10-24",
-    "parentCommit": "d9acce3b4b7aaacacab2461b8fc68cf29a196b77",
-    "interfaceMethods": 150,
-    "adapterMethods": 150,
-    "nativeRoutes": 91,
-    "activeCandidatesRemaining": 113,
+    "parentCommit": "bc7d737029ceb629e140ba4b67dcc03a40e216ed",
+    "interfaceMethods": 175,
+    "adapterMethods": 175,
+    "nativeRoutes": 116,
+    "activeCandidatesRemaining": 88,
     "workstreams": {
-      "P6": 10,
+      "P6": 18,
       "P5": 17,
       "P2": 13,
       "P4": 24,
       "P9": 1,
-      "P7": 3,
+      "P7": 20,
       "P3": 23
     },
     "contracts": [
       {
-        "native": "GetOrthotropic3DMaterialCount",
-        "managedSignature": "PropertyQueryResult<int> GetOrthotropic3DMaterialCount()",
-        "phase": "P3",
-        "mutation": false
-      },
-      {
-        "native": "GetOrthotropic3DMaterialProperties",
-        "managedSignature": "PropertyQueryResult<Orthotropic3DMaterialProperties> GetOrthotropic3DMaterialProperties(int nativeMaterialNumber)",
-        "phase": "P3",
-        "mutation": false
-      },
-      {
-        "native": "RemoveMaterialFromBeam",
-        "managedSignature": "PropertyMutationResult RemoveMaterialFromBeam(int memberId)",
-        "phase": "P3",
+        "native": "CreateWideFlangePropertyFromTable",
+        "managedSignature": "PropertyMutationResult CreateWideFlangePropertyFromTable(WideFlangeTableDefinition definition)",
+        "phase": "P6",
         "mutation": true
       },
       {
-        "native": "GetSolidMaterialName",
-        "managedSignature": "PropertyQueryResult<string> GetSolidMaterialName(int solidId)",
-        "phase": "P3",
-        "mutation": false
-      },
-      {
-        "native": "GetIsotropicMaterialAssignedSolidCount",
-        "managedSignature": "PropertyQueryResult<int> GetIsotropicMaterialAssignedSolidCount(string materialName)",
-        "phase": "P3",
-        "mutation": false
-      },
-      {
-        "native": "GetIsotropicMaterialAssignedSolidList",
-        "managedSignature": "PropertyQueryResult<IReadOnlyList<int>> GetIsotropicMaterialAssignedSolidIds(string materialName, int maximumResults = 100000)",
-        "phase": "P3",
-        "mutation": false
-      },
-      {
-        "native": "SetTypeToIsotropicMaterial",
-        "managedSignature": "PropertyMutationResult SetTypeToIsotropicMaterial(string materialName, IsotropicMaterialType materialType)",
-        "phase": "P3",
+        "native": "CreateBeamPropertyFromTableEx",
+        "managedSignature": "PropertyMutationResult CreateBeamPropertyFromTableEx(Country country, string sectionName, TableSolidShape shape)",
+        "phase": "P6",
         "mutation": true
       },
       {
-        "native": "GetTypeForIsotropicMaterial",
-        "managedSignature": "PropertyQueryResult<IsotropicMaterialType> GetTypeForIsotropicMaterial(string materialName)",
-        "phase": "P3",
-        "mutation": false
-      },
-      {
-        "native": "GetSectionPropertyValues",
-        "managedSignature": "PropertyQueryResult<BeamSectionProperties> GetSectionPropertiesForProfile(AssignedSectionProfile profileType)",
-        "phase": "P4",
-        "mutation": false
-      },
-      {
-        "native": "GetBeamSectionPropertyRefNo",
-        "managedSignature": "PropertyQueryResult<int> GetBeamSectionPropertyRefNo(int memberId)",
-        "phase": "P4",
-        "mutation": false
-      },
-      {
-        "native": "GetBeamSectionPropertyValuesEx",
-        "managedSignature": "PropertyQueryResult<MemberSectionValues> GetBeamSectionPropertyValuesEx(int memberId)",
-        "phase": "P4",
-        "mutation": false
-      },
-      {
-        "native": "GetSectionTableNo",
-        "managedSignature": "PropertyQueryResult<int> GetSectionTableNo(int memberId)",
-        "phase": "P4",
-        "mutation": false
-      },
-      {
-        "native": "GetBeamSectionPropertyTypeNo",
-        "managedSignature": "PropertyQueryResult<int> GetBeamSectionPropertyTypeNo(int memberId)",
-        "phase": "P4",
-        "mutation": false
-      },
-      {
-        "native": "GetBeamSectionName",
-        "managedSignature": "PropertyQueryResult<string> GetBeamSectionName(int memberId)",
-        "phase": "P4",
-        "mutation": false
-      },
-      {
-        "native": "GetBeamSectionDisplayName",
-        "managedSignature": "PropertyQueryResult<string> GetBeamSectionDisplayName(int memberId)",
-        "phase": "P4",
-        "mutation": false
-      },
-      {
-        "native": "GetCountryTableNo",
-        "managedSignature": "PropertyQueryResult<int> GetCountryTableNo(int memberId)",
-        "phase": "P4",
-        "mutation": false
-      },
-      {
-        "native": "CreateAssignProfileProperty",
-        "managedSignature": "PropertyMutationResult CreateAssignProfileProperty(AssignedSectionProfile profileType)",
-        "phase": "P5",
+        "native": "CreatePrismaticRectangleProperty",
+        "managedSignature": "PropertyMutationResult CreatePrismaticRectangleProperty(double depthY, double widthZ)",
+        "phase": "P6",
         "mutation": true
       },
       {
-        "native": "AssignElementSpecToPlate",
-        "managedSignature": "PropertyMutationResult AssignElementSpecToPlate(IEnumerable<int> plateIds, int specificationId)",
-        "phase": "P5",
+        "native": "CreatePrismaticCircleProperty",
+        "managedSignature": "PropertyMutationResult CreatePrismaticCircleProperty(double diameter)",
+        "phase": "P6",
         "mutation": true
       },
       {
-        "native": "UpdatePropertiesToDesignSection",
-        "managedSignature": "PropertyMutationResult UpdatePropertiesToDesignSection()",
-        "phase": "P5",
+        "native": "CreatePrismaticTeeProperty",
+        "managedSignature": "PropertyMutationResult CreatePrismaticTeeProperty(double totalDepth, double flangeWidth, double stemDepth, double stemWidth)",
+        "phase": "P6",
         "mutation": true
       },
       {
-        "native": "CreateIsotropicMaterialPropertiesEx",
-        "managedSignature": "PropertyMutationResult CreateIsotropicMaterialPropertiesEx(IsotropicMaterialDefinition material, IsotropicMaterialStrengths strengths)",
-        "phase": "P5",
+        "native": "CreatePrismaticTrapezoidalProperty",
+        "managedSignature": "PropertyMutationResult CreatePrismaticTrapezoidalProperty(double depth, double topWidth, double bottomWidth)",
+        "phase": "P6",
         "mutation": true
       },
       {
-        "native": "CreateIsotropicMaterialSteel",
-        "managedSignature": "PropertyMutationResult CreateIsotropicMaterialSteel(IsotropicMaterialDefinition material, SteelMaterialStrengths strengths, bool isPhysical)",
-        "phase": "P5",
+        "native": "CreatePrismaticGeneralProperty",
+        "managedSignature": "PropertyMutationResult CreatePrismaticGeneralProperty(GeneralPrismaticSectionDefinition definition)",
+        "phase": "P6",
         "mutation": true
       },
       {
-        "native": "CreateIsotropicMaterialConcrete",
-        "managedSignature": "PropertyMutationResult CreateIsotropicMaterialConcrete(IsotropicMaterialDefinition material, double compressiveStrength, bool isPhysical)",
-        "phase": "P5",
+        "native": "CreateTaperedTubeProperty",
+        "managedSignature": "PropertyMutationResult CreateTaperedTubeProperty(TaperedTubeShape shape, double startDepth, double endDepth, double thickness)",
+        "phase": "P6",
         "mutation": true
       },
       {
-        "native": "CreateIsotropicMaterialAluminum",
-        "managedSignature": "PropertyMutationResult CreateIsotropicMaterialAluminum(IsotropicMaterialDefinition material, bool isPhysical)",
-        "phase": "P5",
+        "native": "CreateMemberPartialReleaseSpec",
+        "managedSignature": "PropertyMutationResult CreateMemberPartialReleaseSpec(MemberEnd memberEnd, DegreeOfFreedomSelection releasedDofs, PartialReleaseFactors factors)",
+        "phase": "P7",
         "mutation": true
       },
       {
-        "native": "CreateIsotropicMaterialTimber",
-        "managedSignature": "PropertyMutationResult CreateIsotropicMaterialTimber(IsotropicMaterialDefinition material, bool isPhysical)",
-        "phase": "P5",
+        "native": "CreateMemberTrussSpec",
+        "managedSignature": "PropertyMutationResult CreateMemberTrussSpec()",
+        "phase": "P7",
         "mutation": true
       },
       {
-        "native": "AssignMaterialToSolid",
-        "managedSignature": "PropertyMutationResult AssignMaterialToSolid(string materialName, IEnumerable<int> solidIds)",
-        "phase": "P5",
+        "native": "CreateMemberInactiveSpec",
+        "managedSignature": "PropertyMutationResult CreateMemberInactiveSpec()",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateMemberTensionSpec",
+        "managedSignature": "PropertyMutationResult CreateMemberTensionSpec()",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateMemberCompressionSpec",
+        "managedSignature": "PropertyMutationResult CreateMemberCompressionSpec()",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateMemberIgnoreStiffSpec",
+        "managedSignature": "PropertyMutationResult CreateMemberIgnoreStiffSpec()",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateMemberCableSpec",
+        "managedSignature": "PropertyMutationResult CreateMemberCableSpec(CableDefinitionKind definitionKind, double value)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateMemberCableSpecEx",
+        "managedSignature": "PropertyMutationResult CreateMemberCableSpecEx(CableDefinitionKind definitionKind, double value, CableTensionEnd tensionEnd, double selfWeightFactorX, double selfWeightFactorY, double selfWeightFactorZ)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateElementNodeReleaseSpec",
+        "managedSignature": "PropertyMutationResult CreateElementNodeReleaseSpec(int nodeId, DegreeOfFreedomSelection releasedDofs)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateElementPlaneStressSpec",
+        "managedSignature": "PropertyMutationResult CreateElementPlaneStressSpec()",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateElementIgnoreInplaneRotnSpec",
+        "managedSignature": "PropertyMutationResult CreateElementIgnoreInplaneRotnSpec()",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "AddControlDependentRelation",
+        "managedSignature": "PropertyMutationResult AddControlDependentRelation(int controlNodeId, ControlDependencyMode mode, DegreeOfFreedomSelection rigidDofs, IEnumerable<int> dependentNodeIds)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateElementOffsetSpec",
+        "managedSignature": "PropertyMutationResult CreateElementOffsetSpec(ElementNodeOffsetAxis coordinateSystem, int plateNodeIndex, double offsetX, double offsetY, double offsetZ)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateElementLocalZOffsetSpec",
+        "managedSignature": "PropertyMutationResult CreateElementLocalZOffsetSpec(double node1Offset, double node2Offset, double node3Offset, double node4Offset)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "CreateMemberFireProofingSpec",
+        "managedSignature": "PropertyMutationResult CreateMemberFireProofingSpec(FireProofingType fireProofingType, double thickness, double density)",
+        "phase": "P7",
+        "mutation": true
+      },
+      {
+        "native": "GetPropertyUniqueID",
+        "managedSignature": "PropertyQueryResult<PropertyUniqueIdentifier> GetPropertyUniqueID(int propertyId)",
+        "phase": "P7",
+        "mutation": false
+      },
+      {
+        "native": "SetPropertyUniqueID",
+        "managedSignature": "PropertyMutationResult SetPropertyUniqueID(int propertyId, string uniqueId)",
+        "phase": "P7",
         "mutation": true
       }
     ],
-    "offlineTests": 4346,
-    "newCases": 190,
-    "selectedXmlExamples": 742,
-    "propertyXmlExamples": 300,
+    "offlineTests": 4551,
+    "newCases": 205,
+    "selectedXmlExamples": 792,
+    "propertyXmlExamples": 350,
     "liveMutationQualified": false,
-    "nextPhase": "P6",
-    "guide": "docs/Property-Materials-and-Member-Sections.md",
-    "contractIndex": "docs/contracts/PropertyRoadmapContractIndex.json"
+    "nextPhase": "P7",
+    "nextNativeFunction": "GetInactiveMemberCount",
+    "guide": "docs/Property-Section-and-Specification-Creation.md",
+    "contractIndex": "docs/contracts/PropertyCreationContractIndex.json"
   },
   "implementationHistory": [
     {
@@ -74727,6 +74903,183 @@
           "sha256": "906ecaf401514d3c1bb1f72f6e45f5bdc27fc41887a81d198068585494c5b9a2"
         }
       ]
+    },
+    {
+      "date": "2026-10-24",
+      "parentCommit": "d9acce3b4b7aaacacab2461b8fc68cf29a196b77",
+      "interfaceMethods": 150,
+      "adapterMethods": 150,
+      "nativeRoutes": 91,
+      "activeCandidatesRemaining": 113,
+      "workstreams": {
+        "P6": 10,
+        "P5": 17,
+        "P2": 13,
+        "P4": 24,
+        "P9": 1,
+        "P7": 3,
+        "P3": 23
+      },
+      "contracts": [
+        {
+          "native": "GetOrthotropic3DMaterialCount",
+          "managedSignature": "PropertyQueryResult<int> GetOrthotropic3DMaterialCount()",
+          "phase": "P3",
+          "mutation": false
+        },
+        {
+          "native": "GetOrthotropic3DMaterialProperties",
+          "managedSignature": "PropertyQueryResult<Orthotropic3DMaterialProperties> GetOrthotropic3DMaterialProperties(int nativeMaterialNumber)",
+          "phase": "P3",
+          "mutation": false
+        },
+        {
+          "native": "RemoveMaterialFromBeam",
+          "managedSignature": "PropertyMutationResult RemoveMaterialFromBeam(int memberId)",
+          "phase": "P3",
+          "mutation": true
+        },
+        {
+          "native": "GetSolidMaterialName",
+          "managedSignature": "PropertyQueryResult<string> GetSolidMaterialName(int solidId)",
+          "phase": "P3",
+          "mutation": false
+        },
+        {
+          "native": "GetIsotropicMaterialAssignedSolidCount",
+          "managedSignature": "PropertyQueryResult<int> GetIsotropicMaterialAssignedSolidCount(string materialName)",
+          "phase": "P3",
+          "mutation": false
+        },
+        {
+          "native": "GetIsotropicMaterialAssignedSolidList",
+          "managedSignature": "PropertyQueryResult<IReadOnlyList<int>> GetIsotropicMaterialAssignedSolidIds(string materialName, int maximumResults = 100000)",
+          "phase": "P3",
+          "mutation": false
+        },
+        {
+          "native": "SetTypeToIsotropicMaterial",
+          "managedSignature": "PropertyMutationResult SetTypeToIsotropicMaterial(string materialName, IsotropicMaterialType materialType)",
+          "phase": "P3",
+          "mutation": true
+        },
+        {
+          "native": "GetTypeForIsotropicMaterial",
+          "managedSignature": "PropertyQueryResult<IsotropicMaterialType> GetTypeForIsotropicMaterial(string materialName)",
+          "phase": "P3",
+          "mutation": false
+        },
+        {
+          "native": "GetSectionPropertyValues",
+          "managedSignature": "PropertyQueryResult<BeamSectionProperties> GetSectionPropertiesForProfile(AssignedSectionProfile profileType)",
+          "phase": "P4",
+          "mutation": false
+        },
+        {
+          "native": "GetBeamSectionPropertyRefNo",
+          "managedSignature": "PropertyQueryResult<int> GetBeamSectionPropertyRefNo(int memberId)",
+          "phase": "P4",
+          "mutation": false
+        },
+        {
+          "native": "GetBeamSectionPropertyValuesEx",
+          "managedSignature": "PropertyQueryResult<MemberSectionValues> GetBeamSectionPropertyValuesEx(int memberId)",
+          "phase": "P4",
+          "mutation": false
+        },
+        {
+          "native": "GetSectionTableNo",
+          "managedSignature": "PropertyQueryResult<int> GetSectionTableNo(int memberId)",
+          "phase": "P4",
+          "mutation": false
+        },
+        {
+          "native": "GetBeamSectionPropertyTypeNo",
+          "managedSignature": "PropertyQueryResult<int> GetBeamSectionPropertyTypeNo(int memberId)",
+          "phase": "P4",
+          "mutation": false
+        },
+        {
+          "native": "GetBeamSectionName",
+          "managedSignature": "PropertyQueryResult<string> GetBeamSectionName(int memberId)",
+          "phase": "P4",
+          "mutation": false
+        },
+        {
+          "native": "GetBeamSectionDisplayName",
+          "managedSignature": "PropertyQueryResult<string> GetBeamSectionDisplayName(int memberId)",
+          "phase": "P4",
+          "mutation": false
+        },
+        {
+          "native": "GetCountryTableNo",
+          "managedSignature": "PropertyQueryResult<int> GetCountryTableNo(int memberId)",
+          "phase": "P4",
+          "mutation": false
+        },
+        {
+          "native": "CreateAssignProfileProperty",
+          "managedSignature": "PropertyMutationResult CreateAssignProfileProperty(AssignedSectionProfile profileType)",
+          "phase": "P5",
+          "mutation": true
+        },
+        {
+          "native": "AssignElementSpecToPlate",
+          "managedSignature": "PropertyMutationResult AssignElementSpecToPlate(IEnumerable<int> plateIds, int specificationId)",
+          "phase": "P5",
+          "mutation": true
+        },
+        {
+          "native": "UpdatePropertiesToDesignSection",
+          "managedSignature": "PropertyMutationResult UpdatePropertiesToDesignSection()",
+          "phase": "P5",
+          "mutation": true
+        },
+        {
+          "native": "CreateIsotropicMaterialPropertiesEx",
+          "managedSignature": "PropertyMutationResult CreateIsotropicMaterialPropertiesEx(IsotropicMaterialDefinition material, IsotropicMaterialStrengths strengths)",
+          "phase": "P5",
+          "mutation": true
+        },
+        {
+          "native": "CreateIsotropicMaterialSteel",
+          "managedSignature": "PropertyMutationResult CreateIsotropicMaterialSteel(IsotropicMaterialDefinition material, SteelMaterialStrengths strengths, bool isPhysical)",
+          "phase": "P5",
+          "mutation": true
+        },
+        {
+          "native": "CreateIsotropicMaterialConcrete",
+          "managedSignature": "PropertyMutationResult CreateIsotropicMaterialConcrete(IsotropicMaterialDefinition material, double compressiveStrength, bool isPhysical)",
+          "phase": "P5",
+          "mutation": true
+        },
+        {
+          "native": "CreateIsotropicMaterialAluminum",
+          "managedSignature": "PropertyMutationResult CreateIsotropicMaterialAluminum(IsotropicMaterialDefinition material, bool isPhysical)",
+          "phase": "P5",
+          "mutation": true
+        },
+        {
+          "native": "CreateIsotropicMaterialTimber",
+          "managedSignature": "PropertyMutationResult CreateIsotropicMaterialTimber(IsotropicMaterialDefinition material, bool isPhysical)",
+          "phase": "P5",
+          "mutation": true
+        },
+        {
+          "native": "AssignMaterialToSolid",
+          "managedSignature": "PropertyMutationResult AssignMaterialToSolid(string materialName, IEnumerable<int> solidIds)",
+          "phase": "P5",
+          "mutation": true
+        }
+      ],
+      "offlineTests": 4346,
+      "newCases": 190,
+      "selectedXmlExamples": 742,
+      "propertyXmlExamples": 300,
+      "liveMutationQualified": false,
+      "nextPhase": "P6",
+      "guide": "docs/Property-Materials-and-Member-Sections.md",
+      "contractIndex": "docs/contracts/PropertyRoadmapContractIndex.json"
     }
   ]
 }

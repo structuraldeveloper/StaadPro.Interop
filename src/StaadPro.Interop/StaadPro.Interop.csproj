@@ -12,11 +12,11 @@
     <RootNamespace>StaadPro.Interop</RootNamespace>
     <PackageId>StaadPro.Interop</PackageId>
     <Version>1.0.0</Version>
-    <ReleaseDocumentationVersion>1.0.0-preview.20261024.6</ReleaseDocumentationVersion>
+    <ReleaseDocumentationVersion>1.0.0-preview.20261024.7</ReleaseDocumentationVersion>
     <PackageVersion>$(ReleaseDocumentationVersion)</PackageVersion>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 IngeneStructs</Copyright>
-    <PackageReleaseNotes>Incorporated 25 Property functions completing the P3/P4/P5 native routes: 3D orthotropic materials, solid assignments, material classifications, member section queries, assigned-profile creation, plate specifications and explicit isotropic material creators. Property now has 150 overloads and 91 of 204 native routes. Added immutable inputs/results, operation-specific native status handling and complete interface/adapter XML IntelliSense. Native mutation acknowledgement does not certify persistence or engineering behavior. Authors Srinivasa Rao Masanam; Copyright (c) 2026 IngeneStructs. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Incorporated 25 Property functions for wide-flange/solid/prismatic/tapered section creation, member/element specifications, cable and fireproofing definitions, control/dependent relations and property unique-ID metadata. Property now has 175 overloads and 116 of 204 native routes. Preserved separate section/specification IDs, zero-based fireproofing indices, status-only creation and void invocation evidence. Added immutable inputs, complete interface/adapter XML IntelliSense and guarded examples. Authors Srinivasa Rao Masanam; Copyright (c) 2026 IngeneStructs. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
@@ -56,6 +56,7 @@
     <None Include="..\..\docs\Property-Workflows.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Property-Sections.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Property-Materials-and-Member-Sections.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Property-Section-and-Specification-Creation.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Output-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Analysis-Queries.md" Pack="true" PackagePath="docs\" />
@@ -71,6 +72,7 @@
   </ItemGroup>
 
   <Target Name="PreparePackageDocumentation" BeforeTargets="_GetPackageFiles">
+    <Error Condition="'$(Authors)' != 'Srinivasa Rao Masanam'" Text="The package Authors metadata must be exactly Srinivasa Rao Masanam." />
     <Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(PackageVersion)', '^[0-9A-Za-z][0-9A-Za-z.+-]*$'))" Text="The package version contains unsupported characters." />
     <Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(ReleaseDocumentationVersion)', '^[0-9A-Za-z][0-9A-Za-z.+-]*$'))" Text="The release documentation version contains unsupported characters." />
     <Exec Command="powershell -NoProfile -NonInteractive -File &quot;$(MSBuildProjectDirectory)\..\..\eng\Prepare-PackageDocumentation.ps1&quot; -PackageVersion &quot;$(PackageVersion)&quot; -DocumentedVersion &quot;$(ReleaseDocumentationVersion)&quot; -ReadmeSource &quot;$(MSBuildProjectDirectory)\..\..\docs\NuGet-README.md&quot; -ReleaseNotesSource &quot;$(MSBuildProjectDirectory)\..\..\docs\Release-Notes.md&quot; -OutputDirectory &quot;$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)package-docs&quot;" />
