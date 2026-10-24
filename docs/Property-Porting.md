@@ -2,7 +2,17 @@
 
 **Updated:** 24 October 2026
 
-## Current increment: fireproofing, attributes and UPT
+## Current UPT/catalog increment
+
+Incorporated **25 Property functions**: 22 reviewed P8 user-provided-table operations and the next three P9 catalog/database-folder operations. Property now exposes **225 overloads**, covering **166 of 204 active native routes**, with **38 remaining**. Five P8 transport contracts and four earlier P7 contracts remain pending. P8 has 25 of 30 routes; P9 has four of nine. See [all 25 UPT/catalog contracts](Property-UPT-Profiles-and-Catalogs.md).
+
+Passed a Release build with zero warnings/errors and **4,959 offline tests**, including **213 new cases**. The isolated PackageReference-only consumer verifies **892 selected XML examples**, including all **450 Property interface/adapter examples**. All sixteen new mutation examples are guarded; separate managed checks execute all 25 routes through both public surfaces. Live native mutation and engineering qualification remain pending.
+
+Added immutable explicit UPT profile inputs, owned table inventories and named section observations. Kept operation-specific creation, insertion and removal outcomes separate. Qualified ten UPT read-back layouts and the database-folder setter against exact acquired native profiles 24.00.02.354, 25.00.01.424 and 26.00.00.340, retaining their different folder return conventions. Unreviewed builds cannot select those policies. Table numbers, native indices and property references retain separate identities.
+
+Replaced legacy publisher branding throughout the package with **TensorStruct**, including assembly Company, copyright and shipped documentation. Package Authors remains exactly **Srinivasa Rao Masanam**. Registry ownership remains separately managed.
+
+## Earlier increment: fireproofing, attributes and UPT
 
 Incorporated **25 Property functions**: 22 reviewed P7 inactive/fireproofing/attribute operations and the first three P8 UPT operations. Property now exposes **200 overloads** and reaches **141 of 204 active native routes**, with **63 remaining**. P7 has 42 of 46 routes; four contract gaps remain explicitly pending. P8 has three of thirty routes. See [the 25 fireproofing/attribute/UPT contracts](Property-Fireproofing-Attributes-and-UPT.md).
 
@@ -10,7 +20,7 @@ Passed a Release build with zero warnings/errors and **4,746 offline tests**, in
 
 Added immutable exact attribute pairs, pair/domain/ID snapshots, fireproofing correspondence and explicit UPT value packets. Bounded count/list/count reads validate written outputs and preserve order/duplicates. By-reference native attribute-value rewriting returns StateChanged rather than data for the wrong pair. UPT table IDs, insertion acknowledgements and duplicate outcomes remain separate; scalar and unequal wide-flange routes retain their different return conventions.
 
-Package Authors remains exactly **Srinivasa Rao Masanam**; company and copyright remain **IngeneStructs**. Existing author packing/verification safeguards remain in place.
+Package Authors remains exactly **Srinivasa Rao Masanam**; company and copyright remain **TensorStruct**. Existing author packing/verification safeguards remain in place.
 
 ## Previous increment: section and specification creation
 
@@ -20,7 +30,7 @@ Passed a Release build with zero warnings/errors and **4,551 offline tests**, in
 
 Added explicit immutable wide-flange, general-prismatic, six-DOF and partial-factor inputs. Retained separate created section IDs, created specification IDs, zero-based fireproofing indices and zero-success status-only results. The void unique-ID setter returns InvokedWithoutAcknowledgement with no fabricated native code and IsSuccessful false; its exact requested property/text identity is retained. Existing signatures, current-material context and native units remain explicit.
 
-Package Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **IngeneStructs**. Packing rejects a different Authors value, and installed-package verification checks the exact manifest value. NuGet.org registry ownership is managed separately.
+Package Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. Packing rejects a different Authors value, and installed-package verification checks the exact manifest value. NuGet.org registry ownership is managed separately.
 
 ## Previous increment: P3/P4/P5 completion
 

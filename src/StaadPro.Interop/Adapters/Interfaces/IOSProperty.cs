@@ -3076,5 +3076,489 @@ namespace StaadPro.Interop.Adapters.Interfaces
 
         #endregion
 
+        #region User-provided profiles and standard database context
+
+        /// <summary>Adds explicit channel data to an existing native UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <param name="definition">Non-null immutable UptChannelDefinition with every applicable native input supplied. Native order after table/name is AX,D,TW,WF,TF,IZ,IY,IX,CZ,AY,AZ. Values are validated finite and against each constructor&#x27;s documented range; no defaults or dimensional conversion.</param>
+        /// <returns>Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.</returns>
+        /// <remarks>When to use: insert the channel using its specific scalar native route. Channel CZ is retained in the native convention without guessing a centroid axis/dimension. Native IZ/IY/IX labels retain this UPT route&#x27;s documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
+        ///     var definition = new StaadPro.Interop.Models.Property.UptChannelDefinition(primary, 0.04);
+        ///     var result = property.AddUPTPropertyCHANNEL(7, &quot;EXPLICIT_CHANNEL&quot;, definition);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult AddUPTPropertyCHANNEL(int tableId, string sectionName, UptChannelDefinition definition);
+
+        /// <summary>Adds explicit angle data to an existing native UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <param name="definition">Non-null immutable UptAngleDefinition with every applicable native input supplied. Native order after table/name is D,WF,TF,R,AY,AZ. Values are validated finite and against each constructor&#x27;s documented range; no defaults or dimensional conversion.</param>
+        /// <returns>Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.</returns>
+        /// <remarks>When to use: insert the angle using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route&#x27;s documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var definition = new StaadPro.Interop.Models.Property.UptAngleDefinition(0.2, 0.15, 0.01, 0.03, 0.002, 0.003);
+        ///     var result = property.AddUPTPropertyANGLE(7, &quot;EXPLICIT_ANGLE&quot;, definition);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult AddUPTPropertyANGLE(int tableId, string sectionName, UptAngleDefinition definition);
+
+        /// <summary>Adds explicit double angle data to an existing native UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <param name="definition">Non-null immutable UptDoubleAngleDefinition with every applicable native input supplied. Native order after table/name is D,WF,TF,SP,IZ,IY,IX,CY,AY,AZ. Values are validated finite and against each constructor&#x27;s documented range; no defaults or dimensional conversion.</param>
+        /// <returns>Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.</returns>
+        /// <remarks>When to use: insert the double angle using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route&#x27;s documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var definition = new StaadPro.Interop.Models.Property.UptDoubleAngleDefinition(0.2, 0.15, 0.01, 0.02, 0.000001, 0.00001, 0.0001, 0.04, 0.002, 0.003);
+        ///     var result = property.AddUPTPropertyDOUBLEANGLE(7, &quot;EXPLICIT_DOUBLEANGLE&quot;, definition);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult AddUPTPropertyDOUBLEANGLE(int tableId, string sectionName, UptDoubleAngleDefinition definition);
+
+        /// <summary>Adds explicit tee data to an existing native UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <param name="definition">Non-null immutable UptTeeDefinition with every applicable native input supplied. Native order after table/name is AX,D,WF,TF,TW,IZ,IY,IX,CY,AY,AZ. Values are validated finite and against each constructor&#x27;s documented range; no defaults or dimensional conversion.</param>
+        /// <returns>Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.</returns>
+        /// <remarks>When to use: insert the tee using its specific scalar native route. The tee native order sends WF/TF before TW; it does not reuse the common wide-flange slot order blindly. Native IZ/IY/IX labels retain this UPT route&#x27;s documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
+        ///     var definition = new StaadPro.Interop.Models.Property.UptTeeDefinition(primary, 0.04);
+        ///     var result = property.AddUPTPropertyTEE(7, &quot;EXPLICIT_TEE&quot;, definition);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult AddUPTPropertyTEE(int tableId, string sectionName, UptTeeDefinition definition);
+
+        /// <summary>Adds explicit pipe data to an existing native UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <param name="definition">Non-null immutable UptPipeDefinition with every applicable native input supplied. Native order after table/name is OD,ID,AY,AZ. Values are validated finite and against each constructor&#x27;s documented range; no defaults or dimensional conversion.</param>
+        /// <returns>Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.</returns>
+        /// <remarks>When to use: insert the pipe using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route&#x27;s documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var definition = new StaadPro.Interop.Models.Property.UptPipeDefinition(0.2, 0.18, 0.002, 0.003);
+        ///     var result = property.AddUPTPropertyPIPE(7, &quot;EXPLICIT_PIPE&quot;, definition);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult AddUPTPropertyPIPE(int tableId, string sectionName, UptPipeDefinition definition);
+
+        /// <summary>Adds explicit tube data to an existing native UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <param name="definition">Non-null immutable UptTubeDefinition with every applicable native input supplied. Native order after table/name is AX,D,WF,TF,IZ,IY,IX,AY,AZ. Values are validated finite and against each constructor&#x27;s documented range; no defaults or dimensional conversion.</param>
+        /// <returns>Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.</returns>
+        /// <remarks>When to use: insert the tube using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route&#x27;s documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var definition = new StaadPro.Interop.Models.Property.UptTubeDefinition(0.01, 0.3, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
+        ///     var result = property.AddUPTPropertyTUBE(7, &quot;EXPLICIT_TUBE&quot;, definition);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult AddUPTPropertyTUBE(int tableId, string sectionName, UptTubeDefinition definition);
+
+        /// <summary>Adds explicit general profile data to an existing native UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <param name="definition">Non-null immutable UptGeneralDefinition with every applicable native input supplied. Native order after table/name is AX,D,TD,B,TB,IZ,IY,IX,SZ,SY,AY,AZ,PZ,PY,HSS,DEE. Values are validated finite and against each constructor&#x27;s documented range; no defaults or dimensional conversion.</param>
+        /// <returns>Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.</returns>
+        /// <remarks>When to use: insert the general profile using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route&#x27;s documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var definition = new StaadPro.Interop.Models.Property.UptGeneralDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.0002, 0.0003, 0.002, 0.003, 0.0004, 0.0005, 0.00000001, 0.28);
+        ///     var result = property.AddUPTPropertyGENERAL(7, &quot;EXPLICIT_GENERAL&quot;, definition);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult AddUPTPropertyGENERAL(int tableId, string sectionName, UptGeneralDefinition definition);
+
+        /// <summary>Adds explicit I-section data to an existing native UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <param name="definition">Non-null immutable UptISectionDefinition with every applicable native input supplied. Native order after table/name is DWW,TWW,DWW1,BFF,TFF,BFF1,TFF1,AYF,AZF,XIF. Values are validated finite and against each constructor&#x27;s documented range; no defaults or dimensional conversion.</param>
+        /// <returns>Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.</returns>
+        /// <remarks>When to use: insert the I-section using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route&#x27;s documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var definition = new StaadPro.Interop.Models.Property.UptISectionDefinition(0.4, 0.006, 0.3, 0.2, 0.01, 0.15, 0.01, 0.002, 0.003, 0.000001);
+        ///     var result = property.AddUPTPropertyISECTION(7, &quot;EXPLICIT_ISECTION&quot;, definition);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult AddUPTPropertyISECTION(int tableId, string sectionName, UptISectionDefinition definition);
+
+        /// <summary>Adds explicit prismatic profile data to an existing native UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <param name="definition">Non-null immutable UptPrismaticDefinition with every applicable native input supplied. Native order after table/name is AX,IZ,IY,IX,AY,AZ,YD,ZD. Values are validated finite and against each constructor&#x27;s documented range; no defaults or dimensional conversion.</param>
+        /// <returns>Succeeded for integral zero, NativeFailure for -6032 and AlreadyExists for -6045, with exact requested TableId/SectionName and actual code retained. No section property ID or new table ID is fabricated.</returns>
+        /// <remarks>When to use: insert the prismatic profile using its specific scalar native route. Native IZ/IY/IX labels retain this UPT route&#x27;s documented meanings instead of borrowing another section layout. Native AY/AZ zero retains ignore-shear semantics. Caller establishes table-type compatibility; no table is created, duplicate replaced or member assigned. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var definition = new StaadPro.Interop.Models.Property.UptPrismaticDefinition(0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003, 0.3, 0.15);
+        ///     var result = property.AddUPTPropertyPRISMATIC(7, &quot;EXPLICIT_PRISMATIC&quot;, definition);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult AddUPTPropertyPRISMATIC(int tableId, string sectionName, UptPrismaticDefinition definition);
+
+        /// <summary>Adds an explicit 12-, 16- or 19-slot composite wide-flange UPT section.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <param name="definition">Non-null immutable twelve-slot steel definition, optionally followed by slab CFR/CFL/CFT/MR and then plate BPR/BPL/BPT. Valid lengths are exactly 12,16,19. A plate without slab is rejected; no engineering zeros are substituted for omitted packets.</param>
+        /// <returns>Succeeded for true/integral one and NativeFailure for false/integral zero. Actual Boolean/integral evidence and requested table/name are retained; no insertion ID or duplicate-specific status is inferred.</returns>
+        /// <remarks>When to use: insert a supported composite layout without guessing optional-buffer length. Sends a fresh owned double array. CFR/CFL retain documented right/left meanings; BPR/BPL labels retain the help&#x27;s duplicated side-description ambiguity. No automatic table creation, material conversion or staged cleanup occurs. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var primary = new StaadPro.Interop.Models.Property.UptWideFlangeDefinition(0.01, 0.3, 0.006, 0.15, 0.01, 0.000001, 0.00001, 0.0001, 0.002, 0.003);
+        ///     var steel = new StaadPro.Interop.Models.Property.UptUnequalWideFlangeDefinition(primary, 0.2, 0.015);
+        ///     var slab = new StaadPro.Interop.Models.Property.UptCompositeSlab(0.5, 0.6, 0.12, 8.0);
+        ///     var plate = new StaadPro.Interop.Models.Property.UptCompositeBottomPlate(0.1, 0.11, 0.01);
+        ///     var definition = new StaadPro.Interop.Models.Property.UptCompositeWideFlangeDefinition(steel, slab, plate);
+        ///     var result = property.AddUPTPropertyWIDEFLANGECOMPOSITE(7, &quot;EXPLICIT_COMPOSITE&quot;, definition);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult AddUPTPropertyWIDEFLANGECOMPOSITE(int tableId, string sectionName, UptCompositeWideFlangeDefinition definition);
+
+        /// <summary>Creates an assigned section-property reference from an existing named UPT entry.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <returns>Created with a positive CreatedPropertyId; native -1 gives NativeFailure. TableId/SectionName and actual code are retained separately. Zero and other undocumented nonpositive results throw.</returns>
+        /// <remarks>When to use: obtain a property reference after the table and named entry already exist. A positive return does not certify a new globally unique allocation. This native route sends tableId before sectionName and does not insert a section, assign members or synthesize a table lookup. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.CreatePropertyFromUPTTable(7, &quot;EXPLICIT_WF&quot;);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult CreatePropertyFromUPTTable(int tableId, string sectionName);
+
+        /// <summary>Obtains a positive section-property reference through the native section-name-first user-table route.</summary>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <returns>Created with separate positive CreatedPropertyId and requested table/name identity. No failure return code is documented: nonpositive/malformed responses throw without an inferred failure mapping.</returns>
+        /// <remarks>When to use: use the distinct CreatePropertyFromUserTable route and its native sectionName,tableId order. It does not fall back to CreatePropertyFromUPTTable, create the table/entry, assign geometry or establish a new-unique allocation. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.CreatePropertyFromUserTable(&quot;EXPLICIT_WF&quot;, 7);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult CreatePropertyFromUserTable(string sectionName, int tableId);
+
+        /// <summary>Creates a UPT table using an explicit requested table number and type.</summary>
+        /// <param name="requestedTableId">Positive requested new native table number. It is retained in TableId separately from the actual returned CreatedTableId.</param>
+        /// <param name="tableType">Defined reviewed UPT type 1..10; not a country, property reference or table inventory index.</param>
+        /// <returns>Created for a positive integral native table ID, NativeFailure for zero; undocumented negatives throw. Requested and actual returned table IDs remain separate even if they differ. No section property ID is populated.</returns>
+        /// <remarks>When to use: request a specific table number without hiding native renumbering, overwrite behavior or collisions. No table/section deletion, insertion or rollback is performed automatically. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.CreateUPTTableEx(7, StaadPro.Interop.Enums.Property.UserProvidedTableType.WideFlange);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult CreateUPTTableEx(int requestedTableId, UserProvidedTableType tableType);
+
+        /// <summary>Requests native removal of an explicitly identified UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <returns>Succeeded for true/integral one and NativeFailure for false/integral zero. Actual return representation and requested TableId are retained; no completion report for dependent sections/properties is fabricated.</returns>
+        /// <remarks>When to use: deliberately remove the native table only after reviewing its current contents and references. Effects on dependent native data are not inferred or rolled back; no automatic replacement or force-removal fallback is attempted. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemoveUPTTable(7);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult RemoveUPTTable(int tableId);
+
+        /// <summary>Requests deletion of an exact named section from a UPT table.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <returns>Succeeded for integral one, NativeFailure for zero and InvalidInput for -100 (invalid table or name). Actual integral code and requested identity are retained; Boolean and undocumented responses throw.</returns>
+        /// <remarks>When to use: deliberately remove one native UPT entry, retaining the table/name identity. Zero is failure here; the scalar insertion zero-success convention is not reused. No dependent-property cleanup, cascade guarantee or force-removal fallback is supplied. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.RemovePropertyFromUPTTable(7, &quot;EXPLICIT_WF&quot;);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult RemovePropertyFromUPTTable(int tableId, string sectionName);
+
+        /// <summary>Reads the native user-provided table count.</summary>
+        /// <returns>Success with the actual nonnegative integral count, including zero; Boolean/fractional/text/null and undocumented negative returns throw.</returns>
+        /// <remarks>When to use: size or inspect UPT inventory without confusing a count with a maximum table ID or an index base. Uses the shared captured-binding gate; dependent dispatches check lifetime individually. Inspect IsSuccessful/Status before Data. No model mutation, geometry hydration, private catalog lookup, unit conversion or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetUserProvidedTableCount();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        PropertyQueryResult<int> GetUserProvidedTableCount();
+
+        /// <summary>Reads a bounded owned snapshot of native UPT table IDs.</summary>
+        /// <param name="maximumResults">Allocation limit 1..100000, default 100000. An oversize native count gives LimitExceeded before list allocation/retrieval.</param>
+        /// <returns>Success with read-only positive IDs in native order, retaining duplicates. Zero inventory skips list retrieval and returns empty data after count recheck. False/zero gives NativeFailure; count changes give StateChanged.</returns>
+        /// <remarks>When to use: enumerate table numbers without assuming contiguous or zero/one-based IDs. Uses count/list/count within the shared gate, validates exact rank-one Int32 shape/length and every written positive ID. Equal counts cannot exclude same-count external edits. Uses the shared captured-binding gate; dependent dispatches check lifetime individually. Inspect IsSuccessful/Status before Data. No model mutation, geometry hydration, private catalog lookup, unit conversion or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetUserProvidedTableList();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Count);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        PropertyQueryResult<IReadOnlyList<int>> GetUserProvidedTableList(int maximumResults = 100000);
+
+        /// <summary>Reads a native table&#x27;s section count with explicit table identity.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <returns>Success with an immutable requested TableId and nonnegative Count, including zero. Zero does not prove the table exists; undocumented negatives or malformed counts throw.</returns>
+        /// <remarks>When to use: observe table population independently from section-name transport. It does not expose the unverified indexed CSStringList representation or infer a section list from count. Uses the shared captured-binding gate; dependent dispatches check lifetime individually. Inspect IsSuccessful/Status before Data. No model mutation, geometry hydration, private catalog lookup, unit conversion or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetUserProvidedTableSectionCount(7);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Count);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        PropertyQueryResult<UptTableSectionCount> GetUserProvidedTableSectionCount(int tableId);
+
+        /// <summary>Reads the written scalar native UPT section type with count consistency checks.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <returns>Success with requested TableId, a positive raw NativeTypeCode and the checked SectionCount. Count changes yield StateChanged. An empty-count observation without a written positive type yields EmptyOrUnavailable; no default type is exposed.</returns>
+        /// <remarks>When to use: observe the singular type value described by native help without treating it as an array. The function&#x27;s integral return is a section count, not a success flag; it must match separate before/after counts. Unknown positive codes are retained but do not imply a supported value layout. Uses the shared captured-binding gate; dependent dispatches check lifetime individually. Inspect IsSuccessful/Status before Data. No model mutation, geometry hydration, private catalog lookup, unit conversion or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetUserProvidedTableSectionType(7);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.NativeTypeCode);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        PropertyQueryResult<UptTableSectionType> GetUserProvidedTableSectionType(int tableId);
+
+        /// <summary>Retains the native named-section count with exact requested UPT identity.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <returns>Success with requested table/name and the actual nonnegative NativeCount, including zero. The copied return wording is ambiguous; no engineering value count, buffer size or missing-section status is inferred.</returns>
+        /// <remarks>When to use: inspect this native scalar without using it as a memory allocation contract. The help calls the return a number of sections despite the method name. GetUserProvidedTableSectionProperties instead sizes its buffer using GetCountofSectionPropertyValuesEx. Uses the shared captured-binding gate; dependent dispatches check lifetime individually. Inspect IsSuccessful/Status before Data. No model mutation, geometry hydration, private catalog lookup, unit conversion or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetUserProvidedTableSectionPropertyCount(7, &quot;EXPLICIT_WF&quot;);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.NativeCount);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        PropertyQueryResult<UptNamedSectionCount> GetUserProvidedTableSectionPropertyCount(int tableId, string sectionName);
+
+        /// <summary>Reads an owned version-qualified native UPT section-value layout.</summary>
+        /// <param name="tableId">Positive existing native UPT table number ID, distinct from member IDs, property references and zero/one-based inventory indices.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <returns>Success for true/integral one with exact requested identity, native type/version/capacity and read-only applicable field names/values. False/zero gives NativeFailure; capacity/version changes give StateChanged. Unreviewed profiles/types fail explicitly.</returns>
+        /// <remarks>When to use: decode one of ten reviewed UPT type codes 412..502 without confusing them with common section-property type codes. Reviewed acquired native profiles are exactly 24.00.02.354, 25.00.01.424 and 26.00.00.340. Unreviewed/unknown versions fail before unsafe access. The profile uses wrapper.StaadVersion, never host ApplicationVersion. Native capacity from GetCountofSectionPropertyValuesEx must be 1..100000 and cover every applicable field. All required slots must be explicitly written finite floating-point values; unused padding is excluded, not turned into engineering zeros. Capacity is rechecked and native version frozen before returning. Native labels, inertia identities and units are retained without geometry/area substitution. Uses the shared captured-binding gate; dependent dispatches check lifetime individually. Inspect IsSuccessful/Status before Data. No model mutation, geometry hydration, private catalog lookup, unit conversion or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetUserProvidedTableSectionProperties(7, &quot;EXPLICIT_WF&quot;);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.NativeTypeCode);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        PropertyQueryResult<UptSectionProperties> GetUserProvidedTableSectionProperties(int tableId, string sectionName);
+
+        /// <summary>Reads a table number for an explicitly supplied native UPT inventory index.</summary>
+        /// <param name="nativeTableIndex">Nonnegative native table index independently established by the caller. The help example uses one but does not establish an index base; this method sends the exact supplied value without incrementing/decrementing it. It is not automatically a section property reference.</param>
+        /// <returns>Success with the exact requested NativeIndex and positive returned TableId; -1 gives NativeFailure. Other nonpositive/malformed results throw.</returns>
+        /// <remarks>When to use: use the native index-to-table observation without treating the varSecRefNo declaration spelling as a verified property-ID alias. No enumeration or automatic mapping from another reference domain occurs. Uses the shared captured-binding gate; dependent dispatches check lifetime individually. Inspect IsSuccessful/Status before Data. No model mutation, geometry hydration, private catalog lookup, unit conversion or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetUserProvidedTableNo(1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.TableId);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        PropertyQueryResult<UptTableReference> GetUserProvidedTableNo(int nativeTableIndex);
+
+        /// <summary>Reads a raw country-specific section shape code with exact catalog identity.</summary>
+        /// <param name="country">Reviewed repository country selector codes 1..37. Source-only Chilean=38 and undefined selectors are rejected; catalog availability is not inferred.</param>
+        /// <param name="sectionName">Exact nonblank native section name without NUL characters. Case/whitespace are preserved; no database normalization or automatic rename.</param>
+        /// <returns>Success with exact requested country/name and nonnegative raw NativeCode, including zero and unmapped values. -1 gives NativeFailure; other negatives/malformed returns throw.</returns>
+        /// <remarks>When to use: inspect the native code without coercing different countries&#x27; shape domains into a universal enum or asserting a supported engineering family. No catalog section or geometry is synthesized from the integer. Uses the shared captured-binding gate; dependent dispatches check lifetime individually. Inspect IsSuccessful/Status before Data. No model mutation, geometry hydration, private catalog lookup, unit conversion or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetShapeCode(Country.Indian, &quot;ISMB300&quot;);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.NativeCode);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        PropertyQueryResult<SectionShapeCode> GetShapeCode(Country country, string sectionName);
+
+        /// <summary>Requests a standard-profile database folder change under an exact native return-policy profile.</summary>
+        /// <param name="folderPath">Exact non-null path text without NUL. Empty/whitespace/relative text is forwarded unchanged for native validation; no directory creation, existence check or path normalization.</param>
+        /// <returns>Succeeded/NativeFailure according to the exact acquired profile: 2024 uses 1/0, 2025/2026 use 0/-1. Retains actual integral response, exact FolderPath and immutable NativeContractVersion. Boolean/undocumented responses throw.</returns>
+        /// <remarks>When to use: deliberately change the acquired application&#x27;s profile database context, after reviewing effects on subsequent catalog operations. Reviewed acquired native profiles are exactly 24.00.02.354, 25.00.01.424 and 26.00.00.340. Unreviewed/unknown versions fail before unsafe access. The profile uses wrapper.StaadVersion, never host ApplicationVersion. Unknown servicing profiles fail before native dispatch. No default-folder reset, backup, implicit reloading or restoration is performed; a version change during the mutation throws and effects may remain. Uses the captured receiver and shared serialization gate on the caller&#x27;s thread. Native changes may remain after failure or a stale-binding/transport exception. No automatic assignment, analysis, conversion, hidden save, retry or rollback occurs. An acknowledgement does not certify persistence or engineering adequacy.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// bool applyChanges = false; // Enable only for the intended/disposable model and reviewed inputs.
+        /// if (applyChanges)
+        /// {
+        ///     var result = property.SetStandardProfileDBFolder(@&quot;C:\STAAD\Profiles&quot;);
+        ///     System.Console.WriteLine(result.Status);
+        ///     if (result.IsSuccessful) System.Console.WriteLine(result.NativeFunction);
+        /// }
+        /// </code></example>
+        PropertyMutationResult SetStandardProfileDBFolder(string folderPath);
+
+        /// <summary>Reads the exact native standard-profile database folder path.</summary>
+        /// <returns>Success with the exact nonempty string, preserving case/whitespace. Null/DBNull/empty gives EmptyOrUnavailable; non-string/NUL text throws. No path-existence guarantee is inferred.</returns>
+        /// <remarks>When to use: observe current catalog context without changing it or substituting a default folder. No filesystem access, normalization or directory creation occurs. Uses the shared captured-binding gate; dependent dispatches check lifetime individually. Inspect IsSuccessful/Status before Data. No model mutation, geometry hydration, private catalog lookup, unit conversion or engineering certification occurs.</remarks>
+        /// <exception cref="ArgumentException">A required definition, selector, identity, text, allocation limit or numeric value violates the documented managed preconditions.</exception>
+        /// <exception cref="InvalidOperationException">The captured binding is disposed/replaced or native status, count, capacity or required output is malformed; earlier native effects may remain.</exception>
+        /// <exception cref="NotSupportedException">The acquired native profile or requested UPT layout has no reviewed contract. No guessed version/status/layout fallback is used.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport fails; no implicit retry, save or rollback occurs.</exception>
+        /// <example><code>
+        /// var result = property.GetStandardProfileDBFolder();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);
+        /// </code></example>
+        PropertyQueryResult<string> GetStandardProfileDBFolder();
+
+        #endregion
+
     }
 }

@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("StaadPro.Interop")]
 [assembly: AssemblyDescription("Modern strongly-typed .NET wrapper for Bentley STAAD.Pro OpenSTAAD COM API.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("IngeneStructs")]
+[assembly: AssemblyCompany("TensorStruct")]
 [assembly: AssemblyProduct("StaadPro.Interop")]
 [assembly: AssemblyCopyright("Copyright (c) 2026 TensorStruct")]
 [assembly: AssemblyTrademark("")]

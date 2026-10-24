@@ -14,6 +14,19 @@ function Read-PackageEntry([string] $name) {
 }
 
 try {
+    # Inspect text and both common assembly string encodings in every shipped entry.
+    $legacyPublisher = 'Ingene' + 'Structs'
+    foreach ($entry in $archive.Entries) {
+        $stream = $entry.Open()
+        $memory = [IO.MemoryStream]::new()
+        try { $stream.CopyTo($memory); $bytes = $memory.ToArray() }
+        finally { $stream.Dispose(); $memory.Dispose() }
+        foreach ($encoding in @([Text.Encoding]::UTF8, [Text.Encoding]::Unicode, [Text.Encoding]::BigEndianUnicode)) {
+            if ($encoding.GetString($bytes).IndexOf($legacyPublisher, [StringComparison]::OrdinalIgnoreCase) -ge 0) {
+                throw "Legacy publisher branding remains in $($entry.FullName)."
+            }
+        }
+    }
     if ($null -eq $archive.GetEntry('lib/net481/StaadPro.Interop.dll')) { throw 'Missing net481 library.' }
     [xml] $xml = Read-PackageEntry 'lib/net481/StaadPro.Interop.xml'
     $readme = Read-PackageEntry 'README.md'
@@ -43,10 +56,10 @@ try {
     if ($metadata.repository.url -ne 'https://github.com/structuraldeveloper/StaadPro.Interop') { throw 'Missing repository metadata.' }
     if ([string]$metadata.authors -cne 'Srinivasa Rao Masanam') { throw 'Incorrect package author.' }
     if ([string]$metadata.copyright -cne 'Copyright (c) 2026 TensorStruct') { throw 'Incorrect package copyright.' }
-    if ($readme -notmatch 'Srinivasa Rao Masanam' -or $readme -notmatch 'IngeneStructs' -or $readme -notmatch 'Copyright \(c\) 2026 TensorStruct') { throw 'Incorrect packaged README author/publisher metadata.' }
+    if ($readme -notmatch 'Srinivasa Rao Masanam' -or $readme -notmatch 'TensorStruct' -or $readme -notmatch 'Copyright \(c\) 2026 TensorStruct') { throw 'Incorrect packaged README author/publisher metadata.' }
     if ([string]$metadata.description -ne 'A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD') { throw 'Incorrect package description.' }
     if ([string]::IsNullOrWhiteSpace([string]$metadata.releaseNotes)) { throw 'Missing release notes in package metadata.' }
-    if ($releaseNotes -notmatch '1.0.0-preview.20261012' -or $releaseNotes -notmatch 'IngeneStructs' -or $releaseNotes -notmatch 'GetLoadCasesFromIds') { throw 'Incomplete packaged release notes.' }
+    if ($releaseNotes -notmatch '1.0.0-preview.20261012' -or $releaseNotes -notmatch 'TensorStruct' -or $releaseNotes -notmatch 'GetLoadCasesFromIds') { throw 'Incomplete packaged release notes.' }
     $version = [string]$metadata.version
     $readmeVersion = [regex]::Match($readme, '(?m)^## Version ([^\r\n]+)').Groups[1].Value.Trim()
     $releaseVersion = [regex]::Match($releaseNotes, '(?m)^## ([^ \r\n]+)').Groups[1].Value
@@ -240,6 +253,8 @@ try {
         $propertyGuide += Read-PackageEntry 'docs/Property-Materials-and-Member-Sections.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-Section-and-Specification-Creation.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-Fireproofing-Attributes-and-UPT.md'
+        $propertyGuide += Read-PackageEntry 'docs/Property-UPT-Profiles-and-Catalogs.md'
+        $uptPortNames = @('AddUPTPropertyCHANNEL', 'AddUPTPropertyANGLE', 'AddUPTPropertyDOUBLEANGLE', 'AddUPTPropertyTEE', 'AddUPTPropertyPIPE', 'AddUPTPropertyTUBE', 'AddUPTPropertyGENERAL', 'AddUPTPropertyISECTION', 'AddUPTPropertyPRISMATIC', 'AddUPTPropertyWIDEFLANGECOMPOSITE', 'CreatePropertyFromUPTTable', 'CreatePropertyFromUserTable', 'CreateUPTTableEx', 'RemoveUPTTable', 'RemovePropertyFromUPTTable', 'GetUserProvidedTableCount', 'GetUserProvidedTableList', 'GetUserProvidedTableSectionCount', 'GetUserProvidedTableSectionType', 'GetUserProvidedTableSectionPropertyCount', 'GetUserProvidedTableSectionProperties', 'GetUserProvidedTableNo', 'GetShapeCode', 'SetStandardProfileDBFolder', 'GetStandardProfileDBFolder')
         $attributePortNames = @('GetInactiveMemberCount', 'GetFireProofedBeamCount', 'GetFireProofedBeamList', 'GetFireProofDataForBeam', 'GetFireProofingSpecCount', 'GetFireProofingSpecDetails', 'GetFireProofingSpecAssignedBeamCount', 'GetFireProofingSpecAssignedBeamList', 'CreateMemberAttribute', 'CreateElementAttribute', 'DeleteMemberAttribute', 'DeleteElementAttribute', 'GetMemberCountByAttribute', 'GetMemberListByAttribute', 'GetMemberAttributeCount', 'GetMemberAttributeList', 'GetElementCountByAttribute', 'GetElementListByAttribute', 'GetAssignedAttributeCount', 'RemoveAttribute', 'AssignMemberAttribute', 'AssignElementAttribute', 'CreateUPTTable', 'AddUPTPropertyWIDEFLANGE', 'AddUPTPropertyWIDEFLANGEUNEQUAL')
         $creationPortNames = @('CreateWideFlangePropertyFromTable', 'CreateBeamPropertyFromTableEx', 'CreatePrismaticRectangleProperty', 'CreatePrismaticCircleProperty', 'CreatePrismaticTeeProperty', 'CreatePrismaticTrapezoidalProperty', 'CreatePrismaticGeneralProperty', 'CreateTaperedTubeProperty', 'CreateMemberPartialReleaseSpec', 'CreateMemberTrussSpec', 'CreateMemberInactiveSpec', 'CreateMemberTensionSpec', 'CreateMemberCompressionSpec', 'CreateMemberIgnoreStiffSpec', 'CreateMemberCableSpec', 'CreateMemberCableSpecEx', 'CreateElementNodeReleaseSpec', 'CreateElementPlaneStressSpec', 'CreateElementIgnoreInplaneRotnSpec', 'AddControlDependentRelation', 'CreateElementOffsetSpec', 'CreateElementLocalZOffsetSpec', 'CreateMemberFireProofingSpec', 'GetPropertyUniqueID', 'SetPropertyUniqueID')
         $roadmapPortNames = @('GetOrthotropic3DMaterialCount', 'GetOrthotropic3DMaterialProperties', 'RemoveMaterialFromBeam', 'GetSolidMaterialName', 'GetIsotropicMaterialAssignedSolidCount', 'GetIsotropicMaterialAssignedSolidIds', 'SetTypeToIsotropicMaterial', 'GetTypeForIsotropicMaterial', 'GetSectionPropertiesForProfile', 'GetBeamSectionPropertyRefNo', 'GetBeamSectionPropertyValuesEx', 'GetSectionTableNo', 'GetBeamSectionPropertyTypeNo', 'GetBeamSectionName', 'GetBeamSectionDisplayName', 'GetCountryTableNo', 'CreateAssignProfileProperty', 'AssignElementSpecToPlate', 'UpdatePropertiesToDesignSection', 'CreateIsotropicMaterialPropertiesEx', 'CreateIsotropicMaterialSteel', 'CreateIsotropicMaterialConcrete', 'CreateIsotropicMaterialAluminum', 'CreateIsotropicMaterialTimber', 'AssignMaterialToSolid')
@@ -249,7 +264,7 @@ try {
         $mainPortNames += @('AssignMaterialProperties', 'AssignMaterialProperty', 'CreateMaterialProperties', 'CreateMaterialPropertiesNoConversion', 'CreateMaterialProperty', 'CreateMaterialPropertyNoConversion', 'GetAllExtendedIsotropicMaterialProperties', 'GetAllIsotropicMaterialProperties', 'GetAllExtendedIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllExtendedMaterialPropertiesWithPopulatedAssignments', 'GetAllMaterialPropertiesWithPopulatedAssignments', 'CreatePlateThicknessProperties', 'AssignThicknessProperties', 'AssignThicknessProperty', 'AssignOffsetSpecification', 'CreateAndAssignOffsetSpecifications', 'PopulateMemberReleases', 'CreateAndAssignMemberEndReleases')
         foreach ($owner in @('Adapters.Interfaces.IOSProperty', 'Adapters.Models.OSPropertyAdapter')) {
             $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-            if ($entries.Count -ne 200) { throw "Expected 200 Property method contracts for $owner." }
+            if ($entries.Count -ne 225) { throw "Expected 225 Property method contracts for $owner." }
             foreach ($entry in $entries) {
                 $methodName = [regex]::Match($entry.name, '\.([^.()]+)(?:\(|$)').Groups[1].Value
                 $requiredTags = @('summary', 'remarks', 'example/code')
@@ -261,11 +276,11 @@ try {
                 if ($entry.SelectSingleNode('remarks').InnerText -notmatch 'When to use:') { throw "Missing comparative Property IntelliSense for $($entry.name)" }
                 if ($propertyGuide -notmatch $methodName) { throw "Missing Property guidance for $methodName" }
                 $binding = if ($owner.EndsWith('IOSProperty')) { 'IOSProperty property = wrapper.Property;' } else { 'var property = new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper);' }
-                $fixture = if ($methodName -in $attributePortNames) { 'PropertyAttributeFixture' } elseif ($methodName -in $creationPortNames) { 'PropertyCreationFixture' } elseif ($methodName -in $roadmapPortNames) { 'PropertyRoadmapFixture' } elseif ($methodName -in $sectionPortNames) { 'PropertySectionFixture' } elseif ($methodName -in $mainPortNames) { 'PropertyPortFixture' } else { 'PropertyQueryFixture' }
+                $fixture = if ($methodName -in $uptPortNames) { 'PropertyUptFixture' } elseif ($methodName -in $attributePortNames) { 'PropertyAttributeFixture' } elseif ($methodName -in $creationPortNames) { 'PropertyCreationFixture' } elseif ($methodName -in $roadmapPortNames) { 'PropertyRoadmapFixture' } elseif ($methodName -in $sectionPortNames) { 'PropertySectionFixture' } elseif ($methodName -in $mainPortNames) { 'PropertyPortFixture' } else { 'PropertyQueryFixture' }
                 $propertySnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.' + $fixture + '.Root { Property = new PackageVerification.' + $fixture + '.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
             }
         }
-        if ($propertySnippets.Count -ne 400) { throw 'Expected 400 Property XML examples.' }
+        if ($propertySnippets.Count -ne 450) { throw 'Expected 450 Property XML examples.' }
     }
 } finally { $archive.Dispose() }
 
@@ -300,7 +315,7 @@ public static class Program
         Check(copyright.Copyright == "Copyright (c) 2026 TensorStruct", "installed assembly copyright");
         var company = (System.Reflection.AssemblyCompanyAttribute)typeof(OpenStaadWrapper).Assembly
             .GetCustomAttributes(typeof(System.Reflection.AssemblyCompanyAttribute), false)[0];
-        Check(company.Company == "IngeneStructs", "installed assembly company");
+        Check(company.Company == "TensorStruct", "installed assembly company");
         var fake = new FakeLoad();
         using (var wrapper = new OpenStaadWrapper(new FakeRoot(fake)))
         {
@@ -566,6 +581,12 @@ __PROPERTY_EXAMPLES__
         var creationAdapterNative = new PackageVerification.PropertyCreationFixture.Native();
         using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyCreationFixture.Root { Property = creationAdapterNative }))
             PackageVerification.PropertyCreationFixture.VerifyCalls(new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper), creationAdapterNative);
+        var uptInterfaceNative = new PackageVerification.PropertyUptFixture.Native();
+        using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyUptFixture.Root { Property = uptInterfaceNative }))
+            PackageVerification.PropertyUptFixture.VerifyCalls(wrapper.Property, uptInterfaceNative);
+        var uptAdapterNative = new PackageVerification.PropertyUptFixture.Native();
+        using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyUptFixture.Root { Property = uptAdapterNative }))
+            PackageVerification.PropertyUptFixture.VerifyCalls(new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper), uptAdapterNative);
         var attributeInterfaceNative = new PackageVerification.PropertyAttributeFixture.Native();
         using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyAttributeFixture.Root { Property = attributeInterfaceNative }))
             PackageVerification.PropertyAttributeFixture.VerifyCalls(wrapper.Property, attributeInterfaceNative);
@@ -777,6 +798,7 @@ if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'F
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyRoadmapFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyRoadmapFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCreationFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCreationFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyAttributeFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyAttributeFixture.cs') }
+if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyUptFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyUptFixture.cs') }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/LoadInspectionFixture.cs') -Destination (Join-Path $consumerRoot 'LoadInspectionFixture.cs')
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'NuGet.Config'), $config)
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'Consumer.csproj'), $project)
@@ -788,6 +810,11 @@ Write-Host "Verifying package $version in $consumerRoot"
 if ($LASTEXITCODE -ne 0) { throw 'Isolated consumer restore failed.' }
 $restoredArchive = Join-Path $consumerRoot "packages/staadpro.interop/$version/staadpro.interop.$version.nupkg"
 if ((Get-FileHash -LiteralPath $restoredArchive -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $PackagePath -Algorithm SHA256).Hash) { throw 'Consumer restored a different package archive.' }
+$installedLibrary = Join-Path $consumerRoot "packages/staadpro.interop/$version/lib/net481/StaadPro.Interop.dll"
+$installedXml = [IO.Path]::ChangeExtension($installedLibrary, '.xml')
+if (!(Test-Path -LiteralPath $installedLibrary) -or !(Test-Path -LiteralPath $installedXml)) { throw 'Installed package must provide XML beside its DLL.' }
+[xml] $installedDocumentation = [IO.File]::ReadAllText($installedXml)
+if ($installedDocumentation.OuterXml -cne $xml.OuterXml) { throw 'Installed IntelliSense differs from the verified archive XML.' }
 & dotnet build (Join-Path $consumerRoot 'Consumer.csproj') -c Release --no-restore --verbosity minimal
 if ($LASTEXITCODE -ne 0) { throw 'Isolated consumer compilation failed.' }
 & (Join-Path $consumerRoot 'bin/Release/net481/Consumer.exe')

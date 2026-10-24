@@ -1,8 +1,46 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261024.10 - 24 October 2026 (prepared preview)
+
+Incorporated **25 Property functions**: 22 reviewed P8 user-provided-table operations and the next three P9 catalog/database-folder operations. Property now exposes **225 overloads**, covering **166 of 204 active native routes**, with **38 remaining**. Five P8 transport contracts and four earlier P7 contracts remain pending. P8 has 25 of 30 routes; P9 has four of nine. See [all 25 UPT/catalog contracts](Property-UPT-Profiles-and-Catalogs.md).
+
+Passed a Release build with zero warnings/errors and **4,959 offline tests**, including **213 new cases**. The isolated PackageReference-only consumer verifies **892 selected XML examples**, including all **450 Property interface/adapter examples**. All sixteen new mutation examples are guarded; separate managed checks execute all 25 routes through both public surfaces. Live native mutation and engineering qualification remain pending.
+
+Added immutable explicit UPT profile inputs, owned table inventories and named section observations. Kept operation-specific creation, insertion and removal outcomes separate. Qualified ten UPT read-back layouts and the database-folder setter against exact acquired native profiles 24.00.02.354, 25.00.01.424 and 26.00.00.340, retaining their different folder return conventions. Unreviewed builds cannot select those policies. Table numbers, native indices and property references retain separate identities.
+
+Replaced legacy publisher branding throughout the package with **TensorStruct**, including assembly Company, copyright and shipped documentation. Package Authors remains exactly **Srinivasa Rao Masanam**. Registry ownership remains separately managed.
+
+- Incorporated `AddUPTPropertyCHANNEL`: Adds explicit channel data to an existing native UPT table.
+- Incorporated `AddUPTPropertyANGLE`: Adds explicit angle data to an existing native UPT table.
+- Incorporated `AddUPTPropertyDOUBLEANGLE`: Adds explicit double angle data to an existing native UPT table.
+- Incorporated `AddUPTPropertyTEE`: Adds explicit tee data to an existing native UPT table.
+- Incorporated `AddUPTPropertyPIPE`: Adds explicit pipe data to an existing native UPT table.
+- Incorporated `AddUPTPropertyTUBE`: Adds explicit tube data to an existing native UPT table.
+- Incorporated `AddUPTPropertyGENERAL`: Adds explicit general profile data to an existing native UPT table.
+- Incorporated `AddUPTPropertyISECTION`: Adds explicit I-section data to an existing native UPT table.
+- Incorporated `AddUPTPropertyPRISMATIC`: Adds explicit prismatic profile data to an existing native UPT table.
+- Incorporated `AddUPTPropertyWIDEFLANGECOMPOSITE`: Adds an explicit 12-, 16- or 19-slot composite wide-flange UPT section.
+- Incorporated `CreatePropertyFromUPTTable`: Creates an assigned section-property reference from an existing named UPT entry.
+- Incorporated `CreatePropertyFromUserTable`: Obtains a positive section-property reference through the native section-name-first user-table route.
+- Incorporated `CreateUPTTableEx`: Creates a UPT table using an explicit requested table number and type.
+- Incorporated `RemoveUPTTable`: Requests native removal of an explicitly identified UPT table.
+- Incorporated `RemovePropertyFromUPTTable`: Requests deletion of an exact named section from a UPT table.
+- Incorporated `GetUserProvidedTableCount`: Reads the native user-provided table count.
+- Incorporated `GetUserProvidedTableList`: Reads a bounded owned snapshot of native UPT table IDs.
+- Incorporated `GetUserProvidedTableSectionCount`: Reads a native table's section count with explicit table identity.
+- Incorporated `GetUserProvidedTableSectionType`: Reads the written scalar native UPT section type with count consistency checks.
+- Incorporated `GetUserProvidedTableSectionPropertyCount`: Retains the native named-section count with exact requested UPT identity.
+- Incorporated `GetUserProvidedTableSectionProperties`: Reads an owned version-qualified native UPT section-value layout.
+- Incorporated `GetUserProvidedTableNo`: Reads a table number for an explicitly supplied native UPT inventory index.
+- Incorporated `GetShapeCode`: Reads a raw country-specific section shape code with exact catalog identity.
+- Incorporated `SetStandardProfileDBFolder`: Requests a standard-profile database folder change under an exact native return-policy profile.
+- Incorporated `GetStandardProfileDBFolder`: Reads the exact native standard-profile database folder path.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.10.nupkg` for manual upload.
+
 ## 1.0.0-preview.20261024.9 - 24 October 2026 (prepared preview)
 
-Updated package and assembly copyright to **Copyright (c) 2026 TensorStruct**. Authors remains **Srinivasa Rao Masanam** and assembly Company remains **IngeneStructs**. Updated README prose to neutral bold API names and standard blue documentation links, removing the red inline-code badges. Preserved runnable fenced examples, the existing API surface and XML IntelliSense.
+Updated package and assembly copyright to **Copyright (c) 2026 TensorStruct**. Authors remains **Srinivasa Rao Masanam** and assembly Company remains **TensorStruct**. Updated README prose to neutral bold API names and standard blue documentation links, removing the red inline-code badges. Preserved runnable fenced examples, the existing API surface and XML IntelliSense.
 
 Rebuilt the Release package with zero warnings/errors. Verified the generated manifest and installed assembly copyright, exact Authors/Company metadata, DLL/XML and shipped guides through a fresh PackageReference-only consumer, including **842 selected XML examples**. The preceding source regression record remains 4,746 passing offline tests; this metadata update adds no API behavior.
 
@@ -16,7 +54,7 @@ Passed a Release build with zero warnings/errors and **4,746 offline tests**, in
 
 Added immutable exact attribute pairs, pair/domain/ID snapshots, fireproofing correspondence and explicit UPT value packets. Bounded count/list/count reads validate written outputs and preserve order/duplicates. By-reference native attribute-value rewriting returns StateChanged rather than data for the wrong pair. UPT table IDs, insertion acknowledgements and duplicate outcomes remain separate; scalar and unequal wide-flange routes retain their different return conventions.
 
-Package Authors remains exactly **Srinivasa Rao Masanam**; company and copyright remain **IngeneStructs**. Existing author packing/verification safeguards remain in place.
+Package Authors remains exactly **Srinivasa Rao Masanam**; company and copyright remain **TensorStruct**. Existing author packing/verification safeguards remain in place.
 
 - Incorporated inactive-member count and seven fireproofing count/list/detail operations.
 - Incorporated fourteen member/element attribute definition, assignment, removal, count and paired-inventory operations.
@@ -34,7 +72,7 @@ Passed a Release build with zero warnings/errors and **4,551 offline tests**, in
 
 Added explicit immutable wide-flange, general-prismatic, six-DOF and partial-factor inputs. Retained separate created section IDs, created specification IDs, zero-based fireproofing indices and zero-success status-only results. The void unique-ID setter returns InvokedWithoutAcknowledgement with no fabricated native code and IsSuccessful false; its exact requested property/text identity is retained. Existing signatures, current-material context and native units remain explicit.
 
-Package Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **IngeneStructs**. Packing rejects a different Authors value, and installed-package verification checks the exact manifest value. NuGet.org registry ownership is managed separately.
+Package Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. Packing rejects a different Authors value, and installed-package verification checks the exact manifest value. NuGet.org registry ownership is managed separately.
 
 - Incorporated wide-flange/solid-shape table, four simple prismatic, general-prismatic and tapered-tube creators.
 - Incorporated partial/member/element specification creators, both cable routes, control/dependent relations, plate offsets and fireproofing creation.
@@ -58,7 +96,7 @@ Added immutable explicit material definitions/strengths, orthotropic constants, 
 - Added immutable named inputs/results, guarded examples, owned bounded snapshots and shared binding checks; preserved all earlier signatures.
 - Updated the native inventory/roadmap, shipped usage guide, installation/publishing instructions and installed XML verification.
 
-Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.6.nupkg` for manual upload. Authors: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs. Registry ownership remains independently managed by the package owner.
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.6.nupkg` for manual upload. Authors: **Srinivasa Rao Masanam**. Company: **TensorStruct**. Copyright (c) 2026 TensorStruct. Registry ownership remains independently managed by the package owner.
 
 ## 1.0.0-preview.20261024.5 - 24 October 2026 (prepared preview)
 
@@ -74,7 +112,7 @@ Selected 47 reviewed section layouts per acquired STAAD 24/25/26 profile, readin
 - Strengthened inventory dispatch lifetime checks and preserved caller-apartment writes, prevalidated input snapshots and nontransactional failure behavior.
 - Updated shipped guides, coverage, package metadata and all interface/adapter XML examples.
 
-Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.5.nupkg` for manual upload; no NuGet.org upload or registry ownership change is performed. Authors: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.5.nupkg` for manual upload; no NuGet.org upload or registry ownership change is performed. Authors: **Srinivasa Rao Masanam**. Company: **TensorStruct**. Copyright (c) 2026 TensorStruct.
 
 ## 1.0.0-preview.20261024.4 - 24 October 2026 (prepared preview)
 
@@ -89,7 +127,7 @@ Material creation records native Created/Updated outcomes separately from list I
 - Added MaterialProperty, PlateThickness, MemberReleases, Releases, Springs, MpFactors, ReleaseType and MaterialCreationStatus with XML documentation. Preserved WPF change notifications and documented private catalog/unit-converter omissions.
 - Updated package metadata/version, shipped workflow/installation/publishing guides, coverage and installed XML verification. Retained prior Boolean load enumeration fixes and existing qualified observation signatures.
 
-Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.4.nupkg` for manual upload. No public upload, registry owner change or live model mutation is performed by this task. Authors: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.4.nupkg` for manual upload. No public upload, registry owner change or live model mutation is performed by this task. Authors: **Srinivasa Rao Masanam**. Company: **TensorStruct**. Copyright (c) 2026 TensorStruct.
 
 ## 1.0.0-preview.20261024.3 - 24 October 2026 (prepared preview)
 
@@ -102,21 +140,21 @@ Passed a Release solution build with zero warnings/errors and **3,763 offline te
 - Added bounded material count/list retrieval, four-slot buffer validation, staged managed population and independent zero-offset packets retaining their end/frame. Corrected the bulk offset null guard.
 - Added the packaged Property-Management-Ports.md guide and updated coverage, installation, publishing and expanded XML verification.
 
-Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.3.nupkg` for manual upload; this task does not publish it to NuGet.org or change registry owners. Authors: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.3.nupkg` for manual upload; this task does not publish it to NuGet.org or change registry owners. Authors: **Srinivasa Rao Masanam**. Company: **TensorStruct**. Copyright (c) 2026 TensorStruct.
 
 ## 1.0.0-preview.20261024.2 - 24 October 2026 (prepared preview)
 
-Restored **Authors: Srinivasa Rao Masanam**. Retained **Company: IngeneStructs** and **Copyright (c) 2026 IngeneStructs** in the package/assembly metadata as applicable. Corrected the current README, publishing guide and verification checks to distinguish author credit from registry ownership. The intended NuGet.org owner is **IngeneStructs**; registry ownership is changed separately by an authenticated current owner and is not asserted by the archive.
+Restored **Authors: Srinivasa Rao Masanam**. Retained **Company: TensorStruct** and **Copyright (c) 2026 TensorStruct** in the package/assembly metadata as applicable. Corrected the current README, publishing guide and verification checks to distinguish author credit from registry ownership. The intended NuGet.org owner is **TensorStruct**; registry ownership is changed separately by an authenticated current owner and is not asserted by the archive.
 
 Retained the existing API implementation, Boolean case-number fix and expanded XML IntelliSense. Built a new net481 archive and verified exact author/copyright metadata, installed company/copyright attributes, DLL/XML assets, packaged guidance and all **542 selected XML examples** through isolated PackageReference restore/build/runtime checks. Previous version entries retain their historical metadata.
 
 ## 1.0.0-preview.20261024.1 - 24 October 2026 (prepared preview)
 
-Updated the package author and assembly company to **IngeneStructs**. Updated both package and assembly copyright to **Copyright (c) 2026 IngeneStructs**, and aligned the packaged README, publishing guide and release metadata. NuGet.org account ownership is configured separately through the portal; the archive metadata does not transfer it.
+Updated publisher branding and assembly Company to **TensorStruct**; current package Authors is **Srinivasa Rao Masanam**. Updated both package and assembly copyright to **Copyright (c) 2026 TensorStruct**, and aligned the packaged README, publishing guide and release metadata. NuGet.org account ownership is configured separately through the portal; the archive metadata does not transfer it.
 
 This metadata update retains the preceding Boolean case-number fix and the existing public API/target-framework inventory. Earlier release entries retain their historical metadata. Built a new net481 archive and verified its manifest, installed assembly company/copyright, DLL/XML assets, shipped guides and all **542 selected XML examples** through isolated PackageReference restore/build/runtime verification. The implementation's preceding **3,574-test** verification and scoped STAAD.Pro 25.00.00.539 live query validation are recorded below.
 
-The archive is prepared for manual upload as a new version; earlier archives are retained. Author/company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
+The archive is prepared for manual upload as a new version; earlier archives are retained. Author/company: **TensorStruct**. Copyright (c) 2026 TensorStruct.
 
 ## 1.0.0-preview.20261024 - 24 October 2026 (prepared preview)
 

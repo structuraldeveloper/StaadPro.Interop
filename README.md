@@ -12,9 +12,19 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Package copyright update
+## Property UPT profiles and catalogs
 
-Updated package and assembly copyright to **Copyright (c) 2026 TensorStruct**. Authors remains **Srinivasa Rao Masanam** and assembly Company remains **IngeneStructs**. Updated README API references to neutral bold text with standard blue documentation links, removing inline-code badges from prose. Retained the preceding preview's API surface, runnable fenced examples and XML IntelliSense.
+Incorporated **25 Property functions**: 22 reviewed P8 user-provided-table operations and the next three P9 catalog/database-folder operations. Property now exposes **225 overloads**, covering **166 of 204 active native routes**, with **38 remaining**. Five P8 transport contracts and four earlier P7 contracts remain pending. P8 has 25 of 30 routes; P9 has four of nine. See [all 25 UPT/catalog contracts](docs/Property-UPT-Profiles-and-Catalogs.md).
+
+Passed a Release build with zero warnings/errors and **4,959 offline tests**, including **213 new cases**. The isolated PackageReference-only consumer verifies **892 selected XML examples**, including all **450 Property interface/adapter examples**. All sixteen new mutation examples are guarded; separate managed checks execute all 25 routes through both public surfaces. Live native mutation and engineering qualification remain pending.
+
+Added immutable explicit UPT profile inputs, owned table inventories and named section observations. Kept operation-specific creation, insertion and removal outcomes separate. Qualified ten UPT read-back layouts and the database-folder setter against exact acquired native profiles 24.00.02.354, 25.00.01.424 and 26.00.00.340, retaining their different folder return conventions. Unreviewed builds cannot select those policies. Table numbers, native indices and property references retain separate identities.
+
+Replaced legacy publisher branding throughout the package with **TensorStruct**, including assembly Company, copyright and shipped documentation. Package Authors remains exactly **Srinivasa Rao Masanam**. Registry ownership remains separately managed.
+
+## Earlier package copyright update
+
+Updated package and assembly copyright to **Copyright (c) 2026 TensorStruct**. Authors remains **Srinivasa Rao Masanam** and assembly Company remains **TensorStruct**. Updated README API references to neutral bold text with standard blue documentation links, removing inline-code badges from prose. Retained the preceding preview's API surface, runnable fenced examples and XML IntelliSense.
 
 Rebuilt the Release package with zero warnings/errors. Verified the generated manifest and installed assembly copyright, exact Authors/Company metadata, DLL/XML and shipped guides through a fresh PackageReference-only consumer, including **842 selected XML examples**. The preceding source regression record remains 4,746 passing offline tests; this metadata update adds no API behavior.
 
@@ -26,7 +36,7 @@ Passed a Release build with zero warnings/errors and **4,746 offline tests**, in
 
 Added immutable exact attribute pairs, pair/domain/ID snapshots, fireproofing correspondence and explicit UPT value packets. Bounded count/list/count reads validate written outputs and preserve order/duplicates. By-reference native attribute-value rewriting returns StateChanged rather than data for the wrong pair. UPT table IDs, insertion acknowledgements and duplicate outcomes remain separate; scalar and unequal wide-flange routes retain their different return conventions.
 
-Package Authors remains exactly **Srinivasa Rao Masanam**; company and copyright remain **IngeneStructs**. Existing author packing/verification safeguards remain in place.
+Package Authors remains exactly **Srinivasa Rao Masanam**; company and copyright remain **TensorStruct**. Existing author packing/verification safeguards remain in place.
 
 ## Earlier Property section and specification creation
 
@@ -36,7 +46,7 @@ Passed a Release build with zero warnings/errors and **4,551 offline tests**, in
 
 Added explicit immutable wide-flange, general-prismatic, six-DOF and partial-factor inputs. Retained separate created section IDs, created specification IDs, zero-based fireproofing indices and zero-success status-only results. The void unique-ID setter returns InvokedWithoutAcknowledgement with no fabricated native code and IsSuccessful false; its exact requested property/text identity is retained. Existing signatures, current-material context and native units remain explicit.
 
-Package Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **IngeneStructs**. Packing rejects a different Authors value, and installed-package verification checks the exact manifest value. NuGet.org registry ownership is managed separately.
+Package Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. Packing rejects a different Authors value, and installed-package verification checks the exact manifest value. NuGet.org registry ownership is managed separately.
 
 ## Case enumeration correction
 
@@ -62,13 +72,13 @@ All 36 methods include comparative IntelliSense explaining scope, alternatives, 
 
 Implemented 15 additional Load observations with complete XML contracts, named status/data results, bounded eager snapshots and an internal shared service. Source now exposes 135 Load overloads and dispatches 88/129 documented native names. Remaining undispatched names total 41: one existing alternative, one derived capability, four partial overlaps and 35 absent operations, plus three separate metadata-only candidates. Passed 2,448 offline tests (189 new cases) and all 30 new XML examples. See [Load inspection usage](docs/Load-Inspection-Queries.md). These changes postdate the prepared archive below; live native qualification remains pending.
 
-## Prepared preview: 1.0.0-preview.20261024.9
+## Prepared preview: 1.0.0-preview.20261024.10
 
-Package author: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 TensorStruct.
+Package author: **Srinivasa Rao Masanam**. Company: **TensorStruct**. Copyright (c) 2026 TensorStruct.
 
-The local archive includes 200 Property overloads, 171 Load overloads, all 143 reference Geometry overloads, 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
+The local archive includes 225 Property overloads, 171 Load overloads, all 143 reference Geometry overloads, 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
-Validated a Release solution build, 4,746 offline tests and isolated installation with 842 compiled/executed XML examples (new mutation examples are guarded). The archive is prepared for manual upload and has not been published to NuGet.org. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
+Validated a Release solution build, 4,959 offline tests and isolated installation with 892 compiled/executed XML examples (new mutation examples are guarded). The archive is prepared for manual upload and has not been published to NuGet.org. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
 
 ## Output comparison and planned work
 

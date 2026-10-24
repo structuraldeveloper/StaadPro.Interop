@@ -6,7 +6,7 @@ Passed a Release build with zero warnings/errors and **4,551 offline tests**, in
 
 Added explicit immutable wide-flange, general-prismatic, six-DOF and partial-factor inputs. Retained separate created section IDs, created specification IDs, zero-based fireproofing indices and zero-success status-only results. The void unique-ID setter returns InvokedWithoutAcknowledgement with no fabricated native code and IsSuccessful false; its exact requested property/text identity is retained. Existing signatures, current-material context and native units remain explicit.
 
-Package Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **IngeneStructs**. Packing rejects a different Authors value, and installed-package verification checks the exact manifest value. NuGet.org registry ownership is managed separately.
+Package Authors remains exactly **Srinivasa Rao Masanam**. Company and copyright remain **TensorStruct**. Packing rejects a different Authors value, and installed-package verification checks the exact manifest value. NuGet.org registry ownership is managed separately.
 
 ## Native contracts and common implementation
 

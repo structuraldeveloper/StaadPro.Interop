@@ -53,7 +53,7 @@ namespace StaadPro.Interop.Tests.Adapter
         public void ExactlyTwentyFiveNewOverloadsAreAvailableOnBothSurfaces()
         {
             Assert.That(NewMethods.Count(), Is.EqualTo(25));
-            Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(200));
+            Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(225));
             foreach (var method in NewMethods)
             {
                 var concrete = typeof(OSPropertyAdapter).GetMethod(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray());

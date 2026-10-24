@@ -15,7 +15,8 @@ namespace StaadPro.Interop.Models.Property
             int? createdSpecificationId = null, int? createdSpecificationIndex = null, int? controlNodeId = null,
             int? propertyId = null, string uniqueId = null, int? plateNodeIndex = null,
             PropertyAttribute attribute = null, PropertyAttributeScope? attributeScope = null,
-            int? tableId = null, int? createdTableId = null, UserProvidedTableType? tableType = null, string sectionName = null)
+            int? tableId = null, int? createdTableId = null, UserProvidedTableType? tableType = null, string sectionName = null,
+            string folderPath = null, Version nativeContractVersion = null)
         {
             NativeFunction = operation; Status = status; TargetKind = targetKind;
             TargetIds = Array.AsReadOnly(targetIds == null ? new int[0] : (int[])targetIds.Clone());
@@ -25,6 +26,7 @@ namespace StaadPro.Interop.Models.Property
             ControlNodeId = controlNodeId; PropertyId = propertyId; UniqueId = uniqueId; PlateNodeIndex = plateNodeIndex;
             Attribute = attribute; AttributeScope = attributeScope; TableId = tableId; CreatedTableId = createdTableId;
             TableType = tableType; SectionName = sectionName;
+            FolderPath = folderPath; NativeContractVersion = nativeContractVersion;
             if (response is bool flag) NativeBooleanReturn = flag;
             else if (response != null) NativeReturnCode = Services.Property.PropertyValueReader.Integer(response, operation);
         }
@@ -74,5 +76,9 @@ namespace StaadPro.Interop.Models.Property
         public UserProvidedTableType? TableType { get; }
         /// <summary>Gets the exact requested section name for UPT insertion; otherwise null. No created section property reference is fabricated.</summary>
         public string SectionName { get; }
+        /// <summary>Gets the exact requested standard-profile folder path for a database-folder mutation; otherwise null. No normalization, creation or filesystem existence check is implied.</summary>
+        public string FolderPath { get; }
+        /// <summary>Gets the immutable exact acquired native version selecting the database-folder return policy; otherwise null.</summary>
+        public Version NativeContractVersion { get; }
     }
 }

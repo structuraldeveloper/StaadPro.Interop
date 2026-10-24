@@ -49,7 +49,9 @@ namespace StaadPro.Interop.Enums.Property
         /// <summary>The operation creates a user-provided table, independently of section and specification IDs.</summary>
         UserProvidedTable,
         /// <summary>The operation adds a named section to an existing user-provided table.</summary>
-        UserProvidedSection
+        UserProvidedSection,
+        /// <summary>The operation changes the acquired native application's standard-profile database folder.</summary>
+        ProfileDatabaseFolder
     }
 
     /// <summary>Identifies the five native ASSIGN profile selectors; these are not section property reference IDs.</summary>
