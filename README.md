@@ -16,15 +16,15 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 Fixed primary and combination discovery rejecting the Boolean `true` returned by `GetPrimaryLoadCaseNumbers` and `GetLoadCombinationCaseNumbers` on the observed STAAD.Pro 25.00.00.539 build. The shared readers now handle Boolean success separately from integral case counts, validate the complete ID array, and recheck the separate count before reading metadata. Boolean false, malformed arrays and inconsistent counts still fail. Reference discovery retains its integer-count contract; matching documented integral primary/combination results remain supported.
 
-Passed a Release build with zero warnings/errors and **3,763 offline tests**, including the preceding **43 case-number return regressions**. Isolated PackageReference verification compiles and executes **592 selected XML examples**; the packaged primary and combination stand-ins now return Boolean success. Native return shapes were observed read-only during diagnosis; wider native/version and engineering qualification remains pending. See the [Load query contracts](docs/Load-Queries.md) and [release notes](docs/Release-Notes.md).
+Passed a Release build with zero warnings/errors and **3,931 offline tests**, including the preceding **43 case-number return regressions**. Isolated PackageReference verification compiles and executes **642 selected XML examples**; the packaged primary and combination stand-ins now return Boolean success. Native return shapes were observed read-only during diagnosis; wider native/version and engineering qualification remains pending. See the [Load query contracts](docs/Load-Queries.md) and [release notes](docs/Release-Notes.md).
 
-## Property management ports
+## Property material and release workflows
 
-Incorporated 25 further Property overloads for table/composite/built-up section creation, beta-angle assignment and population, material assignment subsets, four-corner plate thickness creation/retrieval/assignment, and member-offset creation/population/assignment. Property now exposes **75 overloads**: 25 typed observations and 50 main-project compatibility ports. Added detailed, matching interface/adapter XML IntelliSense and examples, the required thickness/offset packets, member offset references and preserved table/offset enum codes. Native dispatch covers **54 of 204 active Property candidates**, with **150 remaining**. See [the 25-method guide](docs/Property-Management-Ports.md) for all signatures, units, statuses, mutation behavior and compatibility corrections.
+Incorporated 25 further main-interface Property overloads for material collections, material creation/assignment, uniform plate thicknesses, grouped offset pipelines and member releases. Property now exposes **100 overloads**: 25 qualified observations and 75 main-project compatibility ports. Added detailed matching interface/adapter XML IntelliSense and examples, mutable material/thickness/release packets and member-end release references. Native dispatch reaches **57 of 204 active Property candidates**, with **147 remaining**. See [all 25 workflow signatures](docs/Property-Workflows.md) for parameters, units, native statuses, side effects and deliberate source corrections.
 
-Passed a Release solution build with zero warnings/errors and **3,763 offline tests**, including **189 new Property management cases**. The isolated installed-package verifier compiles and runs **592 selected XML examples**, including all **150 Property interface/adapter examples**, through a fresh PackageReference-only consumer and cache. Managed stand-ins exercise the examples without changing a native STAAD model. Live creation/assignment and engineering qualification for this increment remain pending.
+Passed a Release build with zero warnings/errors and **3,931 offline tests**, including **168 new workflow cases**. Isolated installed-package verification compiles and runs **642 selected XML examples**, including all **200 Property interface/adapter examples**, through a fresh PackageReference-only consumer and package cache. Examples run against managed native stand-ins; live mutation and engineering qualification remain pending.
 
-The preceding 25 inventory/material-context/assignment ports remain available; see [the earlier port guide](docs/Property-Main-Ports.md).
+Material creation records native Created/Updated outcomes separately from list IDs; legacy creation retains its explicitly documented E/G x1000 scale. Indexed material collections retain native names and consistent name equality/hash behavior. Release read-back preserves mixed native modes and partial-mode provenance; basic creation refuses unsupported partial-moment packets. Populations stage native reads before changing caller packets, degree overloads retain caller-apartment dispatch, and multi-step writes recheck binding lifetime around each native write.
 
 ## Earlier source update — Load expansion
 
@@ -36,13 +36,13 @@ All 36 methods include comparative IntelliSense explaining scope, alternatives, 
 
 Implemented 15 additional Load observations with complete XML contracts, named status/data results, bounded eager snapshots and an internal shared service. Source now exposes 135 Load overloads and dispatches 88/129 documented native names. Remaining undispatched names total 41: one existing alternative, one derived capability, four partial overlaps and 35 absent operations, plus three separate metadata-only candidates. Passed 2,448 offline tests (189 new cases) and all 30 new XML examples. See [Load inspection usage](docs/Load-Inspection-Queries.md). These changes postdate the prepared archive below; live native qualification remains pending.
 
-## Prepared preview: 1.0.0-preview.20261024.3
+## Prepared preview: 1.0.0-preview.20261024.4
 
 Package author: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
 
-The local archive includes 75 Property overloads, 171 Load overloads, all 143 reference Geometry overloads, 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
+The local archive includes 100 Property overloads, 171 Load overloads, all 143 reference Geometry overloads, 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
-Validated a Release solution build, 3,763 offline tests and isolated installation with 592 compiled/executed XML examples. The archive is prepared for manual upload and has not been published to NuGet.org. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
+Validated a Release solution build, 3,931 offline tests and isolated installation with 642 compiled/executed XML examples. The archive is prepared for manual upload and has not been published to NuGet.org. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
 
 ## Output comparison and planned work
 
@@ -50,7 +50,7 @@ The [Output guide](docs/Output-Porting.md) documents 15 implemented typed querie
 
 ## Property implementation and comparison
 
-The [Property review](docs/Property-Porting.md) records 75 managed overloads and routes to 54 of the 204 active native candidates, with 150 remaining. The [main-project ports guide](docs/Property-Main-Ports.md) lists the preceding 25 signatures and explains compatibility sentinels, no-op inputs, native status checks, raw section-buffer limits and mutation behavior. The [multi-version inventory](docs/reports/OpenSTAAD-Property-API-Coverage-and-Contract-Inventory.md) remains the earlier contract evidence; dispatch coverage does not certify complete typed payloads or live compatibility.
+The [Property review](docs/Property-Porting.md) records 100 managed overloads and routes to 57 of the 204 active native candidates, with 147 remaining. The [main-project ports guide](docs/Property-Main-Ports.md) lists the preceding 25 signatures and explains compatibility sentinels, no-op inputs, native status checks, raw section-buffer limits and mutation behavior. The [multi-version inventory](docs/reports/OpenSTAAD-Property-API-Coverage-and-Contract-Inventory.md) remains the earlier contract evidence; dispatch coverage does not certify complete typed payloads or live compatibility.
 
 ## Support comparison and planned work
 
@@ -218,8 +218,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261024.3 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.3.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261024.4 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.4.nupkg
 ```
 
 ---

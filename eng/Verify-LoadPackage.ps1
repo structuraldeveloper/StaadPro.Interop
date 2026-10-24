@@ -235,11 +235,13 @@ try {
         $propertyGuide = Read-PackageEntry 'docs/Property-Porting.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-Main-Ports.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-Management-Ports.md'
+        $propertyGuide += Read-PackageEntry 'docs/Property-Workflows.md'
         $mainPortNames = @('GetUnusedSectionsCount', 'GetUnusedSectionsIds', 'GetBeamProperty', 'GetPlateMaterialName', 'GetSectionPropertyList', 'GetSectionPropertyName', 'GetSectionPropertyValues', 'GetSectionPropertyAssignedBeams', 'GetThicknessPropertyList', 'GetThicknessPropertyAssignedPlates', 'GetAveragePlateThickness', 'GetBeamsWithMissingSectionProperty', 'GetPlatesWithMissingThicknessProperty', 'GetMemberSpecification', 'AssignBeamProperty', 'AssignMaterialToMember', 'SetMaterialName', 'AssignMemberEndOffsets', 'AssignMemberEndOffset')
         $mainPortNames += @('DeleteMaterial', 'CreateBeamPropertyFromTable', 'CreateCompositeBeamPropertyFromTable', 'CreateBuiltUpBeamProperty', 'AssignBetaAnglesToBeams', 'PopulateBetaAngles', 'GetIsotropicMaterialAssignedBeams', 'GetIsotropicMaterialAssignedPlates', 'CreatePlateElementThickness', 'CreatePlateElementThicknesses', 'AssignPlateElementThickness', 'AssignPlateElementThicknesses', 'GetPlateThicknessByPlateId', 'GetPlateThicknessByThicknessPropertyId', 'GetAllPlateElementThicknesses', 'GetAllPlateElementThicknessesWithPopulatedAssignments', 'GetBeamOffsetSpecification', 'PopulateMemberOffsets', 'CreateOffsetSpecification', 'CreateOffsetSpecifications', 'AssignOffsetSpecifications')
+        $mainPortNames += @('AssignMaterialProperties', 'AssignMaterialProperty', 'CreateMaterialProperties', 'CreateMaterialPropertiesNoConversion', 'CreateMaterialProperty', 'CreateMaterialPropertyNoConversion', 'GetAllExtendedIsotropicMaterialProperties', 'GetAllIsotropicMaterialProperties', 'GetAllExtendedIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllExtendedMaterialPropertiesWithPopulatedAssignments', 'GetAllMaterialPropertiesWithPopulatedAssignments', 'CreatePlateThicknessProperties', 'AssignThicknessProperties', 'AssignThicknessProperty', 'AssignOffsetSpecification', 'CreateAndAssignOffsetSpecifications', 'PopulateMemberReleases', 'CreateAndAssignMemberEndReleases')
         foreach ($owner in @('Adapters.Interfaces.IOSProperty', 'Adapters.Models.OSPropertyAdapter')) {
             $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-            if ($entries.Count -ne 75) { throw "Expected 75 Property method contracts for $owner." }
+            if ($entries.Count -ne 100) { throw "Expected 100 Property method contracts for $owner." }
             foreach ($entry in $entries) {
                 $methodName = [regex]::Match($entry.name, '\.([^.()]+)(?:\(|$)').Groups[1].Value
                 $requiredTags = @('summary', 'remarks', 'example/code')
@@ -255,7 +257,7 @@ try {
                 $propertySnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.' + $fixture + '.Root { Property = new PackageVerification.' + $fixture + '.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
             }
         }
-        if ($propertySnippets.Count -ne 150) { throw 'Expected 150 Property XML examples.' }
+        if ($propertySnippets.Count -ne 200) { throw 'Expected 200 Property XML examples.' }
     }
 } finally { $archive.Dispose() }
 

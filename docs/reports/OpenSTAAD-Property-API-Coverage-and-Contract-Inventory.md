@@ -9617,3 +9617,7 @@ Passed 3,313 offline tests (413 new Property cases). Fifty expanded XML examples
 ## 11. Subsequent management-port checkpoint
 
 On 24 October 2026 the managed surface reached 75 overloads: 25 qualified observations and 50 main-project compatibility methods. The latest increment adds 25 methods for section creation, beta angles, material subsets, plate thicknesses and member offsets. Native route coverage is 54/204 active candidates, with 150 pending; this does not establish live qualification. The earlier per-function plans/coverage labels above are archived evidence. Use [the current Property guide](../Property-Porting.md) and [all 25 management contracts](../Property-Management-Ports.md) for implementation status and behavior.
+
+## 12. Subsequent material and release workflow checkpoint
+
+On 24 October 2026 the next 25 main-interface ports brought Property to 100 managed overloads and 57/204 active native routes, leaving 147 pending. The new material, uniform-thickness, offset and member-release workflows retain signatures and document operation-specific statuses, the legacy E/G scale, retained release modes and nontransactional mutations. Earlier per-function coverage/plans above remain archived evidence. See [the current Property guide](../Property-Porting.md) and [all 25 workflow contracts](../Property-Workflows.md) for current behavior and qualification limits.

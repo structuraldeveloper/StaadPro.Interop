@@ -1,5 +1,20 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261024.4 - 24 October 2026 (prepared preview)
+
+Incorporated 25 further main-interface Property overloads for material collections, material creation/assignment, uniform plate thicknesses, grouped offset pipelines and member releases. Property now exposes **100 overloads**: 25 qualified observations and 75 main-project compatibility ports. Added detailed matching interface/adapter XML IntelliSense and examples, mutable material/thickness/release packets and member-end release references. Native dispatch reaches **57 of 204 active Property candidates**, with **147 remaining**. See [all 25 workflow signatures](Property-Workflows.md) for parameters, units, native statuses, side effects and deliberate source corrections.
+
+Passed a Release build with zero warnings/errors and **3,931 offline tests**, including **168 new workflow cases**. Isolated installed-package verification compiles and runs **642 selected XML examples**, including all **200 Property interface/adapter examples**, through a fresh PackageReference-only consumer and package cache. Examples run against managed native stand-ins; live mutation and engineering qualification remain pending.
+
+Material creation records native Created/Updated outcomes separately from list IDs; legacy creation retains its explicitly documented E/G x1000 scale. Indexed material collections retain native names and consistent name equality/hash behavior. Release read-back preserves mixed native modes and partial-mode provenance; basic creation refuses unsupported partial-moment packets. Populations stage native reads before changing caller packets, degree overloads retain caller-apartment dispatch, and multi-step writes recheck binding lifetime around each native write.
+
+- Incorporated seven material read/population overloads, four material creation overloads and three material assignment overloads.
+- Incorporated four uniform thickness overloads, four offset assignment/pipeline overloads and three member-release population/creation overloads.
+- Added MaterialProperty, PlateThickness, MemberReleases, Releases, Springs, MpFactors, ReleaseType and MaterialCreationStatus with XML documentation. Preserved WPF change notifications and documented private catalog/unit-converter omissions.
+- Updated package metadata/version, shipped workflow/installation/publishing guides, coverage and installed XML verification. Retained prior Boolean load enumeration fixes and existing qualified observation signatures.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.4.nupkg` for manual upload. No public upload, registry owner change or live model mutation is performed by this task. Authors: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
+
 ## 1.0.0-preview.20261024.3 - 24 October 2026 (prepared preview)
 
 Incorporated 25 further Property overloads for table/composite/built-up section creation, beta-angle assignment and population, material assignment subsets, four-corner plate thickness creation/retrieval/assignment, and member-offset creation/population/assignment. Property now exposes **75 overloads**: 25 typed observations and 50 main-project compatibility ports. Added detailed, matching interface/adapter XML IntelliSense and examples, the required thickness/offset packets, member offset references and preserved table/offset enum codes. Native dispatch covers **54 of 204 active Property candidates**, with **150 remaining**. See [the 25-method guide](Property-Management-Ports.md) for all signatures, units, statuses, mutation behavior and compatibility corrections.

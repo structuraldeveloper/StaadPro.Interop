@@ -1,8 +1,11 @@
 # Property creation, assignments and managed population
 
+This guide records the preceding management increment. Property now exposes 100 overloads; see [the latest 25 material and release workflows](Property-Workflows.md).
+
+
 This increment adds 25 main-project methods to IOSProperty and the single OSPropertyAdapter. Twenty-one are main-interface methods; the four material-assignment subset overloads were public adapter methods in the main project. Return types, parameter names/order and optional defaults are preserved after namespace adaptation. Private catalog and unit-library dependencies are not imported.
 
-There are now 75 Property overloads: 25 typed observations and 50 main-project compatibility ports. Ten additional native names have routes, giving 54 of 204 active candidates and 150 pending. This is dispatch coverage, not live qualification.
+At that management-port checkpoint there were 75 Property overloads: 25 typed observations and 50 main-project compatibility ports. Ten additional native names have routes, giving 54 of 204 active candidates and 150 pending. This is dispatch coverage, not live qualification.
 
 ## Shared rules
 

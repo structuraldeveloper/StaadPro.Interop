@@ -97,6 +97,16 @@ namespace StaadPro.Interop.Entities
         [JsonIgnore]
         public OffsetSpecification EndOffset { get => Get<OffsetSpecification>(); set => Set(value); }
 
+        /// <summary>Gets or sets the managed start-end release packet; null until supplied or populated.</summary>
+        /// <remarks>Setting this reference does not modify STAAD. Native creation/assignment must be requested explicitly.</remarks>
+        [JsonIgnore]
+        public MemberReleases StartRelease { get => Get<MemberReleases>(); set => Set(value); }
+
+        /// <summary>Gets or sets the managed end-end release packet; null until supplied or populated.</summary>
+        /// <remarks>PopulateMemberReleases retains per-DOF native modes alongside the compatibility projection.</remarks>
+        [JsonIgnore]
+        public MemberReleases EndRelease { get => Get<MemberReleases>(); set => Set(value); }
+
         /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Beam.P:MemberLoadItems']/*" />
         [JsonIgnore]
         public List<MemberLoad> MemberLoadItems { get => Get<List<MemberLoad>>(); private set => Set(value); }

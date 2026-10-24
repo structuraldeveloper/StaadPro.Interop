@@ -2,27 +2,27 @@
 
 A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD
 
-## Version 1.0.0-preview.20261024.3
+## Version 1.0.0-preview.20261024.4
 
 Package author: **Srinivasa Rao Masanam**. Company: **IngeneStructs**. Copyright (c) 2026 IngeneStructs.
 
 StaadPro.Interop provides typed adapters and managed models for working with an existing Bentley STAAD.Pro application through OpenSTAAD. It includes geometry and load operations, model information and lifecycle functions, application-window controls, and native analysis requests.
 
-This preview includes 75 Property overloads, all 171 current Load overloads, the completed reference Geometry ports, 15 typed Output queries, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
+This preview includes 100 Property overloads, all 171 current Load overloads, the completed reference Geometry ports, 15 typed Output queries, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
 
 ## Primary and combination case enumeration fix
 
 Fixed primary and combination discovery rejecting the Boolean `true` returned by `GetPrimaryLoadCaseNumbers` and `GetLoadCombinationCaseNumbers` on the observed STAAD.Pro 25.00.00.539 build. The shared readers now handle Boolean success separately from integral case counts, validate the complete ID array, and recheck the separate count before reading metadata. Boolean false, malformed arrays and inconsistent counts still fail. Reference discovery retains its integer-count contract; matching documented integral primary/combination results remain supported.
 
-Passed a Release build with zero warnings/errors and **3,763 offline tests**, including the preceding **43 case-number return regressions**. Isolated PackageReference verification compiles and executes **592 selected XML examples**; the packaged primary and combination stand-ins now return Boolean success. Native return shapes were observed read-only during diagnosis; wider native/version and engineering qualification remains pending. Upgrade the consuming application to this exact package version and rebuild to load the corrected DLL. Existing Load API signatures are unchanged.
+Passed a Release build with zero warnings/errors and **3,931 offline tests**, including the preceding **43 case-number return regressions**. Isolated PackageReference verification compiles and executes **642 selected XML examples**; the packaged primary and combination stand-ins now return Boolean success. Native return shapes were observed read-only during diagnosis; wider native/version and engineering qualification remains pending. Upgrade the consuming application to this exact package version and rebuild to load the corrected DLL. Existing Load API signatures are unchanged.
 
-## Property management ports
+## Property material and release workflows
 
-Incorporated 25 further Property overloads for table/composite/built-up section creation, beta-angle assignment and population, material assignment subsets, four-corner plate thickness creation/retrieval/assignment, and member-offset creation/population/assignment. Property now exposes **75 overloads**: 25 typed observations and 50 main-project compatibility ports. Added detailed, matching interface/adapter XML IntelliSense and examples, the required thickness/offset packets, member offset references and preserved table/offset enum codes. Native dispatch covers **54 of 204 active Property candidates**, with **150 remaining**. See [the 25-method guide](Property-Management-Ports.md) for all signatures, units, statuses, mutation behavior and compatibility corrections.
+Incorporated 25 further main-interface Property overloads for material collections, material creation/assignment, uniform plate thicknesses, grouped offset pipelines and member releases. Property now exposes **100 overloads**: 25 qualified observations and 75 main-project compatibility ports. Added detailed matching interface/adapter XML IntelliSense and examples, mutable material/thickness/release packets and member-end release references. Native dispatch reaches **57 of 204 active Property candidates**, with **147 remaining**. See [all 25 workflow signatures](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Property-Workflows.md) for parameters, units, native statuses, side effects and deliberate source corrections.
 
-Passed a Release solution build with zero warnings/errors and **3,763 offline tests**, including **189 new Property management cases**. The isolated installed-package verifier compiles and runs **592 selected XML examples**, including all **150 Property interface/adapter examples**, through a fresh PackageReference-only consumer and cache. Managed stand-ins exercise the examples without changing a native STAAD model. Live creation/assignment and engineering qualification for this increment remain pending.
+Passed a Release build with zero warnings/errors and **3,931 offline tests**, including **168 new workflow cases**. Isolated installed-package verification compiles and runs **642 selected XML examples**, including all **200 Property interface/adapter examples**, through a fresh PackageReference-only consumer and package cache. Examples run against managed native stand-ins; live mutation and engineering qualification remain pending.
 
-The preceding 25 inventory/material-context/assignment ports remain available; see `docs/Property-Main-Ports.md`.
+Material creation records native Created/Updated outcomes separately from list IDs; legacy creation retains its explicitly documented E/G x1000 scale. Indexed material collections retain native names and consistent name equality/hash behavior. Release read-back preserves mixed native modes and partial-mode provenance; basic creation refuses unsupported partial-moment packets. Populations stage native reads before changing caller packets, degree overloads retain caller-apartment dispatch, and multi-step writes recheck binding lifetime around each native write.
 
 ## Earlier source — Load expansion
 
@@ -46,7 +46,7 @@ Load exposes **120 overloads: all 115 main-interface signatures plus five conven
 
 Output provides **15 typed queries** for analysis/buckling result availability, node displacements, support reactions, local member-end forces, static checks, seven plate-center operations, member design section names and steel utilization ratios. Named status/data results preserve native units, documented failure/sentinel distinctions and immutable owned data. Inspect IsSuccessful before Data. These observations do not run analysis or establish result freshness. See the [Output guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Porting.md). Forty-five documented native Output mappings remain pending.
 
-The approved wrapper surface is complete. This archive includes all 75 Property overloads described above. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
+The approved wrapper surface is complete. This archive includes all 100 Property overloads described above. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
 ## Requirements
 
@@ -61,7 +61,7 @@ The package does not include Bentley executables, COM binaries or a STAAD.Pro li
 After this version is available on NuGet.org:
 
 ```powershell
-dotnet add package StaadPro.Interop --version 1.0.0-preview.20261024.3
+dotnet add package StaadPro.Interop --version 1.0.0-preview.20261024.4
 ```
 
 For a .NET Framework project, the package reference is:
@@ -71,7 +71,7 @@ For a .NET Framework project, the package reference is:
   <TargetFramework>net481</TargetFramework>
 </PropertyGroup>
 <ItemGroup>
-  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261024.3" />
+  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261024.4" />
 </ItemGroup>
 ```
 
@@ -168,13 +168,13 @@ See the [root guide](https://github.com/structuraldeveloper/StaadPro.Interop/blo
 
 ## IntelliSense and included documentation
 
-Expanded XML IntelliSense is included for **143 Geometry overloads, 171 Load overloads, 75 Property overloads, 15 Output queries, 53 common Root operations and three optional Root operation interfaces**, on both interfaces and concrete adapters. Keep `StaadPro.Interop.xml` beside the library when distributing assemblies outside normal NuGet restore.
+Expanded XML IntelliSense is included for **143 Geometry overloads, 171 Load overloads, 100 Property overloads, 15 Output queries, 53 common Root operations and three optional Root operation interfaces**, on both interfaces and concrete adapters. Keep `StaadPro.Interop.xml` beside the library when distributing assemblies outside normal NuGet restore.
 
 The archive includes Geometry, Load, Output and Root guides, installation and publishing instructions, and the release history. The package metadata identifies **Srinivasa Rao Masanam** as the author; company and copyright use **IngeneStructs**. NuGet.org Owners are managed separately by the registry.
 
 ## Preview validation and operating limits
 
-The current implementation passed **3,763 offline tests**. Installed-package verification checks **592 selected XML example blocks**, including all 150 Property examples, compiles a fresh consumer and exercises managed native stand-ins; window-changing examples are guarded off. These checks do not certify every native COM response, STAAD release or engineering-unit convention.
+The current implementation passed **3,931 offline tests**. Installed-package verification checks **642 selected XML example blocks**, including all 200 Property examples, compiles a fresh consumer and exercises managed native stand-ins; window-changing examples are guarded off. These checks do not certify every native COM response, STAAD release or engineering-unit convention.
 
 Silent and hidden options do not guarantee unattended operation. Synchronous native calls can block beyond logical polling budgets, and mutations can leave partial effects when a later step fails. Validate native behavior against controlled models and the STAAD versions used by your application before production deployment.
 

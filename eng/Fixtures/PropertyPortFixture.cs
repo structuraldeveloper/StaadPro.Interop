@@ -32,6 +32,9 @@ namespace PackageVerification
             public readonly Dictionary<string, Exception> Errors = new Dictionary<string, Exception>();
             public readonly Dictionary<string, object> Buffers = new Dictionary<string, object>();
             public int[] Sections = { 37, 38 }, Thicknesses = { 45, 46 };
+            public string[] MaterialNames = { " STEEL Ω ", " CONCRETE Ω " };
+            public int[] ReleaseModes = { 0, 0, 0, 0, 1, 1 };
+            public double[] ReleaseValues = new double[6];
             public readonly Dictionary<int, int[]> Beams = new Dictionary<int, int[]> { [37] = new[] { 17, 41 }, [38] = new int[0] };
             public readonly Dictionary<int, int[]> Plates = new Dictionary<int, int[]> { [45] = new[] { 17 }, [46] = new int[0] };
             public Action<string> OnCall;
@@ -91,7 +94,8 @@ namespace PackageVerification
             public object GetIsotropicMaterialAssignedPlateList(string name, ref object ids)
             { var status = R(nameof(GetIsotropicMaterialAssignedPlateList), true, name); Fill(nameof(GetIsotropicMaterialAssignedPlateList), ref ids, new[] { 17 }); return status; }
             public object CreatePlateThicknessProperty(double[] values) => R(nameof(CreatePlateThicknessProperty), 94, values);
-            public object AssignPlateThickness(int[] ids, int propertyId) => R(nameof(AssignPlateThickness), 0, ids, propertyId);
+            public object CreatePlateThicknessProperty(double value) => R(nameof(CreatePlateThicknessProperty), 94, value);
+            public object AssignPlateThickness(object ids, int propertyId) => R(nameof(AssignPlateThickness), 0, ids, propertyId);
             public object GetThicknessPropertyValues(int id, ref object values)
             { var status = R(nameof(GetThicknessPropertyValues), 4, id); Fill(nameof(GetThicknessPropertyValues), ref values, new[] { 0.1, 0.2, 0.3, 0.0 }); return status; }
             public object GetMemberGlobalOffSet(int id, int location, ref object x, ref object y, ref object z)
@@ -104,6 +108,26 @@ namespace PackageVerification
                 var status = R(nameof(GetMemberLocalOffSet), 0, id, location);
                 x = O("offsetX", -0.2); y = O("offsetY", 0.0); z = O("offsetZ", 0.4); return status;
             }
+            public object GetBeamMaterialName(int id) => R(nameof(GetBeamMaterialName), " STEEL Ω ", id);
+            public object GetIsotropicMaterialCount() => R(nameof(GetIsotropicMaterialCount), MaterialNames.Length);
+            private void Constants(ref object e, ref object poisson, ref object density, ref object alpha, ref object damping)
+            { e = O("materialE", 200000.0); poisson = O("materialPoisson", .3); density = O("materialDensity", 77.0); alpha = O("materialAlpha", 12e-6); damping = O("materialDamping", .02); }
+            private void Strengths(ref object fy, ref object fu, ref object ry, ref object rt, ref object fcu)
+            { fy = O("materialFy", 355.0); fu = O("materialFu", 510.0); ry = O("materialRy", 1.1); rt = O("materialRt", 1.2); fcu = O("materialFcu", 40.0); }
+            public object GetMaterialProperty(string name, ref object e, ref object poisson, ref object density, ref object alpha, ref object damping)
+            { var raw = R(nameof(GetMaterialProperty), 0, name); Constants(ref e, ref poisson, ref density, ref alpha, ref damping); return raw; }
+            public object GetMaterialPropertyEx(string name, ref object e, ref object poisson, ref object density, ref object alpha, ref object damping, ref object fy, ref object fu, ref object ry, ref object rt, ref object fcu)
+            { var raw = R(nameof(GetMaterialPropertyEx), true, name); Constants(ref e, ref poisson, ref density, ref alpha, ref damping); Strengths(ref fy, ref fu, ref ry, ref rt, ref fcu); return raw; }
+            public object GetIsotropicMaterialProperties(int index, ref object e, ref object poisson, ref object g, ref object density, ref object alpha, ref object damping)
+            { var raw = R(nameof(GetIsotropicMaterialProperties), MaterialNames[index], index); Constants(ref e, ref poisson, ref density, ref alpha, ref damping); g = O("materialG", 80000.0); return raw; }
+            public object GetIsotropicMaterialPropertiesEx(int index, ref object e, ref object poisson, ref object g, ref object density, ref object alpha, ref object damping, ref object fy, ref object fu, ref object ry, ref object rt, ref object fcu)
+            { var raw = R(nameof(GetIsotropicMaterialPropertiesEx), MaterialNames[index], index); Constants(ref e, ref poisson, ref density, ref alpha, ref damping); g = O("materialG", 80000.0); Strengths(ref fy, ref fu, ref ry, ref rt, ref fcu); return raw; }
+            public object CreateIsotropicMaterialProperties(string name, double e, double poisson, double g, double density, double alpha, double damping)
+                => R(nameof(CreateIsotropicMaterialProperties), 0, name, e, poisson, g, density, alpha, damping);
+            public object AssignMaterialToPlate(string name, object ids) => R(nameof(AssignMaterialToPlate), 0, name, ids);
+            public object GetMemberReleaseSpec(int id, int end, ref object modes, ref object springs)
+            { var raw = R(nameof(GetMemberReleaseSpec), 1, id, end); Fill("releaseModes", ref modes, ReleaseModes); Fill("releaseValues", ref springs, ReleaseValues); return raw; }
+            public object CreateMemberReleaseSpec(int end, int[] flags, double[] springs) => R(nameof(CreateMemberReleaseSpec), end == 0 ? 95 : 96, end, flags, springs);
         }
     }
 }

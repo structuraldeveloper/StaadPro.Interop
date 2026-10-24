@@ -29,7 +29,7 @@ namespace StaadPro.Interop.Tests.Adapter
             "GetAllPlateElementThicknessesWithPopulatedAssignments", "GetBeamOffsetSpecification", "PopulateMemberOffsets",
             "CreateOffsetSpecification", "CreateOffsetSpecifications", "AssignOffsetSpecifications"
         };
-        private static IEnumerable<MethodInfo> Methods => typeof(IOSProperty).GetMethods().Where(m => Names.Contains(m.Name));
+        private static IEnumerable<MethodInfo> Methods => typeof(IOSProperty).GetMethods().Where(m => Names.Contains(m.Name) && (m.Name != "AssignOffsetSpecifications" || m.GetParameters().Length == 1));
         public static IEnumerable<TestCaseData> Ports => Methods.Select(m => new TestCaseData(m).SetName("{m}_" + m));
         private static OpenStaadWrapper Wrap(PropertyPortFixture.Native native) => new OpenStaadWrapper(new PropertyPortFixture.Root { Property = native });
         private static HashSet<Beam> Beams() => new HashSet<Beam> { new Beam { Id = 17, BetaAngle = 25.0 }, new Beam { Id = 41, BetaAngle = -15.0 } };
@@ -57,7 +57,7 @@ namespace StaadPro.Interop.Tests.Adapter
         public void AddsExactlyTwentyFiveMethodsWithoutChangingExistingObservationReturns()
         {
             Assert.That(Methods.Count(), Is.EqualTo(25));
-            Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(75));
+            Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(100));
             foreach (var method in Methods)
             {
                 var concrete = typeof(OSPropertyAdapter).GetMethod(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray());
@@ -101,7 +101,7 @@ namespace StaadPro.Interop.Tests.Adapter
             var xml = XDocument.Load(Path.ChangeExtension(typeof(IOSProperty).Assembly.Location, ".xml"));
             string prefix = "M:StaadPro.Interop.Adapters.Interfaces.IOSProperty." + method.Name;
             var entries = xml.Descendants("member").Where(e => (string)e.Attribute("name") == prefix || ((string)e.Attribute("name")).StartsWith(prefix + "(")).ToArray();
-            Assert.That(entries.Length, Is.EqualTo(Methods.Count(m => m.Name == method.Name)));
+            Assert.That(entries.Length, Is.EqualTo(typeof(IOSProperty).GetMethods().Count(m => m.Name == method.Name)));
             foreach (var entry in entries)
             {
                 var id = ((string)entry.Attribute("name")).Replace("Interfaces.IOSProperty", "Models.OSPropertyAdapter");

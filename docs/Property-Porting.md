@@ -2,7 +2,17 @@
 
 **Updated:** 24 October 2026
 
-## Current increment: 25 management ports
+## Current increment: 25 material and release workflows
+
+Incorporated 25 further main-interface Property overloads for material collections, material creation/assignment, uniform plate thicknesses, grouped offset pipelines and member releases. Property now exposes **100 overloads**: 25 qualified observations and 75 main-project compatibility ports. Added detailed matching interface/adapter XML IntelliSense and examples, mutable material/thickness/release packets and member-end release references. Native dispatch reaches **57 of 204 active Property candidates**, with **147 remaining**. See [all 25 workflow signatures](Property-Workflows.md) for parameters, units, native statuses, side effects and deliberate source corrections.
+
+Passed a Release build with zero warnings/errors and **3,931 offline tests**, including **168 new workflow cases**. Isolated installed-package verification compiles and runs **642 selected XML examples**, including all **200 Property interface/adapter examples**, through a fresh PackageReference-only consumer and package cache. Examples run against managed native stand-ins; live mutation and engineering qualification remain pending.
+
+Material creation records native Created/Updated outcomes separately from list IDs; legacy creation retains its explicitly documented E/G x1000 scale. Indexed material collections retain native names and consistent name equality/hash behavior. Release read-back preserves mixed native modes and partial-mode provenance; basic creation refuses unsupported partial-moment packets. Populations stage native reads before changing caller packets, degree overloads retain caller-apartment dispatch, and multi-step writes recheck binding lifetime around each native write.
+
+All 25 signatures match the main interface. Custom IOSProperty implementations must supply the new members. Existing qualified single-material and release methods retain their return types; mutable collection/population methods use those checked observations internally.
+
+## Previous increment: 25 management ports
 
 Incorporated 25 further Property overloads for table/composite/built-up section creation, beta-angle assignment and population, material assignment subsets, four-corner plate thickness creation/retrieval/assignment, and member-offset creation/population/assignment. Property now exposes **75 overloads**: 25 typed observations and 50 main-project compatibility ports. Added detailed, matching interface/adapter XML IntelliSense and examples, the required thickness/offset packets, member offset references and preserved table/offset enum codes. Native dispatch covers **54 of 204 active Property candidates**, with **150 remaining**. See [the 25-method guide](Property-Management-Ports.md) for all signatures, units, statuses, mutation behavior and compatibility corrections.
 
