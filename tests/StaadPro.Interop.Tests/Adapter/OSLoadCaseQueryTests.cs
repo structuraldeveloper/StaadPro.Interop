@@ -144,9 +144,11 @@ namespace StaadPro.Interop.Tests.Adapter
 
         [TestCase(false)]
         [TestCase(true)]
-        public void NumberRetrieval_RequiresMatchingCountInsteadOfZeroSuccess(bool reference)
+        public void NumberRetrieval_RejectsFailureOrMismatchingIntegralCount(bool reference)
         {
-            foreach (object status in new object[] { 0, 1, 3, -1, -106, -114, null, true, "2", 2.0, long.MaxValue })
+            var invalid = new object[] { 0, 1, 3, -1, -106, -114, null, false, "2", 2.0, long.MaxValue };
+            if (reference) invalid = invalid.Concat(new object[] { true }).ToArray();
+            foreach (object status in invalid)
             {
                 var raw = new CaseLoad { NumberCount = status };
                 using (var wrapper = new OpenStaadWrapper(new OSLoadQueryTests.QueryRoot(raw)))

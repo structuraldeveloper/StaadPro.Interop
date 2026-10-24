@@ -157,7 +157,7 @@ The four ported sealed entities derive from `MemberLoad` and work with the exist
 
 These parameterless methods discover existing cases without case activation. They leave the session's active case unchanged and read metadata only. They exclude combination and repeat-load discovery. A licensed connected model and serialized access on the appropriate COM thread are still required.
 
-The algorithm validates the count, returns a fresh empty set for zero, then allocates an Int32 ID buffer and fetches the numbers. **The native number-retrieval return value is the case count, not a zero success code.** It must equal the preceding count. A negative error, noninteger return or changed count throws `InvalidOperationException`; there is no silent retry or partially returned set.
+The algorithm validates the count, returns a fresh empty set for zero, then allocates an Int32 ID buffer and fetches the numbers. **Primary number retrieval accepts Boolean success or a matching integral count; reference number retrieval requires a matching integral count.** The read-only STAAD.Pro 2025 observation returned Boolean `true` for `GetPrimaryLoadCaseNumbers`, despite the vendor help describing a count. Boolean `false` fails; `true` is never converted to integer one. After Boolean success, the ID array is fully validated and the separate primary count is read again before metadata retrieval. Negative errors, malformed returns, mismatched integral counts and observed count changes throw `InvalidOperationException`; no retry or partial set is returned.
 
 IDs must form a one-dimensional Int32 array with exactly the expected length; nonzero lower bounds are supported. Every ID must be positive and unique. All IDs are validated before any metadata request, so unwritten zero entries and duplicates are rejected rather than silently discarded by the set.
 
@@ -222,7 +222,7 @@ foreach (var lc in orderedPrimaryCases)
 
 These methods read existing **combination metadata**. Every result has `CaseType=LoadCombination` and `Type=LoadType.None` (23). Combinations have no primary/reference engineering category, so `GetLoadType` and `GetReferenceLoadType` are not called. Factors, constituent cases, assignments and analysis results are outside these methods' scope. Returned combinations cannot be passed as cases to the primary/reference assignment query methods.
 
-Count retrieval must return a nonnegative signed integer within Int32 range. For positive counts, number retrieval must return the matching count; zero success semantics are not used. Its output must be an exact-length, one-dimensional Int32 array with positive, unique IDs; zero/nonzero SAFEARRAY lower bounds are accepted. All IDs are validated before any title is read. Negative statuses such as `-1`, `-106` and `-114`, mismatched counts, malformed arrays and non-string titles throw `InvalidOperationException`. COM/binding exceptions propagate unchanged, and no partial collection is returned.
+Count retrieval must return a nonnegative signed integer within Int32 range. For positive counts, number retrieval accepts Boolean `true` or an integral value matching the count. Boolean `false`, numeric zero and mismatched counts fail. The observed STAAD.Pro 2025 build returns Boolean success for `GetLoadCombinationCaseNumbers`; Boolean success triggers a separate count recheck after ID validation and before title reads. Its output must be an exact-length, one-dimensional Int32 array with positive, unique IDs; zero/nonzero SAFEARRAY lower bounds are accepted. All IDs are validated before any title is read. Negative statuses such as `-1`, `-106` and `-114`, mismatched counts, malformed arrays and non-string titles throw `InvalidOperationException`. COM/binding exceptions propagate unchanged, and no partial collection is returned.
 
 Discovery returns a fresh set of independent objects, with unspecified iteration order. Zero count returns a fresh empty set and skips number/title reads. Title strings preserve whitespace, Unicode, empty text and literal `NONE`. COM array buffers are copied rather than exposed. A title change on a returned object does not update STAAD.
 
@@ -244,7 +244,7 @@ var distinctCombinations = load.GetLoadCombinationCasesFromIds(new[] { 201, 301,
 
 `OSLoadCombinationQueryTests` verifies enumeration and direct lookup, replacement/in-place buffers, sparse IDs, ownership, zero/invalid counts, count mismatches/errors, malformed/nonpositive/duplicate/unwritten arrays, nonzero bounds, title preservation, missing membership, native/binding errors at each stage and later failures without a partial set. Its stand-in omits activation and type APIs, so accidental calls to them fail.
 
-The installed Bentley 2025 reference's `GetLoadCombinationCaseNumbers` return description labels the positive result as a *primary* case count, despite the combination method name and example. This port interprets it as the retrieved combination count and validates it accordingly. Live release verification must use models with different primary/reference/combination counts to resolve that documentation inconsistency; offline stand-ins do not establish native behavior.
+The installed Bentley 2025 help describes the `GetLoadCombinationCaseNumbers` result as a *primary* case count. Read-only inspection of STAAD.Pro 25.00.00.539 instead returned a CLR Boolean and populated the combination ID array. The wrapper handles that Boolean contract explicitly while retaining matching integral counts for the documented return form. It validates the separate combination count and full ID buffer rather than treating every native enumeration method as having the same return contract.
 
 `OSLoadCombinationBatchQueryTests` covers distinct/fresh/eager results, one membership fetch, empty/null/invalid input, membership checks before titles, single-pass enumeration and input mutation, enumerator disposal/failures, malformed native payloads, native/binding failures, nonzero bounds, and concrete adapter exposure.
 
@@ -407,7 +407,7 @@ The offline suite and package consumer do not certify native COM SAFEARRAY marsh
 - Installed Bentley technical reference: Help/topics/Commands_TechRef/r-stpst_Member_Load_Specification.html and uniform member load/modeling help describe distributed moments and span/offset conventions.
 - Bentley [Unit System of OpenSTAAD](https://bentleysystems.service-now.com/community?id=kb_article&sysparm_article=KB0111068) describes base-system read-back units. Confirm actual read-back units rather than assuming input units.
 
-- Installed native combination APIs: OSAPP_Help/group___property_load_operation.html (GetLoadCombinationCaseCount, GetLoadCombinationCaseNumbers and GetLoadCaseTitle). Confirm the positive number-return interpretation with differing family counts before release.
+- Installed native combination APIs: OSAPP_Help/group___property_load_operation.html (GetLoadCombinationCaseCount, GetLoadCombinationCaseNumbers and GetLoadCaseTitle). Boolean primary/combination success and integral reference counts were observed on STAAD.Pro 25.00.00.539; other builds still require native qualification.
 
 ## Load envelope queries
 

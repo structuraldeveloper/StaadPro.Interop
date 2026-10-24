@@ -2,7 +2,9 @@
 
 ## Package and runtime
 
-The locally prepared preview is `1.0.0-preview.20261023.1`, including the approved wrapper surface, all 143 reference Geometry overloads, 171 Load overloads and 50 Property overloads, 15 typed Output queries, 53 common Root operations and three optional Root operations. Use this exact version with the local-feed instructions below. This local build does not establish a new public publication. Public-feed examples retain the previously verified version; consult [release notes](Release-Notes.md), [Load contracts](Load-Porting.md), [Output usage](Output-Porting.md) and [Root capabilities](Root-Completion-and-Capabilities.md) for scope and limits.
+Preview `1.0.0-preview.20261024` corrects `GetLoadCasesFromIds` and related primary/combination discovery throwing `invalid integer result` when native number retrieval returns Boolean success. Update the installed package and rebuild/restart the consuming application to use the corrected DLL. The [Load query guide](Load-Queries.md) explains the distinct Boolean and integer contracts.
+
+The locally prepared preview is `1.0.0-preview.20261024`, including the approved wrapper surface, all 143 reference Geometry overloads, 171 Load overloads and 50 Property overloads, 15 typed Output queries, 53 common Root operations and three optional Root operations. Use this exact version with the local-feed instructions below. This local build does not establish a new public publication. Public-feed examples retain the previously verified version; consult [release notes](Release-Notes.md), [Load contracts](Load-Porting.md), [Output usage](Output-Porting.md) and [Root capabilities](Root-Completion-and-Capabilities.md) for scope and limits.
 
 This guide uses preview version `1.0.0-preview.20261012.1` of package `StaadPro.Interop`. Public-feed commands apply after that exact version is accepted and available on NuGet.org; [Publishing.md](Publishing.md) explains upload and verification. The same verified archive can be installed immediately through a local feed.
 
@@ -98,7 +100,7 @@ In the consumer directory, use a project-scoped `NuGet.Config`:
 NuGet.org remains configured for dependencies. Add the exact package reference with:
 
 ```powershell
-dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261023.1
+dotnet add ./YourApp.csproj package StaadPro.Interop --version 1.0.0-preview.20261024
 dotnet restore ./YourApp.csproj --configfile ./NuGet.Config --packages ./packages
 dotnet build ./YourApp.csproj -c Release --no-restore
 ```

@@ -1,5 +1,11 @@
 # Load API porting and new assignments
 
+## Case-number return correction — 24 October 2026
+
+Corrected primary and combination discovery to handle the Boolean success returned by `GetPrimaryLoadCaseNumbers` and `GetLoadCombinationCaseNumbers` on the observed STAAD.Pro 25.00.00.539 build. The earlier implementation passed `true` to an integer-only decoder and threw before filtering valid case IDs. `GetLoadCasesFromIds`, family/range discovery, primary population readers and combination lookups share the corrected paths.
+
+Boolean false still fails. Boolean success requires an exact-length one-dimensional Int32 array of positive unique IDs and a matching separate count recheck before metadata reads. Documented matching integral return forms remain supported. Reference enumeration still requires its integral count; ordinary count/type decoding is not relaxed. No case is activated and no model data is written. Corrected the regressions that previously rejected Boolean true and updated the installed-package stand-in to reproduce the observed native contract. See [Load query contracts](Load-Queries.md).
+
 ## Approved Load expansion
 
 Implemented all 36 approved contracts with a single IOSLoad/OSLoadAdapter surface and internal services. Current source has 171 overloads and 126/129 documented native dispatches; the three unused names have managed alternatives. Passed 2,900 offline tests. See [Load expansion contracts, differences and operating limits](Load-Expansion.md). The prepared distribution archive remains unchanged; live native qualification is pending.

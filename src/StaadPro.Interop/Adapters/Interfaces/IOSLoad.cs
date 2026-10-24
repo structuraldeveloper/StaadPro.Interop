@@ -1453,8 +1453,11 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// A successful zero count returns a fresh empty set. Set iteration order is unspecified.</returns>
         /// <remarks>
         /// <para>Reads GetPrimaryLoadCaseCount, GetPrimaryLoadCaseNumbers, GetLoadCaseTitle
-        /// and GetLoadType on the currently open model. The case-number method returns a count,
-        /// which must match the preceding count; it does not use zero as a success status.
+        /// and GetLoadType on the currently open model. Primary number retrieval accepts Boolean
+        /// true (observed on STAAD.Pro 2025) or an integral count matching the preceding count.
+        /// Boolean false fails. A Boolean success requires a valid ID array and a matching count
+        /// read again before metadata retrieval. True is never converted to integer one; a numeric
+        /// zero is not success for a nonempty inventory. Reference enumeration retains its integral-count contract.
         /// Titles (including empty strings, whitespace and Unicode) are preserved without trimming.
         /// Engineering types include None (23); unknown codes are rejected.</para>
         /// <para>No case is activated and no active-case state or assignments are changed.
@@ -1647,8 +1650,11 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// A successful zero count returns a fresh empty set. Iteration order is unspecified.</returns>
         /// <remarks>
         /// <para>Reads GetLoadCombinationCaseCount and GetLoadCombinationCaseNumbers, then
-        /// GetLoadCaseTitle for each validated ID. The number-retrieval result must match the count;
-        /// zero is not treated as success when combinations exist. IDs must be positive and unique
+        /// GetLoadCaseTitle for each validated ID. Number retrieval accepts Boolean true or an
+        /// integral return matching the separate count; false and mismatched integral counts fail.
+        /// A Boolean success requires a matching count read again before titles are retrieved.
+        /// True is never converted to integer one. Numeric zero is not success for a nonempty inventory.
+        /// IDs must be positive and unique
         /// in a one-dimensional Int32 array of exactly the expected length. Nonzero bounds are supported.</para>
         /// <para>Combinations have no engineering LoadType classification, so Type is always None (23);
         /// GetLoadType is not called. Titles preserve whitespace, Unicode, empty text and literal "NONE".

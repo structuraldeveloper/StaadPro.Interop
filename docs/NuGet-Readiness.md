@@ -1,6 +1,14 @@
 # NuGet readiness assessment
 
-## Latest prepared preview — 1.0.0-preview.20261023.1
+## Latest prepared preview — 1.0.0-preview.20261024
+
+Fixed primary and combination discovery rejecting the Boolean `true` returned by `GetPrimaryLoadCaseNumbers` and `GetLoadCombinationCaseNumbers` on the observed STAAD.Pro 25.00.00.539 build. The shared readers now handle Boolean success separately from integral case counts, validate the complete ID array, and recheck the separate count before reading metadata. Boolean false, malformed arrays and inconsistent counts still fail. Reference discovery retains its integer-count contract; matching documented integral primary/combination results remain supported.
+
+Passed a Release build with zero warnings/errors and **3,574 offline tests**, including **43 new case-number return regressions**. Isolated PackageReference verification compiles and executes **542 selected XML examples**; the packaged primary and combination stand-ins now return Boolean success. Native return shapes were observed read-only during diagnosis; wider native/version and engineering qualification remains pending.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.nupkg` for manual upload. Verification checks the net481 DLL/XML pair, expanded interface/adapter contracts, guide/version consistency and exact restored package identity in a fresh consumer/cache. Includes the earlier Property and Load expansion increments. Public API counts are unchanged. The consumer application must install this new version and rebuild; an older loaded DLL retains the exception. No public upload is performed by this task.
+
+## Earlier prepared preview — 1.0.0-preview.20261023.1
 
 Added 25 main-project Property overloads for section/thickness inventories, assignment discovery, material context and assignment, member specifications, and global-Y member-end offsets. Property now exposes **50 overloads**: the existing 25 typed observations and these 25 signature-compatible ports. All new interface and adapter methods include expanded XML IntelliSense with parameters, return values, examples, units, side effects and failure contracts. Shared locking/lifetime checks, bounded native buffers and checked operation-specific statuses are included. Passed **3,531 offline tests**, including **209 new Property cases**, with zero build warnings/errors. The installed-package verifier compiles and runs **542 selected XML examples**, including all **100 Property examples**, against managed stand-ins. Live COM and engineering qualification remain pending.
 

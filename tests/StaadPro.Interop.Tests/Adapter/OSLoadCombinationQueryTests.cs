@@ -158,9 +158,9 @@ namespace StaadPro.Interop.Tests.Adapter
 
         [TestCase(false)]
         [TestCase(true)]
-        public void Queries_RequireMatchingNumberCountInsteadOfZeroSuccess(bool single)
+        public void Queries_RejectFailureOrMismatchingIntegralCount(bool single)
         {
-            foreach (object count in new object[] { 0, 1, 3, -1, -106, -114, null, true, "2", 2.0, long.MaxValue })
+            foreach (object count in new object[] { 0, 1, 3, -1, -106, -114, null, false, "2", 2.0, long.MaxValue })
             {
                 var raw = new CombinationLoad { NumberCount = count };
                 using (var wrapper = new OpenStaadWrapper(new OSLoadQueryTests.QueryRoot(raw)))

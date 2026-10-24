@@ -12,9 +12,15 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
+## Case enumeration correction
+
+Fixed primary and combination discovery rejecting the Boolean `true` returned by `GetPrimaryLoadCaseNumbers` and `GetLoadCombinationCaseNumbers` on the observed STAAD.Pro 25.00.00.539 build. The shared readers now handle Boolean success separately from integral case counts, validate the complete ID array, and recheck the separate count before reading metadata. Boolean false, malformed arrays and inconsistent counts still fail. Reference discovery retains its integer-count contract; matching documented integral primary/combination results remain supported.
+
+Passed a Release build with zero warnings/errors and **3,574 offline tests**, including **43 new case-number return regressions**. Isolated PackageReference verification compiles and executes **542 selected XML examples**; the packaged primary and combination stand-ins now return Boolean success. Native return shapes were observed read-only during diagnosis; wider native/version and engineering qualification remains pending. See the [Load query contracts](docs/Load-Queries.md) and [release notes](docs/Release-Notes.md).
+
 ## Property main-project ports
 
-Added 25 main-project Property overloads for section/thickness inventories, assignment discovery, material context and assignment, member specifications, and global-Y member-end offsets. Property now exposes **50 overloads**: the existing 25 typed observations and these 25 signature-compatible ports. All new interface and adapter methods include expanded XML IntelliSense with parameters, return values, examples, units, side effects and failure contracts. Shared locking/lifetime checks, bounded native buffers and checked operation-specific statuses are included. Passed **3,531 offline tests**, including **209 new Property cases**, with zero build warnings/errors. The installed-package verifier compiles and runs **542 selected XML examples**, including all **100 Property examples**, against managed stand-ins. Live COM and engineering qualification remain pending. See the [25-method guide](docs/Property-Main-Ports.md) and [Property inventory](docs/Property-Porting.md).
+Added 25 main-project Property overloads for section/thickness inventories, assignment discovery, material context and assignment, member specifications, and global-Y member-end offsets. Property now exposes **50 overloads**: the existing 25 typed observations and these 25 signature-compatible ports. All new interface and adapter methods include expanded XML IntelliSense with parameters, return values, examples, units, side effects and failure contracts. Shared locking/lifetime checks, bounded native buffers and checked operation-specific statuses are included. Passed **3,574 offline tests**, including **209 new Property cases**, with zero build warnings/errors. The installed-package verifier compiles and runs **542 selected XML examples**, including all **100 Property examples**, against managed stand-ins. Live COM and engineering qualification remain pending. See the [25-method guide](docs/Property-Main-Ports.md) and [Property inventory](docs/Property-Porting.md).
 
 ## Earlier source update — Load expansion
 
@@ -26,11 +32,11 @@ All 36 methods include comparative IntelliSense explaining scope, alternatives, 
 
 Implemented 15 additional Load observations with complete XML contracts, named status/data results, bounded eager snapshots and an internal shared service. Source now exposes 135 Load overloads and dispatches 88/129 documented native names. Remaining undispatched names total 41: one existing alternative, one derived capability, four partial overlaps and 35 absent operations, plus three separate metadata-only candidates. Passed 2,448 offline tests (189 new cases) and all 30 new XML examples. See [Load inspection usage](docs/Load-Inspection-Queries.md). These changes postdate the prepared archive below; live native qualification remains pending.
 
-## Prepared preview: 1.0.0-preview.20261023.1
+## Prepared preview: 1.0.0-preview.20261024
 
 The local archive includes 50 Property overloads, 171 Load overloads, all 143 reference Geometry overloads, 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
-Validated a Release solution build, 3,531 offline tests and isolated installation with 542 compiled/executed XML examples. The archive is prepared for manual upload and has not been published to NuGet.org. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
+Validated a Release solution build, 3,574 offline tests and isolated installation with 542 compiled/executed XML examples. The archive is prepared for manual upload and has not been published to NuGet.org. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
 
 ## Output comparison and planned work
 
@@ -206,8 +212,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261023.1 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261023.1.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261024 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.nupkg
 ```
 
 ---

@@ -12,11 +12,11 @@
     <RootNamespace>StaadPro.Interop</RootNamespace>
     <PackageId>StaadPro.Interop</PackageId>
     <Version>1.0.0</Version>
-    <ReleaseDocumentationVersion>1.0.0-preview.20261023.1</ReleaseDocumentationVersion>
+    <ReleaseDocumentationVersion>1.0.0-preview.20261024</ReleaseDocumentationVersion>
     <PackageVersion>$(ReleaseDocumentationVersion)</PackageVersion>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 StaadDev</Copyright>
-    <PackageReleaseNotes>Added 25 main-project Property overloads for section/thickness inventories, assignment discovery, material context/assignment, member behavior and global-Y end offsets. Preserved signatures and shipped comprehensive interface/adapter XML IntelliSense and usage guidance. Property now exposes 50 overloads alongside 171 Load overloads, 143 reference Geometry overloads and 15 typed Output queries. Shared Property locking and lifetime checks, bounded buffers and native status validation are covered by offline and isolated installed-package verification. Targets Windows and .NET Framework 4.8.1; live STAAD and engineering qualification remain pending. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed primary and combination case discovery rejecting native Boolean success from GetPrimaryLoadCaseNumbers and GetLoadCombinationCaseNumbers. Preserved reference integer-count semantics and documented numeric return forms; validated complete ID buffers and rechecked counts after Boolean success. Added regression coverage and corrected XML, usage and release guidance. Includes 50 Property overloads, 171 Load overloads, 143 reference Geometry overloads, 15 typed Output queries and reviewed Root/wrapper APIs for Windows/net481. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>

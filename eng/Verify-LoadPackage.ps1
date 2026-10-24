@@ -697,8 +697,8 @@ __PROPERTY_EXAMPLES__
         public int GetPrimaryLoadCaseCount() => Empty ? 0 : 1;
         public int GetReferenceLoadCaseCount() => Empty ? 0 : 1;
         public int GetLoadCombinationCaseCount() => Empty ? 0 : 2;
-        public int GetLoadCombinationCaseNumbers(ref object ids) { CombinationNumberCalls++; ids = new[] { 201, 301 }; return 2; }
-        public int GetPrimaryLoadCaseNumbers(ref object ids) { ids = new[] { 17 }; return 1; }
+        public bool GetLoadCombinationCaseNumbers(ref object ids) { CombinationNumberCalls++; ids = new[] { 201, 301 }; return true; }
+        public bool GetPrimaryLoadCaseNumbers(ref object ids) { ids = new[] { 17 }; return true; }
         public int GetReferenceLoadCaseNumbers(ref object ids) { ids = new[] { 17 }; return 1; }
         public string GetLoadCaseTitle(int id) => id == 201 || id == 301 ? "COMB " + id : "PRIMARY";
         public string GetReferenceLoadCaseTitle(int id) => "REFERENCE";

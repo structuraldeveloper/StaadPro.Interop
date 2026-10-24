@@ -1,5 +1,17 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261024 - 24 October 2026 (prepared preview)
+
+Fixed primary and combination discovery rejecting the Boolean `true` returned by `GetPrimaryLoadCaseNumbers` and `GetLoadCombinationCaseNumbers` on the observed STAAD.Pro 25.00.00.539 build. The shared readers now handle Boolean success separately from integral case counts, validate the complete ID array, and recheck the separate count before reading metadata. Boolean false, malformed arrays and inconsistent counts still fail. Reference discovery retains its integer-count contract; matching documented integral primary/combination results remain supported.
+
+- Corrected the readers used by `GetLoadCasesFromIds`, `GetAllPrimaryLoadCases`, family/range filters, primary population queries and combination discovery/lookups. Kept the general integer decoder strict and public signatures unchanged.
+- Added Boolean-success/failure, 74-primary/230-combination, in-place buffer, malformed-array, changed-count, strict reference-return and integral compatibility regressions. Removed the test expectation that Boolean true is invalid for primary/combination number retrieval.
+- Updated matching interface/adapter XML IntelliSense, query/porting guides, installed-package fixtures and installation/publishing documentation. Retained all 50 Property overloads, 171 Load overloads, 143 reference Geometry overloads, 15 typed Output queries and reviewed Root/wrapper APIs.
+
+Passed a Release build with zero warnings/errors and **3,574 offline tests**, including **43 new case-number return regressions**. Isolated PackageReference verification compiles and executes **542 selected XML examples**; the packaged primary and combination stand-ins now return Boolean success. Native return shapes were observed read-only during diagnosis; wider native/version and engineering qualification remains pending.
+
+The net481 archive is prepared for manual upload and has not been published to NuGet.org by this task. No model-opening, case-activation, geometry-editing or save operation is added by the correction. Author: Srinivasa Rao Masanam. Copyright (c) 2026 StaadDev.
+
 ## 1.0.0-preview.20261023.1 - 23 October 2026 (prepared preview)
 
 Added 25 main-project Property overloads for section/thickness inventories, assignment discovery, material context and assignment, member specifications, and global-Y member-end offsets. Property now exposes **50 overloads**: the existing 25 typed observations and these 25 signature-compatible ports. All new interface and adapter methods include expanded XML IntelliSense with parameters, return values, examples, units, side effects and failure contracts. Shared locking/lifetime checks, bounded native buffers and checked operation-specific statuses are included. Passed **3,531 offline tests**, including **209 new Property cases**, with zero build warnings/errors. The installed-package verifier compiles and runs **542 selected XML examples**, including all **100 Property examples**, against managed stand-ins. Live COM and engineering qualification remain pending.
