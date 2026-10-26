@@ -4,6 +4,8 @@
 **Baseline:** main at 1d8285ce66c95c60da55530d4c721fb7274893da<br>
 **Scope:** Completed the remaining domain comparisons and implementation plans; no domain functions were implemented or packaged by this review.
 
+**Implementation checkpoint, 26 October 2026:** completed four documented P10 Property operations and 25 further Output routes. Supplemental Property candidates remain excluded and require a later reminder/review. See the [current roadmap](../../ROADMAP.md).
+
 ## 1. Review coverage
 
 | Domain | Installed help names, 2024 / 2025 / 2026 | Main managed interface overloads | Current status / report |
@@ -11,8 +13,8 @@
 | Root | 39 reviewed native functions | 23 reference methods | Reviewed managed coverage complete; native qualification remains. [Root plan](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md) |
 | Geometry | 135 / 135 / 135, including one deprecated summary | 143 | Reference parity complete; wider native and version-policy work remains. [Geometry plan](OpenSTAAD-Geometry-Multi-Version-Architecture-and-Plan.md) |
 | Load | 129 / 129 / 129 | 115 | Reference parity complete, with five additional conveniences; wider native coverage remains. [Load plan](OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md) |
-| Output | 59 / 60 / 60 | 86 | 15 native mappings implemented; 45 pending. [Output plan](OpenSTAAD-Output-Multi-Version-Architecture-and-Plan.md) |
-| Property | 204 / 209 / 209 | 103 | 25 typed native mappings implemented; 179 active mappings pending. Deprecated/reserved/private entries distinguished in its report. [Property plan](OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md) |
+| Output | 59 / 60 / 60 | 86 | 40 native mappings implemented; 20 pending. [Output plan](OpenSTAAD-Output-Multi-Version-Architecture-and-Plan.md) |
+| Property | 204 / 209 / 209 | 103 | 195 active native routes implemented through 249 common and five optional operations; nine documented gates pending; fifteen supplemental candidates parked. Deprecated/reserved/private entries distinguished in its report. [Property plan](OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md) |
 | Support | 35 / 35 / 35 | 33 | Binding-only placeholder. [Support plan](OpenSTAAD-Support-Multi-Version-Architecture-and-Plan.md) |
 | Design | 31 / 45 / 45 | 7 | Binding-only placeholder. [Design plan](OpenSTAAD-Design-Multi-Version-Architecture-and-Plan.md) |
 | Commands | 18 / 18 / 18, including one deprecated summary | 21 | Binding-only placeholder. [Commands plan](OpenSTAAD-Commands-Multi-Version-Architecture-and-Plan.md) |

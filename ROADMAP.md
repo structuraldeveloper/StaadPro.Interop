@@ -6,19 +6,15 @@ Our mission is to provide the structural engineering and computational design co
 
 ---
 
-## Implementation pause — 23 October 2026
+## Current implementation and next steps — 26 October 2026
 
-At the user’s request, all remaining domain implementations are paused. The first 25 Property queries remain completed; the 179 remaining active Property mappings, remaining Output operations and other unported domains are deferred. No further implementation or package behavior change is authorized by the current diagnostic review. The parked Load items retain their separate explicit-approval requirement.
+The user resumed documented Property work and requested the next 25 functions in the following domain. Property now exposes **249 common overloads plus five optional catalog queries**, covering **195/204 active documented native routes**. P2–P6, P9 and P10 allocations are implemented; P7 retains four gates and P8 retains five. The [Property completion guide](docs/Property-Profile-Names-and-Final-Cleanup.md) records the final four P10 operations and the nine unresolved transport/status/context contracts.
 
-**Reminder checkpoint:** when the user next discusses resuming porting, or before preparing the next public NuGet release, remind them of this pause and the outstanding implementation/qualification work. Resume only on their instruction. This is a workflow reminder, without a scheduled notification date. Read-only investigation of reported failures and an assembly-wide audit may continue.
+The subsequent **Output** increment adds 25 documented routes, bringing coverage to **40/60**. The [extended Output guide](docs/Output-Extended-Queries.md) records exact typed signatures, differences between similar operations, native return conventions, units, bounds, version assumptions and state checks. The twenty remaining Output routes retain their individual layout, direction, transport or qualification work; the thirteen supplemental Output unit candidates remain separate discovery work.
 
-## Porting priority when implementation resumes — 23 October 2026
+**Reminder checkpoint:** before further Property expansion or the next public NuGet release, remind the user about **fifteen supplemental Property discovery candidates** and the **nine documented Property gates**. Supplemental candidates were expressly excluded from this increment and need separate review/approval. This is a durable workflow checkpoint, not a scheduled notification.
 
-The next domain to port is **Property & Materials** (`IOSProperty` / `OSPropertyAdapter`), corresponding to Phase 3 below. The first 25 typed Property queries are implemented in current source: all 13 P2 observations plus the first 12 P3 material observations. Of 204 active reviewed native names, 179 remain pending. The main reference contains 103 interface overloads and four additional public adapter methods. These source-parity counts are distinct from the 212-name cross-version native inventory and its reserved/deprecated exclusions.
-
-The shared binding/result foundation (P1) and P2 member/plate offset, release, beta-angle and section reads are implemented with one common reader for the unchanged 2024–2026 contracts. This supports subsequent Output offset and coordinate-transformation workflows without requiring the full section catalog first. Next complete the remaining 11 P3 material operations, then section/thickness observations (P4) and the approved creation/assignment workstreams. Native qualification remains separate from source implementation. See the [Property implementation sequence](docs/reports/OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md#10-implementation-sequence).
-
-Output already exposes 15 typed queries; its 45 remaining documented native functions retain their own dependency and qualification gates. The [remaining-adapter sequence](docs/reports/OpenSTAAD-Remaining-Adapters-Review-Index.md#3-recommended-implementation-sequence) prioritizes Property orientation/offset prerequisites alongside Output foundations, followed by Support/Commands, Design, Table/View and IDEA StatiCa integration. This dependency sequence supplements the product milestones below.
+Next review the remaining Output contracts in dependency order, then continue Support/Commands, Design, Table/View and IDEA StatiCa following the [remaining-adapter sequence](docs/reports/OpenSTAAD-Remaining-Adapters-Review-Index.md#3-recommended-implementation-sequence). This task does not resume those other domain implementations. Preserve one non-partial adapter per domain and internal common/version-policy services. Native qualification is separate from source implementation.
 
 ### Parked Load work — explicit approval required
 

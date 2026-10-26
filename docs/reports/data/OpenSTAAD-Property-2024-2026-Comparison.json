@@ -29,8 +29,8 @@
     "unchangedCommonContracts": 188,
     "changedCommonExamples": 75,
     "changes2025To2026": 0,
-    "currentPropertyMethods": 250,
-    "currentPropertyNativeDispatches": 191,
+    "currentPropertyMethods": 254,
+    "currentPropertyNativeDispatches": 195,
     "referenceInterfaceOverloads": 103,
     "referencePublicAdapterMethods": 107,
     "referenceAdapterOnlyMethods": 4,
@@ -48,8 +48,8 @@
     "excludedClassOnlyHelperNames": 22,
     "groupClassAndMetadataCandidateUnion": 227,
     "referenceActiveCandidatesWithoutTarget": 129,
-    "remainingActiveCandidateNames": 13,
-    "currentCommonPropertyMethods": 245,
+    "remainingActiveCandidateNames": 9,
+    "currentCommonPropertyMethods": 249,
     "currentOptionalPropertyCatalogMethods": 5
   },
   "manualEvidence": {
@@ -49001,17 +49001,18 @@
       "name": "RemoveAllElementNodeReleaseSpec",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "RemoveAllElementNodeReleaseSpec",
         "proposedRequest": "MemberReleaseRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveAllElementNodeReleaseSpec()"
+        "proposedSignature": "RemoveAllElementNodeReleaseSpec()",
+        "managedSignature": "PropertyMutationResult RemoveAllElementNodeReleaseSpec()"
       },
       "versions": {
         "2024": {
@@ -49099,7 +49100,14 @@
           "exampleCount": 3
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "RemoveAllElementNodeReleaseSpec",
+        "returnType": "PropertyMutationResult",
+        "managedSignature": "PropertyMutationResult RemoveAllElementNodeReleaseSpec()",
+        "nativeRuntimeVerified": false
+      }
     },
     {
       "name": "GetMemberReleaseSpecEx",
@@ -51200,17 +51208,18 @@
       "name": "RemoveMemberFireProofingSpecFromBeam",
       "category": "Specification: Get and Remove Specification Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "RemoveMemberFireProofingSpecFromBeam",
         "proposedRequest": "FireProofingRequest",
         "proposedResult": "PropertyRemovalResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "RemoveMemberFireProofingSpecFromBeam(FireProofingRequest request)"
+        "proposedSignature": "RemoveMemberFireProofingSpecFromBeam(FireProofingRequest request)",
+        "managedSignature": "PropertyMutationResult RemoveMemberFireProofingSpecFromBeam(int memberId)"
       },
       "versions": {
         "2024": {
@@ -51337,7 +51346,14 @@
           "exampleCount": 1
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "RemoveMemberFireProofingSpecFromBeam",
+        "returnType": "PropertyMutationResult",
+        "managedSignature": "PropertyMutationResult RemoveMemberFireProofingSpecFromBeam(int memberId)",
+        "nativeRuntimeVerified": false
+      }
     },
     {
       "name": "CreateAssignProfileProperty",
@@ -67747,17 +67763,18 @@
       "name": "GetPublishedProfileName",
       "category": "Publish: Functions Related to Publish Information Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetPublishedProfileName",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyNameResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "GetPublishedProfileName(SpecificationQuery request)"
+        "proposedSignature": "GetPublishedProfileName(SpecificationQuery request)",
+        "managedSignature": "PropertyQueryResult<string> GetPublishedProfileName(string staadProfileName, Country country)"
       },
       "versions": {
         "2024": {
@@ -67917,23 +67934,31 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetPublishedProfileName",
+        "returnType": "PropertyQueryResult<string>",
+        "managedSignature": "PropertyQueryResult<string> GetPublishedProfileName(string staadProfileName, Country country)",
+        "nativeRuntimeVerified": false
+      }
     },
     {
       "name": "GetSTAADProfileName",
       "category": "Publish: Functions Related to Publish Information Property",
       "classification": "Unchanged",
-      "currentAdapterImplemented": false,
+      "currentAdapterImplemented": true,
       "sourceDirectCalls": [],
       "sourceDelegatedCalls": [],
       "plan": {
         "phase": "P10",
-        "disposition": "Pending; contract verification before implementation",
+        "disposition": "Implemented native route; managed verification passed; live qualification pending",
         "proposedMethod": "GetSTAADProfileName",
         "proposedRequest": "SpecificationQuery",
         "proposedResult": "PropertyNameResult",
         "notes": "Use the native parameters and output names below as contract evidence; map to descriptive managed request fields and named qualified payloads. Interpret this operation’s return independently.",
-        "proposedSignature": "GetSTAADProfileName(SpecificationQuery request)"
+        "proposedSignature": "GetSTAADProfileName(SpecificationQuery request)",
+        "managedSignature": "PropertyQueryResult<string> GetStaadProfileName(string publishedProfileName, Country country)"
       },
       "versions": {
         "2024": {
@@ -68093,7 +68118,14 @@
           "exampleCount": 2
         }
       },
-      "currentRepositoryNativeRoute": false
+      "currentRepositoryNativeRoute": true,
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetStaadProfileName",
+        "returnType": "PropertyQueryResult<string>",
+        "managedSignature": "PropertyQueryResult<string> GetStaadProfileName(string publishedProfileName, Country country)",
+        "nativeRuntimeVerified": false
+      }
     },
     {
       "name": "SetStandardProfileDBFolder",
@@ -74270,14 +74302,14 @@
     "No Property domain API, source implementation, target framework or NuGet package was changed."
   ],
   "implementationUpdate": {
-    "date": "2026-10-24",
-    "parentCommit": "a863d75776529dacc41e50c9803baf578db0470a",
-    "interfaceMethods": 245,
-    "adapterMethods": 245,
+    "date": "2026-10-26",
+    "parentCommit": "c72d8c4",
+    "interfaceMethods": 249,
+    "adapterMethods": 249,
     "optionalCatalogMethods": 5,
-    "totalPropertyOperations": 250,
-    "nativeRoutes": 191,
-    "activeCandidatesRemaining": 13,
+    "totalPropertyOperations": 254,
+    "nativeRoutes": 195,
+    "activeCandidatesRemaining": 9,
     "workstreams": {
       "P2": 13,
       "P3": 23,
@@ -74287,168 +74319,40 @@
       "P7": 42,
       "P8": 25,
       "P9": 9,
-      "P10": 20
+      "P10": 24
     },
     "contracts": [
       {
-        "native": "RemovePropertyFromPlate",
-        "managedSignature": "PropertyMutationResult RemovePropertyFromPlate(int plateId)",
+        "native": "RemoveAllElementNodeReleaseSpec",
+        "managedSignature": "PropertyMutationResult RemoveAllElementNodeReleaseSpec()",
         "phase": "P10",
         "mutation": true
       },
       {
-        "native": "RemoveMaterialFromPlate",
-        "managedSignature": "PropertyMutationResult RemoveMaterialFromPlate(IEnumerable<int> plateIds)",
+        "native": "RemoveMemberFireProofingSpecFromBeam",
+        "managedSignature": "PropertyMutationResult RemoveMemberFireProofingSpecFromBeam(int memberId)",
         "phase": "P10",
         "mutation": true
       },
       {
-        "native": "RemoveMaterialFromSolid",
-        "managedSignature": "PropertyMutationResult RemoveMaterialFromSolid(IEnumerable<int> solidIds)",
+        "native": "GetPublishedProfileName",
+        "managedSignature": "PropertyQueryResult<string> GetPublishedProfileName(string staadProfileName, Country country)",
         "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "DeleteMemberReleaseSpec",
-        "managedSignature": "PropertyMutationResult DeleteMemberReleaseSpec(int memberId, MemberEnd memberEnd)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "DeleteAllControlDependentRelations",
-        "managedSignature": "PropertyMutationResult DeleteAllControlDependentRelations()",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveAllElementOffsetSpec",
-        "managedSignature": "PropertyMutationResult RemoveAllElementOffsetSpec()",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemovePropertyFromBeam",
-        "managedSignature": "PropertyMutationResult RemovePropertyFromBeam(int memberId)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "DeleteProperty",
-        "managedSignature": "PropertyMutationResult DeleteProperty(int propertyId)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "DeleteMemberSpec",
-        "managedSignature": "PropertyMutationResult DeleteMemberSpec(int specificationId)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveMemberReleaseSpecFromBeam",
-        "managedSignature": "PropertyMutationResult RemoveMemberReleaseSpecFromBeam(int memberId, MemberEnd memberEnd)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveMemberOffsetSpecFromBeam",
-        "managedSignature": "PropertyMutationResult RemoveMemberOffsetSpecFromBeam(int memberId, MemberEnd memberEnd)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveMemberTrussSpecFromBeam",
-        "managedSignature": "PropertyMutationResult RemoveMemberTrussSpecFromBeam(int memberId)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveMemberInactiveSpecFromBeam",
-        "managedSignature": "PropertyMutationResult RemoveMemberInactiveSpecFromBeam(int memberId)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveMemberTensionSpecFromBeam",
-        "managedSignature": "PropertyMutationResult RemoveMemberTensionSpecFromBeam(int memberId)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveMemberCompressionSpecFromBeam",
-        "managedSignature": "PropertyMutationResult RemoveMemberCompressionSpecFromBeam(int memberId)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveMemberIgnoreStiffSpecFromBeam",
-        "managedSignature": "PropertyMutationResult RemoveMemberIgnoreStiffSpecFromBeam(int memberId)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveMemberCableSpecFromBeam",
-        "managedSignature": "PropertyMutationResult RemoveMemberCableSpecFromBeam(int memberId, CableDefinitionKind definitionKind)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveElementPlaneStressSpecFromPlate",
-        "managedSignature": "PropertyMutationResult RemoveElementPlaneStressSpecFromPlate(int plateId)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveElementIgnoreInplaneRotnSpecFromPlate",
-        "managedSignature": "PropertyMutationResult RemoveElementIgnoreInplaneRotnSpecFromPlate(int plateId)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "RemoveElementNodeReleaseSpecFromPlate",
-        "managedSignature": "PropertyMutationResult RemoveElementNodeReleaseSpecFromPlate(int plateId, int nodeId)",
-        "phase": "P10",
-        "mutation": true
-      },
-      {
-        "native": "GetDefaultStandardProfileDBFolder",
-        "managedSignature": "PropertyQueryResult<string> GetDefaultStandardProfileDBFolder()",
-        "phase": "P9",
         "mutation": false
       },
       {
-        "native": "IsStandardDatabaseSection",
-        "managedSignature": "PropertyQueryResult<StandardSectionSource> IsStandardDatabaseSection(int propertyId)",
-        "phase": "P9",
-        "mutation": false
-      },
-      {
-        "native": "GetStandardSectionDatabaseName",
-        "managedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionDatabaseName(int propertyId)",
-        "phase": "P9",
-        "mutation": false
-      },
-      {
-        "native": "GetStandardSectionTableName",
-        "managedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionTableName(int propertyId)",
-        "phase": "P9",
-        "mutation": false
-      },
-      {
-        "native": "GetStandardSectionName",
-        "managedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionName(int propertyId)",
-        "phase": "P9",
+        "native": "GetSTAADProfileName",
+        "managedSignature": "PropertyQueryResult<string> GetStaadProfileName(string publishedProfileName, Country country)",
+        "phase": "P10",
         "mutation": false
       }
     ],
-    "offlineTests": 5156,
-    "newCases": 197,
-    "selectedXmlExamples": 944,
-    "propertyXmlExamples": 490,
+    "offlineTests": 5353,
+    "newPropertyCases": 32,
+    "selectedXmlExamples": 1002,
+    "propertyXmlExamples": 498,
     "catalogAndAcquisitionXmlExamples": 12,
     "liveMutationQualified": false,
-    "nextPhase": "P10",
-    "nextNativeFunction": "RemoveAllElementNodeReleaseSpec",
     "gatedP7Functions": {
       "GetInactiveMemberList": "Void by-value Object transport is marked unusable in reference source; a live native written-buffer fixture is missing.",
       "GetAlphaAngleForSection": "Native help supplies no interpretable return-status contract; no finite default/output is promoted to certified success.",
@@ -74462,27 +74366,31 @@
       "FindUPTTable": "Documented member is absent from inspected 2025/2026 exported IOSPropertyUI metadata; no qualified dispatch receiver is established.",
       "GetUserProvidedTableSectionList": "Help specifies indexed CSStringList output without a verified CLR representation; no guessed String array or index mapping is exposed."
     },
-    "managedApiRenames": {
-      "AddUPTPropertyWIDEFLANGE": "AddUptPropertyWideFlange",
-      "AddUPTPropertyWIDEFLANGEUNEQUAL": "AddUptPropertyWideFlangeUnequal",
-      "AddUPTPropertyWIDEFLANGECOMPOSITE": "AddUptPropertyWideFlangeComposite",
-      "AddUPTPropertyCHANNEL": "AddUptPropertyChannel",
-      "AddUPTPropertyANGLE": "AddUptPropertyAngle",
-      "AddUPTPropertyDOUBLEANGLE": "AddUptPropertyDoubleAngle",
-      "AddUPTPropertyTEE": "AddUptPropertyTee",
-      "AddUPTPropertyPIPE": "AddUptPropertyPipe",
-      "AddUPTPropertyTUBE": "AddUptPropertyTube",
-      "AddUPTPropertyGENERAL": "AddUptPropertyGeneral",
-      "AddUPTPropertyISECTION": "AddUptPropertyISection",
-      "AddUPTPropertyPRISMATIC": "AddUptPropertyPrismatic",
-      "CreateUPTTable": "CreateUptTable",
-      "CreateUPTTableEx": "CreateUptTableEx",
-      "CreatePropertyFromUPTTable": "CreatePropertyFromUptTable",
-      "RemoveUPTTable": "RemoveUptTable",
-      "RemovePropertyFromUPTTable": "RemovePropertyFromUptTable"
-    },
-    "guide": "docs/Property-Catalog-Capabilities-and-Cleanup.md",
-    "contractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
+    "supplementalCandidatesParked": 15,
+    "reminder": "Before further Property expansion or the next public release, present the nine documented contract gates and fifteen supplemental candidates. Supplemental implementation requires separate user review/approval.",
+    "guide": "docs/Property-Profile-Names-and-Final-Cleanup.md",
+    "sourceEvidence": [
+      {
+        "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSProperty.cs",
+        "bytes": 628409,
+        "sha256": "2c8fae7e4cbd4ce0c3fa862558d72b1e4190b9b118d0b165b08718a086afc702"
+      },
+      {
+        "file": "src/StaadPro.Interop/Adapters/Models/OSPropertyAdapter.cs",
+        "bytes": 647591,
+        "sha256": "09397e3bfdd746e2e1a176962eda08e029d5f52bda24eb5a19e74e661d9f39a9"
+      },
+      {
+        "file": "src/StaadPro.Interop/Services/Property/PropertyCleanupReader.cs",
+        "bytes": 14640,
+        "sha256": "7722e2914259c50bfaa4dc16acdb281b81dd43c4c8b0872cfaedf8592250d13a"
+      },
+      {
+        "file": "tests/StaadPro.Interop.Tests/Adapter/OSPropertyCompletionTests.cs",
+        "bytes": 9847,
+        "sha256": "01200b594505a9b20275e513525e39156762390e6aecf4bd0ce50e374a586f37"
+      }
+    ]
   },
   "implementationHistory": [
     {
@@ -75930,6 +75838,221 @@
       ],
       "guide": "docs/Property-UPT-Profiles-and-Catalogs.md",
       "contractIndex": "docs/contracts/PropertyUptContractIndex.json"
+    },
+    {
+      "date": "2026-10-24",
+      "parentCommit": "a863d75776529dacc41e50c9803baf578db0470a",
+      "interfaceMethods": 245,
+      "adapterMethods": 245,
+      "optionalCatalogMethods": 5,
+      "totalPropertyOperations": 250,
+      "nativeRoutes": 191,
+      "activeCandidatesRemaining": 13,
+      "workstreams": {
+        "P2": 13,
+        "P3": 23,
+        "P4": 24,
+        "P5": 17,
+        "P6": 18,
+        "P7": 42,
+        "P8": 25,
+        "P9": 9,
+        "P10": 20
+      },
+      "contracts": [
+        {
+          "native": "RemovePropertyFromPlate",
+          "managedSignature": "PropertyMutationResult RemovePropertyFromPlate(int plateId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveMaterialFromPlate",
+          "managedSignature": "PropertyMutationResult RemoveMaterialFromPlate(IEnumerable<int> plateIds)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveMaterialFromSolid",
+          "managedSignature": "PropertyMutationResult RemoveMaterialFromSolid(IEnumerable<int> solidIds)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "DeleteMemberReleaseSpec",
+          "managedSignature": "PropertyMutationResult DeleteMemberReleaseSpec(int memberId, MemberEnd memberEnd)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "DeleteAllControlDependentRelations",
+          "managedSignature": "PropertyMutationResult DeleteAllControlDependentRelations()",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveAllElementOffsetSpec",
+          "managedSignature": "PropertyMutationResult RemoveAllElementOffsetSpec()",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemovePropertyFromBeam",
+          "managedSignature": "PropertyMutationResult RemovePropertyFromBeam(int memberId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "DeleteProperty",
+          "managedSignature": "PropertyMutationResult DeleteProperty(int propertyId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "DeleteMemberSpec",
+          "managedSignature": "PropertyMutationResult DeleteMemberSpec(int specificationId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveMemberReleaseSpecFromBeam",
+          "managedSignature": "PropertyMutationResult RemoveMemberReleaseSpecFromBeam(int memberId, MemberEnd memberEnd)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveMemberOffsetSpecFromBeam",
+          "managedSignature": "PropertyMutationResult RemoveMemberOffsetSpecFromBeam(int memberId, MemberEnd memberEnd)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveMemberTrussSpecFromBeam",
+          "managedSignature": "PropertyMutationResult RemoveMemberTrussSpecFromBeam(int memberId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveMemberInactiveSpecFromBeam",
+          "managedSignature": "PropertyMutationResult RemoveMemberInactiveSpecFromBeam(int memberId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveMemberTensionSpecFromBeam",
+          "managedSignature": "PropertyMutationResult RemoveMemberTensionSpecFromBeam(int memberId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveMemberCompressionSpecFromBeam",
+          "managedSignature": "PropertyMutationResult RemoveMemberCompressionSpecFromBeam(int memberId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveMemberIgnoreStiffSpecFromBeam",
+          "managedSignature": "PropertyMutationResult RemoveMemberIgnoreStiffSpecFromBeam(int memberId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveMemberCableSpecFromBeam",
+          "managedSignature": "PropertyMutationResult RemoveMemberCableSpecFromBeam(int memberId, CableDefinitionKind definitionKind)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveElementPlaneStressSpecFromPlate",
+          "managedSignature": "PropertyMutationResult RemoveElementPlaneStressSpecFromPlate(int plateId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveElementIgnoreInplaneRotnSpecFromPlate",
+          "managedSignature": "PropertyMutationResult RemoveElementIgnoreInplaneRotnSpecFromPlate(int plateId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "RemoveElementNodeReleaseSpecFromPlate",
+          "managedSignature": "PropertyMutationResult RemoveElementNodeReleaseSpecFromPlate(int plateId, int nodeId)",
+          "phase": "P10",
+          "mutation": true
+        },
+        {
+          "native": "GetDefaultStandardProfileDBFolder",
+          "managedSignature": "PropertyQueryResult<string> GetDefaultStandardProfileDBFolder()",
+          "phase": "P9",
+          "mutation": false
+        },
+        {
+          "native": "IsStandardDatabaseSection",
+          "managedSignature": "PropertyQueryResult<StandardSectionSource> IsStandardDatabaseSection(int propertyId)",
+          "phase": "P9",
+          "mutation": false
+        },
+        {
+          "native": "GetStandardSectionDatabaseName",
+          "managedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionDatabaseName(int propertyId)",
+          "phase": "P9",
+          "mutation": false
+        },
+        {
+          "native": "GetStandardSectionTableName",
+          "managedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionTableName(int propertyId)",
+          "phase": "P9",
+          "mutation": false
+        },
+        {
+          "native": "GetStandardSectionName",
+          "managedSignature": "PropertyQueryResult<StandardSectionText> GetStandardSectionName(int propertyId)",
+          "phase": "P9",
+          "mutation": false
+        }
+      ],
+      "offlineTests": 5156,
+      "newCases": 197,
+      "selectedXmlExamples": 944,
+      "propertyXmlExamples": 490,
+      "catalogAndAcquisitionXmlExamples": 12,
+      "liveMutationQualified": false,
+      "nextPhase": "P10",
+      "nextNativeFunction": "RemoveAllElementNodeReleaseSpec",
+      "gatedP7Functions": {
+        "GetInactiveMemberList": "Void by-value Object transport is marked unusable in reference source; a live native written-buffer fixture is missing.",
+        "GetAlphaAngleForSection": "Native help supplies no interpretable return-status contract; no finite default/output is promoted to certified success.",
+        "GetCentroidLocationForSection": "Native return status is undocumented; qualification must establish success/absence before exposing engineering data.",
+        "GetAssignedAttributeByIndex": "Index base and native observation-context relationship are not verified; no guessed mapping to a requested entity."
+      },
+      "gatedP8Functions": {
+        "GetUptGeneralProfilePointsCount": "Reviewed CLR metadata passes output count values by value, unlike the help declaration; compatible native transport is not qualified.",
+        "GetUptGeneralProfileBoundaryPoints": "Newer optional coordinate API requires a compatible acquired capability; reviewed by-value output metadata does not establish safe returned buffers.",
+        "GetUptGeneralStressLocationPoints": "Newer optional coordinate output metadata is not qualified for safe paired buffer retrieval.",
+        "FindUPTTable": "Documented member is absent from inspected 2025/2026 exported IOSPropertyUI metadata; no qualified dispatch receiver is established.",
+        "GetUserProvidedTableSectionList": "Help specifies indexed CSStringList output without a verified CLR representation; no guessed String array or index mapping is exposed."
+      },
+      "managedApiRenames": {
+        "AddUPTPropertyWIDEFLANGE": "AddUptPropertyWideFlange",
+        "AddUPTPropertyWIDEFLANGEUNEQUAL": "AddUptPropertyWideFlangeUnequal",
+        "AddUPTPropertyWIDEFLANGECOMPOSITE": "AddUptPropertyWideFlangeComposite",
+        "AddUPTPropertyCHANNEL": "AddUptPropertyChannel",
+        "AddUPTPropertyANGLE": "AddUptPropertyAngle",
+        "AddUPTPropertyDOUBLEANGLE": "AddUptPropertyDoubleAngle",
+        "AddUPTPropertyTEE": "AddUptPropertyTee",
+        "AddUPTPropertyPIPE": "AddUptPropertyPipe",
+        "AddUPTPropertyTUBE": "AddUptPropertyTube",
+        "AddUPTPropertyGENERAL": "AddUptPropertyGeneral",
+        "AddUPTPropertyISECTION": "AddUptPropertyISection",
+        "AddUPTPropertyPRISMATIC": "AddUptPropertyPrismatic",
+        "CreateUPTTable": "CreateUptTable",
+        "CreateUPTTableEx": "CreateUptTableEx",
+        "CreatePropertyFromUPTTable": "CreatePropertyFromUptTable",
+        "RemoveUPTTable": "RemoveUptTable",
+        "RemovePropertyFromUPTTable": "RemovePropertyFromUptTable"
+      },
+      "guide": "docs/Property-Catalog-Capabilities-and-Cleanup.md",
+      "contractIndex": "docs/contracts/PropertyCleanupContractIndex.json"
     }
   ]
 }

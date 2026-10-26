@@ -1,6 +1,22 @@
 # NuGet readiness assessment
 
-## Latest prepared preview - 1.0.0-preview.20261024.12
+## Latest prepared preview - 1.0.0-preview.20261026.1
+
+Added four documented Property operations for model-wide element-node release cleanup, member fireproofing cleanup and country-qualified profile-name translation. Property now provides **249 common overloads and five optional catalog queries**, covering **195 of 204** active documented native routes. Nine documented contract gates and fifteen supplemental discovery candidates remain.
+
+Added **25 typed Output queries**, bringing coverage to **40 of 60** documented native names. The new APIs cover member and physical-member results, solid stresses, mat influence areas and base pressures, modal and buckling observations, nonlinear load steps, steel-design observations and time-history results. Named immutable payloads preserve native status evidence, units and component meanings, with bounded collections and result-state checks.
+
+All new APIs include matching interface/adapter XML documentation and usage examples explaining their differences from similar operations. Validation passed **5,353 offline tests** and **1,002 selected packaged XML examples** using managed native-signature fixtures. Live COM and engineering qualification remain pending. The target remains Windows/.NET Framework 4.8.1.
+
+See the [Property completion guide](Property-Profile-Names-and-Final-Cleanup.md) and [extended Output guide](Output-Extended-Queries.md) for contracts, examples and limitations.
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.1.nupkg` for manual upload. The release archive includes the current DLL/XML pair, README, release notes, updated installation/publishing instructions and domain usage guides. Its exact archive identity, installed company/copyright metadata and all 1,002 selected XML examples are verified through a fresh PackageReference-only consumer and package cache. The earlier CI archive remains a separate validation artifact. No public upload or registry ownership change is performed.
+
+Authors is **Srinivasa Rao Masanam**, assembly Company is **TensorStruct**, and package/assembly copyright is **Copyright (c) 2026 TensorStruct**. The metadata matches the 24 October release configuration and the preceding local validation archive. TensorStruct is the intended registry owner; actual NuGet.org ownership is managed separately from archive metadata. Previous release entries retain their historical attribution.
+
+Before a public release, revisit the nine documented Property gates and fifteen supplemental candidates with the user, retain the separately parked Load approval boundary, and review native qualification claims. The new Output and Property interface members require custom interface implementations to be updated.
+
+## Earlier prepared preview - 1.0.0-preview.20261024.12
 
 Retains the preceding preview's API surface and compiled XML IntelliSense. Release package verification covers all 944 selected examples through a fresh PackageReference consumer. The preceding implementation regression suite passed 5,156 offline tests; this release changes packaged documentation only.
 

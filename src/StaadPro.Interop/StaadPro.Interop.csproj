@@ -12,11 +12,11 @@
     <RootNamespace>StaadPro.Interop</RootNamespace>
     <PackageId>StaadPro.Interop</PackageId>
     <Version>1.0.0</Version>
-    <ReleaseDocumentationVersion>1.0.0-preview.20261024.12</ReleaseDocumentationVersion>
+    <ReleaseDocumentationVersion>1.0.0-preview.20261026.1</ReleaseDocumentationVersion>
     <PackageVersion>$(ReleaseDocumentationVersion)</PackageVersion>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 TensorStruct</Copyright>
-    <PackageReleaseNotes>Includes 245 common Property overloads and five separately acquired catalog queries, with complete XML IntelliSense and operation-specific cleanup results. Public UPT methods use PascalCase, for example AddUptPropertyChannel; consumers upgrading from earlier previews should use the API rename guide. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Added four Property cleanup and profile-name operations plus 25 typed Output queries for member and solid results, support-node observations, modal and buckling results, steel design and time histories. Includes complete XML IntelliSense and named managed results. Property covers 195 of 204 documented routes and Output covers 40 of 60. Live native qualification remains pending. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
@@ -60,11 +60,14 @@
     <None Include="..\..\docs\Property-Fireproofing-Attributes-and-UPT.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Property-UPT-Profiles-and-Catalogs.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Property-Catalog-Capabilities-and-Cleanup.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Property-Profile-Names-and-Final-Cleanup.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Property-API-Naming.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\contracts\PropertyApiRenames.json" Pack="true" PackagePath="docs\contracts\" />
     <None Include="..\..\docs\contracts\PropertyCleanupContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
     <None Include="..\..\docs\contracts\PropertyUptContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
     <None Include="..\..\docs\contracts\PropertyAttributeContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
+    <None Include="..\..\docs\Output-Extended-Queries.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\contracts\OutputAdvancedContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
     <None Include="..\..\docs\Output-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Root-Analysis-Queries.md" Pack="true" PackagePath="docs\" />

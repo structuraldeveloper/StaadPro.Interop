@@ -12,17 +12,15 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Property catalog capabilities and cleanup
+## Property completion and extended Output queries
 
-Incorporated **25 Property operations**: all five remaining P9 catalog queries and twenty P10 removal/deletion functions. The current surface has **245 common overloads plus five separately acquired catalog queries**, covering **191 of 204 active native routes**, with **13 remaining**. P9 is complete; P10 has twenty of twenty-four routes. The nine earlier P7/P8 contract gaps remain pending. See [all 25 catalog/cleanup contracts](docs/Property-Catalog-Capabilities-and-Cleanup.md).
+Property provides **249 common overloads plus five optional catalog queries**, covering **195/204** active documented native routes. The four new operations complete the documented P10 cleanup/profile-name allocation. Nine documented contract gates and fifteen supplemental discovery candidates remain separate work. See [the Property completion guide](docs/Property-Profile-Names-and-Final-Cleanup.md).
 
-Passed a Release build with zero warnings/errors and **5,156 offline tests**, including **197 new cases**. The isolated PackageReference-only consumer verifies **944 selected XML examples**: 490 common Property examples plus twelve optional catalog/acquisition examples, alongside the existing groups. Separate managed checks exercise all twenty new mutations and five catalog queries through both public surfaces. Live native mutation and engineering qualification remain pending.
+Output provides **40 typed queries**, including 25 new member, solid, support-node, modal, buckling, nonlinear, steel-design and time-history operations. Twenty documented native routes remain. See [the extended Output guide](docs/Output-Extended-Queries.md) for exact signatures and comparisons between similar methods.
 
-Added a passive version/signature acquisition boundary for the newer catalog group on exact native profiles **25.00.01.424** and **26.00.00.340**. Retained operation-specific zero-success, Boolean-success and explicit no-specification removal outcomes, owned bounded bulk targets, and separate member-end, cable-definition and analytical-node selectors. No native model is modified by verification.
+The Release build and **5,353 offline tests** passed. The isolated package consumer verifies **1,002 selected XML examples**, including all 80 Output and 510 Property/capability examples. Native COM and engineering qualification remain pending. The library targets Windows/.NET Framework 4.8.1.
 
-Renamed **17 public UPT methods** to PascalCase, including `AddUptPropertyChannel`, `AddUptPropertyWideFlange` and `CreateUptTable`. This preview requires callers to update those method names. Parameter names, types, ordering, defaults and return types are preserved. Bentley native dispatch names and recorded contract evidence retain their original spelling.
-
-See [the API rename table](docs/Property-API-Naming.md).
+Public UPT methods use PascalCase, including `AddUptPropertyChannel`. See [the API rename table](docs/Property-API-Naming.md) when upgrading from an earlier preview.
 
 ## Earlier Property UPT profiles and catalogs
 
@@ -72,20 +70,20 @@ All 36 methods include comparative IntelliSense explaining scope, alternatives, 
 
 Implemented 15 additional Load observations with complete XML contracts, named status/data results, bounded eager snapshots and an internal shared service. Source now exposes 135 Load overloads and dispatches 88/129 documented native names. Remaining undispatched names total 41: one existing alternative, one derived capability, four partial overlaps and 35 absent operations, plus three separate metadata-only candidates. Passed 2,448 offline tests (189 new cases) and all 30 new XML examples. See [Load inspection usage](docs/Load-Inspection-Queries.md). These changes postdate the prepared archive below; live native qualification remains pending.
 
-## Prepared preview: 1.0.0-preview.20261024.12
+## Prepared preview: 1.0.0-preview.20261026.1
 
 
-The local archive includes 245 common Property overloads plus five separately acquired catalog queries, 171 Load overloads, all 143 reference Geometry overloads, 15 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
+The current source preview includes 249 common Property overloads plus five separately acquired catalog queries, 171 Load overloads, all 143 reference Geometry overloads, 40 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
-Validated a Release solution build, 5,156 offline tests and isolated installation with 944 compiled/executed XML examples (new mutation examples are guarded). The archive is prepared for manual upload and has not been published to NuGet.org. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
+Validated the Release build, 5,353 offline tests and isolated package consumption with 1,002 compiled/executed XML examples. Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.1.nupkg` for manual upload; it has not been published. Author is Srinivasa Rao Masanam; company and copyright holder are TensorStruct. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
 
 ## Output comparison and planned work
 
-The [Output guide](docs/Output-Porting.md) documents 15 implemented typed queries and 45 pending native mappings. The linked 2024–2026 comparison inventories every native contract and main-project overload, with shared services for identical contracts and narrow policies planned for evidenced differences. Source coverage does not certify live native behavior or change the published preview.
+The [Output guide](docs/Output-Porting.md) documents 40 implemented typed queries and 20 pending native mappings. The linked 2024–2026 comparison inventories every native contract and main-project overload, with shared services for identical contracts and narrow policies planned for evidenced differences. Source coverage does not certify live native behavior or change the published preview.
 
 ## Property implementation and comparison
 
-The [Property review](docs/Property-Porting.md) records 200 managed overloads and routes to 141 of the 204 active native candidates, with 63 remaining. The [main-project ports guide](docs/Property-Main-Ports.md) lists the preceding 25 signatures and explains compatibility sentinels, no-op inputs, native status checks, raw section-buffer limits and mutation behavior. The [multi-version inventory](docs/reports/OpenSTAAD-Property-API-Coverage-and-Contract-Inventory.md) remains the earlier contract evidence; dispatch coverage does not certify complete typed payloads or live compatibility.
+The [Property review](docs/Property-Porting.md) records 249 common overloads plus five optional catalog queries and routes to 195 of the 204 active native candidates, with nine documented gates remaining. The [main-project ports guide](docs/Property-Main-Ports.md) lists the preceding 25 signatures and explains compatibility sentinels, no-op inputs, native status checks, raw section-buffer limits and mutation behavior. The [multi-version inventory](docs/reports/OpenSTAAD-Property-API-Coverage-and-Contract-Inventory.md) remains the earlier contract evidence; dispatch coverage does not certify complete typed payloads or live compatibility.
 
 ## Support comparison and planned work
 
@@ -241,7 +239,7 @@ StaadPro.Interop/
 
 ## Building and Testing
 
-The current source adapters expose all 143 reference Geometry methods, 135 Load overloads and 15 typed Output queries. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
+The current source adapters expose all 143 reference Geometry methods, 171 Load overloads and 40 typed Output queries. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
 
 The Root port maps all 39 reviewed native functions and all 23 private-source Root methods through 53 common operations and three optional capability operations. Access them through `wrapper.Root`; see [root porting progress and examples](docs/Root-Porting.md).
 
@@ -253,8 +251,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261024.9 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261024.9.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261026.1 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.1.nupkg
 ```
 
 ---

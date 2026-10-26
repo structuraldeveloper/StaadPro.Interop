@@ -7,11 +7,17 @@ namespace StaadPro.Interop.Enums.Output
         Success = 0,
         /// <summary>The native retrieval returned its documented failure flag; no data is exposed.</summary>
         NativeFailure = 1,
-        /// <summary>The native section-name query returned an empty string.</summary>
+        /// <summary>The native observation reported a documented not-found outcome, including an empty section name or nonlinear case -8002.</summary>
         NotFound = 2,
         /// <summary>The steel-ratio output reported the documented -1 sentinel for analysis not performed.</summary>
         AnalysisNotPerformed = 3,
         /// <summary>The steel-ratio output reported the documented -999 sentinel for a member not designed.</summary>
-        MemberNotDesigned = 4
+        MemberNotDesigned = 4,
+        /// <summary>The native query or integration preflight explicitly reported no applicable result set.</summary>
+        ResultsUnavailable = 5,
+        /// <summary>The native sample count exceeded the caller’s managed allocation limit; no result buffer was allocated.</summary>
+        LimitExceeded = 6,
+        /// <summary>Native input correspondence or before/after integration metadata changed; no mixed payload is exposed.</summary>
+        StateChanged = 7
     }
 }

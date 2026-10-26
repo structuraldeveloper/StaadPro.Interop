@@ -3888,5 +3888,71 @@ namespace StaadPro.Interop.Adapters.Interfaces
         /// <value>A version/signature-qualified acquisition interface for newer catalog functions.</value>
         /// <remarks>Acquire GetStandardCatalog before calling newer APIs; the common adapter does not implement that optional interface.</remarks>
         IOSPropertyCapabilities Capabilities { get; }
+
+        #region Remaining release, fireproofing and profile-name operations
+
+        /// <summary>Removes every element-node release specification from the acquired model.</summary>
+        /// <returns>A model-scoped acknowledgement: Succeeded for native 1/true, or NoSpecification for 0/false. NoSpecification means that no release was present and is not a fabricated successful mutation.</returns>
+        /// <remarks><para>When to use: remove all element-node release specifications in one explicit model-wide operation. RemoveElementNodeReleaseSpecFromPlate targets a particular plate and analytical node instead; DeleteMemberReleaseSpec concerns a member end. This operation does not remove member releases or element offsets. It can affect many assignments; native failure or a transport exception may follow partial changes. No implicit save, retry, rollback, analysis or geometry selection occurs.</para><para>Uses the common installed 2024–2026 contract and the captured Property receiver. Calls are synchronous on the caller’s established COM apartment and share the adapter gate. Other adapters, raw calls and external edits remain outside that gate. Reacquire wrapper.Property after RefreshComObjects. Stale or disposed bindings are rejected before access and checked again after return. Live native and engineering qualification remains required.</para></remarks>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed, or native data has an undocumented status, invalid type or malformed text.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks the required compatible native member.</exception>
+        /// <example><code>bool allowNativeMutation = false;
+        /// if (allowNativeMutation)
+        /// {
+        ///     var result = property.RemoveAllElementNodeReleaseSpec();
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        PropertyMutationResult RemoveAllElementNodeReleaseSpec();
+
+        /// <summary>Removes the fireproofing specification assigned to one analytical member.</summary>
+        /// <param name="memberId">Positive analytical member ID, not a fireproofing specification index or specification definition ID.</param>
+        /// <returns>A member-scoped result retaining the requested ID and actual native acknowledgement. Native 1/true is Succeeded; 0/false is NativeFailure and does not prove that no specification existed.</returns>
+        /// <remarks><para>When to use: remove fireproofing from one member without deleting its section, material, release or offset specification. GetFireProofDataForBeam observes the existing assignment; GetFireProofingSpecDetails takes a zero-based specification index and does not identify a member. No specification index is derived from memberId. This mutation does not recompute design results or save the model, and partial native effects are not rolled back.</para><para>Uses the common installed 2024–2026 contract and the captured Property receiver. Calls are synchronous on the caller’s established COM apartment and share the adapter gate. Other adapters, raw calls and external edits remain outside that gate. Reacquire wrapper.Property after RefreshComObjects. Stale or disposed bindings are rejected before access and checked again after return. Live native and engineering qualification remains required.</para></remarks>
+        /// <exception cref="ArgumentOutOfRangeException">memberId is not positive.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed, or native data has an undocumented status, invalid type or malformed text.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks the required compatible native member.</exception>
+        /// <example><code>bool allowNativeMutation = false;
+        /// if (allowNativeMutation)
+        /// {
+        ///     var result = property.RemoveMemberFireProofingSpecFromBeam(17);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        PropertyMutationResult RemoveMemberFireProofingSpecFromBeam(int memberId);
+
+        /// <summary>Looks up a published catalog profile name from its STAAD profile name and country table.</summary>
+        /// <param name="staadProfileName">Exact nonblank STAAD catalog profile name without NUL characters; case and whitespace are preserved. This is not a model property ID or UPT section index.</param>
+        /// <param name="country">Existing Country selector in the documented range 1 through 37. Country.Chilean (38) is not included in the reviewed table.</param>
+        /// <returns>The exact returned published name on Success. A null, DBNull or empty native name produces EmptyOrUnavailable without a data payload; non-string or embedded-NUL responses are rejected.</returns>
+        /// <remarks><para>When to use: translate an existing STAAD catalog label to its published label for a specified country. GetStaadProfileName performs the reverse lookup. These mappings are not assumed to be one-to-one or reversible, and this query does not publish a section, create a property, search model assignments or change the database folder. Native text is preserved without trimming, case changes, shape inference or unit conversion.</para><para>Uses the common installed 2024–2026 contract and the captured Property receiver. Calls are synchronous on the caller’s established COM apartment and share the adapter gate. Other adapters, raw calls and external edits remain outside that gate. Reacquire wrapper.Property after RefreshComObjects. Stale or disposed bindings are rejected before access and checked again after return. Live native and engineering qualification remains required.</para></remarks>
+        /// <exception cref="ArgumentNullException">The profile-name input is null.</exception>
+        /// <exception cref="ArgumentException">The profile-name input is blank or contains a NUL character.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">country is outside the documented range 1 through 37.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed, or native data has an undocumented status, invalid type or malformed text.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks the required compatible native member.</exception>
+        /// <example><code>var result = property.GetPublishedProfileName("W12X26", Country.American);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        PropertyQueryResult<string> GetPublishedProfileName(string staadProfileName, Country country);
+
+        /// <summary>Looks up a STAAD catalog profile name from its published name and country table.</summary>
+        /// <param name="publishedProfileName">Exact nonblank published catalog profile name without NUL characters; case and whitespace are preserved. This is not a file path or a model section reference.</param>
+        /// <param name="country">Existing Country selector in the documented range 1 through 37. Country.Chilean (38) is not included in the reviewed table.</param>
+        /// <returns>The exact returned STAAD profile name on Success. A null, DBNull or empty native name produces EmptyOrUnavailable without a data payload; malformed text or non-string returns are rejected.</returns>
+        /// <remarks><para>When to use: translate a published catalog label to the corresponding STAAD label. GetPublishedProfileName performs the opposite lookup. The translation uses the acquired native catalog and explicit country; it does not create an ASSIGN/UPT section, hydrate a SectionProperty object, alter current material or certify a round trip. Native names and country identity are preserved, and no model mutation or unit conversion occurs.</para><para>Uses the common installed 2024–2026 contract and the captured Property receiver. Calls are synchronous on the caller’s established COM apartment and share the adapter gate. Other adapters, raw calls and external edits remain outside that gate. Reacquire wrapper.Property after RefreshComObjects. Stale or disposed bindings are rejected before access and checked again after return. Live native and engineering qualification remains required.</para></remarks>
+        /// <exception cref="ArgumentNullException">The profile-name input is null.</exception>
+        /// <exception cref="ArgumentException">The profile-name input is blank or contains a NUL character.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">country is outside the documented range 1 through 37.</exception>
+        /// <exception cref="InvalidOperationException">The binding is stale/disposed, or native data has an undocumented status, invalid type or malformed text.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks the required compatible native member.</exception>
+        /// <example><code>var result = property.GetStaadProfileName("W12X26", Country.American);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        PropertyQueryResult<string> GetStaadProfileName(string publishedProfileName, Country country);
+
+        #endregion
     }
 }

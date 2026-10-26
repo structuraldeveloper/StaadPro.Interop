@@ -134,5 +134,55 @@ namespace StaadPro.Interop.Services.Property
             return Run(p => { const string op = "RemoveElementNodeReleaseSpecFromPlate"; object raw = p.RemoveElementNodeReleaseSpecFromPlate(plateId, nodeId);
                 return new PropertyMutationResult(op, Zero(raw, op), raw, PropertyMutationTargetKind.Plate, targetIds: new[] { plateId }, nodeId: nodeId); });
         }
+
+        internal PropertyMutationResult RemoveAllElementNodeReleaseSpec()
+        {
+            return Run(p =>
+            {
+                const string operation = "RemoveAllElementNodeReleaseSpec";
+                object response = p.RemoveAllElementNodeReleaseSpec();
+                bool removed = Flag(response, operation);
+                return new PropertyMutationResult(operation,
+                    removed ? PropertyMutationStatus.Succeeded : PropertyMutationStatus.NoSpecification,
+                    response, PropertyMutationTargetKind.Model);
+            });
+        }
+
+        internal PropertyMutationResult RemoveMemberFireProofingSpecFromBeam(int memberId)
+        {
+            Positive(memberId, nameof(memberId));
+            return Run(p =>
+            {
+                const string operation = "RemoveMemberFireProofingSpecFromBeam";
+                object response = p.RemoveMemberFireProofingSpecFromBeam(memberId);
+                return new PropertyMutationResult(operation,
+                    Flag(response, operation) ? PropertyMutationStatus.Succeeded : PropertyMutationStatus.NativeFailure,
+                    response, PropertyMutationTargetKind.Member, targetIds: new[] { memberId });
+            });
+        }
+
+        internal PropertyQueryResult<string> GetPublishedProfileName(string staadProfileName, Country country) =>
+            ProfileName(staadProfileName, nameof(staadProfileName), country, true);
+
+        internal PropertyQueryResult<string> GetStaadProfileName(string publishedProfileName, Country country) =>
+            ProfileName(publishedProfileName, nameof(publishedProfileName), country, false);
+
+        private PropertyQueryResult<string> ProfileName(string name, string parameterName, Country country, bool published)
+        {
+            if (name == null) throw new ArgumentNullException(parameterName);
+            if (string.IsNullOrWhiteSpace(name) || name.IndexOf('\0') >= 0)
+                throw new ArgumentException("Supply an exact nonblank catalog name without NUL characters.", parameterName);
+            if ((int)country < 1 || (int)country > 37) throw new ArgumentOutOfRangeException(nameof(country));
+            return Run(p =>
+            {
+                string operation = published ? "GetPublishedProfileName" : "GetSTAADProfileName";
+                object response = published ? p.GetPublishedProfileName(name, (int)country) : p.GetSTAADProfileName(name, (int)country);
+                if (response == null || response == DBNull.Value || response is string empty && empty.Length == 0)
+                    return new PropertyQueryResult<string>(operation, PropertyQueryStatus.EmptyOrUnavailable);
+                if (!(response is string text) || text.IndexOf('\0') >= 0)
+                    throw new InvalidOperationException(operation + " returned malformed catalog text.");
+                return new PropertyQueryResult<string>(operation, PropertyQueryStatus.Success, text);
+            });
+        }
     }
 }

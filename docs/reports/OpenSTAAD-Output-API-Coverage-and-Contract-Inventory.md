@@ -1,20 +1,28 @@
 # OpenSTAAD Output API coverage and contract inventory
 
-**Review date:** 22 October 2026<br>**Implementation updated:** 23 October 2026<br>
+**Review date:** 22 October 2026<br>**Implementation updated:** 26 October 2026<br>
 **Repository baseline:** `3c67959163450d1b2c150bbc8f25a5c1f99dc30c`<br>
-**Status:** Fifteen typed Output queries implemented; 45 native mappings remain pending. Historical source fingerprints below identify the comparison baseline.
+**Status:** Forty typed Output queries implemented; 20 native mappings remain pending. Historical source fingerprints below identify the comparison baseline.
 
 Read the [cross-version architecture and plan](OpenSTAAD-Output-Multi-Version-Architecture-and-Plan.md) for conclusions, policy boundaries and release gates. The [comparison evidence](data/OpenSTAAD-Output-2024-2026-Comparison.json) contains exact declarations, complete parameter-table descriptions, return tables, fingerprints and managed-source mappings.
+
+## Current implementation - extended documented queries
+
+Implemented **25 additional documented Output routes**, bringing IOSOutput and the single non-partial OSOutputAdapter to **40 typed queries covering 40/60 native names**, with **20 documented routes pending**. Added member/physical-member results, solid stresses, mat/base-pressure snapshots, modal/buckling observations, nonlinear load steps, steel-design observations and time-history queries. See [the extended contracts and comparative usage guide](../Output-Extended-Queries.md).
+
+The selected contracts are shared or cosmetic across the installed 2024–2026 references. One internal common reader performs native dispatch and validation; direction-code policies, uncertain member-end layouts, cut/point buffers and incompatible scalar-output transports remain separate work. No new public ref/out, tuples or raw VARIANT packets are exposed. Existing wrapper/provider behavior is unchanged.
+
+Validation passed **5,353 offline tests**, including 165 new Output cases and 32 Property completion cases. The isolated installed-package consumer verifies **1,002 selected XML examples**, including all 80 Output examples and 510 Property/capability examples. Live native marshaling and engineering qualification remain pending.
 
 ## 1. Scope and counting rules
 
 The Analysis Results tree contributes 48 functions in 2024 and 49 in 2025/2026. Eleven additional functions belong to OSOutputUI but are filed under Steel Design Results. This inventory includes those functions, giving 59 / 60 / 60 native names. The linked Chinese Steel section was inspected and contributes zero OSOutputUI functions; other native owners in that section are outside this Output review. Ten pages per year were traversed; nine contain Output functions.
 
-Current IOSOutput and OSOutputAdapter expose 15 typed queries mapping 15 documented native names. RootMemberForcesService separately retains its two existing Output dispatches. Forty-five documented native names remain pending; raw binding presence is distinct from typed coverage.
+Current IOSOutput and OSOutputAdapter expose 40 typed queries mapping 40 documented native names. RootMemberForcesService separately retains its two existing Output dispatches. Twenty documented native names remain pending; raw binding presence is distinct from typed coverage.
 
 The read-only main IOSOutput has 86 method overloads, and its OSOutputAdapter implements all 86, plus 24 private methods. These map to 17 distinct native targets; 43 of the 60 documented native names have no direct target in that reference adapter. Main-source parity, typed adapter coverage and native-name coverage are separate counts.
 
-Fifteen entries below now have typed Output APIs; 45 remain pending. Implemented entries identify their actual managed signatures. Other classes and signatures are design proposals. Their names may be refined at API review; they do not exist merely because they appear here. Every proposed query result carries qualified status, operation identity and the listed payload. No proposed signature exposes ref/out or tuples.
+Forty entries below now have typed Output APIs; 20 remain pending. Implemented entries identify their actual managed signatures. Other classes and signatures are design proposals. Their names may be refined at API review; they do not exist merely because they appear here. Every proposed query result carries qualified status, operation identity and the listed payload. No proposed signature exposes ref/out or tuples.
 
 ## 2. Complete cross-version matrix
 
@@ -22,32 +30,32 @@ Fifteen entries below now have typed Output APIs; 45 remain pending. Implemented
 | --- | --- | --- | --- | --- | --- | --- |
 | [AreResultsAvailable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___ana_rlt.html#gab326f7578cd6d53aa4f4400f74640491) / `VARIANT` | Unchanged | Implemented: `GetAnalysisResultAvailability`; Root retained | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L49) | O2 |
 | [GetMemberDesignSectionName](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gaa4e3a6905c36de9f5e0edb39ab022217) / `VARIANT` | Unchanged | Implemented: `GetMemberDesignSectionName` | Not called | O5 |
-| [IsMultipleMemberSteelDesignResultsAvailable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c) / `VARIANT` | Unchanged | Pending | Not called | O10 |
-| [GetSteelDesignParameterBlockCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939) / `VARIANT` | Unchanged | Pending | Not called | O10 |
+| [IsMultipleMemberSteelDesignResultsAvailable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c) / `VARIANT` | Unchanged | Implemented: `GetMultipleSteelDesignResultAvailability` | Not called | O10 |
+| [GetSteelDesignParameterBlockCount](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939) / `VARIANT` | Unchanged | Implemented: `GetSteelDesignParameterBlockCount` | Not called | O10 |
 | [GetSteelDesignParameterBlockNameByIndex](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gae4d12cb96249a53e02ac209d4ec28bb7) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gae4d12cb96249a53e02ac209d4ec28bb7) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gae4d12cb96249a53e02ac209d4ec28bb7) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetMultipleMemberSteelDesignRatio](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gae9107fd34396f30c46e3e34660194db4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gae9107fd34396f30c46e3e34660194db4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gae9107fd34396f30c46e3e34660194db4) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetMultipleMemberSteelDesignMaxRatio](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gab44e212393084c79c2da98b206b9c612) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gab44e212393084c79c2da98b206b9c612) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gab44e212393084c79c2da98b206b9c612) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetMultipleMemberSteelDesignResults](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gaa2dd5aae686f3943747519b19cc2dbcd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gaa2dd5aae686f3943747519b19cc2dbcd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gaa2dd5aae686f3943747519b19cc2dbcd) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetMemberSteelDesignRatio](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gafcd9cbfb77d9a4df423fb92993d542c4) / `VARIANT` | Unchanged | Implemented: `GetMemberSteelUtilizationRatio` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L178) | O5 |
-| [GetMemberSteelDesignResults](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L155) | O5 |
+| [GetMemberSteelDesignResults](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2) / `VARIANT` | Unchanged | Implemented: `GetMemberSteelDesignResults` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L155) | O5 |
 | [GetMemberSteelDesignMinFailureRatio](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga33d973a3a58d9bb7dbb1a551dbe112c8) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga33d973a3a58d9bb7dbb1a551dbe112c8) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga33d973a3a58d9bb7dbb1a551dbe112c8) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetMemberSteelDesignMaxFailureRatio](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga5bedb4627e488a567f4786374d07cea9) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga5bedb4627e488a567f4786374d07cea9) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga5bedb4627e488a567f4786374d07cea9) / `VARIANT` | Unchanged | Pending | Not called | O10 |
 | [GetNodeDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#gad7bb8f56f4f2096c0240d644e99479dc) / `VARIANT` | Unchanged | Implemented: `GetNodeDisplacements` | Not called | O2 |
 | [GetSupportReactions](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga8bfa8a82d929856113b7920b030989d1) / `VARIANT` | Unchanged | Implemented: `GetSupportReactions` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L71) | O2 |
-| [GetMatInfluenceAreas](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856) / `VARIANT` | Unchanged | Pending | Not called | O7 |
-| [GetBasePressures](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99) / `VARIANT` | Formatting or typo only | Pending | Not called | O7 |
+| [GetMatInfluenceAreas](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856) / `VARIANT` | Unchanged | Implemented: `GetMatInfluenceAreas` | Not called | O7 |
+| [GetBasePressures](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99) / `VARIANT` | Formatting or typo only | Implemented: `GetBasePressures` | Not called | O7 |
 | [GetMemberEndDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#gaf4f46574a9c80c6398e062781d131cf2) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#gaf4f46574a9c80c6398e062781d131cf2) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#gaf4f46574a9c80c6398e062781d131cf2) / `VARIANT` | Version policy candidate | Pending | Not called | O6 |
-| [GetIntermediateMemberTransDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd) / `VARIANT` | Unchanged | Pending | Not called | O6 |
+| [GetIntermediateMemberTransDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd) / `VARIANT` | Unchanged | Implemented: `GetRelativeMemberDisplacement` | Not called | O6 |
 | [GetMemberEndForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga9ee15e2a2869bfb68049fcc03d062329) / `VARIANT` | Unchanged | Implemented: `GetMemberEndForces`; Root retained | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L233) | O2 |
-| [GetPMemberEndForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060) / `VARIANT` | Formatting or typo only | Pending | Not called | O6 |
+| [GetPMemberEndForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060) / `VARIANT` | Formatting or typo only | Implemented: `GetPhysicalMemberEndForces` | Not called | O6 |
 | [GetMinMaxBendingMoment](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#gaf63c90d9d6acf2007bd0dc194d59a813) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#gaf63c90d9d6acf2007bd0dc194d59a813) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#gaf63c90d9d6acf2007bd0dc194d59a813) / `VARIANT` | Version policy candidate | Pending | Not called | O6 |
 | [GetMinMaxShearForce](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#gac5691dcf8af2b39c3ca8a1d6ed06a93a) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#gac5691dcf8af2b39c3ca8a1d6ed06a93a) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#gac5691dcf8af2b39c3ca8a1d6ed06a93a) / `VARIANT` | Version policy candidate | Pending | Not called | O6 |
-| [GetMinMaxAxialForce](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga072e86e3cb9e6c606510480f01ce76a9) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga072e86e3cb9e6c606510480f01ce76a9) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga072e86e3cb9e6c606510480f01ce76a9) / `VARIANT` | Formatting or typo only | Pending | Not called | O6 |
-| [GetIntermediateMemberForcesAtDistance](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga914b3980dd567b9042f94fca42a7e641) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga914b3980dd567b9042f94fca42a7e641) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga914b3980dd567b9042f94fca42a7e641) / `VARIANT` | Unchanged | Pending | Not called | O6 |
-| [GetPMemberIntermediateForcesAtDistance](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga43d4b974d3b4f05d28156edbf7a390f6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga43d4b974d3b4f05d28156edbf7a390f6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga43d4b974d3b4f05d28156edbf7a390f6) / `VARIANT` | Unchanged | Pending | Not called | O6 |
+| [GetMinMaxAxialForce](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga072e86e3cb9e6c606510480f01ce76a9) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga072e86e3cb9e6c606510480f01ce76a9) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga072e86e3cb9e6c606510480f01ce76a9) / `VARIANT` | Formatting or typo only | Implemented: `GetMemberAxialForceExtrema` | Not called | O6 |
+| [GetIntermediateMemberForcesAtDistance](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga914b3980dd567b9042f94fca42a7e641) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga914b3980dd567b9042f94fca42a7e641) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga914b3980dd567b9042f94fca42a7e641) / `VARIANT` | Unchanged | Implemented: `GetMemberForcesAtDistance` | Not called | O6 |
+| [GetPMemberIntermediateForcesAtDistance](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga43d4b974d3b4f05d28156edbf7a390f6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga43d4b974d3b4f05d28156edbf7a390f6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga43d4b974d3b4f05d28156edbf7a390f6) / `VARIANT` | Unchanged | Implemented: `GetPhysicalMemberForcesAtDistance` | Not called | O6 |
 | [GetMaxSectionDisplacement](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga1ddbbc7a3b403db9d08040fff625326b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga1ddbbc7a3b403db9d08040fff625326b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga1ddbbc7a3b403db9d08040fff625326b) / `VARIANT` | Version policy candidate | Pending | Not called | O6 |
-| [GetIntermediateDeflectionAtDistance](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56) / `VARIANT` | Unchanged | Pending | Not called | O6 |
-| [GetIntermediateMemberAbsTransDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34) / `VARIANT` | Unchanged | Pending | Not called | O6 |
+| [GetIntermediateDeflectionAtDistance](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56) / `VARIANT` | Unchanged | Implemented: `GetMemberDeflectionAtDistance` | Not called | O6 |
+| [GetIntermediateMemberAbsTransDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34) / `VARIANT` | Unchanged | Implemented: `GetAbsoluteMemberDisplacement` | Not called | O6 |
 | [GetAllPlateCenterStressesAndMoments](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga461a2ec82c9fb789f92cfb7f705a3e88) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterStressesAndMoments` | Not called | O3 |
 | [GetPlateCenterNormalPrincipalStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gae2958f7723d482e818d88e51d320880f) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterNormalPrincipalStresses` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L895) | O3 |
 | [GetAllPlateCenterForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gad14d57e4e0404457454a3ea1394a8537) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterForces` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L865) | O3 |
@@ -59,27 +67,27 @@ Fifteen entries below now have typed Output APIs; 45 remain pending. Implemented
 | [GetResultantForceAlongLineForPlateList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga16b671df915dfa2ca6691372f0c827be) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga16b671df915dfa2ca6691372f0c827be) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga16b671df915dfa2ca6691372f0c827be) / `VARIANT` | Formatting or typo only | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L808) | O4 |
 | [GetResultantForceAlongLineForParametricSurface](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga2d8565301564943488f7604ce1b44e8b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga2d8565301564943488f7604ce1b44e8b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga2d8565301564943488f7604ce1b44e8b) / `VARIANT` | Formatting or typo only | Pending | Not called | O4 |
 | [GetPlateStressAtPoint](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga7e9ab82a5558ce71e3926e225755acc6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga7e9ab82a5558ce71e3926e225755acc6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga7e9ab82a5558ce71e3926e225755acc6) / `VARIANT` | Parameter-name clarification | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L1941) | O4 |
-| [GetAllSolidNormalStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___solid_rlt.html#gaba6b09a64357f09d33a1dfa8588028bc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___solid_rlt.html#gaba6b09a64357f09d33a1dfa8588028bc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___solid_rlt.html#gaba6b09a64357f09d33a1dfa8588028bc) / `VARIANT` | Unchanged | Pending | Not called | O7 |
-| [GetAllSolidShearStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___solid_rlt.html#ga58a11e689111b93551978060d3beb068) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___solid_rlt.html#ga58a11e689111b93551978060d3beb068) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___solid_rlt.html#ga58a11e689111b93551978060d3beb068) / `VARIANT` | Unchanged | Pending | Not called | O7 |
-| [GetAllSolidPrincipalStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___solid_rlt.html#ga7e416935359b156473f8f628ea038729) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___solid_rlt.html#ga7e416935359b156473f8f628ea038729) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___solid_rlt.html#ga7e416935359b156473f8f628ea038729) / `VARIANT` | Unchanged | Pending | Not called | O7 |
+| [GetAllSolidNormalStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___solid_rlt.html#gaba6b09a64357f09d33a1dfa8588028bc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___solid_rlt.html#gaba6b09a64357f09d33a1dfa8588028bc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___solid_rlt.html#gaba6b09a64357f09d33a1dfa8588028bc) / `VARIANT` | Unchanged | Implemented: `GetSolidNormalStresses` | Not called | O7 |
+| [GetAllSolidShearStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___solid_rlt.html#ga58a11e689111b93551978060d3beb068) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___solid_rlt.html#ga58a11e689111b93551978060d3beb068) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___solid_rlt.html#ga58a11e689111b93551978060d3beb068) / `VARIANT` | Unchanged | Implemented: `GetSolidShearStresses` | Not called | O7 |
+| [GetAllSolidPrincipalStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___solid_rlt.html#ga7e416935359b156473f8f628ea038729) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___solid_rlt.html#ga7e416935359b156473f8f628ea038729) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___solid_rlt.html#ga7e416935359b156473f8f628ea038729) / `VARIANT` | Unchanged | Implemented: `GetSolidPrincipalStresses` | Not called | O7 |
 | [GetAllSolidVonMisesStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___solid_rlt.html#ga2203456c21ee383624d6a165b279057f) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___solid_rlt.html#ga2203456c21ee383624d6a165b279057f) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___solid_rlt.html#ga2203456c21ee383624d6a165b279057f) / `VARIANT` | Unchanged | Pending | Not called | O7 |
-| [GetNLLoadStep](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#gaabe6a654c4c8143ebb2742cb7fb689dd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#gaabe6a654c4c8143ebb2742cb7fb689dd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#gaabe6a654c4c8143ebb2742cb7fb689dd) / `VARIANT` | Unchanged | Pending | Not called | O8 |
+| [GetNLLoadStep](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#gaabe6a654c4c8143ebb2742cb7fb689dd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#gaabe6a654c4c8143ebb2742cb7fb689dd) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#gaabe6a654c4c8143ebb2742cb7fb689dd) / `VARIANT` | Unchanged | Implemented: `GetNonlinearLoadStep` | Not called | O8 |
 | [GetNLNodeDisplacements](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#gac9537ae0e34eb6d10cc8119749e7aa78) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#gac9537ae0e34eb6d10cc8119749e7aa78) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#gac9537ae0e34eb6d10cc8119749e7aa78) / `VARIANT` | Unchanged | Pending | Not called | O8 |
-| [GetNoOfModesExtracted](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga9332682c8f686e537fbbe73131a02eed) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga9332682c8f686e537fbbe73131a02eed) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga9332682c8f686e537fbbe73131a02eed) / `VARIANT` | Unchanged | Pending | Not called | O8 |
-| [GetModeFrequency](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga19eeb7e1d7f95329e97881d4aecdc42c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga19eeb7e1d7f95329e97881d4aecdc42c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga19eeb7e1d7f95329e97881d4aecdc42c) / `VARIANT` | Unchanged | Pending | Not called | O8 |
-| [GetModalDisplacementAtNode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga6ad3b3a30f91debfd7a443ebc279cea1) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga6ad3b3a30f91debfd7a443ebc279cea1) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga6ad3b3a30f91debfd7a443ebc279cea1) / `VARIANT` | Unchanged | Pending | Not called | O8 |
-| [GetModalMassParticipationFactors](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga118cbf967b0d0392fa170b5f57f64081) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga118cbf967b0d0392fa170b5f57f64081) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga118cbf967b0d0392fa170b5f57f64081) / `VARIANT` | Unchanged | Pending | Not called | O8 |
+| [GetNoOfModesExtracted](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga9332682c8f686e537fbbe73131a02eed) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga9332682c8f686e537fbbe73131a02eed) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga9332682c8f686e537fbbe73131a02eed) / `VARIANT` | Unchanged | Implemented: `GetExtractedModeCount` | Not called | O8 |
+| [GetModeFrequency](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga19eeb7e1d7f95329e97881d4aecdc42c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga19eeb7e1d7f95329e97881d4aecdc42c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga19eeb7e1d7f95329e97881d4aecdc42c) / `VARIANT` | Unchanged | Implemented: `GetModeFrequency` | Not called | O8 |
+| [GetModalDisplacementAtNode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga6ad3b3a30f91debfd7a443ebc279cea1) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga6ad3b3a30f91debfd7a443ebc279cea1) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga6ad3b3a30f91debfd7a443ebc279cea1) / `VARIANT` | Unchanged | Implemented: `GetModalNodeDisplacements` | Not called | O8 |
+| [GetModalMassParticipationFactors](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga118cbf967b0d0392fa170b5f57f64081) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga118cbf967b0d0392fa170b5f57f64081) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga118cbf967b0d0392fa170b5f57f64081) / `VARIANT` | Unchanged | Implemented: `GetModalMassParticipationFactors` | Not called | O8 |
 | [GetMissingMassParticipationFactors](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga7bae007519dd0144777b9874096b47b9) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga7bae007519dd0144777b9874096b47b9) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga7bae007519dd0144777b9874096b47b9) / `VARIANT` | Unchanged | Pending | Not called | O8 |
-| [GetTimeHistoryIntegrationStepInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#gaea1ad7d38067027dbe6c74a6152f2f5d) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#gaea1ad7d38067027dbe6c74a6152f2f5d) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#gaea1ad7d38067027dbe6c74a6152f2f5d) / `VARIANT` | Unchanged | Pending | Not called | O9 |
-| [GetTimeHistoryResponseAtTime](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga646f263e1b9a53e4212f3c2cc5ed8acc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga646f263e1b9a53e4212f3c2cc5ed8acc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga646f263e1b9a53e4212f3c2cc5ed8acc) / `VARIANT` | Unchanged | Pending | Not called | O9 |
-| [GetTimeHistoryResponse](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57) / `VARIANT` | Unchanged | Pending | Not called | O9 |
+| [GetTimeHistoryIntegrationStepInfo](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#gaea1ad7d38067027dbe6c74a6152f2f5d) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#gaea1ad7d38067027dbe6c74a6152f2f5d) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#gaea1ad7d38067027dbe6c74a6152f2f5d) / `VARIANT` | Unchanged | Implemented: `GetTimeHistoryIntegrationInfo` | Not called | O9 |
+| [GetTimeHistoryResponseAtTime](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga646f263e1b9a53e4212f3c2cc5ed8acc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga646f263e1b9a53e4212f3c2cc5ed8acc) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga646f263e1b9a53e4212f3c2cc5ed8acc) / `VARIANT` | Unchanged | Implemented: `GetTimeHistoryResponseAtTime` | Not called | O9 |
+| [GetTimeHistoryResponse](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57) / `VARIANT` | Unchanged | Implemented: `GetTimeHistoryResponse` | Not called | O9 |
 | [GetTimeHistoryResponseMinMax](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga3206fd5f32a98d437bd0dab1e3a82bf4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga3206fd5f32a98d437bd0dab1e3a82bf4) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga3206fd5f32a98d437bd0dab1e3a82bf4) / `VARIANT` | Unchanged | Pending | Not called | O9 |
 | [GetMaxBeamStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#gae0623051a17845003fd341a3ca0bb007) | Not in help/header | [long](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#gae0623051a17845003fd341a3ca0bb007) / `long` | Added help member | Pending | Not called | O10 |
 | [GetStaticCheckResult](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___static_check.html#ga8343b8a41832142e342fb4b8750a6e38) / `VARIANT` | Unchanged | Implemented: `GetStaticCheckResult` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L91) | O2 |
 | [IsBucklingAnalysisResultsAvailable](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga65682c9aeb4eacc4a9ee03d9e21d166c) / `VARIANT` | Unchanged | Implemented: `GetBucklingResultAvailability` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L54) | O5 |
-| [GetNoOfBucklingFactors](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L923) | O5 |
+| [GetNoOfBucklingFactors](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b) / `VARIANT` | Unchanged | Implemented: `GetBucklingFactorCount` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L923) | O5 |
 | [GetBucklingFactor](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#gab1fae0d3b4a716ba9919da5d54f242c0) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#gab1fae0d3b4a716ba9919da5d54f242c0) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#gab1fae0d3b4a716ba9919da5d54f242c0) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L931) | O5 |
-| [GetBucklingModeDisplacementAtNode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L945) | O5 |
+| [GetBucklingModeDisplacementAtNode](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6) / `VARIANT` | Unchanged | Implemented: `GetBucklingModeDisplacements` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L945) | O5 |
 
 **Comparison:** Unchanged means normalized declaration and non-example contract match; formatting-only entries preserve equivalent meanings; policy candidates require validation of changed input or output conventions. “Not in help/header” is an evidence boundary, not proof about every installed native server.
 
@@ -161,7 +169,7 @@ VARIANT OSOutputUI::GetMemberDesignSectionName(const VARIANT FAR&varnBeamNo)
 **Section:** Design: Steel Design Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga23663ecf75659aa873be867cea01f42c)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<bool> GetMultipleSteelDesignResultAvailability()`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O10
 
@@ -179,9 +187,9 @@ No parameters.
 
 `System.Object IsMultipleMemberSteelDesignResultsAvailable()`
 
-**Proposed managed entry:** `GetMultipleSteelDesignResultAvailability()`<br>
-**Proposed return class:** `SteelDesignAvailabilityResult`<br>
-**Result and validation contract:** AISC 360-16 limitation in all reviewed references. Native availability, design code and result context govern access in addition to application version.
+**Implemented managed entry:** `OutputQueryResult<bool> GetMultipleSteelDesignResultAvailability()`<br>
+**Return envelope:** `OutputQueryResult<bool>`<br>
+**Result and validation contract:** This is distinct from general analysis or buckling availability. The reviewed contract identifies AISC 360-16 as the applicable design context. A successful observation with Data=false is valid data, not a query failure. Native Boolean or integral 0/1 is accepted; an integral -1 is not borrowed as success. No design code is changed and no multiple-block result packet is inferred.
 
 <a id="output-getsteeldesignparameterblockcount"></a>
 
@@ -190,7 +198,7 @@ No parameters.
 **Section:** Design: Steel Design Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#ga65c592e2e4b54a57c0321bbb38e29939)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<int> GetSteelDesignParameterBlockCount()`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O10
 
@@ -208,9 +216,9 @@ No parameters.
 
 `System.Object GetSteelDesignParameterBlockCount()`
 
-**Proposed managed entry:** `GetSteelDesignParameterBlockCount()`<br>
-**Proposed return class:** `SteelDesignBlockCountResult`<br>
-**Result and validation contract:** AISC 360-16; direct count, zero may be valid. Snapshot with names to detect races.
+**Implemented managed entry:** `OutputQueryResult<int> GetSteelDesignParameterBlockCount()`<br>
+**Return envelope:** `OutputQueryResult<int>`<br>
+**Result and validation contract:** The reviewed help limits multiple-block extraction to AISC 360-16. GetMultipleSteelDesignResultAvailability observes that capability separately. Zero is a valid count; it is not a fabricated successful design result or a Boolean false. No block names, governing blocks, design changes or results freshness are inferred.
 
 <a id="output-getsteeldesignparameterblocknamebyindex"></a>
 
@@ -392,7 +400,7 @@ VARIANT OSOutputUI::GetMemberSteelDesignRatio(const VARIANT FAR&vnBeamNo,VARIANT
 **Section:** Design: Steel Design Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___design_steel.html#gaf0f6f888d59db3ae5f4896025fc44dd2)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<MemberSteelDesignResults> GetMemberSteelDesignResults(int memberId)`; managed verified, live qualification pending.<br>
 **Main reference:** [GetSteelDesignResultsForBeam native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L155)<br>
 **Workstream:** O5
 
@@ -423,9 +431,9 @@ VARIANT OSOutputUI::GetMemberSteelDesignResults(const VARIANT FAR&vnBeamNo,VARIA
 
 `System.Object GetMemberSteelDesignResults(System.Object, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef)`
 
-**Proposed managed entry:** `GetMemberSteelDesignResults(int memberId)`<br>
-**Proposed return class:** `MemberSteelDesignQueryResult`<br>
-**Result and validation contract:** Ten outputs include three design forces, critical section and slenderness. Source TODO reports inconsistent status variants; preserve raw status and Unknown instead of treating all non-PASS values as Failed.
+**Implemented managed entry:** `OutputQueryResult<MemberSteelDesignResults> GetMemberSteelDesignResults(int memberId)`<br>
+**Return envelope:** `OutputQueryResult<MemberSteelDesignResults>`<br>
+**Result and validation contract:** Prefer this query when code, decision, governing case/station/clause/section, allowable ratio, FX/MY/MZ and slenderness are needed. GetMemberSteelUtilizationRatio returns only a ratio. PASS/FAIL text is classified explicitly; numeric, Boolean or other status variants are preserved as Unknown rather than guessed. The three unreturned FY/FZ/MX actions are unavailable and are never set to zero. Governing case IDs are not hydrated or activated. Native false takes precedence over any written outputs.
 
 <a id="output-getmembersteeldesignminfailureratio"></a>
 
@@ -566,7 +574,7 @@ VARIANT OSOutputUI::GetSupportReactions(const VARIANT FAR&nNodeNo,const VARIANT 
 **Section:** Result: Nodes/Joints/Supports Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga8a408a6468ecf006e35de27075584856)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<IReadOnlyList<MatInfluenceArea>> GetMatInfluenceAreas(IEnumerable<int> supportNodeIds, int maximumResults = 100000)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O7
 
@@ -596,9 +604,9 @@ VARIANT OSOutputUI::GetMatInfluenceAreas(VARIANT FAR&nNodes,VARIANT FAR&varYZAre
 
 `System.Object GetMatInfluenceAreas(System.Object, System.Object, System.Object, System.Object)`
 
-**Proposed managed entry:** `GetMatInfluenceAreas(IEnumerable<int> supportNodeIds)`<br>
-**Proposed return class:** `MatInfluenceAreasResult`<br>
-**Result and validation contract:** Snapshot node IDs once; preserve correspondence of YZ/ZX/XY arrays; zero is native success; validate ELASTIC MAT context.
+**Implemented managed entry:** `OutputQueryResult<IReadOnlyList<MatInfluenceArea>> GetMatInfluenceAreas(IEnumerable<int> supportNodeIds, int maximumResults = 100000)`<br>
+**Return envelope:** `OutputQueryResult<IReadOnlyList<MatInfluenceArea>>`<br>
+**Result and validation contract:** Use for YZ/ZX/XY influence areas, not base pressures or Load floor influence areas. Input is snapshotted once with a bounded selection; order and duplicates are retained. Empty input returns an owned empty result without native result calls. Exported metadata passes initialized arrays by value, so every applicable Double slot must be written in place. Native integer 0 means success; -107/-108 mean buffer failure. Actual Boolean acknowledgements are interpreted separately, never converted to an integer zero. Changed node correspondence rejects mixed data. Areas retain native length-squared units.
 
 <a id="output-getbasepressures"></a>
 
@@ -607,7 +615,7 @@ VARIANT OSOutputUI::GetMatInfluenceAreas(VARIANT FAR&nNodes,VARIANT FAR&varYZAre
 **Section:** Result: Nodes/Joints/Supports Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___nod_rlt.html#ga6b71fd3346b2e89a6c47bfd7945f0d99)<br>
 **Comparison:** Formatting or typo only<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<IReadOnlyList<NodeBasePressure>> GetBasePressures(int loadCaseId, IEnumerable<int> supportNodeIds, int maximumResults = 100000)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O7
 
@@ -637,9 +645,9 @@ VARIANT OSOutputUI::GetBasePressures(const VARIANT FAR&varLC,VARIANT FAR&nNodes,
 
 `System.Object GetBasePressures(System.Object, System.Object, System.Object, System.Object, System.Object)`
 
-**Proposed managed entry:** `GetBasePressures(int loadCaseId, IEnumerable<int> supportNodeIds)`<br>
-**Proposed return class:** `BasePressuresResult`<br>
-**Result and validation contract:** YZ/ZX/XY pressure arrays map to global X/Y/Z; preserve node order and Boolean status; BASE PRESSURE prerequisite.
+**Implemented managed entry:** `OutputQueryResult<IReadOnlyList<NodeBasePressure>> GetBasePressures(int loadCaseId, IEnumerable<int> supportNodeIds, int maximumResults = 100000)`<br>
+**Return envelope:** `OutputQueryResult<IReadOnlyList<NodeBasePressure>>`<br>
+**Result and validation contract:** Requires native BASE PRESSURE results; it does not calculate contact pressure from support reactions or ELASTIC MAT influence areas. Native YZ/ZX/XY arrays correspond to global X/Y/Z pressure components in force-per-area units. The Boolean-success contract differs from GetMatInfluenceAreas integer-zero success. Bounded one-pass input snapshots preserve duplicates/order, validate written fixed-size arrays and reject changed node correspondence. Empty input returns an owned empty result without native retrieval.
 
 <a id="output-getmemberenddisplacements"></a>
 
@@ -694,7 +702,7 @@ The 2024 example declares eDisp(0 To 5) and reads six entries; 2025/2026 declare
 **Section:** Result: Members Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga0ac61ab06bab4b6188a03445edc8bacd)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<Vector3D> GetRelativeMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O6
 
@@ -718,9 +726,9 @@ VARIANT OSOutputUI::GetIntermediateMemberTransDisplacements(const VARIANT FAR&nM
 
 `System.Object GetIntermediateMemberTransDisplacements(System.Object, System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetRelativeMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)`<br>
-**Proposed return class:** `MemberTranslationResult`<br>
-**Result and validation contract:** Three local translations at a validated station; do not confuse relative displacement with absolute displacement.
+**Implemented managed entry:** `OutputQueryResult<Vector3D> GetRelativeMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)`<br>
+**Return envelope:** `OutputQueryResult<Vector3D>`<br>
+**Result and validation contract:** Use for the native relative translations described in local X/Y/Z order. GetAbsoluteMemberDisplacement invokes a different native operation whose prose is ambiguous; neither query applies a managed frame or offset transformation. This returns three translations, not six nodal translation/rotation values.
 
 <a id="output-getmemberendforces"></a>
 
@@ -765,7 +773,7 @@ VARIANT OSOutputUI::GetMemberEndForces(const VARIANT FAR&nMemberNo,const VARIANT
 **Section:** Result: Members Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#gafd324bfa929f74ec38f73d4d43463060)<br>
 **Comparison:** Formatting or typo only<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<ForceComponents> GetPhysicalMemberEndForces(int physicalMemberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem = ResultCoordinateSystem.Local)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O6
 
@@ -790,9 +798,9 @@ VARIANT OSOutputUI::GetPMemberEndForces(const VARIANT FAR&nMemberNo,const VARIAN
 
 `System.Object GetPMemberEndForces(System.Object, System.Object, System.Object, System.Object ByRef, System.Object)`
 
-**Proposed managed entry:** `GetPhysicalMemberEndForces(int physicalMemberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem)`<br>
-**Proposed return class:** `PhysicalMemberEndForcesResult`<br>
-**Result and validation contract:** Physical member incidence reordering can change signs. Validate physical identity and native start/end; do not treat its ID as an analytical beam ID.
+**Implemented managed entry:** `OutputQueryResult<ForceComponents> GetPhysicalMemberEndForces(int physicalMemberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem = ResultCoordinateSystem.Local)`<br>
+**Return envelope:** `OutputQueryResult<ForceComponents>`<br>
+**Result and validation contract:** Use for physical-member IDs and native physical start/end incidence. GetMemberEndForces takes analytical member IDs. MemberEnd.Start/End map to native 0/1; ResultCoordinateSystem.Local/Global map independently to 0/1 and do not reuse the oppositely numbered offset enum. Physical incidence reordering may change signs; no managed reordering, rotation or sign correction is applied. FX/FY/FZ retain force units and MX/MY/MZ force-times-length units.
 
 <a id="output-getminmaxbendingmoment"></a>
 
@@ -901,7 +909,7 @@ VARIANT OSOutputUI::GetMinMaxShearForce(const VARIANT FAR&nMemberNo,const VARIAN
 **Section:** Result: Members Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga072e86e3cb9e6c606510480f01ce76a9) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga072e86e3cb9e6c606510480f01ce76a9) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga072e86e3cb9e6c606510480f01ce76a9)<br>
 **Comparison:** Formatting or typo only<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<MemberForceExtrema> GetMemberAxialForceExtrema(int memberId, int loadCaseId)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O6
 
@@ -927,9 +935,9 @@ VARIANT OSOutputUI::GetMinMaxAxialForce(const VARIANT FAR&nMemberNo,const VARIAN
 
 `System.Object GetMinMaxAxialForce(System.Object, System.Object, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef)`
 
-**Proposed managed entry:** `GetMemberAxialForceExtrema(int memberId, int loadCaseId)`<br>
-**Proposed return class:** `MemberForceExtremaResult`<br>
-**Result and validation contract:** Signed minimum/maximum and positions, not absolute extrema. Formatting/typo change needs no separate implementation.
+**Implemented managed entry:** `OutputQueryResult<MemberForceExtrema> GetMemberAxialForceExtrema(int memberId, int loadCaseId)`<br>
+**Return envelope:** `OutputQueryResult<MemberForceExtrema>`<br>
+**Result and validation contract:** Unlike GetMemberForcesAtDistance, this requests native extrema over the member. Values are not absolute extrema, sorted envelopes across load cases or recalculated forces. Minimum must not exceed maximum; both written stations must be nonnegative. Positions retain native length units from the analytical start.
 
 <a id="output-getintermediatememberforcesatdistance"></a>
 
@@ -938,7 +946,7 @@ VARIANT OSOutputUI::GetMinMaxAxialForce(const VARIANT FAR&nMemberNo,const VARIAN
 **Section:** Result: Members Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga914b3980dd567b9042f94fca42a7e641) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga914b3980dd567b9042f94fca42a7e641) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga914b3980dd567b9042f94fca42a7e641)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<ForceComponents> GetMemberForcesAtDistance(int memberId, double distanceFromStart, int loadCaseId)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O6
 
@@ -962,9 +970,9 @@ VARIANT OSOutputUI::GetIntermediateMemberForcesAtDistance(const VARIANT FAR&nMem
 
 `System.Object GetIntermediateMemberForcesAtDistance(System.Object, System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetMemberForcesAtDistance(int memberId, double distanceFromStart, int loadCaseId)`<br>
-**Proposed return class:** `MemberSectionForcesResult`<br>
-**Result and validation contract:** Six local force/moment values; distance measured from the analytical start in native length units; validate against member length.
+**Implemented managed entry:** `OutputQueryResult<ForceComponents> GetMemberForcesAtDistance(int memberId, double distanceFromStart, int loadCaseId)`<br>
+**Return envelope:** `OutputQueryResult<ForceComponents>`<br>
+**Result and validation contract:** This returns FX/FY/FZ/MX/MY/MZ at a native distance from the analytical start. GetPhysicalMemberForcesAtDistance uses physical-member identity and total physical length. It is not an end-action sign conversion, result envelope or normalized eigenmode. Station zero is allowed; member membership and upper station validity remain native decisions. No implicit length-fraction conversion, unit scaling or geometry hydration occurs.
 
 <a id="output-getpmemberintermediateforcesatdistance"></a>
 
@@ -973,7 +981,7 @@ VARIANT OSOutputUI::GetIntermediateMemberForcesAtDistance(const VARIANT FAR&nMem
 **Section:** Result: Members Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga43d4b974d3b4f05d28156edbf7a390f6) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga43d4b974d3b4f05d28156edbf7a390f6) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga43d4b974d3b4f05d28156edbf7a390f6)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<ForceComponents> GetPhysicalMemberForcesAtDistance(int physicalMemberId, double distanceFromStart, int loadCaseId)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O6
 
@@ -997,9 +1005,9 @@ VARIANT OSOutputUI::GetPMemberIntermediateForcesAtDistance(const VARIANT FAR&nMe
 
 `System.Object GetPMemberIntermediateForcesAtDistance(System.Object, System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetPhysicalMemberForcesAtDistance(int physicalMemberId, double distanceFromStart, int loadCaseId)`<br>
-**Proposed return class:** `PhysicalMemberSectionForcesResult`<br>
-**Result and validation contract:** Physical start and total length require physical geometry; preserve analytical-versus-physical identity.
+**Implemented managed entry:** `OutputQueryResult<ForceComponents> GetPhysicalMemberForcesAtDistance(int physicalMemberId, double distanceFromStart, int loadCaseId)`<br>
+**Return envelope:** `OutputQueryResult<ForceComponents>`<br>
+**Result and validation contract:** This returns FX/FY/FZ/MX/MY/MZ at a native distance from the physical start. GetMemberForcesAtDistance uses analytical member identity; IDs are not interchangeable. It is not an end-action sign conversion, result envelope or normalized eigenmode. Station zero is allowed; member membership and upper station validity remain native decisions. No implicit length-fraction conversion, unit scaling or geometry hydration occurs.
 
 <a id="output-getmaxsectiondisplacement"></a>
 
@@ -1054,7 +1062,7 @@ VARIANT OSOutputUI::GetMaxSectionDisplacement(const VARIANT FAR&nMemberNo,const 
 **Section:** Result: Members Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga8adea9e89760a8344ca297b111408b56)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<MemberDeflection> GetMemberDeflectionAtDistance(int memberId, double distanceFromStart, int loadCaseId)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O6
 
@@ -1079,9 +1087,9 @@ VARIANT OSOutputUI::GetIntermediateDeflectionAtDistance(const VARIANT FAR&nMembe
 
 `System.Object GetIntermediateDeflectionAtDistance(System.Object, System.Object, System.Object, System.Object ByRef, System.Object ByRef)`
 
-**Proposed managed entry:** `GetMemberDeflectionAtDistance(int memberId, double distanceFromStart, int loadCaseId)`<br>
-**Proposed return class:** `MemberDeflectionResult`<br>
-**Result and validation contract:** Return the two qualified Y/Z outputs; confirm axes and absolute/relative convention before documenting them as such.
+**Implemented managed entry:** `OutputQueryResult<MemberDeflection> GetMemberDeflectionAtDistance(int memberId, double distanceFromStart, int loadCaseId)`<br>
+**Return envelope:** `OutputQueryResult<MemberDeflection>`<br>
+**Result and validation contract:** Choose this for the two-output native deflection operation; GetRelativeMemberDisplacement and GetAbsoluteMemberDisplacement return three translation slots through different functions. The help does not fully establish the Y/Z frame or absolute/relative convention, so NativeY/NativeZ preserve slot identity without asserting a transformation. No missing X value or rotations are invented.
 
 <a id="output-getintermediatememberabstransdisplacements"></a>
 
@@ -1090,7 +1098,7 @@ VARIANT OSOutputUI::GetIntermediateDeflectionAtDistance(const VARIANT FAR&nMembe
 **Section:** Result: Members Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___mem_rlt.html#ga06e324e0eed5e1b970331c6f113d6f34)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<Vector3D> GetAbsoluteMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O6
 
@@ -1114,9 +1122,9 @@ VARIANT OSOutputUI::GetIntermediateMemberAbsTransDisplacements(const VARIANT FAR
 
 `System.Object GetIntermediateMemberAbsTransDisplacements(System.Object, System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetAbsoluteMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)`<br>
-**Proposed return class:** `MemberTranslationResult`<br>
-**Result and validation contract:** Name says absolute, prose repeats relative. Resolve via paired native fixtures; share transport only, not unverified semantics.
+**Implemented managed entry:** `OutputQueryResult<Vector3D> GetAbsoluteMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)`<br>
+**Return envelope:** `OutputQueryResult<Vector3D>`<br>
+**Result and validation contract:** Calls the native AbsTrans operation, separately from GetRelativeMemberDisplacement. The installed name says absolute while its prose repeats relative; the result preserves native X/Y/Z slots and does not certify an absolute/relative transformation. No offset transfer, basis reconstruction, rotation, length-fraction conversion or zero substitution is applied.
 
 <a id="output-getallplatecenterstressesandmoments"></a>
 
@@ -1543,7 +1551,7 @@ VARIANT OSOutputUI::GetPlateStressAtPoint(const VARIANT FAR&plateNo,const VARIAN
 **Section:** Result: Solids Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___solid_rlt.html#gaba6b09a64357f09d33a1dfa8588028bc) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___solid_rlt.html#gaba6b09a64357f09d33a1dfa8588028bc) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___solid_rlt.html#gaba6b09a64357f09d33a1dfa8588028bc)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<SolidNormalStresses> GetSolidNormalStresses(int solidId, int nativeCornerIndex, int loadCaseId)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O7
 
@@ -1567,9 +1575,9 @@ VARIANT OSOutputUI::GetAllSolidNormalStresses(const VARIANT FAR&nSolidNo,const V
 
 `System.Object GetAllSolidNormalStresses(System.Object, System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetSolidNormalStresses(int solidId, int cornerIndex, int loadCaseId)`<br>
-**Proposed return class:** `SolidNormalStressResult`<br>
-**Result and validation contract:** Three SXX,SYY,SZZ outputs; determine corner index base and whether any center sentinel is supported before defining an enum.
+**Implemented managed entry:** `OutputQueryResult<SolidNormalStresses> GetSolidNormalStresses(int solidId, int nativeCornerIndex, int loadCaseId)`<br>
+**Return envelope:** `OutputQueryResult<SolidNormalStresses>`<br>
+**Result and validation contract:** Use for solid elements, not plate-center stresses. The nonnegative native corner selector is passed unchanged; it is not an analytical node ID and no zero/one-based corner mapping or center sentinel is invented. Named component ordering follows the native output slots; no principal transformation is performed. All three native stress values must be written and finite on success. Native result stress units and signs are preserved.
 
 <a id="output-getallsolidshearstresses"></a>
 
@@ -1578,7 +1586,7 @@ VARIANT OSOutputUI::GetAllSolidNormalStresses(const VARIANT FAR&nSolidNo,const V
 **Section:** Result: Solids Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___solid_rlt.html#ga58a11e689111b93551978060d3beb068) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___solid_rlt.html#ga58a11e689111b93551978060d3beb068) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___solid_rlt.html#ga58a11e689111b93551978060d3beb068)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<SolidShearStresses> GetSolidShearStresses(int solidId, int nativeCornerIndex, int loadCaseId)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O7
 
@@ -1602,9 +1610,9 @@ VARIANT OSOutputUI::GetAllSolidShearStresses(const VARIANT FAR&nSolidNo,const VA
 
 `System.Object GetAllSolidShearStresses(System.Object, System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetSolidShearStresses(int solidId, int cornerIndex, int loadCaseId)`<br>
-**Proposed return class:** `SolidShearStressResult`<br>
-**Result and validation contract:** Three SXY,SYZ,SZX outputs; preserve native coordinate system and corner identity.
+**Implemented managed entry:** `OutputQueryResult<SolidShearStresses> GetSolidShearStresses(int solidId, int nativeCornerIndex, int loadCaseId)`<br>
+**Return envelope:** `OutputQueryResult<SolidShearStresses>`<br>
+**Result and validation contract:** Use for solid elements, not plate-center stresses. The nonnegative native corner selector is passed unchanged; it is not an analytical node ID and no zero/one-based corner mapping or center sentinel is invented. Named component ordering follows the native output slots; no principal transformation is performed. All three native stress values must be written and finite on success. Native result stress units and signs are preserved.
 
 <a id="output-getallsolidprincipalstresses"></a>
 
@@ -1613,7 +1621,7 @@ VARIANT OSOutputUI::GetAllSolidShearStresses(const VARIANT FAR&nSolidNo,const VA
 **Section:** Result: Solids Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___solid_rlt.html#ga7e416935359b156473f8f628ea038729) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___solid_rlt.html#ga7e416935359b156473f8f628ea038729) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___solid_rlt.html#ga7e416935359b156473f8f628ea038729)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<SolidPrincipalStresses> GetSolidPrincipalStresses(int solidId, int nativeCornerIndex, int loadCaseId)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O7
 
@@ -1637,9 +1645,9 @@ VARIANT OSOutputUI::GetAllSolidPrincipalStresses(const VARIANT FAR&nSolidNo,cons
 
 `System.Object GetAllSolidPrincipalStresses(System.Object, System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetSolidPrincipalStresses(int solidId, int cornerIndex, int loadCaseId)`<br>
-**Proposed return class:** `SolidPrincipalStressResult`<br>
-**Result and validation contract:** Help repeats S1,S1,S2. Confirm ordering of three principal stresses before labeling S1/S2/S3 or sorting data.
+**Implemented managed entry:** `OutputQueryResult<SolidPrincipalStresses> GetSolidPrincipalStresses(int solidId, int nativeCornerIndex, int loadCaseId)`<br>
+**Return envelope:** `OutputQueryResult<SolidPrincipalStresses>`<br>
+**Result and validation contract:** Use for solid elements, not plate-center stresses. The nonnegative native corner selector is passed unchanged; it is not an analytical node ID and no zero/one-based corner mapping or center sentinel is invented. The help repeats S1 labels, so FirstNativeValue/SecondNativeValue/ThirdNativeValue retain native slot order without sorting or claiming descending S1/S2/S3. All three native stress values must be written and finite on success. Native result stress units and signs are preserved.
 
 <a id="output-getallsolidvonmisesstresses"></a>
 
@@ -1683,7 +1691,7 @@ VARIANT OSOutputUI::GetAllSolidVonMisesStresses(const VARIANT FAR&nSolidNo,const
 **Section:** Result: Dynamic Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#gaabe6a654c4c8143ebb2742cb7fb689dd) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#gaabe6a654c4c8143ebb2742cb7fb689dd) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#gaabe6a654c4c8143ebb2742cb7fb689dd)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<double> GetNonlinearLoadStep(int loadCaseId)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O8
 
@@ -1711,9 +1719,9 @@ VARIANT OSOutputUI::GetNLLoadStep(const VARIANT FAR&nLC)
 
 `System.Object GetNLLoadStep(System.Object)`
 
-**Proposed managed entry:** `GetNonlinearLoadStep(int loadCaseId)`<br>
-**Proposed return class:** `NonlinearLoadStepResult`<br>
-**Result and validation contract:** Direct numeric data with -1/-8002/-9911 errors; do not treat arbitrary nonzero as success or assume count rather than step semantics.
+**Implemented managed entry:** `OutputQueryResult<double> GetNonlinearLoadStep(int loadCaseId)`<br>
+**Return envelope:** `OutputQueryResult<double>`<br>
+**Result and validation contract:** The return is numeric data, not a Boolean flag or a certified step count/index range. Nonnegative finite values are preserved without rounding. Native -1 is NativeFailure, -8002 NotFound and -9911 ResultsUnavailable. No arbitrary nonzero success rule is used. This does not retrieve nonlinear node displacements or activate a load step.
 
 <a id="output-getnlnodedisplacements"></a>
 
@@ -1758,7 +1766,7 @@ VARIANT OSOutputUI::GetNLNodeDisplacements(const VARIANT FAR&nNodeNo,const VARIA
 **Section:** Result: Dynamic Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga9332682c8f686e537fbbe73131a02eed) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga9332682c8f686e537fbbe73131a02eed) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga9332682c8f686e537fbbe73131a02eed)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<int> GetExtractedModeCount()`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O8
 
@@ -1776,9 +1784,9 @@ No parameters.
 
 `System.Object GetNoOfModesExtracted()`
 
-**Proposed managed entry:** `GetExtractedModeCount()`<br>
-**Proposed return class:** `ModeCountResult`<br>
-**Result and validation contract:** Direct count, not success flag; allow valid zero and reject malformed/nonintegral values.
+**Implemented managed entry:** `OutputQueryResult<int> GetExtractedModeCount()`<br>
+**Return envelope:** `OutputQueryResult<int>`<br>
+**Result and validation contract:** This is an integral mode count, not buckling-factor count or a success flag. Zero remains valid data. It does not establish mode numbering, result normalization or whether the modal set is current. No dynamic analysis is started.
 
 <a id="output-getmodefrequency"></a>
 
@@ -1787,7 +1795,7 @@ No parameters.
 **Section:** Result: Dynamic Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga19eeb7e1d7f95329e97881d4aecdc42c) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga19eeb7e1d7f95329e97881d4aecdc42c) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga19eeb7e1d7f95329e97881d4aecdc42c)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<double> GetModeFrequency(int nativeModeNumber)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O8
 
@@ -1809,9 +1817,9 @@ VARIANT OSOutputUI::GetModeFrequency(const VARIANT FAR&varMode,VARIANT FAR&varFr
 
 `System.Object GetModeFrequency(System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetModeFrequency(int modeNumber)`<br>
-**Proposed return class:** `ModeFrequencyResult`<br>
-**Result and validation contract:** Frequency in Hz with Boolean native status; confirm mode numbering; avoid invented unit conversion.
+**Implemented managed entry:** `OutputQueryResult<double> GetModeFrequency(int nativeModeNumber)`<br>
+**Return envelope:** `OutputQueryResult<double>`<br>
+**Result and validation contract:** Use for modal frequency, not a buckling eigenvalue or time-history interval. The nonnegative native mode number/index is passed unchanged and is not rebased from a managed index. Zero frequency is retained when native success reports it; negative or unwritten/nonfinite frequency is rejected. No cycles/radians conversion occurs.
 
 <a id="output-getmodaldisplacementatnode"></a>
 
@@ -1820,7 +1828,7 @@ VARIANT OSOutputUI::GetModeFrequency(const VARIANT FAR&varMode,VARIANT FAR&varFr
 **Section:** Result: Dynamic Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga6ad3b3a30f91debfd7a443ebc279cea1) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga6ad3b3a30f91debfd7a443ebc279cea1) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga6ad3b3a30f91debfd7a443ebc279cea1)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<ModeDisplacements> GetModalNodeDisplacements(int nativeModeNumber, int nodeId)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O8
 
@@ -1843,9 +1851,9 @@ VARIANT OSOutputUI::GetModalDisplacementAtNode(const VARIANT FAR&varMode,const V
 
 `System.Object GetModalDisplacementAtNode(System.Object, System.Object, System.Object)`
 
-**Proposed managed entry:** `GetModalNodeDisplacements(int modeNumber, int nodeId)`<br>
-**Proposed return class:** `ModalNodeDisplacementResult`<br>
-**Result and validation contract:** Six modal components; eigenvector normalization is not physical static displacement. Preserve mode/node metadata.
+**Implemented managed entry:** `OutputQueryResult<ModeDisplacements> GetModalNodeDisplacements(int nativeModeNumber, int nodeId)`<br>
+**Return envelope:** `OutputQueryResult<ModeDisplacements>`<br>
+**Result and validation contract:** Use for a dynamic modal shape; GetBucklingModeDisplacements queries a different mode family and GetNodeDisplacements retrieves load-case responses. The native mode number/index is passed unchanged. Exported metadata takes the six-element initialized array by value, so all applicable slots must be written in place. Native normalization is not rescaled into physical static displacement and no rotations are invented.
 
 <a id="output-getmodalmassparticipationfactors"></a>
 
@@ -1854,7 +1862,7 @@ VARIANT OSOutputUI::GetModalDisplacementAtNode(const VARIANT FAR&varMode,const V
 **Section:** Result: Dynamic Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga118cbf967b0d0392fa170b5f57f64081) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga118cbf967b0d0392fa170b5f57f64081) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga118cbf967b0d0392fa170b5f57f64081)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<ModalMassParticipation> GetModalMassParticipationFactors(int nativeModeNumber)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O8
 
@@ -1878,9 +1886,9 @@ VARIANT OSOutputUI::GetModalMassParticipationFactors(const VARIANT FAR&varMode,V
 
 `System.Object GetModalMassParticipationFactors(System.Object, System.Object ByRef, System.Object ByRef, System.Object ByRef)`
 
-**Proposed managed entry:** `GetModalMassParticipationFactors(int modeNumber)`<br>
-**Proposed return class:** `MassParticipationResult`<br>
-**Result and validation contract:** Three direction factors; verify fraction/percentage convention and normalization; do not rescale without evidence.
+**Implemented managed entry:** `OutputQueryResult<ModalMassParticipation> GetModalMassParticipationFactors(int nativeModeNumber)`<br>
+**Return envelope:** `OutputQueryResult<ModalMassParticipation>`<br>
+**Result and validation contract:** Use for one mode, not missing-mass factors, cumulative participation or a load-case force result. The native mode number/index is passed unchanged. All three scalar slots must be written and finite. Fraction-versus-percentage and eigenvector normalization are not inferred; no factors are rescaled or summed.
 
 <a id="output-getmissingmassparticipationfactors"></a>
 
@@ -1924,7 +1932,7 @@ No member with this name appears in either inspected IOSOutputUI interface. This
 **Section:** Result: Dynamic Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#gaea1ad7d38067027dbe6c74a6152f2f5d) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#gaea1ad7d38067027dbe6c74a6152f2f5d) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#gaea1ad7d38067027dbe6c74a6152f2f5d)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<TimeHistoryIntegrationInfo> GetTimeHistoryIntegrationInfo()`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O9
 
@@ -1951,9 +1959,9 @@ VARIANT OSOutputUI::GetTimeHistoryIntegrationStepInfo(double*deltaT)
 
 `System.Object GetTimeHistoryIntegrationStepInfo(Double ByRef)`
 
-**Proposed managed entry:** `GetTimeHistoryIntegrationInfo()`<br>
-**Proposed return class:** `TimeHistoryIntegrationResult`<br>
-**Result and validation contract:** Return count plus deltaTimeSeconds; zero means no time-history result and -1 error. Validate count, positive finite interval and the documented t=0 sample convention.
+**Implemented managed entry:** `OutputQueryResult<TimeHistoryIntegrationInfo> GetTimeHistoryIntegrationInfo()`<br>
+**Return envelope:** `OutputQueryResult<TimeHistoryIntegrationInfo>`<br>
+**Result and validation contract:** Unlike a Boolean availability query, this returns a sample count plus an interval in seconds. Native 0 means ResultsUnavailable and -1 NativeFailure; a positive count requires a positive finite interval. The first response is at time zero and the last at (count-1)*interval; no extra endpoint is invented. It does not run integration or certify result freshness.
 
 <a id="output-gettimehistoryresponseattime"></a>
 
@@ -1962,7 +1970,7 @@ VARIANT OSOutputUI::GetTimeHistoryIntegrationStepInfo(double*deltaT)
 **Section:** Result: Dynamic Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga646f263e1b9a53e4212f3c2cc5ed8acc) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga646f263e1b9a53e4212f3c2cc5ed8acc) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga646f263e1b9a53e4212f3c2cc5ed8acc)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<TimeHistorySample> GetTimeHistoryResponseAtTime(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, double timeSeconds)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O9
 
@@ -1994,9 +2002,9 @@ VARIANT OSOutputUI::GetTimeHistoryResponseAtTime(long lCase,long nodeNo,long dof
 
 `System.Object GetTimeHistoryResponseAtTime(Int32, Int32, OpenSTAADUI.DegreesOfFreedom, OpenSTAADUI.TimeHistoryResponseType, Double, Double ByRef)`
 
-**Proposed managed entry:** `GetTimeHistoryResponseAtTime(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, double timeSeconds)`<br>
-**Proposed return class:** `TimeHistorySampleResult`<br>
-**Result and validation contract:** Keep reserved native load-case argument internal and zero. Validate integration bounds; map DOF 1..6 and kind 0..2; preserve response-specific units.
+**Implemented managed entry:** `OutputQueryResult<TimeHistorySample> GetTimeHistoryResponseAtTime(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, double timeSeconds)`<br>
+**Return envelope:** `OutputQueryResult<TimeHistorySample>`<br>
+**Result and validation contract:** GetTimeHistoryResponse retrieves the full integration series. The reserved native load-case argument is always internal zero; no caller case is activated. The native response DOF/kind selects translational or rotational displacement/velocity/acceleration units. Integration metadata is read before/after; requested time must lie in 0..(count-1)*interval. Native 1/true succeeds, 0/false means ResultsUnavailable and integer -1 means NativeFailure, never VARIANT_TRUE. Native interpolation, if any, is not reproduced in managed code. Changed integration metadata returns StateChanged with no sample.
 
 <a id="output-gettimehistoryresponse"></a>
 
@@ -2005,7 +2013,7 @@ VARIANT OSOutputUI::GetTimeHistoryResponseAtTime(long lCase,long nodeNo,long dof
 **Section:** Result: Dynamic Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___dynamic_rlt.html#ga2e7ec7357bfaef20ecd21bba24e06a57)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<TimeHistorySeries> GetTimeHistoryResponse(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, int maximumSamples = 100000)`; managed verified, live qualification pending.<br>
 **Main reference:** No direct native target in the reference Output adapter.<br>
 **Workstream:** O9
 
@@ -2036,9 +2044,9 @@ VARIANT OSOutputUI::GetTimeHistoryResponse(long lCase,long nodeNo,long dofNo,lon
 
 `System.Object GetTimeHistoryResponse(Int32, Int32, OpenSTAADUI.DegreesOfFreedom, OpenSTAADUI.TimeHistoryResponseType, System.Object ByRef)`
 
-**Proposed managed entry:** `GetTimeHistoryResponse(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind)`<br>
-**Proposed return class:** `TimeHistorySeriesResult`<br>
-**Result and validation contract:** Materialized bounded samples, t=0 at first entry, stable count/interval snapshot; reject count mismatch and avoid unbounded allocation.
+**Implemented managed entry:** `OutputQueryResult<TimeHistorySeries> GetTimeHistoryResponse(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, int maximumSamples = 100000)`<br>
+**Return envelope:** `OutputQueryResult<TimeHistorySeries>`<br>
+**Result and validation contract:** Use for all integration samples rather than one requested time. The reserved native load-case argument stays internal zero. A checked integration count sizes the Double buffer; counts exceeding maximumSamples produce LimitExceeded before allocation or retrieval. Sample zero is at time zero; no extra final sample is added. Native 1/true succeeds, 0/false means ResultsUnavailable and integer -1 NativeFailure. Count/interval are rechecked after retrieval; StateChanged discards mixed data. Samples preserve signs and response-dependent native units; no smoothing, interpolation, differentiation or unit conversion occurs.
 
 <a id="output-gettimehistoryresponseminmax"></a>
 
@@ -2210,7 +2218,7 @@ No parameters.
 **Section:** Result: Buckling Analysis Result Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga61ea226383660ee7e9bc9cb687dfb20b)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<int> GetBucklingFactorCount()`; managed verified, live qualification pending.<br>
 **Main reference:** [GetNumberOfBucklingFactorsComputed native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L923)<br>
 **Workstream:** O5
 
@@ -2232,9 +2240,9 @@ No parameters.
 
 `System.Object GetNoOfBucklingFactors()`
 
-**Proposed managed entry:** `GetBucklingFactorCount()`<br>
-**Proposed return class:** `BucklingFactorCountResult`<br>
-**Result and validation contract:** Direct integral count; distinguish zero factors from native failure.
+**Implemented managed entry:** `OutputQueryResult<int> GetBucklingFactorCount()`<br>
+**Return envelope:** `OutputQueryResult<int>`<br>
+**Result and validation contract:** This returns an actual integral count, not a success flag or a factor value. Zero is a valid count and does not prove that another result family is unavailable. GetBucklingResultAvailability observes availability; GetBucklingModeDisplacements retrieves one shape. No eigenanalysis is started.
 
 <a id="output-getbucklingfactor"></a>
 
@@ -2276,7 +2284,7 @@ VARIANT OSOutputUI::GetBucklingFactor(const VARIANT FAR&varBucklingMode,VARIANT 
 **Section:** Result: Buckling Analysis Result Analysis Results<br>
 **Availability in help:** [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6) · [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6) · [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___buckling_rlt.html#ga4a1940a1616821e91e5cf3e42492d6f6)<br>
 **Comparison:** Unchanged<br>
-**Current implementation:** No typed Output method or production dispatch found.<br>
+**Current implementation:** Implemented `OutputQueryResult<ModeDisplacements> GetBucklingModeDisplacements(int nativeBucklingModeNumber, int nodeId)`; managed verified, live qualification pending.<br>
 **Main reference:** [GetBucklingModeDisplacementAtNode native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L945)<br>
 **Workstream:** O5
 
@@ -2310,9 +2318,9 @@ VARIANT OSOutputUI::GetBucklingModeDisplacementAtNode(const VARIANT FAR&varBuckl
 
 `System.Object GetBucklingModeDisplacementAtNode(System.Object, System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetBucklingModeDisplacements(int bucklingModeNumber, int nodeId)`<br>
-**Proposed return class:** `BucklingModeDisplacementResult`<br>
-**Result and validation contract:** Six displacements, not the source scalar return. varDisps prototype corresponds to varModalDisps prose. Preserve normalization and six components.
+**Implemented managed entry:** `OutputQueryResult<ModeDisplacements> GetBucklingModeDisplacements(int nativeBucklingModeNumber, int nodeId)`<br>
+**Return envelope:** `OutputQueryResult<ModeDisplacements>`<br>
+**Result and validation contract:** Use for a buckling mode shape, not static displacement or a scalar buckling factor. The native mode number/index is passed unchanged; no zero/one-based conversion or count-derived remapping occurs. Six initialized Double slots are passed by reference and must be written on native 1/true success. Mode-shape normalization is not converted into physical static length/rotation units. Native numeric -1 is not accepted as this operation’s documented 1/0 flag.
 
 ## 4. Supplemental unit declarations and interop candidates
 

@@ -38,7 +38,7 @@ try {
     $loadPorting = Read-PackageEntry 'docs/Load-Porting.md'
     $rootPorting = Read-PackageEntry 'docs/Root-Porting.md'
     $outputPorting = Read-PackageEntry 'docs/Output-Porting.md'
-    if ($outputPorting -notmatch 'GetAnalysisResultAvailability' -or $readme -notmatch '15 typed') { throw 'Missing packaged Output guidance.' }
+    if ($outputPorting -notmatch 'GetAnalysisResultAvailability' -or $readme -notmatch '40 typed') { throw 'Missing packaged Output guidance.' }
     if ($installation -notmatch 'net481' -or $publishing -notmatch 'nuget.org') { throw 'Incomplete installation/publishing guides.' }
     $installationCode = [regex]::Match($installation, '(?s)```csharp\s*\r?\n(.*?)```').Groups[1].Value
     if ([string]::IsNullOrWhiteSpace($installationCode)) { throw 'Missing installation C# example.' }
@@ -191,10 +191,12 @@ try {
     if ($xml.OuterXml -match 'cref="!:|<inheritdoc|<include') { throw 'Unresolved documentation in installed package XML.' }
     if ($snippets.Count -ne 310) { throw "Expected 310 existing packaged XML examples; found $($snippets.Count)." }
     $outputSnippets = @()
+    $advancedOutputNames = @('GetMemberSteelDesignResults', 'GetBucklingFactorCount', 'GetBucklingModeDisplacements', 'GetRelativeMemberDisplacement', 'GetAbsoluteMemberDisplacement', 'GetPhysicalMemberEndForces', 'GetMemberAxialForceExtrema', 'GetMemberForcesAtDistance', 'GetPhysicalMemberForcesAtDistance', 'GetMemberDeflectionAtDistance', 'GetMatInfluenceAreas', 'GetBasePressures', 'GetSolidNormalStresses', 'GetSolidShearStresses', 'GetSolidPrincipalStresses', 'GetNonlinearLoadStep', 'GetSteelDesignParameterBlockCount', 'GetExtractedModeCount', 'GetModeFrequency', 'GetModalNodeDisplacements', 'GetModalMassParticipationFactors', 'GetTimeHistoryIntegrationInfo', 'GetTimeHistoryResponseAtTime', 'GetTimeHistoryResponse', 'GetMultipleSteelDesignResultAvailability')
+    $outputAdvancedGuide = Read-PackageEntry 'docs/Output-Extended-Queries.md'
     $newLine = [Environment]::NewLine
     foreach ($owner in @('Adapters.Interfaces.IOSOutput', 'Adapters.Models.OSOutputAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        if ($entries.Count -ne 15) { throw "Expected 15 documented Output queries for $owner." }
+        if ($entries.Count -ne 40) { throw "Expected 40 documented Output queries for $owner." }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary', 'returns', 'remarks', 'example/code')) {
                 $node = $entry.SelectSingleNode($tag)
@@ -202,10 +204,15 @@ try {
             }
             $binding = if ($owner.EndsWith('IOSOutput')) { 'IOSOutput output = wrapper.Output;' } else { 'var output = new StaadPro.Interop.Adapters.Models.OSOutputAdapter(wrapper);' }
             $example = $entry.SelectSingleNode('example/code').InnerText.Replace('wrapper.Output.', 'output.')
-            $outputSnippets += 'using (var wrapper = new OpenStaadWrapper(new FakeOutputRoot())) {' + $newLine + $binding + $newLine + $example + $newLine + '}'
+            $methodName = [regex]::Match([string]$entry.name, '\.(\w+)(?:\(|$)').Groups[1].Value
+            $rootExpression = if ($methodName -in $advancedOutputNames) {
+                if ($outputAdvancedGuide -notmatch $methodName) { throw "Missing Output usage guidance for $methodName" }
+                'new PackageVerification.OutputAdvancedFixture.Root { Output = new PackageVerification.OutputAdvancedFixture.Native() }'
+            } else { 'new FakeOutputRoot()' }
+            $outputSnippets += 'using (var wrapper = new OpenStaadWrapper(' + $rootExpression + ')) {' + $newLine + $binding + $newLine + $example + $newLine + '}'
         }
     }
-    if ($outputSnippets.Count -ne 30) { throw 'Expected 30 Output XML examples.' }
+    if ($outputSnippets.Count -ne 80) { throw 'Expected 80 Output XML examples.' }
     $inspectionSnippets = @()
     if ($hasLoadInspection) {
         $inspectionNames = @('GetActiveLoadCaseNumber', 'GetLoadListCount', 'GetLoadListCaseCount', 'GetLoadListCases', 'GetLoadCommandCount', 'GetAssignedEntityCount', 'GetLoadItemCount', 'GetLoadItemKind', 'ContainsDynamicLoad', 'GetRepeatContributionCount', 'GetRepeatContributions', 'GetNotionalItemCount', 'GetNotionalContributionCount', 'GetNotionalContributions', 'GetReferenceItemCount')
@@ -258,6 +265,8 @@ try {
         $propertyGuide += Read-PackageEntry 'docs/Property-Fireproofing-Attributes-and-UPT.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-UPT-Profiles-and-Catalogs.md'
         $propertyGuide += Read-PackageEntry 'docs/Property-Catalog-Capabilities-and-Cleanup.md'
+        $completionPortNames = @('RemoveAllElementNodeReleaseSpec', 'RemoveMemberFireProofingSpecFromBeam', 'GetPublishedProfileName', 'GetStaadProfileName')
+        $propertyGuide += Read-PackageEntry 'docs/Property-Profile-Names-and-Final-Cleanup.md'
         $cleanupPortNames = @('RemovePropertyFromPlate', 'RemoveMaterialFromPlate', 'RemoveMaterialFromSolid', 'DeleteMemberReleaseSpec', 'DeleteAllControlDependentRelations', 'RemoveAllElementOffsetSpec', 'RemovePropertyFromBeam', 'DeleteProperty', 'DeleteMemberSpec', 'RemoveMemberReleaseSpecFromBeam', 'RemoveMemberOffsetSpecFromBeam', 'RemoveMemberTrussSpecFromBeam', 'RemoveMemberInactiveSpecFromBeam', 'RemoveMemberTensionSpecFromBeam', 'RemoveMemberCompressionSpecFromBeam', 'RemoveMemberIgnoreStiffSpecFromBeam', 'RemoveMemberCableSpecFromBeam', 'RemoveElementPlaneStressSpecFromPlate', 'RemoveElementIgnoreInplaneRotnSpecFromPlate', 'RemoveElementNodeReleaseSpecFromPlate')
         $uptPortNames = @('AddUptPropertyChannel', 'AddUptPropertyAngle', 'AddUptPropertyDoubleAngle', 'AddUptPropertyTee', 'AddUptPropertyPipe', 'AddUptPropertyTube', 'AddUptPropertyGeneral', 'AddUptPropertyISection', 'AddUptPropertyPrismatic', 'AddUptPropertyWideFlangeComposite', 'CreatePropertyFromUptTable', 'CreatePropertyFromUserTable', 'CreateUptTableEx', 'RemoveUptTable', 'RemovePropertyFromUptTable', 'GetUserProvidedTableCount', 'GetUserProvidedTableList', 'GetUserProvidedTableSectionCount', 'GetUserProvidedTableSectionType', 'GetUserProvidedTableSectionPropertyCount', 'GetUserProvidedTableSectionProperties', 'GetUserProvidedTableNo', 'GetShapeCode', 'SetStandardProfileDBFolder', 'GetStandardProfileDBFolder')
         $attributePortNames = @('GetInactiveMemberCount', 'GetFireProofedBeamCount', 'GetFireProofedBeamList', 'GetFireProofDataForBeam', 'GetFireProofingSpecCount', 'GetFireProofingSpecDetails', 'GetFireProofingSpecAssignedBeamCount', 'GetFireProofingSpecAssignedBeamList', 'CreateMemberAttribute', 'CreateElementAttribute', 'DeleteMemberAttribute', 'DeleteElementAttribute', 'GetMemberCountByAttribute', 'GetMemberListByAttribute', 'GetMemberAttributeCount', 'GetMemberAttributeList', 'GetElementCountByAttribute', 'GetElementListByAttribute', 'GetAssignedAttributeCount', 'RemoveAttribute', 'AssignMemberAttribute', 'AssignElementAttribute', 'CreateUptTable', 'AddUptPropertyWideFlange', 'AddUptPropertyWideFlangeUnequal')
@@ -269,7 +278,7 @@ try {
         $mainPortNames += @('AssignMaterialProperties', 'AssignMaterialProperty', 'CreateMaterialProperties', 'CreateMaterialPropertiesNoConversion', 'CreateMaterialProperty', 'CreateMaterialPropertyNoConversion', 'GetAllExtendedIsotropicMaterialProperties', 'GetAllIsotropicMaterialProperties', 'GetAllExtendedIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllIsotropicMaterialPropertiesWithPopulatedAssignments', 'GetAllExtendedMaterialPropertiesWithPopulatedAssignments', 'GetAllMaterialPropertiesWithPopulatedAssignments', 'CreatePlateThicknessProperties', 'AssignThicknessProperties', 'AssignThicknessProperty', 'AssignOffsetSpecification', 'CreateAndAssignOffsetSpecifications', 'PopulateMemberReleases', 'CreateAndAssignMemberEndReleases')
         foreach ($owner in @('Adapters.Interfaces.IOSProperty', 'Adapters.Models.OSPropertyAdapter')) {
             $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-            if ($entries.Count -ne 245) { throw "Expected 245 Property method contracts for $owner." }
+            if ($entries.Count -ne 249) { throw "Expected 249 Property method contracts for $owner." }
             foreach ($entry in $entries) {
                 $methodName = [regex]::Match($entry.name, '\.([^.()]+)(?:\(|$)').Groups[1].Value
                 $requiredTags = @('summary', 'remarks', 'example/code')
@@ -281,11 +290,11 @@ try {
                 if ($entry.SelectSingleNode('remarks').InnerText -notmatch 'When to use:') { throw "Missing comparative Property IntelliSense for $($entry.name)" }
                 if ($propertyGuide -notmatch $methodName) { throw "Missing Property guidance for $methodName" }
                 $binding = if ($owner.EndsWith('IOSProperty')) { 'IOSProperty property = wrapper.Property;' } else { 'var property = new StaadPro.Interop.Adapters.Models.OSPropertyAdapter(wrapper);' }
-                $fixture = if ($methodName -in $cleanupPortNames) { 'PropertyCleanupFixture' } elseif ($methodName -in $uptPortNames) { 'PropertyUptFixture' } elseif ($methodName -in $attributePortNames) { 'PropertyAttributeFixture' } elseif ($methodName -in $creationPortNames) { 'PropertyCreationFixture' } elseif ($methodName -in $roadmapPortNames) { 'PropertyRoadmapFixture' } elseif ($methodName -in $sectionPortNames) { 'PropertySectionFixture' } elseif ($methodName -in $mainPortNames) { 'PropertyPortFixture' } else { 'PropertyQueryFixture' }
+                $fixture = if ($methodName -in $completionPortNames) { 'PropertyCompletionFixture' } elseif ($methodName -in $cleanupPortNames) { 'PropertyCleanupFixture' } elseif ($methodName -in $uptPortNames) { 'PropertyUptFixture' } elseif ($methodName -in $attributePortNames) { 'PropertyAttributeFixture' } elseif ($methodName -in $creationPortNames) { 'PropertyCreationFixture' } elseif ($methodName -in $roadmapPortNames) { 'PropertyRoadmapFixture' } elseif ($methodName -in $sectionPortNames) { 'PropertySectionFixture' } elseif ($methodName -in $mainPortNames) { 'PropertyPortFixture' } else { 'PropertyQueryFixture' }
                 $propertySnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.' + $fixture + '.Root { Property = new PackageVerification.' + $fixture + '.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
             }
         }
-        if ($propertySnippets.Count -ne 490) { throw 'Expected 490 common Property XML examples.' }
+        if ($propertySnippets.Count -ne 498) { throw 'Expected 498 common Property XML examples.' }
         foreach ($owner in @('Adapters.Interfaces.Capabilities.IOSPropertyStandardCatalog',
             'Adapters.Models.Capabilities.OSPropertyStandardCatalogAdapter',
             'Adapters.Interfaces.Capabilities.IOSPropertyCapabilities',
@@ -301,7 +310,7 @@ try {
                 $propertySnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.PropertyCleanupFixture.Root { Property = new PackageVerification.PropertyCleanupFixture.Native() })) {' + $newLine + 'IOSProperty property = wrapper.Property;' + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
             }
         }
-        if ($propertySnippets.Count -ne 502) { throw 'Expected 490 common and twelve optional Property XML examples.' }
+        if ($propertySnippets.Count -ne 510) { throw 'Expected 498 common and twelve optional Property XML examples.' }
         $namingGuide = Read-PackageEntry 'docs/Property-API-Naming.md'
         $renames = (Read-PackageEntry 'docs/contracts/PropertyApiRenames.json' | ConvertFrom-Json).publicNames
         foreach ($rename in $renames.PSObject.Properties) {
@@ -337,6 +346,7 @@ using System.Linq;
 using StaadPro.Interop.Adapters.Interfaces;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
+using StaadPro.Interop.Enums.Output;
 using StaadPro.Interop.Models;
 
 public static class Program
@@ -563,7 +573,7 @@ public static class Program
         using (var wrapper = new OpenStaadWrapper(new FakeOutputRoot()))
         {
             var output = wrapper.Output;
-            Check(typeof(IOSOutput).GetMethods().Count(m => !m.IsSpecialName) == 15, "installed Output query count");
+            Check(typeof(IOSOutput).GetMethods().Count(m => !m.IsSpecialName) == 40, "installed Output query count");
             Check(output.GetMemberEndForces(17, MemberEnd.Start, 1).Data.Fx == 1.25, "installed local end actions");
             Check(output.GetPlateCenterPrincipalStressesAndAnglesEx(17, 1).Data.AngleBottom == 2.25, "installed split principal buffers");
             var native = (FakeOutput)(object)wrapper.RawOutput;
@@ -828,7 +838,7 @@ $program = $program.Replace('__OUTPUT_EXAMPLES__', ($outputSnippets -join [Envir
 $program = $program.Replace('__INSPECTION_EXAMPLES__', ($inspectionSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__EXPANSION_EXAMPLES__', ($expansionSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__PROPERTY_EXAMPLES__', ($propertySnippets -join [Environment]::NewLine))
-$program = $program.Replace('__EXAMPLE_COUNT__', [string](340 + $inspectionSnippets.Count + $expansionSnippets.Count + $propertySnippets.Count))
+$program = $program.Replace('__EXAMPLE_COUNT__', [string](310 + $outputSnippets.Count + $inspectionSnippets.Count + $expansionSnippets.Count + $propertySnippets.Count))
 if ($hasLoadExpansion) { $program = 'using StaadPro.Interop.Models.Loads.Contracts;' + [Environment]::NewLine + 'using StaadPro.Interop.Models.Loads.Queries;' + [Environment]::NewLine + $program }
 if ($hasLoadInspection) { $program = 'using StaadPro.Interop.Enums.Loads;' + [Environment]::NewLine + $program }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyQueryFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyQueryFixture.cs') }
@@ -838,6 +848,8 @@ if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'F
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCreationFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCreationFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyAttributeFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyAttributeFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyUptFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyUptFixture.cs') }
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputAdvancedFixture.cs') -Destination (Join-Path $consumerRoot 'OutputAdvancedFixture.cs')
+if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCompletionFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCompletionFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCleanupFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCleanupFixture.cs') }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/LoadInspectionFixture.cs') -Destination (Join-Path $consumerRoot 'LoadInspectionFixture.cs')
 [IO.File]::WriteAllText((Join-Path $consumerRoot 'NuGet.Config'), $config)

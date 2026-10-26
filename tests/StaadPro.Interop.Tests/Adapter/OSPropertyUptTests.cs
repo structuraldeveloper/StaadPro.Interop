@@ -51,7 +51,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [Test]
         public void AddsExactlyTwentyFiveTypedContractsAndKeepsUnverifiedOptionalTransportsOutOfTheCommonAdapter()
         {
-            Assert.That(Names.Distinct().Count(), Is.EqualTo(25)); Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(245));
+            Assert.That(Names.Distinct().Count(), Is.EqualTo(25)); Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(249));
             foreach (string name in Names)
             {
                 var m = Method(name); var impl = typeof(OSPropertyAdapter).GetMethod(ManagedName(name), m.GetParameters().Select(p => p.ParameterType).ToArray()); Assert.That(impl.ReturnType, Is.EqualTo(m.ReturnType));

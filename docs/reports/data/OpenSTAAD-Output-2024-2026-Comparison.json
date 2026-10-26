@@ -10,9 +10,9 @@
     },
     "union": 60,
     "intersection": 59,
-    "currentOutputMethods": 15,
+    "currentOutputMethods": 40,
     "currentDelegatedNativeNames": 2,
-    "currentUnmappedNativeNames": 45,
+    "currentUnmappedNativeNames": 20,
     "referenceOverloads": 86,
     "referencePublicAdapterMethods": 86,
     "referenceAsyncOverloads": 33,
@@ -406,23 +406,23 @@
   "currentSourceEvidence": [
     {
       "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSOutput.cs",
-      "bytes": 28040,
-      "sha256": "ab0a4bb344c1836f587a034e2bde177cb7e9d941b28c573b2d8c4bba0519c7b3"
+      "bytes": 99662,
+      "sha256": "cb6a5506b015bf415dba7a590f830860714b2326ad1d3c60e9c84c2915dd7468"
     },
     {
       "file": "src/StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs",
-      "bytes": 29950,
-      "sha256": "b27ac8fb32dd29574252fa6f34548e535128a94852af37edfb2f24fba25fbbf6"
+      "bytes": 103855,
+      "sha256": "503e2f7237da2e90cbe838e0534bf66ae6232eb761da0291b72a98fb0335cd78"
     },
     {
       "file": "src/StaadPro.Interop/Enums/Output/OutputQueryStatus.cs",
-      "bytes": 857,
-      "sha256": "82cd30b7544d9a9ac030032e58cf33581b2f912f83ba1d311c356062d988df00"
+      "bytes": 1397,
+      "sha256": "82b380cc07d58b1610dd7fca451f4c352327de86e9974e1661786a3d0cae7052"
     },
     {
       "file": "src/StaadPro.Interop/Services/Output/OutputQueryReader.cs",
-      "bytes": 13326,
-      "sha256": "7233aa38b10dd217c10b9b82ffc0ae27c41928bd9b0a862eca5cf3a1e741d120"
+      "bytes": 13568,
+      "sha256": "6185750d7555541aec09848ee5d3b88db41ef4044822737a42840c2da1043c0e"
     },
     {
       "file": "src/StaadPro.Interop/Models/Output/ForceComponents.cs",
@@ -436,8 +436,8 @@
     },
     {
       "file": "src/StaadPro.Interop/Models/Output/OutputQueryResult.cs",
-      "bytes": 3194,
-      "sha256": "fd56a23068c7c37fae9acab5fb64aae2ba3ebc1ce7e213a645dd4d4eb0bbb61a"
+      "bytes": 4034,
+      "sha256": "3d8cff875d0c65f0254a11b170ab16f2c84585b3926d67c48fc3ebf0f591f768"
     },
     {
       "file": "src/StaadPro.Interop/Models/Output/PlateCenterResults.cs",
@@ -448,6 +448,21 @@
       "file": "src/StaadPro.Interop/Models/Output/StaticCheckResult.cs",
       "bytes": 824,
       "sha256": "5f122ae21e15b3d280c323dbd11df1b811a2364d674a7a0c1bf33918c36f0f75"
+    },
+    {
+      "file": "src/StaadPro.Interop/Services/Output/OutputAdvancedReader.cs",
+      "bytes": 27500,
+      "sha256": "a9b75e27b9e21c7ffd2adcf549b08073079769bcf6a6f20edae3cbc773296ba7"
+    },
+    {
+      "file": "src/StaadPro.Interop/Enums/Output/OutputResponseOptions.cs",
+      "bytes": 2424,
+      "sha256": "6589371db19abea6d43aea3164e9e366192398a6b73b433c68859e4274c0f0a9"
+    },
+    {
+      "file": "tests/StaadPro.Interop.Tests/Adapter/OSOutputAdvancedTests.cs",
+      "bytes": 23316,
+      "sha256": "f0c9e3845486a980a466598a6cebbd1cb8a3dc425b18a002e9567c665f6278b8"
     }
   ],
   "referenceSourceEvidence": [
@@ -5273,7 +5288,7 @@
       "name": "IsMultipleMemberSteelDesignResultsAvailable",
       "category": "Design: Steel Design Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -5334,13 +5349,20 @@
           "examplesSha256": "a26486620c30a87110045e18696e25e5e0ef54d6303fb38fce5daf8f5602024f",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetMultipleSteelDesignResultAvailability",
+        "returnType": "OutputQueryResult<bool>",
+        "managedSignature": "OutputQueryResult<bool> GetMultipleSteelDesignResultAvailability()",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetSteelDesignParameterBlockCount",
       "category": "Design: Steel Design Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -5401,6 +5423,13 @@
           "examplesSha256": "52c8442637a55cd6df43693d1d59616e86458d3074ba0e8bed9b5b88fd6ef2d1",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetSteelDesignParameterBlockCount",
+        "returnType": "OutputQueryResult<int>",
+        "managedSignature": "OutputQueryResult<int> GetSteelDesignParameterBlockCount()",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -6414,7 +6443,7 @@
       "name": "GetMemberSteelDesignResults",
       "category": "Design: Steel Design Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -6864,6 +6893,13 @@
           "examplesSha256": "18a03546dc9d5ecb7aff6284a2a51dc93b74ebec7e95874965744f353d65c106",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetMemberSteelDesignResults",
+        "returnType": "OutputQueryResult<MemberSteelDesignResults>",
+        "managedSignature": "OutputQueryResult<MemberSteelDesignResults> GetMemberSteelDesignResults(int memberId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -7463,7 +7499,7 @@
       "name": "GetMatInfluenceAreas",
       "category": "Result: Nodes/Joints/Supports Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -7701,13 +7737,20 @@
           "examplesSha256": "032e6e170516089571d730ae0fdd564b2f70eddc384f15162133726c70e61742",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetMatInfluenceAreas",
+        "returnType": "OutputQueryResult<IReadOnlyList<MatInfluenceArea>>",
+        "managedSignature": "OutputQueryResult<IReadOnlyList<MatInfluenceArea>> GetMatInfluenceAreas(IEnumerable<int> supportNodeIds, int maximumResults = 100000)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetBasePressures",
       "category": "Result: Nodes/Joints/Supports Analysis Results",
       "classification": "Formatting or typo only",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -7966,6 +8009,13 @@
           "examplesSha256": "6063e97f6460821ea63a81b43c29d7d4a7b07df0edf969802189d7e30608d78e",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetBasePressures",
+        "returnType": "OutputQueryResult<IReadOnlyList<NodeBasePressure>>",
+        "managedSignature": "OutputQueryResult<IReadOnlyList<NodeBasePressure>> GetBasePressures(int loadCaseId, IEnumerable<int> supportNodeIds, int maximumResults = 100000)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -8177,7 +8227,7 @@
       "name": "GetIntermediateMemberTransDisplacements",
       "category": "Result: Members Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -8376,6 +8426,13 @@
           "examplesSha256": "274cba964a8a574e7089b38f754eac7deef0540efc46785fb2601de2dba1fc1d",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetRelativeMemberDisplacement",
+        "returnType": "OutputQueryResult<Vector3D>",
+        "managedSignature": "OutputQueryResult<Vector3D> GetRelativeMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -8663,7 +8720,7 @@
       "name": "GetPMemberEndForces",
       "category": "Result: Members Analysis Results",
       "classification": "Formatting or typo only",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -8895,6 +8952,13 @@
           "examplesSha256": "ce3c3cb9f0a6b3fa4a016d19e21ea15c1dc55a1d293f68601b280470093b2a60",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetPhysicalMemberEndForces",
+        "returnType": "OutputQueryResult<ForceComponents>",
+        "managedSignature": "OutputQueryResult<ForceComponents> GetPhysicalMemberEndForces(int physicalMemberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem = ResultCoordinateSystem.Local)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -9509,7 +9573,7 @@
       "name": "GetMinMaxAxialForce",
       "category": "Result: Members Analysis Results",
       "classification": "Formatting or typo only",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -9774,13 +9838,20 @@
           "examplesSha256": "801ac6d92b424fadf9f37276d9eac4ae67633341c55289f9390d4141f56dec71",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetMemberAxialForceExtrema",
+        "returnType": "OutputQueryResult<MemberForceExtrema>",
+        "managedSignature": "OutputQueryResult<MemberForceExtrema> GetMemberAxialForceExtrema(int memberId, int loadCaseId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetIntermediateMemberForcesAtDistance",
       "category": "Result: Members Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -9979,13 +10050,20 @@
           "examplesSha256": "e1213197f625e04d6294b53365f0bf5b8940db231ea543f18f210f0877da99c5",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetMemberForcesAtDistance",
+        "returnType": "OutputQueryResult<ForceComponents>",
+        "managedSignature": "OutputQueryResult<ForceComponents> GetMemberForcesAtDistance(int memberId, double distanceFromStart, int loadCaseId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetPMemberIntermediateForcesAtDistance",
       "category": "Result: Members Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -10184,6 +10262,13 @@
           "examplesSha256": "5ecbe7cc38652e5a1bff2cccbdb3921cb145645db2c0a05ad1861ef4b78b8a92",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetPhysicalMemberForcesAtDistance",
+        "returnType": "OutputQueryResult<ForceComponents>",
+        "managedSignature": "OutputQueryResult<ForceComponents> GetPhysicalMemberForcesAtDistance(int physicalMemberId, double distanceFromStart, int loadCaseId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -10428,7 +10513,7 @@
       "name": "GetIntermediateDeflectionAtDistance",
       "category": "Result: Members Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -10660,13 +10745,20 @@
           "examplesSha256": "867a2d2e8d693bea0953be09808265e64926d72672b0b004b689aa86ff9ac992",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetMemberDeflectionAtDistance",
+        "returnType": "OutputQueryResult<MemberDeflection>",
+        "managedSignature": "OutputQueryResult<MemberDeflection> GetMemberDeflectionAtDistance(int memberId, double distanceFromStart, int loadCaseId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetIntermediateMemberAbsTransDisplacements",
       "category": "Result: Members Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -10865,6 +10957,13 @@
           "examplesSha256": "2cda193d2a88329e716b62f1427e213efae8820348dbe9a3579f2ebe8638f9aa",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetAbsoluteMemberDisplacement",
+        "returnType": "OutputQueryResult<Vector3D>",
+        "managedSignature": "OutputQueryResult<Vector3D> GetAbsoluteMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -13696,7 +13795,7 @@
       "name": "GetAllSolidNormalStresses",
       "category": "Result: Solids Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -13895,13 +13994,20 @@
           "examplesSha256": "e5468104cfe748605d2942903f2edd8dddcfcfb043235e9368e3a70ad9c8d86e",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetSolidNormalStresses",
+        "returnType": "OutputQueryResult<SolidNormalStresses>",
+        "managedSignature": "OutputQueryResult<SolidNormalStresses> GetSolidNormalStresses(int solidId, int nativeCornerIndex, int loadCaseId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetAllSolidShearStresses",
       "category": "Result: Solids Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -14100,13 +14206,20 @@
           "examplesSha256": "7f479435bd68dc9026315113654d9c5502c456b6f2de842be8fda9e29baa9d78",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetSolidShearStresses",
+        "returnType": "OutputQueryResult<SolidShearStresses>",
+        "managedSignature": "OutputQueryResult<SolidShearStresses> GetSolidShearStresses(int solidId, int nativeCornerIndex, int loadCaseId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetAllSolidPrincipalStresses",
       "category": "Result: Solids Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -14305,6 +14418,13 @@
           "examplesSha256": "01c926fcaeea3b48c8456e8a80056d25ba56917ff1e54748454ea2018180f210",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetSolidPrincipalStresses",
+        "returnType": "OutputQueryResult<SolidPrincipalStresses>",
+        "managedSignature": "OutputQueryResult<SolidPrincipalStresses> GetSolidPrincipalStresses(int solidId, int nativeCornerIndex, int loadCaseId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -14516,7 +14636,7 @@
       "name": "GetNLLoadStep",
       "category": "Result: Dynamic Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -14667,6 +14787,13 @@
           "examplesSha256": "7251646cf2569b4410375fd31781566cc8de6f44dc450c186e7b0fff604fc734",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetNonlinearLoadStep",
+        "returnType": "OutputQueryResult<double>",
+        "managedSignature": "OutputQueryResult<double> GetNonlinearLoadStep(int loadCaseId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -14911,7 +15038,7 @@
       "name": "GetNoOfModesExtracted",
       "category": "Result: Dynamic Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -14972,13 +15099,20 @@
           "examplesSha256": "c917b6e371bb7cd23a29b260ffcde03df68301095ae0f3357aa1a421861d9f3e",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetExtractedModeCount",
+        "returnType": "OutputQueryResult<int>",
+        "managedSignature": "OutputQueryResult<int> GetExtractedModeCount()",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetModeFrequency",
       "category": "Result: Dynamic Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -15111,13 +15245,20 @@
           "examplesSha256": "49a0cac76da6cce867ccfb22f1af8eafe51a41a9a324402ae0801d165d5a86bb",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetModeFrequency",
+        "returnType": "OutputQueryResult<double>",
+        "managedSignature": "OutputQueryResult<double> GetModeFrequency(int nativeModeNumber)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetModalDisplacementAtNode",
       "category": "Result: Dynamic Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -15283,13 +15424,20 @@
           "examplesSha256": "aa28a07b1d77632cbb667d8a92f83a5abd562263f20508d82f28fc23c4261f3b",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetModalNodeDisplacements",
+        "returnType": "OutputQueryResult<ModeDisplacements>",
+        "managedSignature": "OutputQueryResult<ModeDisplacements> GetModalNodeDisplacements(int nativeModeNumber, int nodeId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetModalMassParticipationFactors",
       "category": "Result: Dynamic Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -15488,6 +15636,13 @@
           "examplesSha256": "4eaf4c092a0b903a793b80ab238589efe82d04912559e76b83ceff52eeac8e39",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetModalMassParticipationFactors",
+        "returnType": "OutputQueryResult<ModalMassParticipation>",
+        "managedSignature": "OutputQueryResult<ModalMassParticipation> GetModalMassParticipationFactors(int nativeModeNumber)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -15699,7 +15854,7 @@
       "name": "GetTimeHistoryIntegrationStepInfo",
       "category": "Result: Dynamic Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -15838,13 +15993,20 @@
           "examplesSha256": "20d8856cb108e43caed35bf1ed5adcaa149d725616e0c3e92d5d216faaeaa8ea",
           "exampleCount": 3
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetTimeHistoryIntegrationInfo",
+        "returnType": "OutputQueryResult<TimeHistoryIntegrationInfo>",
+        "managedSignature": "OutputQueryResult<TimeHistoryIntegrationInfo> GetTimeHistoryIntegrationInfo()",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetTimeHistoryResponseAtTime",
       "category": "Result: Dynamic Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -16148,13 +16310,20 @@
           "examplesSha256": "c702088b427189e08779c86cbd100b6eef7f645f08a7d8cf18a63bbfd7012cc4",
           "exampleCount": 3
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetTimeHistoryResponseAtTime",
+        "returnType": "OutputQueryResult<TimeHistorySample>",
+        "managedSignature": "OutputQueryResult<TimeHistorySample> GetTimeHistoryResponseAtTime(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, double timeSeconds)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetTimeHistoryResponse",
       "category": "Result: Dynamic Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [],
       "plan": {
@@ -16425,6 +16594,13 @@
           "examplesSha256": "c72ac700d3c689498f4cdbd7945fc49af120090e660de502d2f6b8cfac17e7f0",
           "exampleCount": 3
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetTimeHistoryResponse",
+        "returnType": "OutputQueryResult<TimeHistorySeries>",
+        "managedSignature": "OutputQueryResult<TimeHistorySeries> GetTimeHistoryResponse(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, int maximumSamples = 100000)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -17374,7 +17550,7 @@
       "name": "GetNoOfBucklingFactors",
       "category": "Result: Buckling Analysis Result Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -17458,6 +17634,13 @@
           "examplesSha256": "97b371e2030d78a8869ec6277f5b5a867c276d168a7087b4a930d13f9bb29a93",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetBucklingFactorCount",
+        "returnType": "OutputQueryResult<int>",
+        "managedSignature": "OutputQueryResult<int> GetBucklingFactorCount()",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -17614,7 +17797,7 @@
       "name": "GetBucklingModeDisplacementAtNode",
       "category": "Result: Buckling Analysis Result Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -17819,6 +18002,13 @@
           "examplesSha256": "e2eb2a8aa1d07e6cc6d6dcd8f52baf96498ed48fdb5909fd55a8bd7fbe09f1ad",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetBucklingModeDisplacements",
+        "returnType": "OutputQueryResult<ModeDisplacements>",
+        "managedSignature": "OutputQueryResult<ModeDisplacements> GetBucklingModeDisplacements(int nativeBucklingModeNumber, int nodeId)",
+        "nativeRuntimeVerified": false
       }
     }
   ],
@@ -22196,11 +22386,11 @@
     }
   ],
   "implementationUpdate": {
-    "date": "2026-10-23",
-    "parentCommit": "6bc16fec0b87367c956317da41f8df8c7d7a5e57",
-    "managedMethods": 15,
-    "nativeMappings": 15,
-    "pendingDocumentedNativeMappings": 45,
+    "date": "2026-10-26",
+    "parentCommit": "c72d8c4",
+    "managedMethods": 40,
+    "nativeMappings": 40,
+    "pendingDocumentedNativeMappings": 20,
     "implementedFunctions": [
       {
         "managed": "GetAnalysisResultAvailability",
@@ -22291,64 +22481,221 @@
         "native": "IsBucklingAnalysisResultsAvailable",
         "returnType": "bool",
         "signature": "OutputQueryResult<bool> GetBucklingResultAvailability()"
+      },
+      {
+        "managed": "GetMemberSteelDesignResults",
+        "native": "GetMemberSteelDesignResults",
+        "returnType": "MemberSteelDesignResults",
+        "signature": "OutputQueryResult<MemberSteelDesignResults> GetMemberSteelDesignResults(int memberId)"
+      },
+      {
+        "managed": "GetBucklingFactorCount",
+        "native": "GetNoOfBucklingFactors",
+        "returnType": "int",
+        "signature": "OutputQueryResult<int> GetBucklingFactorCount()"
+      },
+      {
+        "managed": "GetBucklingModeDisplacements",
+        "native": "GetBucklingModeDisplacementAtNode",
+        "returnType": "ModeDisplacements",
+        "signature": "OutputQueryResult<ModeDisplacements> GetBucklingModeDisplacements(int nativeBucklingModeNumber, int nodeId)"
+      },
+      {
+        "managed": "GetRelativeMemberDisplacement",
+        "native": "GetIntermediateMemberTransDisplacements",
+        "returnType": "Vector3D",
+        "signature": "OutputQueryResult<Vector3D> GetRelativeMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)"
+      },
+      {
+        "managed": "GetAbsoluteMemberDisplacement",
+        "native": "GetIntermediateMemberAbsTransDisplacements",
+        "returnType": "Vector3D",
+        "signature": "OutputQueryResult<Vector3D> GetAbsoluteMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)"
+      },
+      {
+        "managed": "GetPhysicalMemberEndForces",
+        "native": "GetPMemberEndForces",
+        "returnType": "ForceComponents",
+        "signature": "OutputQueryResult<ForceComponents> GetPhysicalMemberEndForces(int physicalMemberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem = ResultCoordinateSystem.Local)"
+      },
+      {
+        "managed": "GetMemberAxialForceExtrema",
+        "native": "GetMinMaxAxialForce",
+        "returnType": "MemberForceExtrema",
+        "signature": "OutputQueryResult<MemberForceExtrema> GetMemberAxialForceExtrema(int memberId, int loadCaseId)"
+      },
+      {
+        "managed": "GetMemberForcesAtDistance",
+        "native": "GetIntermediateMemberForcesAtDistance",
+        "returnType": "ForceComponents",
+        "signature": "OutputQueryResult<ForceComponents> GetMemberForcesAtDistance(int memberId, double distanceFromStart, int loadCaseId)"
+      },
+      {
+        "managed": "GetPhysicalMemberForcesAtDistance",
+        "native": "GetPMemberIntermediateForcesAtDistance",
+        "returnType": "ForceComponents",
+        "signature": "OutputQueryResult<ForceComponents> GetPhysicalMemberForcesAtDistance(int physicalMemberId, double distanceFromStart, int loadCaseId)"
+      },
+      {
+        "managed": "GetMemberDeflectionAtDistance",
+        "native": "GetIntermediateDeflectionAtDistance",
+        "returnType": "MemberDeflection",
+        "signature": "OutputQueryResult<MemberDeflection> GetMemberDeflectionAtDistance(int memberId, double distanceFromStart, int loadCaseId)"
+      },
+      {
+        "managed": "GetMatInfluenceAreas",
+        "native": "GetMatInfluenceAreas",
+        "returnType": "IReadOnlyList<MatInfluenceArea>",
+        "signature": "OutputQueryResult<IReadOnlyList<MatInfluenceArea>> GetMatInfluenceAreas(IEnumerable<int> supportNodeIds, int maximumResults = 100000)"
+      },
+      {
+        "managed": "GetBasePressures",
+        "native": "GetBasePressures",
+        "returnType": "IReadOnlyList<NodeBasePressure>",
+        "signature": "OutputQueryResult<IReadOnlyList<NodeBasePressure>> GetBasePressures(int loadCaseId, IEnumerable<int> supportNodeIds, int maximumResults = 100000)"
+      },
+      {
+        "managed": "GetSolidNormalStresses",
+        "native": "GetAllSolidNormalStresses",
+        "returnType": "SolidNormalStresses",
+        "signature": "OutputQueryResult<SolidNormalStresses> GetSolidNormalStresses(int solidId, int nativeCornerIndex, int loadCaseId)"
+      },
+      {
+        "managed": "GetSolidShearStresses",
+        "native": "GetAllSolidShearStresses",
+        "returnType": "SolidShearStresses",
+        "signature": "OutputQueryResult<SolidShearStresses> GetSolidShearStresses(int solidId, int nativeCornerIndex, int loadCaseId)"
+      },
+      {
+        "managed": "GetSolidPrincipalStresses",
+        "native": "GetAllSolidPrincipalStresses",
+        "returnType": "SolidPrincipalStresses",
+        "signature": "OutputQueryResult<SolidPrincipalStresses> GetSolidPrincipalStresses(int solidId, int nativeCornerIndex, int loadCaseId)"
+      },
+      {
+        "managed": "GetNonlinearLoadStep",
+        "native": "GetNLLoadStep",
+        "returnType": "double",
+        "signature": "OutputQueryResult<double> GetNonlinearLoadStep(int loadCaseId)"
+      },
+      {
+        "managed": "GetSteelDesignParameterBlockCount",
+        "native": "GetSteelDesignParameterBlockCount",
+        "returnType": "int",
+        "signature": "OutputQueryResult<int> GetSteelDesignParameterBlockCount()"
+      },
+      {
+        "managed": "GetExtractedModeCount",
+        "native": "GetNoOfModesExtracted",
+        "returnType": "int",
+        "signature": "OutputQueryResult<int> GetExtractedModeCount()"
+      },
+      {
+        "managed": "GetModeFrequency",
+        "native": "GetModeFrequency",
+        "returnType": "double",
+        "signature": "OutputQueryResult<double> GetModeFrequency(int nativeModeNumber)"
+      },
+      {
+        "managed": "GetModalNodeDisplacements",
+        "native": "GetModalDisplacementAtNode",
+        "returnType": "ModeDisplacements",
+        "signature": "OutputQueryResult<ModeDisplacements> GetModalNodeDisplacements(int nativeModeNumber, int nodeId)"
+      },
+      {
+        "managed": "GetModalMassParticipationFactors",
+        "native": "GetModalMassParticipationFactors",
+        "returnType": "ModalMassParticipation",
+        "signature": "OutputQueryResult<ModalMassParticipation> GetModalMassParticipationFactors(int nativeModeNumber)"
+      },
+      {
+        "managed": "GetTimeHistoryIntegrationInfo",
+        "native": "GetTimeHistoryIntegrationStepInfo",
+        "returnType": "TimeHistoryIntegrationInfo",
+        "signature": "OutputQueryResult<TimeHistoryIntegrationInfo> GetTimeHistoryIntegrationInfo()"
+      },
+      {
+        "managed": "GetTimeHistoryResponseAtTime",
+        "native": "GetTimeHistoryResponseAtTime",
+        "returnType": "TimeHistorySample",
+        "signature": "OutputQueryResult<TimeHistorySample> GetTimeHistoryResponseAtTime(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, double timeSeconds)"
+      },
+      {
+        "managed": "GetTimeHistoryResponse",
+        "native": "GetTimeHistoryResponse",
+        "returnType": "TimeHistorySeries",
+        "signature": "OutputQueryResult<TimeHistorySeries> GetTimeHistoryResponse(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, int maximumSamples = 100000)"
+      },
+      {
+        "managed": "GetMultipleSteelDesignResultAvailability",
+        "native": "IsMultipleMemberSteelDesignResultsAvailable",
+        "returnType": "bool",
+        "signature": "OutputQueryResult<bool> GetMultipleSteelDesignResultAvailability()"
       }
     ],
-    "pendingNativeNames": [
-      "IsMultipleMemberSteelDesignResultsAvailable",
+    "newManagedFunctions": [
+      "GetMemberSteelDesignResults",
+      "GetBucklingFactorCount",
+      "GetBucklingModeDisplacements",
+      "GetRelativeMemberDisplacement",
+      "GetAbsoluteMemberDisplacement",
+      "GetPhysicalMemberEndForces",
+      "GetMemberAxialForceExtrema",
+      "GetMemberForcesAtDistance",
+      "GetPhysicalMemberForcesAtDistance",
+      "GetMemberDeflectionAtDistance",
+      "GetMatInfluenceAreas",
+      "GetBasePressures",
+      "GetSolidNormalStresses",
+      "GetSolidShearStresses",
+      "GetSolidPrincipalStresses",
+      "GetNonlinearLoadStep",
       "GetSteelDesignParameterBlockCount",
+      "GetExtractedModeCount",
+      "GetModeFrequency",
+      "GetModalNodeDisplacements",
+      "GetModalMassParticipationFactors",
+      "GetTimeHistoryIntegrationInfo",
+      "GetTimeHistoryResponseAtTime",
+      "GetTimeHistoryResponse",
+      "GetMultipleSteelDesignResultAvailability"
+    ],
+    "pendingNativeNames": [
       "GetSteelDesignParameterBlockNameByIndex",
       "GetMultipleMemberSteelDesignRatio",
       "GetMultipleMemberSteelDesignMaxRatio",
       "GetMultipleMemberSteelDesignResults",
-      "GetMemberSteelDesignResults",
       "GetMemberSteelDesignMinFailureRatio",
       "GetMemberSteelDesignMaxFailureRatio",
-      "GetMatInfluenceAreas",
-      "GetBasePressures",
       "GetMemberEndDisplacements",
-      "GetIntermediateMemberTransDisplacements",
-      "GetPMemberEndForces",
       "GetMinMaxBendingMoment",
       "GetMinMaxShearForce",
-      "GetMinMaxAxialForce",
-      "GetIntermediateMemberForcesAtDistance",
-      "GetPMemberIntermediateForcesAtDistance",
       "GetMaxSectionDisplacement",
-      "GetIntermediateDeflectionAtDistance",
-      "GetIntermediateMemberAbsTransDisplacements",
       "GetPlateCornerForces",
       "GetResultantForceAlongLineForPlateList",
       "GetResultantForceAlongLineForParametricSurface",
       "GetPlateStressAtPoint",
-      "GetAllSolidNormalStresses",
-      "GetAllSolidShearStresses",
-      "GetAllSolidPrincipalStresses",
       "GetAllSolidVonMisesStresses",
-      "GetNLLoadStep",
       "GetNLNodeDisplacements",
-      "GetNoOfModesExtracted",
-      "GetModeFrequency",
-      "GetModalDisplacementAtNode",
-      "GetModalMassParticipationFactors",
       "GetMissingMassParticipationFactors",
-      "GetTimeHistoryIntegrationStepInfo",
-      "GetTimeHistoryResponseAtTime",
-      "GetTimeHistoryResponse",
       "GetTimeHistoryResponseMinMax",
       "GetMaxBeamStresses",
-      "GetNoOfBucklingFactors",
-      "GetBucklingFactor",
-      "GetBucklingModeDisplacementAtNode"
+      "GetBucklingFactor"
     ],
-    "phases": "O1 foundation and all typed O2/O3 mappings implemented; three independent O5 queries implemented while O4 contracts remain unresolved. Native qualification gates remain pending.",
+    "phases": "O1 foundation; all O2/O3; independent O5/O6/O7/O8/O9/O10/O11 common contracts implemented. Uncertain contracts and live qualification remain pending.",
     "validation": {
-      "offlineTestsPassed": 2259,
-      "newOutputTestCases": 74,
-      "compiledExecutedXmlExamples": 30,
+      "offlineTestsPassed": 5353,
+      "newOutputTestCases": 165,
+      "newPropertyTestCases": 32,
+      "compiledExecutedXmlExamples": 1002,
+      "outputXmlExamples": 80,
       "releaseBuildWarnings": 0,
       "releaseBuildErrors": 0,
       "nativeRuntimeValidation": false,
-      "nugetBuilt": false
+      "nugetBuilt": "Prepared release preview; not published",
+      "packageVersion": "1.0.0-preview.20261026.1",
+      "priorCiPackageVersion": "1.0.0-preview.ci.2026102601",
+      "packageConsumerVerification": "Passed 1002 XML examples and isolated PackageReference restore/build/runtime with managed native-signature fixtures."
     },
     "principalBufferContract": {
       "inputElementType": "System.Double",
@@ -22358,7 +22705,9 @@
         "System.Single"
       ],
       "nativeVerified": false
-    }
+    },
+    "guide": "docs/Output-Extended-Queries.md",
+    "contractIndex": "docs/contracts/OutputAdvancedContractIndex.json"
   },
   "comparisonBaselineSourceEvidence": [
     {
@@ -22390,6 +22739,173 @@
       "file": "src/StaadPro.Interop/StaadPro.Interop.csproj",
       "bytes": 5056,
       "sha256": "035570ef3e35b52a2772e2ec96b9bf886ce3d08d6e555c3d51ffd870de9f1a59"
+    }
+  ],
+  "implementationHistory": [
+    {
+      "date": "2026-10-23",
+      "parentCommit": "6bc16fec0b87367c956317da41f8df8c7d7a5e57",
+      "managedMethods": 15,
+      "nativeMappings": 15,
+      "pendingDocumentedNativeMappings": 45,
+      "implementedFunctions": [
+        {
+          "managed": "GetAnalysisResultAvailability",
+          "native": "AreResultsAvailable",
+          "returnType": "bool",
+          "signature": "OutputQueryResult<bool> GetAnalysisResultAvailability()"
+        },
+        {
+          "managed": "GetNodeDisplacements",
+          "native": "GetNodeDisplacements",
+          "returnType": "NodeDisplacements",
+          "signature": "OutputQueryResult<NodeDisplacements> GetNodeDisplacements(int nodeId, int loadCaseId)"
+        },
+        {
+          "managed": "GetSupportReactions",
+          "native": "GetSupportReactions",
+          "returnType": "ForceComponents",
+          "signature": "OutputQueryResult<ForceComponents> GetSupportReactions(int nodeId, int loadCaseId)"
+        },
+        {
+          "managed": "GetMemberEndForces",
+          "native": "GetMemberEndForces",
+          "returnType": "ForceComponents",
+          "signature": "OutputQueryResult<ForceComponents> GetMemberEndForces(int memberId, MemberEnd memberEnd, int loadCaseId)"
+        },
+        {
+          "managed": "GetStaticCheckResult",
+          "native": "GetStaticCheckResult",
+          "returnType": "StaticCheckResult",
+          "signature": "OutputQueryResult<StaticCheckResult> GetStaticCheckResult(int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterStressesAndMoments",
+          "native": "GetAllPlateCenterStressesAndMoments",
+          "returnType": "PlateCenterStressesAndMoments",
+          "signature": "OutputQueryResult<PlateCenterStressesAndMoments> GetPlateCenterStressesAndMoments(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterNormalPrincipalStresses",
+          "native": "GetPlateCenterNormalPrincipalStresses",
+          "returnType": "PlatePrincipalStresses",
+          "signature": "OutputQueryResult<PlatePrincipalStresses> GetPlateCenterNormalPrincipalStresses(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterForces",
+          "native": "GetAllPlateCenterForces",
+          "returnType": "PlateCenterForces",
+          "signature": "OutputQueryResult<PlateCenterForces> GetPlateCenterForces(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterMoments",
+          "native": "GetAllPlateCenterMoments",
+          "returnType": "PlateCenterMoments",
+          "signature": "OutputQueryResult<PlateCenterMoments> GetPlateCenterMoments(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterPrincipalStressesAndAngles",
+          "native": "GetAllPlateCenterPrincipalStressesAndAngles",
+          "returnType": "PlatePrincipalStressesAndAngles",
+          "signature": "OutputQueryResult<PlatePrincipalStressesAndAngles> GetPlateCenterPrincipalStressesAndAngles(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterPrincipalStressesAndAnglesEx",
+          "native": "GetAllPlateCenterPrincipalStressesAndAnglesEx",
+          "returnType": "PlatePrincipalStressesAndAngles",
+          "signature": "OutputQueryResult<PlatePrincipalStressesAndAngles> GetPlateCenterPrincipalStressesAndAnglesEx(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterVonMisesStresses",
+          "native": "GetPlateCenterVonMisesStresses",
+          "returnType": "PlateCenterVonMises",
+          "signature": "OutputQueryResult<PlateCenterVonMises> GetPlateCenterVonMisesStresses(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetMemberDesignSectionName",
+          "native": "GetMemberDesignSectionName",
+          "returnType": "string",
+          "signature": "OutputQueryResult<string> GetMemberDesignSectionName(int memberId)"
+        },
+        {
+          "managed": "GetMemberSteelUtilizationRatio",
+          "native": "GetMemberSteelDesignRatio",
+          "returnType": "double",
+          "signature": "OutputQueryResult<double> GetMemberSteelUtilizationRatio(int memberId)"
+        },
+        {
+          "managed": "GetBucklingResultAvailability",
+          "native": "IsBucklingAnalysisResultsAvailable",
+          "returnType": "bool",
+          "signature": "OutputQueryResult<bool> GetBucklingResultAvailability()"
+        }
+      ],
+      "pendingNativeNames": [
+        "IsMultipleMemberSteelDesignResultsAvailable",
+        "GetSteelDesignParameterBlockCount",
+        "GetSteelDesignParameterBlockNameByIndex",
+        "GetMultipleMemberSteelDesignRatio",
+        "GetMultipleMemberSteelDesignMaxRatio",
+        "GetMultipleMemberSteelDesignResults",
+        "GetMemberSteelDesignResults",
+        "GetMemberSteelDesignMinFailureRatio",
+        "GetMemberSteelDesignMaxFailureRatio",
+        "GetMatInfluenceAreas",
+        "GetBasePressures",
+        "GetMemberEndDisplacements",
+        "GetIntermediateMemberTransDisplacements",
+        "GetPMemberEndForces",
+        "GetMinMaxBendingMoment",
+        "GetMinMaxShearForce",
+        "GetMinMaxAxialForce",
+        "GetIntermediateMemberForcesAtDistance",
+        "GetPMemberIntermediateForcesAtDistance",
+        "GetMaxSectionDisplacement",
+        "GetIntermediateDeflectionAtDistance",
+        "GetIntermediateMemberAbsTransDisplacements",
+        "GetPlateCornerForces",
+        "GetResultantForceAlongLineForPlateList",
+        "GetResultantForceAlongLineForParametricSurface",
+        "GetPlateStressAtPoint",
+        "GetAllSolidNormalStresses",
+        "GetAllSolidShearStresses",
+        "GetAllSolidPrincipalStresses",
+        "GetAllSolidVonMisesStresses",
+        "GetNLLoadStep",
+        "GetNLNodeDisplacements",
+        "GetNoOfModesExtracted",
+        "GetModeFrequency",
+        "GetModalDisplacementAtNode",
+        "GetModalMassParticipationFactors",
+        "GetMissingMassParticipationFactors",
+        "GetTimeHistoryIntegrationStepInfo",
+        "GetTimeHistoryResponseAtTime",
+        "GetTimeHistoryResponse",
+        "GetTimeHistoryResponseMinMax",
+        "GetMaxBeamStresses",
+        "GetNoOfBucklingFactors",
+        "GetBucklingFactor",
+        "GetBucklingModeDisplacementAtNode"
+      ],
+      "phases": "O1 foundation and all typed O2/O3 mappings implemented; three independent O5 queries implemented while O4 contracts remain unresolved. Native qualification gates remain pending.",
+      "validation": {
+        "offlineTestsPassed": 2259,
+        "newOutputTestCases": 74,
+        "compiledExecutedXmlExamples": 30,
+        "releaseBuildWarnings": 0,
+        "releaseBuildErrors": 0,
+        "nativeRuntimeValidation": false,
+        "nugetBuilt": false
+      },
+      "principalBufferContract": {
+        "inputElementType": "System.Double",
+        "basis": "Concrete installed VBA examples allocate Double stress/angle arrays, despite parameter prose saying float.",
+        "acceptedReturnedElementTypes": [
+          "System.Double",
+          "System.Single"
+        ],
+        "nativeVerified": false
+      }
     }
   ]
 }

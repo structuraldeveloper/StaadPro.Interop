@@ -10,7 +10,7 @@ All 30 main-source wrapper properties, both constructor forms, RefreshComObjects
 
 - `Root`, `Geometry`, `Load`: existing implemented adapters.
 - `RawOpenStaad`, `RawGeometry`, `RawLoad`, `RawOutput`, `RawProperty`, `RawSupport`, `RawDesign`, `RawCommands`, `RawTable`, `RawView`: native bindings; RawCommands reads the native singular Command property.
-- `Output`: 15 typed result queries; `Property`: 25 typed observation queries.
+- `Output`: 40 typed result queries; `Property`: 249 common overloads plus five optional catalog queries.
 - `Support`, `Design`, `Commands`, `Table`, `View`: binding-only placeholders; their domain functions are not ported.
 - `IdeaStatiCa`: integration placeholder when Geometry/Load/Output exist; no transformation, verification or export functions are available.
 - `StaadVersion`: cached native STAAD version; each access returns a copy, null when unavailable. This is the source for native version selection.
@@ -275,12 +275,26 @@ Optional access uses `root.Capabilities.GetAdinaExport()`, `GetAnalysisErrorMess
 
 ## Output result queries
 
-IOSOutput and OSOutputAdapter expose 15 typed queries covering analysis/buckling availability, nodal displacement, support reactions, local member-end forces, static checks, seven plate-center result families and member design section/ratio observations. Each returns OutputQueryResult&lt;T&gt; with explicit status and owned data; inspect IsSuccessful before Data. No public reference outputs or tuples are used.
+IOSOutput and OSOutputAdapter expose 40 typed queries covering analysis/buckling availability, nodal displacement, support reactions, local member-end forces, static checks, seven plate-center result families and member design section/ratio observations. Each returns OutputQueryResult&lt;T&gt; with explicit status and owned data; inspect IsSuccessful before Data. No public reference outputs or tuples are used.
 
-See the [Output API guide](Output-Porting.md) for all signatures, payloads, native flags, axes/units, sentinels, examples, threading/lifetime rules and the 45 pending native mappings. These are source additions after the published preview; live native qualification remains pending.
+See the [Output API guide](Output-Porting.md) for all signatures, payloads, native flags, axes/units, sentinels, examples, threading/lifetime rules and the 20 pending native mappings. These are source additions after the published preview; live native qualification remains pending.
 
 ## Property observations
 
 The current `IOSProperty` / `OSPropertyAdapter` surface contains 25 read-only queries. Every query returns `PropertyQueryResult<T>`; inspect `IsSuccessful` before accessing `Data`. No public reference outputs or tuples are used. See the [complete signature and behavior table](Property-Porting.md#implemented-apis-and-choosing-between-them) for member releases, member/plate offsets, section properties, material names/constants, isotropic observations and orthotropic observations.
 
 Existing `MemberEnd` and `Vector3D` types are reused. New named results distinguish native success, missing entities, absent specifications, unavailable members, collection limits and changed counts. Native units, signs and array ordering are preserved. These methods do not assign properties, convert units, run analysis or certify result freshness. The documented-but-metadata-absent plate property reference query reports `Unsupported` when its exact member is unavailable.
+
+## Extended Output and final documented Property cleanup
+
+Implemented **25 additional documented Output routes**, bringing IOSOutput and the single non-partial OSOutputAdapter to **40 typed queries covering 40/60 native names**, with **20 documented routes pending**. Added member/physical-member results, solid stresses, mat/base-pressure snapshots, modal/buckling observations, nonlinear load steps, steel-design observations and time-history queries. See [the extended contracts and comparative usage guide](Output-Extended-Queries.md).
+
+The selected contracts are shared or cosmetic across the installed 2024–2026 references. One internal common reader performs native dispatch and validation; direction-code policies, uncertain member-end layouts, cut/point buffers and incompatible scalar-output transports remain separate work. No new public ref/out, tuples or raw VARIANT packets are exposed. Existing wrapper/provider behavior is unchanged.
+
+Validation passed **5,353 offline tests**, including 165 new Output cases and 32 Property completion cases. The isolated installed-package consumer verifies **1,002 selected XML examples**, including all 80 Output examples and 510 Property/capability examples. Live native marshaling and engineering qualification remain pending.
+
+Implemented the final four safely specified P10 operations: `RemoveAllElementNodeReleaseSpec`, `RemoveMemberFireProofingSpecFromBeam`, `GetPublishedProfileName` and `GetStaadProfileName`. Property now exposes **249 common overloads plus five separately acquired catalog queries**, covering **195 of 204 active documented native routes**. P10 is complete at 24/24. The remaining **nine P7/P8 contract gates** require transport, status or context evidence; they are not implemented by guessing.
+
+The increment deliberately excludes the **fifteen supplemental Property discovery candidates**. **Reminder checkpoint:** present those candidates and the nine documented gates before further Property expansion or the next public release, and obtain separate approval for supplemental work. See [the four complete contracts and remaining gates](Property-Profile-Names-and-Final-Cleanup.md).
+
+The subsequent domain increment implements **25 Output routes**, bringing typed Output coverage to **40/60**. Validation passed **5,353 offline tests** with zero failures; package verification covers **1,002 selected XML examples**. These checks use managed native-signature fixtures; live 2024–2026 COM and engineering qualification remain pending.

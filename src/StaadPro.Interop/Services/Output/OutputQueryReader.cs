@@ -13,6 +13,9 @@ namespace StaadPro.Interop.Services.Output
     {
         private readonly OpenStaadWrapper wrapper;
         private readonly object native;
+        private readonly object advancedGate = new object();
+        internal T WithBinding<T>(Func<dynamic, T> query)
+        { lock (advancedGate) { var receiver = Binding(); var result = query(receiver); Binding(); return result; } }
         internal OutputQueryReader(OpenStaadWrapper wrapper, object native)
         { this.wrapper = wrapper; this.native = native; }
 
@@ -168,14 +171,14 @@ namespace StaadPro.Interop.Services.Output
                 : Failed<T>(operation, entityId, loadCaseId);
         }
 
-        private static object Buffer(int count)
+        internal static object Buffer(int count)
         {
             var doubles = new double[count];
             for (int i = 0; i < count; i++) doubles[i] = double.NaN;
             return doubles;
         }
 
-        private static double[] ReadArrayValues(object value, int count, string operation, bool allowSingle = false)
+        internal static double[] ReadArrayValues(object value, int count, string operation, bool allowSingle = false)
         {
             if (!(value is Array array) || array.Rank != 1 || array.Length != count ||
                 (array.GetType().GetElementType() != typeof(double) && !(allowSingle && array.GetType().GetElementType() == typeof(float))))
@@ -186,7 +189,7 @@ namespace StaadPro.Interop.Services.Output
             return values;
         }
 
-        private static double ReadNumber(object value, string operation)
+        internal static double ReadNumber(object value, string operation)
         {
             double number;
             if (value is double d) number = d;
@@ -197,7 +200,7 @@ namespace StaadPro.Interop.Services.Output
             return number;
         }
 
-        private static bool ReadFlag(object value, string operation, bool allowVariantTrue = true)
+        internal static bool ReadFlag(object value, string operation, bool allowVariantTrue = true)
         {
             if (value is bool flag) return flag;
             long code = NativeValues.ReadInt64(value, operation + " status");
@@ -206,7 +209,7 @@ namespace StaadPro.Interop.Services.Output
             throw new InvalidOperationException(operation + " returned an undocumented status.");
         }
 
-        private static void Positive(int value, string name)
+        internal static void Positive(int value, string name)
         { if (value <= 0) throw new ArgumentOutOfRangeException(name, "A positive native identifier is required."); }
         private static OutputQueryResult<T> Result<T>(string operation, T data, int? entityId = null, int? loadCaseId = null) =>
             new OutputQueryResult<T>(operation, OutputQueryStatus.Success, data, entityId, loadCaseId);

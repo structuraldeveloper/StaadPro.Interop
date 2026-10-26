@@ -37,7 +37,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [Test]
         public void CommonAndOptionalSurfacesExposeExactlyTwentyFiveNewTypedOperations()
         {
-            Assert.That(typeof(IOSProperty).GetMethods().Count(m=>!m.IsSpecialName),Is.EqualTo(245));Assert.That(CatalogNames.Length,Is.EqualTo(5));
+            Assert.That(typeof(IOSProperty).GetMethods().Count(m=>!m.IsSpecialName),Is.EqualTo(249));Assert.That(CatalogNames.Length,Is.EqualTo(5));
             Assert.That(typeof(OSPropertyAdapter).GetInterfaces(),Does.Not.Contain(typeof(IOSPropertyStandardCatalog)));
             foreach(string n in Names){var m=Method(n);var actual=typeof(OSPropertyAdapter).GetMethod(n);Assert.That(actual.ReturnType,Is.EqualTo(m.ReturnType));Assert.That(actual.GetParameters().Select(p=>p.Name),Is.EqualTo(m.GetParameters().Select(p=>p.Name)));}
             foreach(var m in typeof(IOSPropertyStandardCatalog).GetMethods())Assert.That(m.GetParameters().Any(p=>p.IsOut||p.ParameterType.IsByRef||p.ParameterType==typeof(object)),Is.False);

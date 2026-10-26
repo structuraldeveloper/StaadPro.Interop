@@ -59,7 +59,7 @@ namespace StaadPro.Interop.Tests.Adapter
         [Test]
         public void AddsExactlyTwentyFiveSourceSignaturesOnBothSurfaces()
         {
-            Assert.That(Methods.Count(), Is.EqualTo(25)); Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(245));
+            Assert.That(Methods.Count(), Is.EqualTo(25)); Assert.That(typeof(IOSProperty).GetMethods().Count(m => !m.IsSpecialName), Is.EqualTo(249));
             foreach (var method in Methods)
             {
                 var implementation = typeof(OSPropertyAdapter).GetMethod(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray());

@@ -1,12 +1,12 @@
 # Output review and implementation status
 
-**Updated:** 23 October 2026
+**Updated:** 26 October 2026
 
-IOSOutput and the single non-partial OSOutputAdapter now expose **15 typed queries**, covering 15 of the 60 documented native Output names. Forty-five documented native names remain pending. Thirteen supplemental metadata-only unit candidates remain a separate contract-discovery task. These are source additions after the published preview; no NuGet archive was built or published for this increment.
+IOSOutput and the single non-partial OSOutputAdapter now expose **40 typed queries**, covering 40 of the 60 documented native Output names. Twenty documented routes and thirteen supplemental unit candidates remain separate work. The latest 25 routes are detailed in the [extended Output guide](Output-Extended-Queries.md). The prepared preview 1.0.0-preview.20261026.1 includes these APIs and passes isolated package-consumer verification; it is not publicly published.
 
 The existing Root member-force service continues to call AreResultsAvailable and GetMemberEndForces independently. Its public behavior and the wrapper are unchanged.
 
-## Implemented queries
+## First fifteen queries
 
 | Managed query | Native function | Qualified payload |
 | --- | --- | --- |
@@ -32,6 +32,40 @@ A successful availability observation can contain Data=false. Empty section text
 
 EntityId and LoadCaseId retain applicable requested IDs even on failure. End-force queries additionally retain MemberEnd. Public signatures expose no ref/out or tuples. Payloads are owned immutable snapshots; ForceComponents.ToForces creates an independent copy using the existing force algebra and conversion model.
 
+## Twenty-five extended queries
+
+Implemented **25 additional documented Output routes**, bringing IOSOutput and the single non-partial OSOutputAdapter to **40 typed queries covering 40/60 native names**, with **20 documented routes pending**. Added member/physical-member results, solid stresses, mat/base-pressure snapshots, modal/buckling observations, nonlinear load steps, steel-design observations and time-history queries. See [the extended contracts and comparative usage guide](Output-Extended-Queries.md).
+
+The selected contracts are shared or cosmetic across the installed 2024–2026 references. One internal common reader performs native dispatch and validation; direction-code policies, uncertain member-end layouts, cut/point buffers and incompatible scalar-output transports remain separate work. No new public ref/out, tuples or raw VARIANT packets are exposed. Existing wrapper/provider behavior is unchanged.
+
+Validation passed **5,353 offline tests**, including 165 new Output cases and 32 Property completion cases. The isolated installed-package consumer verifies **1,002 selected XML examples**, including all 80 Output examples and 510 Property/capability examples. Live native marshaling and engineering qualification remain pending.
+
+- `GetMemberSteelDesignResults` → `GetMemberSteelDesignResults`.
+- `GetBucklingFactorCount` → `GetNoOfBucklingFactors`.
+- `GetBucklingModeDisplacements` → `GetBucklingModeDisplacementAtNode`.
+- `GetRelativeMemberDisplacement` → `GetIntermediateMemberTransDisplacements`.
+- `GetAbsoluteMemberDisplacement` → `GetIntermediateMemberAbsTransDisplacements`.
+- `GetPhysicalMemberEndForces` → `GetPMemberEndForces`.
+- `GetMemberAxialForceExtrema` → `GetMinMaxAxialForce`.
+- `GetMemberForcesAtDistance` → `GetIntermediateMemberForcesAtDistance`.
+- `GetPhysicalMemberForcesAtDistance` → `GetPMemberIntermediateForcesAtDistance`.
+- `GetMemberDeflectionAtDistance` → `GetIntermediateDeflectionAtDistance`.
+- `GetMatInfluenceAreas` → `GetMatInfluenceAreas`.
+- `GetBasePressures` → `GetBasePressures`.
+- `GetSolidNormalStresses` → `GetAllSolidNormalStresses`.
+- `GetSolidShearStresses` → `GetAllSolidShearStresses`.
+- `GetSolidPrincipalStresses` → `GetAllSolidPrincipalStresses`.
+- `GetNonlinearLoadStep` → `GetNLLoadStep`.
+- `GetSteelDesignParameterBlockCount` → `GetSteelDesignParameterBlockCount`.
+- `GetExtractedModeCount` → `GetNoOfModesExtracted`.
+- `GetModeFrequency` → `GetModeFrequency`.
+- `GetModalNodeDisplacements` → `GetModalDisplacementAtNode`.
+- `GetModalMassParticipationFactors` → `GetModalMassParticipationFactors`.
+- `GetTimeHistoryIntegrationInfo` → `GetTimeHistoryIntegrationStepInfo`.
+- `GetTimeHistoryResponseAtTime` → `GetTimeHistoryResponseAtTime`.
+- `GetTimeHistoryResponse` → `GetTimeHistoryResponse`.
+- `GetMultipleSteelDesignResultAvailability` → `IsMultipleMemberSteelDesignResultsAvailable`.
+
 ## Units, transport and lifetime
 
 Values remain in native Output units. Wrapper input-unit caches do not prove those units. No implicit scaling, degree/radian conversion, sign change, offset transfer, case activation or model mutation occurs.
@@ -44,7 +78,7 @@ Values remain in native Output units. Wrapper input-unit caches do not prove tho
 
 All output arrays start as Double NaN sentinel buffers, following the concrete native examples. Native success requires exact rank, length, floating-point element type and written finite values. Nonzero SAFEARRAY lower bounds are supported. Native false never triggers an alternate-API retry.
 
-Boolean contracts accept Boolean or exact integral 0/1/-1, with -1 representing VARIANT_TRUE. Buckling availability uses the narrower documented 0/1 convention, also accepting Boolean values. Nulls, strings, decimals, fractional values and unknown codes are rejected.
+The first fifteen ordinary Boolean retrieval contracts accept Boolean or exact integral 0/1/-1, with -1 representing VARIANT_TRUE. Buckling availability uses the narrower documented 0/1 convention, also accepting Boolean values. Nulls, strings, decimals, fractional values and unknown codes are rejected.
 
 Calls execute synchronously on the established caller COM apartment. The implementation uses shared internal services for these identical 2024–2026 contracts; it introduces no artificial per-year classes. Future version-sensitive contracts must route from wrapper.StaadVersion, never ApplicationVersion.
 
@@ -83,10 +117,10 @@ Both installed 2025/2026 vendor IOSOutputUI interfaces contain 72 matching metad
 
 ## Roadmap progress and validation
 
-Implemented the O1 foundation, all five O2 typed mappings, all seven O3 plate-center mappings and three independent O5 queries. Native qualification exit criteria remain pending for every phase. O4 corner/cut/point contracts retain unresolved layouts, axes or invocation discrepancies; the roadmap allows independent queries to proceed while those are resolved. The remaining O5 queries and O6–O11 remain pending.
+Implemented the O1 foundation, all five O2 typed mappings, all seven O3 plate-center mappings and three independent O5 queries. Native qualification exit criteria remain pending for every phase. O4 corner/cut/point contracts retain unresolved layouts, axes or invocation discrepancies; the roadmap allows independent queries to proceed while those are resolved. The new increment adds independent common O5–O11 queries while the remaining twenty routes retain their specific gates. Native phase-exit qualification remains pending.
 
 Use the acquired wrapper.StaadVersion internally. Keep one non-partial adapter, no new public ref/out or tuple outputs, and complete XML documentation for interfaces, adapters and result models. Native ambiguity must remain explicitly unverified until resolved.
 
 Reused the main-source node/static-check vocabulary and plate component/surface order as immutable snapshots. Reused MemberEnd, strict native integral readers and the existing Forces model for editable copies. The main project remains strictly read-only. Source Task/parallel COM behavior, Property-offset conveniences and batch APIs were not copied.
 
-Offline tests cover all 15 call packets, caller-thread execution, native failures, scalar/array sentinels, Single/Double principal buffers, nonzero lower bounds, ordering, ownership, design sentinels, stale/disposed bindings and expanded matching XML contracts. These tests do not run STAAD or certify native engineering behavior. The target remains net481 and the published preview remains unchanged.
+Offline tests cover all 40 query packets, caller-thread execution, native failures, scalar/array sentinels, Single/Double principal buffers, nonzero lower bounds, ordering, ownership, design sentinels, stale/disposed bindings and expanded matching XML contracts. These tests do not run STAAD or certify native engineering behavior. The target remains net481 and the existing distribution archives remain unchanged.

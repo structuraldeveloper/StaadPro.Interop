@@ -1,5 +1,15 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261026.1 - 26 October 2026 (prepared preview)
+
+Added four documented Property operations for model-wide element-node release cleanup, member fireproofing cleanup and country-qualified profile-name translation. Property now provides **249 common overloads and five optional catalog queries**, covering **195 of 204** active documented native routes. Nine documented contract gates and fifteen supplemental discovery candidates remain.
+
+Added **25 typed Output queries**, bringing coverage to **40 of 60** documented native names. The new APIs cover member and physical-member results, solid stresses, mat influence areas and base pressures, modal and buckling observations, nonlinear load steps, steel-design observations and time-history results. Named immutable payloads preserve native status evidence, units and component meanings, with bounded collections and result-state checks.
+
+All new APIs include matching interface/adapter XML documentation and usage examples explaining their differences from similar operations. Validation passed **5,353 offline tests** and **1,002 selected packaged XML examples** using managed native-signature fixtures. Live COM and engineering qualification remain pending. The target remains Windows/.NET Framework 4.8.1.
+
+See the [Property completion guide](Property-Profile-Names-and-Final-Cleanup.md) and [extended Output guide](Output-Extended-Queries.md) for contracts, examples and limitations.
+
 ## 1.0.0-preview.20261024.12 - 24 October 2026 (prepared preview)
 
 Includes the Property catalog and cleanup APIs from the preceding preview: 245 common overloads and five separately acquired catalog queries. See [the Property guide](Property-Catalog-Capabilities-and-Cleanup.md) for operation-specific results and native-version requirements.

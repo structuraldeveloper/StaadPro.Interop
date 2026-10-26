@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Windows.Media.Media3D;
+using StaadPro.Interop.Enums.Output;
 using System;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Models.Output;
@@ -12,6 +15,7 @@ namespace StaadPro.Interop.Adapters.Models
     public sealed class OSOutputAdapter : OSBaseAdapter, IOSOutput
     {
         private readonly OutputQueryReader queries;
+        private readonly OutputAdvancedReader advanced;
         /// <summary>Captures the acquired wrapper's Output binding without invoking native result functions.</summary>
         /// <param name="wrapper">The connected wrapper whose RawOutput is available.</param>
         /// <exception cref="ArgumentNullException">The wrapper or its RawOutput binding is null.</exception>
@@ -19,6 +23,7 @@ namespace StaadPro.Interop.Adapters.Models
         {
             ComObject = wrapper.RawOutput ?? throw new ArgumentNullException(nameof(wrapper.RawOutput));
             queries = new OutputQueryReader(wrapper, (object)ComObject);
+            advanced = new OutputAdvancedReader(queries);
         }
         /// <summary>Gets the captured native Output automation binding.</summary>
         /// <value>The acquired raw object; direct use bypasses managed validation and lifetime checks.</value>
@@ -255,5 +260,355 @@ namespace StaadPro.Interop.Adapters.Models
         /// else System.Console.WriteLine(result.Status);</code></example>
         public OutputQueryResult<bool> GetBucklingResultAvailability() =>
             queries.GetBucklingResultAvailability();
+
+        #region Member, solid, modal and time-history observations
+
+        /// <summary>Reads the complete single-block steel-design result packet for one analytical member.</summary>
+        /// <param name="memberId">Positive analytical member ID; not a physical-member ID or a collection index.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Prefer this query when code, decision, governing case/station/clause/section, allowable ratio, FX/MY/MZ and slenderness are needed. GetMemberSteelUtilizationRatio returns only a ratio. PASS/FAIL text is classified explicitly; numeric, Boolean or other status variants are preserved as Unknown rather than guessed. The three unreturned FY/FZ/MX actions are unavailable and are never set to zero. Governing case IDs are not hydrated or activated. Native false takes precedence over any written outputs.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetMemberSteelDesignResults(17);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.DesignStatus);</code></example>
+        public OutputQueryResult<MemberSteelDesignResults> GetMemberSteelDesignResults(int memberId) =>
+            advanced.GetMemberSteelDesignResults(memberId);
+
+        /// <summary>Counts the native eigen-buckling factors already extracted.</summary>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: This returns an actual integral count, not a success flag or a factor value. Zero is a valid count and does not prove that another result family is unavailable. GetBucklingResultAvailability observes availability; GetBucklingModeDisplacements retrieves one shape. No eigenanalysis is started.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetBucklingFactorCount();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<int> GetBucklingFactorCount() =>
+            advanced.GetBucklingFactorCount();
+
+        /// <summary>Reads all six native eigen-buckling mode-shape components at one node.</summary>
+        /// <param name="nativeBucklingModeNumber">Nonnegative native eigen-buckling mode number/index, passed unchanged and not mapped to a dynamic mode.</param>
+        /// <param name="nodeId">Positive native analytical node ID, not an array index.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Use for a buckling mode shape, not static displacement or a scalar buckling factor. The native mode number/index is passed unchanged; no zero/one-based conversion or count-derived remapping occurs. Six initialized Double slots are passed by reference and must be written on native 1/true success. Mode-shape normalization is not converted into physical static length/rotation units. Native numeric -1 is not accepted as this operation’s documented 1/0 flag.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetBucklingModeDisplacements(1, 11);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Translation);</code></example>
+        public OutputQueryResult<ModeDisplacements> GetBucklingModeDisplacements(int nativeBucklingModeNumber, int nodeId) =>
+            advanced.GetBucklingModeDisplacements(nativeBucklingModeNumber, nodeId);
+
+        /// <summary>Reads the relative native X/Y/Z member translation at a specified station.</summary>
+        /// <param name="memberId">Positive analytical member ID; not a physical-member ID or a collection index.</param>
+        /// <param name="distanceFromStart">Finite nonnegative native station measured from the relevant member start. No fraction/length conversion occurs; member existence and upper station validity remain native decisions.</param>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Use for the native relative translations described in local X/Y/Z order. GetAbsoluteMemberDisplacement invokes a different native operation whose prose is ambiguous; neither query applies a managed frame or offset transformation. This returns three translations, not six nodal translation/rotation values.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetRelativeMemberDisplacement(17, 0.5, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<Vector3D> GetRelativeMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId) =>
+            advanced.GetRelativeMemberDisplacement(memberId, distanceFromStart, loadCaseId);
+
+        /// <summary>Reads the absolute-labelled native X/Y/Z member translation at a specified station.</summary>
+        /// <param name="memberId">Positive analytical member ID; not a physical-member ID or a collection index.</param>
+        /// <param name="distanceFromStart">Finite nonnegative native station measured from the relevant member start. No fraction/length conversion occurs; member existence and upper station validity remain native decisions.</param>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Calls the native AbsTrans operation, separately from GetRelativeMemberDisplacement. The installed name says absolute while its prose repeats relative; the result preserves native X/Y/Z slots and does not certify an absolute/relative transformation. No offset transfer, basis reconstruction, rotation, length-fraction conversion or zero substitution is applied.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetAbsoluteMemberDisplacement(17, 0.5, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<Vector3D> GetAbsoluteMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId) =>
+            advanced.GetAbsoluteMemberDisplacement(memberId, distanceFromStart, loadCaseId);
+
+        /// <summary>Reads six physical-member end actions in explicitly selected native local/global axes.</summary>
+        /// <param name="physicalMemberId">Positive native physical-member ID. Analytical member IDs are not interchangeable with this identity.</param>
+        /// <param name="memberEnd">Existing MemberEnd.Start (native 0) or MemberEnd.End (native 1), interpreted for the physical-member incidence.</param>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <param name="coordinateSystem">Local=0 or Global=1 for this native physical-member force query. No managed rotation is applied.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Use for physical-member IDs and native physical start/end incidence. GetMemberEndForces takes analytical member IDs. MemberEnd.Start/End map to native 0/1; ResultCoordinateSystem.Local/Global map independently to 0/1 and do not reuse the oppositely numbered offset enum. Physical incidence reordering may change signs; no managed reordering, rotation or sign correction is applied. FX/FY/FZ retain force units and MX/MY/MZ force-times-length units.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetPhysicalMemberEndForces(7, MemberEnd.Start, 1, ResultCoordinateSystem.Local);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Fx);</code></example>
+        public OutputQueryResult<ForceComponents> GetPhysicalMemberEndForces(int physicalMemberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem = ResultCoordinateSystem.Local) =>
+            advanced.GetPhysicalMemberEndForces(physicalMemberId, memberEnd, loadCaseId, coordinateSystem);
+
+        /// <summary>Reads signed axial-force minimum/maximum values and both native stations.</summary>
+        /// <param name="memberId">Positive analytical member ID; not a physical-member ID or a collection index.</param>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Unlike GetMemberForcesAtDistance, this requests native extrema over the member. Values are not absolute extrema, sorted envelopes across load cases or recalculated forces. Minimum must not exceed maximum; both written stations must be nonnegative. Positions retain native length units from the analytical start.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetMemberAxialForceExtrema(17, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.MinimumValue);</code></example>
+        public OutputQueryResult<MemberForceExtrema> GetMemberAxialForceExtrema(int memberId, int loadCaseId) =>
+            advanced.GetMemberAxialForceExtrema(memberId, loadCaseId);
+
+        /// <summary>Reads six local section actions at a specified analytical member station.</summary>
+        /// <param name="memberId">Positive analytical member ID; not a physical-member ID or a collection index.</param>
+        /// <param name="distanceFromStart">Finite nonnegative native station measured from the relevant member start. No fraction/length conversion occurs; member existence and upper station validity remain native decisions.</param>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: This returns FX/FY/FZ/MX/MY/MZ at a native distance from the analytical start. GetPhysicalMemberForcesAtDistance uses physical-member identity and total physical length. It is not an end-action sign conversion, result envelope or normalized eigenmode. Station zero is allowed; member membership and upper station validity remain native decisions. No implicit length-fraction conversion, unit scaling or geometry hydration occurs.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetMemberForcesAtDistance(17, 0.5, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Fx);</code></example>
+        public OutputQueryResult<ForceComponents> GetMemberForcesAtDistance(int memberId, double distanceFromStart, int loadCaseId) =>
+            advanced.GetMemberForcesAtDistance(memberId, distanceFromStart, loadCaseId);
+
+        /// <summary>Reads six local section actions at a specified physical member station.</summary>
+        /// <param name="physicalMemberId">Positive native physical-member ID. Analytical member IDs are not interchangeable with this identity.</param>
+        /// <param name="distanceFromStart">Finite nonnegative native station measured from the relevant member start. No fraction/length conversion occurs; member existence and upper station validity remain native decisions.</param>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: This returns FX/FY/FZ/MX/MY/MZ at a native distance from the physical start. GetMemberForcesAtDistance uses analytical member identity; IDs are not interchangeable. It is not an end-action sign conversion, result envelope or normalized eigenmode. Station zero is allowed; member membership and upper station validity remain native decisions. No implicit length-fraction conversion, unit scaling or geometry hydration occurs.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetPhysicalMemberForcesAtDistance(17, 0.5, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Fx);</code></example>
+        public OutputQueryResult<ForceComponents> GetPhysicalMemberForcesAtDistance(int physicalMemberId, double distanceFromStart, int loadCaseId) =>
+            advanced.GetPhysicalMemberForcesAtDistance(physicalMemberId, distanceFromStart, loadCaseId);
+
+        /// <summary>Reads the two native Y/Z deflection outputs at one analytical member station.</summary>
+        /// <param name="memberId">Positive analytical member ID; not a physical-member ID or a collection index.</param>
+        /// <param name="distanceFromStart">Finite nonnegative native station measured from the relevant member start. No fraction/length conversion occurs; member existence and upper station validity remain native decisions.</param>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Choose this for the two-output native deflection operation; GetRelativeMemberDisplacement and GetAbsoluteMemberDisplacement return three translation slots through different functions. The help does not fully establish the Y/Z frame or absolute/relative convention, so NativeY/NativeZ preserve slot identity without asserting a transformation. No missing X value or rotations are invented.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetMemberDeflectionAtDistance(17, 0.5, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.NativeY);</code></example>
+        public OutputQueryResult<MemberDeflection> GetMemberDeflectionAtDistance(int memberId, double distanceFromStart, int loadCaseId) =>
+            advanced.GetMemberDeflectionAtDistance(memberId, distanceFromStart, loadCaseId);
+
+        /// <summary>Reads native ELASTIC MAT influence areas corresponding to an explicit support-node selection.</summary>
+        /// <param name="supportNodeIds">Non-null one-pass selection of positive support-node IDs. Order and duplicates are preserved. Empty input is valid; native ELASTIC MAT/BASE PRESSURE prerequisites remain the caller’s responsibility.</param>
+        /// <param name="maximumResults">Maximum support-node selection size, from 1 through 100000. Input beyond this bound is rejected before native access.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Use for YZ/ZX/XY influence areas, not base pressures or Load floor influence areas. Input is snapshotted once with a bounded selection; order and duplicates are retained. Empty input returns an owned empty result without native result calls. Exported metadata passes initialized arrays by value, so every applicable Double slot must be written in place. Native integer 0 means success; -107/-108 mean buffer failure. Actual Boolean acknowledgements are interpreted separately, never converted to an integer zero. Changed node correspondence rejects mixed data. Areas retain native length-squared units.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetMatInfluenceAreas(new[] { 11, 12, 11 });
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Count);</code></example>
+        public OutputQueryResult<IReadOnlyList<MatInfluenceArea>> GetMatInfluenceAreas(IEnumerable<int> supportNodeIds, int maximumResults = 100000) =>
+            advanced.GetMatInfluenceAreas(supportNodeIds, maximumResults);
+
+        /// <summary>Reads signed base pressures for explicitly ordered support nodes and one result case.</summary>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <param name="supportNodeIds">Non-null one-pass selection of positive support-node IDs. Order and duplicates are preserved. Empty input is valid; native ELASTIC MAT/BASE PRESSURE prerequisites remain the caller’s responsibility.</param>
+        /// <param name="maximumResults">Maximum support-node selection size, from 1 through 100000. Input beyond this bound is rejected before native access.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Requires native BASE PRESSURE results; it does not calculate contact pressure from support reactions or ELASTIC MAT influence areas. Native YZ/ZX/XY arrays correspond to global X/Y/Z pressure components in force-per-area units. The Boolean-success contract differs from GetMatInfluenceAreas integer-zero success. Bounded one-pass input snapshots preserve duplicates/order, validate written fixed-size arrays and reject changed node correspondence. Empty input returns an owned empty result without native retrieval.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetBasePressures(1, new[] { 11, 12 });
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Count);</code></example>
+        public OutputQueryResult<IReadOnlyList<NodeBasePressure>> GetBasePressures(int loadCaseId, IEnumerable<int> supportNodeIds, int maximumResults = 100000) =>
+            advanced.GetBasePressures(loadCaseId, supportNodeIds, maximumResults);
+
+        /// <summary>Reads SXX/SYY/SZZ normal stresses at an explicitly identified native solid corner.</summary>
+        /// <param name="solidId">Positive native solid-element ID; not a plate or analytical member ID.</param>
+        /// <param name="nativeCornerIndex">Nonnegative native solid-corner selector, passed unchanged. No analytical node-ID mapping, zero/one rebasing or center sentinel is supplied.</param>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Use for solid elements, not plate-center stresses. The nonnegative native corner selector is passed unchanged; it is not an analytical node ID and no zero/one-based corner mapping or center sentinel is invented. Named component ordering follows the native output slots; no principal transformation is performed. All three native stress values must be written and finite on success. Native result stress units and signs are preserved.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetSolidNormalStresses(101, 1, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<SolidNormalStresses> GetSolidNormalStresses(int solidId, int nativeCornerIndex, int loadCaseId) =>
+            advanced.GetSolidNormalStresses(solidId, nativeCornerIndex, loadCaseId);
+
+        /// <summary>Reads SXY/SYZ/SZX shear stresses at an explicitly identified native solid corner.</summary>
+        /// <param name="solidId">Positive native solid-element ID; not a plate or analytical member ID.</param>
+        /// <param name="nativeCornerIndex">Nonnegative native solid-corner selector, passed unchanged. No analytical node-ID mapping, zero/one rebasing or center sentinel is supplied.</param>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Use for solid elements, not plate-center stresses. The nonnegative native corner selector is passed unchanged; it is not an analytical node ID and no zero/one-based corner mapping or center sentinel is invented. Named component ordering follows the native output slots; no principal transformation is performed. All three native stress values must be written and finite on success. Native result stress units and signs are preserved.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetSolidShearStresses(101, 1, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<SolidShearStresses> GetSolidShearStresses(int solidId, int nativeCornerIndex, int loadCaseId) =>
+            advanced.GetSolidShearStresses(solidId, nativeCornerIndex, loadCaseId);
+
+        /// <summary>Reads three native principal-stress slots at an explicitly identified native solid corner.</summary>
+        /// <param name="solidId">Positive native solid-element ID; not a plate or analytical member ID.</param>
+        /// <param name="nativeCornerIndex">Nonnegative native solid-corner selector, passed unchanged. No analytical node-ID mapping, zero/one rebasing or center sentinel is supplied.</param>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Use for solid elements, not plate-center stresses. The nonnegative native corner selector is passed unchanged; it is not an analytical node ID and no zero/one-based corner mapping or center sentinel is invented. The help repeats S1 labels, so FirstNativeValue/SecondNativeValue/ThirdNativeValue retain native slot order without sorting or claiming descending S1/S2/S3. All three native stress values must be written and finite on success. Native result stress units and signs are preserved.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetSolidPrincipalStresses(101, 1, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<SolidPrincipalStresses> GetSolidPrincipalStresses(int solidId, int nativeCornerIndex, int loadCaseId) =>
+            advanced.GetSolidPrincipalStresses(solidId, nativeCornerIndex, loadCaseId);
+
+        /// <summary>Reads the native nonlinear load-step value for one result load case.</summary>
+        /// <param name="loadCaseId">Positive native result load-case number. No activation is performed; suitability is determined by STAAD.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: The return is numeric data, not a Boolean flag or a certified step count/index range. Nonnegative finite values are preserved without rounding. Native -1 is NativeFailure, -8002 NotFound and -9911 ResultsUnavailable. No arbitrary nonzero success rule is used. This does not retrieve nonlinear node displacements or activate a load step.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetNonlinearLoadStep(1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<double> GetNonlinearLoadStep(int loadCaseId) =>
+            advanced.GetNonlinearLoadStep(loadCaseId);
+
+        /// <summary>Counts the native steel-design parameter blocks in the applicable result context.</summary>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: The reviewed help limits multiple-block extraction to AISC 360-16. GetMultipleSteelDesignResultAvailability observes that capability separately. Zero is a valid count; it is not a fabricated successful design result or a Boolean false. No block names, governing blocks, design changes or results freshness are inferred.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetSteelDesignParameterBlockCount();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<int> GetSteelDesignParameterBlockCount() =>
+            advanced.GetSteelDesignParameterBlockCount();
+
+        /// <summary>Counts modes already extracted by native dynamic analysis.</summary>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: This is an integral mode count, not buckling-factor count or a success flag. Zero remains valid data. It does not establish mode numbering, result normalization or whether the modal set is current. No dynamic analysis is started.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetExtractedModeCount();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<int> GetExtractedModeCount() =>
+            advanced.GetExtractedModeCount();
+
+        /// <summary>Reads the native frequency in Hz for an explicitly identified dynamic mode.</summary>
+        /// <param name="nativeModeNumber">Nonnegative native dynamic-mode number/index, passed unchanged. The native result context decides validity; no zero/one-based conversion is inferred.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Use for modal frequency, not a buckling eigenvalue or time-history interval. The nonnegative native mode number/index is passed unchanged and is not rebased from a managed index. Zero frequency is retained when native success reports it; negative or unwritten/nonfinite frequency is rejected. No cycles/radians conversion occurs.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetModeFrequency(1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<double> GetModeFrequency(int nativeModeNumber) =>
+            advanced.GetModeFrequency(nativeModeNumber);
+
+        /// <summary>Reads six dynamic eigenmode shape components at an analytical node.</summary>
+        /// <param name="nativeModeNumber">Nonnegative native dynamic-mode number/index, passed unchanged. The native result context decides validity; no zero/one-based conversion is inferred.</param>
+        /// <param name="nodeId">Positive native analytical node ID, not an array index.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Use for a dynamic modal shape; GetBucklingModeDisplacements queries a different mode family and GetNodeDisplacements retrieves load-case responses. The native mode number/index is passed unchanged. Exported metadata takes the six-element initialized array by value, so all applicable slots must be written in place. Native normalization is not rescaled into physical static displacement and no rotations are invented.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetModalNodeDisplacements(1, 11);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Translation);</code></example>
+        public OutputQueryResult<ModeDisplacements> GetModalNodeDisplacements(int nativeModeNumber, int nodeId) =>
+            advanced.GetModalNodeDisplacements(nativeModeNumber, nodeId);
+
+        /// <summary>Reads native X/Y/Z mass participation factors for an explicit dynamic mode.</summary>
+        /// <param name="nativeModeNumber">Nonnegative native dynamic-mode number/index, passed unchanged. The native result context decides validity; no zero/one-based conversion is inferred.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Use for one mode, not missing-mass factors, cumulative participation or a load-case force result. The native mode number/index is passed unchanged. All three scalar slots must be written and finite. Fraction-versus-percentage and eigenvector normalization are not inferred; no factors are rescaled or summed.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetModalMassParticipationFactors(1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Factors);</code></example>
+        public OutputQueryResult<ModalMassParticipation> GetModalMassParticipationFactors(int nativeModeNumber) =>
+            advanced.GetModalMassParticipationFactors(nativeModeNumber);
+
+        /// <summary>Reads native time-history response-sample count and integration interval.</summary>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Unlike a Boolean availability query, this returns a sample count plus an interval in seconds. Native 0 means ResultsUnavailable and -1 NativeFailure; a positive count requires a positive finite interval. The first response is at time zero and the last at (count-1)*interval; no extra endpoint is invented. It does not run integration or certify result freshness.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetTimeHistoryIntegrationInfo();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.SampleCount);</code></example>
+        public OutputQueryResult<TimeHistoryIntegrationInfo> GetTimeHistoryIntegrationInfo() =>
+            advanced.GetTimeHistoryIntegrationInfo();
+
+        /// <summary>Reads a native time-history response at one bounded time.</summary>
+        /// <param name="nodeId">Positive native analytical node ID, not an array index.</param>
+        /// <param name="degreeOfFreedom">A defined translational or rotational response DOF, mapping exactly to native selectors 1 through 6.</param>
+        /// <param name="responseKind">Displacement=0, Velocity=1 or Acceleration=2. Units depend on the requested translational/rotational DOF.</param>
+        /// <param name="timeSeconds">Finite nonnegative time in seconds within the observed native integration-sample bounds.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: GetTimeHistoryResponse retrieves the full integration series. The reserved native load-case argument is always internal zero; no caller case is activated. The native response DOF/kind selects translational or rotational displacement/velocity/acceleration units. Integration metadata is read before/after; requested time must lie in 0..(count-1)*interval. Native 1/true succeeds, 0/false means ResultsUnavailable and integer -1 means NativeFailure, never VARIANT_TRUE. Native interpolation, if any, is not reproduced in managed code. Changed integration metadata returns StateChanged with no sample.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetTimeHistoryResponseAtTime(11, ResponseDegreeOfFreedom.TranslationX, TimeHistoryResponseKind.Displacement, 0.0);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Value);</code></example>
+        public OutputQueryResult<TimeHistorySample> GetTimeHistoryResponseAtTime(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, double timeSeconds) =>
+            advanced.GetTimeHistoryResponseAtTime(nodeId, degreeOfFreedom, responseKind, timeSeconds);
+
+        /// <summary>Reads a bounded, owned native time-history response series.</summary>
+        /// <param name="nodeId">Positive native analytical node ID, not an array index.</param>
+        /// <param name="degreeOfFreedom">A defined translational or rotational response DOF, mapping exactly to native selectors 1 through 6.</param>
+        /// <param name="responseKind">Displacement=0, Velocity=1 or Acceleration=2. Units depend on the requested translational/rotational DOF.</param>
+        /// <param name="maximumSamples">Maximum allocated response samples, from 1 through 100000. A larger native count returns LimitExceeded without allocating or fetching the series.</param>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: Use for all integration samples rather than one requested time. The reserved native load-case argument stays internal zero. A checked integration count sizes the Double buffer; counts exceeding maximumSamples produce LimitExceeded before allocation or retrieval. Sample zero is at time zero; no extra final sample is added. Native 1/true succeeds, 0/false means ResultsUnavailable and integer -1 NativeFailure. Count/interval are rechecked after retrieval; StateChanged discards mixed data. Samples preserve signs and response-dependent native units; no smoothing, interpolation, differentiation or unit conversion occurs.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID, native selector, enum, station, time or bounded selection is invalid; invalid input is rejected before result retrieval.</exception>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetTimeHistoryResponse(11, ResponseDegreeOfFreedom.TranslationX, TimeHistoryResponseKind.Displacement);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Samples.Count);</code></example>
+        public OutputQueryResult<TimeHistorySeries> GetTimeHistoryResponse(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, int maximumSamples = 100000) =>
+            advanced.GetTimeHistoryResponse(nodeId, degreeOfFreedom, responseKind, maximumSamples);
+
+        /// <summary>Observes native availability for multiple steel-design parameter-block extraction.</summary>
+        /// <returns>A named status/data result. Inspect IsSuccessful before Data; native failure, unavailable results, changed state or managed limits expose no payload. Actual Boolean and integral return evidence remain distinct.</returns>
+        /// <remarks><para>When to use: This is distinct from general analysis or buckling availability. The reviewed contract identifies AISC 360-16 as the applicable design context. A successful observation with Data=false is valid data, not a query failure. Native Boolean or integral 0/1 is accepted; an integral -1 is not borrowed as success. No design code is changed and no multiple-block result packet is inferred.</para><para>Common reviewed 2024–2026 contract; no changed direction-code or displacement-layout policy is guessed. Calls execute synchronously on the caller’s established COM apartment under the shared expanded-query gate. Coordinate other query paths, adapters, raw access and external model edits. Reacquire wrapper.Output after refresh; captured binding identity is checked before and after the observation. Success requires applicable initialized outputs to be written, finite and correctly shaped. No case activation, analysis, save, retry, implicit unit conversion or engineering certification occurs. Wrapper input-unit caches do not prove Output units; live native qualification remains required.</para></remarks>
+        /// <exception cref="System.InvalidOperationException">The binding is stale/disposed, or native output has an undocumented type/code, inconsistent shape/correspondence or unwritten/nonfinite applicable data.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native member.</exception>
+        /// <example><code>var result = output.GetMultipleSteelDesignResultAvailability();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<bool> GetMultipleSteelDesignResultAvailability() =>
+            advanced.GetMultipleSteelDesignResultAvailability();
+
+        #endregion
     }
 }
