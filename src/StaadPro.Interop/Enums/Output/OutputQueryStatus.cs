@@ -18,6 +18,8 @@ namespace StaadPro.Interop.Enums.Output
         /// <summary>The native sample count exceeded the caller’s managed allocation limit; no result buffer was allocated.</summary>
         LimitExceeded = 6,
         /// <summary>Native input correspondence or before/after integration metadata changed; no mixed payload is exposed.</summary>
-        StateChanged = 7
+        StateChanged = 7,
+        /// <summary>A native packet succeeded but required governing-case metadata could not be uniquely resolved.</summary>
+        MetadataUnavailable = 8
     }
 }

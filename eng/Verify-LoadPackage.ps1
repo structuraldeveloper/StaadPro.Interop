@@ -38,7 +38,7 @@ try {
     $loadPorting = Read-PackageEntry 'docs/Load-Porting.md'
     $rootPorting = Read-PackageEntry 'docs/Root-Porting.md'
     $outputPorting = Read-PackageEntry 'docs/Output-Porting.md'
-    if ($outputPorting -notmatch 'GetAnalysisResultAvailability' -or $readme -notmatch '40 typed') { throw 'Missing packaged Output guidance.' }
+    if ($outputPorting -notmatch 'GetAnalysisResultAvailability' -or $readme -notmatch '71 managed') { throw 'Missing packaged Output guidance.' }
     if ($installation -notmatch 'net481' -or $publishing -notmatch 'nuget.org') { throw 'Incomplete installation/publishing guides.' }
     $installationCode = [regex]::Match($installation, '(?s)```csharp\s*\r?\n(.*?)```').Groups[1].Value
     if ([string]::IsNullOrWhiteSpace($installationCode)) { throw 'Missing installation C# example.' }
@@ -192,11 +192,17 @@ try {
     if ($snippets.Count -ne 310) { throw "Expected 310 existing packaged XML examples; found $($snippets.Count)." }
     $outputSnippets = @()
     $advancedOutputNames = @('GetMemberSteelDesignResults', 'GetBucklingFactorCount', 'GetBucklingModeDisplacements', 'GetRelativeMemberDisplacement', 'GetAbsoluteMemberDisplacement', 'GetPhysicalMemberEndForces', 'GetMemberAxialForceExtrema', 'GetMemberForcesAtDistance', 'GetPhysicalMemberForcesAtDistance', 'GetMemberDeflectionAtDistance', 'GetMatInfluenceAreas', 'GetBasePressures', 'GetSolidNormalStresses', 'GetSolidShearStresses', 'GetSolidPrincipalStresses', 'GetNonlinearLoadStep', 'GetSteelDesignParameterBlockCount', 'GetExtractedModeCount', 'GetModeFrequency', 'GetModalNodeDisplacements', 'GetModalMassParticipationFactors', 'GetTimeHistoryIntegrationInfo', 'GetTimeHistoryResponseAtTime', 'GetTimeHistoryResponse', 'GetMultipleSteelDesignResultAvailability')
+    $steelBlockOutputNames = @('GetSteelDesignParameterBlockName', 'GetMaximumMemberSteelUtilizationRatio', 'GetMinimumSteelDesignFailureRatio', 'GetMaximumSteelDesignFailureRatio')
+    $steelBlockOutputGuide = Read-PackageEntry 'docs/Output-Steel-Design-Blocks.md'
     $outputAdvancedGuide = Read-PackageEntry 'docs/Output-Extended-Queries.md'
+    $workflowOutputGuide = Read-PackageEntry 'docs/Output-Managed-Workflows.md'
+    $workflowContracts = (Read-PackageEntry 'docs/contracts/OutputManagedWorkflowContractIndex.json' | ConvertFrom-Json).contracts
+    if ($workflowContracts.Count -ne 25) { throw 'Expected 25 workflow contracts.' }
+    $workflowOutputSignatures = @($workflowContracts | ForEach-Object { $_.xmlSignature })
     $newLine = [Environment]::NewLine
     foreach ($owner in @('Adapters.Interfaces.IOSOutput', 'Adapters.Models.OSOutputAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        if ($entries.Count -ne 40) { throw "Expected 40 documented Output queries for $owner." }
+        if ($entries.Count -ne 71) { throw "Expected 71 documented Output queries for $owner." }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary', 'returns', 'remarks', 'example/code')) {
                 $node = $entry.SelectSingleNode($tag)
@@ -205,14 +211,41 @@ try {
             $binding = if ($owner.EndsWith('IOSOutput')) { 'IOSOutput output = wrapper.Output;' } else { 'var output = new StaadPro.Interop.Adapters.Models.OSOutputAdapter(wrapper);' }
             $example = $entry.SelectSingleNode('example/code').InnerText.Replace('wrapper.Output.', 'output.')
             $methodName = [regex]::Match([string]$entry.name, '\.(\w+)(?:\(|$)').Groups[1].Value
-            $rootExpression = if ($methodName -in $advancedOutputNames) {
+            $isBlockOverload = $methodName -in @('GetMemberSteelDesignResults', 'GetMemberSteelUtilizationRatio') -and [string]$entry.name -match 'System.String'
+            $signature = ([string]$entry.name).Substring(("M:StaadPro.Interop.$owner.").Length)
+            $rootExpression = if ($signature -in $workflowOutputSignatures) {
+                if ($workflowOutputGuide -notmatch $methodName) { throw "Missing Output workflow guidance for $methodName" }
+                'new PackageVerification.OutputWorkflowFixture.Root()'
+            } elseif ($methodName -in $steelBlockOutputNames -or $isBlockOverload) {
+                if ($steelBlockOutputGuide -notmatch $methodName) { throw "Missing Output steel-block guidance for $methodName" }
+                'new PackageVerification.OutputSteelBlockFixture.Root { Output = new PackageVerification.OutputSteelBlockFixture.Native() }'
+            } elseif ($methodName -in $advancedOutputNames) {
                 if ($outputAdvancedGuide -notmatch $methodName) { throw "Missing Output usage guidance for $methodName" }
                 'new PackageVerification.OutputAdvancedFixture.Root { Output = new PackageVerification.OutputAdvancedFixture.Native() }'
             } else { 'new FakeOutputRoot()' }
             $outputSnippets += 'using (var wrapper = new OpenStaadWrapper(' + $rootExpression + ')) {' + $newLine + $binding + $newLine + $example + $newLine + '}'
         }
     }
-    if ($outputSnippets.Count -ne 80) { throw 'Expected 80 Output XML examples.' }
+    if ($outputSnippets.Count -ne 142) { throw 'Expected 142 Output XML examples.' }
+    $supportSnippets = @()
+    $supportGuide = Read-PackageEntry 'docs/Support-Foundations.md'
+    foreach ($owner in @('Adapters.Interfaces.IOSSupport', 'Adapters.Models.OSSupportAdapter')) {
+        $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+        if ($entries.Count -ne 19) { throw "Expected 19 Support contracts for $owner." }
+        foreach ($entry in $entries) {
+            foreach ($tag in @('summary', 'returns', 'remarks', 'example/code')) {
+                $node = $entry.SelectSingleNode($tag)
+                if ($null -eq $node -or [string]::IsNullOrWhiteSpace($node.InnerText)) { throw "Incomplete $tag for $($entry.name)" }
+            }
+            $methodName = [regex]::Match([string]$entry.name, '\.(\w+)(?:\(|$)').Groups[1].Value
+            if ($supportGuide -notmatch $methodName) { throw "Missing Support guidance for $methodName" }
+            if ($entry.SelectSingleNode('remarks').InnerText -notmatch 'When to use:') { throw "Missing comparative Support IntelliSense for $methodName" }
+            $binding = if ($owner.EndsWith('IOSSupport')) { 'IOSSupport support = wrapper.Support;' } else { 'var support = new StaadPro.Interop.Adapters.Models.OSSupportAdapter(wrapper);' }
+            $example = $entry.SelectSingleNode('example/code').InnerText
+            $supportSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.SupportFoundationFixture.Root { Support = new PackageVerification.SupportFoundationFixture.Native() })) {' + $newLine + $binding + $newLine + $example + $newLine + '}'
+        }
+    }
+    if ($supportSnippets.Count -ne 38) { throw 'Expected 38 Support XML examples.' }
     $inspectionSnippets = @()
     if ($hasLoadInspection) {
         $inspectionNames = @('GetActiveLoadCaseNumber', 'GetLoadListCount', 'GetLoadListCaseCount', 'GetLoadListCases', 'GetLoadCommandCount', 'GetAssignedEntityCount', 'GetLoadItemCount', 'GetLoadItemKind', 'ContainsDynamicLoad', 'GetRepeatContributionCount', 'GetRepeatContributions', 'GetNotionalItemCount', 'GetNotionalContributionCount', 'GetNotionalContributions', 'GetReferenceItemCount')
@@ -343,10 +376,12 @@ $project = @"
 $program = @'
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using StaadPro.Interop.Adapters.Interfaces;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Enums.Output;
+using StaadPro.Interop.Models.Support;
 using StaadPro.Interop.Models;
 
 public static class Program
@@ -573,7 +608,7 @@ public static class Program
         using (var wrapper = new OpenStaadWrapper(new FakeOutputRoot()))
         {
             var output = wrapper.Output;
-            Check(typeof(IOSOutput).GetMethods().Count(m => !m.IsSpecialName) == 40, "installed Output query count");
+            Check(typeof(IOSOutput).GetMethods().Count(m => !m.IsSpecialName) == 71, "installed Output query count");
             Check(output.GetMemberEndForces(17, MemberEnd.Start, 1).Data.Fx == 1.25, "installed local end actions");
             Check(output.GetPlateCenterPrincipalStressesAndAnglesEx(17, 1).Data.AngleBottom == 2.25, "installed split principal buffers");
             var native = (FakeOutput)(object)wrapper.RawOutput;
@@ -590,7 +625,8 @@ public static class Program
         RunInspectionDocumentationExamples();
         RunExpansionDocumentationExamples();
         RunPropertyDocumentationExamples();
-        Console.WriteLine("PASS: __EXAMPLE_COUNT__ packaged XML examples and Geometry/Load/Root/Output/Property IntelliSense.");
+        RunSupportDocumentationExamples();
+        Console.WriteLine("PASS: __EXAMPLE_COUNT__ packaged XML examples and Geometry/Load/Root/Output/Property/Support IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -600,6 +636,10 @@ __EXAMPLES__
     private static void RunOutputDocumentationExamples()
     {
 __OUTPUT_EXAMPLES__
+    }
+    private static void RunSupportDocumentationExamples()
+    {
+__SUPPORT_EXAMPLES__
     }
     private static void RunInspectionDocumentationExamples()
     {
@@ -834,11 +874,12 @@ __PROPERTY_EXAMPLES__
 }
 '@
 $program = $program.Replace('__EXAMPLES__', ($snippets -join "`n"))
+$program = $program.Replace('__SUPPORT_EXAMPLES__', ($supportSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__OUTPUT_EXAMPLES__', ($outputSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__INSPECTION_EXAMPLES__', ($inspectionSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__EXPANSION_EXAMPLES__', ($expansionSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__PROPERTY_EXAMPLES__', ($propertySnippets -join [Environment]::NewLine))
-$program = $program.Replace('__EXAMPLE_COUNT__', [string](310 + $outputSnippets.Count + $inspectionSnippets.Count + $expansionSnippets.Count + $propertySnippets.Count))
+$program = $program.Replace('__EXAMPLE_COUNT__', [string](310 + $supportSnippets.Count + $outputSnippets.Count + $inspectionSnippets.Count + $expansionSnippets.Count + $propertySnippets.Count))
 if ($hasLoadExpansion) { $program = 'using StaadPro.Interop.Models.Loads.Contracts;' + [Environment]::NewLine + 'using StaadPro.Interop.Models.Loads.Queries;' + [Environment]::NewLine + $program }
 if ($hasLoadInspection) { $program = 'using StaadPro.Interop.Enums.Loads;' + [Environment]::NewLine + $program }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyQueryFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyQueryFixture.cs') }
@@ -848,7 +889,10 @@ if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'F
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCreationFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCreationFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyAttributeFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyAttributeFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyUptFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyUptFixture.cs') }
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputSteelBlockFixture.cs') -Destination (Join-Path $consumerRoot 'OutputSteelBlockFixture.cs')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/SupportFoundationFixture.cs') -Destination (Join-Path $consumerRoot 'SupportFoundationFixture.cs')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputAdvancedFixture.cs') -Destination (Join-Path $consumerRoot 'OutputAdvancedFixture.cs')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputWorkflowFixture.cs') -Destination (Join-Path $consumerRoot 'OutputWorkflowFixture.cs')
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCompletionFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCompletionFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCleanupFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCleanupFixture.cs') }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/LoadInspectionFixture.cs') -Destination (Join-Path $consumerRoot 'LoadInspectionFixture.cs')

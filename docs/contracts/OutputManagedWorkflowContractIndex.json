@@ -1,0 +1,605 @@
+{
+  "date": "2026-10-26",
+  "description": "23 synchronous main-project workflow adaptations and two typed enabling overloads; no additional native route enabled.",
+  "managedOverloads": 25,
+  "nativeCoverage": 46,
+  "contracts": [
+    {
+      "returnType": "OutputQueryResult<BeamSteelDesignResults>",
+      "name": "GetSteelDesignResultsForBeam",
+      "parameters": [
+        {
+          "type": "Beam",
+          "name": "beam"
+        },
+        {
+          "type": "IEnumerable<ILoadCase>",
+          "name": "loadCases"
+        }
+      ],
+      "summary": "Retrieves a beam design packet and resolves its governing case from supplied metadata.",
+      "remarks": "Uses the existing complete native steel-design packet, preserving the raw design decision and unavailable action components. Unlike GetMemberSteelDesignResults(int), this resolves governing case metadata and retains the caller Beam. A native success whose governing case is absent returns MetadataUnavailable without Data. Conflicting metadata for the same case number is rejected; duplicate identical metadata is accepted. Cases must belong to this model and the numeric case identities must be unambiguous.",
+      "args": "beam, loadCases",
+      "setup": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };",
+      "example": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };\nvar result = wrapper.Output.GetSteelDesignResultsForBeam(beam, loadCases);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<BeamSteelDesignResults> GetSteelDesignResultsForBeam(Beam beam, IEnumerable<ILoadCase> loadCases)",
+      "sourceSignature": "MemberSteelDesignResults GetSteelDesignResultsForBeam(Beam beam, IEnumerable<ILoadCase> allLoadCases)",
+      "xmlSignature": "GetSteelDesignResultsForBeam(StaadPro.Interop.Entities.Beam,System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase})"
+    },
+    {
+      "returnType": "OutputQueryResult<BeamSteelDesignResults>",
+      "name": "GetSteelDesignResultsForBeam",
+      "parameters": [
+        {
+          "type": "IOSLoad",
+          "name": "load"
+        },
+        {
+          "type": "Beam",
+          "name": "beam"
+        }
+      ],
+      "summary": "Retrieves a beam design packet using case metadata discovered from this wrapper.",
+      "remarks": "Uses the existing complete native steel-design packet, preserving the raw design decision and unavailable action components. Unlike GetMemberSteelDesignResults(int), this resolves governing case metadata and retains the caller Beam. A native success whose governing case is absent returns MetadataUnavailable without Data. Conflicting metadata for the same case number is rejected; duplicate identical metadata is accepted. Cases must belong to this model and the numeric case identities must be unambiguous. Discovers primary and combination cases through the current Load adapter; reference cases are not governing design cases here. Pass this wrapper's Load adapter, not one acquired from a different model. Supplied-metadata overloads avoid discovery calls.",
+      "args": "wrapper.Load, beam",
+      "setup": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };",
+      "example": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };\nvar result = wrapper.Output.GetSteelDesignResultsForBeam(wrapper.Load, beam);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<BeamSteelDesignResults> GetSteelDesignResultsForBeam(IOSLoad load, Beam beam)",
+      "sourceSignature": "MemberSteelDesignResults GetSteelDesignResultsForBeam(IOSLoad load, Beam beam)",
+      "xmlSignature": "GetSteelDesignResultsForBeam(StaadPro.Interop.Adapters.Interfaces.IOSLoad,StaadPro.Interop.Entities.Beam)"
+    },
+    {
+      "returnType": "OutputBatchResult<BeamSteelDesignResults>",
+      "name": "GetSteelDesignResultsForBeams",
+      "parameters": [
+        {
+          "type": "IEnumerable<Beam>",
+          "name": "beams"
+        },
+        {
+          "type": "IEnumerable<ILoadCase>",
+          "name": "loadCases"
+        }
+      ],
+      "summary": "Retrieves independently qualified design packets for a beam selection.",
+      "remarks": "Uses the existing complete native steel-design packet, preserving the raw design decision and unavailable action components. Unlike GetMemberSteelDesignResults(int), this resolves governing case metadata and retains the caller Beam. A native success whose governing case is absent returns MetadataUnavailable without Data. Conflicting metadata for the same case number is rejected; duplicate identical metadata is accepted. Cases must belong to this model and the numeric case identities must be unambiguous. Selection is enumerated once before dispatch, retains order, and rejects duplicate member IDs. Ordinary native failures remain individual results; transport or malformed-data exceptions abort the operation.",
+      "args": "new[] { beam }, loadCases",
+      "setup": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };",
+      "example": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };\nvar result = wrapper.Output.GetSteelDesignResultsForBeams(new[] { beam }, loadCases);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data);\n    else System.Console.WriteLine(item.Status);",
+      "signature": "OutputBatchResult<BeamSteelDesignResults> GetSteelDesignResultsForBeams(IEnumerable<Beam> beams, IEnumerable<ILoadCase> loadCases)",
+      "sourceSignature": "IEnumerable<MemberSteelDesignResults> GetSteelDesignResultsForBeams(IEnumerable<Beam> beams, IEnumerable<ILoadCase> allLoadCases)",
+      "xmlSignature": "GetSteelDesignResultsForBeams(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Beam},System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase})"
+    },
+    {
+      "returnType": "OutputBatchResult<BeamSteelDesignResults>",
+      "name": "GetSteelDesignResultsForBeams",
+      "parameters": [
+        {
+          "type": "IOSLoad",
+          "name": "load"
+        },
+        {
+          "type": "IEnumerable<Beam>",
+          "name": "beams"
+        }
+      ],
+      "summary": "Retrieves beam design packets after discovering governing-case metadata once.",
+      "remarks": "Uses the existing complete native steel-design packet, preserving the raw design decision and unavailable action components. Unlike GetMemberSteelDesignResults(int), this resolves governing case metadata and retains the caller Beam. A native success whose governing case is absent returns MetadataUnavailable without Data. Conflicting metadata for the same case number is rejected; duplicate identical metadata is accepted. Cases must belong to this model and the numeric case identities must be unambiguous. Discovers primary/combination cases once per nonempty selection using this wrapper's current Load adapter. Empty selections perform no native discovery. Duplicate member IDs are rejected.",
+      "args": "wrapper.Load, new[] { beam }",
+      "setup": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };",
+      "example": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };\nvar result = wrapper.Output.GetSteelDesignResultsForBeams(wrapper.Load, new[] { beam });\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data);\n    else System.Console.WriteLine(item.Status);",
+      "signature": "OutputBatchResult<BeamSteelDesignResults> GetSteelDesignResultsForBeams(IOSLoad load, IEnumerable<Beam> beams)",
+      "sourceSignature": "IEnumerable<MemberSteelDesignResults> GetSteelDesignResultsForBeams(IOSLoad load, IEnumerable<Beam> beams)",
+      "xmlSignature": "GetSteelDesignResultsForBeams(StaadPro.Interop.Adapters.Interfaces.IOSLoad,System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Beam})"
+    },
+    {
+      "returnType": "OutputBatchResult<double>",
+      "name": "GetMemberSteelUtilizationRatios",
+      "parameters": [
+        {
+          "type": "HashSet<Beam>",
+          "name": "beams"
+        }
+      ],
+      "summary": "Retrieves per-member utilization observations without changing the supplied beams.",
+      "remarks": "Unlike PopulateMemberSteelUtilizationRatios, this only reads. Snapshots the set once in its enumeration order; distinct beam objects with the same member ID are rejected. Retains each query's status and member identity, including failures. Ratios are dimensionless.",
+      "args": "new HashSet<Beam> { beam }",
+      "setup": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };",
+      "example": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };\nvar result = wrapper.Output.GetMemberSteelUtilizationRatios(new HashSet<Beam> { beam });\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data);\n    else System.Console.WriteLine(item.Status);",
+      "signature": "OutputBatchResult<double> GetMemberSteelUtilizationRatios(HashSet<Beam> beams)",
+      "sourceSignature": "Dictionary<Beam, double> GetMemberSteelUtilizationRatios(HashSet<Beam> beams)",
+      "xmlSignature": "GetMemberSteelUtilizationRatios(System.Collections.Generic.HashSet{StaadPro.Interop.Entities.Beam})"
+    },
+    {
+      "returnType": "OutputPopulationResult",
+      "name": "PopulateMemberSteelUtilizationRatios",
+      "parameters": [
+        {
+          "type": "HashSet<Beam>",
+          "name": "beams"
+        }
+      ],
+      "summary": "Stages utilization observations and applies them to caller beams only after all reads succeed.",
+      "remarks": "Unlike GetMemberSteelUtilizationRatios, this updates the caller-owned Beam.UtilizationRatio caches, never the STAAD model. Any ordinary failed query prevents all managed assignments. Empty selections apply nothing. Successful native reads are staged before assignment; an exception from a property setter, notification handler or lifetime check can interrupt assignment after earlier beams were updated. This is not an atomic rollback transaction. Prior cache values do not certify current design results. Ratios are dimensionless.",
+      "args": "new HashSet<Beam> { beam }",
+      "setup": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };",
+      "example": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar loadCases = new ILoadCase[] { new LoadCase(1, \"Dead\") };\nvar result = wrapper.Output.PopulateMemberSteelUtilizationRatios(new HashSet<Beam> { beam });\nSystem.Console.WriteLine(result.IsSuccessful);\nSystem.Console.WriteLine(result.WasApplied);",
+      "signature": "OutputPopulationResult PopulateMemberSteelUtilizationRatios(HashSet<Beam> beams)",
+      "sourceSignature": "void PopulateMemberSteelUtilizationRatios(HashSet<Beam> forBeams)",
+      "xmlSignature": "PopulateMemberSteelUtilizationRatios(System.Collections.Generic.HashSet{StaadPro.Interop.Entities.Beam})"
+    },
+    {
+      "returnType": "OutputQueryResult<IdentifiedMemberForces>",
+      "name": "GetMemberEndForces",
+      "parameters": [
+        {
+          "type": "string",
+          "name": "loadCaseTitle"
+        },
+        {
+          "type": "int",
+          "name": "memberId"
+        },
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        },
+        {
+          "type": "MemberEnd",
+          "name": "memberEnd"
+        }
+      ],
+      "summary": "Retrieves identified analytical member-end actions in native local axes.",
+      "remarks": "Unlike the three-argument numeric overload, this returns an identified packet containing the exact caller-supplied case title and coordinate system. The title is a label, not a native lookup or proof of case identity. Values keep native member-end signs; no support-reaction sign reversal is applied. Local X follows native member incidence; beta and native local conventions are handled by STAAD.",
+      "args": "\"Dead\", 17, 1, MemberEnd.Start",
+      "setup": "",
+      "example": "var result = wrapper.Output.GetMemberEndForces(\"Dead\", 17, 1, MemberEnd.Start);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForces(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
+      "sourceSignature": "MemberForces GetMemberEndForces(string lcTitle, int beamId, int loadCaseId, MemberEnd memberEnd)",
+      "xmlSignature": "GetMemberEndForces(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd)"
+    },
+    {
+      "returnType": "OutputQueryResult<IdentifiedMemberForces>",
+      "name": "GetMemberEndForces",
+      "parameters": [
+        {
+          "type": "string",
+          "name": "loadCaseTitle"
+        },
+        {
+          "type": "int",
+          "name": "memberId"
+        },
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        },
+        {
+          "type": "MemberEnd",
+          "name": "memberEnd"
+        },
+        {
+          "type": "ResultCoordinateSystem",
+          "name": "coordinateSystem"
+        }
+      ],
+      "summary": "Retrieves identified analytical member-end actions in the requested native axes.",
+      "remarks": "Unlike the three-argument numeric overload, this returns an identified packet containing the exact caller-supplied case title and coordinate system. The title is a label, not a native lookup or proof of case identity. Values keep native member-end signs; no support-reaction sign reversal is applied. Local or Global is sent directly to the native call. This performs no managed axis reconstruction.",
+      "args": "\"Dead\", 17, 1, MemberEnd.Start, ResultCoordinateSystem.Global",
+      "setup": "",
+      "example": "var result = wrapper.Output.GetMemberEndForces(\"Dead\", 17, 1, MemberEnd.Start, ResultCoordinateSystem.Global);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForces(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd, ResultCoordinateSystem coordinateSystem)",
+      "sourceSignature": "MemberForces GetMemberEndForces(string lcTitle, int beamId, int loadCaseId, MemberEnd memberEnd, LocalOrGlobal coordinateSystem)",
+      "xmlSignature": "GetMemberEndForces(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd,StaadPro.Interop.Enums.Output.ResultCoordinateSystem)"
+    },
+    {
+      "returnType": "OutputQueryResult<OffsetAwareMemberEndForces>",
+      "name": "GetMemberEndForcesConsideringOffsets",
+      "parameters": [
+        {
+          "type": "string",
+          "name": "loadCaseTitle"
+        },
+        {
+          "type": "Beam",
+          "name": "beam"
+        },
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        },
+        {
+          "type": "MemberEnd",
+          "name": "memberEnd"
+        }
+      ],
+      "summary": "Retrieves native global member-end forces and an offset-transfer audit packet.",
+      "remarks": "Unlike GetMemberEndForces, this includes native global member-end forces at the analytical face and a managed transfer to the physical joint, with an audit of the global joint-to-face offset. Uses Mjoint = Mface + offset cross F; forces are unchanged. Offset lengths and force/moment units must be mutually consistent; no unit conversion or independent engineering validation is performed. Explicit native NoSpecification is recorded as an absent offset; other offset failures do not become zero. Joint/face naming and transfer follow the main-project convention and require live model qualification before engineering use. Uses supplied hydrated incidence/coordinates; stale caller geometry cannot be certified against STAAD.",
+      "args": "\"Dead\", beam, 1, MemberEnd.Start",
+      "setup": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));",
+      "example": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar result = wrapper.Output.GetMemberEndForcesConsideringOffsets(\"Dead\", beam, 1, MemberEnd.Start);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<OffsetAwareMemberEndForces> GetMemberEndForcesConsideringOffsets(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
+      "sourceSignature": "OffsetAwareMemberEndForces GetMemberEndForcesConsideringOffsets(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
+      "xmlSignature": "GetMemberEndForcesConsideringOffsets(System.String,StaadPro.Interop.Entities.Beam,System.Int32,StaadPro.Interop.Enums.MemberEnd)"
+    },
+    {
+      "returnType": "OutputQueryResult<IdentifiedMemberForces>",
+      "name": "GetMemberEndForcesAtPhysicalJoint",
+      "parameters": [
+        {
+          "type": "string",
+          "name": "loadCaseTitle"
+        },
+        {
+          "type": "Beam",
+          "name": "beam"
+        },
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        },
+        {
+          "type": "MemberEnd",
+          "name": "memberEnd"
+        }
+      ],
+      "summary": "Retrieves the managed global member-end action transferred to the physical joint.",
+      "remarks": "Unlike GetMemberEndForces, this includes native global member-end forces at the analytical face and a managed transfer to the physical joint, with an audit of the global joint-to-face offset. Uses Mjoint = Mface + offset cross F; forces are unchanged. Offset lengths and force/moment units must be mutually consistent; no unit conversion or independent engineering validation is performed. Explicit native NoSpecification is recorded as an absent offset; other offset failures do not become zero. Joint/face naming and transfer follow the main-project convention and require live model qualification before engineering use. Returns only the physical-joint projection; choose GetMemberEndForcesConsideringOffsets to inspect both face and joint results with the offset. This uses analytical members; it is not GetPhysicalMemberEndForces for a native physical-member ID. Supply hydrated incidence/coordinates.",
+      "args": "\"Dead\", beam, 1, MemberEnd.Start",
+      "setup": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));",
+      "example": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar result = wrapper.Output.GetMemberEndForcesAtPhysicalJoint(\"Dead\", beam, 1, MemberEnd.Start);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
+      "sourceSignature": "MemberForces GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
+      "xmlSignature": "GetMemberEndForcesAtPhysicalJoint(System.String,StaadPro.Interop.Entities.Beam,System.Int32,StaadPro.Interop.Enums.MemberEnd)"
+    },
+    {
+      "returnType": "OutputQueryResult<OffsetAwareMemberEndForces>",
+      "name": "GetMemberEndForcesConsideringOffsets",
+      "parameters": [
+        {
+          "type": "string",
+          "name": "loadCaseTitle"
+        },
+        {
+          "type": "int",
+          "name": "memberId"
+        },
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        },
+        {
+          "type": "MemberEnd",
+          "name": "memberEnd"
+        }
+      ],
+      "summary": "Retrieves native global member-end forces and an offset-transfer audit packet.",
+      "remarks": "Unlike GetMemberEndForces, this includes native global member-end forces at the analytical face and a managed transfer to the physical joint, with an audit of the global joint-to-face offset. Uses Mjoint = Mface + offset cross F; forces are unchanged. Offset lengths and force/moment units must be mutually consistent; no unit conversion or independent engineering validation is performed. Explicit native NoSpecification is recorded as an absent offset; other offset failures do not become zero. Joint/face naming and transfer follow the main-project convention and require live model qualification before engineering use. Reads incidence and node coordinates from the current Geometry binding with strict status/written-output validation.",
+      "args": "\"Dead\", 17, 1, MemberEnd.Start",
+      "setup": "",
+      "example": "var result = wrapper.Output.GetMemberEndForcesConsideringOffsets(\"Dead\", 17, 1, MemberEnd.Start);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<OffsetAwareMemberEndForces> GetMemberEndForcesConsideringOffsets(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
+      "sourceSignature": "OffsetAwareMemberEndForces GetMemberEndForcesConsideringOffsets(string loadCaseTitle, int beamId, int loadCaseId, MemberEnd memberEnd)",
+      "xmlSignature": "GetMemberEndForcesConsideringOffsets(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd)"
+    },
+    {
+      "returnType": "OutputQueryResult<IdentifiedMemberForces>",
+      "name": "GetMemberEndForcesAtPhysicalJoint",
+      "parameters": [
+        {
+          "type": "string",
+          "name": "loadCaseTitle"
+        },
+        {
+          "type": "int",
+          "name": "memberId"
+        },
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        },
+        {
+          "type": "MemberEnd",
+          "name": "memberEnd"
+        }
+      ],
+      "summary": "Retrieves the managed global member-end action transferred to the physical joint.",
+      "remarks": "Unlike GetMemberEndForces, this includes native global member-end forces at the analytical face and a managed transfer to the physical joint, with an audit of the global joint-to-face offset. Uses Mjoint = Mface + offset cross F; forces are unchanged. Offset lengths and force/moment units must be mutually consistent; no unit conversion or independent engineering validation is performed. Explicit native NoSpecification is recorded as an absent offset; other offset failures do not become zero. Joint/face naming and transfer follow the main-project convention and require live model qualification before engineering use. Returns only the physical-joint projection; choose GetMemberEndForcesConsideringOffsets to inspect both face and joint results with the offset. This uses analytical members; it is not GetPhysicalMemberEndForces for a native physical-member ID. Resolves native incidence/coordinates.",
+      "args": "\"Dead\", 17, 1, MemberEnd.Start",
+      "setup": "",
+      "example": "var result = wrapper.Output.GetMemberEndForcesAtPhysicalJoint(\"Dead\", 17, 1, MemberEnd.Start);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
+      "sourceSignature": "MemberForces GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, int beamId, int loadCaseId, MemberEnd memberEnd)",
+      "xmlSignature": "GetMemberEndForcesAtPhysicalJoint(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd)"
+    },
+    {
+      "returnType": "MemberCoordinateSystem",
+      "name": "GetMemberLocalCoordinateSystem",
+      "parameters": [
+        {
+          "type": "Beam",
+          "name": "member"
+        }
+      ],
+      "summary": "Computes a right-handed managed member basis from supplied geometry and beta degrees.",
+      "remarks": "Uses no native result query. Unlike requesting native Local/Global axes, this is a geometry convention, not native orientation read-back. Supply hydrated distinct nodes and the intended finite beta angle. X follows start to end; projected global Y defines the reference except near vertical, where projected global Z defines Z. Beta rotates Y/Z about positive X. Native orientation rules or stale caller geometry can differ; prefer native axis selection for Output extraction. The returned pure transforms change axes without converting units.",
+      "args": "beam",
+      "setup": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));",
+      "frame": true,
+      "example": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar result = wrapper.Output.GetMemberLocalCoordinateSystem(beam);\nSystem.Console.WriteLine(result.XAxis);",
+      "signature": "MemberCoordinateSystem GetMemberLocalCoordinateSystem(Beam member)",
+      "sourceSignature": "LocalCS GetMemberLocalCoordinateSystem(Beam member)",
+      "xmlSignature": "GetMemberLocalCoordinateSystem(StaadPro.Interop.Entities.Beam)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCenterForces>",
+      "name": "GetPlateCenterForces",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        }
+      ],
+      "summary": "Retrieves the selected result family at a plate center using entity identities.",
+      "remarks": "Returns the five native center force/stress components, not the three center moments or combined eight-value stress/moment packet. Equivalent to the corresponding numeric-ID query; only case and plate IDs select native results. Captures identities before dispatch and does not hydrate geometry, validate case membership or read native case titles. Uses native plate-local axes and face conventions; no corner or arbitrary-point interpolation.",
+      "args": "loadCase, plate",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };\nvar result = wrapper.Output.GetPlateCenterForces(loadCase, plate);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<PlateCenterForces> GetPlateCenterForces(ILoadCase loadCase, Plate plate)",
+      "sourceSignature": "PlateCenterForces GetPlateCenterForces(ILoadCase loadCase, Plate plate)",
+      "xmlSignature": "GetPlateCenterForces(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCenterMoments>",
+      "name": "GetPlateCenterMoments",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        }
+      ],
+      "summary": "Retrieves moments at a plate center using entity identities.",
+      "remarks": "Returns the three native center bending/twisting moments per unit width, not the five center force/stress components. Equivalent to the corresponding numeric-ID query; only case and plate IDs select native results. Captures identities before dispatch and does not hydrate geometry, validate case membership or read native case titles. Uses native plate-local axes and face conventions; no corner or arbitrary-point interpolation.",
+      "args": "loadCase, plate",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };\nvar result = wrapper.Output.GetPlateCenterMoments(loadCase, plate);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<PlateCenterMoments> GetPlateCenterMoments(ILoadCase loadCase, Plate plate)",
+      "sourceSignature": "PlateCenterMoments GetPlateCenterMoments(ILoadCase loadCase, Plate plate)",
+      "xmlSignature": "GetPlateCenterMoments(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCenterVonMises>",
+      "name": "GetPlateCenterVonMises",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        }
+      ],
+      "summary": "Retrieves the selected result family at a plate center using entity identities.",
+      "remarks": "Returns top/bottom center von Mises stresses, not normal principal stresses or principal directions. Equivalent to the corresponding numeric-ID query; only case and plate IDs select native results. Captures identities before dispatch and does not hydrate geometry, validate case membership or read native case titles. Uses native plate-local axes and face conventions; no corner or arbitrary-point interpolation.",
+      "args": "loadCase, plate",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };\nvar result = wrapper.Output.GetPlateCenterVonMises(loadCase, plate);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<PlateCenterVonMises> GetPlateCenterVonMises(ILoadCase loadCase, Plate plate)",
+      "sourceSignature": "PlateCenterVonMises GetPlateCenterVonMises(ILoadCase loadCase, Plate plate)",
+      "xmlSignature": "GetPlateCenterVonMises(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlatePrincipalStresses>",
+      "name": "GetPlatePrincipalStresses",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        }
+      ],
+      "summary": "Retrieves the selected result family at a plate center using entity identities.",
+      "remarks": "Returns top/bottom center normal principal stresses, not von Mises stresses or principal directions. Equivalent to the corresponding numeric-ID query; only case and plate IDs select native results. Captures identities before dispatch and does not hydrate geometry, validate case membership or read native case titles. Uses native plate-local axes and face conventions; no corner or arbitrary-point interpolation.",
+      "args": "loadCase, plate",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };\nvar result = wrapper.Output.GetPlatePrincipalStresses(loadCase, plate);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<PlatePrincipalStresses> GetPlatePrincipalStresses(ILoadCase loadCase, Plate plate)",
+      "sourceSignature": "PlatePrincipalStresses GetPlatePrincipalStresses(ILoadCase loadCase, Plate plate)",
+      "xmlSignature": "GetPlatePrincipalStresses(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCenterResults>",
+      "name": "GetPlateCenterResults",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        }
+      ],
+      "summary": "Retrieves four qualified result families for one plate center.",
+      "remarks": "Unlike individual plate-center family queries, this composes forces, moments, von Mises and normal principal stresses from four existing native calls. It is not the eight-value combined stress/moment native query. All four are observed even when an ordinary native failure occurs; the first failure determines Status and Data remains unavailable. Observations retains each contributing status; exceptions abort immediately. The calls are sequential observations, not an atomic solver snapshot. Native plate-local axes, top/bottom conventions and family-specific units are preserved.",
+      "args": "loadCase, plate",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };\nvar result = wrapper.Output.GetPlateCenterResults(loadCase, plate);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<PlateCenterResults> GetPlateCenterResults(ILoadCase loadCase, Plate plate)",
+      "sourceSignature": "PlateCenterResults GetPlateCenterResults(ILoadCase loadCase, Plate plate)",
+      "xmlSignature": "GetPlateCenterResults(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)"
+    },
+    {
+      "returnType": "OutputBatchResult<PlateCenterResults>",
+      "name": "GetPlateCenterResults",
+      "parameters": [
+        {
+          "type": "IEnumerable<ILoadCase>",
+          "name": "loadCases"
+        },
+        {
+          "type": "IEnumerable<Plate>",
+          "name": "plates"
+        }
+      ],
+      "summary": "Retrieves four plate-center result families for a Cartesian selection.",
+      "remarks": "Unlike individual plate-center family queries, this composes forces, moments, von Mises and normal principal stresses from four existing native calls. It is not the eight-value combined stress/moment native query. All four are observed even when an ordinary native failure occurs; the first failure determines Status and Data remains unavailable. Observations retains each contributing status; exceptions abort immediately. The calls are sequential observations, not an atomic solver snapshot. Native plate-local axes, top/bottom conventions and family-specific units are preserved. Snapshots both sequences once, then queries case-major/plate-minor Cartesian order. Duplicate selections are retained; conflicting metadata for the same case number is rejected. Ordinary per-pair failures remain in Items. Empty products perform no native queries.",
+      "args": "new[] { loadCase }, new[] { plate }",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };\nvar result = wrapper.Output.GetPlateCenterResults(new[] { loadCase }, new[] { plate });\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data);\n    else System.Console.WriteLine(item.Status);",
+      "signature": "OutputBatchResult<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
+      "sourceSignature": "IEnumerable<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
+      "xmlSignature": "GetPlateCenterResults(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Plate})"
+    },
+    {
+      "returnType": "OutputBatchResult<PlateCenterResults>",
+      "name": "GetPlateCenterResults",
+      "parameters": [
+        {
+          "type": "IEnumerable<ILoadCase>",
+          "name": "loadCases"
+        },
+        {
+          "type": "IEnumerable<Plate>",
+          "name": "plates"
+        },
+        {
+          "type": "int",
+          "name": "degreeOfParallelism"
+        }
+      ],
+      "summary": "Retrieves plate-center result sets with an explicit compatibility scheduling hint.",
+      "remarks": "Unlike individual plate-center family queries, this composes forces, moments, von Mises and normal principal stresses from four existing native calls. It is not the eight-value combined stress/moment native query. All four are observed even when an ordinary native failure occurs; the first failure determines Status and Data remains unavailable. Observations retains each contributing status; exceptions abort immediately. The calls are sequential observations, not an atomic solver snapshot. Native plate-local axes, top/bottom conventions and family-specific units are preserved. Snapshots both sequences once, then queries case-major/plate-minor Cartesian order. Duplicate selections are retained; conflicting metadata for the same case number is rejected. Ordinary per-pair failures remain in Items. Empty products perform no native queries. Unlike the main-source parallel implementation, degreeOfParallelism (1-64) is retained as a compatibility planning hint; every COM call remains serialized on the caller thread. It does not request native worker threads or promise parallel speedup.",
+      "args": "new[] { loadCase }, new[] { plate }, 2",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar plate = new Plate { Id = 17 };\nvar result = wrapper.Output.GetPlateCenterResults(new[] { loadCase }, new[] { plate }, 2);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data);\n    else System.Console.WriteLine(item.Status);",
+      "signature": "OutputBatchResult<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates, int degreeOfParallelism)",
+      "sourceSignature": "IEnumerable<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates, int nThreads)",
+      "xmlSignature": "GetPlateCenterResults(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Plate},System.Int32)"
+    },
+    {
+      "returnType": "OutputBatchResult<StaticCheckResult>",
+      "name": "GetStaticCheckResults",
+      "parameters": [
+        {
+          "type": "IEnumerable<int>",
+          "name": "loadCaseIds"
+        }
+      ],
+      "summary": "Retrieves static equilibrium observations for an ordered case selection.",
+      "remarks": "Unlike GetStaticCheckResult(int), this returns an ordered list of independent case results, including duplicate case requests and failed observations. It does not collapse equal force records in a HashSet. Preserves native global total loads/reactions and their original signs; does not negate reactions, compute an equilibrium tolerance or assert that analysis is current.",
+      "args": "new[] { 1, 2 }",
+      "setup": "",
+      "example": "var result = wrapper.Output.GetStaticCheckResults(new[] { 1, 2 });\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data);\n    else System.Console.WriteLine(item.Status);",
+      "signature": "OutputBatchResult<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds)",
+      "sourceSignature": "HashSet<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds)",
+      "xmlSignature": "GetStaticCheckResults(System.Collections.Generic.IEnumerable{System.Int32})"
+    },
+    {
+      "returnType": "OutputBatchResult<StaticCheckResult>",
+      "name": "GetStaticCheckResults",
+      "parameters": [
+        {
+          "type": "IEnumerable<int>",
+          "name": "loadCaseIds"
+        },
+        {
+          "type": "int",
+          "name": "degreeOfParallelism"
+        }
+      ],
+      "summary": "Retrieves ordered static checks with an explicit compatibility scheduling hint.",
+      "remarks": "Unlike GetStaticCheckResult(int), this returns an ordered list of independent case results, including duplicate case requests and failed observations. It does not collapse equal force records in a HashSet. Preserves native global total loads/reactions and their original signs; does not negate reactions, compute an equilibrium tolerance or assert that analysis is current. degreeOfParallelism (1-64) is a compatibility planning hint; COM dispatch stays serialized on the caller thread and creates no tasks.",
+      "args": "new[] { 1, 2 }, 2",
+      "setup": "",
+      "example": "var result = wrapper.Output.GetStaticCheckResults(new[] { 1, 2 }, 2);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data);\n    else System.Console.WriteLine(item.Status);",
+      "signature": "OutputBatchResult<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds, int degreeOfParallelism)",
+      "sourceSignature": "HashSet<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds, int nThreads)",
+      "xmlSignature": "GetStaticCheckResults(System.Collections.Generic.IEnumerable{System.Int32},System.Int32)"
+    },
+    {
+      "returnType": "OutputQueryResult<ForceComponents>",
+      "name": "GetSupportForces",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "nodeId"
+        },
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        }
+      ],
+      "summary": "Retrieves the opposite of the native support reaction for use as an applied support action.",
+      "remarks": "Unlike GetSupportReactions, this negates all six global components, including moments, to preserve the main-project support-action convention. Native failure remains a failure without Data. No force or moment unit conversion, support assignment or model update is performed. Choose GetSupportReactions when the original STAAD reaction sign is required.",
+      "args": "17, 1",
+      "setup": "",
+      "example": "var result = wrapper.Output.GetSupportForces(17, 1);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<ForceComponents> GetSupportForces(int nodeId, int loadCaseId)",
+      "sourceSignature": "LoadCaseForces GetSupportForces(int supportId, int loadCaseId)",
+      "xmlSignature": "GetSupportForces(System.Int32,System.Int32)"
+    },
+    {
+      "returnType": "OutputQueryResult<ForceComponents>",
+      "name": "GetMemberEndForces",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "memberId"
+        },
+        {
+          "type": "MemberEnd",
+          "name": "memberEnd"
+        },
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        },
+        {
+          "type": "ResultCoordinateSystem",
+          "name": "coordinateSystem"
+        }
+      ],
+      "summary": "Retrieves analytical member-end actions in explicitly selected native axes.",
+      "remarks": "Unlike the existing three-argument overload, this sends the requested Local or Global selector to STAAD. Unlike the title overloads, it returns only the six components with envelope identities. It does not reconstruct beta/local axes or transfer offsets. Native member-end signs are unchanged.",
+      "args": "17, MemberEnd.Start, 1, ResultCoordinateSystem.Global",
+      "setup": "",
+      "newTyped": true,
+      "example": "var result = wrapper.Output.GetMemberEndForces(17, MemberEnd.Start, 1, ResultCoordinateSystem.Global);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<ForceComponents> GetMemberEndForces(int memberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem)",
+      "sourceSignature": null,
+      "xmlSignature": "GetMemberEndForces(System.Int32,StaadPro.Interop.Enums.MemberEnd,System.Int32,StaadPro.Interop.Enums.Output.ResultCoordinateSystem)"
+    },
+    {
+      "returnType": "OutputQueryResult<double>",
+      "name": "GetMemberSteelUtilizationRatio",
+      "parameters": [
+        {
+          "type": "Beam",
+          "name": "beam"
+        }
+      ],
+      "summary": "Retrieves the current native utilization observation for a caller beam identity.",
+      "remarks": "Equivalent to the numeric-ID query, capturing the positive beam ID and checking it after dispatch. It does not populate Beam.UtilizationRatio; choose PopulateMemberSteelUtilizationRatios for staged cache updates. The ratio is dimensionless and this does not run or certify current steel design.",
+      "args": "beam",
+      "setup": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));",
+      "newTyped": true,
+      "example": "var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));\nvar result = wrapper.Output.GetMemberSteelUtilizationRatio(beam);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);\nelse System.Console.WriteLine(result.Status);",
+      "signature": "OutputQueryResult<double> GetMemberSteelUtilizationRatio(Beam beam)",
+      "sourceSignature": null,
+      "xmlSignature": "GetMemberSteelUtilizationRatio(StaadPro.Interop.Entities.Beam)"
+    }
+  ]
+}

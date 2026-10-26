@@ -25,7 +25,7 @@ namespace StaadPro.Interop.Tests.Adapter
         private static readonly string[] ArrayNames = { "GetBucklingModeDisplacements", "GetRelativeMemberDisplacement", "GetAbsoluteMemberDisplacement", "GetPhysicalMemberEndForces", "GetMemberForcesAtDistance", "GetPhysicalMemberForcesAtDistance", "GetSolidNormalStresses", "GetSolidShearStresses", "GetSolidPrincipalStresses" };
         private static string NativeName(string name) => NativeNames[Array.IndexOf(Names, name)];
         private static OpenStaadWrapper Wrap(OutputAdvancedFixture.Native native, int major = 26) => new OpenStaadWrapper(new OutputAdvancedFixture.Root { Output = native, Major = major });
-        private static object[] Args(string name) => typeof(IOSOutput).GetMethod(name).GetParameters().Select(p =>
+        private static object[] Args(string name) => typeof(IOSOutput).GetMethods().Single(m => m.Name == name && !m.GetParameters().Any(p => p.ParameterType == typeof(string))).GetParameters().Select(p =>
             p.ParameterType == typeof(MemberEnd) ? (object)MemberEnd.End :
             p.ParameterType == typeof(ResultCoordinateSystem) ? ResultCoordinateSystem.Local :
             p.ParameterType == typeof(ResponseDegreeOfFreedom) ? ResponseDegreeOfFreedom.TranslationX :
@@ -37,7 +37,7 @@ namespace StaadPro.Interop.Tests.Adapter
             p.Name == "loadCaseId" ? 41 : 17).ToArray();
         private static object Invoke(IOSOutput output, string name, object[] args = null)
         {
-            try { return typeof(IOSOutput).GetMethod(name).Invoke(output, args ?? Args(name)); }
+            try { return typeof(IOSOutput).GetMethods().Single(m => m.Name == name && !m.GetParameters().Any(p => p.ParameterType == typeof(string))).Invoke(output, args ?? Args(name)); }
             catch (TargetInvocationException ex) { ExceptionDispatchInfo.Capture(ex.InnerException).Throw(); throw; }
         }
         private static object Property(object result,string name) => result.GetType().GetProperty(name).GetValue(result);
@@ -109,7 +109,7 @@ namespace StaadPro.Interop.Tests.Adapter
         {
             var n=new OutputAdvancedFixture.Native();using(var w=Wrap(n))
             {
-                var parameters=typeof(IOSOutput).GetMethod(name).GetParameters();
+                var parameters=typeof(IOSOutput).GetMethods().Single(m => m.Name == name && !m.GetParameters().Any(p => p.ParameterType == typeof(string))).GetParameters();
                 for(int i=0;i<parameters.Length;i++)
                 {
                     var args=Args(name);var p=parameters[i];

@@ -87,7 +87,7 @@ namespace StaadPro.Interop.Tests.Adapter
         private static object Property(object result, string name) => result.GetType().GetProperty(name).GetValue(result);
         private static string NativeName(string name)
         { switch (name) { case "GetAnalysisResultAvailability": return "AreResultsAvailable"; case "GetBucklingResultAvailability": return "IsBucklingAnalysisResultsAvailable"; case "GetPlateCenterStressesAndMoments": return "GetAllPlateCenterStressesAndMoments"; case "GetPlateCenterForces": return "GetAllPlateCenterForces"; case "GetPlateCenterMoments": return "GetAllPlateCenterMoments"; case "GetPlateCenterPrincipalStressesAndAngles": return "GetAllPlateCenterPrincipalStressesAndAngles"; case "GetPlateCenterPrincipalStressesAndAnglesEx": return "GetAllPlateCenterPrincipalStressesAndAnglesEx"; case "GetMemberSteelUtilizationRatio": return "GetMemberSteelDesignRatio"; default: return name; } }
-        private static readonly MethodInfo[] Queries = typeof(IOSOutput).GetMethods().Where(m => !m.IsSpecialName && typeof(Native).GetMethod(NativeName(m.Name)) != null).ToArray();
+        private static readonly MethodInfo[] Queries = typeof(IOSOutput).GetMethods().Where(m => !m.IsSpecialName && m.GetParameters().All(p => p.ParameterType == typeof(int) || p.ParameterType == typeof(MemberEnd)) && typeof(Native).GetMethod(NativeName(m.Name)) != null).ToArray();
         private static IEnumerable<TestCaseData> EveryQuery => Queries.Select(m => new TestCaseData(m).SetArgDisplayNames(m.Name));
         private static IEnumerable<TestCaseData> Retrievals => Queries.Where(m => m.Name != "GetAnalysisResultAvailability" &&
             m.Name != "GetBucklingResultAvailability" && m.Name != "GetMemberDesignSectionName").Select(m => new TestCaseData(m));
@@ -320,16 +320,17 @@ namespace StaadPro.Interop.Tests.Adapter
             }
         }
         [Test]
-        public void PublicContractHasFortyTypedOperationsWithoutReferenceOutputs()
+        public void PublicContractHasSeventyOneTypedOperationsWithoutReferenceOutputs()
         {
             Assert.That(Queries, Has.Length.EqualTo(15));
             var all = typeof(IOSOutput).GetMethods().Where(m => !m.IsSpecialName).ToArray();
-            Assert.That(all, Has.Length.EqualTo(40));
+            Assert.That(all, Has.Length.EqualTo(71));
             foreach (var method in all)
             {
                 Assert.That(method.GetParameters().Any(p => p.ParameterType.IsByRef), Is.False);
-                Assert.That(method.ReturnType.GetGenericTypeDefinition(), Is.EqualTo(typeof(OutputQueryResult<>)));
-                Assert.That(typeof(OSOutputAdapter).GetMethod(method.Name), Is.Not.Null);
+                Assert.That(method.ReturnType == typeof(MemberCoordinateSystem) || method.ReturnType == typeof(OutputPopulationResult) ||
+                    method.ReturnType.IsGenericType && new[] { typeof(OutputQueryResult<>), typeof(OutputBatchResult<>) }.Contains(method.ReturnType.GetGenericTypeDefinition()), Is.True);
+                Assert.That(typeof(OSOutputAdapter).GetMethod(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray()), Is.Not.Null);
             }
         }
     }

@@ -6,6 +6,8 @@ Added 25 documented Output routes to IOSOutput and the single non-partial OSOutp
 
 Import `StaadPro.Interop.Enums.Output` for the new coordinate, response and design enums, and `StaadPro.Interop.Models.Output` for named results. Examples assume an already acquired `wrapper` and `output = wrapper.Output`, running on the established COM apartment.
 
+**Current source checkpoint:** six later steel-design routes bring Output to 46/60, with fourteen remaining. See [the steel-block guide](Output-Steel-Design-Blocks.md). The 40/60 and twenty-pending figures above describe the preceding increment.
+
 ## Public contracts
 
 Every signature below returns OutputQueryResult<T>: inspect IsSuccessful before Data. A failed result has no qualified payload; reading Data throws InvalidOperationException. Native Boolean evidence and integral codes remain separate in NativeBooleanReturn and NativeReturnCode when recorded. Transport exceptions propagate without retry; a malformed successful response throws instead of publishing default values. Counts are integral data, not flags.

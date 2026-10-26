@@ -124,6 +124,11 @@ namespace StaadPro.Interop.Entities
         [JsonIgnore]
         public Vector3D ToVector => StartNode != null && EndNode != null ? Node.GetVector3D(StartNode, EndNode) : default;
 
+        /// <summary>Gets or sets the last explicitly populated managed steel utilization ratio; null until supplied.</summary>
+        /// <remarks>Output.PopulateMemberSteelUtilizationRatios stages qualified native reads before applying values. This cache is not proof of result freshness or PASS/FAIL, and setting it does not change STAAD.</remarks>
+        [JsonIgnore]
+        public double? UtilizationRatio { get => Get<double?>(); set => Set(value); }
+
         /// <include file="../Documentation/ApiMembers.xml" path="doc/members/member[@name='Beam.P:Length']/*" />
         [JsonIgnore]
         public double Length => StartNode != null && EndNode != null

@@ -2,9 +2,16 @@
 
 **Review date:** 23 October 2026<br>
 **Baseline:** `687420d96014f203152fcf2e40979e5b5f351b1c`<br>
-**Status:** Documentation and implementation proposals only; no Support functions were ported.
+**Implementation updated:** 26 October 2026<br>
+**Status:** 19 common documented routes implemented; 16 remain pending; native qualification remains separate.
 
 Read the [architecture and implementation plan](OpenSTAAD-Support-Multi-Version-Architecture-and-Plan.md) for decisions, source limitations and verification gates. The [comparison JSON](data/OpenSTAAD-Support-2024-2026-Comparison.json) preserves each year, exact declarations, full parameter/return tables, source maps and fingerprints.
+
+## Current implementation - foundation and mutation contracts
+
+Implemented **19 common documented Support routes**, leaving **16/35 pending**. The new surface covers supported-node discovery, typed support information and GUIDs, foundation counts/readback, explicit fixed/pinned/fixed-but creation, assignment, unassignment, deletion and void GUID invocation. One internal shared service validates operation-specific counts/types/flags, owned bounded buffers and binding lifetime. Reused existing Releases/Springs packets and ported the main-project enums without private UI dependencies. See [all 19 contracts](../Support-Foundations.md).
+
+Release build passed with zero warnings/errors and **5,523 offline tests** (170 new cases). Isolated documentation/package verification covers **1,052 selected XML examples**, including all 92 Output and 38 Support examples. Managed fixtures do not certify live 2024–2026 COM or engineering behavior.
 
 ## 1. Scope and counting
 
@@ -12,49 +19,49 @@ Each version has 35 detailed Support functions across three group pages. All dec
 
 Both inspected 2025/2026 IOSSupportUI interfaces contain exactly the same 35 methods, covering the same names as help. Native class listings contain 42 names: those 35 functions and seven implementation/lifecycle helpers, excluded below. No supplemental automation-only name was found.
 
-The current IOSSupport and OSSupportAdapter expose zero domain methods; ComObject and inherited Wrapper are binding properties. The main source has 33 matching interface/public-adapter overloads and no private adapter methods. Those call eighteen distinct native names, leaving seventeen without a main-adapter target. Two managed overloads are obsolete(error=true), and other branches are incomplete; source presence is not a native verification claim.
+The current IOSSupport and OSSupportAdapter expose nineteen domain methods reaching nineteen of thirty-five documented native routes; ComObject and inherited Wrapper are binding properties. The main source has 33 matching interface/public-adapter overloads and no private adapter methods. Those call eighteen distinct native names, leaving seventeen without a main-adapter target. Two managed overloads are obsolete(error=true), and other branches are incomplete; source presence is not a native verification claim.
 
 All 35 native names are pending as typed managed APIs in this repository. Each proposal below returns a named status/data result; no new public ref/out, tuple or proprietary vendor COM type is proposed. A common implementation is justified by current evidence; separate year implementations would add unsupported distinctions.
 
 ## 2. Complete cross-version matrix
 
-| Native Support function | Return (all years) | 2024 / 2025 / 2026 | Main call target | Plan |
-| --- | --- | --- | --- | --- |
-| `CreateSupportFixed` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaccbf813fd3847a7f863ca83642abded3) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaccbf813fd3847a7f863ca83642abded3) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaccbf813fd3847a7f863ca83642abded3) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L84) | S6 |
-| `CreateSupportPinned` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga5e2e4d1263c4218440d8d96d634b459f) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga5e2e4d1263c4218440d8d96d634b459f) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga5e2e4d1263c4218440d8d96d634b459f) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L80) | S6 |
-| `CreateSupportFixedBut` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gad7e5628fc73b89b32f8d70f18cc81e78) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gad7e5628fc73b89b32f8d70f18cc81e78) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gad7e5628fc73b89b32f8d70f18cc81e78) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L89) | S6 |
-| `AssignSupportToNode` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gae45409664dab164fc6ce4fbb296c9a1e) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gae45409664dab164fc6ce4fbb296c9a1e) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gae45409664dab164fc6ce4fbb296c9a1e) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L62) | S6 |
-| `GetSupportName` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga73977d3c7ddb234e8d88f2b87a08f15d) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga73977d3c7ddb234e8d88f2b87a08f15d) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga73977d3c7ddb234e8d88f2b87a08f15d) | No target | S3 |
-| `GetSupportUniqueID` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaa8d7c16ec66a713c07c99b5f3bde2efa) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaa8d7c16ec66a713c07c99b5f3bde2efa) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaa8d7c16ec66a713c07c99b5f3bde2efa) | No target | S3 |
-| `SetSupportUniqueID` | `void` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga2ed3d0f63a68576e7a81f57591be743e) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga2ed3d0f63a68576e7a81f57591be743e) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga2ed3d0f63a68576e7a81f57591be743e) | No target | S8 |
-| `RemoveSupportFromNode` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaf77763c62a89f04dc29fbd9b0e0d037d) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaf77763c62a89f04dc29fbd9b0e0d037d) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaf77763c62a89f04dc29fbd9b0e0d037d) | No target | S8 |
-| `DeleteSupport` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga63e369a9e50538229af6c07d73ae7845) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga63e369a9e50538229af6c07d73ae7845) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga63e369a9e50538229af6c07d73ae7845) | No target | S8 |
-| `CreateInclinedSupport` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga0de3290e927f957f41a1bd6e0e3abeac) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga0de3290e927f957f41a1bd6e0e3abeac) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga0de3290e927f957f41a1bd6e0e3abeac) | No target | S7 |
-| `CreateElasticMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga49d5757efd9c46e1acd59260b1ead221) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga49d5757efd9c46e1acd59260b1ead221) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga49d5757efd9c46e1acd59260b1ead221) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L108) | S7 |
-| `RemoveElasticMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga153b6a29601fbe3ff99e9b5d559433a7) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga153b6a29601fbe3ff99e9b5d559433a7) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga153b6a29601fbe3ff99e9b5d559433a7) | No target | S8 |
-| `RemoveElasticMatFromNode` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga5f7616e7bb3baf0f1e8e3f8c1984c701) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga5f7616e7bb3baf0f1e8e3f8c1984c701) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga5f7616e7bb3baf0f1e8e3f8c1984c701) | No target | S8 |
-| `AssignSupportToEntityList` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga86ef9166a6e38cc1d19f0138fb01d07b) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga86ef9166a6e38cc1d19f0138fb01d07b) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga86ef9166a6e38cc1d19f0138fb01d07b) | No target | S6 |
-| `CreatePlateMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaa1e39b95a2e56588edd55118f6c9c544) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaa1e39b95a2e56588edd55118f6c9c544) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaa1e39b95a2e56588edd55118f6c9c544) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L114) | S7 |
-| `RemovePlateMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga81c64bbb52a4fb50612139675971f7d8) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga81c64bbb52a4fb50612139675971f7d8) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga81c64bbb52a4fb50612139675971f7d8) | No target | S8 |
-| `RemovePlateMatFromPlate` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaaa030000531d9773c5b032432c4b4215) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaaa030000531d9773c5b032432c4b4215) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaaa030000531d9773c5b032432c4b4215) | No target | S8 |
-| `CreateElasticFooting` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga1eb1b863f39109878125d792c62fbccc) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga1eb1b863f39109878125d792c62fbccc) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga1eb1b863f39109878125d792c62fbccc) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L103) | S7 |
-| `RemoveElasticFooting` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gab41a4e6af27c329d359f845891db80d8) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gab41a4e6af27c329d359f845891db80d8) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gab41a4e6af27c329d359f845891db80d8) | No target | S8 |
-| `RemoveElasticFootingFromNode` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gacc712e1e6a56cb8618f30108ee913aa0) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gacc712e1e6a56cb8618f30108ee913aa0) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gacc712e1e6a56cb8618f30108ee913aa0) | No target | S8 |
-| `GetSupportCount` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga2399fd56b13e12e5fa80e99ac0bbbd8c) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga2399fd56b13e12e5fa80e99ac0bbbd8c) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga2399fd56b13e12e5fa80e99ac0bbbd8c) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L128) | S2 |
-| `GetSupportNodes` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga8921a39485dbf131b14e8b7362d93ed5) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga8921a39485dbf131b14e8b7362d93ed5) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga8921a39485dbf131b14e8b7362d93ed5) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L169) | S2 |
-| `GetSupportType` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga222d7ca1ee337f5fdc17b765c9f452f5) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga222d7ca1ee337f5fdc17b765c9f452f5) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga222d7ca1ee337f5fdc17b765c9f452f5) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L191) | S2 |
-| `GetSupportInformation` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga5cebc53658e2c36b81dde5f3e8c1c961) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga5cebc53658e2c36b81dde5f3e8c1c961) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga5cebc53658e2c36b81dde5f3e8c1c961) | No target | S2 |
-| `GetSupportInformationEx` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga44751a360dec5b32dc6f4dc8149f9e64) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga44751a360dec5b32dc6f4dc8149f9e64) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga44751a360dec5b32dc6f4dc8149f9e64) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L222) | S3 |
-| `GetCountOfElasticMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga384870741da40646f01f9e3201daf5dd) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga384870741da40646f01f9e3201daf5dd) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga384870741da40646f01f9e3201daf5dd) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L368) | S4 |
-| `GetElasticMatDetail` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga1a8d6f586d8a9000a37b5c802487ca1a) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga1a8d6f586d8a9000a37b5c802487ca1a) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga1a8d6f586d8a9000a37b5c802487ca1a) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L438) | S4 |
-| `GetElasticMatAssignmentList` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga45260b57daac5ddd1c0f95074f25ed72) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga45260b57daac5ddd1c0f95074f25ed72) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga45260b57daac5ddd1c0f95074f25ed72) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L454) | S4 |
-| `GetCountOfPlateMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#gaebf5cc1e4a8e0e3792695bb8e584102b) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#gaebf5cc1e4a8e0e3792695bb8e584102b) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#gaebf5cc1e4a8e0e3792695bb8e584102b) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L346) | S4 |
-| `GetPlateMatSupportId` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#gaf19c74e5767bab8c670353de21a5b5c4) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#gaf19c74e5767bab8c670353de21a5b5c4) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#gaf19c74e5767bab8c670353de21a5b5c4) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L351) | S4 |
-| `GetPlateMatDetail` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga195575a1227391d9ed4921902779b769) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga195575a1227391d9ed4921902779b769) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga195575a1227391d9ed4921902779b769) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L398) | S4 |
-| `GetPlateMatAssignmentList` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#gadb8f00f7184d2f6684ebb3fcb0c53754) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#gadb8f00f7184d2f6684ebb3fcb0c53754) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#gadb8f00f7184d2f6684ebb3fcb0c53754) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L414) | S4 |
-| `GetCountOfElasticFooting` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga6091112d45f222bd5c72971f8b555361) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga6091112d45f222bd5c72971f8b555361) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga6091112d45f222bd5c72971f8b555361) | No target | S5 |
-| `GetElasticFootingDetail` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga2fa98d49a023f379ef4e2d56dc5aa96b) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga2fa98d49a023f379ef4e2d56dc5aa96b) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga2fa98d49a023f379ef4e2d56dc5aa96b) | No target | S5 |
-| `GetElasticFootingAssignmentList` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga43dc24b4de9c9362ccb2716faa1e22d4) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga43dc24b4de9c9362ccb2716faa1e22d4) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga43dc24b4de9c9362ccb2716faa1e22d4) | No target | S5 |
+| Native Support function | Return (all years) | 2024 / 2025 / 2026 | Main call target | Plan | Current coverage |
+| --- | --- | --- | --- | --- | --- |
+| `CreateSupportFixed` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaccbf813fd3847a7f863ca83642abded3) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaccbf813fd3847a7f863ca83642abded3) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaccbf813fd3847a7f863ca83642abded3) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L84) | S6 | Implemented: `CreateFixedSupport`; live pending |
+| `CreateSupportPinned` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga5e2e4d1263c4218440d8d96d634b459f) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga5e2e4d1263c4218440d8d96d634b459f) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga5e2e4d1263c4218440d8d96d634b459f) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L80) | S6 | Implemented: `CreatePinnedSupport`; live pending |
+| `CreateSupportFixedBut` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gad7e5628fc73b89b32f8d70f18cc81e78) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gad7e5628fc73b89b32f8d70f18cc81e78) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gad7e5628fc73b89b32f8d70f18cc81e78) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L89) | S6 | Implemented: `CreateFixedButSupport`; live pending |
+| `AssignSupportToNode` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gae45409664dab164fc6ce4fbb296c9a1e) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gae45409664dab164fc6ce4fbb296c9a1e) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gae45409664dab164fc6ce4fbb296c9a1e) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L62) | S6 | Implemented: `AssignSupportToNodes`; live pending |
+| `GetSupportName` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga73977d3c7ddb234e8d88f2b87a08f15d) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga73977d3c7ddb234e8d88f2b87a08f15d) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga73977d3c7ddb234e8d88f2b87a08f15d) | No target | S3 | Pending |
+| `GetSupportUniqueID` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaa8d7c16ec66a713c07c99b5f3bde2efa) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaa8d7c16ec66a713c07c99b5f3bde2efa) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaa8d7c16ec66a713c07c99b5f3bde2efa) | No target | S3 | Implemented: `GetSupportUniqueId`; live pending |
+| `SetSupportUniqueID` | `void` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga2ed3d0f63a68576e7a81f57591be743e) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga2ed3d0f63a68576e7a81f57591be743e) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga2ed3d0f63a68576e7a81f57591be743e) | No target | S8 | Implemented: `SetSupportUniqueId`; live pending |
+| `RemoveSupportFromNode` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaf77763c62a89f04dc29fbd9b0e0d037d) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaf77763c62a89f04dc29fbd9b0e0d037d) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaf77763c62a89f04dc29fbd9b0e0d037d) | No target | S8 | Implemented: `RemoveSupportFromNode`; live pending |
+| `DeleteSupport` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga63e369a9e50538229af6c07d73ae7845) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga63e369a9e50538229af6c07d73ae7845) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga63e369a9e50538229af6c07d73ae7845) | No target | S8 | Implemented: `DeleteSupport`; live pending |
+| `CreateInclinedSupport` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga0de3290e927f957f41a1bd6e0e3abeac) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga0de3290e927f957f41a1bd6e0e3abeac) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga0de3290e927f957f41a1bd6e0e3abeac) | No target | S7 | Pending |
+| `CreateElasticMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga49d5757efd9c46e1acd59260b1ead221) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga49d5757efd9c46e1acd59260b1ead221) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga49d5757efd9c46e1acd59260b1ead221) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L108) | S7 | Pending |
+| `RemoveElasticMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga153b6a29601fbe3ff99e9b5d559433a7) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga153b6a29601fbe3ff99e9b5d559433a7) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga153b6a29601fbe3ff99e9b5d559433a7) | No target | S8 | Pending |
+| `RemoveElasticMatFromNode` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga5f7616e7bb3baf0f1e8e3f8c1984c701) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga5f7616e7bb3baf0f1e8e3f8c1984c701) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga5f7616e7bb3baf0f1e8e3f8c1984c701) | No target | S8 | Pending |
+| `AssignSupportToEntityList` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga86ef9166a6e38cc1d19f0138fb01d07b) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga86ef9166a6e38cc1d19f0138fb01d07b) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga86ef9166a6e38cc1d19f0138fb01d07b) | No target | S6 | Pending |
+| `CreatePlateMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaa1e39b95a2e56588edd55118f6c9c544) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaa1e39b95a2e56588edd55118f6c9c544) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaa1e39b95a2e56588edd55118f6c9c544) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L114) | S7 | Pending |
+| `RemovePlateMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga81c64bbb52a4fb50612139675971f7d8) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga81c64bbb52a4fb50612139675971f7d8) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga81c64bbb52a4fb50612139675971f7d8) | No target | S8 | Pending |
+| `RemovePlateMatFromPlate` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaaa030000531d9773c5b032432c4b4215) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaaa030000531d9773c5b032432c4b4215) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaaa030000531d9773c5b032432c4b4215) | No target | S8 | Pending |
+| `CreateElasticFooting` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga1eb1b863f39109878125d792c62fbccc) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga1eb1b863f39109878125d792c62fbccc) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga1eb1b863f39109878125d792c62fbccc) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L103) | S7 | Pending |
+| `RemoveElasticFooting` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gab41a4e6af27c329d359f845891db80d8) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gab41a4e6af27c329d359f845891db80d8) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gab41a4e6af27c329d359f845891db80d8) | No target | S8 | Pending |
+| `RemoveElasticFootingFromNode` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gacc712e1e6a56cb8618f30108ee913aa0) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gacc712e1e6a56cb8618f30108ee913aa0) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gacc712e1e6a56cb8618f30108ee913aa0) | No target | S8 | Pending |
+| `GetSupportCount` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga2399fd56b13e12e5fa80e99ac0bbbd8c) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga2399fd56b13e12e5fa80e99ac0bbbd8c) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga2399fd56b13e12e5fa80e99ac0bbbd8c) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L128) | S2 | Implemented: `GetSupportedNodeCount`; live pending |
+| `GetSupportNodes` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga8921a39485dbf131b14e8b7362d93ed5) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga8921a39485dbf131b14e8b7362d93ed5) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga8921a39485dbf131b14e8b7362d93ed5) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L169) | S2 | Implemented: `GetSupportedNodeIds`; live pending |
+| `GetSupportType` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga222d7ca1ee337f5fdc17b765c9f452f5) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga222d7ca1ee337f5fdc17b765c9f452f5) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga222d7ca1ee337f5fdc17b765c9f452f5) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L191) | S2 | Implemented: `GetSupportType`; live pending |
+| `GetSupportInformation` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga5cebc53658e2c36b81dde5f3e8c1c961) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga5cebc53658e2c36b81dde5f3e8c1c961) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga5cebc53658e2c36b81dde5f3e8c1c961) | No target | S2 | Implemented: `GetSupportInformation`; live pending |
+| `GetSupportInformationEx` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga44751a360dec5b32dc6f4dc8149f9e64) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga44751a360dec5b32dc6f4dc8149f9e64) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga44751a360dec5b32dc6f4dc8149f9e64) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L222) | S3 | Pending |
+| `GetCountOfElasticMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga384870741da40646f01f9e3201daf5dd) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga384870741da40646f01f9e3201daf5dd) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga384870741da40646f01f9e3201daf5dd) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L368) | S4 | Implemented: `GetElasticMatDefinitionCount`; live pending |
+| `GetElasticMatDetail` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga1a8d6f586d8a9000a37b5c802487ca1a) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga1a8d6f586d8a9000a37b5c802487ca1a) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga1a8d6f586d8a9000a37b5c802487ca1a) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L438) | S4 | Implemented: `GetElasticMat`; live pending |
+| `GetElasticMatAssignmentList` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga45260b57daac5ddd1c0f95074f25ed72) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga45260b57daac5ddd1c0f95074f25ed72) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga45260b57daac5ddd1c0f95074f25ed72) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L454) | S4 | Implemented: `GetElasticMatAssignedNodeIds`; live pending |
+| `GetCountOfPlateMat` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#gaebf5cc1e4a8e0e3792695bb8e584102b) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#gaebf5cc1e4a8e0e3792695bb8e584102b) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#gaebf5cc1e4a8e0e3792695bb8e584102b) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L346) | S4 | Implemented: `GetPlateMatDefinitionCount`; live pending |
+| `GetPlateMatSupportId` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#gaf19c74e5767bab8c670353de21a5b5c4) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#gaf19c74e5767bab8c670353de21a5b5c4) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#gaf19c74e5767bab8c670353de21a5b5c4) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L351) | S4 | Pending |
+| `GetPlateMatDetail` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga195575a1227391d9ed4921902779b769) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga195575a1227391d9ed4921902779b769) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga195575a1227391d9ed4921902779b769) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L398) | S4 | Pending |
+| `GetPlateMatAssignmentList` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#gadb8f00f7184d2f6684ebb3fcb0c53754) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#gadb8f00f7184d2f6684ebb3fcb0c53754) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#gadb8f00f7184d2f6684ebb3fcb0c53754) | [Direct adapter](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L414) | S4 | Pending |
+| `GetCountOfElasticFooting` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga6091112d45f222bd5c72971f8b555361) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga6091112d45f222bd5c72971f8b555361) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga6091112d45f222bd5c72971f8b555361) | No target | S5 | Implemented: `GetElasticFootingDefinitionCount`; live pending |
+| `GetElasticFootingDetail` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga2fa98d49a023f379ef4e2d56dc5aa96b) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga2fa98d49a023f379ef4e2d56dc5aa96b) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga2fa98d49a023f379ef4e2d56dc5aa96b) | No target | S5 | Implemented: `GetElasticFooting`; live pending |
+| `GetElasticFootingAssignmentList` | `VARIANT` | [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga43dc24b4de9c9362ccb2716faa1e22d4) / [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga43dc24b4de9c9362ccb2716faa1e22d4) / [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga43dc24b4de9c9362ccb2716faa1e22d4) | No target | S5 | Implemented: `GetElasticFootingAssignedNodeIds`; live pending |
 
 ## 3. Native contracts and managed proposals
 
@@ -66,7 +73,7 @@ Native long is Windows 32-bit. VARIANT/Object does not determine logical directi
 
 **Section:** Support: Create Support and Assign Support to Node(s) Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaccbf813fd3847a7f863ca83642abded3), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaccbf813fd3847a7f863ca83642abded3) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaccbf813fd3847a7f863ca83642abded3).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportMutationResult CreateFixedSupport()`; live native qualification pending.<br>
 **Main reference:** [CreateSupport native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L84)<br>
 **Workstream:** S6
 
@@ -85,12 +92,12 @@ No native parameters.
 
 **Installed 2025 / 2026 interop:** `System.Object CreateSupportFixed()`
 
-**Proposed managed entry:** `CreateFixedSupport()`<br>
-**Proposed return class:** `SupportCreationResult`
+**Implemented managed entry:** `SupportMutationResult CreateFixedSupport()`<br>
+**Return family:** `SupportMutationResult`
 
-**Payload, validation and limitations:** Native reference ID or -1. Confirm valid ID domain rather than confusing status with ID. Do not mutate managed Id on failure.
+**Payload, validation and limitations:** When to use: This creates a support definition and returns its qualified positive reference; it does not attach it to nodes. AssignSupportToNodes is a separate mutation. Native -1 is failure; Boolean success or native zero is not accepted as a created reference. No mutable managed support ID is overwritten. Read back assignments separately before drawing restraint/engineering conclusions.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-createsupportpinned"></a>
 
@@ -98,7 +105,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Create Support and Assign Support to Node(s) Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga5e2e4d1263c4218440d8d96d634b459f), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga5e2e4d1263c4218440d8d96d634b459f) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga5e2e4d1263c4218440d8d96d634b459f).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportMutationResult CreatePinnedSupport()`; live native qualification pending.<br>
 **Main reference:** [CreateSupport native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L80)<br>
 **Workstream:** S6
 
@@ -117,12 +124,12 @@ No native parameters.
 
 **Installed 2025 / 2026 interop:** `System.Object CreateSupportPinned()`
 
-**Proposed managed entry:** `CreatePinnedSupport()`<br>
-**Proposed return class:** `SupportCreationResult`
+**Implemented managed entry:** `SupportMutationResult CreatePinnedSupport()`<br>
+**Return family:** `SupportMutationResult`
 
-**Payload, validation and limitations:** Help says local y/z rotations free, source default frees all rotations. Confirm native six-DOF behavior, especially torsion, before publishing restraint semantics.
+**Payload, validation and limitations:** When to use: The native pinned operation is separate from synthesizing fixed-but release flags. Help describes local Y/Z rotations while the private source convenience releases all rotations; this method deliberately returns only the created ID and does not claim torsional restraint. Assign it separately, then use GetSupportInformation at a node to observe actual states. Native -1 is failure; success requires a positive integral reference.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-createsupportfixedbut"></a>
 
@@ -130,7 +137,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Create Support and Assign Support to Node(s) Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gad7e5628fc73b89b32f8d70f18cc81e78), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gad7e5628fc73b89b32f8d70f18cc81e78) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gad7e5628fc73b89b32f8d70f18cc81e78).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportMutationResult CreateFixedButSupport(FixedButSupportDefinition definition)`; live native qualification pending.<br>
 **Main reference:** [CreateSupport native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L89)<br>
 **Workstream:** S6
 
@@ -153,12 +160,12 @@ VARIANT OSSupportUI::CreateSupportFixedBut(const VARIANT FAR&varReleaseSpec,cons
 
 **Installed 2025 / 2026 interop:** `System.Object CreateSupportFixedBut(System.Object, System.Object)`
 
-**Proposed managed entry:** `CreateFixedButSupport(FixedButSupportRequest request)`<br>
-**Proposed return class:** `SupportCreationResult`
+**Implemented managed entry:** `SupportMutationResult CreateFixedButSupport(FixedButSupportDefinition definition)`<br>
+**Return family:** `SupportMutationResult`
 
-**Payload, validation and limitations:** Six Double 0/1 release values and six Double stiffnesses. Read-back state Spring=-1 is not directly a valid creation release flag; validate compatibility and dimensions.
+**Payload, validation and limitations:** When to use: Use when creation flags and springs must be specified explicitly rather than using the dedicated fixed/pinned calls. FixedButSupportDefinition snapshots the existing Releases/Springs packets. Native input flags are six Double 0/1 values, not the read-back Spring=-1 state or member partial-release modes. Native arrays are fresh copies; the caller’s packets are not changed. Stiffness units and release/spring interaction remain native semantics without scaling or inferred modes. Native -1 fails; a positive integral support ID is required.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-assignsupporttonode"></a>
 
@@ -166,7 +173,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Create Support and Assign Support to Node(s) Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gae45409664dab164fc6ce4fbb296c9a1e), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gae45409664dab164fc6ce4fbb296c9a1e) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gae45409664dab164fc6ce4fbb296c9a1e).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportMutationResult AssignSupportToNodes(int supportId, IEnumerable<int> nodeIds, int maximumResults = 100000)`; live native qualification pending.<br>
 **Main reference:** [AssignSupportToNode native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L62), [AssignSupportToNode native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L69)<br>
 **Workstream:** S6
 
@@ -189,12 +196,12 @@ VARIANT OSSupportUI::AssignSupportToNode(const VARIANT FAR&varnNodeNo,const VARI
 
 **Installed 2025 / 2026 interop:** `System.Object AssignSupportToNode(System.Object, System.Object)`
 
-**Proposed managed entry:** `AssignSupportToNodes(int supportId, IEnumerable<int> nodeIds)`<br>
-**Proposed return class:** `SupportAssignmentResult`
+**Implemented managed entry:** `SupportMutationResult AssignSupportToNodes(int supportId, IEnumerable<int> nodeIds, int maximumResults = 100000)`<br>
+**Return family:** `SupportMutationResult`
 
-**Payload, validation and limitations:** Native zero success/-1 failure. Accept validated scalar convenience overload; snapshot and own Int32 IDs, document batch partial effects.
+**Payload, validation and limitations:** When to use: Creation and assignment are separate; this function sends one Int32 node-ID array to native AssignSupportToNode in node-array-first/support-ID-second order. The support ID must be appropriate for node assignment; this is not the plate-mat entity-list route. Input is enumerated once and bounded; order and duplicates remain unchanged. Integral 0 is success and -1 is failure; actual Boolean false is not numeric zero-success. Empty input produces NoOperation after binding checks and no native invocation. No per-node acknowledgement is invented; partial native effects on failure are possible.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-getsupportname"></a>
 
@@ -232,7 +239,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Create Support and Assign Support to Node(s) Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaa8d7c16ec66a713c07c99b5f3bde2efa), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaa8d7c16ec66a713c07c99b5f3bde2efa) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaa8d7c16ec66a713c07c99b5f3bde2efa).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<SupportUniqueId> GetSupportUniqueId(int supportId)`; live native qualification pending.<br>
 **Main reference:** No native target in the reference Support adapter.<br>
 **Workstream:** S3
 
@@ -249,12 +256,12 @@ VARIANT OSSupportUI::GetSupportUniqueID(const VARIANT FAR&nSupportNo)
 
 **Installed 2025 / 2026 interop:** `System.Object GetSupportUniqueID(System.Object)`
 
-**Proposed managed entry:** `GetSupportUniqueId(int supportId)`<br>
-**Proposed return class:** `SupportUniqueIdResult`
+**Implemented managed entry:** `SupportQueryResult<SupportUniqueId> GetSupportUniqueId(int supportId)`<br>
+**Return family:** `SupportQueryResult<SupportUniqueId>`
 
-**Payload, validation and limitations:** Support item ID, not node ID. Parse valid GUID text into Guid while retaining raw text and qualified invalid/absent results.
+**Payload, validation and limitations:** When to use: This takes a support item/definition ID, not a node number, support-list index or user-facing name. Null, DBNull or empty native text gives EmptyOrUnavailable; malformed GUID text throws. Exact native text and parsed Guid are both retained. Guid.Empty, if returned, remains an observed value, not a generated replacement. SetSupportUniqueId writes a new identity and has only void invocation evidence.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-setsupportuniqueid"></a>
 
@@ -262,7 +269,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Create Support and Assign Support to Node(s) Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga2ed3d0f63a68576e7a81f57591be743e), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga2ed3d0f63a68576e7a81f57591be743e) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga2ed3d0f63a68576e7a81f57591be743e).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportMutationResult SetSupportUniqueId(int supportId, Guid uniqueId)`; live native qualification pending.<br>
 **Main reference:** No native target in the reference Support adapter.<br>
 **Workstream:** S8
 
@@ -280,12 +287,12 @@ void OSSupportUI::SetSupportUniqueID(const VARIANT FAR&nSupportNo,const VARIANT 
 
 **Installed 2025 / 2026 interop:** `Void SetSupportUniqueID(System.Object, System.Object)`
 
-**Proposed managed entry:** `SetSupportUniqueId(int supportId, Guid uniqueId)`<br>
-**Proposed return class:** `SupportIdentityUpdateResult`
+**Implemented managed entry:** `SupportMutationResult SetSupportUniqueId(int supportId, Guid uniqueId)`<br>
+**Return family:** `SupportMutationResult`
 
-**Payload, validation and limitations:** Native void return proves no status flag. Record completed invocation separately from optional read-back verification; validate GUID format before mutation and preserve identity scope.
+**Payload, validation and limitations:** When to use: This writes a nonempty explicitly supplied Guid to a support definition/item, not a node. GetSupportUniqueId reads its actual current value. The native setter returns void, so completed dispatch produces InvokedWithoutAcknowledgement and IsSuccessful=false, with the requested ID/GUID retained and no fabricated native flag. No automatic read-back or persistence claim occurs; callers may request a separate read-back if needed. The Guid is marshaled as canonical D-format text.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-removesupportfromnode"></a>
 
@@ -293,7 +300,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Create Support and Assign Support to Node(s) Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#gaf77763c62a89f04dc29fbd9b0e0d037d), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#gaf77763c62a89f04dc29fbd9b0e0d037d) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#gaf77763c62a89f04dc29fbd9b0e0d037d).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportMutationResult RemoveSupportFromNode(int nodeId)`; live native qualification pending.<br>
 **Main reference:** No native target in the reference Support adapter.<br>
 **Workstream:** S8
 
@@ -315,12 +322,12 @@ VARIANT OSSupportUI::RemoveSupportFromNode(const VARIANT FAR&nNodeNo)
 
 **Installed 2025 / 2026 interop:** `System.Object RemoveSupportFromNode(System.Object)`
 
-**Proposed managed entry:** `RemoveSupportFromNode(int nodeId)`<br>
-**Proposed return class:** `SupportRemovalResult`
+**Implemented managed entry:** `SupportMutationResult RemoveSupportFromNode(int nodeId)`<br>
+**Return family:** `SupportMutationResult`
 
-**Payload, validation and limitations:** Boolean status; unassigns from node. Keep separate from deleting a shared support definition and preserve unknown/absent semantics.
+**Payload, validation and limitations:** When to use: This unassigns one node; DeleteSupport removes a shared definition and its assignments. Native 1/true is success, 0/false is failure. Failure does not prove that no support existed. No shared definition deletion, family-specific fallback, retry, save or managed node update is performed.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-deletesupport"></a>
 
@@ -328,7 +335,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Create Support and Assign Support to Node(s) Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_create_support.html#ga63e369a9e50538229af6c07d73ae7845), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_create_support.html#ga63e369a9e50538229af6c07d73ae7845) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_create_support.html#ga63e369a9e50538229af6c07d73ae7845).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportMutationResult DeleteSupport(int supportId)`; live native qualification pending.<br>
 **Main reference:** No native target in the reference Support adapter.<br>
 **Workstream:** S8
 
@@ -350,12 +357,12 @@ VARIANT OSSupportUI::DeleteSupport(const VARIANT FAR&nSupportNo)
 
 **Installed 2025 / 2026 interop:** `System.Object DeleteSupport(System.Object)`
 
-**Proposed managed entry:** `DeleteSupport(int supportId)`<br>
-**Proposed return class:** `SupportRemovalResult`
+**Implemented managed entry:** `SupportMutationResult DeleteSupport(int supportId)`<br>
+**Return family:** `SupportMutationResult`
 
-**Payload, validation and limitations:** Native zero success/-1 failure. Explicitly removes definition and its assignments; document scope and do not silently use it for unassignment.
+**Payload, validation and limitations:** When to use: This is broader than RemoveSupportFromNode, which targets only one assignment. The documented operation removes the support item and its assignments; the request retains the support ID without pretending to know every affected node. Integral 0 is success and -1 is failure; Boolean false is not decoded as numeric zero. Native partial changes may remain on failure and cannot be rolled back by this result.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-createinclinedsupport"></a>
 
@@ -784,7 +791,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Get Support Information Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga2399fd56b13e12e5fa80e99ac0bbbd8c), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga2399fd56b13e12e5fa80e99ac0bbbd8c) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga2399fd56b13e12e5fa80e99ac0bbbd8c).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<int> GetSupportedNodeCount()`; live native qualification pending.<br>
 **Main reference:** [GetSupportNodesCount native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L128)<br>
 **Workstream:** S2
 
@@ -798,12 +805,12 @@ No native parameters.
 
 **Installed 2025 / 2026 interop:** `System.Object GetSupportCount()`
 
-**Proposed managed entry:** `GetSupportedNodeCount()`<br>
-**Proposed return class:** `SupportedNodeCountResult`
+**Implemented managed entry:** `SupportQueryResult<int> GetSupportedNodeCount()`<br>
+**Return family:** `SupportQueryResult<int>`
 
-**Payload, validation and limitations:** Count is supported nodes, not support definitions. Zero is valid empty data; require an integral bounded native value.
+**Payload, validation and limitations:** When to use: This is the supported-node count used by GetSupportedNodeIds, not the number of distinct support definitions or any contiguous ID range. Zero is valid data. Exact nonnegative integral returns are required; Boolean success is never treated as count one. No node geometry is hydrated.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-getsupportnodes"></a>
 
@@ -811,7 +818,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Get Support Information Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga8921a39485dbf131b14e8b7362d93ed5), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga8921a39485dbf131b14e8b7362d93ed5) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga8921a39485dbf131b14e8b7362d93ed5).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<IReadOnlyList<int>> GetSupportedNodeIds(int maximumResults = 100000)`; live native qualification pending.<br>
 **Main reference:** [GetSupportNodeIds native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L169)<br>
 **Workstream:** S2
 
@@ -833,12 +840,12 @@ VARIANT OSSupportUI::GetSupportNodes(VARIANT FAR&varNodeNos)
 
 **Installed 2025 / 2026 interop:** `System.Object GetSupportNodes(System.Object ByRef)`
 
-**Proposed managed entry:** `GetSupportedNodeIds()`<br>
-**Proposed return class:** `SupportedNodeIdsResult`
+**Implemented managed entry:** `SupportQueryResult<IReadOnlyList<int>> GetSupportedNodeIds(int maximumResults = 100000)`<br>
+**Return family:** `SupportQueryResult<IReadOnlyList<int>>`
 
-**Payload, validation and limitations:** Count-prefetch plus owned Int32 array and returned count reconciliation. Respect lower bounds, empty state, count races and maximum allocation.
+**Payload, validation and limitations:** When to use: Use for node discovery instead of enumerating support-definition IDs from a count. The native return is a count, not a Boolean flag; -1 is failure. Count/list/count must agree; a changed count returns StateChanged with no payload and no retry. Zero is rechecked and returns an owned empty list without native list invocation. Initialized Int32 arrays must be completely written; native order and duplicates remain unchanged. Equal counts cannot prove an atomic model snapshot.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-getsupporttype"></a>
 
@@ -846,7 +853,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Get Support Information Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga222d7ca1ee337f5fdc17b765c9f452f5), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga222d7ca1ee337f5fdc17b765c9f452f5) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga222d7ca1ee337f5fdc17b765c9f452f5).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<SupportTypeObservation> GetSupportType(int nodeId)`; live native qualification pending.<br>
 **Main reference:** [GetSupportTypesOfNodes native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L191), [GetDistinctSupports native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L221), [GetSupportTypeExt native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L547)<br>
 **Workstream:** S2
 
@@ -881,12 +888,12 @@ VARIANT OSSupportUI::GetSupportType(VARIANT FAR&vaSupportNode)
 
 **Installed 2025 / 2026 interop:** `System.Object GetSupportType(System.Object)`
 
-**Proposed managed entry:** `GetSupportType(int nodeId)`<br>
-**Proposed return class:** `SupportTypeResult`
+**Implemented managed entry:** `SupportQueryResult<SupportTypeObservation> GetSupportType(int nodeId)`<br>
+**Return family:** `SupportQueryResult<SupportTypeObservation>`
 
-**Payload, validation and limitations:** Native -1 error, 0 NoSupport, 1..13 data. Keep unknown raw codes; no Boolean decoding. Native mutable reference is documented logical input.
+**Payload, validation and limitations:** When to use: Prefer this inexpensive type-only observation when DOF states and stiffnesses are not needed. Native 0 is successful NoSupport data; -1 is NativeFailure. Unknown nonnegative codes retain NativeTypeCode and KnownType=null, without being cast to a fabricated known enum. GetSupportInformation instead requires a reviewed type and written six-DOF buffers. The metadata input is passed by value despite a mutable-reference help declaration.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-getsupportinformation"></a>
 
@@ -894,7 +901,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Get Support Information Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga5cebc53658e2c36b81dde5f3e8c1c961), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga5cebc53658e2c36b81dde5f3e8c1c961) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga5cebc53658e2c36b81dde5f3e8c1c961).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<SupportInformation> GetSupportInformation(int nodeId)`; live native qualification pending.<br>
 **Main reference:** No native target in the reference Support adapter.<br>
 **Workstream:** S2
 
@@ -931,12 +938,12 @@ VARIANT OSSupportUI::GetSupportInformation(const VARIANT FAR&vaSupportNode,VARIA
 
 **Installed 2025 / 2026 interop:** `System.Object GetSupportInformation(System.Object, System.Object ByRef, System.Object ByRef)`
 
-**Proposed managed entry:** `GetSupportInformation(int nodeId)`<br>
-**Proposed return class:** `SupportInformationResult`
+**Implemented managed entry:** `SupportQueryResult<SupportInformation> GetSupportInformation(int nodeId)`<br>
+**Return family:** `SupportQueryResult<SupportInformation>`
 
-**Payload, validation and limitations:** Native result is a support-type code, not a success flag. Six Int32 states include Spring=-1, Fixed=0, Released=1; six Double spring constants need typed DOF preservation.
+**Payload, validation and limitations:** When to use: Unlike GetSupportType, this retrieves all FX/FY/FZ/MX/MY/MZ restraint observations. The native return is a support-type code, never a Boolean success flag. Type 0 yields NoSupport without consuming untouched buffers; -1 yields NativeFailure; an unknown positive type yields UnsupportedNativeType without guessing its layout. Known positive types require six written Int32 states (-1 spring, 0 fixed, 1 released) and six finite nonnegative floating-point stiffnesses. Springs are not collapsed to released=true. Native local support axes, force/length translational stiffness and moment/angle rotational stiffness are retained without conversion.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-getsupportinformationex"></a>
 
@@ -998,7 +1005,7 @@ The help marks support number and type as [in], the interop declares Object&, th
 
 **Section:** Support: Get Support Information Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga384870741da40646f01f9e3201daf5dd), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga384870741da40646f01f9e3201daf5dd) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga384870741da40646f01f9e3201daf5dd).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<int> GetElasticMatDefinitionCount()`; live native qualification pending.<br>
 **Main reference:** [GetElasticMatSupports native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L368)<br>
 **Workstream:** S4
 
@@ -1012,12 +1019,12 @@ No native parameters.
 
 **Installed 2025 / 2026 interop:** `System.Object GetCountOfElasticMat()`
 
-**Proposed managed entry:** `GetElasticMatDefinitionCount()`<br>
-**Proposed return class:** `FoundationSupportCountResult`
+**Implemented managed entry:** `SupportQueryResult<int> GetElasticMatDefinitionCount()`<br>
+**Return family:** `SupportQueryResult<int>`
 
-**Payload, validation and limitations:** Definition count, not assigned node count or contiguous ID range. Discovery requires verified IDs, not 1..count.
+**Payload, validation and limitations:** When to use: This is a definition count, not supported-node count, assignment count or maximum support ID. Use GetElasticMat with a known positive definition ID; there is no inferred 1..count discovery. Zero is valid integral data. Plate-mat and footing definition counts are separate queries.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-getelasticmatdetail"></a>
 
@@ -1025,7 +1032,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Get Support Information Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga1a8d6f586d8a9000a37b5c802487ca1a), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga1a8d6f586d8a9000a37b5c802487ca1a) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga1a8d6f586d8a9000a37b5c802487ca1a).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<ElasticMatObservation> GetElasticMat(int supportId)`; live native qualification pending.<br>
 **Main reference:** [GetElasticMatSupport native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L438), [PopulateElasticMatSupport native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L516)<br>
 **Workstream:** S4
 
@@ -1052,12 +1059,12 @@ VARIANT OSSupportUI::GetElasticMatDetail(const VARIANT FAR&supportid,VARIANT FAR
 
 **Installed 2025 / 2026 interop:** `System.Object GetElasticMatDetail(System.Object, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef)`
 
-**Proposed managed entry:** `GetElasticMat(int supportId)`<br>
-**Proposed return class:** `ElasticMatQueryResult`
+**Implemented managed entry:** `SupportQueryResult<ElasticMatObservation> GetElasticMat(int supportId)`<br>
+**Return family:** `SupportQueryResult<ElasticMatObservation>`
 
-**Payload, validation and limitations:** Boolean status qualifies direction, scalar subgrade, flags and assigned-node count. No partial default model on failure.
+**Payload, validation and limitations:** When to use: Use a known support definition ID, not a node ID or zero-based index. Native true qualifies direction 0..5, scalar subgrade, print flag, spring-generation type and nonnegative assignment count; false exposes no default packet. This query does not read assigned nodes; GetElasticMatAssignedNodeIds performs a bounded detail/list/detail observation. Native subgrade is force/length cubed, not force/length nodal stiffness. Only direction variants and compression/multilinear generation remain distinct. No model or geometry objects are hydrated.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-getelasticmatassignmentlist"></a>
 
@@ -1065,7 +1072,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Get Support Information Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga45260b57daac5ddd1c0f95074f25ed72), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga45260b57daac5ddd1c0f95074f25ed72) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga45260b57daac5ddd1c0f95074f25ed72).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<IReadOnlyList<int>> GetElasticMatAssignedNodeIds(int supportId, int maximumResults = 100000)`; live native qualification pending.<br>
 **Main reference:** [GetElasticMatSupport native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L454), [PopulateElasticMatSupport native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L528)<br>
 **Workstream:** S4
 
@@ -1088,12 +1095,12 @@ VARIANT OSSupportUI::GetElasticMatAssignmentList(const VARIANT FAR&supportid,VAR
 
 **Installed 2025 / 2026 interop:** `System.Object GetElasticMatAssignmentList(System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetElasticMatAssignedNodeIds(int supportId)`<br>
-**Proposed return class:** `SupportAssignmentListResult`
+**Implemented managed entry:** `SupportQueryResult<IReadOnlyList<int>> GetElasticMatAssignedNodeIds(int supportId, int maximumResults = 100000)`<br>
+**Return family:** `SupportQueryResult<IReadOnlyList<int>>`
 
-**Payload, validation and limitations:** Allocate from qualified detail count; owned node IDs, matching family and bounded race handling. Native Boolean status.
+**Payload, validation and limitations:** When to use: The returned IDs are analytical nodes, never plate IDs or support-definition IDs. Allocation uses qualified GetElasticMat detail, then Boolean list retrieval and a complete detail recheck. Exceeding maximumResults gives LimitExceeded before list allocation; zero assignments return an owned empty list after recheck. Changed count/direction/subgrade/flags gives StateChanged without payload or retry. Native order/duplicates are preserved; equal metadata does not detect every same-count edit.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-getcountofplatemat"></a>
 
@@ -1101,7 +1108,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Get Support Information Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#gaebf5cc1e4a8e0e3792695bb8e584102b), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#gaebf5cc1e4a8e0e3792695bb8e584102b) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#gaebf5cc1e4a8e0e3792695bb8e584102b).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<int> GetPlateMatDefinitionCount()`; live native qualification pending.<br>
 **Main reference:** [GetPlateMatSupports native call](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs#L346)<br>
 **Workstream:** S4
 
@@ -1115,12 +1122,12 @@ No native parameters.
 
 **Installed 2025 / 2026 interop:** `System.Object GetCountOfPlateMat()`
 
-**Proposed managed entry:** `GetPlateMatDefinitionCount()`<br>
-**Proposed return class:** `FoundationSupportCountResult`
+**Implemented managed entry:** `SupportQueryResult<int> GetPlateMatDefinitionCount()`<br>
+**Return family:** `SupportQueryResult<int>`
 
-**Payload, validation and limitations:** Definition count used with explicit zero-based index-to-ID query.
+**Payload, validation and limitations:** When to use: This count concerns plate-mat definitions, not plates, support nodes, assigned entities or maximum support reference. Zero is valid integral data. It does not resolve plate-mat ID/index or scalar/array contract gates; no plate assignments or subgrades are synthesized from this count.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-getplatematsupportid"></a>
 
@@ -1249,7 +1256,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Get Support Information Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga6091112d45f222bd5c72971f8b555361), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga6091112d45f222bd5c72971f8b555361) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga6091112d45f222bd5c72971f8b555361).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<int> GetElasticFootingDefinitionCount()`; live native qualification pending.<br>
 **Main reference:** No native target in the reference Support adapter.<br>
 **Workstream:** S5
 
@@ -1263,12 +1270,12 @@ No native parameters.
 
 **Installed 2025 / 2026 interop:** `System.Object GetCountOfElasticFooting()`
 
-**Proposed managed entry:** `GetElasticFootingDefinitionCount()`<br>
-**Proposed return class:** `FoundationSupportCountResult`
+**Implemented managed entry:** `SupportQueryResult<int> GetElasticFootingDefinitionCount()`<br>
+**Return family:** `SupportQueryResult<int>`
 
-**Payload, validation and limitations:** No documented footing index-to-ID API. Count alone is not enumeration; require known IDs or separately verified identity discovery.
+**Payload, validation and limitations:** When to use: This is independent of the supported-node and elastic-mat counts. No documented footing index-to-ID enumeration is assumed; supply known support IDs to GetElasticFooting. Zero is valid, and a count is never decoded as a success flag.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-getelasticfootingdetail"></a>
 
@@ -1276,7 +1283,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Get Support Information Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga2fa98d49a023f379ef4e2d56dc5aa96b), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga2fa98d49a023f379ef4e2d56dc5aa96b) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga2fa98d49a023f379ef4e2d56dc5aa96b).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<ElasticFootingObservation> GetElasticFooting(int supportId)`; live native qualification pending.<br>
 **Main reference:** No native target in the reference Support adapter.<br>
 **Workstream:** S5
 
@@ -1303,12 +1310,12 @@ VARIANT OSSupportUI::GetElasticFootingDetail(const VARIANT FAR&supportid,VARIANT
 
 **Installed 2025 / 2026 interop:** `System.Object GetElasticFootingDetail(System.Object, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef, System.Object ByRef)`
 
-**Proposed managed entry:** `GetElasticFooting(int supportId)`<br>
-**Proposed return class:** `ElasticFootingQueryResult`
+**Implemented managed entry:** `SupportQueryResult<ElasticFootingObservation> GetElasticFooting(int supportId)`<br>
+**Return family:** `SupportQueryResult<ElasticFootingObservation>`
 
-**Payload, validation and limitations:** Qualified length, width, direction, subgrade and assigned-node count. Reuse source model selectively with explicit units and validated buffers.
+**Payload, validation and limitations:** When to use: Unlike GetElasticMat, the native footing packet includes finite positive length and width as well as native direction 0..5, scalar subgrade and assigned-node count. Known support definition ID is required. Native 1/true succeeds, 0/false fails; integral -1 is not VARIANT_TRUE for this narrower contract. Lengths remain native length units and subgrade remains force/length cubed; no area, spring stiffness or reaction is derived.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 <a id="support-getelasticfootingassignmentlist"></a>
 
@@ -1316,7 +1323,7 @@ Return the operation identity, semantic outcome and actual native code when pres
 
 **Section:** Support: Get Support Information Support<br>
 **Cross-version status:** Common declaration and non-example contract in [2024](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___property_get_support.html#ga43dc24b4de9c9362ccb2716faa1e22d4), [2025](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___property_get_support.html#ga43dc24b4de9c9362ccb2716faa1e22d4) and [2026](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___property_get_support.html#ga43dc24b4de9c9362ccb2716faa1e22d4).<br>
-**Current typed implementation:** Pending.<br>
+**Current typed implementation:** Implemented `SupportQueryResult<IReadOnlyList<int>> GetElasticFootingAssignedNodeIds(int supportId, int maximumResults = 100000)`; live native qualification pending.<br>
 **Main reference:** No native target in the reference Support adapter.<br>
 **Workstream:** S5
 
@@ -1339,12 +1346,12 @@ VARIANT OSSupportUI::GetElasticFootingAssignmentList(const VARIANT FAR&supportid
 
 **Installed 2025 / 2026 interop:** `System.Object GetElasticFootingAssignmentList(System.Object, System.Object ByRef)`
 
-**Proposed managed entry:** `GetElasticFootingAssignedNodeIds(int supportId)`<br>
-**Proposed return class:** `SupportAssignmentListResult`
+**Implemented managed entry:** `SupportQueryResult<IReadOnlyList<int>> GetElasticFootingAssignedNodeIds(int supportId, int maximumResults = 100000)`<br>
+**Return family:** `SupportQueryResult<IReadOnlyList<int>>`
 
-**Payload, validation and limitations:** Qualified list by known support ID; validate coupled count and resolve IDs only after native success.
+**Payload, validation and limitations:** When to use: Uses qualified footing detail/list/detail, retaining node identity and every observed length/width/direction/modulus/count in its state check. Native 1/true is success; 0/false is failure and numeric -1 is rejected rather than treated as true. Empty assignment is a rechecked owned empty list. LimitExceeded occurs before list allocation. StateChanged has no payload; same-count edits can remain undetected, so coordinate session access. No node geometry is hydrated or reordered.
 
-Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. These are proposed contracts, not callable APIs.
+Return the operation identity, semantic outcome and actual native code when present. Expose native data only after its status/type/shape is qualified; preserve explicit absence and unsupported interpretations. This implemented signature is callable; native qualification remains separate.
 
 ## 4. Native implementation helpers excluded
 

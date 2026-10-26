@@ -1,5 +1,28 @@
 # NuGet readiness assessment
 
+## Latest prepared preview - 1.0.0-preview.20261026.3
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.3.nupkg` for Windows/.NET Framework 4.8.1. It includes all current source additions: **71 managed Output overloads reaching 46 documented native names** and **19 Support operations**, alongside the existing Root, Geometry, Load, Property and approved wrapper surface. Fourteen documented Output routes and sixteen Support routes remain pending; parked Property and Load work retains its separate approval requirements.
+
+The Release build passed with zero warnings/errors, and **5,788 offline tests** passed. Verification of this exact archive restored an isolated PackageReference consumer, compiled and executed **1,102 selected XML examples**, and checked package identity, publisher metadata, documentation and runtime dispatch against managed native-signature fixtures. These checks do not certify live COM or engineering accuracy. Author remains **Srinivasa Rao Masanam**, with company and copyright attributed to **TensorStruct**.
+
+Build and verification evidence is recorded under `artifacts/release`. Earlier distribution archives remain unchanged. This preparation does not establish public availability of the new version.
+
+## Managed Output workflows - current source
+
+Added **25 managed Output overloads**: 23 synchronous main-project workflow adaptations and two typed enabling overloads for explicit native axes and Beam ratio queries. Output now exposes **71 managed overloads reaching 46/60 documented native names**. The fourteen native contract gates remain; this increment adds compositions, entity conveniences and ordered batches over qualified native routes. See [the managed workflow guide](Output-Managed-Workflows.md) for exact contracts and comparative usage.
+
+Added governing-case resolution, per-item batch outcomes, staged caller utilization caches, native global offset-transfer audit packets, geometry bases, plate-center composites, ordered static checks and opposite support actions. All new APIs have matching XML documentation and examples; no public ref/out, tuples, partial adapters or thread-pool COM calls were introduced.
+
+
+## Earlier source increment and CI validation - 1.0.0-preview.20261026.2
+
+Added **six common documented Output routes and 19 Support functions**, with full matching interface/adapter IntelliSense and named managed results. Output now covers **46/60** documented native names; Support covers **19/35**. The new Output overloads distinguish named parameter blocks from member-only observations, while Support preserves node/definition identity, six-DOF states and operation-specific native acknowledgements.
+
+Passed a Release build with zero warnings/errors and **5,523 offline tests**, including 170 new cases. A separate local CI archive verifies **1,052 selected XML examples** using managed native-signature fixtures. Live 2024–2026 COM and engineering qualification remain pending. The existing prepared distribution archive is unchanged.
+
+Only the local CI archive `1.0.0-preview.ci.2026102602` is built to validate this increment; it is not a distribution or publication. The latest prepared distribution remains 1.0.0-preview.20261026.1, recorded below. Custom IOSOutput/IOSSupport implementations must supply the new members. TensorStruct company/copyright and Srinivasa Rao Masanam authorship remain unchanged.
+
 ## Latest prepared preview - 1.0.0-preview.20261026.1
 
 Added four documented Property operations for model-wide element-node release cleanup, member fireproofing cleanup and country-qualified profile-name translation. Property now provides **249 common overloads and five optional catalog queries**, covering **195 of 204** active documented native routes. Nine documented contract gates and fifteen supplemental discovery candidates remain.

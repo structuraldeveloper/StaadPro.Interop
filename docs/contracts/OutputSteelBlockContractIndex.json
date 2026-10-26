@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-26",
+  "contracts": [
+    {
+      "native": "GetSteelDesignParameterBlockNameByIndex",
+      "managed": "GetSteelDesignParameterBlockName",
+      "type": "string",
+      "parameters": "int parameterBlockIndex",
+      "args": "parameterBlockIndex",
+      "summary": "Reads the native name of one zero-based steel-design parameter block.",
+      "remarks": "When to use: Use this name with the parameter-block overloads of GetMemberSteelUtilizationRatio and GetMemberSteelDesignResults. GetSteelDesignParameterBlockCount is a count, not a last index. This query passes the nonnegative index unchanged; it does not enumerate blocks, select a design code, run design or verify that all blocks are supported. Native false is failure; unwritten or empty successful names are rejected rather than used as a default block.",
+      "example": "var result = output.GetSteelDesignParameterBlockName(0);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);",
+      "signature": "OutputQueryResult<string> GetSteelDesignParameterBlockName(int parameterBlockIndex)"
+    },
+    {
+      "native": "GetMultipleMemberSteelDesignRatio",
+      "managed": "GetMemberSteelUtilizationRatio",
+      "type": "double",
+      "parameters": "int memberId, string parameterBlockName",
+      "args": "memberId, parameterBlockName",
+      "summary": "Reads a member utilization ratio for one explicitly named steel-design parameter block.",
+      "remarks": "When to use: Unlike the member-only overload, this calls the multiple-block native API and retains the exact requested ParameterBlockName in the result. The reviewed help describes AISC 360-16 multiple-design results; native availability and applicable code/context remain STAAD decisions. It does not select a block or take a maximum across blocks. Only finite nonnegative ratios are data; the single-block -999/-1 sentinels are not reused here. Native false takes precedence over any ratio buffer.",
+      "example": "var result = output.GetMemberSteelUtilizationRatio(17, \"PARAMETER 1\");\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);",
+      "signature": "OutputQueryResult<double> GetMemberSteelUtilizationRatio(int memberId, string parameterBlockName)"
+    },
+    {
+      "native": "GetMultipleMemberSteelDesignMaxRatio",
+      "managed": "GetMaximumMemberSteelUtilizationRatio",
+      "type": "double",
+      "parameters": "int memberId",
+      "args": "memberId",
+      "summary": "Reads the native maximum utilization ratio for one member across available design parameter blocks.",
+      "remarks": "When to use: Choose this to ask STAAD for its maximum across parameter blocks, rather than the member-only or explicitly named-block ratio query. The native output does not identify a governing block, so ParameterBlockName is null and no identity is guessed. A finite nonnegative ratio is required on native true; it is not converted to PASS/FAIL and no managed envelope, single-block sentinel interpretation or design execution occurs.",
+      "example": "var result = output.GetMaximumMemberSteelUtilizationRatio(17);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);",
+      "signature": "OutputQueryResult<double> GetMaximumMemberSteelUtilizationRatio(int memberId)"
+    },
+    {
+      "native": "GetMultipleMemberSteelDesignResults",
+      "managed": "GetMemberSteelDesignResults",
+      "type": "ParameterBlockSteelDesignResults",
+      "parameters": "int memberId, string parameterBlockName",
+      "args": "memberId, parameterBlockName",
+      "summary": "Reads the named parameter-block steel-design packet for one analytical member.",
+      "remarks": "When to use: Unlike GetMemberSteelDesignResults(memberId), this native packet supplies code, PASS/FAIL text, critical/allowable ratios, critical load case, clause and section for an explicit block. It supplies no critical station, FX/MY/MZ or slenderness; those fields are absent from ParameterBlockSteelDesignResults, never synthesized as zero. PASS/FAIL text is classified explicitly; other written text remains Unknown. Exact requested block and native status text are preserved. Native false prevents publication of any packet; no block selection, case activation or design is performed.",
+      "example": "var result = output.GetMemberSteelDesignResults(17, \"PARAMETER 1\");\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.DesignStatus);",
+      "signature": "OutputQueryResult<ParameterBlockSteelDesignResults> GetMemberSteelDesignResults(int memberId, string parameterBlockName)"
+    },
+    {
+      "native": "GetMemberSteelDesignMinFailureRatio",
+      "managed": "GetMinimumSteelDesignFailureRatio",
+      "type": "double",
+      "parameters": "",
+      "args": "",
+      "summary": "Reads the native model-wide minimum steel-design failure ratio.",
+      "remarks": "When to use: This function has no member ID or parameter-block input. It is a model-wide native failure-ratio observation, not the minimum utilization of a requested member or a managed envelope. GetMaximumSteelDesignFailureRatio is a separate observation with its own success flag; the two are not combined into an allegedly atomic range. Native false means failure or unavailable data without proving the absence of failing members. A finite nonnegative ratio is required on native success.",
+      "example": "var result = output.GetMinimumSteelDesignFailureRatio();\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);",
+      "signature": "OutputQueryResult<double> GetMinimumSteelDesignFailureRatio()"
+    },
+    {
+      "native": "GetMemberSteelDesignMaxFailureRatio",
+      "managed": "GetMaximumSteelDesignFailureRatio",
+      "type": "double",
+      "parameters": "",
+      "args": "",
+      "summary": "Reads the native model-wide maximum steel-design failure ratio.",
+      "remarks": "When to use: This function has no member ID or parameter-block input. It is independent from GetMinimumSteelDesignFailureRatio and from GetMaximumMemberSteelUtilizationRatio, which targets a member across blocks. No governing member/block is returned or invented. Native false prevents consumption of its output; the method does not infer failure thresholds, result freshness or an engineering PASS/FAIL decision.",
+      "example": "var result = output.GetMaximumSteelDesignFailureRatio();\nif (result.IsSuccessful) System.Console.WriteLine(result.Data);",
+      "signature": "OutputQueryResult<double> GetMaximumSteelDesignFailureRatio()"
+    }
+  ]
+}

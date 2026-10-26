@@ -2,9 +2,21 @@
 
 **Updated:** 26 October 2026
 
-IOSOutput and the single non-partial OSOutputAdapter now expose **40 typed queries**, covering 40 of the 60 documented native Output names. Twenty documented routes and thirteen supplemental unit candidates remain separate work. The latest 25 routes are detailed in the [extended Output guide](Output-Extended-Queries.md). The prepared preview 1.0.0-preview.20261026.1 includes these APIs and passes isolated package-consumer verification; it is not publicly published.
+IOSOutput and the single non-partial OSOutputAdapter now expose **71 managed overloads**, covering 46 of the 60 documented native Output names. Fourteen documented routes and thirteen supplemental unit candidates remain separate work. The preceding 25 routes are detailed in the [extended Output guide](Output-Extended-Queries.md). The previously prepared preview 1.0.0-preview.20261026.1 includes the earlier 40-query surface and passes isolated package-consumer verification; it is not publicly published.
 
 The existing Root member-force service continues to call AreResultsAvailable and GetMemberEndForces independently. Its public behavior and the wrapper are unchanged.
+
+## Managed Output workflows - current source
+
+Added **25 managed Output overloads**: 23 synchronous main-project workflow adaptations and two typed enabling overloads for explicit native axes and Beam ratio queries. Output now exposes **71 managed overloads reaching 46/60 documented native names**. The fourteen native contract gates remain; this increment adds compositions, entity conveniences and ordered batches over qualified native routes. See [the managed workflow guide](Output-Managed-Workflows.md) for exact contracts and comparative usage.
+
+Added governing-case resolution, per-item batch outcomes, staged caller utilization caches, native global offset-transfer audit packets, geometry bases, plate-center composites, ordered static checks and opposite support actions. All new APIs have matching XML documentation and examples; no public ref/out, tuples, partial adapters or thread-pool COM calls were introduced.
+
+## Earlier steel-design-block increment
+
+Implemented six further common documented Output routes for named design-parameter-block observations and independent failure-ratio limits. Typed Output coverage is **46/60**, with **14 documented routes pending**. Matching interface/adapter XML, named subset results and exact block identity distinguish the new overloads from the existing member-only APIs. See [the steel-block guide](Output-Steel-Design-Blocks.md).
+
+Release build passed with zero warnings/errors and **5,523 offline tests** (170 new cases). Isolated documentation/package verification covers **1,052 selected XML examples**, including all 92 Output and 38 Support examples. Managed fixtures do not certify live 2024–2026 COM or engineering behavior.
 
 ## First fifteen queries
 
@@ -68,9 +80,9 @@ Validation passed **5,353 offline tests**, including 165 new Output cases and 32
 
 ## Units, transport and lifetime
 
-Values remain in native Output units. Wrapper input-unit caches do not prove those units. No implicit scaling, degree/radian conversion, sign change, offset transfer, case activation or model mutation occurs.
+Values remain in native Output units. Wrapper input-unit caches do not prove those units. The original native-query overloads perform no implicit scaling, degree/radian conversion, sign change, offset transfer, case activation or model mutation. The explicitly named managed workflows document their sign reversal, offset transfer or caller-cache updates separately.
 
-- End-force queries pass the explicit local-coordinate flag zero and retain native start/end actions.
+- Original three-argument end-force queries pass local flag zero. New typed overloads request Local/Global directly and retain native start/end actions.
 - Support reactions remain global reactions; they are not negated into support-applied actions.
 - Plate-center “forces” are stresses; plate moments are moments per unit width.
 - Static-check loads and reactions remain separate. No assumed algebraic combination is labeled an equilibrium residual.
@@ -111,7 +123,7 @@ Identifiers must refer to suitable results in the acquired model. Availability a
 
 Reviewed all installed 2024/2025/2026 Output help sections and Output-owned steel-result functions filed under Design. Counts are **59 / 60 / 60 native names**, with 59 common and 60 in the union. GetMaxBeamStresses is newly documented in 2025; four common contracts need direction/layout policy verification. Normalized 2025/2026 declarations, contracts and examples match.
 
-The strictly read-only main project exposes **86 managed overloads**, implemented by 86 public adapter methods backed by **17 native targets**. Thirty-three return Task; two expose out outputs that should become named results in this repository. Four offset-aware/physical-joint overloads depend on an unported Property operation. The contract annex records every signature, dependency and required adaptation.
+The strictly read-only main project exposes **86 managed overloads**, implemented by 86 public adapter methods backed by **17 native targets**. Thirty-three return Task; two expose out outputs that should become named results in this repository. The four offset-aware/physical-joint overloads now reuse the implemented Property offset query; the latest workflow guide records their managed adaptations. The contract annex records every signature, dependency and required adaptation.
 
 Both installed 2025/2026 vendor IOSOutputUI interfaces contain 72 matching metadata methods. Thirteen additional unit queries appear in all three native class listings without detailed contracts, with a reference/value mismatch against interop metadata; they need contract discovery, and GetMissingMassParticipationFactors is documented but absent from those interfaces. These evidence gaps require acquired-server verification, not version guesses.
 

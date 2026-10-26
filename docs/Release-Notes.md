@@ -1,5 +1,23 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261026.3 - 26 October 2026 (prepared preview)
+
+Prepared the package for Windows/.NET Framework 4.8.1 with the managed Output workflows below, the preceding six steel-design-block queries and nineteen Support operations. The package exposes 71 managed Output overloads covering 46 documented native functions, alongside the existing Geometry, Load, Root, Property and wrapper APIs.
+
+Added **25 managed Output overloads**: 23 synchronous main-project workflow adaptations and two typed enabling overloads for explicit native axes and Beam ratio queries. Output now exposes **71 managed overloads reaching 46/60 documented native names**. The fourteen native contract gates remain; this increment adds compositions, entity conveniences and ordered batches over qualified native routes. See [the managed workflow guide](Output-Managed-Workflows.md) for exact contracts and comparative usage.
+
+Added governing-case resolution, per-item batch outcomes, staged caller utilization caches, native global offset-transfer audit packets, geometry bases, plate-center composites, ordered static checks and opposite support actions. All new APIs have matching XML documentation and examples; no public ref/out, tuples, partial adapters or thread-pool COM calls were introduced.
+
+Validation passed **5,788 offline tests** and an isolated package consumer compiling/executing **1,102 selected XML examples**, including all 142 Output examples. Live native COM and engineering qualification remain pending. Publisher metadata remains TensorStruct, with Srinivasa Rao Masanam as author. The earlier prepared distribution archive remains unchanged.
+
+## 1.0.0-preview.20261026.2 - 26 October 2026 (source preview)
+
+Added **six common documented Output routes and 19 Support functions**, with full matching interface/adapter IntelliSense and named managed results. Output now covers **46/60** documented native names; Support covers **19/35**. The new Output overloads distinguish named parameter blocks from member-only observations, while Support preserves node/definition identity, six-DOF states and operation-specific native acknowledgements.
+
+Passed a Release build with zero warnings/errors and **5,523 offline tests**, including 170 new cases. A separate local CI archive verifies **1,052 selected XML examples** using managed native-signature fixtures. Live 2024–2026 COM and engineering qualification remain pending. The existing prepared distribution archive is unchanged.
+
+See [Output parameter blocks](Output-Steel-Design-Blocks.md) and [Support foundations](Support-Foundations.md) for exact signatures, examples, native conventions and limitations.
+
 ## 1.0.0-preview.20261026.1 - 26 October 2026 (prepared preview)
 
 Added four documented Property operations for model-wide element-node release cleanup, member fireproofing cleanup and country-qualified profile-name translation. Property now provides **249 common overloads and five optional catalog queries**, covering **195 of 204** active documented native routes. Nine documented contract gates and fifteen supplemental discovery candidates remain.

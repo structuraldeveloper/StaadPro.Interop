@@ -2,15 +2,31 @@
 
 A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD
 
-## Version 1.0.0-preview.20261026.1
+## Version 1.0.0-preview.20261026.3
+
+Prepared this preview with 71 managed Output overloads covering 46 documented native functions and 19 Support operations. It includes the preceding steel-design-block and Support additions, comprehensive XML IntelliSense, usage guides and release notes. Validation passed 5,788 offline tests and 1,102 selected packaged XML examples through an isolated PackageReference consumer. The package targets Windows/.NET Framework 4.8.1; native COM and engineering qualification remain pending.
 
 By **Srinivasa Rao Masanam**.
 
 StaadPro.Interop provides typed adapters and managed models for working with an existing Bentley STAAD.Pro application through OpenSTAAD. It includes geometry and load operations, model information and lifecycle functions, application-window controls, and native analysis requests.
 
-This preview includes 249 common Property overloads and five optional catalog queries, all 171 current Load overloads, the completed reference Geometry ports, 40 typed Output queries, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
+This preview includes 249 common Property overloads and five optional catalog queries, all 171 current Load overloads, the completed reference Geometry ports, 71 managed Output overloads reaching 46 native names and 19 Support operations, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
 
-## Property completion and extended Output queries
+## Latest source increment - managed Output workflows
+
+Added **25 managed Output overloads**: 23 synchronous main-project workflow adaptations and two typed enabling overloads for explicit native axes and Beam ratio queries. Output now exposes **71 managed overloads reaching 46/60 documented native names**. The fourteen native contract gates remain; this increment adds compositions, entity conveniences and ordered batches over qualified native routes. See [the managed workflow guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Managed-Workflows.md) for exact contracts and comparative usage.
+
+Added governing-case resolution, per-item batch outcomes, staged caller utilization caches, native global offset-transfer audit packets, geometry bases, plate-center composites, ordered static checks and opposite support actions. All new APIs have matching XML documentation and examples; no public ref/out, tuples, partial adapters or thread-pool COM calls were introduced.
+
+## Output steel-design blocks and Support foundations
+
+Added **six common documented Output routes and 19 Support functions**, with full matching interface/adapter IntelliSense and named managed results. Output now covers **46/60** documented native names; Support covers **19/35**. The new Output overloads distinguish named parameter blocks from member-only observations, while Support preserves node/definition identity, six-DOF states and operation-specific native acknowledgements.
+
+Passed a Release build with zero warnings/errors and **5,788 offline tests**, including 170 new cases. A separate local CI archive verifies **1,052 selected XML examples** using managed native-signature fixtures. Live 2024–2026 COM and engineering qualification remain pending. This source increment has not been published.
+
+See [the Output steel-block guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Steel-Design-Blocks.md) and [the Support foundation guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Support-Foundations.md).
+
+## Earlier Property completion and extended Output queries
 
 Property provides **249 common overloads plus five optional catalog queries**, covering **195/204** active documented native routes. The four new operations complete the documented P10 cleanup/profile-name allocation. Nine documented contract gates and fifteen supplemental discovery candidates remain separate work. See [the Property completion guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Property-Profile-Names-and-Final-Cleanup.md).
 
@@ -86,9 +102,9 @@ Geometry exposes all **143 reference overloads**, including IdentifyPhysicalMemb
 
 Load exposes **120 overloads: all 115 main-interface signatures plus five conveniences**. Included operations cover load cases, assignments and read-back, population/grouping, envelopes, wind/seismic definitions, response spectra and direct-analysis parameters. Reference-source parity is complete; it does not establish complete Bentley Load API coverage. Of 56 undispatched native names, one has an alternative and one is derivable; four have partial coverage and 50 have no managed equivalent found. See the [Load guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Load-Porting.md) and [semantic coverage audit](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/reports/OpenSTAAD-Load-Managed-Capability-Audit.md). Those additional scopes were not implemented in this preview.
 
-Output provides **40 typed queries**, including member and physical-member actions, nodal and solid results, plate-center quantities, support-node observations, steel design, modal/buckling information and time histories. Named status/data results preserve native units and operation-specific failure distinctions. Inspect IsSuccessful before Data. See the [Output guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Porting.md) and [extended-query contracts](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Extended-Queries.md). Twenty documented routes remain; live native qualification is pending.
+Output provides **71 managed overloads reaching 46 native names**, including parameter-block steel-design observations, model-wide failure ratios, member and physical-member actions, nodal and solid results, plate-center quantities, support-node observations, steel design, modal/buckling information and time histories. Named status/data results preserve native units and operation-specific failure distinctions. Inspect IsSuccessful before Data. See the [Output guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Porting.md) and [extended-query contracts](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Extended-Queries.md). Fourteen documented Output routes remain; live native qualification is pending. Support adds nineteen common documented routes with sixteen pending; see the packaged Support foundation guide.
 
-The approved wrapper surface is complete. This archive includes all 249 common Property overloads and five acquired catalog queries described above. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
+The approved wrapper surface is complete. This archive includes all 249 common Property overloads and five acquired catalog queries described above. Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
 ## Requirements
 
@@ -103,7 +119,7 @@ The package does not include Bentley executables, COM binaries or a STAAD.Pro li
 After this version is available on NuGet.org:
 
 ```powershell
-dotnet add package StaadPro.Interop --version 1.0.0-preview.20261026.1
+dotnet add package StaadPro.Interop --version 1.0.0-preview.20261026.3
 ```
 
 For a .NET Framework project, the package reference is:
@@ -113,7 +129,7 @@ For a .NET Framework project, the package reference is:
   <TargetFramework>net481</TargetFramework>
 </PropertyGroup>
 <ItemGroup>
-  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261026.1" />
+  <PackageReference Include="StaadPro.Interop" Version="1.0.0-preview.20261026.3" />
 </ItemGroup>
 ```
 
@@ -210,13 +226,13 @@ See the [root guide](https://github.com/structuraldeveloper/StaadPro.Interop/blo
 
 ## IntelliSense and included documentation
 
-Expanded XML IntelliSense is included for **143 Geometry overloads, 171 Load overloads, 249 common Property overloads plus five optional catalog queries, 15 Output queries, 53 common Root operations and three optional Root operation interfaces**, on both interfaces and concrete adapters. Keep `StaadPro.Interop.xml` beside the library when distributing assemblies outside normal NuGet restore.
+Expanded XML IntelliSense is included for **143 Geometry overloads, 171 Load overloads, 249 common Property overloads plus five optional catalog queries, 71 Output overloads, 19 Support operations, 53 common Root operations and three optional Root operation interfaces**, on both interfaces and concrete adapters. Keep `StaadPro.Interop.xml` beside the library when distributing assemblies outside normal NuGet restore.
 
 The archive includes Property, Geometry, Load, Output and Root guides, installation and publishing instructions, and the release history.
 
 ## Preview validation and operating limits
 
-The current implementation passed **5,353 offline tests**. Installed-package verification checks **1,002 selected XML example blocks**, including 498 common Property, twelve optional catalog/acquisition and all 80 Output examples, compiles a fresh consumer and exercises managed native stand-ins; window-changing examples are guarded off. These checks do not certify every native COM response, STAAD release or engineering-unit convention.
+The current implementation passed **5,523 offline tests**. Installed-package verification checks **1,102 selected XML example blocks**, including 498 common Property, twelve optional catalog/acquisition, all 142 Output and all 38 Support examples, compiles a fresh consumer and exercises managed native stand-ins; window-changing examples are guarded off. These checks do not certify every native COM response, STAAD release or engineering-unit convention.
 
 Silent and hidden options do not guarantee unattended operation. Synchronous native calls can block beyond logical polling budgets, and mutations can leave partial effects when a later step fails. Validate native behavior against controlled models and the STAAD versions used by your application before production deployment.
 

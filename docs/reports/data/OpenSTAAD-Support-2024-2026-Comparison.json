@@ -20,8 +20,8 @@
     "changedNonExampleContracts": 0,
     "changedCommonExamples2024To2025": 35,
     "changes2025To2026": 0,
-    "currentTypedMethods": 0,
-    "currentNativeDispatches": 0,
+    "currentTypedMethods": 19,
+    "currentNativeDispatches": 19,
     "mainInterfaceOverloads": 33,
     "mainPublicAdapterMethods": 33,
     "mainPrivateAdapterMethods": 0,
@@ -33,7 +33,8 @@
     "helpOnlyNames": 0,
     "classListedNames": 42,
     "excludedClassHelpers": 7,
-    "yearSpecificPolicyImplementationsRequiredByEvidence": 0
+    "yearSpecificPolicyImplementationsRequiredByEvidence": 0,
+    "remainingNativeRoutes": 16
   },
   "manualEvidence": {
     "2024": {
@@ -2490,28 +2491,18 @@
   "currentSourceEvidence": [
     {
       "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSSupport.cs",
-      "bytes": 608,
-      "sha256": "4a3f0f9fa4f7f4ff33838a254c87b16d19f8885c9b1e18c80fbc129b658dff75"
+      "bytes": 52106,
+      "sha256": "e28143de567a64115dfb895c88b24ba026fe39001ee87285c94d1e6d28e8799f"
     },
     {
       "file": "src/StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs",
-      "bytes": 1257,
-      "sha256": "9838a58497367cd308ecd152001dbc0e197567eceb49172f3bf154de1ea69f46"
+      "bytes": 54058,
+      "sha256": "40427da4fcc2720824bfcc6b968addd2c94ad920971b462a48e593a9e72e1fac"
     },
     {
-      "file": "src/StaadPro.Interop/Models/OpenStaadWrapper.cs",
-      "bytes": 21039,
-      "sha256": "1c0b69fe545a379262ad70cb1d1f9c45de872aba92e6eb4df218441455628692"
-    },
-    {
-      "file": "src/StaadPro.Interop/Common/Units/UnitsConverter.cs",
-      "bytes": 4918,
-      "sha256": "ada5c77a1b653d1b2ffde985978bfbe59149a426481276e0504ef0877c5eea8d"
-    },
-    {
-      "file": "src/StaadPro.Interop/StaadPro.Interop.csproj",
-      "bytes": 5056,
-      "sha256": "035570ef3e35b52a2772e2ec96b9bf886ce3d08d6e555c3d51ffd870de9f1a59"
+      "file": "src/StaadPro.Interop/Services/Support/SupportService.cs",
+      "bytes": 16188,
+      "sha256": "5958601aae7c36f05df66900254aa2d94985706cfa4445a843845d240a77bb84"
     }
   ],
   "readOnlyReferenceEvidence": [
@@ -2686,7 +2677,7 @@
       "name": "CreateSupportFixed",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "CreateSupport",
@@ -2778,13 +2769,19 @@
           "examplesSha256": "e71403e6c643215395a9cf0755e286cc3bdd0e26d57926d6b34d38f9b0c3d183",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "CreateFixedSupport",
+        "managedSignature": "SupportMutationResult CreateFixedSupport()",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "CreateSupportPinned",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "CreateSupport",
@@ -2876,13 +2873,19 @@
           "examplesSha256": "46622580ff7a46c7b01af82e7eda1f28ac34121dc938e89f4c2f7d50fa3b3816",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "CreatePinnedSupport",
+        "managedSignature": "SupportMutationResult CreatePinnedSupport()",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "CreateSupportFixedBut",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "CreateSupport",
@@ -3049,13 +3052,19 @@
           "examplesSha256": "e2381f55e61f3d06258df54b45f20cf28d5a78ee9012488c93d8f3ba4476d3da",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "CreateFixedButSupport",
+        "managedSignature": "SupportMutationResult CreateFixedButSupport(FixedButSupportDefinition definition)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "AssignSupportToNode",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "AssignSupportToNode",
@@ -3232,6 +3241,12 @@
           "examplesSha256": "654ceac18b92d7b0f354ba10bc0bd2dafa534cd42163b9a8eb4dfe6c021cb101",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "AssignSupportToNodes",
+        "managedSignature": "SupportMutationResult AssignSupportToNodes(int supportId, IEnumerable<int> nodeIds, int maximumResults = 100000)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -3340,7 +3355,7 @@
       "name": "GetSupportUniqueID",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S3",
@@ -3436,13 +3451,19 @@
           "examplesSha256": "a45842adb16be02c6f065fd5f9dffd33f97527333052b156609670dd2a1da602",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetSupportUniqueId",
+        "managedSignature": "SupportQueryResult<SupportUniqueId> GetSupportUniqueId(int supportId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "SetSupportUniqueID",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S8",
@@ -3571,13 +3592,19 @@
           "examplesSha256": "a45842adb16be02c6f065fd5f9dffd33f97527333052b156609670dd2a1da602",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "SetSupportUniqueId",
+        "managedSignature": "SupportMutationResult SetSupportUniqueId(int supportId, Guid uniqueId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "RemoveSupportFromNode",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S8",
@@ -3700,13 +3727,19 @@
           "examplesSha256": "0547d872cac3cf6b01de09831ea625df403f57d0ada3171b2af2d35750737d67",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "RemoveSupportFromNode",
+        "managedSignature": "SupportMutationResult RemoveSupportFromNode(int nodeId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "DeleteSupport",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S8",
@@ -3829,6 +3862,12 @@
           "examplesSha256": "7f7d2f0c19ad3b45a01cf2f5c397f78ddb1cfe1c7fc9b7060e24b1b42e6fc0c1",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "DeleteSupport",
+        "managedSignature": "SupportMutationResult DeleteSupport(int supportId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -6256,7 +6295,7 @@
       "name": "GetSupportCount",
       "category": "Support: Get Support Information Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "GetSupportNodesCount",
@@ -6321,13 +6360,19 @@
           "examplesSha256": "d6da62e494945c7d383e55a97933208c0ca8aa9737a9923df986cc35d115ea80",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetSupportedNodeCount",
+        "managedSignature": "SupportQueryResult<int> GetSupportedNodeCount()",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetSupportNodes",
       "category": "Support: Get Support Information Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "GetSupportNodeIds",
@@ -6460,13 +6505,19 @@
           "examplesSha256": "6ca8302fc09cf95400ab54f8d1536132eb6ed6fda222d6f02ae82e90656abd99",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetSupportedNodeIds",
+        "managedSignature": "SupportQueryResult<IReadOnlyList<int>> GetSupportedNodeIds(int maximumResults = 100000)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetSupportType",
       "category": "Support: Get Support Information Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "GetSupportTypesOfNodes",
@@ -6773,13 +6824,19 @@
           "examplesSha256": "46697198620f807d0d68c6247e972d38aebaa17a3c330f522926613ef015bf32",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetSupportType",
+        "managedSignature": "SupportQueryResult<SupportTypeObservation> GetSupportType(int nodeId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetSupportInformation",
       "category": "Support: Get Support Information Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S2",
@@ -7124,6 +7181,12 @@
           "examplesSha256": "03616892be6fae9671d1e9ad8d23f71deb293a5cf6cb49a4d0ea849d5b3b115b",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetSupportInformation",
+        "managedSignature": "SupportQueryResult<SupportInformation> GetSupportInformation(int nodeId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -7574,7 +7637,7 @@
       "name": "GetCountOfElasticMat",
       "category": "Support: Get Support Information Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "GetElasticMatSupports",
@@ -7639,13 +7702,19 @@
           "examplesSha256": "fd970a236347ed29887f6b79db6861c216aec14352f02b25a931aa68d32c1c65",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetElasticMatDefinitionCount",
+        "managedSignature": "SupportQueryResult<int> GetElasticMatDefinitionCount()",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetElasticMatDetail",
       "category": "Support: Get Support Information Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "GetElasticMatSupport",
@@ -8097,13 +8166,19 @@
           "examplesSha256": "1063a9f080b3079b86f858fdce915bf0f6c40e92a774393055eb1bd21689b9ba",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetElasticMat",
+        "managedSignature": "SupportQueryResult<ElasticMatObservation> GetElasticMat(int supportId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetElasticMatAssignmentList",
       "category": "Support: Get Support Information Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "GetElasticMatSupport",
@@ -8280,13 +8355,19 @@
           "examplesSha256": "18747a32dfb2cccff7885ed03005137977afd55c2d259f5929f3c2c255afbdbc",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetElasticMatAssignedNodeIds",
+        "managedSignature": "SupportQueryResult<IReadOnlyList<int>> GetElasticMatAssignedNodeIds(int supportId, int maximumResults = 100000)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetCountOfPlateMat",
       "category": "Support: Get Support Information Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "GetPlateMatSupports",
@@ -8351,6 +8432,12 @@
           "examplesSha256": "844b4727298e9f84e46292f2c6e0790c52d0871b80d20acff691af99d5220c28",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetPlateMatDefinitionCount",
+        "managedSignature": "SupportQueryResult<int> GetPlateMatDefinitionCount()",
+        "nativeRuntimeVerified": false
       }
     },
     {
@@ -9162,7 +9249,7 @@
       "name": "GetCountOfElasticFooting",
       "category": "Support: Get Support Information Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S5",
@@ -9219,13 +9306,19 @@
           "examplesSha256": "7d0e5aa6625257045b6ecab0f61b8511fd14adaf019d12f05611461b533463d2",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetElasticFootingDefinitionCount",
+        "managedSignature": "SupportQueryResult<int> GetElasticFootingDefinitionCount()",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetElasticFootingDetail",
       "category": "Support: Get Support Information Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S5",
@@ -9588,13 +9681,19 @@
           "examplesSha256": "b4e6df4a319dbd0f11c5fae806461aab4ea69a599e6fb7a642a533507194dcdd",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetElasticFooting",
+        "managedSignature": "SupportQueryResult<ElasticFootingObservation> GetElasticFooting(int supportId)",
+        "nativeRuntimeVerified": false
       }
     },
     {
       "name": "GetElasticFootingAssignmentList",
       "category": "Support: Get Support Information Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S5",
@@ -9750,6 +9849,12 @@
           "examplesSha256": "70c41bd71ee72c439ddd2be098409973a354406421e114ff6f567684bf7f31bc",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "status": "implemented",
+        "managedMethod": "GetElasticFootingAssignedNodeIds",
+        "managedSignature": "SupportQueryResult<IReadOnlyList<int>> GetElasticFootingAssignedNodeIds(int supportId, int maximumResults = 100000)",
+        "nativeRuntimeVerified": false
       }
     }
   ],
@@ -10596,5 +10701,145 @@
     "No 2024 vendor interop DLL was found at the corresponding expected STAAD path.",
     "Equal documentation/metadata does not certify native marshaling, engineering correctness, or servicing-build compatibility.",
     "Models/factory contain incomplete and obsolete behaviors recorded as adaptation work."
+  ],
+  "implementationUpdate": {
+    "date": "2026-10-26",
+    "parentCommit": "a193948",
+    "managedMethods": 19,
+    "nativeMappings": 19,
+    "pendingDocumentedNativeMappings": 16,
+    "contracts": [
+      {
+        "native": "GetSupportCount",
+        "managedSignature": "SupportQueryResult<int> GetSupportedNodeCount()"
+      },
+      {
+        "native": "GetSupportNodes",
+        "managedSignature": "SupportQueryResult<IReadOnlyList<int>> GetSupportedNodeIds(int maximumResults = 100000)"
+      },
+      {
+        "native": "GetSupportType",
+        "managedSignature": "SupportQueryResult<SupportTypeObservation> GetSupportType(int nodeId)"
+      },
+      {
+        "native": "GetSupportInformation",
+        "managedSignature": "SupportQueryResult<SupportInformation> GetSupportInformation(int nodeId)"
+      },
+      {
+        "native": "GetSupportUniqueID",
+        "managedSignature": "SupportQueryResult<SupportUniqueId> GetSupportUniqueId(int supportId)"
+      },
+      {
+        "native": "GetCountOfElasticMat",
+        "managedSignature": "SupportQueryResult<int> GetElasticMatDefinitionCount()"
+      },
+      {
+        "native": "GetElasticMatDetail",
+        "managedSignature": "SupportQueryResult<ElasticMatObservation> GetElasticMat(int supportId)"
+      },
+      {
+        "native": "GetElasticMatAssignmentList",
+        "managedSignature": "SupportQueryResult<IReadOnlyList<int>> GetElasticMatAssignedNodeIds(int supportId, int maximumResults = 100000)"
+      },
+      {
+        "native": "GetCountOfPlateMat",
+        "managedSignature": "SupportQueryResult<int> GetPlateMatDefinitionCount()"
+      },
+      {
+        "native": "GetCountOfElasticFooting",
+        "managedSignature": "SupportQueryResult<int> GetElasticFootingDefinitionCount()"
+      },
+      {
+        "native": "GetElasticFootingDetail",
+        "managedSignature": "SupportQueryResult<ElasticFootingObservation> GetElasticFooting(int supportId)"
+      },
+      {
+        "native": "GetElasticFootingAssignmentList",
+        "managedSignature": "SupportQueryResult<IReadOnlyList<int>> GetElasticFootingAssignedNodeIds(int supportId, int maximumResults = 100000)"
+      },
+      {
+        "native": "CreateSupportFixed",
+        "managedSignature": "SupportMutationResult CreateFixedSupport()"
+      },
+      {
+        "native": "CreateSupportPinned",
+        "managedSignature": "SupportMutationResult CreatePinnedSupport()"
+      },
+      {
+        "native": "CreateSupportFixedBut",
+        "managedSignature": "SupportMutationResult CreateFixedButSupport(FixedButSupportDefinition definition)"
+      },
+      {
+        "native": "AssignSupportToNode",
+        "managedSignature": "SupportMutationResult AssignSupportToNodes(int supportId, IEnumerable<int> nodeIds, int maximumResults = 100000)"
+      },
+      {
+        "native": "RemoveSupportFromNode",
+        "managedSignature": "SupportMutationResult RemoveSupportFromNode(int nodeId)"
+      },
+      {
+        "native": "DeleteSupport",
+        "managedSignature": "SupportMutationResult DeleteSupport(int supportId)"
+      },
+      {
+        "native": "SetSupportUniqueID",
+        "managedSignature": "SupportMutationResult SetSupportUniqueId(int supportId, Guid uniqueId)"
+      }
+    ],
+    "pendingNativeNames": [
+      "GetSupportName",
+      "CreateInclinedSupport",
+      "CreateElasticMat",
+      "RemoveElasticMat",
+      "RemoveElasticMatFromNode",
+      "AssignSupportToEntityList",
+      "CreatePlateMat",
+      "RemovePlateMat",
+      "RemovePlateMatFromPlate",
+      "CreateElasticFooting",
+      "RemoveElasticFooting",
+      "RemoveElasticFootingFromNode",
+      "GetSupportInformationEx",
+      "GetPlateMatSupportId",
+      "GetPlateMatDetail",
+      "GetPlateMatAssignmentList"
+    ],
+    "validation": {
+      "offlineTestsPassed": 5523,
+      "newSupportCases": 130,
+      "supportXmlExamples": 38,
+      "nativeRuntimeValidation": false,
+      "compiledExecutedXmlExamples": 1052,
+      "packageVersion": "1.0.0-preview.ci.2026102602"
+    },
+    "guide": "docs/Support-Foundations.md",
+    "contractIndex": "docs/contracts/SupportFoundationContractIndex.json"
+  },
+  "comparisonBaselineSourceEvidence": [
+    {
+      "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSSupport.cs",
+      "bytes": 608,
+      "sha256": "4a3f0f9fa4f7f4ff33838a254c87b16d19f8885c9b1e18c80fbc129b658dff75"
+    },
+    {
+      "file": "src/StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs",
+      "bytes": 1257,
+      "sha256": "9838a58497367cd308ecd152001dbc0e197567eceb49172f3bf154de1ea69f46"
+    },
+    {
+      "file": "src/StaadPro.Interop/Models/OpenStaadWrapper.cs",
+      "bytes": 21039,
+      "sha256": "1c0b69fe545a379262ad70cb1d1f9c45de872aba92e6eb4df218441455628692"
+    },
+    {
+      "file": "src/StaadPro.Interop/Common/Units/UnitsConverter.cs",
+      "bytes": 4918,
+      "sha256": "ada5c77a1b653d1b2ffde985978bfbe59149a426481276e0504ef0877c5eea8d"
+    },
+    {
+      "file": "src/StaadPro.Interop/StaadPro.Interop.csproj",
+      "bytes": 5056,
+      "sha256": "035570ef3e35b52a2772e2ec96b9bf886ce3d08d6e555c3d51ffd870de9f1a59"
+    }
   ]
 }

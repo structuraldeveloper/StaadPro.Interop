@@ -12,7 +12,25 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Property completion and extended Output queries
+## Latest prepared preview - 1.0.0-preview.20261026.3
+
+Prepared the Windows/.NET Framework 4.8.1 package with **71 managed Output overloads covering 46 native functions** and **19 Support operations**, including the preceding steel-design-block and Support additions. The release build passed with zero warnings/errors and **5,788 offline tests**. Isolated installation verification compiled and executed **1,102 selected packaged XML examples**. See [NuGet readiness](docs/NuGet-Readiness.md) for the archive and validation details.
+
+## Latest implementation - managed Output workflows
+
+Added **25 managed Output overloads**: 23 synchronous main-project workflow adaptations and two typed enabling overloads for explicit native axes and Beam ratio queries. Output now exposes **71 managed overloads reaching 46/60 documented native names**. The fourteen native contract gates remain; this increment adds compositions, entity conveniences and ordered batches over qualified native routes. See [the managed workflow guide](docs/Output-Managed-Workflows.md) for exact contracts and comparative usage.
+
+Added governing-case resolution, per-item batch outcomes, staged caller utilization caches, native global offset-transfer audit packets, geometry bases, plate-center composites, ordered static checks and opposite support actions. All new APIs have matching XML documentation and examples; no public ref/out, tuples, partial adapters or thread-pool COM calls were introduced.
+
+## Earlier source increment - Output steel blocks and Support
+
+Added **six common documented Output routes and 19 Support functions**, with full matching interface/adapter IntelliSense and named managed results. Output now covers **46/60** documented native names; Support covers **19/35**. The new Output overloads distinguish named parameter blocks from member-only observations, while Support preserves node/definition identity, six-DOF states and operation-specific native acknowledgements.
+
+Passed a Release build with zero warnings/errors and **5,523 offline tests**, including 170 new cases. A separate local CI archive verifies **1,052 selected XML examples** using managed native-signature fixtures. Live 2024–2026 COM and engineering qualification remain pending. The existing prepared distribution archive is unchanged.
+
+See [the six Output contracts](docs/Output-Steel-Design-Blocks.md) and [the nineteen Support contracts](docs/Support-Foundations.md). Source preview documentation is 1.0.0-preview.20261026.3; the previously prepared 1.0.0-preview.20261026.1 distribution archive remains unchanged.
+
+## Earlier Property completion and extended Output queries
 
 Property provides **249 common overloads plus five optional catalog queries**, covering **195/204** active documented native routes. The four new operations complete the documented P10 cleanup/profile-name allocation. Nine documented contract gates and fifteen supplemental discovery candidates remain separate work. See [the Property completion guide](docs/Property-Profile-Names-and-Final-Cleanup.md).
 
@@ -73,13 +91,13 @@ Implemented 15 additional Load observations with complete XML contracts, named s
 ## Prepared preview: 1.0.0-preview.20261026.1
 
 
-The current source preview includes 249 common Property overloads plus five separately acquired catalog queries, 171 Load overloads, all 143 reference Geometry overloads, 40 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
+The prepared 1.0.0-preview.20261026.1 archive includes 249 common Property overloads plus five separately acquired catalog queries, 171 Load overloads, all 143 reference Geometry overloads, 40 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
 
 Validated the Release build, 5,353 offline tests and isolated package consumption with 1,002 compiled/executed XML examples. Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.1.nupkg` for manual upload; it has not been published. Author is Srinivasa Rao Masanam; company and copyright holder are TensorStruct. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
 
 ## Output comparison and planned work
 
-The [Output guide](docs/Output-Porting.md) documents 40 implemented typed queries and 20 pending native mappings. The linked 2024–2026 comparison inventories every native contract and main-project overload, with shared services for identical contracts and narrow policies planned for evidenced differences. Source coverage does not certify live native behavior or change the published preview.
+The [Output guide](docs/Output-Porting.md) documents 71 implemented managed overloads reaching 46 native names and 14 pending native mappings. The linked 2024–2026 comparison inventories every native contract and main-project overload, with shared services for identical contracts and narrow policies planned for evidenced differences. Source coverage does not certify live native behavior or change the published preview.
 
 ## Property implementation and comparison
 
@@ -87,7 +105,7 @@ The [Property review](docs/Property-Porting.md) records 249 common overloads plu
 
 ## Support comparison and planned work
 
-The [Support review](docs/Support-Porting.md) compares STAAD.Pro 2024, 2025 and 2026, inventories all native contracts and main-project implementations, and proposes shared internal services with typed support-family handling. Support remains a binding-only placeholder; this review adds documentation and an implementation plan without changing package contents.
+The [Support review](docs/Support-Porting.md) compares STAAD.Pro 2024, 2025 and 2026, inventories all native contracts and main-project implementations, and proposes shared internal services with typed support-family handling. Support now implements 19 common documented routes with 16 remaining; see [the foundation guide](docs/Support-Foundations.md) for exact signatures, result conventions and remaining qualification gates.
 
 ## Remaining adapter comparisons and planned work
 
@@ -239,7 +257,7 @@ StaadPro.Interop/
 
 ## Building and Testing
 
-The current source adapters expose all 143 reference Geometry methods, 171 Load overloads and 40 typed Output queries. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
+The current source adapters expose all 143 reference Geometry methods, 171 Load overloads, 71 managed Output overloads and 19 Support operations. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
 
 The Root port maps all 39 reviewed native functions and all 23 private-source Root methods through 53 common operations and three optional capability operations. Access them through `wrapper.Root`; see [root porting progress and examples](docs/Root-Porting.md).
 

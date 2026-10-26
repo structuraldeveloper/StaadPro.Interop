@@ -3,8 +3,8 @@ using System.Windows.Media.Media3D;
 namespace StaadPro.Interop.Models.Output
 {
     /// <summary>An owned, immutable six-component force/moment snapshot in the query's documented axes.</summary>
-    /// <remarks>No sign, axis or unit conversion is applied. Member-end actions are local; support
-    /// reactions are global. Preserve their different action conventions. Use ToForces for the existing
+    /// <remarks>Components preserve the enclosing query's documented sign, axes and units. Member-end actions default to local or use explicitly selected native axes; support
+    /// reactions are global and GetSupportForces explicitly negates all six reaction components. Preserve their different action conventions. Use ToForces for the existing
     /// mutable vector algebra and unit-conversion model without changing this snapshot.</remarks>
     public sealed class ForceComponents
     {

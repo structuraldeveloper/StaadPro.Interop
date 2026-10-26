@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using StaadPro.Interop.Entities;
 using System.Windows.Media.Media3D;
 using StaadPro.Interop.Enums.Output;
 using System;
@@ -16,6 +17,7 @@ namespace StaadPro.Interop.Adapters.Models
     {
         private readonly OutputQueryReader queries;
         private readonly OutputAdvancedReader advanced;
+        private readonly OutputWorkflowService workflows;
         /// <summary>Captures the acquired wrapper's Output binding without invoking native result functions.</summary>
         /// <param name="wrapper">The connected wrapper whose RawOutput is available.</param>
         /// <exception cref="ArgumentNullException">The wrapper or its RawOutput binding is null.</exception>
@@ -24,6 +26,7 @@ namespace StaadPro.Interop.Adapters.Models
             ComObject = wrapper.RawOutput ?? throw new ArgumentNullException(nameof(wrapper.RawOutput));
             queries = new OutputQueryReader(wrapper, (object)ComObject);
             advanced = new OutputAdvancedReader(queries);
+            workflows = new OutputWorkflowService(wrapper, queries, advanced);
         }
         /// <summary>Gets the captured native Output automation binding.</summary>
         /// <value>The acquired raw object; direct use bypasses managed validation and lifetime checks.</value>
@@ -608,6 +611,511 @@ namespace StaadPro.Interop.Adapters.Models
         /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
         public OutputQueryResult<bool> GetMultipleSteelDesignResultAvailability() =>
             advanced.GetMultipleSteelDesignResultAvailability();
+
+        #endregion
+        #region Steel-design parameter blocks and failure ratios
+
+        /// <summary>Reads the native name of one zero-based steel-design parameter block.</summary>
+        /// <param name="parameterBlockIndex">Nonnegative zero-based native design-parameter-block index. Count and block availability remain native result-context decisions.</param>
+        /// <returns>A qualified status/data observation retaining actual native flag evidence and applicable member/block identity. Inspect IsSuccessful before Data; native failure has no payload.</returns>
+        /// <remarks><para>When to use: Use this name with the parameter-block overloads of GetMemberSteelUtilizationRatio and GetMemberSteelDesignResults. GetSteelDesignParameterBlockCount is a count, not a last index. This query passes the nonnegative index unchanged; it does not enumerate blocks, select a design code, run design or verify that all blocks are supported. Native false is failure; unwritten or empty successful names are rejected rather than used as a default block.</para><para>Common reviewed 2024–2026 contract, implemented by the shared internal Output reader. Calls run synchronously on the caller’s established COM apartment under the existing expanded-query gate. Reacquire wrapper.Output after refresh; disposed or replaced captured receivers are rejected before and after work. Coordinate raw access and external edits separately. Native units, code/result context and text are retained without conversion. No analysis, design, save, mutation, automatic retry or live engineering certification occurs.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID/index/name is invalid; rejected before native invocation.</exception>
+        /// <exception cref="System.InvalidOperationException">The receiver is stale/disposed, or successful native output has an unknown flag, invalid text/type, unwritten scalar or nonfinite/negative ratio.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native operation.</exception>
+        /// <example><code>var result = output.GetSteelDesignParameterBlockName(0);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<string> GetSteelDesignParameterBlockName(int parameterBlockIndex) =>
+            advanced.GetSteelDesignParameterBlockName(parameterBlockIndex);
+
+        /// <summary>Reads a member utilization ratio for one explicitly named steel-design parameter block.</summary>
+        /// <param name="memberId">Positive native analytical member ID; not a physical member, design-block index or load-case number.</param>
+        /// <param name="parameterBlockName">Exact nonblank native parameter-block name, without NUL characters. Case and surrounding whitespace are preserved; obtain it with GetSteelDesignParameterBlockName when discovering names.</param>
+        /// <returns>A qualified status/data observation retaining actual native flag evidence and applicable member/block identity. Inspect IsSuccessful before Data; native failure has no payload.</returns>
+        /// <remarks><para>When to use: Unlike the member-only overload, this calls the multiple-block native API and retains the exact requested ParameterBlockName in the result. The reviewed help describes AISC 360-16 multiple-design results; native availability and applicable code/context remain STAAD decisions. It does not select a block or take a maximum across blocks. Only finite nonnegative ratios are data; the single-block -999/-1 sentinels are not reused here. Native false takes precedence over any ratio buffer.</para><para>Common reviewed 2024–2026 contract, implemented by the shared internal Output reader. Calls run synchronously on the caller’s established COM apartment under the existing expanded-query gate. Reacquire wrapper.Output after refresh; disposed or replaced captured receivers are rejected before and after work. Coordinate raw access and external edits separately. Native units, code/result context and text are retained without conversion. No analysis, design, save, mutation, automatic retry or live engineering certification occurs.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID/index/name is invalid; rejected before native invocation.</exception>
+        /// <exception cref="System.InvalidOperationException">The receiver is stale/disposed, or successful native output has an unknown flag, invalid text/type, unwritten scalar or nonfinite/negative ratio.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native operation.</exception>
+        /// <example><code>var result = output.GetMemberSteelUtilizationRatio(17, "PARAMETER 1");
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<double> GetMemberSteelUtilizationRatio(int memberId, string parameterBlockName) =>
+            advanced.GetMemberSteelUtilizationRatio(memberId, parameterBlockName);
+
+        /// <summary>Reads the native maximum utilization ratio for one member across available design parameter blocks.</summary>
+        /// <param name="memberId">Positive native analytical member ID; not a physical member, design-block index or load-case number.</param>
+        /// <returns>A qualified status/data observation retaining actual native flag evidence and applicable member/block identity. Inspect IsSuccessful before Data; native failure has no payload.</returns>
+        /// <remarks><para>When to use: Choose this to ask STAAD for its maximum across parameter blocks, rather than the member-only or explicitly named-block ratio query. The native output does not identify a governing block, so ParameterBlockName is null and no identity is guessed. A finite nonnegative ratio is required on native true; it is not converted to PASS/FAIL and no managed envelope, single-block sentinel interpretation or design execution occurs.</para><para>Common reviewed 2024–2026 contract, implemented by the shared internal Output reader. Calls run synchronously on the caller’s established COM apartment under the existing expanded-query gate. Reacquire wrapper.Output after refresh; disposed or replaced captured receivers are rejected before and after work. Coordinate raw access and external edits separately. Native units, code/result context and text are retained without conversion. No analysis, design, save, mutation, automatic retry or live engineering certification occurs.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID/index/name is invalid; rejected before native invocation.</exception>
+        /// <exception cref="System.InvalidOperationException">The receiver is stale/disposed, or successful native output has an unknown flag, invalid text/type, unwritten scalar or nonfinite/negative ratio.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native operation.</exception>
+        /// <example><code>var result = output.GetMaximumMemberSteelUtilizationRatio(17);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<double> GetMaximumMemberSteelUtilizationRatio(int memberId) =>
+            advanced.GetMaximumMemberSteelUtilizationRatio(memberId);
+
+        /// <summary>Reads the named parameter-block steel-design packet for one analytical member.</summary>
+        /// <param name="memberId">Positive native analytical member ID; not a physical member, design-block index or load-case number.</param>
+        /// <param name="parameterBlockName">Exact nonblank native parameter-block name, without NUL characters. Case and surrounding whitespace are preserved; obtain it with GetSteelDesignParameterBlockName when discovering names.</param>
+        /// <returns>A qualified status/data observation retaining actual native flag evidence and applicable member/block identity. Inspect IsSuccessful before Data; native failure has no payload.</returns>
+        /// <remarks><para>When to use: Unlike GetMemberSteelDesignResults(memberId), this native packet supplies code, PASS/FAIL text, critical/allowable ratios, critical load case, clause and section for an explicit block. It supplies no critical station, FX/MY/MZ or slenderness; those fields are absent from ParameterBlockSteelDesignResults, never synthesized as zero. PASS/FAIL text is classified explicitly; other written text remains Unknown. Exact requested block and native status text are preserved. Native false prevents publication of any packet; no block selection, case activation or design is performed.</para><para>Common reviewed 2024–2026 contract, implemented by the shared internal Output reader. Calls run synchronously on the caller’s established COM apartment under the existing expanded-query gate. Reacquire wrapper.Output after refresh; disposed or replaced captured receivers are rejected before and after work. Coordinate raw access and external edits separately. Native units, code/result context and text are retained without conversion. No analysis, design, save, mutation, automatic retry or live engineering certification occurs.</para></remarks>
+        /// <exception cref="System.ArgumentException">An ID/index/name is invalid; rejected before native invocation.</exception>
+        /// <exception cref="System.InvalidOperationException">The receiver is stale/disposed, or successful native output has an unknown flag, invalid text/type, unwritten scalar or nonfinite/negative ratio.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native operation.</exception>
+        /// <example><code>var result = output.GetMemberSteelDesignResults(17, "PARAMETER 1");
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.DesignStatus);</code></example>
+        public OutputQueryResult<ParameterBlockSteelDesignResults> GetMemberSteelDesignResults(int memberId, string parameterBlockName) =>
+            advanced.GetMemberSteelDesignResults(memberId, parameterBlockName);
+
+        /// <summary>Reads the native model-wide minimum steel-design failure ratio.</summary>
+        /// <returns>A qualified status/data observation retaining actual native flag evidence and applicable member/block identity. Inspect IsSuccessful before Data; native failure has no payload.</returns>
+        /// <remarks><para>When to use: This function has no member ID or parameter-block input. It is a model-wide native failure-ratio observation, not the minimum utilization of a requested member or a managed envelope. GetMaximumSteelDesignFailureRatio is a separate observation with its own success flag; the two are not combined into an allegedly atomic range. Native false means failure or unavailable data without proving the absence of failing members. A finite nonnegative ratio is required on native success.</para><para>Common reviewed 2024–2026 contract, implemented by the shared internal Output reader. Calls run synchronously on the caller’s established COM apartment under the existing expanded-query gate. Reacquire wrapper.Output after refresh; disposed or replaced captured receivers are rejected before and after work. Coordinate raw access and external edits separately. Native units, code/result context and text are retained without conversion. No analysis, design, save, mutation, automatic retry or live engineering certification occurs.</para></remarks>
+        /// <exception cref="System.InvalidOperationException">The receiver is stale/disposed, or successful native output has an unknown flag, invalid text/type, unwritten scalar or nonfinite/negative ratio.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native operation.</exception>
+        /// <example><code>var result = output.GetMinimumSteelDesignFailureRatio();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<double> GetMinimumSteelDesignFailureRatio() =>
+            advanced.GetMinimumSteelDesignFailureRatio();
+
+        /// <summary>Reads the native model-wide maximum steel-design failure ratio.</summary>
+        /// <returns>A qualified status/data observation retaining actual native flag evidence and applicable member/block identity. Inspect IsSuccessful before Data; native failure has no payload.</returns>
+        /// <remarks><para>When to use: This function has no member ID or parameter-block input. It is independent from GetMinimumSteelDesignFailureRatio and from GetMaximumMemberSteelUtilizationRatio, which targets a member across blocks. No governing member/block is returned or invented. Native false prevents consumption of its output; the method does not infer failure thresholds, result freshness or an engineering PASS/FAIL decision.</para><para>Common reviewed 2024–2026 contract, implemented by the shared internal Output reader. Calls run synchronously on the caller’s established COM apartment under the existing expanded-query gate. Reacquire wrapper.Output after refresh; disposed or replaced captured receivers are rejected before and after work. Coordinate raw access and external edits separately. Native units, code/result context and text are retained without conversion. No analysis, design, save, mutation, automatic retry or live engineering certification occurs.</para></remarks>
+        /// <exception cref="System.InvalidOperationException">The receiver is stale/disposed, or successful native output has an unknown flag, invalid text/type, unwritten scalar or nonfinite/negative ratio.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retry.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver lacks a compatible native operation.</exception>
+        /// <example><code>var result = output.GetMaximumSteelDesignFailureRatio();
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);</code></example>
+        public OutputQueryResult<double> GetMaximumSteelDesignFailureRatio() =>
+            advanced.GetMaximumSteelDesignFailureRatio();
+
+        #endregion
+
+        #region Managed result workflows
+
+        /// <summary>Retrieves a beam design packet and resolves its governing case from supplied metadata.</summary>
+        /// <param name="beam">Caller-owned beam with a positive ID; geometry is required only for offset workflows.</param>
+        /// <param name="loadCases">Non-null case metadata selection of at most 100000 items with positive IDs, valid families/types and no conflicting metadata for a shared number.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Uses the existing complete native steel-design packet, preserving the raw design decision and unavailable action components. Unlike GetMemberSteelDesignResults(int), this resolves governing case metadata and retains the caller Beam. A native success whose governing case is absent returns MetadataUnavailable without Data. Conflicting metadata for the same case number is rejected; duplicate identical metadata is accepted. Cases must belong to this model and the numeric case identities must be unambiguous. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));
+        /// var loadCases = new ILoadCase[] { new LoadCase(1, "Dead") };
+        /// var result = wrapper.Output.GetSteelDesignResultsForBeam(beam, loadCases);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<BeamSteelDesignResults> GetSteelDesignResultsForBeam(Beam beam, IEnumerable<ILoadCase> loadCases) =>
+            workflows.GetSteelDesignResultsForBeam(beam, loadCases);
+
+        /// <summary>Retrieves a beam design packet using case metadata discovered from this wrapper.</summary>
+        /// <param name="load">This acquired wrapper's current Load adapter, used to discover primary and combination case metadata.</param>
+        /// <param name="beam">Caller-owned beam with a positive ID; geometry is required only for offset workflows.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Uses the existing complete native steel-design packet, preserving the raw design decision and unavailable action components. Unlike GetMemberSteelDesignResults(int), this resolves governing case metadata and retains the caller Beam. A native success whose governing case is absent returns MetadataUnavailable without Data. Conflicting metadata for the same case number is rejected; duplicate identical metadata is accepted. Cases must belong to this model and the numeric case identities must be unambiguous. Discovers primary and combination cases through the current Load adapter; reference cases are not governing design cases here. Pass this wrapper's Load adapter, not one acquired from a different model. Supplied-metadata overloads avoid discovery calls. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));
+        /// var loadCases = new ILoadCase[] { new LoadCase(1, "Dead") };
+        /// var result = wrapper.Output.GetSteelDesignResultsForBeam(wrapper.Load, beam);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<BeamSteelDesignResults> GetSteelDesignResultsForBeam(IOSLoad load, Beam beam) =>
+            workflows.GetSteelDesignResultsForBeam(load, beam);
+
+        /// <summary>Retrieves independently qualified design packets for a beam selection.</summary>
+        /// <param name="beams">Non-null selection, at most 100000 beams, one positive unique member ID per beam; enumerated once before dispatch.</param>
+        /// <param name="loadCases">Non-null case metadata selection of at most 100000 items with positive IDs, valid families/types and no conflicting metadata for a shared number.</param>
+        /// <returns>An immutable ordered batch with per-item status and data; empty batches are successful. Inspect each item's IsSuccessful before Data; ordinary failure retains the item.</returns>
+        /// <remarks>Uses the existing complete native steel-design packet, preserving the raw design decision and unavailable action components. Unlike GetMemberSteelDesignResults(int), this resolves governing case metadata and retains the caller Beam. A native success whose governing case is absent returns MetadataUnavailable without Data. Conflicting metadata for the same case number is rejected; duplicate identical metadata is accepted. Cases must belong to this model and the numeric case identities must be unambiguous. Selection is enumerated once before dispatch, retains order, and rejects duplicate member IDs. Ordinary native failures remain individual results; transport or malformed-data exceptions abort the operation. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));
+        /// var loadCases = new ILoadCase[] { new LoadCase(1, "Dead") };
+        /// var result = wrapper.Output.GetSteelDesignResultsForBeams(new[] { beam }, loadCases);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public OutputBatchResult<BeamSteelDesignResults> GetSteelDesignResultsForBeams(IEnumerable<Beam> beams, IEnumerable<ILoadCase> loadCases) =>
+            workflows.GetSteelDesignResultsForBeams(beams, loadCases);
+
+        /// <summary>Retrieves beam design packets after discovering governing-case metadata once.</summary>
+        /// <param name="load">This acquired wrapper's current Load adapter, used to discover primary and combination case metadata.</param>
+        /// <param name="beams">Non-null selection, at most 100000 beams, one positive unique member ID per beam; enumerated once before dispatch.</param>
+        /// <returns>An immutable ordered batch with per-item status and data; empty batches are successful. Inspect each item's IsSuccessful before Data; ordinary failure retains the item.</returns>
+        /// <remarks>Uses the existing complete native steel-design packet, preserving the raw design decision and unavailable action components. Unlike GetMemberSteelDesignResults(int), this resolves governing case metadata and retains the caller Beam. A native success whose governing case is absent returns MetadataUnavailable without Data. Conflicting metadata for the same case number is rejected; duplicate identical metadata is accepted. Cases must belong to this model and the numeric case identities must be unambiguous. Discovers primary/combination cases once per nonempty selection using this wrapper's current Load adapter. Empty selections perform no native discovery. Duplicate member IDs are rejected. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));
+        /// var loadCases = new ILoadCase[] { new LoadCase(1, "Dead") };
+        /// var result = wrapper.Output.GetSteelDesignResultsForBeams(wrapper.Load, new[] { beam });
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public OutputBatchResult<BeamSteelDesignResults> GetSteelDesignResultsForBeams(IOSLoad load, IEnumerable<Beam> beams) =>
+            workflows.GetSteelDesignResultsForBeams(load, beams);
+
+        /// <summary>Retrieves per-member utilization observations without changing the supplied beams.</summary>
+        /// <param name="beams">Non-null selection, at most 100000 beams, one positive unique member ID per beam; enumerated once before dispatch.</param>
+        /// <returns>An immutable ordered batch with per-item status and data; empty batches are successful. Inspect each item's IsSuccessful before Data; ordinary failure retains the item.</returns>
+        /// <remarks>Unlike PopulateMemberSteelUtilizationRatios, this only reads. Snapshots the set once in its enumeration order; distinct beam objects with the same member ID are rejected. Retains each query's status and member identity, including failures. Ratios are dimensionless. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));
+        /// var loadCases = new ILoadCase[] { new LoadCase(1, "Dead") };
+        /// var result = wrapper.Output.GetMemberSteelUtilizationRatios(new HashSet&lt;Beam&gt; { beam });
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public OutputBatchResult<double> GetMemberSteelUtilizationRatios(HashSet<Beam> beams) =>
+            workflows.GetMemberSteelUtilizationRatios(beams);
+
+        /// <summary>Stages utilization observations and applies them to caller beams only after all reads succeed.</summary>
+        /// <param name="beams">Non-null selection, at most 100000 beams, one positive unique member ID per beam; enumerated once before dispatch.</param>
+        /// <returns>Staged per-beam query statuses and whether the managed cache assignment phase completed. Inspect IsSuccessful and WasApplied.</returns>
+        /// <remarks>Unlike GetMemberSteelUtilizationRatios, this updates the caller-owned Beam.UtilizationRatio caches, never the STAAD model. Any ordinary failed query prevents all managed assignments. Empty selections apply nothing. Successful native reads are staged before assignment; an exception from a property setter, notification handler or lifetime check can interrupt assignment after earlier beams were updated. This is not an atomic rollback transaction. Prior cache values do not certify current design results. Ratios are dimensionless. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));
+        /// var loadCases = new ILoadCase[] { new LoadCase(1, "Dead") };
+        /// var result = wrapper.Output.PopulateMemberSteelUtilizationRatios(new HashSet&lt;Beam&gt; { beam });
+        /// System.Console.WriteLine(result.IsSuccessful);
+        /// System.Console.WriteLine(result.WasApplied);</code></example>
+        public OutputPopulationResult PopulateMemberSteelUtilizationRatios(HashSet<Beam> beams) =>
+            workflows.PopulateMemberSteelUtilizationRatios(beams);
+
+        /// <summary>Retrieves identified analytical member-end actions in native local axes.</summary>
+        /// <param name="loadCaseTitle">Caller-supplied case label retained exactly; cannot be null or contain NUL. Empty is allowed; it is not a native title lookup.</param>
+        /// <param name="memberId">Positive analytical member ID, not a physical-member ID.</param>
+        /// <param name="loadCaseId">Positive native result case number present in the analyzed model.</param>
+        /// <param name="memberEnd">Start or End of the native member incidence.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Unlike the three-argument numeric overload, this returns an identified packet containing the exact caller-supplied case title and coordinate system. The title is a label, not a native lookup or proof of case identity. Values keep native member-end signs; no support-reaction sign reversal is applied. Local X follows native member incidence; beta and native local conventions are handled by STAAD. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var result = wrapper.Output.GetMemberEndForces("Dead", 17, 1, MemberEnd.Start);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<IdentifiedMemberForces> GetMemberEndForces(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd) =>
+            workflows.GetMemberEndForces(loadCaseTitle, memberId, loadCaseId, memberEnd);
+
+        /// <summary>Retrieves identified analytical member-end actions in the requested native axes.</summary>
+        /// <param name="loadCaseTitle">Caller-supplied case label retained exactly; cannot be null or contain NUL. Empty is allowed; it is not a native title lookup.</param>
+        /// <param name="memberId">Positive analytical member ID, not a physical-member ID.</param>
+        /// <param name="loadCaseId">Positive native result case number present in the analyzed model.</param>
+        /// <param name="memberEnd">Start or End of the native member incidence.</param>
+        /// <param name="coordinateSystem">Local or Global as interpreted directly by STAAD; no other selector is accepted.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Unlike the three-argument numeric overload, this returns an identified packet containing the exact caller-supplied case title and coordinate system. The title is a label, not a native lookup or proof of case identity. Values keep native member-end signs; no support-reaction sign reversal is applied. Local or Global is sent directly to the native call. This performs no managed axis reconstruction. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var result = wrapper.Output.GetMemberEndForces("Dead", 17, 1, MemberEnd.Start, ResultCoordinateSystem.Global);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<IdentifiedMemberForces> GetMemberEndForces(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd, ResultCoordinateSystem coordinateSystem) =>
+            workflows.GetMemberEndForces(loadCaseTitle, memberId, loadCaseId, memberEnd, coordinateSystem);
+
+        /// <summary>Retrieves native global member-end forces and an offset-transfer audit packet.</summary>
+        /// <param name="loadCaseTitle">Caller-supplied case label retained exactly; cannot be null or contain NUL. Empty is allowed; it is not a native title lookup.</param>
+        /// <param name="beam">Caller-owned beam with a positive ID; geometry is required only for offset workflows.</param>
+        /// <param name="loadCaseId">Positive native result case number present in the analyzed model.</param>
+        /// <param name="memberEnd">Start or End of the native member incidence.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Unlike GetMemberEndForces, this includes native global member-end forces at the analytical face and a managed transfer to the physical joint, with an audit of the global joint-to-face offset. Uses Mjoint = Mface + offset cross F; forces are unchanged. Offset lengths and force/moment units must be mutually consistent; no unit conversion or independent engineering validation is performed. Explicit native NoSpecification is recorded as an absent offset; other offset failures do not become zero. Joint/face naming and transfer follow the main-project convention and require live model qualification before engineering use. Uses supplied hydrated incidence/coordinates; stale caller geometry cannot be certified against STAAD. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));
+        /// var result = wrapper.Output.GetMemberEndForcesConsideringOffsets("Dead", beam, 1, MemberEnd.Start);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<OffsetAwareMemberEndForces> GetMemberEndForcesConsideringOffsets(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd) =>
+            workflows.GetMemberEndForcesConsideringOffsets(loadCaseTitle, beam, loadCaseId, memberEnd);
+
+        /// <summary>Retrieves the managed global member-end action transferred to the physical joint.</summary>
+        /// <param name="loadCaseTitle">Caller-supplied case label retained exactly; cannot be null or contain NUL. Empty is allowed; it is not a native title lookup.</param>
+        /// <param name="beam">Caller-owned beam with a positive ID; geometry is required only for offset workflows.</param>
+        /// <param name="loadCaseId">Positive native result case number present in the analyzed model.</param>
+        /// <param name="memberEnd">Start or End of the native member incidence.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Unlike GetMemberEndForces, this includes native global member-end forces at the analytical face and a managed transfer to the physical joint, with an audit of the global joint-to-face offset. Uses Mjoint = Mface + offset cross F; forces are unchanged. Offset lengths and force/moment units must be mutually consistent; no unit conversion or independent engineering validation is performed. Explicit native NoSpecification is recorded as an absent offset; other offset failures do not become zero. Joint/face naming and transfer follow the main-project convention and require live model qualification before engineering use. Returns only the physical-joint projection; choose GetMemberEndForcesConsideringOffsets to inspect both face and joint results with the offset. This uses analytical members; it is not GetPhysicalMemberEndForces for a native physical-member ID. Supply hydrated incidence/coordinates. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));
+        /// var result = wrapper.Output.GetMemberEndForcesAtPhysicalJoint("Dead", beam, 1, MemberEnd.Start);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<IdentifiedMemberForces> GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd) =>
+            workflows.GetMemberEndForcesAtPhysicalJoint(loadCaseTitle, beam, loadCaseId, memberEnd);
+
+        /// <summary>Retrieves native global member-end forces and an offset-transfer audit packet.</summary>
+        /// <param name="loadCaseTitle">Caller-supplied case label retained exactly; cannot be null or contain NUL. Empty is allowed; it is not a native title lookup.</param>
+        /// <param name="memberId">Positive analytical member ID, not a physical-member ID.</param>
+        /// <param name="loadCaseId">Positive native result case number present in the analyzed model.</param>
+        /// <param name="memberEnd">Start or End of the native member incidence.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Unlike GetMemberEndForces, this includes native global member-end forces at the analytical face and a managed transfer to the physical joint, with an audit of the global joint-to-face offset. Uses Mjoint = Mface + offset cross F; forces are unchanged. Offset lengths and force/moment units must be mutually consistent; no unit conversion or independent engineering validation is performed. Explicit native NoSpecification is recorded as an absent offset; other offset failures do not become zero. Joint/face naming and transfer follow the main-project convention and require live model qualification before engineering use. Reads incidence and node coordinates from the current Geometry binding with strict status/written-output validation. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var result = wrapper.Output.GetMemberEndForcesConsideringOffsets("Dead", 17, 1, MemberEnd.Start);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<OffsetAwareMemberEndForces> GetMemberEndForcesConsideringOffsets(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd) =>
+            workflows.GetMemberEndForcesConsideringOffsets(loadCaseTitle, memberId, loadCaseId, memberEnd);
+
+        /// <summary>Retrieves the managed global member-end action transferred to the physical joint.</summary>
+        /// <param name="loadCaseTitle">Caller-supplied case label retained exactly; cannot be null or contain NUL. Empty is allowed; it is not a native title lookup.</param>
+        /// <param name="memberId">Positive analytical member ID, not a physical-member ID.</param>
+        /// <param name="loadCaseId">Positive native result case number present in the analyzed model.</param>
+        /// <param name="memberEnd">Start or End of the native member incidence.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Unlike GetMemberEndForces, this includes native global member-end forces at the analytical face and a managed transfer to the physical joint, with an audit of the global joint-to-face offset. Uses Mjoint = Mface + offset cross F; forces are unchanged. Offset lengths and force/moment units must be mutually consistent; no unit conversion or independent engineering validation is performed. Explicit native NoSpecification is recorded as an absent offset; other offset failures do not become zero. Joint/face naming and transfer follow the main-project convention and require live model qualification before engineering use. Returns only the physical-joint projection; choose GetMemberEndForcesConsideringOffsets to inspect both face and joint results with the offset. This uses analytical members; it is not GetPhysicalMemberEndForces for a native physical-member ID. Resolves native incidence/coordinates. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var result = wrapper.Output.GetMemberEndForcesAtPhysicalJoint("Dead", 17, 1, MemberEnd.Start);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<IdentifiedMemberForces> GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd) =>
+            workflows.GetMemberEndForcesAtPhysicalJoint(loadCaseTitle, memberId, loadCaseId, memberEnd);
+
+        /// <summary>Computes a right-handed managed member basis from supplied geometry and beta degrees.</summary>
+        /// <param name="member">Caller-owned beam with a positive ID, hydrated distinct start/end nodes, finite coordinates and beta degrees.</param>
+        /// <returns>An owned orthonormal basis from supplied geometry; no native status is fabricated.</returns>
+        /// <remarks>Uses no native result query. Unlike requesting native Local/Global axes, this is a geometry convention, not native orientation read-back. Supply hydrated distinct nodes and the intended finite beta angle. X follows start to end; projected global Y defines the reference except near vertical, where projected global Z defines Z. Beta rotates Y/Z about positive X. Native orientation rules or stale caller geometry can differ; prefer native axis selection for Output extraction. The returned pure transforms change axes without converting units. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));
+        /// var result = wrapper.Output.GetMemberLocalCoordinateSystem(beam);
+        /// System.Console.WriteLine(result.XAxis);</code></example>
+        public MemberCoordinateSystem GetMemberLocalCoordinateSystem(Beam member) =>
+            workflows.GetMemberLocalCoordinateSystem(member);
+
+        /// <summary>Retrieves the selected result family at a plate center using entity identities.</summary>
+        /// <param name="loadCase">Caller case metadata with a positive native result case ID; no native case discovery or activation is performed.</param>
+        /// <param name="plate">Caller plate with a positive ID; geometry is not required for center extraction.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Returns the five native center force/stress components, not the three center moments or combined eight-value stress/moment packet. Equivalent to the corresponding numeric-ID query; only case and plate IDs select native results. Captures identities before dispatch and does not hydrate geometry, validate case membership or read native case titles. Uses native plate-local axes and face conventions; no corner or arbitrary-point interpolation. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var plate = new Plate { Id = 17 };
+        /// var result = wrapper.Output.GetPlateCenterForces(loadCase, plate);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCenterForces> GetPlateCenterForces(ILoadCase loadCase, Plate plate) =>
+            workflows.GetPlateCenterForces(loadCase, plate);
+
+        /// <summary>Retrieves moments at a plate center using entity identities.</summary>
+        /// <param name="loadCase">Caller case metadata with a positive native result case ID; no native case discovery or activation is performed.</param>
+        /// <param name="plate">Caller plate with a positive ID; geometry is not required for center extraction.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Returns the three native center bending/twisting moments per unit width, not the five center force/stress components. Equivalent to the corresponding numeric-ID query; only case and plate IDs select native results. Captures identities before dispatch and does not hydrate geometry, validate case membership or read native case titles. Uses native plate-local axes and face conventions; no corner or arbitrary-point interpolation. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var plate = new Plate { Id = 17 };
+        /// var result = wrapper.Output.GetPlateCenterMoments(loadCase, plate);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCenterMoments> GetPlateCenterMoments(ILoadCase loadCase, Plate plate) =>
+            workflows.GetPlateCenterMoments(loadCase, plate);
+
+        /// <summary>Retrieves the selected result family at a plate center using entity identities.</summary>
+        /// <param name="loadCase">Caller case metadata with a positive native result case ID; no native case discovery or activation is performed.</param>
+        /// <param name="plate">Caller plate with a positive ID; geometry is not required for center extraction.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Returns top/bottom center von Mises stresses, not normal principal stresses or principal directions. Equivalent to the corresponding numeric-ID query; only case and plate IDs select native results. Captures identities before dispatch and does not hydrate geometry, validate case membership or read native case titles. Uses native plate-local axes and face conventions; no corner or arbitrary-point interpolation. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var plate = new Plate { Id = 17 };
+        /// var result = wrapper.Output.GetPlateCenterVonMises(loadCase, plate);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCenterVonMises> GetPlateCenterVonMises(ILoadCase loadCase, Plate plate) =>
+            workflows.GetPlateCenterVonMises(loadCase, plate);
+
+        /// <summary>Retrieves the selected result family at a plate center using entity identities.</summary>
+        /// <param name="loadCase">Caller case metadata with a positive native result case ID; no native case discovery or activation is performed.</param>
+        /// <param name="plate">Caller plate with a positive ID; geometry is not required for center extraction.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Returns top/bottom center normal principal stresses, not von Mises stresses or principal directions. Equivalent to the corresponding numeric-ID query; only case and plate IDs select native results. Captures identities before dispatch and does not hydrate geometry, validate case membership or read native case titles. Uses native plate-local axes and face conventions; no corner or arbitrary-point interpolation. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var plate = new Plate { Id = 17 };
+        /// var result = wrapper.Output.GetPlatePrincipalStresses(loadCase, plate);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlatePrincipalStresses> GetPlatePrincipalStresses(ILoadCase loadCase, Plate plate) =>
+            workflows.GetPlatePrincipalStresses(loadCase, plate);
+
+        /// <summary>Retrieves four qualified result families for one plate center.</summary>
+        /// <param name="loadCase">Caller case metadata with a positive native result case ID; no native case discovery or activation is performed.</param>
+        /// <param name="plate">Caller plate with a positive ID; geometry is not required for center extraction.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Unlike individual plate-center family queries, this composes forces, moments, von Mises and normal principal stresses from four existing native calls. It is not the eight-value combined stress/moment native query. All four are observed even when an ordinary native failure occurs; the first failure determines Status and Data remains unavailable. Observations retains each contributing status; exceptions abort immediately. The calls are sequential observations, not an atomic solver snapshot. Native plate-local axes, top/bottom conventions and family-specific units are preserved. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var plate = new Plate { Id = 17 };
+        /// var result = wrapper.Output.GetPlateCenterResults(loadCase, plate);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCenterResults> GetPlateCenterResults(ILoadCase loadCase, Plate plate) =>
+            workflows.GetPlateCenterResults(loadCase, plate);
+
+        /// <summary>Retrieves four plate-center result families for a Cartesian selection.</summary>
+        /// <param name="loadCases">Non-null case metadata selection of at most 100000 items with positive IDs, valid families/types and no conflicting metadata for a shared number.</param>
+        /// <param name="plates">Non-null plate selection with positive IDs, at most 100000 entries; Cartesian output is limited to 100000 pairs.</param>
+        /// <returns>An immutable ordered batch with per-item status and data; empty batches are successful. Inspect each item's IsSuccessful before Data; ordinary failure retains the item.</returns>
+        /// <remarks>Unlike individual plate-center family queries, this composes forces, moments, von Mises and normal principal stresses from four existing native calls. It is not the eight-value combined stress/moment native query. All four are observed even when an ordinary native failure occurs; the first failure determines Status and Data remains unavailable. Observations retains each contributing status; exceptions abort immediately. The calls are sequential observations, not an atomic solver snapshot. Native plate-local axes, top/bottom conventions and family-specific units are preserved. Snapshots both sequences once, then queries case-major/plate-minor Cartesian order. Duplicate selections are retained; conflicting metadata for the same case number is rejected. Ordinary per-pair failures remain in Items. Empty products perform no native queries. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var plate = new Plate { Id = 17 };
+        /// var result = wrapper.Output.GetPlateCenterResults(new[] { loadCase }, new[] { plate });
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public OutputBatchResult<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates) =>
+            workflows.GetPlateCenterResults(loadCases, plates);
+
+        /// <summary>Retrieves plate-center result sets with an explicit compatibility scheduling hint.</summary>
+        /// <param name="loadCases">Non-null case metadata selection of at most 100000 items with positive IDs, valid families/types and no conflicting metadata for a shared number.</param>
+        /// <param name="plates">Non-null plate selection with positive IDs, at most 100000 entries; Cartesian output is limited to 100000 pairs.</param>
+        /// <param name="degreeOfParallelism">Compatibility planning hint from 1 through 64; native calls remain serialized on the caller thread.</param>
+        /// <returns>An immutable ordered batch with per-item status and data; empty batches are successful. Inspect each item's IsSuccessful before Data; ordinary failure retains the item.</returns>
+        /// <remarks>Unlike individual plate-center family queries, this composes forces, moments, von Mises and normal principal stresses from four existing native calls. It is not the eight-value combined stress/moment native query. All four are observed even when an ordinary native failure occurs; the first failure determines Status and Data remains unavailable. Observations retains each contributing status; exceptions abort immediately. The calls are sequential observations, not an atomic solver snapshot. Native plate-local axes, top/bottom conventions and family-specific units are preserved. Snapshots both sequences once, then queries case-major/plate-minor Cartesian order. Duplicate selections are retained; conflicting metadata for the same case number is rejected. Ordinary per-pair failures remain in Items. Empty products perform no native queries. Unlike the main-source parallel implementation, degreeOfParallelism (1-64) is retained as a compatibility planning hint; every COM call remains serialized on the caller thread. It does not request native worker threads or promise parallel speedup. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var plate = new Plate { Id = 17 };
+        /// var result = wrapper.Output.GetPlateCenterResults(new[] { loadCase }, new[] { plate }, 2);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public OutputBatchResult<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates, int degreeOfParallelism) =>
+            workflows.GetPlateCenterResults(loadCases, plates, degreeOfParallelism);
+
+        /// <summary>Retrieves static equilibrium observations for an ordered case selection.</summary>
+        /// <param name="loadCaseIds">Non-null sequence of positive result case IDs, at most 100000 entries; order and duplicates are retained.</param>
+        /// <returns>An immutable ordered batch with per-item status and data; empty batches are successful. Inspect each item's IsSuccessful before Data; ordinary failure retains the item.</returns>
+        /// <remarks>Unlike GetStaticCheckResult(int), this returns an ordered list of independent case results, including duplicate case requests and failed observations. It does not collapse equal force records in a HashSet. Preserves native global total loads/reactions and their original signs; does not negate reactions, compute an equilibrium tolerance or assert that analysis is current. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var result = wrapper.Output.GetStaticCheckResults(new[] { 1, 2 });
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public OutputBatchResult<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds) =>
+            workflows.GetStaticCheckResults(loadCaseIds);
+
+        /// <summary>Retrieves ordered static checks with an explicit compatibility scheduling hint.</summary>
+        /// <param name="loadCaseIds">Non-null sequence of positive result case IDs, at most 100000 entries; order and duplicates are retained.</param>
+        /// <param name="degreeOfParallelism">Compatibility planning hint from 1 through 64; native calls remain serialized on the caller thread.</param>
+        /// <returns>An immutable ordered batch with per-item status and data; empty batches are successful. Inspect each item's IsSuccessful before Data; ordinary failure retains the item.</returns>
+        /// <remarks>Unlike GetStaticCheckResult(int), this returns an ordered list of independent case results, including duplicate case requests and failed observations. It does not collapse equal force records in a HashSet. Preserves native global total loads/reactions and their original signs; does not negate reactions, compute an equilibrium tolerance or assert that analysis is current. degreeOfParallelism (1-64) is a compatibility planning hint; COM dispatch stays serialized on the caller thread and creates no tasks. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var result = wrapper.Output.GetStaticCheckResults(new[] { 1, 2 }, 2);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public OutputBatchResult<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds, int degreeOfParallelism) =>
+            workflows.GetStaticCheckResults(loadCaseIds, degreeOfParallelism);
+
+        /// <summary>Retrieves the opposite of the native support reaction for use as an applied support action.</summary>
+        /// <param name="nodeId">Positive native support-node ID in the analyzed model.</param>
+        /// <param name="loadCaseId">Positive native result case number present in the analyzed model.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Unlike GetSupportReactions, this negates all six global components, including moments, to preserve the main-project support-action convention. Native failure remains a failure without Data. No force or moment unit conversion, support assignment or model update is performed. Choose GetSupportReactions when the original STAAD reaction sign is required. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var result = wrapper.Output.GetSupportForces(17, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<ForceComponents> GetSupportForces(int nodeId, int loadCaseId) =>
+            workflows.GetSupportForces(nodeId, loadCaseId);
+
+        /// <summary>Retrieves analytical member-end actions in explicitly selected native axes.</summary>
+        /// <param name="memberId">Positive analytical member ID, not a physical-member ID.</param>
+        /// <param name="memberEnd">Start or End of the native member incidence.</param>
+        /// <param name="loadCaseId">Positive native result case number present in the analyzed model.</param>
+        /// <param name="coordinateSystem">Local or Global as interpreted directly by STAAD; no other selector is accepted.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Unlike the existing three-argument overload, this sends the requested Local or Global selector to STAAD. Unlike the title overloads, it returns only the six components with envelope identities. It does not reconstruct beta/local axes or transfer offsets. Native member-end signs are unchanged. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var result = wrapper.Output.GetMemberEndForces(17, MemberEnd.Start, 1, ResultCoordinateSystem.Global);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<ForceComponents> GetMemberEndForces(int memberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem) =>
+            workflows.GetMemberEndForces(memberId, memberEnd, loadCaseId, coordinateSystem);
+
+        /// <summary>Retrieves the current native utilization observation for a caller beam identity.</summary>
+        /// <param name="beam">Caller-owned beam with a positive ID; geometry is required only for offset workflows.</param>
+        /// <returns>A status/data observation with requested identities. Inspect IsSuccessful before Data; unavailable data throws. Composite Observations retains participating native query evidence.</returns>
+        /// <remarks>Equivalent to the numeric-ID query, capturing the positive beam ID and checking it after dispatch. It does not populate Beam.UtilizationRatio; choose PopulateMemberSteelUtilizationRatios for staged cache updates. The ratio is dimensionless and this does not run or certify current steel design. Runs synchronously on the caller's COM apartment. Serialize model access; do not dispatch these calls through Task.Run. Selections are bounded to 100000 items/results and materialized before COM dispatch. Values preserve native units; wrapper input-unit caches do not certify Output units. These methods do not run analysis, activate cases, save or write native model data. Lifecycle/rebinding checks reject replaced participating bindings; external model edits can still invalidate observations.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required object or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An ID, enum, selection, metadata identity, finite geometry or scheduling hint is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding was disposed/replaced, caller beam identity changed, or native successful data/status is malformed or unwritten.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport failed; the original exception propagates without retries.</exception>
+        /// <example><code>var beam = new Beam(17, new Node(1, 0, 0, 0), new Node(2, 2, 0, 0));
+        /// var result = wrapper.Output.GetMemberSteelUtilizationRatio(beam);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<double> GetMemberSteelUtilizationRatio(Beam beam) =>
+            workflows.GetMemberSteelUtilizationRatio(beam);
 
         #endregion
     }

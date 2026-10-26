@@ -4,7 +4,11 @@
 **Baseline:** main at 1d8285ce66c95c60da55530d4c721fb7274893da<br>
 **Scope:** Completed the remaining domain comparisons and implementation plans; no domain functions were implemented or packaged by this review.
 
-**Implementation checkpoint, 26 October 2026:** completed four documented P10 Property operations and 25 further Output routes. Supplemental Property candidates remain excluded and require a later reminder/review. See the [current roadmap](../../ROADMAP.md).
+**Current managed Output checkpoint, 26 October 2026:** added 25 public overloads (23 main-source adaptations plus two typed enabling overloads). Output has 71 managed overloads reaching 46/60 native names; native gates and other domains retain separate scope. See [the workflow guide](../Output-Managed-Workflows.md).
+
+**Previous implementation checkpoint, 26 October 2026:** added six qualified Output routes and nineteen Support functions (46/60 and 19/35 coverage). The other domains and parked Property/Load work retain their separate scope.
+
+**Earlier implementation checkpoint, 26 October 2026:** completed four documented P10 Property operations and 25 further Output routes. Supplemental Property candidates remain excluded and require a later reminder/review. See the [current roadmap](../../ROADMAP.md).
 
 ## 1. Review coverage
 
@@ -13,9 +17,9 @@
 | Root | 39 reviewed native functions | 23 reference methods | Reviewed managed coverage complete; native qualification remains. [Root plan](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md) |
 | Geometry | 135 / 135 / 135, including one deprecated summary | 143 | Reference parity complete; wider native and version-policy work remains. [Geometry plan](OpenSTAAD-Geometry-Multi-Version-Architecture-and-Plan.md) |
 | Load | 129 / 129 / 129 | 115 | Reference parity complete, with five additional conveniences; wider native coverage remains. [Load plan](OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md) |
-| Output | 59 / 60 / 60 | 86 | 40 native mappings implemented; 20 pending. [Output plan](OpenSTAAD-Output-Multi-Version-Architecture-and-Plan.md) |
+| Output | 59 / 60 / 60 | 86 | 71 managed overloads reach 46 native mappings; 14 native routes pending. [Output plan](OpenSTAAD-Output-Multi-Version-Architecture-and-Plan.md) |
 | Property | 204 / 209 / 209 | 103 | 195 active native routes implemented through 249 common and five optional operations; nine documented gates pending; fifteen supplemental candidates parked. Deprecated/reserved/private entries distinguished in its report. [Property plan](OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md) |
-| Support | 35 / 35 / 35 | 33 | Binding-only placeholder. [Support plan](OpenSTAAD-Support-Multi-Version-Architecture-and-Plan.md) |
+| Support | 35 / 35 / 35 | 33 | 19 common native routes implemented; 16 pending. [Support plan](OpenSTAAD-Support-Multi-Version-Architecture-and-Plan.md) |
 | Design | 31 / 45 / 45 | 7 | Binding-only placeholder. [Design plan](OpenSTAAD-Design-Multi-Version-Architecture-and-Plan.md) |
 | Commands | 18 / 18 / 18, including one deprecated summary | 21 | Binding-only placeholder. [Commands plan](OpenSTAAD-Commands-Multi-Version-Architecture-and-Plan.md) |
 | Table | 24 / 24 / 24 | 29 | Binding-only placeholder. [Table plan](OpenSTAAD-Table-Multi-Version-Architecture-and-Plan.md) |
@@ -24,7 +28,7 @@
 
 These are domain report scopes, not interchangeable measures. Managed overloads, native names, class helpers, reserved entries and metadata-only functions must not be summed as a single “implemented API” total. In particular, Output-owned functions filed under the Design steel help page are counted in Output.
 
-All reviewed domains now have comparison/source inventories and architecture plans. Output subsequently added its first 15 typed queries and Property added its first 25 typed observations; the other domains in that remaining-review increment remain placeholders. That completes the **review series**, not implementation of those domains or native qualification of existing ports.
+All reviewed domains have comparison/source inventories and architecture plans. Current implementation covers 46 Output and 19 Support native routes, plus the Property scope recorded above; Design, Commands, Table, View and IDEA integration remain placeholders. That completes the **review series**, not implementation of those domains or native qualification of existing ports.
 
 ## 2. Findings from the remaining review
 
@@ -43,7 +47,7 @@ All reviewed domains now have comparison/source inventories and architecture pla
 | View missing private target | SetModeSectionPage absent from the main adapter | Plan a native-contract implementation beyond private parity. |
 | IDEA StatiCa | Depends on unported Output/Property and conditional Support operations | Port prerequisites first; separate STAAD and IDEA-format qualifications. |
 
-The four native domains reviewed here contain 140 names in 2024 and 154 in 2025/2026, with one deprecated Commands entry included. All their current typed domain methods remain pending. Output is a separate domain and now has 15 typed queries. IDEA's 24 managed overloads are a separate integration surface.
+The four native domains reviewed here contain 140 names in 2024 and 154 in 2025/2026, with one deprecated Commands entry included. All their current typed domain methods remain pending. Output is a separate domain and now has 46 typed queries. IDEA's 24 managed overloads are a separate integration surface.
 
 ## 3. Recommended implementation sequence
 

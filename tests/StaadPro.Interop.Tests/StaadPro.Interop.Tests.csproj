@@ -30,7 +30,10 @@
     <Compile Include="..\..\eng\Fixtures\PropertyUptFixture.cs" Link="Fixtures\PropertyUptFixture.cs" />
     <Compile Include="..\..\eng\Fixtures\PropertyCleanupFixture.cs" Link="Fixtures\PropertyCleanupFixture.cs" />
     <Compile Include="..\..\eng\Fixtures\PropertyCompletionFixture.cs" Link="Fixtures\PropertyCompletionFixture.cs" />
+    <Compile Include="..\..\eng\Fixtures\OutputWorkflowFixture.cs" Link="Fixtures\OutputWorkflowFixture.cs" />
     <Compile Include="..\..\eng\Fixtures\OutputAdvancedFixture.cs" Link="Fixtures\OutputAdvancedFixture.cs" />
+    <Compile Include="..\..\eng\Fixtures\OutputSteelBlockFixture.cs" Link="Fixtures\OutputSteelBlockFixture.cs" />
+    <Compile Include="..\..\eng\Fixtures\SupportFoundationFixture.cs" Link="Fixtures\SupportFoundationFixture.cs" />
     <None Include="..\..\docs\contracts\LoadExpansionContractIndex.json" Link="ContractReview\LoadExpansionContractIndex.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

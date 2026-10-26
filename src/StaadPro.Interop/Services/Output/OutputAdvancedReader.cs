@@ -25,9 +25,9 @@ namespace StaadPro.Interop.Services.Output
         private static void EntityCase(int entityId, int loadCaseId, string name) { Positive(entityId, name); Positive(loadCaseId, nameof(loadCaseId)); }
         private static bool IsIntegral(object value) => value is sbyte || value is byte || value is short || value is ushort || value is int || value is uint || value is long || value is ulong;
         private static OutputQueryResult<T> Result<T>(string op, T data = default, OutputQueryStatus status = OutputQueryStatus.Success,
-            object response = null, int? entity = null, int? loadCase = null, MemberEnd? end = null, string diagnostic = null) =>
+            object response = null, int? entity = null, int? loadCase = null, MemberEnd? end = null, string diagnostic = null, string parameterBlockName = null) =>
             new OutputQueryResult<T>(op, status, data, entity, loadCase, end,
-                IsIntegral(response) ? Integer(response, op) : (int?)null, response is bool b ? (bool?)b : null, diagnostic);
+                IsIntegral(response) ? Integer(response, op) : (int?)null, response is bool b ? (bool?)b : null, diagnostic, parameterBlockName);
         private static string Text(object value, string sentinel, string operation)
         { if (!(value is string text) || text == sentinel || text.IndexOf('\0') >= 0) throw new InvalidOperationException(operation + " returned unwritten or malformed text."); return text; }
         private static Vector3D Vector(double[] values) => new Vector3D(values[0], values[1], values[2]);
@@ -258,6 +258,55 @@ namespace StaadPro.Interop.Services.Output
                 if (!after.IsSuccessful || !Same(before.Data, after.Data)) return Result<TimeHistorySeries>(op, status: OutputQueryStatus.StateChanged, response: raw, entity: nodeId);
                 var samples = observed.Select((v, i) => new TimeHistorySample(i * before.Data.TimeStepSeconds, v)).ToArray();
                 return Result(op, new TimeHistorySeries(nodeId, degreeOfFreedom, responseKind, before.Data, samples), response: raw, entity: nodeId); });
+        }
+        private static void BlockName(string parameterBlockName)
+        {
+            if (parameterBlockName == null) throw new ArgumentNullException(nameof(parameterBlockName));
+            if (string.IsNullOrWhiteSpace(parameterBlockName) || parameterBlockName.IndexOf('\0') >= 0)
+                throw new ArgumentException("Supply an exact nonblank parameter-block name without NUL characters.", nameof(parameterBlockName));
+        }
+        internal OutputQueryResult<string> GetSteelDesignParameterBlockName(int parameterBlockIndex)
+        {
+            NativeIndex(parameterBlockIndex, nameof(parameterBlockIndex));
+            return Run(p => { const string op = "GetSteelDesignParameterBlockNameByIndex"; string sentinel = "<unwritten:" + Guid.NewGuid().ToString("N") + ">"; object name = sentinel;
+                object raw = p.GetSteelDesignParameterBlockNameByIndex(parameterBlockIndex, ref name);
+                if (!ReadFlag(raw, op)) return Result<string>(op, status: OutputQueryStatus.NativeFailure, response: raw);
+                string value = Text(name, sentinel, op);
+                if (string.IsNullOrWhiteSpace(value)) throw new InvalidOperationException(op + " returned an empty block name on success.");
+                return Result(op, value, response: raw); });
+        }
+        internal OutputQueryResult<double> GetMemberSteelUtilizationRatio(int memberId, string parameterBlockName)
+        { Positive(memberId, nameof(memberId)); BlockName(parameterBlockName);
+            return Run(p => { const string op = "GetMultipleMemberSteelDesignRatio"; object value = double.NaN;
+                object raw = p.GetMultipleMemberSteelDesignRatio(parameterBlockName, memberId, ref value);
+                return SteelRatio(op, raw, value, memberId, parameterBlockName); }); }
+        internal OutputQueryResult<double> GetMaximumMemberSteelUtilizationRatio(int memberId)
+        { Positive(memberId, nameof(memberId));
+            return Run(p => { const string op = "GetMultipleMemberSteelDesignMaxRatio"; object value = double.NaN;
+                object raw = p.GetMultipleMemberSteelDesignMaxRatio(memberId, ref value); return SteelRatio(op, raw, value, memberId); }); }
+        internal OutputQueryResult<double> GetMinimumSteelDesignFailureRatio() => Run(p => { const string op = "GetMemberSteelDesignMinFailureRatio"; object value = double.NaN;
+            object raw = p.GetMemberSteelDesignMinFailureRatio(ref value); return SteelRatio(op, raw, value); });
+        internal OutputQueryResult<double> GetMaximumSteelDesignFailureRatio() => Run(p => { const string op = "GetMemberSteelDesignMaxFailureRatio"; object value = double.NaN;
+            object raw = p.GetMemberSteelDesignMaxFailureRatio(ref value); return SteelRatio(op, raw, value); });
+        private static OutputQueryResult<double> SteelRatio(string op, object raw, object value, int? memberId = null, string blockName = null)
+        {
+            if (!ReadFlag(raw, op)) return Result<double>(op, status: OutputQueryStatus.NativeFailure, response: raw, entity: memberId, parameterBlockName: blockName);
+            double ratio = ReadNumber(value, op); if (ratio < 0) throw new InvalidOperationException(op + " returned an undocumented negative ratio.");
+            return Result(op, ratio, response: raw, entity: memberId, parameterBlockName: blockName);
+        }
+        internal OutputQueryResult<ParameterBlockSteelDesignResults> GetMemberSteelDesignResults(int memberId, string parameterBlockName)
+        {
+            Positive(memberId, nameof(memberId)); BlockName(parameterBlockName);
+            return Run(p => { const string op = "GetMultipleMemberSteelDesignResults"; string sentinel = "<unwritten:" + Guid.NewGuid().ToString("N") + ">";
+                object code = sentinel, status = sentinel, ratio = double.NaN, allowable = double.NaN, loadCase = int.MinValue, clause = sentinel, section = sentinel;
+                object raw = p.GetMultipleMemberSteelDesignResults(parameterBlockName, memberId, ref code, ref status, ref ratio, ref allowable, ref loadCase, ref clause, ref section);
+                if (!ReadFlag(raw, op)) return Result<ParameterBlockSteelDesignResults>(op, status: OutputQueryStatus.NativeFailure, response: raw, entity: memberId, parameterBlockName: parameterBlockName);
+                string decisionText = Text(status, sentinel, op); SteelDesignStatus decision = string.Equals(decisionText.Trim(), "PASS", StringComparison.OrdinalIgnoreCase) ? SteelDesignStatus.Passed
+                    : string.Equals(decisionText.Trim(), "FAIL", StringComparison.OrdinalIgnoreCase) ? SteelDesignStatus.Failed : SteelDesignStatus.Unknown;
+                double actual = ReadNumber(ratio, op), permitted = ReadNumber(allowable, op); int criticalCase = Integer(loadCase, op);
+                if (actual < 0 || permitted < 0 || criticalCase <= 0) throw new InvalidOperationException(op + " returned invalid design data.");
+                var data = new ParameterBlockSteelDesignResults(memberId, parameterBlockName, Text(code, sentinel, op), decision, decisionText, actual, permitted, criticalCase, Text(clause, sentinel, op), Text(section, sentinel, op));
+                return Result(op, data, response: raw, entity: memberId, parameterBlockName: parameterBlockName); });
         }
     }
 }

@@ -25,7 +25,7 @@ namespace StaadPro.Interop.Tests.Adapter
                 string[] methodNames = { "M:" + typeof(IOSOutput).FullName + "." + method.Name,
                     "M:" + typeof(OSOutputAdapter).FullName + "." + method.Name };
                 XElement[] entries = methodNames.Select(name => members.Single(m =>
-                    ((string)m.Attribute("name")).Split('(')[0] == name)).ToArray();
+                    ((string)m.Attribute("name")).Split('(')[0] == name && m.Elements("param").Select(p => (string)p.Attribute("name")).SequenceEqual(method.GetParameters().Select(p => p.Name)))).ToArray();
                 foreach (var entry in entries)
                 {
                     foreach (string element in new[] { "summary", "returns", "remarks", "example" })
@@ -34,7 +34,8 @@ namespace StaadPro.Interop.Tests.Adapter
                         Is.EqualTo(method.GetParameters().Select(p => p.Name)), method.Name);
                     Assert.That(entry.Elements("param").All(p => !string.IsNullOrWhiteSpace(p.Value)), Is.True);
                     Assert.That(entry.Element("remarks").Value, Does.Contain("COM apartment").And.Contain("units"));
-                    Assert.That(entry.Element("example").Element("code").Value, Does.Contain("IsSuccessful"));
+                    Assert.That(entry.Element("example").Element("code").Value,
+                        Does.Contain(method.Name == "GetMemberLocalCoordinateSystem" ? "XAxis" : "IsSuccessful"));
                 }
                 Assert.That(entries[0].Nodes().Select(n => n.ToString()), Is.EqualTo(entries[1].Nodes().Select(n => n.ToString())), method.Name);
             }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Enums.Output;
@@ -15,20 +17,28 @@ namespace StaadPro.Interop.Models.Output
         private readonly T data;
         internal OutputQueryResult(string nativeFunction, OutputQueryStatus status, T data,
             int? entityId = null, int? loadCaseId = null, MemberEnd? memberEnd = null,
-            int? nativeReturnCode = null, bool? nativeBooleanReturn = null, string diagnostic = null)
+            int? nativeReturnCode = null, bool? nativeBooleanReturn = null, string diagnostic = null, string parameterBlockName = null, IEnumerable<OutputObservation> observations = null, string managedOperation = null)
         {
             NativeFunction = nativeFunction;
+            Observations = Array.AsReadOnly((observations ?? Enumerable.Empty<OutputObservation>()).ToArray());
+            ManagedOperation = managedOperation;
             Status = status;
             this.data = status == OutputQueryStatus.Success ? data : default;
             EntityId = entityId;
             LoadCaseId = loadCaseId;
             MemberEnd = memberEnd;
+            ParameterBlockName = parameterBlockName;
             NativeReturnCode = nativeReturnCode; NativeBooleanReturn = nativeBooleanReturn; Diagnostic = diagnostic;
         }
 
         /// <summary>Gets the native function that produced this observation.</summary>
         /// <value>The exact OpenSTAAD method name, for diagnostics.</value>
         public string NativeFunction { get; }
+        /// <summary>Gets the managed composition name when several observations form this result; null for an ordinary native query.</summary>
+        public string ManagedOperation { get; }
+        /// <summary>Gets owned per-query evidence for composed results; empty for older direct query paths.</summary>
+        /// <remarks>NativeFunction/NativeReturnCode/NativeBooleanReturn identify the decisive or final query; these observations preserve every contributing query independently.</remarks>
+        public IReadOnlyList<OutputObservation> Observations { get; }
         /// <summary>Gets the qualified outcome of this query.</summary>
         /// <value>Success or an operation-specific failure, absence, steel-design sentinel, allocation-limit or changed-state outcome.</value>
         public OutputQueryStatus Status { get; }
@@ -38,6 +48,9 @@ namespace StaadPro.Interop.Models.Output
         /// <summary>Gets the requested entity identifier when the function takes one.</summary>
         /// <value>The positive node, analytical/physical member, plate or solid ID, including on native failure; null for model-wide queries.</value>
         public int? EntityId { get; }
+        /// <summary>Gets the exact explicitly requested steel-design parameter-block name, including on native failure; null for queries without that input.</summary>
+        /// <remarks>A maximum across blocks does not identify its governing block; null does not mean that a default block was selected.</remarks>
+        public string ParameterBlockName { get; }
         /// <summary>Gets the requested load-case identifier when applicable.</summary>
         /// <value>The positive native case ID, including on native failure; otherwise null.</value>
         public int? LoadCaseId { get; }
