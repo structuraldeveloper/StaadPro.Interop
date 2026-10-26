@@ -3,9 +3,16 @@
 **Review date:** 22 October 2026<br>**Implementation updated:** 26 October 2026<br>
 **Baseline:** main at 3c67959163450d1b2c150bbc8f25a5c1f99dc30c<br>
 **Scope:** Installed STAAD.Pro 2024, 2025 and 2026 Output contracts, including Output-owned steel results filed under Design; current production code; the strictly read-only main project; and passive vendor interop metadata.<br>
-**Status:** Seventy-one managed Output overloads reaching 46 native names implemented; 14 documented native mappings remain pending. Version-sensitive policies and supplemental operations remain separate work.
+**Status:** Ninety-six managed Output overloads reaching 47 native names implemented; 13 documented native mappings remain pending. Version-sensitive policies and supplemental operations remain separate work.
 
-## Current implementation - managed workflows
+## Current implementation - plate-corner workflows
+
+Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](../Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
+
+Passed a Release build with zero warnings/errors and **6,036 offline tests**, including **248 new corner cases**. Isolated package verification covers **1,152 selected XML examples**, including all 192 Output examples. Read-only native checks support the global force/moment contract on sampled STAAD.Pro 2026.0.0.340 observations; broader native/engineering qualification remains pending.
+
+
+## Previous implementation - managed workflows
 
 Added **25 managed Output overloads**: 23 synchronous main-project workflow adaptations and two typed enabling overloads for explicit native axes and Beam ratio queries. Output now exposes **71 managed overloads reaching 46/60 documented native names**. The fourteen native contract gates remain; this increment adds compositions, entity conveniences and ordered batches over qualified native routes. See [the managed workflow guide](../Output-Managed-Workflows.md) for exact contracts and comparative usage.
 
@@ -34,7 +41,7 @@ The three installed references document **59 / 60 / 60 Output function names**. 
 
 GetMaxBeamStresses appears in the 2025/2026 help and generated Output header, and is absent from those reviewed 2024 sources. All 59 common native declarations match. Their semantics require closer attention: **four common functions have changed input/output documentation that warrants version policies**, one has a parameter-name clarification, and five have only formatting or typo changes. The normalized 2025 and 2026 declarations, contracts and examples match.
 
-The current IOSOutput / OSOutputAdapter expose **71 managed overloads reaching 46 native names** with named status/data results and owned snapshots. Separately, the implemented Root member-force service already calls two Output members. The private main project exposes **86 managed overloads backed by 17 native targets**; this provides reusable functionality, but does not cover every native Output function and includes behaviors that should be corrected during porting.
+The current IOSOutput / OSOutputAdapter expose **96 managed overloads reaching 47 native names** with named status/data results and owned snapshots. Separately, the implemented Root member-force service already calls two Output members. The private main project exposes **86 managed overloads backed by 17 native targets**; this provides reusable functionality, but does not cover every native Output function and includes behaviors that should be corrected during porting.
 
 Use shared internal services for common extraction and decoding, with narrow policies for the three direction arguments and member-end displacement layout. Select the profile from **wrapper.StaadVersion**, which identifies the acquired native server. **wrapper.ApplicationVersion identifies the host/client assembly** and cannot select STAAD behavior. Treat help differences as candidate contracts requiring native confirmation rather than assuming every difference is a tested binary change.
 
@@ -50,9 +57,9 @@ Use shared internal services for common extraction and decoding, with narrow pol
 | Further formatting or typo-only changes | 5 |
 | Common functions whose examples changed, 2024 to 2025 | 49 |
 | Normalized changes, 2025 to 2026 | 0 |
-| Current IOSOutput / OSOutputAdapter domain overloads | 71 / 71 |
+| Current IOSOutput / OSOutputAdapter domain overloads | 96 / 96 |
 | Native names currently dispatched through Root | 2 |
-| Documented names with no current production dispatch | 14 |
+| Documented names with no current production dispatch | 13 |
 | Main-source interface / public adapter overloads | 86 / 86 |
 | Main-source private adapter helpers | 24 |
 | Main-source Task-returning / public out overloads | 33 / 2 |
@@ -144,7 +151,7 @@ Every row is a native OSOutputUI name. The return shown is the native declaratio
 | [GetAllPlateCenterPrincipalStressesAndAngles](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#gac13e9962fbf82d34625f618241fc733c) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterPrincipalStressesAndAngles` | Not called | O3 |
 | [GetAllPlateCenterPrincipalStressesAndAnglesEx](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga7a893aa342562cc268da3d1a8a1ea49c) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterPrincipalStressesAndAnglesEx` | Not called | O3 |
 | [GetPlateCenterVonMisesStresses](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga2ee9f974e72eec15760b7e6da620d7c8) / `VARIANT` | Unchanged | Implemented: `GetPlateCenterVonMisesStresses` | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L883) | O3 |
-| [GetPlateCornerForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga68bc8a450a29bc91630da63201e05870) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga68bc8a450a29bc91630da63201e05870) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga68bc8a450a29bc91630da63201e05870) / `VARIANT` | Unchanged | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L378) | O4 |
+| [GetPlateCornerForces](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga68bc8a450a29bc91630da63201e05870) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga68bc8a450a29bc91630da63201e05870) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga68bc8a450a29bc91630da63201e05870) / `VARIANT` | Unchanged | Implemented: `GetPlateCornerForces` with 25 typed workflows | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L378) | O4 |
 | [GetResultantForceAlongLineForPlateList](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga16b671df915dfa2ca6691372f0c827be) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga16b671df915dfa2ca6691372f0c827be) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga16b671df915dfa2ca6691372f0c827be) / `VARIANT` | Formatting or typo only | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L808) | O4 |
 | [GetResultantForceAlongLineForParametricSurface](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga2d8565301564943488f7604ce1b44e8b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga2d8565301564943488f7604ce1b44e8b) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga2d8565301564943488f7604ce1b44e8b) / `VARIANT` | Formatting or typo only | Pending | Not called | O4 |
 | [GetPlateStressAtPoint](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202026/OSAPP_Help/group___plate_rlt.html#ga7e9ab82a5558ce71e3926e225755acc6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202024/OSAPP_Help/group___plate_rlt.html#ga7e9ab82a5558ce71e3926e225755acc6) | [VARIANT](../../../../../../../../Program%20Files/Bentley/Engineering/STAAD.Pro%202025/OSAPP_Help/group___plate_rlt.html#ga7e9ab82a5558ce71e3926e225755acc6) / `VARIANT` | Parameter-name clarification | Pending | [Called](file:///D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs#L1941) | O4 |
@@ -302,7 +309,7 @@ Include axes, reference point and verified units/normalization where relevant. A
 
 Keep concrete results/requests under Models/Output, selectors under Enums/Output and decoding/services internal. Prefer classes; a small immutable composite key struct is justified for indexed identity. Avoid an unnecessary public generic result hierarchy.
 
-The annex identifies implemented managed signatures for 46 names and proposed contracts for the remaining 14. Examples:
+The annex identifies implemented managed signatures for 47 names and proposed contracts for the remaining 13. Examples:
 
 ~~~csharp
 MemberEndForcesResult GetMemberEndForces(

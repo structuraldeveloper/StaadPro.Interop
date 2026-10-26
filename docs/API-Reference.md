@@ -1,5 +1,12 @@
 # StaadPro.Interop API Reference
 
+## Current implementation - plate-corner workflows
+
+Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
+
+Passed a Release build with zero warnings/errors and **6,036 offline tests**, including **248 new corner cases**. Isolated package verification covers **1,152 selected XML examples**, including all 192 Output examples. Read-only native checks support the global force/moment contract on sampled STAAD.Pro 2026.0.0.340 observations; broader native/engineering qualification remains pending.
+
+
 ## Managed Output workflows - current source
 
 Added **25 managed Output overloads**: 23 synchronous main-project workflow adaptations and two typed enabling overloads for explicit native axes and Beam ratio queries. Output now exposes **71 managed overloads reaching 46/60 documented native names**. The fourteen native contract gates remain; this increment adds compositions, entity conveniences and ordered batches over qualified native routes. See [the managed workflow guide](Output-Managed-Workflows.md) for exact contracts and comparative usage.
@@ -17,7 +24,7 @@ All 30 main-source wrapper properties, both constructor forms, RefreshComObjects
 
 - `Root`, `Geometry`, `Load`: existing implemented adapters.
 - `RawOpenStaad`, `RawGeometry`, `RawLoad`, `RawOutput`, `RawProperty`, `RawSupport`, `RawDesign`, `RawCommands`, `RawTable`, `RawView`: native bindings; RawCommands reads the native singular Command property.
-- `Output`: 71 managed result overloads reaching 46 native names; `Property`: 249 common overloads plus five optional catalog queries.
+- `Output`: 96 managed result overloads reaching 47 native names; `Property`: 249 common overloads plus five optional catalog queries.
 - `Support`: 19 typed operations for discovery, foundation readback and explicit mutations.
 - `Design`, `Commands`, `Table`, `View`: binding-only placeholders; their domain functions are not ported.
 - `IdeaStatiCa`: integration placeholder when Geometry/Load/Output exist; no transformation, verification or export functions are available.
@@ -283,9 +290,9 @@ Optional access uses `root.Capabilities.GetAdinaExport()`, `GetAnalysisErrorMess
 
 ## Output result queries
 
-IOSOutput and OSOutputAdapter expose 71 managed overloads covering analysis/buckling availability, nodal displacement, support reactions, local member-end forces, static checks, seven plate-center result families and member design section/ratio observations. Single native observations return OutputQueryResult&lt;T&gt;; managed workflows additionally return named batch, population and coordinate-system results with documented status/ownership rules; inspect IsSuccessful before Data. No public reference outputs or tuples are used.
+IOSOutput and OSOutputAdapter expose 96 managed overloads covering analysis/buckling availability, nodal displacement, support reactions, local member-end forces, static checks, seven plate-center result families and member design section/ratio observations. Single native observations return OutputQueryResult&lt;T&gt;; managed workflows additionally return named batch, population and coordinate-system results with documented status/ownership rules; inspect IsSuccessful before Data. No public reference outputs or tuples are used.
 
-See the [Output API guide](Output-Porting.md) for all signatures, payloads, native flags, axes/units, sentinels, examples, threading/lifetime rules and the 14 pending native mappings. These are source additions after the published preview; live native qualification remains pending.
+See the [Output API guide](Output-Porting.md) for all signatures, payloads, native flags, axes/units, sentinels, examples, threading/lifetime rules and the 13 pending native mappings. These are source additions after the published preview; live native qualification remains pending.
 
 ## Property observations
 

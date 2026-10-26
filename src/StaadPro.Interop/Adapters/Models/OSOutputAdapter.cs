@@ -18,6 +18,7 @@ namespace StaadPro.Interop.Adapters.Models
         private readonly OutputQueryReader queries;
         private readonly OutputAdvancedReader advanced;
         private readonly OutputWorkflowService workflows;
+        private readonly OutputPlateCornerService corners;
         /// <summary>Captures the acquired wrapper's Output binding without invoking native result functions.</summary>
         /// <param name="wrapper">The connected wrapper whose RawOutput is available.</param>
         /// <exception cref="ArgumentNullException">The wrapper or its RawOutput binding is null.</exception>
@@ -27,6 +28,7 @@ namespace StaadPro.Interop.Adapters.Models
             queries = new OutputQueryReader(wrapper, (object)ComObject);
             advanced = new OutputAdvancedReader(queries);
             workflows = new OutputWorkflowService(wrapper, queries, advanced);
+            corners = new OutputPlateCornerService(wrapper, queries);
         }
         /// <summary>Gets the captured native Output automation binding.</summary>
         /// <value>The acquired raw object; direct use bypasses managed validation and lifetime checks.</value>
@@ -1116,6 +1118,496 @@ namespace StaadPro.Interop.Adapters.Models
         /// else System.Console.WriteLine(result.Status);</code></example>
         public OutputQueryResult<double> GetMemberSteelUtilizationRatio(Beam beam) =>
             workflows.GetMemberSteelUtilizationRatio(beam);
+
+        #endregion
+
+        #region Plate corner result workflows
+
+        /// <summary>Retrieves one qualified global plate-corner force/moment observation.</summary>
+        /// <param name="loadCase">Caller case metadata with positive ID and primary/reference/combination family; captured before dispatch.</param>
+        /// <param name="plate">Caller plate with a positive ID. Supplied A/B/C incidence is required for all-corner expansion; single/sparse queries can hydrate ID-only plates.</param>
+        /// <param name="cornerNode">Positive incidence-node selector. The plate's captured canonical corner coordinates are used; unrelated supplied coordinates are not substituted.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.   Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var result = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode) =>
+            corners.GetPlateCornerForces(loadCase, plate, cornerNode);
+
+        /// <summary>Retrieves one qualified global plate-corner force/moment observation.</summary>
+        /// <param name="loadCaseId">Positive result case number; metadata resolution performs no case activation.</param>
+        /// <param name="plateId">Positive native plate ID.</param>
+        /// <param name="cornerNodeId">Positive plate-incidence node ID, not a corner array index.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.  Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>var result = wrapper.Output.GetPlateCornerForces(1, 17, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId) =>
+            corners.GetPlateCornerForces(loadCaseId, plateId, cornerNodeId);
+
+        /// <summary>Retrieves one qualified global plate-corner force/moment observation.</summary>
+        /// <param name="loadCaseId">Positive result case number; metadata resolution performs no case activation.</param>
+        /// <param name="plateId">Positive native plate ID.</param>
+        /// <param name="cornerNodeId">Positive plate-incidence node ID, not a corner array index.</param>
+        /// <param name="geometry">This acquired wrapper's current Geometry adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <param name="load">This acquired wrapper's current Load adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.  Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>var result = wrapper.Output.GetPlateCornerForces(1, 17, 1, wrapper.Geometry, wrapper.Load);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load) =>
+            corners.GetPlateCornerForces(loadCaseId, plateId, cornerNodeId, geometry, load);
+
+        /// <summary>Retrieves one qualified global plate-corner force/moment observation.</summary>
+        /// <param name="loadCaseId">Positive result case number; metadata resolution performs no case activation.</param>
+        /// <param name="plateId">Positive native plate ID.</param>
+        /// <param name="cornerNodeId">Positive plate-incidence node ID, not a corner array index.</param>
+        /// <param name="loadCaseType">Primary, combination or reference metadata family. Repeat metadata is rejected; family does not add a native Output selector.</param>
+        /// <param name="geometry">This acquired wrapper's current Geometry adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <param name="load">This acquired wrapper's current Load adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.  Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>var result = wrapper.Output.GetPlateCornerForces(1, 17, 1, LoadCaseType.PrimaryLoad, wrapper.Geometry, wrapper.Load);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load) =>
+            corners.GetPlateCornerForces(loadCaseId, plateId, cornerNodeId, loadCaseType, geometry, load);
+
+        /// <summary>Retrieves and indexes the requested plate-corner outcomes.</summary>
+        /// <param name="loadCases">Non-null bounded case metadata selection; conflicting metadata for one family/number is rejected.</param>
+        /// <param name="plate">Caller plate with a positive ID. Supplied A/B/C incidence is required for all-corner expansion; single/sparse queries can hydrate ID-only plates.</param>
+        /// <param name="cornerNode">Positive incidence-node selector. The plate's captured canonical corner coordinates are used; unrelated supplied coordinates are not substituted.</param>
+        /// <returns>An eager indexed set with family-aware keys, ordered per-request outcomes and failure-safe data access. Empty validated selections succeed.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch.  Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var result = wrapper.Output.GetPlateCornerForces(new[] { loadCase }, plate, cornerNode);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate, Node cornerNode) =>
+            corners.GetPlateCornerForces(loadCases, plate, cornerNode);
+
+        /// <summary>Retrieves and indexes the requested plate-corner outcomes.</summary>
+        /// <param name="loadCase">Caller case metadata with positive ID and primary/reference/combination family; captured before dispatch.</param>
+        /// <param name="plate">Caller plate with a positive ID. Supplied A/B/C incidence is required for all-corner expansion; single/sparse queries can hydrate ID-only plates.</param>
+        /// <returns>An eager indexed set with family-aware keys, ordered per-request outcomes and failure-safe data access. Empty validated selections succeed.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch.  Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var result = wrapper.Output.GetPlateCornerForces(loadCase, plate);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, Plate plate) =>
+            corners.GetPlateCornerForces(loadCase, plate);
+
+        /// <summary>Retrieves and indexes the requested plate-corner outcomes.</summary>
+        /// <param name="loadCases">Non-null bounded case metadata selection; conflicting metadata for one family/number is rejected.</param>
+        /// <param name="plate">Caller plate with a positive ID. Supplied A/B/C incidence is required for all-corner expansion; single/sparse queries can hydrate ID-only plates.</param>
+        /// <returns>An eager indexed set with family-aware keys, ordered per-request outcomes and failure-safe data access. Empty validated selections succeed.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch.  Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var result = wrapper.Output.GetPlateCornerForces(new[] { loadCase }, plate);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate) =>
+            corners.GetPlateCornerForces(loadCases, plate);
+
+        /// <summary>Retrieves and indexes the requested plate-corner outcomes.</summary>
+        /// <param name="loadCase">Caller case metadata with positive ID and primary/reference/combination family; captured before dispatch.</param>
+        /// <param name="plates">Non-null bounded selection of hydrated plates; conflicting geometry for one plate ID is rejected.</param>
+        /// <returns>An eager indexed set with family-aware keys, ordered per-request outcomes and failure-safe data access. Empty validated selections succeed.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch.  Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var result = wrapper.Output.GetPlateCornerForces(loadCase, new[] { plate });
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, IEnumerable<Plate> plates) =>
+            corners.GetPlateCornerForces(loadCase, plates);
+
+        /// <summary>Retrieves and indexes the requested plate-corner outcomes.</summary>
+        /// <param name="loadCases">Non-null bounded case metadata selection; conflicting metadata for one family/number is rejected.</param>
+        /// <param name="plates">Non-null bounded selection of hydrated plates; conflicting geometry for one plate ID is rejected.</param>
+        /// <returns>An eager indexed set with family-aware keys, ordered per-request outcomes and failure-safe data access. Empty validated selections succeed.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch.  Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var result = wrapper.Output.GetPlateCornerForces(new[] { loadCase }, new[] { plate });
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates) =>
+            corners.GetPlateCornerForces(loadCases, plates);
+
+        /// <summary>Retrieves and indexes the requested plate-corner outcomes.</summary>
+        /// <param name="requests">Non-null sparse selection of at most 100000 requests; identities and supplied geometry are captured once.</param>
+        /// <returns>An eager indexed set with family-aware keys, ordered per-request outcomes and failure-safe data access. Empty validated selections succeed.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch.  Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var result = wrapper.Output.GetPlateCornerForces(new[] { new PlateCornerForcesRequest(loadCase, plate, cornerNode) });
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesRequest> requests) =>
+            corners.GetPlateCornerForces(requests);
+
+        /// <summary>Retrieves and indexes the requested plate-corner outcomes.</summary>
+        /// <param name="loadCaseIds">Non-null selection of positive case numbers, at most 100000 entries; repeated IDs are coalesced.</param>
+        /// <param name="plateId">Positive native plate ID.</param>
+        /// <param name="cornerNodeId">Positive plate-incidence node ID, not a corner array index.</param>
+        /// <param name="geometry">This acquired wrapper's current Geometry adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <param name="load">This acquired wrapper's current Load adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <returns>An eager indexed set with family-aware keys, ordered per-request outcomes and failure-safe data access. Empty validated selections succeed.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>var result = wrapper.Output.GetPlateCornerForces(new[] { 1 }, 17, 1, wrapper.Geometry, wrapper.Load);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load) =>
+            corners.GetPlateCornerForces(loadCaseIds, plateId, cornerNodeId, geometry, load);
+
+        /// <summary>Retrieves one qualified global plate-corner force/moment observation.</summary>
+        /// <param name="loadCase">Caller case metadata with positive ID and primary/reference/combination family; captured before dispatch.</param>
+        /// <param name="plate">Caller plate with a positive ID. Supplied A/B/C incidence is required for all-corner expansion; single/sparse queries can hydrate ID-only plates.</param>
+        /// <param name="cornerNode">Positive incidence-node selector. The plate's captured canonical corner coordinates are used; unrelated supplied coordinates are not substituted.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.   Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var result = wrapper.Output.GetPlateCornerForcesInGlobalCoordinates(loadCase, plate, cornerNode);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerForces> GetPlateCornerForcesInGlobalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode) =>
+            corners.GetPlateCornerForcesInGlobalCoordinates(loadCase, plate, cornerNode);
+
+        /// <summary>Retrieves one qualified global plate-corner force/moment observation.</summary>
+        /// <param name="plate">Caller plate with a positive ID. Supplied A/B/C incidence is required for all-corner expansion; single/sparse queries can hydrate ID-only plates.</param>
+        /// <param name="cornerNode">Positive incidence-node selector. The plate's captured canonical corner coordinates are used; unrelated supplied coordinates are not substituted.</param>
+        /// <param name="loadCaseId">Positive result case number; metadata resolution performs no case activation.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.   Replaces the source Boolean/out-vector convenience with a named status/data result; failures do not become zero vectors. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var result = wrapper.Output.GetPlateCornerForcesGlobal(plate, cornerNode, 1);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerForces> GetPlateCornerForcesGlobal(Plate plate, Node cornerNode, int loadCaseId) =>
+            corners.GetPlateCornerForcesGlobal(plate, cornerNode, loadCaseId);
+
+        /// <summary>Retrieves a plate-corner packet and projects it into a described managed member basis.</summary>
+        /// <param name="loadCase">Caller case metadata with positive ID and primary/reference/combination family; captured before dispatch.</param>
+        /// <param name="plate">Caller plate with a positive ID. Supplied A/B/C incidence is required for all-corner expansion; single/sparse queries can hydrate ID-only plates.</param>
+        /// <param name="cornerNode">Positive incidence-node selector. The plate's captured canonical corner coordinates are used; unrelated supplied coordinates are not substituted.</param>
+        /// <param name="otherMemberNode">Distinct positive direction-node ID with finite coordinates; defines a conceptual zero-beta local X from the corner.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back.  Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var otherMemberNode = plate.B;
+        /// var result = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode, otherMemberNode);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode) =>
+            corners.GetPlateCornerForces(loadCase, plate, cornerNode, otherMemberNode);
+
+        /// <summary>Retrieves a plate-corner packet and projects it into a described managed member basis.</summary>
+        /// <param name="loadCase">Caller case metadata with positive ID and primary/reference/combination family; captured before dispatch.</param>
+        /// <param name="plate">Caller plate with a positive ID. Supplied A/B/C incidence is required for all-corner expansion; single/sparse queries can hydrate ID-only plates.</param>
+        /// <param name="cornerNode">Positive incidence-node selector. The plate's captured canonical corner coordinates are used; unrelated supplied coordinates are not substituted.</param>
+        /// <param name="member">Positive real member with distinct hydrated end nodes and finite beta degrees; selected corners must match an end ID and point.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back.  Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };
+        /// var otherMemberNode = plate.B;
+        /// var result = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode, member);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member) =>
+            corners.GetPlateCornerForces(loadCase, plate, cornerNode, member);
+
+        /// <summary>Transforms an owned global plate-corner packet into a described managed member basis.</summary>
+        /// <param name="plateCornerForces">Owned global source packet, or a bounded non-null sequence of such packets for the collection overload; no native result is re-read.</param>
+        /// <param name="otherMemberNode">Distinct positive direction-node ID with finite coordinates; defines a conceptual zero-beta local X from the corner.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. This overload is pure managed math over an existing packet and performs no native result query. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };
+        /// var otherMemberNode = plate.B;
+        /// var source = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode);
+        /// if (!source.IsSuccessful) return;
+        /// var result = wrapper.Output.TransformPlateCornerForcesToMemberLocal(source.Data, otherMemberNode);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Node otherMemberNode) =>
+            corners.TransformPlateCornerForcesToMemberLocal(plateCornerForces, otherMemberNode);
+
+        /// <summary>Transforms an owned global plate-corner packet into a described managed member basis.</summary>
+        /// <param name="plateCornerForces">Owned global source packet, or a bounded non-null sequence of such packets for the collection overload; no native result is re-read.</param>
+        /// <param name="member">Positive real member with distinct hydrated end nodes and finite beta degrees; selected corners must match an end ID and point.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. This overload is pure managed math over an existing packet and performs no native result query. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };
+        /// var otherMemberNode = plate.B;
+        /// var source = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode);
+        /// if (!source.IsSuccessful) return;
+        /// var result = wrapper.Output.TransformPlateCornerForcesToMemberLocal(source.Data, member);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Beam member) =>
+            corners.TransformPlateCornerForcesToMemberLocal(plateCornerForces, member);
+
+        /// <summary>Retrieves a plate-corner packet and projects it into a described managed member basis.</summary>
+        /// <param name="loadCase">Caller case metadata with positive ID and primary/reference/combination family; captured before dispatch.</param>
+        /// <param name="plate">Caller plate with a positive ID. Supplied A/B/C incidence is required for all-corner expansion; single/sparse queries can hydrate ID-only plates.</param>
+        /// <param name="cornerNode">Positive incidence-node selector. The plate's captured canonical corner coordinates are used; unrelated supplied coordinates are not substituted.</param>
+        /// <param name="otherMemberNode">Distinct positive direction-node ID with finite coordinates; defines a conceptual zero-beta local X from the corner.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back.  Returns PlateCornerMemberForces rather than relabeling a global PlateCornerForces packet. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var otherMemberNode = plate.B;
+        /// var result = wrapper.Output.GetPlateCornerForcesInMemberLocalCoordinates(loadCase, plate, cornerNode, otherMemberNode);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode) =>
+            corners.GetPlateCornerForcesInMemberLocalCoordinates(loadCase, plate, cornerNode, otherMemberNode);
+
+        /// <summary>Retrieves one sparse typed plate-corner request.</summary>
+        /// <param name="request">Non-null typed sparse request; referenced entities are captured before dispatch.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Unlike the enumerable request overload, this returns one status/data observation without allocating an indexed set. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var result = wrapper.Output.GetPlateCornerForces(new PlateCornerForcesRequest(loadCase, plate, cornerNode));
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerForces> GetPlateCornerForces(PlateCornerForcesRequest request) =>
+            corners.GetPlateCornerForces(request);
+
+        /// <summary>Retrieves selected numeric cases using an explicit metadata family.</summary>
+        /// <param name="loadCaseIds">Non-null selection of positive case numbers, at most 100000 entries; repeated IDs are coalesced.</param>
+        /// <param name="plateId">Positive native plate ID.</param>
+        /// <param name="cornerNodeId">Positive plate-incidence node ID, not a corner array index.</param>
+        /// <param name="loadCaseType">Primary, combination or reference metadata family. Repeat metadata is rejected; family does not add a native Output selector.</param>
+        /// <param name="geometry">This acquired wrapper's current Geometry adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <param name="load">This acquired wrapper's current Load adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <returns>An eager indexed set with family-aware keys, ordered per-request outcomes and failure-safe data access. Empty validated selections succeed.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>var result = wrapper.Output.GetPlateCornerForces(new[] { 1 }, 17, 1, LoadCaseType.PrimaryLoad, wrapper.Geometry, wrapper.Load);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load) =>
+            corners.GetPlateCornerForces(loadCaseIds, plateId, cornerNodeId, loadCaseType, geometry, load);
+
+        /// <summary>Retrieves a corner packet in the beta-aware managed basis of a supplied member.</summary>
+        /// <param name="loadCase">Caller case metadata with positive ID and primary/reference/combination family; captured before dispatch.</param>
+        /// <param name="plate">Caller plate with a positive ID. Supplied A/B/C incidence is required for all-corner expansion; single/sparse queries can hydrate ID-only plates.</param>
+        /// <param name="cornerNode">Positive incidence-node selector. The plate's captured canonical corner coordinates are used; unrelated supplied coordinates are not substituted.</param>
+        /// <param name="member">Positive real member with distinct hydrated end nodes and finite beta degrees; selected corners must match an end ID and point.</param>
+        /// <returns>An identified status/data observation. Inspect IsSuccessful before Data; failed Data access throws. MetadataUnavailable means no qualified Output payload was obtained.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. Unlike the other-node overload, this retains a real member ID and Start/End identity. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };
+        /// var result = wrapper.Output.GetPlateCornerForcesInMemberLocalCoordinates(loadCase, plate, cornerNode, member);
+        /// if (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);
+        /// else System.Console.WriteLine(result.Status);</code></example>
+        public OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member) =>
+            corners.GetPlateCornerForcesInMemberLocalCoordinates(loadCase, plate, cornerNode, member);
+
+        /// <summary>Retrieves sparse corner requests in one supplied member basis.</summary>
+        /// <param name="requests">Non-null sparse selection of at most 100000 requests; identities and supplied geometry are captured once.</param>
+        /// <param name="member">Positive real member with distinct hydrated end nodes and finite beta degrees; selected corners must match an end ID and point.</param>
+        /// <returns>An owned ordered result collection. Inspect each item's IsSuccessful before Data.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. Every requested corner must be a member end; an ordinary failed extraction remains an identified failed item. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };
+        /// var result = wrapper.Output.GetPlateCornerForcesInMemberLocalCoordinates(new[] { new PlateCornerForcesRequest(loadCase, plate, cornerNode) }, member);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public OutputBatchResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(IEnumerable<PlateCornerForcesRequest> requests, Beam member) =>
+            corners.GetPlateCornerForcesInMemberLocalCoordinates(requests, member);
+
+        /// <summary>Projects an ordered collection of owned corner packets without native result calls.</summary>
+        /// <param name="plateCornerForces">Owned global source packet, or a bounded non-null sequence of such packets for the collection overload; no native result is re-read.</param>
+        /// <param name="member">Positive real member with distinct hydrated end nodes and finite beta degrees; selected corners must match an end ID and point.</param>
+        /// <returns>An owned ordered result collection. Inspect each item's IsSuccessful before Data.</returns>
+        /// <remarks>Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. Unlike sparse extraction, this preserves duplicate source observations and performs no hydration or COM result query. Every source packet is validated before a result collection is returned. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>ILoadCase loadCase = new LoadCase(1, "Dead");
+        /// var cornerNode = new Node(1, 0, 0, 0);
+        /// var plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));
+        /// var member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };
+        /// var source = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode);
+        /// if (!source.IsSuccessful) return;
+        /// var result = wrapper.Output.TransformPlateCornerForcesToMemberLocal(new[] { source.Data }, member);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public OutputBatchResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(IEnumerable<PlateCornerForces> plateCornerForces, Beam member) =>
+            corners.TransformPlateCornerForcesToMemberLocal(plateCornerForces, member);
+
+        /// <summary>Resolves typed keys into indexed global corner observations.</summary>
+        /// <param name="keys">Non-null bounded key selection; default/invalid IDs are rejected. Null-family keys require automatic unambiguous metadata resolution.</param>
+        /// <param name="geometry">This acquired wrapper's current Geometry adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <param name="load">This acquired wrapper's current Load adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <returns>An eager indexed set with family-aware keys, ordered per-request outcomes and failure-safe data access. Empty validated selections succeed.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. Family-aware keys select their metadata family; keys without a family require unambiguous discovery. Equivalent resolved keys are coalesced before native extraction. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>var result = wrapper.Output.GetPlateCornerForces(new[] { new PlateCornerForcesKey(1, 17, 1) }, wrapper.Geometry, wrapper.Load);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesKey> keys, IOSGeometry geometry, IOSLoad load) =>
+            corners.GetPlateCornerForces(keys, geometry, load);
+
+        /// <summary>Resolves typed keys using one explicitly selected metadata family.</summary>
+        /// <param name="keys">Non-null bounded key selection; default/invalid IDs are rejected. Null-family keys require automatic unambiguous metadata resolution.</param>
+        /// <param name="loadCaseType">Primary, combination or reference metadata family. Repeat metadata is rejected; family does not add a native Output selector.</param>
+        /// <param name="geometry">This acquired wrapper's current Geometry adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <param name="load">This acquired wrapper's current Load adapter; cross-wrapper/stale adapters are rejected.</param>
+        /// <returns>An eager indexed set with family-aware keys, ordered per-request outcomes and failure-safe data access. Empty validated selections succeed.</returns>
+        /// <remarks>Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. Keys without a family inherit the explicit family; a key that declares a different family is rejected. Runs synchronously on the caller's COM apartment; serialize model access and do not use Task.Run for COM dispatch. Native units and action signs are preserved; wrapper input-unit caches do not certify Output units. No analysis, case activation, save or native model mutation is performed. Captured binding replacements are rejected. Multiple reads are observations, not an atomic or fresh analysis snapshot. Live axis evidence is limited to the sampled 2026 build; 2024/2025 and other models remain qualification work.</remarks>
+        /// <exception cref="System.ArgumentNullException">A required entity, adapter, packet or selection is null.</exception>
+        /// <exception cref="System.ArgumentException">An identity, family, geometry, selection, conflicting snapshot or member association is invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">A binding is stale/disposed, discovery exceeds its bound, or a native successful response is malformed, unwritten or nonfinite.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Original native transport failure propagates without an alternate-API retry.</exception>
+        /// <example><code>var result = wrapper.Output.GetPlateCornerForces(new[] { new PlateCornerForcesKey(1, 17, 1) }, LoadCaseType.PrimaryLoad, wrapper.Geometry, wrapper.Load);
+        /// foreach (var item in result.Items)
+        ///     if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);
+        ///     else System.Console.WriteLine(item.Status);</code></example>
+        public PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesKey> keys, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load) =>
+            corners.GetPlateCornerForces(keys, loadCaseType, geometry, load);
 
         #endregion
     }

@@ -14,6 +14,8 @@ namespace StaadPro.Interop.Tests.Adapter
     [TestFixture]
     public class OSOutputDocumentationTests
     {
+        private static string XmlType(Type type) => type.IsGenericType ? type.GetGenericTypeDefinition().FullName.Split('`')[0] + "{" + string.Join(",",type.GetGenericArguments().Select(XmlType)) + "}" : type.FullName.Replace('+','.');
+
         [Test]
         public void AllOutputOperationsShipExpandedMatchingIntelliSenseContractsAndExamples()
         {
@@ -22,10 +24,11 @@ namespace StaadPro.Interop.Tests.Adapter
             var members = xml.Descendants("member").ToArray();
             foreach (var method in typeof(IOSOutput).GetMethods().Where(m => !m.IsSpecialName))
             {
-                string[] methodNames = { "M:" + typeof(IOSOutput).FullName + "." + method.Name,
-                    "M:" + typeof(OSOutputAdapter).FullName + "." + method.Name };
+                string suffix = method.Name + (method.GetParameters().Length == 0 ? "" : "(" + string.Join(",", method.GetParameters().Select(p => XmlType(p.ParameterType))) + ")");
+                string[] methodNames = { "M:" + typeof(IOSOutput).FullName + "." + suffix,
+                    "M:" + typeof(OSOutputAdapter).FullName + "." + suffix };
                 XElement[] entries = methodNames.Select(name => members.Single(m =>
-                    ((string)m.Attribute("name")).Split('(')[0] == name && m.Elements("param").Select(p => (string)p.Attribute("name")).SequenceEqual(method.GetParameters().Select(p => p.Name)))).ToArray();
+                    (string)m.Attribute("name") == name)).ToArray();
                 foreach (var entry in entries)
                 {
                     foreach (string element in new[] { "summary", "returns", "remarks", "example" })
@@ -54,7 +57,7 @@ namespace StaadPro.Interop.Tests.Adapter
                 Assert.That(members.ContainsKey("T:" + typeName), Is.True, typeName);
                 Assert.That(members["T:" + typeName].Element("summary")?.Value.Trim(), Is.Not.Null.And.Not.Empty);
                 foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-                    Assert.That(members["P:" + typeName + "." + property.Name].Element("summary")?.Value.Trim(), Is.Not.Null.And.Not.Empty);
+                    Assert.That(members["P:" + typeName + "." + property.Name + (property.GetIndexParameters().Length == 0 ? "" : "(" + string.Join(",", property.GetIndexParameters().Select(p => XmlType(p.ParameterType))) + ")")].Element("summary")?.Value.Trim(), Is.Not.Null.And.Not.Empty);
                 if (type.IsEnum)
                     foreach (string name in Enum.GetNames(type))
                         Assert.That(members["F:" + typeName + "." + name].Element("summary")?.Value.Trim(), Is.Not.Null.And.Not.Empty);

@@ -1,6 +1,21 @@
 # NuGet readiness assessment
 
-## Latest prepared preview - 1.0.0-preview.20261026.3
+## Current implementation - plate-corner workflows
+
+Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
+
+Passed a Release build with zero warnings/errors and **6,036 offline tests**, including **248 new corner cases**. Isolated package verification covers **1,152 selected XML examples**, including all 192 Output examples. Read-only native checks support the global force/moment contract on sampled STAAD.Pro 2026.0.0.340 observations; broader native/engineering qualification remains pending.
+
+
+## Latest prepared preview - 1.0.0-preview.20261026.4
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.4.nupkg` for the package owner's manual upload. This Windows/.NET Framework 4.8.1 preview includes **96 managed Output overloads reaching 47 native names**, **19 Support operations**, and the existing approved Root, Geometry, Load, Property and wrapper APIs. Thirteen documented Output routes and sixteen Support routes remain pending. The parked Load work, nine Property contract gates and fifteen supplemental Property candidates retain their separate review requirements.
+
+The Release build and **6,036 offline tests** passed. Verification of the exact release archive restored an isolated PackageReference consumer and compiled/executed **1,152 selected XML examples**, including all **192 Output examples**. Read-only native checks are limited to sampled 2026.0.0.340 corner results and hydration; broader COM/engineering qualification remains pending. Author is **Srinivasa Rao Masanam**, company is **TensorStruct**, and copyright is **Copyright (c) 2026 TensorStruct**.
+
+The package, source commit, SHA256 receipt and verification log are retained under `artifacts/release`. The user selected manual upload; this workspace has not submitted the package or verified public availability. Earlier archives are preserved.
+
+## Earlier prepared preview - 1.0.0-preview.20261026.3
 
 Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.3.nupkg` for Windows/.NET Framework 4.8.1. It includes all current source additions: **71 managed Output overloads reaching 46 documented native names** and **19 Support operations**, alongside the existing Root, Geometry, Load, Property and approved wrapper surface. Fourteen documented Output routes and sixteen Support routes remain pending; parked Property and Load work retains its separate approval requirements.
 
@@ -8,7 +23,7 @@ The Release build passed with zero warnings/errors, and **5,788 offline tests** 
 
 Build and verification evidence is recorded under `artifacts/release`. Earlier distribution archives remain unchanged. This preparation does not establish public availability of the new version.
 
-## Managed Output workflows - current source
+## Earlier managed Output workflows
 
 Added **25 managed Output overloads**: 23 synchronous main-project workflow adaptations and two typed enabling overloads for explicit native axes and Beam ratio queries. Output now exposes **71 managed overloads reaching 46/60 documented native names**. The fourteen native contract gates remain; this increment adds compositions, entity conveniences and ordered batches over qualified native routes. See [the managed workflow guide](Output-Managed-Workflows.md) for exact contracts and comparative usage.
 
@@ -23,7 +38,7 @@ Passed a Release build with zero warnings/errors and **5,523 offline tests**, in
 
 Only the local CI archive `1.0.0-preview.ci.2026102602` is built to validate this increment; it is not a distribution or publication. The latest prepared distribution remains 1.0.0-preview.20261026.1, recorded below. Custom IOSOutput/IOSSupport implementations must supply the new members. TensorStruct company/copyright and Srinivasa Rao Masanam authorship remain unchanged.
 
-## Latest prepared preview - 1.0.0-preview.20261026.1
+## Earlier prepared preview - 1.0.0-preview.20261026.1
 
 Added four documented Property operations for model-wide element-node release cleanup, member fireproofing cleanup and country-qualified profile-name translation. Property now provides **249 common overloads and five optional catalog queries**, covering **195 of 204** active documented native routes. Nine documented contract gates and fifteen supplemental discovery candidates remain.
 

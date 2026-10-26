@@ -1,0 +1,671 @@
+{
+  "date": "2026-10-26",
+  "managedOverloads": 25,
+  "sourceAdaptations": 18,
+  "typedEnablingOverloads": 7,
+  "nativeNamesAdded": 1,
+  "contracts": [
+    {
+      "returnType": "OutputQueryResult<PlateCornerForces>",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        },
+        {
+          "type": "Node",
+          "name": "cornerNode"
+        }
+      ],
+      "summary": "Retrieves one qualified global plate-corner force/moment observation.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.  ",
+      "args": "loadCase, plate, cornerNode",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));",
+      "sourceSignature": "PlateCornerForces GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode)",
+      "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar result = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerForces>",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        },
+        {
+          "type": "int",
+          "name": "plateId"
+        },
+        {
+          "type": "int",
+          "name": "cornerNodeId"
+        }
+      ],
+      "summary": "Retrieves one qualified global plate-corner force/moment observation.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.  Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs.",
+      "args": "1, 17, 1",
+      "setup": "",
+      "sourceSignature": "PlateCornerForces GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId)",
+      "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId)",
+      "example": "var result = wrapper.Output.GetPlateCornerForces(1, 17, 1);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "GetPlateCornerForces(System.Int32,System.Int32,System.Int32)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerForces>",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        },
+        {
+          "type": "int",
+          "name": "plateId"
+        },
+        {
+          "type": "int",
+          "name": "cornerNodeId"
+        },
+        {
+          "type": "IOSGeometry",
+          "name": "geometry"
+        },
+        {
+          "type": "IOSLoad",
+          "name": "load"
+        }
+      ],
+      "summary": "Retrieves one qualified global plate-corner force/moment observation.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.  Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs.",
+      "args": "1, 17, 1, wrapper.Geometry, wrapper.Load",
+      "setup": "",
+      "sourceSignature": "PlateCornerForces GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+      "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+      "example": "var result = wrapper.Output.GetPlateCornerForces(1, 17, 1, wrapper.Geometry, wrapper.Load);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "GetPlateCornerForces(System.Int32,System.Int32,System.Int32,StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerForces>",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        },
+        {
+          "type": "int",
+          "name": "plateId"
+        },
+        {
+          "type": "int",
+          "name": "cornerNodeId"
+        },
+        {
+          "type": "LoadCaseType",
+          "name": "loadCaseType"
+        },
+        {
+          "type": "IOSGeometry",
+          "name": "geometry"
+        },
+        {
+          "type": "IOSLoad",
+          "name": "load"
+        }
+      ],
+      "summary": "Retrieves one qualified global plate-corner force/moment observation.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.  Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs.",
+      "args": "1, 17, 1, LoadCaseType.PrimaryLoad, wrapper.Geometry, wrapper.Load",
+      "setup": "",
+      "sourceSignature": "PlateCornerForces GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
+      "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
+      "example": "var result = wrapper.Output.GetPlateCornerForces(1, 17, 1, LoadCaseType.PrimaryLoad, wrapper.Geometry, wrapper.Load);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "GetPlateCornerForces(System.Int32,System.Int32,System.Int32,StaadPro.Interop.Enums.LoadCaseType,StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)"
+    },
+    {
+      "returnType": "PlateCornerForcesResultSet",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "IEnumerable<ILoadCase>",
+          "name": "loadCases"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        },
+        {
+          "type": "Node",
+          "name": "cornerNode"
+        }
+      ],
+      "summary": "Retrieves and indexes the requested plate-corner outcomes.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. ",
+      "args": "new[] { loadCase }, plate, cornerNode",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));",
+      "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate, Node cornerNode)",
+      "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate, Node cornerNode)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar result = wrapper.Output.GetPlateCornerForces(new[] { loadCase }, plate, cornerNode);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node)"
+    },
+    {
+      "returnType": "PlateCornerForcesResultSet",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        }
+      ],
+      "summary": "Retrieves and indexes the requested plate-corner outcomes.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. ",
+      "args": "loadCase, plate",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));",
+      "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, Plate plate)",
+      "signature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, Plate plate)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar result = wrapper.Output.GetPlateCornerForces(loadCase, plate);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)"
+    },
+    {
+      "returnType": "PlateCornerForcesResultSet",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "IEnumerable<ILoadCase>",
+          "name": "loadCases"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        }
+      ],
+      "summary": "Retrieves and indexes the requested plate-corner outcomes.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. ",
+      "args": "new[] { loadCase }, plate",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));",
+      "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate)",
+      "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar result = wrapper.Output.GetPlateCornerForces(new[] { loadCase }, plate);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},StaadPro.Interop.Entities.Plate)"
+    },
+    {
+      "returnType": "PlateCornerForcesResultSet",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "IEnumerable<Plate>",
+          "name": "plates"
+        }
+      ],
+      "summary": "Retrieves and indexes the requested plate-corner outcomes.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. ",
+      "args": "loadCase, new[] { plate }",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));",
+      "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, IEnumerable<Plate> plates)",
+      "signature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, IEnumerable<Plate> plates)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar result = wrapper.Output.GetPlateCornerForces(loadCase, new[] { plate });\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Entities.ILoadCase,System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Plate})"
+    },
+    {
+      "returnType": "PlateCornerForcesResultSet",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "IEnumerable<ILoadCase>",
+          "name": "loadCases"
+        },
+        {
+          "type": "IEnumerable<Plate>",
+          "name": "plates"
+        }
+      ],
+      "summary": "Retrieves and indexes the requested plate-corner outcomes.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. ",
+      "args": "new[] { loadCase }, new[] { plate }",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));",
+      "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
+      "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar result = wrapper.Output.GetPlateCornerForces(new[] { loadCase }, new[] { plate });\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Plate})"
+    },
+    {
+      "returnType": "PlateCornerForcesResultSet",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "IEnumerable<PlateCornerForcesRequest>",
+          "name": "requests"
+        }
+      ],
+      "summary": "Retrieves and indexes the requested plate-corner outcomes.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. ",
+      "args": "new[] { new PlateCornerForcesRequest(loadCase, plate, cornerNode) }",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));",
+      "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesRequest> requests)",
+      "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesRequest> requests)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar result = wrapper.Output.GetPlateCornerForces(new[] { new PlateCornerForcesRequest(loadCase, plate, cornerNode) });\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Models.Output.PlateCornerForcesRequest})"
+    },
+    {
+      "returnType": "PlateCornerForcesResultSet",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "IEnumerable<int>",
+          "name": "loadCaseIds"
+        },
+        {
+          "type": "int",
+          "name": "plateId"
+        },
+        {
+          "type": "int",
+          "name": "cornerNodeId"
+        },
+        {
+          "type": "IOSGeometry",
+          "name": "geometry"
+        },
+        {
+          "type": "IOSLoad",
+          "name": "load"
+        }
+      ],
+      "summary": "Retrieves and indexes the requested plate-corner outcomes.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs.",
+      "args": "new[] { 1 }, 17, 1, wrapper.Geometry, wrapper.Load",
+      "setup": "",
+      "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+      "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+      "example": "var result = wrapper.Output.GetPlateCornerForces(new[] { 1 }, 17, 1, wrapper.Geometry, wrapper.Load);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{System.Int32},System.Int32,System.Int32,StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerForces>",
+      "name": "GetPlateCornerForcesInGlobalCoordinates",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        },
+        {
+          "type": "Node",
+          "name": "cornerNode"
+        }
+      ],
+      "summary": "Retrieves one qualified global plate-corner force/moment observation.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.  ",
+      "args": "loadCase, plate, cornerNode",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));",
+      "sourceSignature": "PlateCornerForces GetPlateCornerForcesInGlobalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode)",
+      "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForcesInGlobalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar result = wrapper.Output.GetPlateCornerForcesInGlobalCoordinates(loadCase, plate, cornerNode);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "GetPlateCornerForcesInGlobalCoordinates(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerForces>",
+      "name": "GetPlateCornerForcesGlobal",
+      "parameters": [
+        {
+          "type": "Plate",
+          "name": "plate"
+        },
+        {
+          "type": "Node",
+          "name": "cornerNode"
+        },
+        {
+          "type": "int",
+          "name": "loadCaseId"
+        }
+      ],
+      "summary": "Retrieves one qualified global plate-corner force/moment observation.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself.   Replaces the source Boolean/out-vector convenience with a named status/data result; failures do not become zero vectors.",
+      "args": "plate, cornerNode, 1",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));",
+      "sourceSignature": "bool GetPlateCornerForcesGlobal(Plate plate, Node cornerNode, int loadCaseId, out Vector3D globalForce, out Vector3D globalMoment)",
+      "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForcesGlobal(Plate plate, Node cornerNode, int loadCaseId)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar result = wrapper.Output.GetPlateCornerForcesGlobal(plate, cornerNode, 1);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "GetPlateCornerForcesGlobal(StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node,System.Int32)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerMemberForces>",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        },
+        {
+          "type": "Node",
+          "name": "cornerNode"
+        },
+        {
+          "type": "Node",
+          "name": "otherMemberNode"
+        }
+      ],
+      "summary": "Retrieves a plate-corner packet and projects it into a described managed member basis.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. ",
+      "args": "loadCase, plate, cornerNode, otherMemberNode",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar otherMemberNode = plate.B;",
+      "sourceSignature": "MemberForces GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+      "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar otherMemberNode = plate.B;\nvar result = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode, otherMemberNode);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node,StaadPro.Interop.Entities.Node)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerMemberForces>",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        },
+        {
+          "type": "Node",
+          "name": "cornerNode"
+        },
+        {
+          "type": "Beam",
+          "name": "member"
+        }
+      ],
+      "summary": "Retrieves a plate-corner packet and projects it into a described managed member basis.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. ",
+      "args": "loadCase, plate, cornerNode, member",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };\nvar otherMemberNode = plate.B;",
+      "sourceSignature": "MemberForces GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member)",
+      "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };\nvar otherMemberNode = plate.B;\nvar result = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode, member);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node,StaadPro.Interop.Entities.Beam)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerMemberForces>",
+      "name": "TransformPlateCornerForcesToMemberLocal",
+      "parameters": [
+        {
+          "type": "PlateCornerForces",
+          "name": "plateCornerForces"
+        },
+        {
+          "type": "Node",
+          "name": "otherMemberNode"
+        }
+      ],
+      "summary": "Transforms an owned global plate-corner packet into a described managed member basis.",
+      "remarks": "Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. This overload is pure managed math over an existing packet and performs no native result query.",
+      "args": "source.Data, otherMemberNode",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };\nvar otherMemberNode = plate.B;\nvar source = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode);\nif (!source.IsSuccessful) return;",
+      "sourceSignature": "MemberForces TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Node otherMemberNode)",
+      "signature": "OutputQueryResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Node otherMemberNode)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };\nvar otherMemberNode = plate.B;\nvar source = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode);\nif (!source.IsSuccessful) return;\nvar result = wrapper.Output.TransformPlateCornerForcesToMemberLocal(source.Data, otherMemberNode);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "TransformPlateCornerForcesToMemberLocal(StaadPro.Interop.Models.Output.PlateCornerForces,StaadPro.Interop.Entities.Node)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerMemberForces>",
+      "name": "TransformPlateCornerForcesToMemberLocal",
+      "parameters": [
+        {
+          "type": "PlateCornerForces",
+          "name": "plateCornerForces"
+        },
+        {
+          "type": "Beam",
+          "name": "member"
+        }
+      ],
+      "summary": "Transforms an owned global plate-corner packet into a described managed member basis.",
+      "remarks": "Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. This overload is pure managed math over an existing packet and performs no native result query.",
+      "args": "source.Data, member",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };\nvar otherMemberNode = plate.B;\nvar source = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode);\nif (!source.IsSuccessful) return;",
+      "sourceSignature": "MemberForces TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Beam member)",
+      "signature": "OutputQueryResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Beam member)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };\nvar otherMemberNode = plate.B;\nvar source = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode);\nif (!source.IsSuccessful) return;\nvar result = wrapper.Output.TransformPlateCornerForcesToMemberLocal(source.Data, member);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "TransformPlateCornerForcesToMemberLocal(StaadPro.Interop.Models.Output.PlateCornerForces,StaadPro.Interop.Entities.Beam)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerMemberForces>",
+      "name": "GetPlateCornerForcesInMemberLocalCoordinates",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        },
+        {
+          "type": "Node",
+          "name": "cornerNode"
+        },
+        {
+          "type": "Node",
+          "name": "otherMemberNode"
+        }
+      ],
+      "summary": "Retrieves a plate-corner packet and projects it into a described managed member basis.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back.  Returns PlateCornerMemberForces rather than relabeling a global PlateCornerForces packet.",
+      "args": "loadCase, plate, cornerNode, otherMemberNode",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar otherMemberNode = plate.B;",
+      "sourceSignature": "PlateCornerForces GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+      "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar otherMemberNode = plate.B;\nvar result = wrapper.Output.GetPlateCornerForcesInMemberLocalCoordinates(loadCase, plate, cornerNode, otherMemberNode);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "GetPlateCornerForcesInMemberLocalCoordinates(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node,StaadPro.Interop.Entities.Node)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerForces>",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "PlateCornerForcesRequest",
+          "name": "request"
+        }
+      ],
+      "summary": "Retrieves one sparse typed plate-corner request.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Unlike the enumerable request overload, this returns one status/data observation without allocating an indexed set.",
+      "args": "new PlateCornerForcesRequest(loadCase, plate, cornerNode)",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));",
+      "sourceSignature": null,
+      "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(PlateCornerForcesRequest request)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar result = wrapper.Output.GetPlateCornerForces(new PlateCornerForcesRequest(loadCase, plate, cornerNode));\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Models.Output.PlateCornerForcesRequest)"
+    },
+    {
+      "returnType": "PlateCornerForcesResultSet",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "IEnumerable<int>",
+          "name": "loadCaseIds"
+        },
+        {
+          "type": "int",
+          "name": "plateId"
+        },
+        {
+          "type": "int",
+          "name": "cornerNodeId"
+        },
+        {
+          "type": "LoadCaseType",
+          "name": "loadCaseType"
+        },
+        {
+          "type": "IOSGeometry",
+          "name": "geometry"
+        },
+        {
+          "type": "IOSLoad",
+          "name": "load"
+        }
+      ],
+      "summary": "Retrieves selected numeric cases using an explicit metadata family.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch.",
+      "args": "new[] { 1 }, 17, 1, LoadCaseType.PrimaryLoad, wrapper.Geometry, wrapper.Load",
+      "setup": "",
+      "sourceSignature": null,
+      "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
+      "example": "var result = wrapper.Output.GetPlateCornerForces(new[] { 1 }, 17, 1, LoadCaseType.PrimaryLoad, wrapper.Geometry, wrapper.Load);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{System.Int32},System.Int32,System.Int32,StaadPro.Interop.Enums.LoadCaseType,StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)"
+    },
+    {
+      "returnType": "OutputQueryResult<PlateCornerMemberForces>",
+      "name": "GetPlateCornerForcesInMemberLocalCoordinates",
+      "parameters": [
+        {
+          "type": "ILoadCase",
+          "name": "loadCase"
+        },
+        {
+          "type": "Plate",
+          "name": "plate"
+        },
+        {
+          "type": "Node",
+          "name": "cornerNode"
+        },
+        {
+          "type": "Beam",
+          "name": "member"
+        }
+      ],
+      "summary": "Retrieves a corner packet in the beta-aware managed basis of a supplied member.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. Unlike the other-node overload, this retains a real member ID and Start/End identity.",
+      "args": "loadCase, plate, cornerNode, member",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };",
+      "sourceSignature": null,
+      "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };\nvar result = wrapper.Output.GetPlateCornerForcesInMemberLocalCoordinates(loadCase, plate, cornerNode, member);\nif (result.IsSuccessful) System.Console.WriteLine(result.Data.Components.Fx);\nelse System.Console.WriteLine(result.Status);",
+      "xmlSignature": "GetPlateCornerForcesInMemberLocalCoordinates(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node,StaadPro.Interop.Entities.Beam)"
+    },
+    {
+      "returnType": "OutputBatchResult<PlateCornerMemberForces>",
+      "name": "GetPlateCornerForcesInMemberLocalCoordinates",
+      "parameters": [
+        {
+          "type": "IEnumerable<PlateCornerForcesRequest>",
+          "name": "requests"
+        },
+        {
+          "type": "Beam",
+          "name": "member"
+        }
+      ],
+      "summary": "Retrieves sparse corner requests in one supplied member basis.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. Every requested corner must be a member end; an ordinary failed extraction remains an identified failed item.",
+      "args": "new[] { new PlateCornerForcesRequest(loadCase, plate, cornerNode) }, member",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };",
+      "sourceSignature": null,
+      "signature": "OutputBatchResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(IEnumerable<PlateCornerForcesRequest> requests, Beam member)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };\nvar result = wrapper.Output.GetPlateCornerForcesInMemberLocalCoordinates(new[] { new PlateCornerForcesRequest(loadCase, plate, cornerNode) }, member);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "GetPlateCornerForcesInMemberLocalCoordinates(System.Collections.Generic.IEnumerable{StaadPro.Interop.Models.Output.PlateCornerForcesRequest},StaadPro.Interop.Entities.Beam)"
+    },
+    {
+      "returnType": "OutputBatchResult<PlateCornerMemberForces>",
+      "name": "TransformPlateCornerForcesToMemberLocal",
+      "parameters": [
+        {
+          "type": "IEnumerable<PlateCornerForces>",
+          "name": "plateCornerForces"
+        },
+        {
+          "type": "Beam",
+          "name": "member"
+        }
+      ],
+      "summary": "Projects an ordered collection of owned corner packets without native result calls.",
+      "remarks": "Projects global corner forces and moments into a managed member basis at the same corner point. It does not reverse member-end signs, transfer moments, sum adjacent plates or return native analytical-member result forces. Beam overloads use supplied beta degrees and require the corner to match a supplied member end ID and point; node-direction overloads use zero beta and no fabricated native member ID. Projected global Y defines the reference except near vertical, where projected global Z is used. This convention is not native orientation read-back. Unlike sparse extraction, this preserves duplicate source observations and performs no hydration or COM result query. Every source packet is validated before a result collection is returned.",
+      "args": "new[] { source.Data }, member",
+      "setup": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };\nvar source = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode);\nif (!source.IsSuccessful) return;",
+      "sourceSignature": null,
+      "signature": "OutputBatchResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(IEnumerable<PlateCornerForces> plateCornerForces, Beam member)",
+      "example": "ILoadCase loadCase = new LoadCase(1, \"Dead\");\nvar cornerNode = new Node(1, 0, 0, 0);\nvar plate = new Plate(17, cornerNode, new Node(2, 2, 0, 0), new Node(3, 2, 2, 0), new Node(4, 0, 2, 0));\nvar member = new Beam(18, cornerNode, plate.B) { BetaAngle = 30 };\nvar source = wrapper.Output.GetPlateCornerForces(loadCase, plate, cornerNode);\nif (!source.IsSuccessful) return;\nvar result = wrapper.Output.TransformPlateCornerForcesToMemberLocal(new[] { source.Data }, member);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "TransformPlateCornerForcesToMemberLocal(System.Collections.Generic.IEnumerable{StaadPro.Interop.Models.Output.PlateCornerForces},StaadPro.Interop.Entities.Beam)"
+    },
+    {
+      "returnType": "PlateCornerForcesResultSet",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "IEnumerable<PlateCornerForcesKey>",
+          "name": "keys"
+        },
+        {
+          "type": "IOSGeometry",
+          "name": "geometry"
+        },
+        {
+          "type": "IOSLoad",
+          "name": "load"
+        }
+      ],
+      "summary": "Resolves typed keys into indexed global corner observations.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. Family-aware keys select their metadata family; keys without a family require unambiguous discovery. Equivalent resolved keys are coalesced before native extraction.",
+      "args": "new[] { new PlateCornerForcesKey(1, 17, 1) }, wrapper.Geometry, wrapper.Load",
+      "setup": "",
+      "sourceSignature": null,
+      "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesKey> keys, IOSGeometry geometry, IOSLoad load)",
+      "example": "var result = wrapper.Output.GetPlateCornerForces(new[] { new PlateCornerForcesKey(1, 17, 1) }, wrapper.Geometry, wrapper.Load);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Models.Output.PlateCornerForcesKey},StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)"
+    },
+    {
+      "returnType": "PlateCornerForcesResultSet",
+      "name": "GetPlateCornerForces",
+      "parameters": [
+        {
+          "type": "IEnumerable<PlateCornerForcesKey>",
+          "name": "keys"
+        },
+        {
+          "type": "LoadCaseType",
+          "name": "loadCaseType"
+        },
+        {
+          "type": "IOSGeometry",
+          "name": "geometry"
+        },
+        {
+          "type": "IOSLoad",
+          "name": "load"
+        }
+      ],
+      "summary": "Resolves typed keys using one explicitly selected metadata family.",
+      "remarks": "Returns nodal Fx/Fy/Fz/Mx/My/Mz in global axes, not plate-center stresses or moments per unit width. The six-slot Double buffer follows installed 2024-2026 VBA examples; global axes follow the main adapter and read-only 2026 equilibrium checks. No extra plate-basis rotation is applied. Native false discards every buffer value. Case family describes metadata only: this native API accepts the numeric case selector and does not activate or disambiguate analysis families itself. Resolves case metadata and plate incidence through this wrapper's current bindings before extraction. Automatic case resolution searches primary, combination and reference metadata and returns MetadataUnavailable for a missing or ambiguous number. Explicit-family overloads avoid this ambiguity; they do not add a native family selector. No case activation or model loading occurs. Returns an indexed, owned outcome set, including ordinary native failures. Exact duplicates are coalesced in first-seen order by family/case/plate/corner. Conflicting supplied geometry or metadata is rejected. All-corner expansions deduplicate repeated closing/triangular incidence and use case-major, plate-major, incidence order; they require supplied A/B/C nodes. Sparse/single ID-only plates are hydrated with checked incidence and written coordinate outputs. At most 100000 input entries and expanded requests are allowed before extraction; no thread-pool dispatch. Keys without a family inherit the explicit family; a key that declares a different family is rejected.",
+      "args": "new[] { new PlateCornerForcesKey(1, 17, 1) }, LoadCaseType.PrimaryLoad, wrapper.Geometry, wrapper.Load",
+      "setup": "",
+      "sourceSignature": null,
+      "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesKey> keys, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
+      "example": "var result = wrapper.Output.GetPlateCornerForces(new[] { new PlateCornerForcesKey(1, 17, 1) }, LoadCaseType.PrimaryLoad, wrapper.Geometry, wrapper.Load);\nforeach (var item in result.Items)\n    if (item.IsSuccessful) System.Console.WriteLine(item.Data.Components.Fx);\n    else System.Console.WriteLine(item.Status);",
+      "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Models.Output.PlateCornerForcesKey},StaadPro.Interop.Enums.LoadCaseType,StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)"
+    }
+  ]
+}
