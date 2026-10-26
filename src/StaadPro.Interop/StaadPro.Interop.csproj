@@ -12,11 +12,11 @@
     <RootNamespace>StaadPro.Interop</RootNamespace>
     <PackageId>StaadPro.Interop</PackageId>
     <Version>1.0.0</Version>
-    <ReleaseDocumentationVersion>1.0.0-preview.20261026.3</ReleaseDocumentationVersion>
+    <ReleaseDocumentationVersion>1.0.0-preview.20261026.4</ReleaseDocumentationVersion>
     <PackageVersion>$(ReleaseDocumentationVersion)</PackageVersion>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 TensorStruct</Copyright>
-    <PackageReleaseNotes>Added 25 managed Output overloads for beam design hydration, staged utilization caches, identified local/global member actions, offset-transfer audits, geometry bases, plate-center composites and ordered static checks. Included six steel-design-block queries and nineteen Support operations from the preceding increment. Expanded XML IntelliSense and usage guides. Output exposes 71 managed overloads reaching 46 of 60 documented native names; fourteen native contracts remain pending. Publisher: TensorStruct. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Added 25 plate-corner Output overloads for checked extraction, case-family resolution, indexed selections and member-local projections. Included full XML IntelliSense, owned status/data results, reproducible read-only coordinate diagnostics and regression tests. Output exposes 96 managed overloads reaching 47 of 60 documented native names; thirteen native routes remain pending. Publisher: TensorStruct. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
@@ -68,6 +68,8 @@
     <None Include="..\..\docs\contracts\PropertyAttributeContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
     <None Include="..\..\docs\Output-Extended-Queries.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\contracts\OutputAdvancedContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
+    <None Include="..\..\docs\Output-Plate-Corners.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\contracts\OutputPlateCornerContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
     <None Include="..\..\docs\Output-Managed-Workflows.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\contracts\OutputManagedWorkflowContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
     <None Include="..\..\docs\Output-Steel-Design-Blocks.md" Pack="true" PackagePath="docs\" />

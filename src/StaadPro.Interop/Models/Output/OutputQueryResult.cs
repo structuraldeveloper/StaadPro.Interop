@@ -17,9 +17,11 @@ namespace StaadPro.Interop.Models.Output
         private readonly T data;
         internal OutputQueryResult(string nativeFunction, OutputQueryStatus status, T data,
             int? entityId = null, int? loadCaseId = null, MemberEnd? memberEnd = null,
-            int? nativeReturnCode = null, bool? nativeBooleanReturn = null, string diagnostic = null, string parameterBlockName = null, IEnumerable<OutputObservation> observations = null, string managedOperation = null)
+            int? nativeReturnCode = null, bool? nativeBooleanReturn = null, string diagnostic = null, string parameterBlockName = null, IEnumerable<OutputObservation> observations = null, string managedOperation = null, int? cornerNodeId = null, LoadCaseType? loadCaseType = null)
         {
             NativeFunction = nativeFunction;
+            CornerNodeId = cornerNodeId;
+            LoadCaseType = loadCaseType;
             Observations = Array.AsReadOnly((observations ?? Enumerable.Empty<OutputObservation>()).ToArray());
             ManagedOperation = managedOperation;
             Status = status;
@@ -31,7 +33,7 @@ namespace StaadPro.Interop.Models.Output
             NativeReturnCode = nativeReturnCode; NativeBooleanReturn = nativeBooleanReturn; Diagnostic = diagnostic;
         }
 
-        /// <summary>Gets the native function that produced this observation.</summary>
+        /// <summary>Gets the associated native target, including a query stopped before native invocation.</summary>
         /// <value>The exact OpenSTAAD method name, for diagnostics.</value>
         public string NativeFunction { get; }
         /// <summary>Gets the managed composition name when several observations form this result; null for an ordinary native query.</summary>
@@ -48,6 +50,10 @@ namespace StaadPro.Interop.Models.Output
         /// <summary>Gets the requested entity identifier when the function takes one.</summary>
         /// <value>The positive node, analytical/physical member, plate or solid ID, including on native failure; null for model-wide queries.</value>
         public int? EntityId { get; }
+        /// <summary>Gets the requested plate incidence-node ID, including failure; null for non-corner queries.</summary>
+        public int? CornerNodeId { get; }
+        /// <summary>Gets captured case-family metadata for a corner workflow; this does not add a native family selector.</summary>
+        public LoadCaseType? LoadCaseType { get; }
         /// <summary>Gets the exact explicitly requested steel-design parameter-block name, including on native failure; null for queries without that input.</summary>
         /// <remarks>A maximum across blocks does not identify its governing block; null does not mean that a default block was selected.</remarks>
         public string ParameterBlockName { get; }

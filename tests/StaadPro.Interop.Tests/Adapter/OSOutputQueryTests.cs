@@ -320,15 +320,15 @@ namespace StaadPro.Interop.Tests.Adapter
             }
         }
         [Test]
-        public void PublicContractHasSeventyOneTypedOperationsWithoutReferenceOutputs()
+        public void PublicContractHasNinetySixTypedOperationsWithoutReferenceOutputs()
         {
             Assert.That(Queries, Has.Length.EqualTo(15));
             var all = typeof(IOSOutput).GetMethods().Where(m => !m.IsSpecialName).ToArray();
-            Assert.That(all, Has.Length.EqualTo(71));
+            Assert.That(all, Has.Length.EqualTo(96));
             foreach (var method in all)
             {
                 Assert.That(method.GetParameters().Any(p => p.ParameterType.IsByRef), Is.False);
-                Assert.That(method.ReturnType == typeof(MemberCoordinateSystem) || method.ReturnType == typeof(OutputPopulationResult) ||
+                Assert.That(method.ReturnType == typeof(PlateCornerForcesResultSet) || method.ReturnType == typeof(MemberCoordinateSystem) || method.ReturnType == typeof(OutputPopulationResult) ||
                     method.ReturnType.IsGenericType && new[] { typeof(OutputQueryResult<>), typeof(OutputBatchResult<>) }.Contains(method.ReturnType.GetGenericTypeDefinition()), Is.True);
                 Assert.That(typeof(OSOutputAdapter).GetMethod(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray()), Is.Not.Null);
             }

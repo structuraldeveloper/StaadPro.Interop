@@ -4,7 +4,9 @@
 **Baseline:** main at 1d8285ce66c95c60da55530d4c721fb7274893da<br>
 **Scope:** Completed the remaining domain comparisons and implementation plans; no domain functions were implemented or packaged by this review.
 
-**Current managed Output checkpoint, 26 October 2026:** added 25 public overloads (23 main-source adaptations plus two typed enabling overloads). Output has 71 managed overloads reaching 46/60 native names; native gates and other domains retain separate scope. See [the workflow guide](../Output-Managed-Workflows.md).
+**Latest plate-corner checkpoint, 26 October 2026:** added 25 managed Output overloads, bringing the public surface to 96 overloads reaching 47/60 documented native names. Read-only 2026 coordinate evidence and metadata ambiguity are documented in the [corner guide](../Output-Plate-Corners.md). Thirteen native Output routes remain.
+
+**Earlier managed Output checkpoint, 26 October 2026:** added 25 public overloads (23 main-source adaptations plus two typed enabling overloads). Output has 71 managed overloads reaching 46/60 native names; native gates and other domains retain separate scope. See [the workflow guide](../Output-Managed-Workflows.md).
 
 **Previous implementation checkpoint, 26 October 2026:** added six qualified Output routes and nineteen Support functions (46/60 and 19/35 coverage). The other domains and parked Property/Load work retain their separate scope.
 
@@ -17,7 +19,7 @@
 | Root | 39 reviewed native functions | 23 reference methods | Reviewed managed coverage complete; native qualification remains. [Root plan](OpenSTAAD-Root-Multi-Version-Architecture-and-Plan.md) |
 | Geometry | 135 / 135 / 135, including one deprecated summary | 143 | Reference parity complete; wider native and version-policy work remains. [Geometry plan](OpenSTAAD-Geometry-Multi-Version-Architecture-and-Plan.md) |
 | Load | 129 / 129 / 129 | 115 | Reference parity complete, with five additional conveniences; wider native coverage remains. [Load plan](OpenSTAAD-Load-Multi-Version-Architecture-and-Plan.md) |
-| Output | 59 / 60 / 60 | 86 | 71 managed overloads reach 46 native mappings; 14 native routes pending. [Output plan](OpenSTAAD-Output-Multi-Version-Architecture-and-Plan.md) |
+| Output | 59 / 60 / 60 | 86 | 96 managed overloads reach 47 native mappings; 13 native routes pending. [Output plan](OpenSTAAD-Output-Multi-Version-Architecture-and-Plan.md) |
 | Property | 204 / 209 / 209 | 103 | 195 active native routes implemented through 249 common and five optional operations; nine documented gates pending; fifteen supplemental candidates parked. Deprecated/reserved/private entries distinguished in its report. [Property plan](OpenSTAAD-Property-Multi-Version-Architecture-and-Plan.md) |
 | Support | 35 / 35 / 35 | 33 | 19 common native routes implemented; 16 pending. [Support plan](OpenSTAAD-Support-Multi-Version-Architecture-and-Plan.md) |
 | Design | 31 / 45 / 45 | 7 | Binding-only placeholder. [Design plan](OpenSTAAD-Design-Multi-Version-Architecture-and-Plan.md) |

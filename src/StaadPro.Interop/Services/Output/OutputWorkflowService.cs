@@ -419,34 +419,11 @@ namespace StaadPro.Interop.Services.Output
             Finite(beta);
             return Run(s =>
             {
-                Vector3D x = points[1] - points[0];
-                x.Normalize();
-                Vector3D y, z;
-                if (Math.Abs(x.Y) >= 1 - 1e-9)
-                {
-                    var gz = new Vector3D(0, 0, 1);
-                    z = gz - Vector3D.DotProduct(gz, x) * x;
-                    z.Normalize();
-                    y = Vector3D.CrossProduct(z, x);
-                    y.Normalize();
-                }
-                else
-                {
-                    var gy = new Vector3D(0, 1, 0);
-                    y = gy - Vector3D.DotProduct(gy, x) * x;
-                    y.Normalize();
-                    z = Vector3D.CrossProduct(x, y);
-                    z.Normalize();
-                }
-                var rotation = Matrix3D.Identity;
-                rotation.Rotate(new Quaternion(x, beta % 360));
-                y = rotation.Transform(y);
-                z = rotation.Transform(z);
-                Finite(y);
-                Finite(z);
-                return new MemberCoordinateSystem(id, points[0], x, y, z, beta);
+                var frame = Coordinates.MemberResultFrame.Create(points[0], points[1], beta);
+                return new MemberCoordinateSystem(id, points[0], frame.X, frame.Y, frame.Z, beta);
             });
         }
+
         private static int PlateId(Plate plate)
         {
             if (plate == null)

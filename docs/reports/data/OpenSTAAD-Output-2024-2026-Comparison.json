@@ -10,9 +10,9 @@
     },
     "union": 60,
     "intersection": 59,
-    "currentOutputMethods": 71,
+    "currentOutputMethods": 96,
     "currentDelegatedNativeNames": 2,
-    "currentUnmappedNativeNames": 14,
+    "currentUnmappedNativeNames": 13,
     "referenceOverloads": 86,
     "referencePublicAdapterMethods": 86,
     "referenceAsyncOverloads": 33,
@@ -32,7 +32,7 @@
     "supplementalClassUnitNames": 13,
     "excludedNativeImplementationHelpers": 2,
     "supplementalUnitQueryNames": 13,
-    "currentImplementedNativeNames": 46
+    "currentImplementedNativeNames": 47
   },
   "manualEvidence": {
     "2024": {
@@ -407,13 +407,13 @@
   "currentSourceEvidence": [
     {
       "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSOutput.cs",
-      "bytes": 185520,
-      "sha256": "499c19376afdf73e5a9c7a3a55c5f71981620e0a49a90a2c0df29a8e7d9e35ad"
+      "bytes": 276184,
+      "sha256": "729c3c54c6adb3e9cb71488cfc506b111dc154a8aa490e6524fae531a6646bb8"
     },
     {
       "file": "src/StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs",
-      "bytes": 192444,
-      "sha256": "ae8942704fd7503fe6e6d580c83d8799ad685f19d33559e13cc3b4c06dc041b2"
+      "bytes": 285477,
+      "sha256": "cc47cc23b46695926058d67c2d10176f713507c65d343f4517a3caa7ba04a9ee"
     },
     {
       "file": "src/StaadPro.Interop/Enums/Output/OutputQueryStatus.cs",
@@ -437,8 +437,8 @@
     },
     {
       "file": "src/StaadPro.Interop/Models/Output/OutputQueryResult.cs",
-      "bytes": 5355,
-      "sha256": "e2b740bcc4c12d5f9a9174d1bbfe30be40532012d9300be88da85051b63e86b9"
+      "bytes": 5877,
+      "sha256": "a92f7a9bdfb06cf4bfac255f8ea5bd1305593c728fd6e095bdda00ea369e258c"
     },
     {
       "file": "src/StaadPro.Interop/Models/Output/PlateCenterResults.cs",
@@ -467,8 +467,8 @@
     },
     {
       "file": "src/StaadPro.Interop/Services/Output/OutputWorkflowService.cs",
-      "bytes": 31087,
-      "sha256": "32e377e5f95376431a6f09ebdd4fb718c4c615a5967a06e80fc424a1f37300f9"
+      "bytes": 29681,
+      "sha256": "0f0a0405704a6b24bfb60e9c3573e1235697eb95dfc7e7fe3b914f63b4231787"
     },
     {
       "file": "src/StaadPro.Interop/Models/Output/BeamSteelDesignResults.cs",
@@ -524,6 +524,61 @@
       "file": "tests/StaadPro.Interop.Tests/Adapter/OSOutputWorkflowTests.cs",
       "bytes": 40021,
       "sha256": "a1ccf8e970877bf66f1677110ef1fb4a4d666af465db62439f5d9bac8f3b1e46"
+    },
+    {
+      "file": "src/StaadPro.Interop/Services/Output/OutputPlateCornerService.cs",
+      "bytes": 33325,
+      "sha256": "719f9511f034ea2502992fec3ac94555236cef3d30d9af84cff46e86f9cd16cc"
+    },
+    {
+      "file": "src/StaadPro.Interop/Services/Output/Coordinates/MemberResultFrame.cs",
+      "bytes": 2793,
+      "sha256": "bed8653f523d51f192002c7995f68cd14ee1642fdb8332e1257c362c47ade5fb"
+    },
+    {
+      "file": "src/StaadPro.Interop/Models/Output/PlateCornerForcesKey.cs",
+      "bytes": 5191,
+      "sha256": "21e05ca24682851e8bfa425915e0d3648c08d43a522d63a8678e6ffa9fbf6cc1"
+    },
+    {
+      "file": "src/StaadPro.Interop/Models/Output/PlateCornerForcesRequest.cs",
+      "bytes": 2155,
+      "sha256": "8379b2eea2fb42132f175acd5e21e46f1c17cc0e10a513d91b6bc5cb90cb3ae5"
+    },
+    {
+      "file": "src/StaadPro.Interop/Models/Output/PlateCornerForces.cs",
+      "bytes": 2400,
+      "sha256": "ff1e974bdf0bb33a97e0d8b7ab520f0763e33b4575fa1f92030e92cfd2b9c1d0"
+    },
+    {
+      "file": "src/StaadPro.Interop/Models/Output/PlateCornerMemberForces.cs",
+      "bytes": 2697,
+      "sha256": "01235501c817760d14014ef2a82f37dfd58ba6054b5a1d96ea6a471b5a8a7cdb"
+    },
+    {
+      "file": "src/StaadPro.Interop/Models/Output/PlateCornerForcesResultSet.cs",
+      "bytes": 6540,
+      "sha256": "f488dc72d865f30104d892c9792065296c65e1289d4d5ce5fbe14050048d5b9e"
+    },
+    {
+      "file": "tests/StaadPro.Interop.Tests/Adapter/OSOutputPlateCornerTests.cs",
+      "bytes": 44120,
+      "sha256": "596555acc5025e1e07ece9fa50d54949c482ddf7bde057dba5800429f63b448d"
+    },
+    {
+      "file": "eng/Fixtures/OutputPlateCornerFixture.cs",
+      "bytes": 5676,
+      "sha256": "925983b1aeadb34de5a03094bad89fcc9a0a0144bc7023f4a90f24ebfcdae692"
+    },
+    {
+      "file": "eng/Diagnostics/PlateCornerCoordinateProbe.cs",
+      "bytes": 5442,
+      "sha256": "9c3cf148f0232c1af708a658a2e245078dd4992ed7fb7ecc7b4bb4fcacce4644"
+    },
+    {
+      "file": "eng/Diagnostics/Probe-PlateCornerCoordinates.ps1",
+      "bytes": 466,
+      "sha256": "88b317fe6dc6287c90aafd9f887dee3dbeaf704668270c8114223486be33289f"
     }
   ],
   "referenceSourceEvidence": [
@@ -12591,7 +12646,7 @@
       "name": "GetPlateCornerForces",
       "category": "Result: Plates Analysis Results",
       "classification": "Unchanged",
-      "currentOutputAdapter": false,
+      "currentOutputAdapter": true,
       "currentDelegatedCalls": [],
       "referenceCalls": [
         {
@@ -12609,9 +12664,9 @@
       ],
       "plan": {
         "phase": "O4",
-        "api": "GetPlateCornerForces(int plateId, int cornerNodeId, int loadCaseId)",
-        "data": "PlateCornerForcesQueryResult",
-        "notes": "Reuse source hydration/request/index models. Help omits output layout/axes; source claims six global values and prior checks, which require new reproducible fixtures. Avoid double rotation."
+        "api": "GetPlateCornerForces and associated typed corner workflows",
+        "data": "OutputQueryResult<PlateCornerForces> / PlateCornerForcesResultSet / PlateCornerMemberForces",
+        "notes": "Implemented 25 managed overloads. Six-double VBA layout and read-only 2026 global force/moment evidence; other builds/models remain qualification work."
       },
       "versions": {
         "2024": {
@@ -19062,7 +19117,13 @@
             "ref pdForces"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -19097,7 +19158,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -19144,7 +19211,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -19197,7 +19270,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -19232,7 +19311,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate, Node cornerNode)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -19261,7 +19346,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, Plate plate)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -19290,7 +19381,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -19319,7 +19416,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, IEnumerable<Plate> plates)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -19348,7 +19451,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -19371,7 +19480,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesRequest> requests)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -19418,7 +19533,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForcesAsync",
@@ -19844,7 +19965,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForcesInGlobalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForcesInGlobalCoordinatesAsync",
@@ -19926,7 +20053,13 @@
       ],
       "hasPublicReferenceOutput": true,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForcesGlobal(Plate plate, Node cornerNode, int loadCaseId)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -19967,7 +20100,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForces",
@@ -20008,7 +20147,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForcesAsync",
@@ -20117,7 +20262,13 @@
       "nativeTargets": [],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "OutputQueryResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Node otherMemberNode)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "TransformPlateCornerForcesToMemberLocal",
@@ -20144,7 +20295,13 @@
       "nativeTargets": [],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "OutputQueryResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Beam member)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetMemberLocalCoordinateSystem",
@@ -20266,7 +20423,13 @@
       ],
       "hasPublicReferenceOutput": false,
       "isAsync": false,
-      "directCalls": []
+      "directCalls": [],
+      "implementation": {
+        "status": "Implemented managed adaptation",
+        "managedSignature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+        "guide": "docs/Output-Plate-Corners.md",
+        "notes": "Owned metadata/geometry, family-aware indexing, named status/data and caller-apartment dispatch; source out-vector convenience replaced by a named return."
+      }
     },
     {
       "name": "GetPlateCornerForcesInMemberLocalCoordinatesAsync",
@@ -22628,10 +22791,10 @@
   ],
   "implementationUpdate": {
     "date": "2026-10-26",
-    "parentCommit": "a193948",
-    "managedMethods": 71,
-    "nativeMappings": 46,
-    "pendingDocumentedNativeMappings": 14,
+    "parentCommit": "97b1bf994fb10cd0898423410f4d84e013799a7d",
+    "managedMethods": 96,
+    "nativeMappings": 47,
+    "pendingDocumentedNativeMappings": 13,
     "implementedFunctions": [
       {
         "managed": "GetAnalysisResultAvailability",
@@ -22908,157 +23071,432 @@
         "native": "GetMemberSteelDesignMaxFailureRatio",
         "returnType": "double",
         "signature": "OutputQueryResult<double> GetMaximumSteelDesignFailureRatio()"
+      },
+      {
+        "managed": "GetSteelDesignResultsForBeam",
+        "signature": "OutputQueryResult<BeamSteelDesignResults> GetSteelDesignResultsForBeam(Beam beam, IEnumerable<ILoadCase> loadCases)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetSteelDesignResultsForBeam",
+        "signature": "OutputQueryResult<BeamSteelDesignResults> GetSteelDesignResultsForBeam(IOSLoad load, Beam beam)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetSteelDesignResultsForBeams",
+        "signature": "OutputBatchResult<BeamSteelDesignResults> GetSteelDesignResultsForBeams(IEnumerable<Beam> beams, IEnumerable<ILoadCase> loadCases)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetSteelDesignResultsForBeams",
+        "signature": "OutputBatchResult<BeamSteelDesignResults> GetSteelDesignResultsForBeams(IOSLoad load, IEnumerable<Beam> beams)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetMemberSteelUtilizationRatios",
+        "signature": "OutputBatchResult<double> GetMemberSteelUtilizationRatios(HashSet<Beam> beams)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "PopulateMemberSteelUtilizationRatios",
+        "signature": "OutputPopulationResult PopulateMemberSteelUtilizationRatios(HashSet<Beam> beams)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetMemberEndForces",
+        "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForces(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetMemberEndForces",
+        "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForces(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd, ResultCoordinateSystem coordinateSystem)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetMemberEndForcesConsideringOffsets",
+        "signature": "OutputQueryResult<OffsetAwareMemberEndForces> GetMemberEndForcesConsideringOffsets(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetMemberEndForcesAtPhysicalJoint",
+        "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetMemberEndForcesConsideringOffsets",
+        "signature": "OutputQueryResult<OffsetAwareMemberEndForces> GetMemberEndForcesConsideringOffsets(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetMemberEndForcesAtPhysicalJoint",
+        "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetMemberLocalCoordinateSystem",
+        "signature": "MemberCoordinateSystem GetMemberLocalCoordinateSystem(Beam member)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetPlateCenterForces",
+        "signature": "OutputQueryResult<PlateCenterForces> GetPlateCenterForces(ILoadCase loadCase, Plate plate)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetPlateCenterMoments",
+        "signature": "OutputQueryResult<PlateCenterMoments> GetPlateCenterMoments(ILoadCase loadCase, Plate plate)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetPlateCenterVonMises",
+        "signature": "OutputQueryResult<PlateCenterVonMises> GetPlateCenterVonMises(ILoadCase loadCase, Plate plate)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetPlatePrincipalStresses",
+        "signature": "OutputQueryResult<PlatePrincipalStresses> GetPlatePrincipalStresses(ILoadCase loadCase, Plate plate)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetPlateCenterResults",
+        "signature": "OutputQueryResult<PlateCenterResults> GetPlateCenterResults(ILoadCase loadCase, Plate plate)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetPlateCenterResults",
+        "signature": "OutputBatchResult<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetPlateCenterResults",
+        "signature": "OutputBatchResult<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates, int degreeOfParallelism)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetStaticCheckResults",
+        "signature": "OutputBatchResult<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetStaticCheckResults",
+        "signature": "OutputBatchResult<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds, int degreeOfParallelism)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetSupportForces",
+        "signature": "OutputQueryResult<ForceComponents> GetSupportForces(int nodeId, int loadCaseId)",
+        "kind": "Adapted synchronous main-project workflow"
+      },
+      {
+        "managed": "GetMemberEndForces",
+        "signature": "OutputQueryResult<ForceComponents> GetMemberEndForces(int memberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem)",
+        "kind": "New typed enabling overload"
+      },
+      {
+        "managed": "GetMemberSteelUtilizationRatio",
+        "signature": "OutputQueryResult<double> GetMemberSteelUtilizationRatio(Beam beam)",
+        "kind": "New typed enabling overload"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate, Node cornerNode)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate, Node cornerNode)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, Plate plate)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, Plate plate)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, IEnumerable<Plate> plates)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, IEnumerable<Plate> plates)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesRequest> requests)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesRequest> requests)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)"
+      },
+      {
+        "managed": "GetPlateCornerForcesInGlobalCoordinates",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForcesInGlobalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForcesInGlobalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode)"
+      },
+      {
+        "managed": "GetPlateCornerForcesGlobal",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForcesGlobal(Plate plate, Node cornerNode, int loadCaseId)",
+        "sourceSignature": "bool GetPlateCornerForcesGlobal(Plate plate, Node cornerNode, int loadCaseId, out Vector3D globalForce, out Vector3D globalMoment)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+        "sourceSignature": "MemberForces GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member)",
+        "sourceSignature": "MemberForces GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member)"
+      },
+      {
+        "managed": "TransformPlateCornerForcesToMemberLocal",
+        "native": "Pure managed transform",
+        "signature": "OutputQueryResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Node otherMemberNode)",
+        "sourceSignature": "MemberForces TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Node otherMemberNode)"
+      },
+      {
+        "managed": "TransformPlateCornerForcesToMemberLocal",
+        "native": "Pure managed transform",
+        "signature": "OutputQueryResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Beam member)",
+        "sourceSignature": "MemberForces TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Beam member)"
+      },
+      {
+        "managed": "GetPlateCornerForcesInMemberLocalCoordinates",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)"
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(PlateCornerForcesRequest request)",
+        "sourceSignature": null
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
+        "sourceSignature": null
+      },
+      {
+        "managed": "GetPlateCornerForcesInMemberLocalCoordinates",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member)",
+        "sourceSignature": null
+      },
+      {
+        "managed": "GetPlateCornerForcesInMemberLocalCoordinates",
+        "native": "GetPlateCornerForces",
+        "signature": "OutputBatchResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(IEnumerable<PlateCornerForcesRequest> requests, Beam member)",
+        "sourceSignature": null
+      },
+      {
+        "managed": "TransformPlateCornerForcesToMemberLocal",
+        "native": "Pure managed transform",
+        "signature": "OutputBatchResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(IEnumerable<PlateCornerForces> plateCornerForces, Beam member)",
+        "sourceSignature": null
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesKey> keys, IOSGeometry geometry, IOSLoad load)",
+        "sourceSignature": null
+      },
+      {
+        "managed": "GetPlateCornerForces",
+        "native": "GetPlateCornerForces",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesKey> keys, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
+        "sourceSignature": null
       }
     ],
     "newManagedFunctions": [
       {
-        "signature": "OutputQueryResult<BeamSteelDesignResults> GetSteelDesignResultsForBeam(Beam beam, IEnumerable<ILoadCase> loadCases)",
-        "sourceSignature": "MemberSteelDesignResults GetSteelDesignResultsForBeam(Beam beam, IEnumerable<ILoadCase> allLoadCases)",
-        "xmlSignature": "GetSteelDesignResultsForBeam(StaadPro.Interop.Entities.Beam,System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase})",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode)",
+        "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<BeamSteelDesignResults> GetSteelDesignResultsForBeam(IOSLoad load, Beam beam)",
-        "sourceSignature": "MemberSteelDesignResults GetSteelDesignResultsForBeam(IOSLoad load, Beam beam)",
-        "xmlSignature": "GetSteelDesignResultsForBeam(StaadPro.Interop.Adapters.Interfaces.IOSLoad,StaadPro.Interop.Entities.Beam)",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId)",
+        "xmlSignature": "GetPlateCornerForces(System.Int32,System.Int32,System.Int32)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputBatchResult<BeamSteelDesignResults> GetSteelDesignResultsForBeams(IEnumerable<Beam> beams, IEnumerable<ILoadCase> loadCases)",
-        "sourceSignature": "IEnumerable<MemberSteelDesignResults> GetSteelDesignResultsForBeams(IEnumerable<Beam> beams, IEnumerable<ILoadCase> allLoadCases)",
-        "xmlSignature": "GetSteelDesignResultsForBeams(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Beam},System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase})",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+        "xmlSignature": "GetPlateCornerForces(System.Int32,System.Int32,System.Int32,StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputBatchResult<BeamSteelDesignResults> GetSteelDesignResultsForBeams(IOSLoad load, IEnumerable<Beam> beams)",
-        "sourceSignature": "IEnumerable<MemberSteelDesignResults> GetSteelDesignResultsForBeams(IOSLoad load, IEnumerable<Beam> beams)",
-        "xmlSignature": "GetSteelDesignResultsForBeams(StaadPro.Interop.Adapters.Interfaces.IOSLoad,System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Beam})",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForces(int loadCaseId, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
+        "xmlSignature": "GetPlateCornerForces(System.Int32,System.Int32,System.Int32,StaadPro.Interop.Enums.LoadCaseType,StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputBatchResult<double> GetMemberSteelUtilizationRatios(HashSet<Beam> beams)",
-        "sourceSignature": "Dictionary<Beam, double> GetMemberSteelUtilizationRatios(HashSet<Beam> beams)",
-        "xmlSignature": "GetMemberSteelUtilizationRatios(System.Collections.Generic.HashSet{StaadPro.Interop.Entities.Beam})",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate, Node cornerNode)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate, Node cornerNode)",
+        "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputPopulationResult PopulateMemberSteelUtilizationRatios(HashSet<Beam> beams)",
-        "sourceSignature": "void PopulateMemberSteelUtilizationRatios(HashSet<Beam> forBeams)",
-        "xmlSignature": "PopulateMemberSteelUtilizationRatios(System.Collections.Generic.HashSet{StaadPro.Interop.Entities.Beam})",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, Plate plate)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, Plate plate)",
+        "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForces(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
-        "sourceSignature": "MemberForces GetMemberEndForces(string lcTitle, int beamId, int loadCaseId, MemberEnd memberEnd)",
-        "xmlSignature": "GetMemberEndForces(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd)",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, Plate plate)",
+        "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},StaadPro.Interop.Entities.Plate)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForces(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd, ResultCoordinateSystem coordinateSystem)",
-        "sourceSignature": "MemberForces GetMemberEndForces(string lcTitle, int beamId, int loadCaseId, MemberEnd memberEnd, LocalOrGlobal coordinateSystem)",
-        "xmlSignature": "GetMemberEndForces(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd,StaadPro.Interop.Enums.Output.ResultCoordinateSystem)",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, IEnumerable<Plate> plates)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(ILoadCase loadCase, IEnumerable<Plate> plates)",
+        "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Entities.ILoadCase,System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Plate})",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<OffsetAwareMemberEndForces> GetMemberEndForcesConsideringOffsets(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
-        "sourceSignature": "OffsetAwareMemberEndForces GetMemberEndForcesConsideringOffsets(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
-        "xmlSignature": "GetMemberEndForcesConsideringOffsets(System.String,StaadPro.Interop.Entities.Beam,System.Int32,StaadPro.Interop.Enums.MemberEnd)",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
+        "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Plate})",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
-        "sourceSignature": "MemberForces GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
-        "xmlSignature": "GetMemberEndForcesAtPhysicalJoint(System.String,StaadPro.Interop.Entities.Beam,System.Int32,StaadPro.Interop.Enums.MemberEnd)",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesRequest> requests)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesRequest> requests)",
+        "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Models.Output.PlateCornerForcesRequest})",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<OffsetAwareMemberEndForces> GetMemberEndForcesConsideringOffsets(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
-        "sourceSignature": "OffsetAwareMemberEndForces GetMemberEndForcesConsideringOffsets(string loadCaseTitle, int beamId, int loadCaseId, MemberEnd memberEnd)",
-        "xmlSignature": "GetMemberEndForcesConsideringOffsets(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd)",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+        "sourceSignature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, IOSGeometry geometry, IOSLoad load)",
+        "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{System.Int32},System.Int32,System.Int32,StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
-        "sourceSignature": "MemberForces GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, int beamId, int loadCaseId, MemberEnd memberEnd)",
-        "xmlSignature": "GetMemberEndForcesAtPhysicalJoint(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd)",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForcesInGlobalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForcesInGlobalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode)",
+        "xmlSignature": "GetPlateCornerForcesInGlobalCoordinates(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "MemberCoordinateSystem GetMemberLocalCoordinateSystem(Beam member)",
-        "sourceSignature": "LocalCS GetMemberLocalCoordinateSystem(Beam member)",
-        "xmlSignature": "GetMemberLocalCoordinateSystem(StaadPro.Interop.Entities.Beam)",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForcesGlobal(Plate plate, Node cornerNode, int loadCaseId)",
+        "sourceSignature": "bool GetPlateCornerForcesGlobal(Plate plate, Node cornerNode, int loadCaseId, out Vector3D globalForce, out Vector3D globalMoment)",
+        "xmlSignature": "GetPlateCornerForcesGlobal(StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node,System.Int32)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<PlateCenterForces> GetPlateCenterForces(ILoadCase loadCase, Plate plate)",
-        "sourceSignature": "PlateCenterForces GetPlateCenterForces(ILoadCase loadCase, Plate plate)",
-        "xmlSignature": "GetPlateCenterForces(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)",
+        "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+        "sourceSignature": "MemberForces GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+        "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node,StaadPro.Interop.Entities.Node)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<PlateCenterMoments> GetPlateCenterMoments(ILoadCase loadCase, Plate plate)",
-        "sourceSignature": "PlateCenterMoments GetPlateCenterMoments(ILoadCase loadCase, Plate plate)",
-        "xmlSignature": "GetPlateCenterMoments(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)",
+        "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member)",
+        "sourceSignature": "MemberForces GetPlateCornerForces(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member)",
+        "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node,StaadPro.Interop.Entities.Beam)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<PlateCenterVonMises> GetPlateCenterVonMises(ILoadCase loadCase, Plate plate)",
-        "sourceSignature": "PlateCenterVonMises GetPlateCenterVonMises(ILoadCase loadCase, Plate plate)",
-        "xmlSignature": "GetPlateCenterVonMises(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)",
+        "signature": "OutputQueryResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Node otherMemberNode)",
+        "sourceSignature": "MemberForces TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Node otherMemberNode)",
+        "xmlSignature": "TransformPlateCornerForcesToMemberLocal(StaadPro.Interop.Models.Output.PlateCornerForces,StaadPro.Interop.Entities.Node)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<PlatePrincipalStresses> GetPlatePrincipalStresses(ILoadCase loadCase, Plate plate)",
-        "sourceSignature": "PlatePrincipalStresses GetPlatePrincipalStresses(ILoadCase loadCase, Plate plate)",
-        "xmlSignature": "GetPlatePrincipalStresses(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)",
+        "signature": "OutputQueryResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Beam member)",
+        "sourceSignature": "MemberForces TransformPlateCornerForcesToMemberLocal(PlateCornerForces plateCornerForces, Beam member)",
+        "xmlSignature": "TransformPlateCornerForcesToMemberLocal(StaadPro.Interop.Models.Output.PlateCornerForces,StaadPro.Interop.Entities.Beam)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputQueryResult<PlateCenterResults> GetPlateCenterResults(ILoadCase loadCase, Plate plate)",
-        "sourceSignature": "PlateCenterResults GetPlateCenterResults(ILoadCase loadCase, Plate plate)",
-        "xmlSignature": "GetPlateCenterResults(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)",
+        "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+        "sourceSignature": "PlateCornerForces GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Node otherMemberNode)",
+        "xmlSignature": "GetPlateCornerForcesInMemberLocalCoordinates(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node,StaadPro.Interop.Entities.Node)",
         "kind": "Adapted synchronous main-project workflow"
       },
       {
-        "signature": "OutputBatchResult<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
-        "sourceSignature": "IEnumerable<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
-        "xmlSignature": "GetPlateCenterResults(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Plate})",
-        "kind": "Adapted synchronous main-project workflow"
-      },
-      {
-        "signature": "OutputBatchResult<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates, int degreeOfParallelism)",
-        "sourceSignature": "IEnumerable<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates, int nThreads)",
-        "xmlSignature": "GetPlateCenterResults(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Plate},System.Int32)",
-        "kind": "Adapted synchronous main-project workflow"
-      },
-      {
-        "signature": "OutputBatchResult<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds)",
-        "sourceSignature": "HashSet<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds)",
-        "xmlSignature": "GetStaticCheckResults(System.Collections.Generic.IEnumerable{System.Int32})",
-        "kind": "Adapted synchronous main-project workflow"
-      },
-      {
-        "signature": "OutputBatchResult<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds, int degreeOfParallelism)",
-        "sourceSignature": "HashSet<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds, int nThreads)",
-        "xmlSignature": "GetStaticCheckResults(System.Collections.Generic.IEnumerable{System.Int32},System.Int32)",
-        "kind": "Adapted synchronous main-project workflow"
-      },
-      {
-        "signature": "OutputQueryResult<ForceComponents> GetSupportForces(int nodeId, int loadCaseId)",
-        "sourceSignature": "LoadCaseForces GetSupportForces(int supportId, int loadCaseId)",
-        "xmlSignature": "GetSupportForces(System.Int32,System.Int32)",
-        "kind": "Adapted synchronous main-project workflow"
-      },
-      {
-        "signature": "OutputQueryResult<ForceComponents> GetMemberEndForces(int memberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem)",
+        "signature": "OutputQueryResult<PlateCornerForces> GetPlateCornerForces(PlateCornerForcesRequest request)",
         "sourceSignature": null,
-        "xmlSignature": "GetMemberEndForces(System.Int32,StaadPro.Interop.Enums.MemberEnd,System.Int32,StaadPro.Interop.Enums.Output.ResultCoordinateSystem)",
+        "xmlSignature": "GetPlateCornerForces(StaadPro.Interop.Models.Output.PlateCornerForcesRequest)",
         "kind": "New typed enabling overload"
       },
       {
-        "signature": "OutputQueryResult<double> GetMemberSteelUtilizationRatio(Beam beam)",
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<int> loadCaseIds, int plateId, int cornerNodeId, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
         "sourceSignature": null,
-        "xmlSignature": "GetMemberSteelUtilizationRatio(StaadPro.Interop.Entities.Beam)",
+        "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{System.Int32},System.Int32,System.Int32,StaadPro.Interop.Enums.LoadCaseType,StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)",
+        "kind": "New typed enabling overload"
+      },
+      {
+        "signature": "OutputQueryResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(ILoadCase loadCase, Plate plate, Node cornerNode, Beam member)",
+        "sourceSignature": null,
+        "xmlSignature": "GetPlateCornerForcesInMemberLocalCoordinates(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate,StaadPro.Interop.Entities.Node,StaadPro.Interop.Entities.Beam)",
+        "kind": "New typed enabling overload"
+      },
+      {
+        "signature": "OutputBatchResult<PlateCornerMemberForces> GetPlateCornerForcesInMemberLocalCoordinates(IEnumerable<PlateCornerForcesRequest> requests, Beam member)",
+        "sourceSignature": null,
+        "xmlSignature": "GetPlateCornerForcesInMemberLocalCoordinates(System.Collections.Generic.IEnumerable{StaadPro.Interop.Models.Output.PlateCornerForcesRequest},StaadPro.Interop.Entities.Beam)",
+        "kind": "New typed enabling overload"
+      },
+      {
+        "signature": "OutputBatchResult<PlateCornerMemberForces> TransformPlateCornerForcesToMemberLocal(IEnumerable<PlateCornerForces> plateCornerForces, Beam member)",
+        "sourceSignature": null,
+        "xmlSignature": "TransformPlateCornerForcesToMemberLocal(System.Collections.Generic.IEnumerable{StaadPro.Interop.Models.Output.PlateCornerForces},StaadPro.Interop.Entities.Beam)",
+        "kind": "New typed enabling overload"
+      },
+      {
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesKey> keys, IOSGeometry geometry, IOSLoad load)",
+        "sourceSignature": null,
+        "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Models.Output.PlateCornerForcesKey},StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)",
+        "kind": "New typed enabling overload"
+      },
+      {
+        "signature": "PlateCornerForcesResultSet GetPlateCornerForces(IEnumerable<PlateCornerForcesKey> keys, LoadCaseType loadCaseType, IOSGeometry geometry, IOSLoad load)",
+        "sourceSignature": null,
+        "xmlSignature": "GetPlateCornerForces(System.Collections.Generic.IEnumerable{StaadPro.Interop.Models.Output.PlateCornerForcesKey},StaadPro.Interop.Enums.LoadCaseType,StaadPro.Interop.Adapters.Interfaces.IOSGeometry,StaadPro.Interop.Adapters.Interfaces.IOSLoad)",
         "kind": "New typed enabling overload"
       }
     ],
@@ -23067,7 +23505,6 @@
       "GetMinMaxBendingMoment",
       "GetMinMaxShearForce",
       "GetMaxSectionDisplacement",
-      "GetPlateCornerForces",
       "GetResultantForceAlongLineForPlateList",
       "GetResultantForceAlongLineForParametricSurface",
       "GetPlateStressAtPoint",
@@ -23079,31 +23516,52 @@
       "GetBucklingFactor"
     ],
     "validation": {
-      "offlineTestsPassed": 5788,
-      "newOutputCases": 265,
-      "compiledExecutedXmlExamples": 1102,
-      "outputXmlExamples": 142,
+      "offlineTestsPassed": 6036,
+      "newOutputCases": 248,
+      "compiledExecutedXmlExamples": 1152,
+      "outputXmlExamples": 192,
       "supportXmlExamples": 38,
       "nativeRuntimeValidation": false,
-      "nugetBuilt": "Prepared distribution preview archive; not uploaded",
-      "packageVersion": "1.0.0-preview.20261026.3",
-      "packageConsumerVerification": "Passed exact distribution-archive verification: isolated PackageReference restore/build/runtime and all 1102 selected XML examples.",
-      "previousCiPackageVersion": "1.0.0-preview.ci.2026102603",
-      "packagePath": "artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.3.nupkg",
-      "packageSha256": "f0f5c14a714593d4cdb8c4d04bcaaafbaebb97695e24580280cb36911df48d34"
+      "nugetBuilt": "Prepared distribution preview for user-managed NuGet.org upload",
+      "packageVersion": "1.0.0-preview.20261026.4",
+      "packageConsumerVerification": "Verified CI payload through 1152 XML examples; exact distribution archive verification recorded in artifacts/release.",
+      "limitedNativeChecksPassed": true,
+      "nativeValidationScope": "Read-only 2026.0.0.340 corner-equilibrium and public hydration checks; broader native qualification remains incomplete.",
+      "ciPackageVersion": "1.0.0-preview.ci.2026102604",
+      "packagePath": "artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.4.nupkg",
+      "publication": "Manual upload selected by the package owner; not submitted or confirmed public by the workspace."
     },
-    "guide": "docs/Output-Managed-Workflows.md",
-    "contractIndex": "docs/contracts/OutputManagedWorkflowContractIndex.json",
+    "nativeEvidence": {
+      "version": "26.0.0.340",
+      "mode": "Read-only; no file open, load activation, analysis, save or model mutation",
+      "sampledNodes": 4,
+      "caseSelections": 2,
+      "observations": 8,
+      "directForceRelativeResidualRange": [
+        8.04917e-9,
+        1.12562e-8
+      ],
+      "incorrectPlateBasisForceResidualRange": [
+        0.0258879,
+        0.381848
+      ],
+      "globalMomentsSupported": true,
+      "publicSuppliedMetadataAndExplicitFamily": "Matched native packet",
+      "publicAutomaticDiscovery": "Returned MetadataUnavailable for genuinely ambiguous family metadata",
+      "diagnostic": "eng/Diagnostics/Probe-PlateCornerCoordinates.ps1"
+    },
+    "guide": "docs/Output-Plate-Corners.md",
+    "contractIndex": "docs/contracts/OutputPlateCornerContractIndex.json",
     "sourceEvidence": [
       {
         "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSOutput.cs",
-        "bytes": 185520,
-        "sha256": "499c19376afdf73e5a9c7a3a55c5f71981620e0a49a90a2c0df29a8e7d9e35ad"
+        "bytes": 276184,
+        "sha256": "729c3c54c6adb3e9cb71488cfc506b111dc154a8aa490e6524fae531a6646bb8"
       },
       {
         "file": "src/StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs",
-        "bytes": 192444,
-        "sha256": "ae8942704fd7503fe6e6d580c83d8799ad685f19d33559e13cc3b4c06dc041b2"
+        "bytes": 285477,
+        "sha256": "cc47cc23b46695926058d67c2d10176f713507c65d343f4517a3caa7ba04a9ee"
       },
       {
         "file": "src/StaadPro.Interop/Enums/Output/OutputQueryStatus.cs",
@@ -23127,8 +23585,8 @@
       },
       {
         "file": "src/StaadPro.Interop/Models/Output/OutputQueryResult.cs",
-        "bytes": 5355,
-        "sha256": "e2b740bcc4c12d5f9a9174d1bbfe30be40532012d9300be88da85051b63e86b9"
+        "bytes": 5877,
+        "sha256": "a92f7a9bdfb06cf4bfac255f8ea5bd1305593c728fd6e095bdda00ea369e258c"
       },
       {
         "file": "src/StaadPro.Interop/Models/Output/PlateCenterResults.cs",
@@ -23157,8 +23615,8 @@
       },
       {
         "file": "src/StaadPro.Interop/Services/Output/OutputWorkflowService.cs",
-        "bytes": 31087,
-        "sha256": "32e377e5f95376431a6f09ebdd4fb718c4c615a5967a06e80fc424a1f37300f9"
+        "bytes": 29681,
+        "sha256": "0f0a0405704a6b24bfb60e9c3573e1235697eb95dfc7e7fe3b914f63b4231787"
       },
       {
         "file": "src/StaadPro.Interop/Models/Output/BeamSteelDesignResults.cs",
@@ -23214,6 +23672,61 @@
         "file": "tests/StaadPro.Interop.Tests/Adapter/OSOutputWorkflowTests.cs",
         "bytes": 40021,
         "sha256": "a1ccf8e970877bf66f1677110ef1fb4a4d666af465db62439f5d9bac8f3b1e46"
+      },
+      {
+        "file": "src/StaadPro.Interop/Services/Output/OutputPlateCornerService.cs",
+        "bytes": 33325,
+        "sha256": "719f9511f034ea2502992fec3ac94555236cef3d30d9af84cff46e86f9cd16cc"
+      },
+      {
+        "file": "src/StaadPro.Interop/Services/Output/Coordinates/MemberResultFrame.cs",
+        "bytes": 2793,
+        "sha256": "bed8653f523d51f192002c7995f68cd14ee1642fdb8332e1257c362c47ade5fb"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/Output/PlateCornerForcesKey.cs",
+        "bytes": 5191,
+        "sha256": "21e05ca24682851e8bfa425915e0d3648c08d43a522d63a8678e6ffa9fbf6cc1"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/Output/PlateCornerForcesRequest.cs",
+        "bytes": 2155,
+        "sha256": "8379b2eea2fb42132f175acd5e21e46f1c17cc0e10a513d91b6bc5cb90cb3ae5"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/Output/PlateCornerForces.cs",
+        "bytes": 2400,
+        "sha256": "ff1e974bdf0bb33a97e0d8b7ab520f0763e33b4575fa1f92030e92cfd2b9c1d0"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/Output/PlateCornerMemberForces.cs",
+        "bytes": 2697,
+        "sha256": "01235501c817760d14014ef2a82f37dfd58ba6054b5a1d96ea6a471b5a8a7cdb"
+      },
+      {
+        "file": "src/StaadPro.Interop/Models/Output/PlateCornerForcesResultSet.cs",
+        "bytes": 6540,
+        "sha256": "f488dc72d865f30104d892c9792065296c65e1289d4d5ce5fbe14050048d5b9e"
+      },
+      {
+        "file": "tests/StaadPro.Interop.Tests/Adapter/OSOutputPlateCornerTests.cs",
+        "bytes": 44120,
+        "sha256": "596555acc5025e1e07ece9fa50d54949c482ddf7bde057dba5800429f63b448d"
+      },
+      {
+        "file": "eng/Fixtures/OutputPlateCornerFixture.cs",
+        "bytes": 5676,
+        "sha256": "925983b1aeadb34de5a03094bad89fcc9a0a0144bc7023f4a90f24ebfcdae692"
+      },
+      {
+        "file": "eng/Diagnostics/PlateCornerCoordinateProbe.cs",
+        "bytes": 5442,
+        "sha256": "9c3cf148f0232c1af708a658a2e245078dd4992ed7fb7ecc7b4bb4fcacce4644"
+      },
+      {
+        "file": "eng/Diagnostics/Probe-PlateCornerCoordinates.ps1",
+        "bytes": 466,
+        "sha256": "88b317fe6dc6287c90aafd9f887dee3dbeaf704668270c8114223486be33289f"
       }
     ]
   },
@@ -24081,6 +24594,597 @@
           "file": "src/StaadPro.Interop/Models/Output/OutputQueryResult.cs",
           "bytes": 4487,
           "sha256": "6763c5f9179c314510a007bce29ad757bbe2508d39c227430479168da931d3cd"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-26",
+      "parentCommit": "a193948",
+      "managedMethods": 71,
+      "nativeMappings": 46,
+      "pendingDocumentedNativeMappings": 14,
+      "implementedFunctions": [
+        {
+          "managed": "GetAnalysisResultAvailability",
+          "native": "AreResultsAvailable",
+          "returnType": "bool",
+          "signature": "OutputQueryResult<bool> GetAnalysisResultAvailability()"
+        },
+        {
+          "managed": "GetNodeDisplacements",
+          "native": "GetNodeDisplacements",
+          "returnType": "NodeDisplacements",
+          "signature": "OutputQueryResult<NodeDisplacements> GetNodeDisplacements(int nodeId, int loadCaseId)"
+        },
+        {
+          "managed": "GetSupportReactions",
+          "native": "GetSupportReactions",
+          "returnType": "ForceComponents",
+          "signature": "OutputQueryResult<ForceComponents> GetSupportReactions(int nodeId, int loadCaseId)"
+        },
+        {
+          "managed": "GetMemberEndForces",
+          "native": "GetMemberEndForces",
+          "returnType": "ForceComponents",
+          "signature": "OutputQueryResult<ForceComponents> GetMemberEndForces(int memberId, MemberEnd memberEnd, int loadCaseId)"
+        },
+        {
+          "managed": "GetStaticCheckResult",
+          "native": "GetStaticCheckResult",
+          "returnType": "StaticCheckResult",
+          "signature": "OutputQueryResult<StaticCheckResult> GetStaticCheckResult(int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterStressesAndMoments",
+          "native": "GetAllPlateCenterStressesAndMoments",
+          "returnType": "PlateCenterStressesAndMoments",
+          "signature": "OutputQueryResult<PlateCenterStressesAndMoments> GetPlateCenterStressesAndMoments(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterNormalPrincipalStresses",
+          "native": "GetPlateCenterNormalPrincipalStresses",
+          "returnType": "PlatePrincipalStresses",
+          "signature": "OutputQueryResult<PlatePrincipalStresses> GetPlateCenterNormalPrincipalStresses(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterForces",
+          "native": "GetAllPlateCenterForces",
+          "returnType": "PlateCenterForces",
+          "signature": "OutputQueryResult<PlateCenterForces> GetPlateCenterForces(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterMoments",
+          "native": "GetAllPlateCenterMoments",
+          "returnType": "PlateCenterMoments",
+          "signature": "OutputQueryResult<PlateCenterMoments> GetPlateCenterMoments(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterPrincipalStressesAndAngles",
+          "native": "GetAllPlateCenterPrincipalStressesAndAngles",
+          "returnType": "PlatePrincipalStressesAndAngles",
+          "signature": "OutputQueryResult<PlatePrincipalStressesAndAngles> GetPlateCenterPrincipalStressesAndAngles(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterPrincipalStressesAndAnglesEx",
+          "native": "GetAllPlateCenterPrincipalStressesAndAnglesEx",
+          "returnType": "PlatePrincipalStressesAndAngles",
+          "signature": "OutputQueryResult<PlatePrincipalStressesAndAngles> GetPlateCenterPrincipalStressesAndAnglesEx(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetPlateCenterVonMisesStresses",
+          "native": "GetPlateCenterVonMisesStresses",
+          "returnType": "PlateCenterVonMises",
+          "signature": "OutputQueryResult<PlateCenterVonMises> GetPlateCenterVonMisesStresses(int plateId, int loadCaseId)"
+        },
+        {
+          "managed": "GetMemberDesignSectionName",
+          "native": "GetMemberDesignSectionName",
+          "returnType": "string",
+          "signature": "OutputQueryResult<string> GetMemberDesignSectionName(int memberId)"
+        },
+        {
+          "managed": "GetMemberSteelUtilizationRatio",
+          "native": "GetMemberSteelDesignRatio",
+          "returnType": "double",
+          "signature": "OutputQueryResult<double> GetMemberSteelUtilizationRatio(int memberId)"
+        },
+        {
+          "managed": "GetBucklingResultAvailability",
+          "native": "IsBucklingAnalysisResultsAvailable",
+          "returnType": "bool",
+          "signature": "OutputQueryResult<bool> GetBucklingResultAvailability()"
+        },
+        {
+          "managed": "GetMemberSteelDesignResults",
+          "native": "GetMemberSteelDesignResults",
+          "returnType": "MemberSteelDesignResults",
+          "signature": "OutputQueryResult<MemberSteelDesignResults> GetMemberSteelDesignResults(int memberId)"
+        },
+        {
+          "managed": "GetBucklingFactorCount",
+          "native": "GetNoOfBucklingFactors",
+          "returnType": "int",
+          "signature": "OutputQueryResult<int> GetBucklingFactorCount()"
+        },
+        {
+          "managed": "GetBucklingModeDisplacements",
+          "native": "GetBucklingModeDisplacementAtNode",
+          "returnType": "ModeDisplacements",
+          "signature": "OutputQueryResult<ModeDisplacements> GetBucklingModeDisplacements(int nativeBucklingModeNumber, int nodeId)"
+        },
+        {
+          "managed": "GetRelativeMemberDisplacement",
+          "native": "GetIntermediateMemberTransDisplacements",
+          "returnType": "Vector3D",
+          "signature": "OutputQueryResult<Vector3D> GetRelativeMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)"
+        },
+        {
+          "managed": "GetAbsoluteMemberDisplacement",
+          "native": "GetIntermediateMemberAbsTransDisplacements",
+          "returnType": "Vector3D",
+          "signature": "OutputQueryResult<Vector3D> GetAbsoluteMemberDisplacement(int memberId, double distanceFromStart, int loadCaseId)"
+        },
+        {
+          "managed": "GetPhysicalMemberEndForces",
+          "native": "GetPMemberEndForces",
+          "returnType": "ForceComponents",
+          "signature": "OutputQueryResult<ForceComponents> GetPhysicalMemberEndForces(int physicalMemberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem = ResultCoordinateSystem.Local)"
+        },
+        {
+          "managed": "GetMemberAxialForceExtrema",
+          "native": "GetMinMaxAxialForce",
+          "returnType": "MemberForceExtrema",
+          "signature": "OutputQueryResult<MemberForceExtrema> GetMemberAxialForceExtrema(int memberId, int loadCaseId)"
+        },
+        {
+          "managed": "GetMemberForcesAtDistance",
+          "native": "GetIntermediateMemberForcesAtDistance",
+          "returnType": "ForceComponents",
+          "signature": "OutputQueryResult<ForceComponents> GetMemberForcesAtDistance(int memberId, double distanceFromStart, int loadCaseId)"
+        },
+        {
+          "managed": "GetPhysicalMemberForcesAtDistance",
+          "native": "GetPMemberIntermediateForcesAtDistance",
+          "returnType": "ForceComponents",
+          "signature": "OutputQueryResult<ForceComponents> GetPhysicalMemberForcesAtDistance(int physicalMemberId, double distanceFromStart, int loadCaseId)"
+        },
+        {
+          "managed": "GetMemberDeflectionAtDistance",
+          "native": "GetIntermediateDeflectionAtDistance",
+          "returnType": "MemberDeflection",
+          "signature": "OutputQueryResult<MemberDeflection> GetMemberDeflectionAtDistance(int memberId, double distanceFromStart, int loadCaseId)"
+        },
+        {
+          "managed": "GetMatInfluenceAreas",
+          "native": "GetMatInfluenceAreas",
+          "returnType": "IReadOnlyList<MatInfluenceArea>",
+          "signature": "OutputQueryResult<IReadOnlyList<MatInfluenceArea>> GetMatInfluenceAreas(IEnumerable<int> supportNodeIds, int maximumResults = 100000)"
+        },
+        {
+          "managed": "GetBasePressures",
+          "native": "GetBasePressures",
+          "returnType": "IReadOnlyList<NodeBasePressure>",
+          "signature": "OutputQueryResult<IReadOnlyList<NodeBasePressure>> GetBasePressures(int loadCaseId, IEnumerable<int> supportNodeIds, int maximumResults = 100000)"
+        },
+        {
+          "managed": "GetSolidNormalStresses",
+          "native": "GetAllSolidNormalStresses",
+          "returnType": "SolidNormalStresses",
+          "signature": "OutputQueryResult<SolidNormalStresses> GetSolidNormalStresses(int solidId, int nativeCornerIndex, int loadCaseId)"
+        },
+        {
+          "managed": "GetSolidShearStresses",
+          "native": "GetAllSolidShearStresses",
+          "returnType": "SolidShearStresses",
+          "signature": "OutputQueryResult<SolidShearStresses> GetSolidShearStresses(int solidId, int nativeCornerIndex, int loadCaseId)"
+        },
+        {
+          "managed": "GetSolidPrincipalStresses",
+          "native": "GetAllSolidPrincipalStresses",
+          "returnType": "SolidPrincipalStresses",
+          "signature": "OutputQueryResult<SolidPrincipalStresses> GetSolidPrincipalStresses(int solidId, int nativeCornerIndex, int loadCaseId)"
+        },
+        {
+          "managed": "GetNonlinearLoadStep",
+          "native": "GetNLLoadStep",
+          "returnType": "double",
+          "signature": "OutputQueryResult<double> GetNonlinearLoadStep(int loadCaseId)"
+        },
+        {
+          "managed": "GetSteelDesignParameterBlockCount",
+          "native": "GetSteelDesignParameterBlockCount",
+          "returnType": "int",
+          "signature": "OutputQueryResult<int> GetSteelDesignParameterBlockCount()"
+        },
+        {
+          "managed": "GetExtractedModeCount",
+          "native": "GetNoOfModesExtracted",
+          "returnType": "int",
+          "signature": "OutputQueryResult<int> GetExtractedModeCount()"
+        },
+        {
+          "managed": "GetModeFrequency",
+          "native": "GetModeFrequency",
+          "returnType": "double",
+          "signature": "OutputQueryResult<double> GetModeFrequency(int nativeModeNumber)"
+        },
+        {
+          "managed": "GetModalNodeDisplacements",
+          "native": "GetModalDisplacementAtNode",
+          "returnType": "ModeDisplacements",
+          "signature": "OutputQueryResult<ModeDisplacements> GetModalNodeDisplacements(int nativeModeNumber, int nodeId)"
+        },
+        {
+          "managed": "GetModalMassParticipationFactors",
+          "native": "GetModalMassParticipationFactors",
+          "returnType": "ModalMassParticipation",
+          "signature": "OutputQueryResult<ModalMassParticipation> GetModalMassParticipationFactors(int nativeModeNumber)"
+        },
+        {
+          "managed": "GetTimeHistoryIntegrationInfo",
+          "native": "GetTimeHistoryIntegrationStepInfo",
+          "returnType": "TimeHistoryIntegrationInfo",
+          "signature": "OutputQueryResult<TimeHistoryIntegrationInfo> GetTimeHistoryIntegrationInfo()"
+        },
+        {
+          "managed": "GetTimeHistoryResponseAtTime",
+          "native": "GetTimeHistoryResponseAtTime",
+          "returnType": "TimeHistorySample",
+          "signature": "OutputQueryResult<TimeHistorySample> GetTimeHistoryResponseAtTime(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, double timeSeconds)"
+        },
+        {
+          "managed": "GetTimeHistoryResponse",
+          "native": "GetTimeHistoryResponse",
+          "returnType": "TimeHistorySeries",
+          "signature": "OutputQueryResult<TimeHistorySeries> GetTimeHistoryResponse(int nodeId, ResponseDegreeOfFreedom degreeOfFreedom, TimeHistoryResponseKind responseKind, int maximumSamples = 100000)"
+        },
+        {
+          "managed": "GetMultipleSteelDesignResultAvailability",
+          "native": "IsMultipleMemberSteelDesignResultsAvailable",
+          "returnType": "bool",
+          "signature": "OutputQueryResult<bool> GetMultipleSteelDesignResultAvailability()"
+        },
+        {
+          "managed": "GetSteelDesignParameterBlockName",
+          "native": "GetSteelDesignParameterBlockNameByIndex",
+          "returnType": "string",
+          "signature": "OutputQueryResult<string> GetSteelDesignParameterBlockName(int parameterBlockIndex)"
+        },
+        {
+          "managed": "GetMemberSteelUtilizationRatio",
+          "native": "GetMultipleMemberSteelDesignRatio",
+          "returnType": "double",
+          "signature": "OutputQueryResult<double> GetMemberSteelUtilizationRatio(int memberId, string parameterBlockName)"
+        },
+        {
+          "managed": "GetMaximumMemberSteelUtilizationRatio",
+          "native": "GetMultipleMemberSteelDesignMaxRatio",
+          "returnType": "double",
+          "signature": "OutputQueryResult<double> GetMaximumMemberSteelUtilizationRatio(int memberId)"
+        },
+        {
+          "managed": "GetMemberSteelDesignResults",
+          "native": "GetMultipleMemberSteelDesignResults",
+          "returnType": "ParameterBlockSteelDesignResults",
+          "signature": "OutputQueryResult<ParameterBlockSteelDesignResults> GetMemberSteelDesignResults(int memberId, string parameterBlockName)"
+        },
+        {
+          "managed": "GetMinimumSteelDesignFailureRatio",
+          "native": "GetMemberSteelDesignMinFailureRatio",
+          "returnType": "double",
+          "signature": "OutputQueryResult<double> GetMinimumSteelDesignFailureRatio()"
+        },
+        {
+          "managed": "GetMaximumSteelDesignFailureRatio",
+          "native": "GetMemberSteelDesignMaxFailureRatio",
+          "returnType": "double",
+          "signature": "OutputQueryResult<double> GetMaximumSteelDesignFailureRatio()"
+        }
+      ],
+      "newManagedFunctions": [
+        {
+          "signature": "OutputQueryResult<BeamSteelDesignResults> GetSteelDesignResultsForBeam(Beam beam, IEnumerable<ILoadCase> loadCases)",
+          "sourceSignature": "MemberSteelDesignResults GetSteelDesignResultsForBeam(Beam beam, IEnumerable<ILoadCase> allLoadCases)",
+          "xmlSignature": "GetSteelDesignResultsForBeam(StaadPro.Interop.Entities.Beam,System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase})",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<BeamSteelDesignResults> GetSteelDesignResultsForBeam(IOSLoad load, Beam beam)",
+          "sourceSignature": "MemberSteelDesignResults GetSteelDesignResultsForBeam(IOSLoad load, Beam beam)",
+          "xmlSignature": "GetSteelDesignResultsForBeam(StaadPro.Interop.Adapters.Interfaces.IOSLoad,StaadPro.Interop.Entities.Beam)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputBatchResult<BeamSteelDesignResults> GetSteelDesignResultsForBeams(IEnumerable<Beam> beams, IEnumerable<ILoadCase> loadCases)",
+          "sourceSignature": "IEnumerable<MemberSteelDesignResults> GetSteelDesignResultsForBeams(IEnumerable<Beam> beams, IEnumerable<ILoadCase> allLoadCases)",
+          "xmlSignature": "GetSteelDesignResultsForBeams(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Beam},System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase})",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputBatchResult<BeamSteelDesignResults> GetSteelDesignResultsForBeams(IOSLoad load, IEnumerable<Beam> beams)",
+          "sourceSignature": "IEnumerable<MemberSteelDesignResults> GetSteelDesignResultsForBeams(IOSLoad load, IEnumerable<Beam> beams)",
+          "xmlSignature": "GetSteelDesignResultsForBeams(StaadPro.Interop.Adapters.Interfaces.IOSLoad,System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Beam})",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputBatchResult<double> GetMemberSteelUtilizationRatios(HashSet<Beam> beams)",
+          "sourceSignature": "Dictionary<Beam, double> GetMemberSteelUtilizationRatios(HashSet<Beam> beams)",
+          "xmlSignature": "GetMemberSteelUtilizationRatios(System.Collections.Generic.HashSet{StaadPro.Interop.Entities.Beam})",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputPopulationResult PopulateMemberSteelUtilizationRatios(HashSet<Beam> beams)",
+          "sourceSignature": "void PopulateMemberSteelUtilizationRatios(HashSet<Beam> forBeams)",
+          "xmlSignature": "PopulateMemberSteelUtilizationRatios(System.Collections.Generic.HashSet{StaadPro.Interop.Entities.Beam})",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForces(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
+          "sourceSignature": "MemberForces GetMemberEndForces(string lcTitle, int beamId, int loadCaseId, MemberEnd memberEnd)",
+          "xmlSignature": "GetMemberEndForces(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForces(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd, ResultCoordinateSystem coordinateSystem)",
+          "sourceSignature": "MemberForces GetMemberEndForces(string lcTitle, int beamId, int loadCaseId, MemberEnd memberEnd, LocalOrGlobal coordinateSystem)",
+          "xmlSignature": "GetMemberEndForces(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd,StaadPro.Interop.Enums.Output.ResultCoordinateSystem)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<OffsetAwareMemberEndForces> GetMemberEndForcesConsideringOffsets(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
+          "sourceSignature": "OffsetAwareMemberEndForces GetMemberEndForcesConsideringOffsets(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
+          "xmlSignature": "GetMemberEndForcesConsideringOffsets(System.String,StaadPro.Interop.Entities.Beam,System.Int32,StaadPro.Interop.Enums.MemberEnd)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
+          "sourceSignature": "MemberForces GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, Beam beam, int loadCaseId, MemberEnd memberEnd)",
+          "xmlSignature": "GetMemberEndForcesAtPhysicalJoint(System.String,StaadPro.Interop.Entities.Beam,System.Int32,StaadPro.Interop.Enums.MemberEnd)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<OffsetAwareMemberEndForces> GetMemberEndForcesConsideringOffsets(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
+          "sourceSignature": "OffsetAwareMemberEndForces GetMemberEndForcesConsideringOffsets(string loadCaseTitle, int beamId, int loadCaseId, MemberEnd memberEnd)",
+          "xmlSignature": "GetMemberEndForcesConsideringOffsets(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<IdentifiedMemberForces> GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, int memberId, int loadCaseId, MemberEnd memberEnd)",
+          "sourceSignature": "MemberForces GetMemberEndForcesAtPhysicalJoint(string loadCaseTitle, int beamId, int loadCaseId, MemberEnd memberEnd)",
+          "xmlSignature": "GetMemberEndForcesAtPhysicalJoint(System.String,System.Int32,System.Int32,StaadPro.Interop.Enums.MemberEnd)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "MemberCoordinateSystem GetMemberLocalCoordinateSystem(Beam member)",
+          "sourceSignature": "LocalCS GetMemberLocalCoordinateSystem(Beam member)",
+          "xmlSignature": "GetMemberLocalCoordinateSystem(StaadPro.Interop.Entities.Beam)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<PlateCenterForces> GetPlateCenterForces(ILoadCase loadCase, Plate plate)",
+          "sourceSignature": "PlateCenterForces GetPlateCenterForces(ILoadCase loadCase, Plate plate)",
+          "xmlSignature": "GetPlateCenterForces(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<PlateCenterMoments> GetPlateCenterMoments(ILoadCase loadCase, Plate plate)",
+          "sourceSignature": "PlateCenterMoments GetPlateCenterMoments(ILoadCase loadCase, Plate plate)",
+          "xmlSignature": "GetPlateCenterMoments(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<PlateCenterVonMises> GetPlateCenterVonMises(ILoadCase loadCase, Plate plate)",
+          "sourceSignature": "PlateCenterVonMises GetPlateCenterVonMises(ILoadCase loadCase, Plate plate)",
+          "xmlSignature": "GetPlateCenterVonMises(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<PlatePrincipalStresses> GetPlatePrincipalStresses(ILoadCase loadCase, Plate plate)",
+          "sourceSignature": "PlatePrincipalStresses GetPlatePrincipalStresses(ILoadCase loadCase, Plate plate)",
+          "xmlSignature": "GetPlatePrincipalStresses(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<PlateCenterResults> GetPlateCenterResults(ILoadCase loadCase, Plate plate)",
+          "sourceSignature": "PlateCenterResults GetPlateCenterResults(ILoadCase loadCase, Plate plate)",
+          "xmlSignature": "GetPlateCenterResults(StaadPro.Interop.Entities.ILoadCase,StaadPro.Interop.Entities.Plate)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputBatchResult<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
+          "sourceSignature": "IEnumerable<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates)",
+          "xmlSignature": "GetPlateCenterResults(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Plate})",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputBatchResult<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates, int degreeOfParallelism)",
+          "sourceSignature": "IEnumerable<PlateCenterResults> GetPlateCenterResults(IEnumerable<ILoadCase> loadCases, IEnumerable<Plate> plates, int nThreads)",
+          "xmlSignature": "GetPlateCenterResults(System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.ILoadCase},System.Collections.Generic.IEnumerable{StaadPro.Interop.Entities.Plate},System.Int32)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputBatchResult<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds)",
+          "sourceSignature": "HashSet<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds)",
+          "xmlSignature": "GetStaticCheckResults(System.Collections.Generic.IEnumerable{System.Int32})",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputBatchResult<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds, int degreeOfParallelism)",
+          "sourceSignature": "HashSet<StaticCheckResult> GetStaticCheckResults(IEnumerable<int> loadCaseIds, int nThreads)",
+          "xmlSignature": "GetStaticCheckResults(System.Collections.Generic.IEnumerable{System.Int32},System.Int32)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<ForceComponents> GetSupportForces(int nodeId, int loadCaseId)",
+          "sourceSignature": "LoadCaseForces GetSupportForces(int supportId, int loadCaseId)",
+          "xmlSignature": "GetSupportForces(System.Int32,System.Int32)",
+          "kind": "Adapted synchronous main-project workflow"
+        },
+        {
+          "signature": "OutputQueryResult<ForceComponents> GetMemberEndForces(int memberId, MemberEnd memberEnd, int loadCaseId, ResultCoordinateSystem coordinateSystem)",
+          "sourceSignature": null,
+          "xmlSignature": "GetMemberEndForces(System.Int32,StaadPro.Interop.Enums.MemberEnd,System.Int32,StaadPro.Interop.Enums.Output.ResultCoordinateSystem)",
+          "kind": "New typed enabling overload"
+        },
+        {
+          "signature": "OutputQueryResult<double> GetMemberSteelUtilizationRatio(Beam beam)",
+          "sourceSignature": null,
+          "xmlSignature": "GetMemberSteelUtilizationRatio(StaadPro.Interop.Entities.Beam)",
+          "kind": "New typed enabling overload"
+        }
+      ],
+      "pendingNativeNames": [
+        "GetMemberEndDisplacements",
+        "GetMinMaxBendingMoment",
+        "GetMinMaxShearForce",
+        "GetMaxSectionDisplacement",
+        "GetPlateCornerForces",
+        "GetResultantForceAlongLineForPlateList",
+        "GetResultantForceAlongLineForParametricSurface",
+        "GetPlateStressAtPoint",
+        "GetAllSolidVonMisesStresses",
+        "GetNLNodeDisplacements",
+        "GetMissingMassParticipationFactors",
+        "GetTimeHistoryResponseMinMax",
+        "GetMaxBeamStresses",
+        "GetBucklingFactor"
+      ],
+      "validation": {
+        "offlineTestsPassed": 5788,
+        "newOutputCases": 265,
+        "compiledExecutedXmlExamples": 1102,
+        "outputXmlExamples": 142,
+        "supportXmlExamples": 38,
+        "nativeRuntimeValidation": false,
+        "nugetBuilt": "Prepared distribution preview archive; not uploaded",
+        "packageVersion": "1.0.0-preview.20261026.3",
+        "packageConsumerVerification": "Passed exact distribution-archive verification: isolated PackageReference restore/build/runtime and all 1102 selected XML examples.",
+        "previousCiPackageVersion": "1.0.0-preview.ci.2026102603",
+        "packagePath": "artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.3.nupkg",
+        "packageSha256": "f0f5c14a714593d4cdb8c4d04bcaaafbaebb97695e24580280cb36911df48d34"
+      },
+      "guide": "docs/Output-Managed-Workflows.md",
+      "contractIndex": "docs/contracts/OutputManagedWorkflowContractIndex.json",
+      "sourceEvidence": [
+        {
+          "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSOutput.cs",
+          "bytes": 185520,
+          "sha256": "499c19376afdf73e5a9c7a3a55c5f71981620e0a49a90a2c0df29a8e7d9e35ad"
+        },
+        {
+          "file": "src/StaadPro.Interop/Adapters/Models/OSOutputAdapter.cs",
+          "bytes": 192444,
+          "sha256": "ae8942704fd7503fe6e6d580c83d8799ad685f19d33559e13cc3b4c06dc041b2"
+        },
+        {
+          "file": "src/StaadPro.Interop/Enums/Output/OutputQueryStatus.cs",
+          "bytes": 1556,
+          "sha256": "3ca9bb5a90d7320055913d787fe0c02e7198f43f3a04bc3fcfcc9ae16a7a6d1c"
+        },
+        {
+          "file": "src/StaadPro.Interop/Services/Output/OutputQueryReader.cs",
+          "bytes": 13568,
+          "sha256": "6185750d7555541aec09848ee5d3b88db41ef4044822737a42840c2da1043c0e"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/ForceComponents.cs",
+          "bytes": 2265,
+          "sha256": "3923e1204534ddd8fe892721941663adb1a8b6d2ac88f1539c83d1b063801b52"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/NodeDisplacements.cs",
+          "bytes": 1780,
+          "sha256": "54ea14a210f06c7a2e5f3d614507d61bc961699329fd0266160ccf9d4e763392"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/OutputQueryResult.cs",
+          "bytes": 5355,
+          "sha256": "e2b740bcc4c12d5f9a9174d1bbfe30be40532012d9300be88da85051b63e86b9"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/PlateCenterResults.cs",
+          "bytes": 5531,
+          "sha256": "1893f3cb5bed1f6a9641725b962b3c8a8d0fd8f18fbad58bfd464be855fc4d62"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/StaticCheckResult.cs",
+          "bytes": 824,
+          "sha256": "5f122ae21e15b3d280c323dbd11df1b811a2364d674a7a0c1bf33918c36f0f75"
+        },
+        {
+          "file": "src/StaadPro.Interop/Services/Output/OutputAdvancedReader.cs",
+          "bytes": 32875,
+          "sha256": "a14546ec3a172c6de1c3f87bfa21b9ba33f7c47bc6cfc8fb1f7355db1fc0a269"
+        },
+        {
+          "file": "src/StaadPro.Interop/Enums/Output/OutputResponseOptions.cs",
+          "bytes": 2424,
+          "sha256": "6589371db19abea6d43aea3164e9e366192398a6b73b433c68859e4274c0f0a9"
+        },
+        {
+          "file": "tests/StaadPro.Interop.Tests/Adapter/OSOutputAdvancedTests.cs",
+          "bytes": 23589,
+          "sha256": "2e90cbceb49b9cce8445deef445c6fb2d328905bf18f2e3b1fc7ced49faf63d1"
+        },
+        {
+          "file": "src/StaadPro.Interop/Services/Output/OutputWorkflowService.cs",
+          "bytes": 31087,
+          "sha256": "32e377e5f95376431a6f09ebdd4fb718c4c615a5967a06e80fc424a1f37300f9"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/BeamSteelDesignResults.cs",
+          "bytes": 1609,
+          "sha256": "2714028e40992eb8ed2044eb6c7f43f73dec0fca2136d8ca62d7a7e7519944d1"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/IdentifiedMemberForces.cs",
+          "bytes": 2273,
+          "sha256": "f30062f60007c3c729c89006a653708aade02fbc4150acbb0db0456b0f8eb241"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/MemberCoordinateSystem.cs",
+          "bytes": 3597,
+          "sha256": "5c27773a8d3e507aad8027365ec171e1a2d814c068af85dab591cf705f63940c"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/OffsetAwareMemberEndForces.cs",
+          "bytes": 2335,
+          "sha256": "a819952bd44599f16106cfea9720a22d060f26262b5674b9caddba529ef8fb05"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/OutputBatchResult.cs",
+          "bytes": 1492,
+          "sha256": "580e317761179ae03c6927d1f55bfd22a03d824e094d39495d134fb66d42c737"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/OutputLoadCaseIdentity.cs",
+          "bytes": 1325,
+          "sha256": "f9afcb205c66f6fdc9c750433bc9a9ca07a77c93dddac96e358e9d6ba9d64f3b"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/OutputObservation.cs",
+          "bytes": 1672,
+          "sha256": "5a37891df0cf3f1c14e3420c4e83d633b67eafcd586620c06ddf2ac1286921cd"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/OutputPopulationResult.cs",
+          "bytes": 1398,
+          "sha256": "bc68c4c630a2dfd2132eac655cb9a4c495e210826e9a5fb1fed85f4e76493bc7"
+        },
+        {
+          "file": "src/StaadPro.Interop/Models/Output/PlateCenterResultSet.cs",
+          "bytes": 1913,
+          "sha256": "3ec822516f82025c10566cf191ca05da90f75524614b337d9ea99efd6fd9966e"
+        },
+        {
+          "file": "src/StaadPro.Interop/Entities/Beam.cs",
+          "bytes": 11308,
+          "sha256": "53d51ec2bf8bac41baef2584fe0ee4278ceafce820fd795a0846d324c7dfa163"
+        },
+        {
+          "file": "tests/StaadPro.Interop.Tests/Adapter/OSOutputWorkflowTests.cs",
+          "bytes": 40021,
+          "sha256": "a1ccf8e970877bf66f1677110ef1fb4a4d666af465db62439f5d9bac8f3b1e46"
         }
       ]
     }

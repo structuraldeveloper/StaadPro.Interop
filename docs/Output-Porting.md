@@ -2,9 +2,16 @@
 
 **Updated:** 26 October 2026
 
-IOSOutput and the single non-partial OSOutputAdapter now expose **71 managed overloads**, covering 46 of the 60 documented native Output names. Fourteen documented routes and thirteen supplemental unit candidates remain separate work. The preceding 25 routes are detailed in the [extended Output guide](Output-Extended-Queries.md). The previously prepared preview 1.0.0-preview.20261026.1 includes the earlier 40-query surface and passes isolated package-consumer verification; it is not publicly published.
+IOSOutput and the single non-partial OSOutputAdapter now expose **96 managed overloads**, covering 47 of the 60 documented native Output names. Thirteen documented routes and thirteen supplemental unit candidates remain separate work. The preceding 25 routes are detailed in the [extended Output guide](Output-Extended-Queries.md). The previously prepared preview 1.0.0-preview.20261026.1 includes the earlier 40-query surface and passes isolated package-consumer verification; it is not publicly published.
 
 The existing Root member-force service continues to call AreResultsAvailable and GetMemberEndForces independently. Its public behavior and the wrapper are unchanged.
+
+## Current implementation - plate-corner workflows
+
+Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
+
+Passed a Release build with zero warnings/errors and **6,036 offline tests**, including **248 new corner cases**. Isolated package verification covers **1,152 selected XML examples**, including all 192 Output examples. Read-only native checks support the global force/moment contract on sampled STAAD.Pro 2026.0.0.340 observations; broader native/engineering qualification remains pending.
+
 
 ## Managed Output workflows - current source
 

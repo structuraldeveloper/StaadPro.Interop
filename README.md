@@ -12,11 +12,21 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Latest prepared preview - 1.0.0-preview.20261026.3
+## Current source - plate-corner workflows
+
+Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](docs/Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
+
+Passed a Release build with zero warnings/errors and **6,036 offline tests**, including **248 new corner cases**. Isolated package verification covers **1,152 selected XML examples**, including all 192 Output examples. Read-only native checks support the global force/moment contract on sampled STAAD.Pro 2026.0.0.340 observations; broader native/engineering qualification remains pending.
+
+## Latest prepared preview - 1.0.0-preview.20261026.4
+
+Prepared **1.0.0-preview.20261026.4** for Windows/.NET Framework 4.8.1 with **96 managed Output overloads covering 47 documented native functions** and **19 Support operations**, including the new plate-corner APIs. The Release build passed with zero warnings/errors and **6,036 offline tests**. Exact-archive verification compiled and executed **1,152 selected XML examples** through an isolated PackageReference consumer. The archive is ready for the package owner's manual NuGet.org upload; public availability has not been confirmed. See [the publishing guide](docs/Publishing.md) and [NuGet readiness](docs/NuGet-Readiness.md).
+
+## Earlier prepared preview - 1.0.0-preview.20261026.3
 
 Prepared the Windows/.NET Framework 4.8.1 package with **71 managed Output overloads covering 46 native functions** and **19 Support operations**, including the preceding steel-design-block and Support additions. The release build passed with zero warnings/errors and **5,788 offline tests**. Isolated installation verification compiled and executed **1,102 selected packaged XML examples**. See [NuGet readiness](docs/NuGet-Readiness.md) for the archive and validation details.
 
-## Latest implementation - managed Output workflows
+## Earlier implementation - managed Output workflows
 
 Added **25 managed Output overloads**: 23 synchronous main-project workflow adaptations and two typed enabling overloads for explicit native axes and Beam ratio queries. Output now exposes **71 managed overloads reaching 46/60 documented native names**. The fourteen native contract gates remain; this increment adds compositions, entity conveniences and ordered batches over qualified native routes. See [the managed workflow guide](docs/Output-Managed-Workflows.md) for exact contracts and comparative usage.
 
@@ -97,7 +107,7 @@ Validated the Release build, 5,353 offline tests and isolated package consumptio
 
 ## Output comparison and planned work
 
-The [Output guide](docs/Output-Porting.md) documents 71 implemented managed overloads reaching 46 native names and 14 pending native mappings. The linked 2024–2026 comparison inventories every native contract and main-project overload, with shared services for identical contracts and narrow policies planned for evidenced differences. Source coverage does not certify live native behavior or change the published preview.
+The [Output guide](docs/Output-Porting.md) documents 96 implemented managed overloads reaching 47 native names and 13 pending native mappings. The linked 2024–2026 comparison inventories every native contract and main-project overload, with shared services for identical contracts and narrow policies planned for evidenced differences. Source coverage does not certify live native behavior or change the published preview.
 
 ## Property implementation and comparison
 
@@ -257,7 +267,7 @@ StaadPro.Interop/
 
 ## Building and Testing
 
-The current source adapters expose all 143 reference Geometry methods, 171 Load overloads, 71 managed Output overloads and 19 Support operations. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
+The current source adapters expose all 143 reference Geometry methods, 171 Load overloads, 96 managed Output overloads and 19 Support operations. Additional domain work remains tracked in the implementation guides. See [load porting progress](docs/Load-Porting.md) and the [envelope query guide](docs/Load-Queries.md#load-envelope-queries).
 
 The Root port maps all 39 reviewed native functions and all 23 private-source Root methods through 53 common operations and three optional capability operations. Access them through `wrapper.Root`; see [root porting progress and examples](docs/Root-Porting.md).
 
@@ -269,8 +279,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261026.1 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.1.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261026.4 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.4.nupkg
 ```
 
 ---

@@ -1,5 +1,13 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261026.4 - 26 October 2026 (prepared preview)
+
+Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
+
+Added owned family-aware keys, request snapshots and indexed outcomes, with explicit failure data access and managed member-coordinate results. Ported the source Boolean/out-vector convenience as a named result. Kept global corner forces distinct from plate-center stresses and member-local projections.
+
+Passed a Release build with zero warnings/errors and **6,036 offline tests**, including **248 new corner cases**. Isolated package verification covers **1,152 selected XML examples**, including all 192 Output examples. Read-only native checks support the global force/moment contract on sampled STAAD.Pro 2026.0.0.340 observations; broader native/engineering qualification remains pending. Prepared the 1.0.0-preview.20261026.4 distribution archive for manual NuGet.org upload. Exact-archive verification covers its metadata, documentation and isolated installation/runtime. Earlier distribution archives remain unchanged; public availability of this version is not yet confirmed. Publisher metadata remains TensorStruct, with Srinivasa Rao Masanam as author.
+
 ## 1.0.0-preview.20261026.3 - 26 October 2026 (prepared preview)
 
 Prepared the package for Windows/.NET Framework 4.8.1 with the managed Output workflows below, the preceding six steel-design-block queries and nineteen Support operations. The package exposes 71 managed Output overloads covering 46 documented native functions, alongside the existing Geometry, Load, Root, Property and wrapper APIs.

@@ -38,7 +38,7 @@ try {
     $loadPorting = Read-PackageEntry 'docs/Load-Porting.md'
     $rootPorting = Read-PackageEntry 'docs/Root-Porting.md'
     $outputPorting = Read-PackageEntry 'docs/Output-Porting.md'
-    if ($outputPorting -notmatch 'GetAnalysisResultAvailability' -or $readme -notmatch '71 managed') { throw 'Missing packaged Output guidance.' }
+    if ($outputPorting -notmatch 'GetAnalysisResultAvailability' -or $readme -notmatch '96 managed') { throw 'Missing packaged Output guidance.' }
     if ($installation -notmatch 'net481' -or $publishing -notmatch 'nuget.org') { throw 'Incomplete installation/publishing guides.' }
     $installationCode = [regex]::Match($installation, '(?s)```csharp\s*\r?\n(.*?)```').Groups[1].Value
     if ([string]::IsNullOrWhiteSpace($installationCode)) { throw 'Missing installation C# example.' }
@@ -195,6 +195,10 @@ try {
     $steelBlockOutputNames = @('GetSteelDesignParameterBlockName', 'GetMaximumMemberSteelUtilizationRatio', 'GetMinimumSteelDesignFailureRatio', 'GetMaximumSteelDesignFailureRatio')
     $steelBlockOutputGuide = Read-PackageEntry 'docs/Output-Steel-Design-Blocks.md'
     $outputAdvancedGuide = Read-PackageEntry 'docs/Output-Extended-Queries.md'
+    $cornerOutputGuide = Read-PackageEntry 'docs/Output-Plate-Corners.md'
+    $cornerContracts = (Read-PackageEntry 'docs/contracts/OutputPlateCornerContractIndex.json' | ConvertFrom-Json).contracts
+    if ($cornerContracts.Count -ne 25) { throw 'Expected 25 corner contracts.' }
+    $cornerOutputSignatures = @($cornerContracts | ForEach-Object { $_.xmlSignature })
     $workflowOutputGuide = Read-PackageEntry 'docs/Output-Managed-Workflows.md'
     $workflowContracts = (Read-PackageEntry 'docs/contracts/OutputManagedWorkflowContractIndex.json' | ConvertFrom-Json).contracts
     if ($workflowContracts.Count -ne 25) { throw 'Expected 25 workflow contracts.' }
@@ -202,7 +206,7 @@ try {
     $newLine = [Environment]::NewLine
     foreach ($owner in @('Adapters.Interfaces.IOSOutput', 'Adapters.Models.OSOutputAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        if ($entries.Count -ne 71) { throw "Expected 71 documented Output queries for $owner." }
+        if ($entries.Count -ne 96) { throw "Expected 96 documented Output queries for $owner." }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary', 'returns', 'remarks', 'example/code')) {
                 $node = $entry.SelectSingleNode($tag)
@@ -213,7 +217,10 @@ try {
             $methodName = [regex]::Match([string]$entry.name, '\.(\w+)(?:\(|$)').Groups[1].Value
             $isBlockOverload = $methodName -in @('GetMemberSteelDesignResults', 'GetMemberSteelUtilizationRatio') -and [string]$entry.name -match 'System.String'
             $signature = ([string]$entry.name).Substring(("M:StaadPro.Interop.$owner.").Length)
-            $rootExpression = if ($signature -in $workflowOutputSignatures) {
+            $rootExpression = if ($signature -in $cornerOutputSignatures) {
+                if ($cornerOutputGuide -notmatch $methodName) { throw "Missing Output corner guidance for $methodName" }
+                'new PackageVerification.OutputPlateCornerFixture.Root()'
+            } elseif ($signature -in $workflowOutputSignatures) {
                 if ($workflowOutputGuide -notmatch $methodName) { throw "Missing Output workflow guidance for $methodName" }
                 'new PackageVerification.OutputWorkflowFixture.Root()'
             } elseif ($methodName -in $steelBlockOutputNames -or $isBlockOverload) {
@@ -226,7 +233,7 @@ try {
             $outputSnippets += 'using (var wrapper = new OpenStaadWrapper(' + $rootExpression + ')) {' + $newLine + $binding + $newLine + $example + $newLine + '}'
         }
     }
-    if ($outputSnippets.Count -ne 142) { throw 'Expected 142 Output XML examples.' }
+    if ($outputSnippets.Count -ne 192) { throw 'Expected 192 Output XML examples.' }
     $supportSnippets = @()
     $supportGuide = Read-PackageEntry 'docs/Support-Foundations.md'
     foreach ($owner in @('Adapters.Interfaces.IOSSupport', 'Adapters.Models.OSSupportAdapter')) {
@@ -382,6 +389,7 @@ using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Enums.Output;
 using StaadPro.Interop.Models.Support;
+using StaadPro.Interop.Models.Output;
 using StaadPro.Interop.Models;
 
 public static class Program
@@ -608,7 +616,7 @@ public static class Program
         using (var wrapper = new OpenStaadWrapper(new FakeOutputRoot()))
         {
             var output = wrapper.Output;
-            Check(typeof(IOSOutput).GetMethods().Count(m => !m.IsSpecialName) == 71, "installed Output query count");
+            Check(typeof(IOSOutput).GetMethods().Count(m => !m.IsSpecialName) == 96, "installed Output query count");
             Check(output.GetMemberEndForces(17, MemberEnd.Start, 1).Data.Fx == 1.25, "installed local end actions");
             Check(output.GetPlateCenterPrincipalStressesAndAnglesEx(17, 1).Data.AngleBottom == 2.25, "installed split principal buffers");
             var native = (FakeOutput)(object)wrapper.RawOutput;
@@ -893,6 +901,7 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputSteelBlockFixtur
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/SupportFoundationFixture.cs') -Destination (Join-Path $consumerRoot 'SupportFoundationFixture.cs')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputAdvancedFixture.cs') -Destination (Join-Path $consumerRoot 'OutputAdvancedFixture.cs')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputWorkflowFixture.cs') -Destination (Join-Path $consumerRoot 'OutputWorkflowFixture.cs')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputPlateCornerFixture.cs') -Destination (Join-Path $consumerRoot 'OutputPlateCornerFixture.cs')
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCompletionFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCompletionFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyCleanupFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyCleanupFixture.cs') }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/LoadInspectionFixture.cs') -Destination (Join-Path $consumerRoot 'LoadInspectionFixture.cs')
