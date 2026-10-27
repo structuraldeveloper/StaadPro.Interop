@@ -1,18 +1,28 @@
+![StaadPro.Interop](https://raw.githubusercontent.com/structuraldeveloper/StaadPro.Interop/main/logo-with-text.png)
+
 # StaadPro.Interop
 
 A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD
 
-## Version 1.0.0-preview.20261026.4
+## Version 1.0.0-preview.20261027.1
 
-This preview provides 96 managed Output overloads covering 47 documented native functions and 19 Support operations. It includes the preceding steel-design-block and Support additions, comprehensive XML IntelliSense, usage guides and release notes. Validation passed 6,036 offline tests and 1,152 selected packaged XML examples through an isolated PackageReference consumer. The package targets Windows/.NET Framework 4.8.1; native COM and engineering qualification remain pending.
+This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface. The Release build passed with zero warnings/errors and 6,448 offline tests, including 412 new Commands/Support/Design cases. Exact-archive verification compiled and executed 1,222 selected XML examples through an isolated PackageReference consumer, including all 34 Commands, 54 Support and twenty Design examples. These checks validate managed behavior and packaging; live native COM and engineering qualification remain pending.
 
 By **Srinivasa Rao Masanam**.
 
 StaadPro.Interop provides typed adapters and managed models for working with an existing Bentley STAAD.Pro application through OpenSTAAD. It includes geometry and load operations, model information and lifecycle functions, application-window controls, and native analysis requests.
 
-This preview includes 249 common Property overloads and five optional catalog queries, all 171 current Load overloads, the completed reference Geometry ports, 96 managed Output overloads reaching 47 native names and 19 Support operations, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
+This preview includes 249 common Property overloads and five optional catalog queries, all 171 current Load overloads, the completed reference Geometry ports, 96 managed Output overloads reaching 47 native names, 27 Support operations, seventeen Commands methods and ten Design methods, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
 
-## Current source - plate-corner workflows
+## Commands, Support and Design foundations
+
+This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface.
+
+The Release build passed with zero warnings/errors and 6,448 offline tests, including 412 new Commands/Support/Design cases. Exact-archive verification compiled and executed 1,222 selected XML examples through an isolated PackageReference consumer, including all 34 Commands, 54 Support and twenty Design examples. These checks validate managed behavior and packaging; live native COM and engineering qualification remain pending.
+
+The symbol-only icon and logo-with-text banner are included as the adopted package branding. See [analysis commands and Support](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Commands-and-Support-Porting.md) and [Design contracts](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Design-Porting.md) for exact signatures, differences between related methods, status handling, units and examples.
+
+## Earlier preview - plate-corner workflows
 
 Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
 
@@ -106,11 +116,11 @@ The reviewed Root port is complete: all 39 reviewed native Root functions and al
 
 Geometry exposes all **143 reference overloads**, including IdentifyPhysicalMembers, GroupPhysicalMembersByPlanAngle and GeneratePolygonMesh. See the [Geometry guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Geometry-Porting.md) for connectivity, managed grouping, mesh quality and native mutation contracts.
 
-Load exposes **120 overloads: all 115 main-interface signatures plus five conveniences**. Included operations cover load cases, assignments and read-back, population/grouping, envelopes, wind/seismic definitions, response spectra and direct-analysis parameters. Reference-source parity is complete; it does not establish complete Bentley Load API coverage. Of 56 undispatched native names, one has an alternative and one is derivable; four have partial coverage and 50 have no managed equivalent found. See the [Load guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Load-Porting.md) and [semantic coverage audit](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/reports/OpenSTAAD-Load-Managed-Capability-Audit.md). Those additional scopes were not implemented in this preview.
+Load exposes **171 managed overloads**, including all 115 main-interface reference signatures, the existing conveniences, inspection queries and approved native expansion. Operations cover load cases, assignments/read-back, envelopes, environmental and dynamic loads. Further Load additions and qualification-driven changes remain parked for explicit review; source parity is not complete Bentley/runtime qualification. See the [Load guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Load-Porting.md), [implemented expansion](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Load-Expansion.md) and [approval checkpoint](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/reports/OpenSTAAD-Load-Expansion-Contracts-and-Type-Plan.md).
 
-Output provides **71 managed overloads reaching 46 native names**, including parameter-block steel-design observations, model-wide failure ratios, member and physical-member actions, nodal and solid results, plate-center quantities, support-node observations, steel design, modal/buckling information and time histories. Named status/data results preserve native units and operation-specific failure distinctions. Inspect IsSuccessful before Data. See the [Output guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Porting.md) and [extended-query contracts](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Extended-Queries.md). Thirteen documented Output routes remain; live native qualification is pending. Support adds nineteen common documented routes with sixteen pending; see the packaged Support foundation guide.
+Output provides **96 managed overloads reaching 47 native names**, including parameter-block steel-design observations, model-wide failure ratios, member and physical-member actions, nodal and solid results, plate-center quantities, support-node observations, steel design, modal/buckling information and time histories. Named status/data results preserve native units and operation-specific failure distinctions. Inspect IsSuccessful before Data. See the [Output guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Porting.md) and [extended-query contracts](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Output-Extended-Queries.md). Thirteen documented Output routes remain; live native qualification is pending. Support provides 27 common documented operations, with eight native contract gates pending; see the packaged Support foundation and Commands/Support guides.
 
-The approved wrapper surface is complete. This archive includes all 249 common Property overloads and five acquired catalog queries described above. Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
+The approved wrapper surface is complete. This archive includes all 249 common Property overloads and five acquired catalog queries described above. Commands provides seventeen analysis-configuration methods and Design provides ten common brief/assignment/query methods. Table, View and IDEA StatiCa remain binding/contract placeholders.
 
 ## Requirements
 
@@ -238,7 +248,7 @@ The archive includes Property, Geometry, Load, Output and Root guides, installat
 
 ## Preview validation and operating limits
 
-The current implementation passed **5,523 offline tests**. Installed-package verification checks **1,152 selected XML example blocks**, including 498 common Property, twelve optional catalog/acquisition, all 192 Output and all 38 Support examples, compiles a fresh consumer and exercises managed native stand-ins; window-changing examples are guarded off. These checks do not certify every native COM response, STAAD release or engineering-unit convention.
+The current implementation passed **6,448 offline tests**. Installed-package verification checks **1,222 selected XML example blocks**, including 498 common Property, twelve optional catalog/acquisition, all 192 Output, 54 Support, 34 Commands and twenty Design examples, compiles a fresh consumer and exercises managed native stand-ins; mutation and window-changing examples are guarded off. These checks do not certify every native COM response, STAAD release or engineering-unit convention.
 
 Silent and hidden options do not guarantee unattended operation. Synchronous native calls can block beyond logical polling budgets, and mutations can leave partial effects when a later step fails. Validate native behavior against controlled models and the STAAD versions used by your application before production deployment.
 

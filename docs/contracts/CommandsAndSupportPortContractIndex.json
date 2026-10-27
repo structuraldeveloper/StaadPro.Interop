@@ -1,0 +1,322 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-26",
+  "branch": "main",
+  "functions": [
+    {
+      "name": "PerformAnalysis",
+      "parameters": "PrintOption printOption",
+      "args": "printOption",
+      "summary": "Configures first-order elastic analysis instructions.",
+      "detail": "Unlike Root.AnalyzeEx, this adds model commands and never runs the solver. Native void completion supplies no success flag.",
+      "example": "PrintOption.PrintStaticsCheck",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "PerformAnalysis"
+    },
+    {
+      "name": "PerformPDeltaAnalysisNoConverge",
+      "parameters": "int numberOfIterations, PrintOption printOption",
+      "args": "numberOfIterations, printOption",
+      "summary": "Configures the documented small-delta P-Delta command.",
+      "detail": "Use PerformPDeltaAnalysisEx to select large versus small delta or geometric stiffness. The deprecated Converge entry is not used. Native void gives no acknowledgement.",
+      "example": "15, PrintOption.NoPrint",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "PerformPDeltaAnalysisNoConverge"
+    },
+    {
+      "name": "PerformPDeltaAnalysisEx",
+      "parameters": "int numberOfIterations, PrintOption printOption, PDeltaDisplacementEffect displacementEffect, bool includeGeometricStiffness",
+      "args": "numberOfIterations, printOption, displacementEffect, includeGeometricStiffness",
+      "summary": "Configures P-Delta instructions with an explicit displacement formulation.",
+      "detail": "SmallDelta is native 1 and LargeDelta 0; geometric stiffness is a separate Int16 0/1 flag. Unlike the NoConverge shortcut, both choices are explicit. Native void gives no acknowledgement.",
+      "example": "15, PrintOption.NoPrint, PDeltaDisplacementEffect.SmallDelta, true",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "PerformPDeltaAnalysisEx"
+    },
+    {
+      "name": "PerformPDeltaAnalysis",
+      "parameters": "PDeltaAnalysisOptions options",
+      "args": "options",
+      "summary": "Configures P-Delta instructions from the main-project typed options.",
+      "detail": "This convenience delegates once to PerformPDeltaAnalysisEx and reports that exact native function. It does not call both P-Delta variants or execute analysis. Native void gives no acknowledgement.",
+      "example": "new StaadPro.Interop.Models.Commands.PDeltaAnalysisOptions()",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "PerformPDeltaAnalysisEx"
+    },
+    {
+      "name": "PerformCableAnalysis",
+      "parameters": "int numberOfIterations, PrintOption printOption",
+      "args": "numberOfIterations, printOption",
+      "summary": "Configures the legacy cable-analysis instruction.",
+      "detail": "Requires cable members and a compatible license/context. Native may select its licensed algorithm. Use PerformCableAnalysisEx for explicit algorithm and parameter packets. PrintModeShapes=4 is unavailable here. Native void gives no acknowledgement.",
+      "example": "300, PrintOption.NoPrint",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "PerformCableAnalysis"
+    },
+    {
+      "name": "PerformCableAnalysisEx",
+      "parameters": "CableAnalysisOptions options",
+      "args": "options",
+      "summary": "Configures basic or advanced cable analysis using typed settings.",
+      "detail": "Basic sends seven Double parameters and null advanced flags; Advanced sends three Double parameters and two Int16 flags. Source defaults and validation are retained. PrintModeShapes=4 is unavailable. Native 1/true acknowledges configuration, 0/false reports failure; neither proves license availability or convergence.",
+      "example": "new StaadPro.Interop.Models.Commands.CableAnalysisOptions()",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "PerformCableAnalysisEx"
+    },
+    {
+      "name": "PerformBucklingAnalysis",
+      "parameters": "int maximumSteps, PrintOption printOption",
+      "args": "maximumSteps, printOption",
+      "summary": "Configures legacy buckling-analysis instructions.",
+      "detail": "Use PerformBucklingAnalysisEx to choose Iterative or Eigen explicitly and obtain a native acknowledgement. PrintModeShapes=4 is unavailable here. Native void gives no acknowledgement.",
+      "example": "15, PrintOption.NoPrint",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "PerformBucklingAnalysis"
+    },
+    {
+      "name": "PerformBucklingAnalysisEx",
+      "parameters": "BucklingAnalysisMethod method, int maximumSteps, PrintOption printOption",
+      "args": "method, maximumSteps, printOption",
+      "summary": "Configures buckling analysis with an explicit solver method.",
+      "detail": "Iterative=0 and Eigen=1 are native selectors. maximumSteps applies to the basic solver as documented; it is not a promised iteration count for every engine. PrintModeShapes=4 is reserved. Native 1/true acknowledges and 0/false fails.",
+      "example": "BucklingAnalysisMethod.Eigen, 15, PrintOption.NoPrint",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "PerformBucklingAnalysisEx"
+    },
+    {
+      "name": "PerformDirectAnalysis",
+      "parameters": "DirectAnalysisOptions options",
+      "args": "options",
+      "summary": "Configures AISC Direct Analysis instructions.",
+      "detail": "Uses LRFD=1 or ASD=2, four Double parameters and two Int16 flags in the documented order. P-Delta iterations above 15 are rejected rather than silently reset. Translation/rotation displacement tolerance retains the native mixed convention; no unit conversion occurs. Native 1/true acknowledges and 0/false fails.",
+      "example": "new StaadPro.Interop.Models.Commands.DirectAnalysisOptions()",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "PerformDirectAnalysis"
+    },
+    {
+      "name": "PerformNonlinearAnalysisEx",
+      "parameters": "NonlinearAnalysisOptions options",
+      "args": "options",
+      "summary": "Configures nonlinear-analysis and optional displacement-control instructions.",
+      "detail": "ArcLength zero disables displacement control. Null target sends native null; an explicit target sends joint ID, global DOF and signed target value as three Doubles. Rebuild and geometric stiffness remain independent selectors. Native 1/true acknowledges and 0/false fails. No result or convergence is inferred.",
+      "example": "new StaadPro.Interop.Models.Commands.NonlinearAnalysisOptions()",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "PerformNonlinearAnalysisEx"
+    },
+    {
+      "name": "SetFloorDiaphragmBaseCommand",
+      "parameters": "double baseElevation",
+      "args": "baseElevation",
+      "summary": "Adds or updates the floor-diaphragm base instruction.",
+      "detail": "Elevation is a finite signed value in current native length units, not a node ID or floor number. Does not create diaphragm geometry. Native 1/true acknowledges and 0/false fails.",
+      "example": "0.0",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "SetFloorDiaphragmBaseCommand"
+    },
+    {
+      "name": "DeleteFloorDiaphragmBaseCommand",
+      "parameters": "",
+      "args": "",
+      "summary": "Deletes the floor-diaphragm base instruction.",
+      "detail": "This removes command configuration, not diaphragm entities or an analysis result. Native 1/true acknowledges and 0/false fails; false is not interpreted as proven absence.",
+      "example": "",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "DeleteFloorDiaphragmBaseCommand"
+    },
+    {
+      "name": "SetCheckSoftStoryCommand",
+      "parameters": "SoftStoryDesignCode designCode",
+      "args": "designCode",
+      "summary": "Adds or updates the soft-story checking instruction.",
+      "detail": "Native codes are IS1893:2002=1, ASCE7:2005/2010/2016=2, IS1893:2016=3. This selector differs from the irregularities selector, whose value 1 is unavailable. Native 1/true acknowledges and 0/false fails.",
+      "example": "SoftStoryDesignCode.Is1893_2016",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "SetCheckSoftStoryCommand"
+    },
+    {
+      "name": "DeleteCheckSoftStoryCommand",
+      "parameters": "",
+      "args": "",
+      "summary": "Deletes the soft-story checking instruction.",
+      "detail": "Does not run a structural-code check or delete model stories. Native 1/true acknowledges and 0/false fails.",
+      "example": "",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "DeleteCheckSoftStoryCommand"
+    },
+    {
+      "name": "SetCheckIrregularitiesCommand",
+      "parameters": "IrregularitiesDesignCode designCode",
+      "args": "designCode",
+      "summary": "Adds or updates the irregularities checking instruction.",
+      "detail": "Requires floor-diaphragm data in the native model. ASCE7:2016=2 and IS1893:2016=3; value 1 is not supported by this contract. No applicability or code-compliance conclusion is produced. Native 1/true acknowledges and 0/false fails.",
+      "example": "IrregularitiesDesignCode.Is1893_2016",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "SetCheckIrregularitiesCommand"
+    },
+    {
+      "name": "DeleteCheckIrregularitiesCommand",
+      "parameters": "",
+      "args": "",
+      "summary": "Deletes the irregularities checking instruction.",
+      "detail": "Does not delete floor diaphragms or clear existing engineering results. Native 1/true acknowledges and 0/false fails.",
+      "example": "",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "DeleteCheckIrregularitiesCommand"
+    },
+    {
+      "name": "DeleteAllAnalysisCommands",
+      "parameters": "",
+      "args": "",
+      "summary": "Deletes the native perform-analysis command inventory.",
+      "detail": "Native 1/true acknowledges deletion. Native 0/false specifically means no perform-analysis commands were present and returns NoCommandsPresent, not a generic failure. Other model instructions and files are not asserted to be cleared.",
+      "example": "",
+      "domain": "Commands",
+      "returnType": "CommandSubmissionResult",
+      "native": "DeleteAllAnalysisCommands"
+    },
+    {
+      "name": "CreateElasticMat",
+      "parameters": "FoundationSupportDirection direction, double subgradeModulus, bool printInfluenceAreas = false, FoundationSpringType springType = FoundationSpringType.None",
+      "args": "direction, subgradeModulus, printInfluenceAreas, springType",
+      "summary": "Creates an elastic-mat support definition without assigning it.",
+      "detail": "Uses one scalar Double subgrade in force/length cubed, direction 0..5 and separate Long print/spring flags. This differs from plate-mat scalar/array creation, which remains gated. A positive return is a support definition ID; zero is native failure, unlike fixed-support creation whose failure is -1.",
+      "example": "FoundationSupportDirection.Y, 25000.0",
+      "domain": "Support",
+      "returnType": "SupportMutationResult",
+      "native": "CreateElasticMat"
+    },
+    {
+      "name": "CreateElasticFooting",
+      "parameters": "double length, double width, FoundationSupportDirection direction, double subgradeModulus",
+      "args": "length, width, direction, subgradeModulus",
+      "summary": "Creates an elastic-footing definition without assigning it.",
+      "detail": "Length and width must be finite and positive in current native length units. Subgrade is finite and nonnegative in force/length cubed, not a nodal spring stiffness. Direction 0..5 preserves X/Y/Z versus XOnly/YOnly/ZOnly. Positive return is a definition ID; zero is native failure.",
+      "example": "2.0, 3.0, FoundationSupportDirection.Y, 25000.0",
+      "domain": "Support",
+      "returnType": "SupportMutationResult",
+      "native": "CreateElasticFooting"
+    },
+    {
+      "name": "RemoveElasticMat",
+      "parameters": "int supportId",
+      "args": "supportId",
+      "summary": "Removes an elastic-mat definition by its support reference ID.",
+      "detail": "This definition-level call differs from RemoveElasticMatFromNode. Shared-assignment consequences are left to STAAD and are not enumerated or certified. Actual Boolean or integral 1/0 acknowledgements are supported; undocumented negative values are rejected.",
+      "example": "7",
+      "domain": "Support",
+      "returnType": "SupportMutationResult",
+      "native": "RemoveElasticMat"
+    },
+    {
+      "name": "RemoveElasticMatFromNode",
+      "parameters": "int nodeId",
+      "args": "nodeId",
+      "summary": "Removes the elastic-mat assignment from one analytical node.",
+      "detail": "The argument is a node ID, not a support definition ID. No shared-definition deletion is inferred. TRUE/FALSE is decoded independently of the zero-success legacy AssignSupportToNodes route. Actual Boolean or integral 1/0 acknowledgements are supported; undocumented negative values are rejected.",
+      "example": "17",
+      "domain": "Support",
+      "returnType": "SupportMutationResult",
+      "native": "RemoveElasticMatFromNode"
+    },
+    {
+      "name": "RemovePlateMat",
+      "parameters": "int supportId",
+      "args": "supportId",
+      "summary": "Removes a plate-mat definition by its support reference ID.",
+      "detail": "Accepts an existing definition ID even though plate-mat creation/readback remain gated. This is not the unresolved two-argument RemovePlateMatFromPlate operation. Shared-assignment consequences are left to STAAD. Actual Boolean or integral 1/0 values implement the documented TRUE/FALSE return; negative values are rejected.",
+      "example": "7",
+      "domain": "Support",
+      "returnType": "SupportMutationResult",
+      "native": "RemovePlateMat"
+    },
+    {
+      "name": "RemoveElasticFooting",
+      "parameters": "int supportId",
+      "args": "supportId",
+      "summary": "Removes an elastic-footing definition by its support reference ID.",
+      "detail": "This definition-level operation differs from node-specific removal. Its documented numeric 1/0 convention is decoded narrowly; integral -1 is rejected, not treated as true. No assignment enumeration, effect verification or automatic deletion of other foundations is promised.",
+      "example": "7",
+      "domain": "Support",
+      "returnType": "SupportMutationResult",
+      "native": "RemoveElasticFooting"
+    },
+    {
+      "name": "RemoveElasticFootingFromNode",
+      "parameters": "int nodeId",
+      "args": "nodeId",
+      "summary": "Removes the elastic-footing assignment from one analytical node.",
+      "detail": "The argument is an analytical node ID, not a support definition ID. Native 1/true acknowledges and 0/false fails. Integral -1 is not a success flag for this operation. Shared definition deletion is not inferred.",
+      "example": "17",
+      "domain": "Support",
+      "returnType": "SupportMutationResult",
+      "native": "RemoveElasticFootingFromNode"
+    },
+    {
+      "name": "AssignSupportToEntities",
+      "parameters": "int supportId, SupportEntityKind entityKind, IEnumerable<int> entityIds, int maximumResults = 100000",
+      "args": "supportId, entityKind, entityIds, maximumResults",
+      "summary": "Assigns a support through the native entity-list route with an explicit requested entity family.",
+      "detail": "Calls AssignSupportToEntityList(supportId, Int32[]), preserving order/duplicates in an owned packet. Plates are required for plate-mat definitions; nodes for other types. entityKind records caller intent and is not a native selector or proof of the definition type. The caller must choose the matching family. Unlike AssignSupportToNodes, native TRUE/FALSE uses actual Boolean or integral 1/0 rather than integral zero-success. Empty input is NoOperation without native invocation. Receipts preserve EntityIds/EntityKind; NodeIds is empty for plates.",
+      "example": "7, StaadPro.Interop.Enums.Support.SupportEntityKind.Nodes, new[] { 17, 41 }",
+      "domain": "Support",
+      "returnType": "SupportMutationResult",
+      "native": "AssignSupportToEntityList"
+    }
+  ],
+  "continuationAudit": {
+    "date": "2026-10-27",
+    "readOnlyReferenceEvidence": [
+      {
+        "file": "[read-only source] Adapters/Interfaces/IOSCommands.cs",
+        "sha256": "35e1fd729e00608c01fef3605d92247f18f03168a57c6f9ef1980a84df8952fa"
+      },
+      {
+        "file": "[read-only source] Adapters/Models/OSCommandsAdapter.cs",
+        "sha256": "52fd5691d4c44fa66869edf84fb0bdd4ee4403642341485d5f2d7aa7094d25ce"
+      },
+      {
+        "file": "[read-only source] Models/AnalysisCommands/AnalysisCommandOptions.cs",
+        "sha256": "233a2b2e6f09631f002ffe18df7bf0cff3aa12a119c7f93e88839c11a9cccf72"
+      },
+      {
+        "file": "[read-only source] Adapters/Interfaces/IOSSupport.cs",
+        "sha256": "be21566bc6d36663bc54d55210f1541702dc394dc69c412d5c624d6dbbff78c7"
+      },
+      {
+        "file": "[read-only source] Adapters/Models/OSSupportAdapter.cs",
+        "sha256": "80b5f2c3069cfaba32cb832423f2cc0f633c25434df5e29d14493d41df260a8b"
+      }
+    ],
+    "offlineTestsPassed": 6320,
+    "newCases": 284,
+    "newXmlExamples": 50,
+    "nugetBuilt": false
+  },
+  "packageRelease": {
+    "version": "1.0.0-preview.20261027.1",
+    "date": "2026-10-27",
+    "artifact": "artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.1.nupkg",
+    "offlineTestsPassed": 6448,
+    "installedXmlExamples": 1222,
+    "icon": "images/symbol-only-logo.png",
+    "readmeBanner": "logo-with-text.png",
+    "publicAvailabilityConfirmed": false,
+    "nativeRuntimeValidation": false
+  }
+}

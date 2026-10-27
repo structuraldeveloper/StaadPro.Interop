@@ -165,5 +165,22 @@ namespace StaadPro.Interop.Services.Support
             return Run(p=>{const string op="SetSupportUniqueID";p.SetSupportUniqueID(supportId,text);
                 return new SupportMutationResult(op,SupportMutationStatus.InvokedWithoutAcknowledgement,supportId:supportId,uniqueId:uniqueId);});
         }
+        private static void FoundationInput(FoundationSupportDirection direction,double subgradeModulus)
+        {if(!Enum.IsDefined(typeof(FoundationSupportDirection),direction))throw new ArgumentOutOfRangeException(nameof(direction));if(double.IsNaN(subgradeModulus)||double.IsInfinity(subgradeModulus)||subgradeModulus<0)throw new ArgumentOutOfRangeException(nameof(subgradeModulus));}
+        private static SupportMutationResult FoundationCreation(string op,object raw)
+        {int id=Integer(raw,op);if(id==0)return new SupportMutationResult(op,SupportMutationStatus.NativeFailure,raw);if(id<0)throw new InvalidOperationException(op+" returned an undocumented negative reference.");return new SupportMutationResult(op,SupportMutationStatus.Succeeded,raw,id);}
+        internal SupportMutationResult CreateElasticMat(FoundationSupportDirection direction,double subgradeModulus,bool printInfluenceAreas,FoundationSpringType springType)
+        {FoundationInput(direction,subgradeModulus);if(!Enum.IsDefined(typeof(FoundationSpringType),springType))throw new ArgumentOutOfRangeException(nameof(springType));return Run(p=>FoundationCreation("CreateElasticMat",(object)p.CreateElasticMat((int)direction,subgradeModulus,printInfluenceAreas?1:0,(int)springType)));}
+        internal SupportMutationResult CreateElasticFooting(double length,double width,FoundationSupportDirection direction,double subgradeModulus)
+        {FoundationInput(direction,subgradeModulus);if(double.IsNaN(length)||double.IsInfinity(length)||length<=0)throw new ArgumentOutOfRangeException(nameof(length));if(double.IsNaN(width)||double.IsInfinity(width)||width<=0)throw new ArgumentOutOfRangeException(nameof(width));return Run(p=>FoundationCreation("CreateElasticFooting",(object)p.CreateElasticFooting(length,width,(int)direction,subgradeModulus)));}
+        private SupportMutationResult RemoveFoundation(string op,int id,bool node,bool variantBoolean)
+        {Positive(id,node?"nodeId":"supportId");return Run(p=>{object raw;switch(op){case "RemoveElasticMat":raw=p.RemoveElasticMat(id);break;case "RemoveElasticMatFromNode":raw=p.RemoveElasticMatFromNode(id);break;case "RemovePlateMat":raw=p.RemovePlateMat(id);break;case "RemoveElasticFooting":raw=p.RemoveElasticFooting(id);break;case "RemoveElasticFootingFromNode":raw=p.RemoveElasticFootingFromNode(id);break;default:throw new InvalidOperationException("Unknown foundation operation.");}return new SupportMutationResult(op,Flag(raw,op,variantBoolean)?SupportMutationStatus.Succeeded:SupportMutationStatus.NativeFailure,raw,node?(int?)null:id,node?new[]{id}:null);});}
+        internal SupportMutationResult RemoveElasticMat(int supportId)=>RemoveFoundation("RemoveElasticMat",supportId,false,false);
+        internal SupportMutationResult RemoveElasticMatFromNode(int nodeId)=>RemoveFoundation("RemoveElasticMatFromNode",nodeId,true,false);
+        internal SupportMutationResult RemovePlateMat(int supportId)=>RemoveFoundation("RemovePlateMat",supportId,false,false);
+        internal SupportMutationResult RemoveElasticFooting(int supportId)=>RemoveFoundation("RemoveElasticFooting",supportId,false,false);
+        internal SupportMutationResult RemoveElasticFootingFromNode(int nodeId)=>RemoveFoundation("RemoveElasticFootingFromNode",nodeId,true,false);
+        internal SupportMutationResult AssignSupportToEntities(int supportId,SupportEntityKind entityKind,IEnumerable<int> entityIds,int maximumResults)
+        {Positive(supportId,nameof(supportId));if(!Enum.IsDefined(typeof(SupportEntityKind),entityKind))throw new ArgumentOutOfRangeException(nameof(entityKind));int[] ids=Nodes(entityIds,maximumResults);return Run(p=>{const string op="AssignSupportToEntityList";if(ids.Length==0)return new SupportMutationResult(op,SupportMutationStatus.NoOperation,supportId:supportId,nodes:entityKind==SupportEntityKind.Nodes?ids:null,entityKind:entityKind,entities:ids);object raw=p.AssignSupportToEntityList(supportId,(object)(int[])ids.Clone());return new SupportMutationResult(op,Flag(raw,op)?SupportMutationStatus.Succeeded:SupportMutationStatus.NativeFailure,raw,supportId,entityKind==SupportEntityKind.Nodes?ids:null,entityKind:entityKind,entities:ids);});}
     }
 }

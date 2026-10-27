@@ -1,3 +1,5 @@
+using StaadPro.Interop.Enums;
+using StaadPro.Interop.Enums.Support;
 using System.Collections.Generic;
 using StaadPro.Interop.Models.Support;
 using StaadPro.Interop.Services.Support;
@@ -296,5 +298,142 @@ namespace StaadPro.Interop.Adapters.Models
             service.SetSupportUniqueId(supportId, uniqueId);
 
         #endregion
+
+        /// <summary>Creates an elastic-mat support definition without assigning it.</summary>
+        /// <param name="direction">FoundationSupportDirection 0..5. X/Y/Z and XOnly/YOnly/ZOnly retain distinct native meanings; plate-mat All is not accepted.</param>
+        /// <param name="subgradeModulus">Finite nonnegative scalar subgrade modulus in current native force/length cubed units. Zero is passed explicitly and native acceptance is reported.</param>
+        /// <param name="printInfluenceAreas">Whether to include the influence print option, marshaled as native Long 0/1.</param>
+        /// <param name="springType">None (0), CompressionOnly (1) or MultiLinear (2), without generating or inferring a stiffness curve.</param>
+        /// <returns>A named SupportMutationResult receipt with actual native evidence and operation-specific status. No Data property, native reference output, fabricated identifier or analysis result is returned.</returns>
+        /// <remarks><para>When to use: Uses one scalar Double subgrade in force/length cubed, direction 0..5 and separate Long print/spring flags. This differs from plate-mat scalar/array creation, which remains gated. A positive return is a support definition ID; zero is native failure, unlike fixed-support creation whose failure is -1.</para><para>Runs synchronously on the caller's established COM apartment under the existing Support gate, with captured binding checks before and after work. No save, retry, rollback, automatic analysis, unit conversion, geometry hydration or effect verification occurs. Native changes, including partial assignments, may precede a failure or post-call exception. Other adapters, raw access and external edits are not excluded. Reviewed declarations and non-example contracts match across installed STAAD.Pro 2024, 2025 and 2026; one common internal service supplies these routes. Binding presence and managed tests do not certify live engineering behavior. Reacquire the adapter after wrapper refresh.</para></remarks>
+        /// <exception cref="ArgumentException">A required input is null, an identifier/enum/limit is invalid, or a numeric setting violates its documented finite/range requirements; no native mutation is invoked.</exception>
+        /// <exception cref="InvalidOperationException">The binding is disposed/replaced, or native acknowledgement/identifier has an undocumented type or value. A post-call error can follow native changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The original native transport exception propagates; no retry or fallback mutation occurs.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver does not expose the required compatible native operation.</exception>
+        /// <example><code>bool applyChanges = false;
+        /// if (applyChanges)
+        /// {
+        ///     var result = support.CreateElasticMat(FoundationSupportDirection.Y, 25000.0);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public SupportMutationResult CreateElasticMat(FoundationSupportDirection direction, double subgradeModulus, bool printInfluenceAreas = false, FoundationSpringType springType = FoundationSpringType.None) => service.CreateElasticMat(direction, subgradeModulus, printInfluenceAreas, springType);
+
+        /// <summary>Creates an elastic-footing definition without assigning it.</summary>
+        /// <param name="length">Finite positive footing length in current native length units.</param>
+        /// <param name="width">Finite positive footing width in current native length units.</param>
+        /// <param name="direction">FoundationSupportDirection 0..5. X/Y/Z and XOnly/YOnly/ZOnly retain distinct native meanings; plate-mat All is not accepted.</param>
+        /// <param name="subgradeModulus">Finite nonnegative scalar subgrade modulus in current native force/length cubed units. Zero is passed explicitly and native acceptance is reported.</param>
+        /// <returns>A named SupportMutationResult receipt with actual native evidence and operation-specific status. No Data property, native reference output, fabricated identifier or analysis result is returned.</returns>
+        /// <remarks><para>When to use: Length and width must be finite and positive in current native length units. Subgrade is finite and nonnegative in force/length cubed, not a nodal spring stiffness. Direction 0..5 preserves X/Y/Z versus XOnly/YOnly/ZOnly. Positive return is a definition ID; zero is native failure.</para><para>Runs synchronously on the caller's established COM apartment under the existing Support gate, with captured binding checks before and after work. No save, retry, rollback, automatic analysis, unit conversion, geometry hydration or effect verification occurs. Native changes, including partial assignments, may precede a failure or post-call exception. Other adapters, raw access and external edits are not excluded. Reviewed declarations and non-example contracts match across installed STAAD.Pro 2024, 2025 and 2026; one common internal service supplies these routes. Binding presence and managed tests do not certify live engineering behavior. Reacquire the adapter after wrapper refresh.</para></remarks>
+        /// <exception cref="ArgumentException">A required input is null, an identifier/enum/limit is invalid, or a numeric setting violates its documented finite/range requirements; no native mutation is invoked.</exception>
+        /// <exception cref="InvalidOperationException">The binding is disposed/replaced, or native acknowledgement/identifier has an undocumented type or value. A post-call error can follow native changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The original native transport exception propagates; no retry or fallback mutation occurs.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver does not expose the required compatible native operation.</exception>
+        /// <example><code>bool applyChanges = false;
+        /// if (applyChanges)
+        /// {
+        ///     var result = support.CreateElasticFooting(2.0, 3.0, FoundationSupportDirection.Y, 25000.0);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public SupportMutationResult CreateElasticFooting(double length, double width, FoundationSupportDirection direction, double subgradeModulus) => service.CreateElasticFooting(length, width, direction, subgradeModulus);
+
+        /// <summary>Removes an elastic-mat definition by its support reference ID.</summary>
+        /// <param name="supportId">Positive support definition/reference ID; not an analytical node, plate ID or zero-based list index.</param>
+        /// <returns>A named SupportMutationResult receipt with actual native evidence and operation-specific status. No Data property, native reference output, fabricated identifier or analysis result is returned.</returns>
+        /// <remarks><para>When to use: This definition-level call differs from RemoveElasticMatFromNode. Shared-assignment consequences are left to STAAD and are not enumerated or certified. Actual Boolean or integral 1/0 acknowledgements are supported; undocumented negative values are rejected.</para><para>Runs synchronously on the caller's established COM apartment under the existing Support gate, with captured binding checks before and after work. No save, retry, rollback, automatic analysis, unit conversion, geometry hydration or effect verification occurs. Native changes, including partial assignments, may precede a failure or post-call exception. Other adapters, raw access and external edits are not excluded. Reviewed declarations and non-example contracts match across installed STAAD.Pro 2024, 2025 and 2026; one common internal service supplies these routes. Binding presence and managed tests do not certify live engineering behavior. Reacquire the adapter after wrapper refresh.</para></remarks>
+        /// <exception cref="ArgumentException">A required input is null, an identifier/enum/limit is invalid, or a numeric setting violates its documented finite/range requirements; no native mutation is invoked.</exception>
+        /// <exception cref="InvalidOperationException">The binding is disposed/replaced, or native acknowledgement/identifier has an undocumented type or value. A post-call error can follow native changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The original native transport exception propagates; no retry or fallback mutation occurs.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver does not expose the required compatible native operation.</exception>
+        /// <example><code>bool applyChanges = false;
+        /// if (applyChanges)
+        /// {
+        ///     var result = support.RemoveElasticMat(7);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public SupportMutationResult RemoveElasticMat(int supportId) => service.RemoveElasticMat(supportId);
+
+        /// <summary>Removes the elastic-mat assignment from one analytical node.</summary>
+        /// <param name="nodeId">Positive analytical node ID; not a support definition/reference ID.</param>
+        /// <returns>A named SupportMutationResult receipt with actual native evidence and operation-specific status. No Data property, native reference output, fabricated identifier or analysis result is returned.</returns>
+        /// <remarks><para>When to use: The argument is a node ID, not a support definition ID. No shared-definition deletion is inferred. TRUE/FALSE is decoded independently of the zero-success legacy AssignSupportToNodes route. Actual Boolean or integral 1/0 acknowledgements are supported; undocumented negative values are rejected.</para><para>Runs synchronously on the caller's established COM apartment under the existing Support gate, with captured binding checks before and after work. No save, retry, rollback, automatic analysis, unit conversion, geometry hydration or effect verification occurs. Native changes, including partial assignments, may precede a failure or post-call exception. Other adapters, raw access and external edits are not excluded. Reviewed declarations and non-example contracts match across installed STAAD.Pro 2024, 2025 and 2026; one common internal service supplies these routes. Binding presence and managed tests do not certify live engineering behavior. Reacquire the adapter after wrapper refresh.</para></remarks>
+        /// <exception cref="ArgumentException">A required input is null, an identifier/enum/limit is invalid, or a numeric setting violates its documented finite/range requirements; no native mutation is invoked.</exception>
+        /// <exception cref="InvalidOperationException">The binding is disposed/replaced, or native acknowledgement/identifier has an undocumented type or value. A post-call error can follow native changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The original native transport exception propagates; no retry or fallback mutation occurs.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver does not expose the required compatible native operation.</exception>
+        /// <example><code>bool applyChanges = false;
+        /// if (applyChanges)
+        /// {
+        ///     var result = support.RemoveElasticMatFromNode(17);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public SupportMutationResult RemoveElasticMatFromNode(int nodeId) => service.RemoveElasticMatFromNode(nodeId);
+
+        /// <summary>Removes a plate-mat definition by its support reference ID.</summary>
+        /// <param name="supportId">Positive support definition/reference ID; not an analytical node, plate ID or zero-based list index.</param>
+        /// <returns>A named SupportMutationResult receipt with actual native evidence and operation-specific status. No Data property, native reference output, fabricated identifier or analysis result is returned.</returns>
+        /// <remarks><para>When to use: Accepts an existing definition ID even though plate-mat creation/readback remain gated. This is not the unresolved two-argument RemovePlateMatFromPlate operation. Shared-assignment consequences are left to STAAD. Actual Boolean or integral 1/0 values implement the documented TRUE/FALSE return; negative values are rejected.</para><para>Runs synchronously on the caller's established COM apartment under the existing Support gate, with captured binding checks before and after work. No save, retry, rollback, automatic analysis, unit conversion, geometry hydration or effect verification occurs. Native changes, including partial assignments, may precede a failure or post-call exception. Other adapters, raw access and external edits are not excluded. Reviewed declarations and non-example contracts match across installed STAAD.Pro 2024, 2025 and 2026; one common internal service supplies these routes. Binding presence and managed tests do not certify live engineering behavior. Reacquire the adapter after wrapper refresh.</para></remarks>
+        /// <exception cref="ArgumentException">A required input is null, an identifier/enum/limit is invalid, or a numeric setting violates its documented finite/range requirements; no native mutation is invoked.</exception>
+        /// <exception cref="InvalidOperationException">The binding is disposed/replaced, or native acknowledgement/identifier has an undocumented type or value. A post-call error can follow native changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The original native transport exception propagates; no retry or fallback mutation occurs.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver does not expose the required compatible native operation.</exception>
+        /// <example><code>bool applyChanges = false;
+        /// if (applyChanges)
+        /// {
+        ///     var result = support.RemovePlateMat(7);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public SupportMutationResult RemovePlateMat(int supportId) => service.RemovePlateMat(supportId);
+
+        /// <summary>Removes an elastic-footing definition by its support reference ID.</summary>
+        /// <param name="supportId">Positive support definition/reference ID; not an analytical node, plate ID or zero-based list index.</param>
+        /// <returns>A named SupportMutationResult receipt with actual native evidence and operation-specific status. No Data property, native reference output, fabricated identifier or analysis result is returned.</returns>
+        /// <remarks><para>When to use: This definition-level operation differs from node-specific removal. Its documented numeric 1/0 convention is decoded narrowly; integral -1 is rejected, not treated as true. No assignment enumeration, effect verification or automatic deletion of other foundations is promised.</para><para>Runs synchronously on the caller's established COM apartment under the existing Support gate, with captured binding checks before and after work. No save, retry, rollback, automatic analysis, unit conversion, geometry hydration or effect verification occurs. Native changes, including partial assignments, may precede a failure or post-call exception. Other adapters, raw access and external edits are not excluded. Reviewed declarations and non-example contracts match across installed STAAD.Pro 2024, 2025 and 2026; one common internal service supplies these routes. Binding presence and managed tests do not certify live engineering behavior. Reacquire the adapter after wrapper refresh.</para></remarks>
+        /// <exception cref="ArgumentException">A required input is null, an identifier/enum/limit is invalid, or a numeric setting violates its documented finite/range requirements; no native mutation is invoked.</exception>
+        /// <exception cref="InvalidOperationException">The binding is disposed/replaced, or native acknowledgement/identifier has an undocumented type or value. A post-call error can follow native changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The original native transport exception propagates; no retry or fallback mutation occurs.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver does not expose the required compatible native operation.</exception>
+        /// <example><code>bool applyChanges = false;
+        /// if (applyChanges)
+        /// {
+        ///     var result = support.RemoveElasticFooting(7);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public SupportMutationResult RemoveElasticFooting(int supportId) => service.RemoveElasticFooting(supportId);
+
+        /// <summary>Removes the elastic-footing assignment from one analytical node.</summary>
+        /// <param name="nodeId">Positive analytical node ID; not a support definition/reference ID.</param>
+        /// <returns>A named SupportMutationResult receipt with actual native evidence and operation-specific status. No Data property, native reference output, fabricated identifier or analysis result is returned.</returns>
+        /// <remarks><para>When to use: The argument is an analytical node ID, not a support definition ID. Native 1/true acknowledges and 0/false fails. Integral -1 is not a success flag for this operation. Shared definition deletion is not inferred.</para><para>Runs synchronously on the caller's established COM apartment under the existing Support gate, with captured binding checks before and after work. No save, retry, rollback, automatic analysis, unit conversion, geometry hydration or effect verification occurs. Native changes, including partial assignments, may precede a failure or post-call exception. Other adapters, raw access and external edits are not excluded. Reviewed declarations and non-example contracts match across installed STAAD.Pro 2024, 2025 and 2026; one common internal service supplies these routes. Binding presence and managed tests do not certify live engineering behavior. Reacquire the adapter after wrapper refresh.</para></remarks>
+        /// <exception cref="ArgumentException">A required input is null, an identifier/enum/limit is invalid, or a numeric setting violates its documented finite/range requirements; no native mutation is invoked.</exception>
+        /// <exception cref="InvalidOperationException">The binding is disposed/replaced, or native acknowledgement/identifier has an undocumented type or value. A post-call error can follow native changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The original native transport exception propagates; no retry or fallback mutation occurs.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver does not expose the required compatible native operation.</exception>
+        /// <example><code>bool applyChanges = false;
+        /// if (applyChanges)
+        /// {
+        ///     var result = support.RemoveElasticFootingFromNode(17);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public SupportMutationResult RemoveElasticFootingFromNode(int nodeId) => service.RemoveElasticFootingFromNode(nodeId);
+
+        /// <summary>Assigns a support through the native entity-list route with an explicit requested entity family.</summary>
+        /// <param name="supportId">Positive support definition/reference ID; not an analytical node, plate ID or zero-based list index.</param>
+        /// <param name="entityKind">Managed Nodes or Plates request family. Must match the actual native definition; it is not sent as a native type selector.</param>
+        /// <param name="entityIds">Non-null sequence of positive analytical node or plate IDs matching entityKind. Enumerated once, bounded and copied; input order and duplicates remain.</param>
+        /// <param name="maximumResults">Managed input limit from 1 through 100000. Oversized inputs are rejected before native invocation.</param>
+        /// <returns>A named SupportMutationResult receipt with actual native evidence and operation-specific status. No Data property, native reference output, fabricated identifier or analysis result is returned.</returns>
+        /// <remarks><para>When to use: Calls AssignSupportToEntityList(supportId, Int32[]), preserving order/duplicates in an owned packet. Plates are required for plate-mat definitions; nodes for other types. entityKind records caller intent and is not a native selector or proof of the definition type. The caller must choose the matching family. Unlike AssignSupportToNodes, native TRUE/FALSE uses actual Boolean or integral 1/0 rather than integral zero-success. Empty input is NoOperation without native invocation. Receipts preserve EntityIds/EntityKind; NodeIds is empty for plates.</para><para>Runs synchronously on the caller's established COM apartment under the existing Support gate, with captured binding checks before and after work. No save, retry, rollback, automatic analysis, unit conversion, geometry hydration or effect verification occurs. Native changes, including partial assignments, may precede a failure or post-call exception. Other adapters, raw access and external edits are not excluded. Reviewed declarations and non-example contracts match across installed STAAD.Pro 2024, 2025 and 2026; one common internal service supplies these routes. Binding presence and managed tests do not certify live engineering behavior. Reacquire the adapter after wrapper refresh.</para></remarks>
+        /// <exception cref="ArgumentException">A required input is null, an identifier/enum/limit is invalid, or a numeric setting violates its documented finite/range requirements; no native mutation is invoked.</exception>
+        /// <exception cref="InvalidOperationException">The binding is disposed/replaced, or native acknowledgement/identifier has an undocumented type or value. A post-call error can follow native changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The original native transport exception propagates; no retry or fallback mutation occurs.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The acquired receiver does not expose the required compatible native operation.</exception>
+        /// <example><code>bool applyChanges = false;
+        /// if (applyChanges)
+        /// {
+        ///     var result = support.AssignSupportToEntities(7, StaadPro.Interop.Enums.Support.SupportEntityKind.Nodes, new[] { 17, 41 });
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public SupportMutationResult AssignSupportToEntities(int supportId, SupportEntityKind entityKind, IEnumerable<int> entityIds, int maximumResults = 100000) => service.AssignSupportToEntities(supportId, entityKind, entityIds, maximumResults);
     }
 }

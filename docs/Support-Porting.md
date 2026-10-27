@@ -1,5 +1,7 @@
 # Support implementation status
 
+**Current checkpoint:** Support now implements 27/35 documented routes after eight foundation/assignment additions. See [the current contracts and remaining gates](Commands-and-Support-Porting.md). The nineteen-route increment below remains its historical record.
+
 **Updated:** 26 October 2026
 
 Implemented **19 common documented Support routes**, leaving **16/35 pending**. The new surface covers supported-node discovery, typed support information and GUIDs, foundation counts/readback, explicit fixed/pinned/fixed-but creation, assignment, unassignment, deletion and void GUID invocation. One internal shared service validates operation-specific counts/types/flags, owned bounded buffers and binding lifetime. Reused existing Releases/Springs packets and ported the main-project enums without private UI dependencies. See [all 19 contracts](Support-Foundations.md).

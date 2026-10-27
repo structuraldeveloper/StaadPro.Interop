@@ -1,5 +1,7 @@
 # Support discovery, foundation observations and explicit mutations
 
+**Current checkpoint:** Support now implements 27/35 documented routes after eight foundation/assignment additions. See [the current contracts and remaining gates](Commands-and-Support-Porting.md). The nineteen-route increment below remains its historical record.
+
 **Updated:** 26 October 2026
 
 Implemented **19 of 35** documented Support native routes in IOSSupport and the single non-partial OSSupportAdapter. Sixteen documented routes remain. The selected contracts match across installed 2024–2026 references and use one internal common service. There is no artificial per-year adapter or wrapper/provider change.

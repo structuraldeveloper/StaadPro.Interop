@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-27",
+  "branch": "main",
+  "managedMethods": 10,
+  "nativeNames": [
+    "CreateDesignBrief",
+    "AssignDesignCommand",
+    "AssignDesignParameter",
+    "GetMemberDesignParameters",
+    "GetDesignBriefCode"
+  ],
+  "extendedGroupPending": true,
+  "functions": [
+    {
+      "name": "CreateDesignBrief",
+      "parameters": "StaadDesignCode designCode",
+      "args": "designCode",
+      "returnType": "DesignBriefResult",
+      "summary": "Creates an empty design parameter brief for a source-compatible design code.",
+      "detail": "When to use: Creates only the brief; it does not assign parameters, append a design command, run design or save. Unlike assignment methods, the returned nonnegative integer is the brief reference, including zero if returned; -1 is native failure.",
+      "example": "StaadDesignCode.ANSIAISC360Year16"
+    },
+    {
+      "name": "AssignDesignCommand",
+      "parameters": "int designBriefId, DesignCommandAssignment designCommand",
+      "args": "designBriefId, designCommand",
+      "returnType": "DesignMutationResult",
+      "summary": "Assigns one typed design command to the requested member selection.",
+      "detail": "When to use: Appends CHECK CODE, SELECT or another typed command; it does not assign a design parameter or execute design. Native 0 acknowledges success and -1 reports failure. Non-GROUP commands pass an empty value. Single-property GROUP passes 0..3 only on acquired STAAD.Pro 2025/2026; 2024/unknown/future GROUP profiles are rejected before mutation. Extended GROUP/SAME AS remains unavailable.",
+      "example": "1, new DesignCommandAssignment(DesignCommandKind.CheckCode, new[] { 17, 41 })"
+    },
+    {
+      "name": "AssignDesignCommands",
+      "parameters": "int designBriefId, IEnumerable<DesignCommandAssignment> designCommands, int maximumResults = 100000",
+      "args": "designBriefId, designCommands, maximumResults",
+      "returnType": "DesignBatchResult",
+      "summary": "Assigns a validated, stably ordered batch of design commands to an existing brief.",
+      "detail": "When to use: Use this for several commands on an existing brief. Materializes once and validates every request/profile before mutation, then sorts by Order with stable input ties. Stops after the first native -1; returns all items with original InputIndex and explicit NotAttempted outcomes. It is not a transaction. An empty selection checks binding but makes no native calls and returns IsNoOperation.",
+      "example": "1, new[] { new DesignCommandAssignment(DesignCommandKind.CheckCode, new[] { 17 }) }"
+    },
+    {
+      "name": "AssignDesignParameter",
+      "parameters": "int designBriefId, DesignParameterAssignment designParameter",
+      "args": "designBriefId, designParameter",
+      "returnType": "DesignMutationResult",
+      "summary": "Assigns one named parameter value to the selected analytical members.",
+      "detail": "When to use: Assigns a parameter such as FYLD or LY, rather than a CHECK CODE/SELECT instruction. Uses the immutable request's invariant NativeValue and owned Int32 member array without reflection or unit conversion. Code-specific meanings, units, ranges and availability remain native responsibilities. Native 0 acknowledges success; -1 reports failure.",
+      "example": "1, new DesignParameterAssignment(\"FYLD\", 250.0, new[] { 17, 41 })"
+    },
+    {
+      "name": "AssignDesignParameters",
+      "key": "AssignDesignParametersExisting",
+      "parameters": "int designBriefId, IEnumerable<DesignParameterAssignment> designParameters, int maximumResults = 100000",
+      "args": "designBriefId, designParameters, maximumResults",
+      "returnType": "DesignBatchResult",
+      "summary": "Assigns a validated, stably ordered parameter batch to an existing brief.",
+      "detail": "When to use: Reuses the supplied brief instead of creating another. Materializes once, orders by Order with stable ties, stops on the first native -1 and retains both failed and unattempted items. Validates the complete input before the first mutation. Empty input makes no native calls. No rollback, automatic command creation or design execution occurs.",
+      "example": "1, new[] { new DesignParameterAssignment(\"FYLD\", 250.0, new[] { 17 }) }"
+    },
+    {
+      "name": "AssignDesignParameters",
+      "key": "AssignDesignParametersNew",
+      "parameters": "StaadDesignCode designCode, IEnumerable<DesignParameterAssignment> designParameters, int maximumResults = 100000",
+      "args": "designCode, designParameters, maximumResults",
+      "returnType": "DesignBatchResult",
+      "summary": "Creates a design brief and assigns a validated ordered parameter batch.",
+      "detail": "When to use: Unlike the brief-ID overload, creates a new brief after validating all requests. Creation -1 prevents every assignment. Later assignment failure preserves Creation and the created DesignBriefId, including zero if returned, with explicit unattempted items. An empty selection creates no brief. This operation does not append CHECK CODE or run design, and never deletes a partially populated brief.",
+      "example": "StaadDesignCode.ANSIAISC360Year16, new[] { new DesignParameterAssignment(\"FYLD\", 250.0, new[] { 17 }) }"
+    },
+    {
+      "name": "GetMemberDesignParameters",
+      "key": "GetMemberDesignParametersSingle",
+      "parameters": "int designBriefId, int memberId, int maximumParameters = 100000",
+      "args": "designBriefId, memberId, maximumParameters",
+      "returnType": "DesignQueryResult<MemberDesignParametersResult>",
+      "summary": "Copies one member's native design parameter rows into an owned managed snapshot.",
+      "detail": "When to use: Retrieves assigned/default parameter metadata, not steel utilization or design forces. Native 0 is success and -1 is failure; failure has no Data. A successful acknowledged zero-count holder returns an empty Parameters list. Names, textual values, unit labels, descriptions and default flags are copied in zero-based native row order before the private holder is released. No parsing or unit conversion occurs.",
+      "example": "1, 17"
+    },
+    {
+      "name": "GetDesignBriefCode",
+      "parameters": "int designBriefId",
+      "args": "designBriefId",
+      "returnType": "DesignQueryResult<DesignBriefCodeObservation>",
+      "summary": "Observes the native design code of an existing design brief.",
+      "detail": "When to use: Looks up a brief; it does not create one. Native zero means NotFound, unlike zero-success assignments and a valid zero reference from creation. Positive codes are preserved in NativeCode; KnownCode is null for unlisted codes. Negative or malformed code returns throw instead of being treated as absence.",
+      "example": "1"
+    },
+    {
+      "name": "GetDesignBriefCodes",
+      "parameters": "IEnumerable<int> designBriefIds, int maximumResults = 100000",
+      "args": "designBriefIds, maximumResults",
+      "returnType": "IReadOnlyList<DesignQueryResult<DesignBriefCodeObservation>>",
+      "summary": "Eagerly observes an ordered bounded selection of design-brief codes.",
+      "detail": "When to use: Calls the same single-brief native query once per requested reference, retaining order, duplicates, brief identity and individual NotFound results. Enumerates input once and validates every ID before native calls. Empty input returns an owned empty list after binding validation. Transport/malformed-response errors abort rather than silently dropping items; this is not an atomic model snapshot.",
+      "example": "new[] { 1, 3, 1 }"
+    },
+    {
+      "name": "GetMemberDesignParameters",
+      "key": "GetMemberDesignParametersBatch",
+      "parameters": "int designBriefId, IEnumerable<int> memberIds, int maximumResults = 100000, int maximumParameters = 100000",
+      "args": "designBriefId, memberIds, maximumResults, maximumParameters",
+      "returnType": "IReadOnlyList<DesignQueryResult<MemberDesignParametersResult>>",
+      "summary": "Eagerly copies parameter snapshots for an ordered bounded member selection.",
+      "detail": "When to use: Shares one brief while obtaining a separate owned native-holder snapshot per member. Retains duplicates, order and identified native failures, continuing after ordinary -1 query failures. Enumerates and validates all member IDs before querying. Empty input creates no holders. Transport, malformed-output, binding or holder errors abort the batch; completed earlier reads are not an atomic model snapshot.",
+      "example": "1, new[] { 17, 41, 17 }"
+    }
+  ],
+  "validation": {
+    "offlineTestsPassed": 6448,
+    "newDesignCases": 128,
+    "designXmlExamples": 20,
+    "totalNewXmlExamples": 70,
+    "nativeRuntimeValidation": false,
+    "packageBuilt": false,
+    "indexedPropertyReaderVerified": true
+  },
+  "mainSourceEvidence": [
+    {
+      "file": "Adapters/Interfaces/IOSDesign.cs",
+      "sha256": "ed4785496c2f2c446bf02ef87feab914fa007be9fccfc63a8c54e852320c7dca"
+    },
+    {
+      "file": "Adapters/Models/OSDesignAdapter.cs",
+      "sha256": "9ea8c12b101252ca0d663833e0f1af25e689813448c5463de8be9249bc85fd82"
+    },
+    {
+      "file": "Enums/StaadDesignCode.cs",
+      "sha256": "8d8887580de384b3962dc00a2359db4f2353ece80243d5a5e5f43c6eb39e5496"
+    },
+    {
+      "file": "Models/Design/MemberDesignParameterInfo.cs",
+      "sha256": "824dd6120de5151eac14900508a3344a5dd747e74bb59a5a99b81426a945b46e"
+    },
+    {
+      "file": "Models/Design/MemberDesignParametersResult.cs",
+      "sha256": "9eff527833eb692aac13fb552537c4ffa8dcc34d778658f7296fcbe44effdd52"
+    },
+    {
+      "file": "Design/DesignCommand.cs",
+      "sha256": "69eb56ce4126a73c5aac4618bfd1d1891f951573032e233153e8182ea065ba1b"
+    },
+    {
+      "file": "Design/DesignParameter`.cs",
+      "sha256": "bf318f4603eacdb13cd90948e2dd1dc0a85e603bb07311f7cd4863ff42129bda"
+    }
+  ],
+  "nativeManualEvidence": [
+    {
+      "year": 2024,
+      "filename": "group___design_steel.html",
+      "title": "Design: Steel Design Results",
+      "version": "24.00.02.354",
+      "bytes": 122127,
+      "sha256": "cbb6c514c7619d96bdfb37681af8e848d73607a345da670ef183e373d98297d0",
+      "summaries": 6,
+      "details": 6,
+      "children": [
+        "group___chinese_steel.html"
+      ]
+    },
+    {
+      "year": 2025,
+      "filename": "group___design_steel.html",
+      "title": "Design: Steel Design Results",
+      "version": "25.00.01.424",
+      "bytes": 129007,
+      "sha256": "5e32a0960a7c1b90781e1533a3d9744d166f1c53bd68c4abe4b896fe58d28bfe",
+      "summaries": 6,
+      "details": 6,
+      "children": [
+        "group___chinese_steel.html"
+      ]
+    },
+    {
+      "year": 2026,
+      "filename": "group___design_steel.html",
+      "title": "Design: Steel Design Results",
+      "version": "26.00.00.340",
+      "bytes": 129007,
+      "sha256": "f179af4eb90bd78f772aaa3fd75318f57138522b1636db334056972b752045a4",
+      "summaries": 6,
+      "details": 6,
+      "children": [
+        "group___chinese_steel.html"
+      ]
+    }
+  ],
+  "packageRelease": {
+    "version": "1.0.0-preview.20261027.1",
+    "date": "2026-10-27",
+    "artifact": "artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.1.nupkg",
+    "offlineTestsPassed": 6448,
+    "installedXmlExamples": 1222,
+    "icon": "images/symbol-only-logo.png",
+    "readmeBanner": "logo-with-text.png",
+    "publicAvailabilityConfirmed": false,
+    "nativeRuntimeValidation": false
+  }
+}

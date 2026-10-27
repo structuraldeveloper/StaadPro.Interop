@@ -53,6 +53,31 @@ try {
     [xml] $nuspec = Read-PackageEntry $nuspecEntry[0].FullName
     $metadata = $nuspec.package.metadata
     if ($metadata.id -ne 'StaadPro.Interop' -or $metadata.license.InnerText -ne 'MIT' -or $metadata.readme -ne 'README.md') { throw 'Invalid package identity, license or README metadata.' }
+    if ([string]$metadata.icon -cne 'images/symbol-only-logo.png') { throw 'The package must use the adopted symbol-only logo as its embedded icon.' }
+    $iconEntry = $archive.GetEntry([string]$metadata.icon)
+    if ($null -eq $iconEntry -or $iconEntry.Length -lt 1 -or $iconEntry.Length -gt 1MB) { throw 'The embedded package icon is missing, empty or exceeds the NuGet 1 MB limit.' }
+    Add-Type -AssemblyName System.Drawing
+    $iconStream = $iconEntry.Open()
+    $iconBuffer = [IO.MemoryStream]::new()
+    $iconImage = $null
+    try {
+        $iconStream.CopyTo($iconBuffer)
+        $iconBuffer.Position = 0
+        $iconImage = [Drawing.Image]::FromStream($iconBuffer)
+        if ($iconImage.RawFormat.Guid -ne [Drawing.Imaging.ImageFormat]::Png.Guid -or $iconImage.Width -ne $iconImage.Height) {
+            throw 'The adopted NuGet icon must remain a square PNG.'
+        }
+    }
+    finally {
+        if ($null -ne $iconImage) { $iconImage.Dispose() }
+        $iconBuffer.Dispose()
+        $iconStream.Dispose()
+    }
+    $bannerEntry = $archive.GetEntry('images/logo-with-text.png')
+    if ($null -eq $bannerEntry -or $bannerEntry.Length -lt 1) { throw 'The package must include the adopted logo with text.' }
+    if (!$readme.Contains('![StaadPro.Interop](https://raw.githubusercontent.com/structuraldeveloper/StaadPro.Interop/main/logo-with-text.png)')) {
+        throw 'The NuGet README must use the adopted banner through its supported absolute image URL.'
+    }
     if ($metadata.repository.url -ne 'https://github.com/structuraldeveloper/StaadPro.Interop') { throw 'Missing repository metadata.' }
     if ([string]$metadata.authors -cne 'Srinivasa Rao Masanam') { throw 'Incorrect package author.' }
     if ([string]$metadata.copyright -cne 'Copyright (c) 2026 TensorStruct') { throw 'Incorrect package copyright.' }
@@ -235,10 +260,10 @@ try {
     }
     if ($outputSnippets.Count -ne 192) { throw 'Expected 192 Output XML examples.' }
     $supportSnippets = @()
-    $supportGuide = Read-PackageEntry 'docs/Support-Foundations.md'
+    $supportGuide = (Read-PackageEntry 'docs/Support-Foundations.md') + (Read-PackageEntry 'docs/Commands-and-Support-Porting.md')
     foreach ($owner in @('Adapters.Interfaces.IOSSupport', 'Adapters.Models.OSSupportAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        if ($entries.Count -ne 19) { throw "Expected 19 Support contracts for $owner." }
+        if ($entries.Count -ne 27) { throw "Expected 27 Support contracts for $owner." }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary', 'returns', 'remarks', 'example/code')) {
                 $node = $entry.SelectSingleNode($tag)
@@ -249,10 +274,39 @@ try {
             if ($entry.SelectSingleNode('remarks').InnerText -notmatch 'When to use:') { throw "Missing comparative Support IntelliSense for $methodName" }
             $binding = if ($owner.EndsWith('IOSSupport')) { 'IOSSupport support = wrapper.Support;' } else { 'var support = new StaadPro.Interop.Adapters.Models.OSSupportAdapter(wrapper);' }
             $example = $entry.SelectSingleNode('example/code').InnerText
-            $supportSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.SupportFoundationFixture.Root { Support = new PackageVerification.SupportFoundationFixture.Native() })) {' + $newLine + $binding + $newLine + $example + $newLine + '}'
+            $supportFixture = if ($methodName -in @('CreateElasticMat', 'CreateElasticFooting', 'RemoveElasticMat', 'RemoveElasticMatFromNode', 'RemovePlateMat', 'RemoveElasticFooting', 'RemoveElasticFootingFromNode', 'AssignSupportToEntities')) { 'CommandsSupportFixture' } else { 'SupportFoundationFixture' }
+            $supportSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.' + $supportFixture + '.Root { Support = new PackageVerification.' + $supportFixture + '.Native() })) {' + $newLine + $binding + $newLine + $example + $newLine + '}'
         }
     }
-    if ($supportSnippets.Count -ne 38) { throw 'Expected 38 Support XML examples.' }
+    if ($supportSnippets.Count -ne 54) { throw 'Expected 54 Support XML examples.' }
+    $commandSnippets = @()
+    foreach ($owner in @('Adapters.Interfaces.IOSCommands', 'Adapters.Models.OSCommandsAdapter')) {
+        $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+        if ($entries.Count -ne 17) { throw "Expected 17 Commands contracts for $owner." }
+        foreach ($entry in $entries) {
+            foreach ($tag in @('summary','returns','remarks','example/code')) {
+                if ([string]::IsNullOrWhiteSpace($entry.SelectSingleNode($tag).InnerText)) { throw "Incomplete Commands $tag for $($entry.name)" }
+            }
+            $binding = if ($owner.EndsWith('IOSCommands')) { 'IOSCommands commands = wrapper.Commands;' } else { 'var commands = new StaadPro.Interop.Adapters.Models.OSCommandsAdapter(wrapper);' }
+            $commandSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.CommandsSupportFixture.Root { Command = new PackageVerification.CommandsSupportFixture.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
+        }
+    }
+    if ($commandSnippets.Count -ne 34) { throw 'Expected 34 Commands XML examples.' }
+    $designGuide = Read-PackageEntry 'docs/Design-Porting.md'
+    $designSnippets = @()
+    foreach ($owner in @('Adapters.Interfaces.IOSDesign', 'Adapters.Models.OSDesignAdapter')) {
+        $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+        if ($entries.Count -ne 10) { throw "Expected ten Design contracts for $owner." }
+        if ($designGuide -notmatch 'GetMemberDesignParameters' -or $designGuide -notmatch 'AssignDesignParameters') { throw 'Missing Design guidance.' }
+        foreach ($entry in $entries) {
+            foreach ($tag in @('summary','returns','remarks','example/code')) {
+                if ([string]::IsNullOrWhiteSpace($entry.SelectSingleNode($tag).InnerText)) { throw "Incomplete Design $tag for $($entry.name)" }
+            }
+            $binding = if ($owner.EndsWith('IOSDesign')) { 'IOSDesign design = wrapper.Design;' } else { 'var design = new StaadPro.Interop.Adapters.Models.OSDesignAdapter(wrapper);' }
+            $designSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.DesignFoundationFixture.Root { Design = new PackageVerification.DesignFoundationFixture.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
+        }
+    }
+    if ($designSnippets.Count -ne 20) { throw 'Expected twenty Design XML examples.' }
     $inspectionSnippets = @()
     if ($hasLoadInspection) {
         $inspectionNames = @('GetActiveLoadCaseNumber', 'GetLoadListCount', 'GetLoadListCaseCount', 'GetLoadListCases', 'GetLoadCommandCount', 'GetAssignedEntityCount', 'GetLoadItemCount', 'GetLoadItemKind', 'ContainsDynamicLoad', 'GetRepeatContributionCount', 'GetRepeatContributions', 'GetNotionalItemCount', 'GetNotionalContributionCount', 'GetNotionalContributions', 'GetReferenceItemCount')
@@ -388,6 +442,9 @@ using StaadPro.Interop.Adapters.Interfaces;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Enums.Output;
+using StaadPro.Interop.Enums.AnalysisCommands;
+using StaadPro.Interop.Enums.Design;
+using StaadPro.Interop.Models.Design;
 using StaadPro.Interop.Models.Support;
 using StaadPro.Interop.Models.Output;
 using StaadPro.Interop.Models;
@@ -634,7 +691,7 @@ public static class Program
         RunExpansionDocumentationExamples();
         RunPropertyDocumentationExamples();
         RunSupportDocumentationExamples();
-        Console.WriteLine("PASS: __EXAMPLE_COUNT__ packaged XML examples and Geometry/Load/Root/Output/Property/Support IntelliSense.");
+        Console.WriteLine("PASS: __EXAMPLE_COUNT__ packaged XML examples and Geometry/Load/Root/Output/Property/Support/Commands/Design IntelliSense.");
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -648,6 +705,8 @@ __OUTPUT_EXAMPLES__
     private static void RunSupportDocumentationExamples()
     {
 __SUPPORT_EXAMPLES__
+__COMMAND_EXAMPLES__
+__DESIGN_EXAMPLES__
     }
     private static void RunInspectionDocumentationExamples()
     {
@@ -883,11 +942,13 @@ __PROPERTY_EXAMPLES__
 '@
 $program = $program.Replace('__EXAMPLES__', ($snippets -join "`n"))
 $program = $program.Replace('__SUPPORT_EXAMPLES__', ($supportSnippets -join [Environment]::NewLine))
+$program = $program.Replace('__COMMAND_EXAMPLES__', ($commandSnippets -join [Environment]::NewLine))
+$program = $program.Replace('__DESIGN_EXAMPLES__', ($designSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__OUTPUT_EXAMPLES__', ($outputSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__INSPECTION_EXAMPLES__', ($inspectionSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__EXPANSION_EXAMPLES__', ($expansionSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__PROPERTY_EXAMPLES__', ($propertySnippets -join [Environment]::NewLine))
-$program = $program.Replace('__EXAMPLE_COUNT__', [string](310 + $supportSnippets.Count + $outputSnippets.Count + $inspectionSnippets.Count + $expansionSnippets.Count + $propertySnippets.Count))
+$program = $program.Replace('__EXAMPLE_COUNT__', [string](310 + $designSnippets.Count + $commandSnippets.Count + $supportSnippets.Count + $outputSnippets.Count + $inspectionSnippets.Count + $expansionSnippets.Count + $propertySnippets.Count))
 if ($hasLoadExpansion) { $program = 'using StaadPro.Interop.Models.Loads.Contracts;' + [Environment]::NewLine + 'using StaadPro.Interop.Models.Loads.Queries;' + [Environment]::NewLine + $program }
 if ($hasLoadInspection) { $program = 'using StaadPro.Interop.Enums.Loads;' + [Environment]::NewLine + $program }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyQueryFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyQueryFixture.cs') }
@@ -898,6 +959,8 @@ if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'F
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyAttributeFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyAttributeFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyUptFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyUptFixture.cs') }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputSteelBlockFixture.cs') -Destination (Join-Path $consumerRoot 'OutputSteelBlockFixture.cs')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/DesignFoundationFixture.cs') -Destination (Join-Path $consumerRoot 'DesignFoundationFixture.cs')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/CommandsSupportFixture.cs') -Destination (Join-Path $consumerRoot 'CommandsSupportFixture.cs')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/SupportFoundationFixture.cs') -Destination (Join-Path $consumerRoot 'SupportFoundationFixture.cs')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputAdvancedFixture.cs') -Destination (Join-Path $consumerRoot 'OutputAdvancedFixture.cs')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputWorkflowFixture.cs') -Destination (Join-Path $consumerRoot 'OutputWorkflowFixture.cs')

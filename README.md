@@ -1,4 +1,8 @@
+![StaadPro.Interop](logo-with-text.png)
+
 # StaadPro.Interop
+
+**Current source increments:** Completed the [25 Commands/Support methods](docs/Commands-and-Support-Porting.md), audited the interrupted work, and added [ten Design brief/assignment/query methods](docs/Design-Porting.md) on `main`. Passed 6,448 offline tests and compiled/executed all 70 new guarded XML examples. These additions and the adopted logos are included in preview **1.0.0-preview.20261027.1**.
 
 [![Build Status](https://github.com/structuraldeveloper/StaadPro.Interop/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/structuraldeveloper/StaadPro.Interop/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -12,13 +16,19 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Current source - plate-corner workflows
+## Latest prepared preview - 1.0.0-preview.20261027.1
+
+This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface.
+
+The Release build passed with zero warnings/errors and 6,448 offline tests, including 412 new Commands/Support/Design cases. Exact-archive verification compiled and executed 1,222 selected XML examples through an isolated PackageReference consumer, including all 34 Commands, 54 Support and twenty Design examples. These checks validate managed behavior and packaging; live native COM and engineering qualification remain pending. The archive is ready for manual NuGet.org upload; public availability has not been confirmed. See [publishing](docs/Publishing.md), [installation](docs/Installation.md) and [NuGet readiness](docs/NuGet-Readiness.md).
+
+## Earlier preview - plate-corner workflows
 
 Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](docs/Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
 
 Passed a Release build with zero warnings/errors and **6,036 offline tests**, including **248 new corner cases**. Isolated package verification covers **1,152 selected XML examples**, including all 192 Output examples. Read-only native checks support the global force/moment contract on sampled STAAD.Pro 2026.0.0.340 observations; broader native/engineering qualification remains pending.
 
-## Latest prepared preview - 1.0.0-preview.20261026.4
+## Earlier prepared preview - 1.0.0-preview.20261026.4
 
 Prepared **1.0.0-preview.20261026.4** for Windows/.NET Framework 4.8.1 with **96 managed Output overloads covering 47 documented native functions** and **19 Support operations**, including the new plate-corner APIs. The Release build passed with zero warnings/errors and **6,036 offline tests**. Exact-archive verification compiled and executed **1,152 selected XML examples** through an isolated PackageReference consumer. The archive is ready for the package owner's manual NuGet.org upload; public availability has not been confirmed. See [the publishing guide](docs/Publishing.md) and [NuGet readiness](docs/NuGet-Readiness.md).
 
@@ -101,7 +111,7 @@ Implemented 15 additional Load observations with complete XML contracts, named s
 ## Prepared preview: 1.0.0-preview.20261026.1
 
 
-The prepared 1.0.0-preview.20261026.1 archive includes 249 common Property overloads plus five separately acquired catalog queries, 171 Load overloads, all 143 reference Geometry overloads, 40 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. Support, Design, Commands, Table, View and IDEA StatiCa remain binding/contract placeholders.
+The prepared 1.0.0-preview.20261026.1 archive includes 249 common Property overloads plus five separately acquired catalog queries, 171 Load overloads, all 143 reference Geometry overloads, 40 typed Output queries, 53 common Root operations, three optional Root operations and the approved wrapper bindings. It targets Windows/.NET Framework 4.8.1 and ships the XML documentation and updated usage guides. At that archive checkpoint, Support, Design, Commands, Table, View and IDEA StatiCa were binding/contract placeholders.
 
 Validated the Release build, 5,353 offline tests and isolated package consumption with 1,002 compiled/executed XML examples. Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.1.nupkg` for manual upload; it has not been published. Author is Srinivasa Rao Masanam; company and copyright holder are TensorStruct. See [release notes](docs/Release-Notes.md) and [NuGet readiness](docs/NuGet-Readiness.md) for verification scope and native qualification limits.
 
@@ -119,7 +129,7 @@ The [Support review](docs/Support-Porting.md) compares STAAD.Pro 2024, 2025 and 
 
 ## Remaining adapter comparisons and planned work
 
-Completed the comparison series for [Design](docs/Design-Porting.md), [Commands](docs/Commands-Porting.md), [Table](docs/Table-Porting.md) and [View](docs/View-Porting.md), plus the separate [IDEA StatiCa integration review](docs/IDEA-StatiCa-Porting.md). The reports include native contracts, source overloads, managed API proposals, version policies and ordered implementation/test plans. These domains remain placeholders. See the [review index and implementation sequence](docs/reports/OpenSTAAD-Remaining-Adapters-Review-Index.md) for dependencies and outstanding release gates.
+Completed the comparison series for [Design](docs/Design-Porting.md), [Commands](docs/Commands-Porting.md), [Table](docs/Table-Porting.md) and [View](docs/View-Porting.md), plus the separate [IDEA StatiCa integration review](docs/IDEA-StatiCa-Porting.md). The reports include native contracts, source overloads, managed API proposals, version policies and ordered implementation/test plans. Design and Commands now have the typed foundations linked above; Table, View and IDEA remain placeholders. See the [review index and implementation sequence](docs/reports/OpenSTAAD-Remaining-Adapters-Review-Index.md) for dependencies and outstanding release gates.
 
 ## Published preview: 1.0.0-preview.20261015
 
@@ -279,8 +289,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261026.4 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.4.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261027.1 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.1.nupkg
 ```
 
 ---

@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\eng\Fixtures\CommandsSupportFixture.cs" Link="Fixtures\CommandsSupportFixture.cs" />
+    <None Include="..\..\docs\contracts\CommandsAndSupportPortContractIndex.json" Link="ContractReview\CommandsAndSupportPortContractIndex.json" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="..\..\eng\Fixtures\DesignFoundationFixture.cs" Link="Fixtures\DesignFoundationFixture.cs" />
+    <None Include="..\..\docs\contracts\DesignFoundationContractIndex.json" Link="ContractReview\DesignFoundationContractIndex.json" CopyToOutputDirectory="PreserveNewest" />
     <ProjectReference Include="..\..\src\StaadPro.Interop\StaadPro.Interop.csproj" />
     <Compile Include="..\..\docs\contracts\IOSLoadExpansionContract.cs" Link="ContractReview\IOSLoadExpansionContract.cs" />
     <Compile Include="..\..\eng\Fixtures\PropertyPortFixture.cs" Link="Fixtures\PropertyPortFixture.cs" />

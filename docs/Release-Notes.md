@@ -1,5 +1,19 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261027.1 - 27 October 2026 (prepared preview)
+
+This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface.
+
+Added complete comparative XML documentation, source-compatible analysis options/design-code vocabulary, immutable Design requests and explicit native acknowledgements. Preserved stable assignment ordering, identified partial completion, caller-thread dispatch, binding checks and original native exceptions. Copied Design parameter rows from privately owned native holders using explicit indexed-property reads.
+
+Adopted the supplied symbol-only PNG as the embedded NuGet icon and the logo with text as the repository/NuGet README banner. Included both original assets and branding guidance. Author: Srinivasa Rao Masanam. Publisher/company: TensorStruct. Copyright (c) 2026 TensorStruct.
+
+The Release build passed with zero warnings/errors and 6,448 offline tests, including 412 new Commands/Support/Design cases. Exact-archive verification compiled and executed 1,222 selected XML examples through an isolated PackageReference consumer, including all 34 Commands, 54 Support and twenty Design examples. These checks validate managed behavior and packaging; live native COM and engineering qualification remain pending.
+
+See [analysis commands and Support](Commands-and-Support-Porting.md), [Design contracts](Design-Porting.md) and [branding](Branding.md) for the new APIs, native acknowledgement rules, owned data and logo usage. Extended GROUP/Chinese steel, steel-command catalog work, eight Support gates and thirteen Output native routes remain pending. Parked Load work, nine Property gates and fifteen supplemental Property candidates retain their approval requirements. The API-usability experiment remains isolated on its separate branch.
+
+Prepared this archive for manual NuGet.org upload; public availability has not been confirmed. Earlier distribution archives are preserved.
+
 ## 1.0.0-preview.20261026.4 - 26 October 2026 (prepared preview)
 
 Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.

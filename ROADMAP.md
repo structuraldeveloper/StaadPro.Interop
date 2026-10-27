@@ -6,8 +6,14 @@ Our mission is to provide the structural engineering and computational design co
 
 ---
 
-## Current implementation and next steps — 26 October 2026
+## Current implementation and next steps — 27 October 2026
 
+**Prepared preview:** 1.0.0-preview.20261027.1 includes the completed 35 Commands/Support/Design methods and adopted logo assets. Release validation passed 6,448 offline tests and 1,222 installed-package XML examples. The source, documentation and package remain a preview; public NuGet.org availability is not confirmed.
+
+
+**Design foundation increment:** Added ten common Design methods reaching five native names, adapting all seven main-source common workflows plus a brief-code query and two query-batch overloads. Extended GROUP and forty union Design native names remain pending. Passed **6,448 offline tests**, including 128 Design cases, and compiled/executed all **70 new guarded XML examples** across the completed increments. See [Design contracts and usage](docs/Design-Porting.md) and [the interrupted-work audit](docs/reports/Porting-Continuation-Audit-2026-10-27.md).
+
+**Commands and Support increment:** Added 25 methods: 17 Commands methods over all sixteen active analysis-command routes, plus eight foundation/assignment operations. Support now covers 27/35 documented native routes. Steel-command creation/catalog work and eight Support contract gates remain pending. The API-usability redesign is isolated on `main-api-usability`; this increment uses the parent `main` contracts. See [the exact signatures and usage](docs/Commands-and-Support-Porting.md).
 
 **Latest Output increment:** Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](docs/Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
 
@@ -22,7 +28,7 @@ The preceding **Output** increment added 25 documented routes, bringing coverage
 
 **Reminder checkpoint:** before further Property expansion or the next public NuGet release, remind the user about **fifteen supplemental Property discovery candidates** and the **nine documented Property gates**. Supplemental candidates were expressly excluded from this increment and need separate review/approval. This is a durable workflow checkpoint, not a scheduled notification.
 
-Next review the remaining thirteen Output contracts and sixteen Support functions in dependency order, then continue Commands, Design, Table/View and IDEA StatiCa following the [remaining-adapter sequence](docs/reports/OpenSTAAD-Remaining-Adapters-Review-Index.md#3-recommended-implementation-sequence). The user authorized the first nineteen Support functions; this increment does not resume the other domain implementations. Preserve one non-partial adapter per domain and internal common/version-policy services. Native qualification is separate from source implementation.
+Next review the remaining thirteen Output contracts, eight Support gates and Commands steel-catalog contracts in dependency order, continue the Design extended-GROUP/Chinese-steel work, then Table/View and IDEA StatiCa following the [remaining-adapter sequence](docs/reports/OpenSTAAD-Remaining-Adapters-Review-Index.md#3-recommended-implementation-sequence). Preserve the recorded approval requirements for parked Load and Property work. Preserve one non-partial adapter per domain and internal common/version-policy services. Native qualification is separate from source implementation.
 
 ### Parked Load work — explicit approval required
 
