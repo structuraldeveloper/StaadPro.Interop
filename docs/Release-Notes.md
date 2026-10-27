@@ -1,5 +1,13 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261027.2 - 27 October 2026 (prepared preview)
+
+Reduced the logo-with-text banner in the repository and NuGet READMEs to **400 pixels wide**, retaining its original aspect ratio and automatic height (approximately 133 pixels). Preserved both supplied PNG assets and the embedded symbol-only package icon. Updated branding guidance and package verification to retain the compact banner sizing.
+
+Retained the managed APIs and runtime contracts from 1.0.0-preview.20261027.1. Verified the new archive metadata, assets and **1,222 selected XML examples** through an isolated installed-package consumer. Reran and passed all **6,448 offline tests** for this build; live COM and engineering qualification remain pending. Author: Srinivasa Rao Masanam. Company/publisher: TensorStruct. Copyright (c) 2026 TensorStruct.
+
+Prepared the archive for manual NuGet.org upload; public availability has not been confirmed. Earlier archives are preserved.
+
 ## 1.0.0-preview.20261027.1 - 27 October 2026 (prepared preview)
 
 This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface.

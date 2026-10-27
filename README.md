@@ -1,8 +1,8 @@
-![StaadPro.Interop](logo-with-text.png)
+<img src="logo-with-text.png" alt="StaadPro.Interop" width="400" />
 
 # StaadPro.Interop
 
-**Current source increments:** Completed the [25 Commands/Support methods](docs/Commands-and-Support-Porting.md), audited the interrupted work, and added [ten Design brief/assignment/query methods](docs/Design-Porting.md) on `main`. Passed 6,448 offline tests and compiled/executed all 70 new guarded XML examples. These additions and the adopted logos are included in preview **1.0.0-preview.20261027.1**.
+**Current source increments:** Completed the [25 Commands/Support methods](docs/Commands-and-Support-Porting.md), audited the interrupted work, and added [ten Design brief/assignment/query methods](docs/Design-Porting.md) on `main`. Passed 6,448 offline tests and compiled/executed all 70 new guarded XML examples. These additions and the adopted logos are included in preview **1.0.0-preview.20261027.2**.
 
 [![Build Status](https://github.com/structuraldeveloper/StaadPro.Interop/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/structuraldeveloper/StaadPro.Interop/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -16,7 +16,11 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Latest prepared preview - 1.0.0-preview.20261027.1
+## Latest prepared preview - 1.0.0-preview.20261027.2
+
+Prepared the preview with a **400-pixel-wide README banner**, preserving the original logo artwork and aspect ratio. Retained the preceding preview's API surface. Release validation passed all **6,448 offline tests** and **1,222 selected installed-package XML examples**. See [release notes](docs/Release-Notes.md), [installation](docs/Installation.md) and [publishing](docs/Publishing.md).
+
+## Earlier prepared preview - 1.0.0-preview.20261027.1
 
 This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface.
 
@@ -289,8 +293,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261027.1 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.1.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261027.2 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.2.nupkg
 ```
 
 ---

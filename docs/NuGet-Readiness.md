@@ -1,6 +1,10 @@
 # NuGet readiness assessment
 
-## Latest prepared preview - 1.0.0-preview.20261027.1
+## Latest prepared preview - 1.0.0-preview.20261027.2
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.2.nupkg` with a compact 400-pixel README banner. The source logo files, embedded symbol icon, managed APIs and runtime contracts are unchanged from the preceding preview. Exact-archive verification passed all **1,222 selected XML examples** and checked metadata, installed IntelliSense and image assets. Reran and passed all **6,448 offline tests** for this build. Public NuGet.org availability has not been confirmed; the archive is prepared for manual upload. See [branding](Branding.md) and [release notes](Release-Notes.md).
+
+## Earlier prepared preview - 1.0.0-preview.20261027.1
 
 Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.1.nupkg` with the 35 Commands/Support/Design additions and adopted logo assets. This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface.
 

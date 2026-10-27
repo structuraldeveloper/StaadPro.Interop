@@ -8,7 +8,7 @@ Our mission is to provide the structural engineering and computational design co
 
 ## Current implementation and next steps — 27 October 2026
 
-**Prepared preview:** 1.0.0-preview.20261027.1 includes the completed 35 Commands/Support/Design methods and adopted logo assets. Release validation passed 6,448 offline tests and 1,222 installed-package XML examples. The source, documentation and package remain a preview; public NuGet.org availability is not confirmed.
+**Prepared preview:** 1.0.0-preview.20261027.2 (compact README banner; same managed API scope as 1.0.0-preview.20261027.1) includes the completed 35 Commands/Support/Design methods and adopted logo assets. Release validation passed 6,448 offline tests and 1,222 installed-package XML examples. The source, documentation and package remain a preview; public NuGet.org availability is not confirmed.
 
 
 **Design foundation increment:** Added ten common Design methods reaching five native names, adapting all seven main-source common workflows plus a brief-code query and two query-batch overloads. Extended GROUP and forty union Design native names remain pending. Passed **6,448 offline tests**, including 128 Design cases, and compiled/executed all **70 new guarded XML examples** across the completed increments. See [Design contracts and usage](docs/Design-Porting.md) and [the interrupted-work audit](docs/reports/Porting-Continuation-Audit-2026-10-27.md).

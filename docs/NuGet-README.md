@@ -1,12 +1,14 @@
-![StaadPro.Interop](https://raw.githubusercontent.com/structuraldeveloper/StaadPro.Interop/main/logo-with-text.png)
+<img src="https://raw.githubusercontent.com/structuraldeveloper/StaadPro.Interop/main/logo-with-text.png" alt="StaadPro.Interop" width="400" />
 
 # StaadPro.Interop
 
 A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD
 
-## Version 1.0.0-preview.20261027.1
+## Version 1.0.0-preview.20261027.2
 
 This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface. The Release build passed with zero warnings/errors and 6,448 offline tests, including 412 new Commands/Support/Design cases. Exact-archive verification compiled and executed 1,222 selected XML examples through an isolated PackageReference consumer, including all 34 Commands, 54 Support and twenty Design examples. These checks validate managed behavior and packaging; live native COM and engineering qualification remain pending.
+
+The logo-with-text banner uses a compact 400-pixel display width with automatic height; the original artwork and embedded symbol icon are preserved. This release retains the preceding preview's API surface and runtime behavior.
 
 By **Srinivasa Rao Masanam**.
 

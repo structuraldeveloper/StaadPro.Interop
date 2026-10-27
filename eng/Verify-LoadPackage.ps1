@@ -75,8 +75,8 @@ try {
     }
     $bannerEntry = $archive.GetEntry('images/logo-with-text.png')
     if ($null -eq $bannerEntry -or $bannerEntry.Length -lt 1) { throw 'The package must include the adopted logo with text.' }
-    if (!$readme.Contains('![StaadPro.Interop](https://raw.githubusercontent.com/structuraldeveloper/StaadPro.Interop/main/logo-with-text.png)')) {
-        throw 'The NuGet README must use the adopted banner through its supported absolute image URL.'
+    if (!$readme.Contains('<img src="https://raw.githubusercontent.com/structuraldeveloper/StaadPro.Interop/main/logo-with-text.png" alt="StaadPro.Interop" width="400" />')) {
+        throw 'The NuGet README must use the adopted banner through its supported absolute image URL with a 400-pixel display width.'
     }
     if ($metadata.repository.url -ne 'https://github.com/structuraldeveloper/StaadPro.Interop') { throw 'Missing repository metadata.' }
     if ([string]$metadata.authors -cne 'Srinivasa Rao Masanam') { throw 'Incorrect package author.' }

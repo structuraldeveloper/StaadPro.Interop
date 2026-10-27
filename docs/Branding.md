@@ -5,7 +5,7 @@ The two supplied root PNG files are the package's adopted logo assets. Preserve 
 | Asset | Purpose | Original dimensions | File size |
 | --- | --- | --- | --- |
 | [symbol-only-logo.png](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/symbol-only-logo.png) | Embedded NuGet package icon, including package-list and Visual Studio display | 1254 × 1254 | 873,573 bytes |
-| [logo-with-text.png](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/logo-with-text.png) | Repository and NuGet README banner; wider documentation placements | 2172 × 724 | 397,441 bytes |
+| [logo-with-text.png](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/logo-with-text.png) | Repository and NuGet README banner; wider documentation placements | 2172 × 724 | 430,180 bytes |
 
 The project sets `PackageIcon` to `images/symbol-only-logo.png` and packs both originals under `images/`. These settings apply to future packages without changing their identity, publisher or version scheme.
 
@@ -13,4 +13,6 @@ NuGet supports embedded PNG/JPEG icons up to 1 MB and recommends 128 × 128 pixe
 
 The repository README references the root banner directly. The NuGet README references its absolute HTTPS URL on raw.githubusercontent.com, an allowed NuGet image host. Push the root assets before publishing a package so that the banner URL is available. A packaged local image alone cannot serve as a NuGet.org README image. See [NuGet's README image requirements](https://learn.microsoft.com/en-us/nuget/nuget-org/package-readme-on-nuget-org#allowed-domains-for-images-and-badges).
 
-The release verifier checks the embedded icon path, size, format and square dimensions, and verifies that the banner is included and referenced by the NuGet README. Preview 1.0.0-preview.20261027.1 incorporates this configuration; earlier generated archives retain their original metadata.
+Both READMEs use an HTML image tag with `width="400"`. This keeps the banner compact at about 400 × 133 display pixels while preserving its original aspect ratio and full-resolution artwork. Height is automatic; NuGet and GitHub constrain images to the available content width on narrower screens. Keep this explicit display width when updating the README so that the large source PNG does not fill the entire page width.
+
+The release verifier checks the embedded icon path, size, format and square dimensions, and verifies that the banner is included and referenced by the NuGet README. Preview 1.0.0-preview.20261027.1 introduced the adopted assets; preview 1.0.0-preview.20261027.2 applies the compact 400-pixel README sizing. Earlier generated archives retain their original metadata.
