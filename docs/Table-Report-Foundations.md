@@ -1,5 +1,7 @@
 # Report and table foundations
 
+**Current coverage:** after the [lifecycle/typography increment](Table-Lifecycle-and-Formatting.md), twenty of 29 source overloads and twenty of 24 native names are implemented. Nine source overloads remain. The foundation checkpoint below records the original ten-method increment.
+
 Implemented 28 October 2026. These **ten methods** adapt existing functions in the read-only main `IOSTable` / `OSTableAdapter`; all ten have a matching main-source implementation. They reach **10/24 documented Table native names**. Nineteen of the main interface's 29 overloads remain pending. Missing native-only APIs follow completion of the main-source porting work.
 
 ## Contracts and differences
@@ -64,6 +66,6 @@ Passed **6,635 offline tests**, including **187 Table cases**, and **1,242 insta
 
 Regression tests cover all ten native packets, identities/index bases, creation failure, void evidence, exact/empty cell strings, untouched outputs, malformed native values, preflight rejection, caller-thread execution, binding replacement/disposal, original exceptions and a complete managed-fixture report workflow. Interface and adapter XML documents match; packaged examples compile and execute in an isolated installed-package consumer with mutation examples guarded. These checks do not qualify live COM, UI/report readiness, license availability, report storage or every servicing build.
 
-Remaining main-source operations: report/table deletion, renaming/resizing, saving all reports/one table, cell formatting and color overloads. View and IDEA integration remain placeholders. Load expansion and supplemental Property work retain their earlier approval checkpoints.
+The original lifecycle/typography follow-up is now implemented. Remaining main-source operations are the nine color, alignment and table-wide font-size overloads listed in the [current guide](Table-Lifecycle-and-Formatting.md). View and IDEA integration remain placeholders. Load expansion and supplemental Property work retain their earlier approval checkpoints.
 
 See the [Table porting status](Table-Porting.md), [native contract inventory](reports/OpenSTAAD-Table-API-Coverage-and-Contract-Inventory.md), and [source/contract index](contracts/TableFoundationContractIndex.json).

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -25,8 +26,10 @@ namespace StaadPro.Interop.Tests.Adapter
     {
         private static MethodInfo[] Methods => typeof(IOSTable).GetMethods().Where(m => !m.IsSpecialName).OrderBy(m => m.Name).ToArray();
         public static IEnumerable<TestCaseData> Ports => Methods.Select(m => new TestCaseData(m.Name));
+        private static string NativeName(string name) => name == "SaveAllReports" ? "SaveReportAll" : name;
         private static object[] Arguments(MethodInfo m) => m.GetParameters().Select(p =>
             p.ParameterType == typeof(string) ? (object)(p.Name == "value" ? " 42.50 " : p.Name == "unitString" ? "kN" : "  Native text  ") :
+            p.ParameterType == typeof(double) ? (object)12.5 :
             p.Name == "reportId" ? 11 : p.Name == "tableId" ? 7 : p.Name == "columnNumber" ? 2 : p.Name == "columnCount" ? 4 : p.Name == "rowCount" ? 3 : 1).ToArray();
         private static object Invoke(IOSTable api, string name, object[] args = null)
         {
@@ -36,9 +39,9 @@ namespace StaadPro.Interop.Tests.Adapter
         }
 
         [Test]
-        public void ExactlyTenSourcePortsHaveNoPublicReferenceOrTupleArguments()
+        public void ExactlyTwentySourcePortsHaveNoPublicReferenceOrTupleArguments()
         {
-            Assert.That(Methods.Length, Is.EqualTo(10));
+            Assert.That(Methods.Length, Is.EqualTo(20));
             Assert.That(typeof(OSTableAdapter).IsSealed, Is.True);
             foreach (var m in Methods)
             {
@@ -72,20 +75,20 @@ namespace StaadPro.Interop.Tests.Adapter
                 Assert.That(native.Calls, Is.Empty, "Acquisition must not call report functions.");
                 var args = Arguments(Methods.Single(m => m.Name == name));
                 var result = Invoke(w.Table, name, args);
-                Assert.That(native.Calls, Is.EqualTo(new[] { name }));
+                Assert.That(native.Calls, Is.EqualTo(new[] { NativeName(name) }));
                 Assert.That(native.Arguments.Single(), Is.EqualTo(args));
                 Assert.That(native.Threads.Single(), Is.EqualTo(Thread.CurrentThread.ManagedThreadId));
                 if (result is TableOperationResult receipt)
                 {
-                    Assert.That(receipt.NativeFunction, Is.EqualTo(name));
+                    Assert.That(receipt.NativeFunction, Is.EqualTo(NativeName(name)));
                     if (name == "CreateReport" || name == "AddTable") Assert.That(receipt.IsSuccessful, Is.True);
                     else
                     {
                         Assert.That(receipt.Status, Is.EqualTo(TableOperationStatus.InvokedWithoutAcknowledgement));
                         Assert.That(receipt.NativeReturnCode, Is.Null);
                         Assert.That(receipt.IsSuccessful, Is.False);
-                        Assert.That(receipt.ReportId, Is.EqualTo(11));
-                        Assert.That(receipt.TableId, Is.EqualTo(name == "SaveReport" ? (int?)null : 7));
+                        Assert.That(receipt.ReportId, Is.EqualTo(name == "SaveAllReports" ? (int?)null : 11));
+                        Assert.That(receipt.TableId, Is.EqualTo(name == "SaveReport" || name == "SaveAllReports" || name == "DeleteReport" ? (int?)null : 7));
                     }
                 }
                 else Assert.That(result, Is.EqualTo(name == "GetCellValue" ? (object)"Cell text" : name == "GetReportCount" ? 2 : 3));
@@ -99,7 +102,7 @@ namespace StaadPro.Interop.Tests.Adapter
             {
                 var native = new Native();
                 using (var w = new OpenStaadWrapper(new Root { Table = native, Major = version }))
-                { Invoke(w.Table, m.Name); Assert.That(native.Calls.Single(), Is.EqualTo(m.Name)); }
+                { Invoke(w.Table, m.Name); Assert.That(native.Calls.Single(), Is.EqualTo(NativeName(m.Name))); }
             }
         }
 
@@ -139,12 +142,13 @@ namespace StaadPro.Interop.Tests.Adapter
 
         [TestCase("CreateReport", "")] [TestCase("CreateReport", " \t ")]
         [TestCase("AddTable", "")] [TestCase("AddTable", " \t ")]
-        public void BlankCreationNamesAreRejected(string name, string text)
+        [TestCase("RenameTable", "")] [TestCase("RenameTable", " \t ")]
+        public void BlankCreationAndRenameNamesAreRejected(string name, string text)
         {
             var native = new Native();
             using (var w = new OpenStaadWrapper(new Root { Table = native }))
             {
-                var args = Arguments(Methods.Single(m => m.Name == name)); args[name == "CreateReport" ? 0 : 1] = text;
+                var args = Arguments(Methods.Single(m => m.Name == name)); args[name == "CreateReport" ? 0 : name == "RenameTable" ? 2 : 1] = text;
                 Assert.Throws<ArgumentException>(() => Invoke(w.Table, name, args)); Assert.That(native.Calls, Is.Empty);
             }
         }
@@ -272,13 +276,88 @@ namespace StaadPro.Interop.Tests.Adapter
         }
 
         [Test]
-        public void NullBindingsAreRejectedAndContractIndexMatchesTheTenPorts()
+        public void NullBindingsAreRejectedAndContractIndexMatchesAllTwentyPorts()
         {
             Assert.Throws<ArgumentNullException>(() => new OSTableAdapter(null));
             using (var w = new OpenStaadWrapper(new Root())) Assert.Throws<ArgumentNullException>(() => new OSTableAdapter(w));
             var index = JObject.Parse(File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, "ContractReview", "TableFoundationContractIndex.json")));
             Assert.That(index["functions"].Select(f => (string)f["managedName"]).OrderBy(s => s), Is.EqualTo(Methods.Select(m => m.Name)));
             Assert.That((bool)index["mainProjectReadOnly"], Is.True);
+        }
+
+        [TestCase(0.0)] [TestCase(-1.0)] [TestCase(double.NaN)]
+        [TestCase(double.PositiveInfinity)] [TestCase(double.NegativeInfinity)]
+        public void FontSizeRejectsNonpositiveAndNonfiniteValuesBeforeNativeWork(double size)
+        {
+            var native = new Native();
+            using (var w = new OpenStaadWrapper(new Root { Table = native }))
+            {
+                var error = Assert.Throws<ArgumentOutOfRangeException>(() => w.Table.SetCellTextSize(11, 7, 1, 2, size));
+                Assert.That(error.ParamName, Is.EqualTo("fontSize"));
+                Assert.That(native.Calls, Is.Empty);
+            }
+        }
+
+        [TestCase("fr-FR")] [TestCase("en-US")] [TestCase("hi-IN")]
+        public void FontSizeIsForwardedAsDoubleWithoutCultureFormatting(string culture)
+        {
+            var previous = CultureInfo.CurrentCulture;
+            try
+            {
+                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+                foreach (double size in new[] { 0.25, 12.5, 72.0, double.MaxValue })
+                {
+                    var native = new Native();
+                    using (var w = new OpenStaadWrapper(new Root { Table = native }))
+                    {
+                        var result = w.Table.SetCellTextSize(11, 7, 1, 2, size);
+                        Assert.That(native.Arguments.Single()[4], Is.TypeOf<double>().And.EqualTo(size));
+                        Assert.That(result.Status, Is.EqualTo(TableOperationStatus.InvokedWithoutAcknowledgement));
+                    }
+                }
+            }
+            finally { CultureInfo.CurrentCulture = previous; }
+        }
+
+        [Test]
+        public void SaveAllAndScopedSaveRequestsKeepDifferentNativeScopeAndIdentities()
+        {
+            var native = new Native();
+            using (var w = new OpenStaadWrapper(new Root { Table = native }))
+            {
+                var all = w.Table.SaveAllReports();
+                var report = w.Table.SaveReport(11);
+                var table = w.Table.SaveTable(11, 7);
+                Assert.That(native.Calls, Is.EqualTo(new[] { "SaveReportAll", "SaveReport", "SaveTable" }));
+                Assert.That(native.Arguments[0], Is.Empty);
+                Assert.That(all.ReportId, Is.Null); Assert.That(all.TableId, Is.Null);
+                Assert.That(report.ReportId, Is.EqualTo(11)); Assert.That(report.TableId, Is.Null);
+                Assert.That(table.ReportId, Is.EqualTo(11)); Assert.That(table.TableId, Is.EqualTo(7));
+                Assert.That(new[] { all, report, table }.All(r => !r.IsSuccessful && r.NativeReturnCode == null), Is.True);
+            }
+        }
+
+        [Test]
+        public void LifecycleAndStyleWorkflowKeepsOneBasedCoordinatesAndAddsNoImplicitSaves()
+        {
+            var native = new Native();
+            using (var w = new OpenStaadWrapper(new Root { Table = native }))
+            {
+                w.Table.RenameTable(11, 7, "  Design forces  ");
+                w.Table.ResizeTable(11, 7, 6, 4);
+                w.Table.SetCellTextBold(11, 7, 1, 2);
+                w.Table.SetCellTextItalic(11, 7, 1, 2);
+                w.Table.SetCellTextUnderline(11, 7, 1, 2);
+                w.Table.SetCellTextSize(11, 7, 1, 2, 12.5);
+                w.Table.SaveTable(11, 7);
+                w.Table.SaveAllReports();
+                w.Table.DeleteTable(11, 7);
+                w.Table.DeleteReport(11);
+                Assert.That(native.Calls, Is.EqualTo(new[] { "RenameTable", "ResizeTable", "SetCellTextBold", "SetCellTextItalic", "SetCellTextUnderline", "SetCellTextSize", "SaveTable", "SaveReportAll", "DeleteTable", "DeleteReport" }));
+                Assert.That(native.Arguments[0][2], Is.EqualTo("  Design forces  "));
+                Assert.That(native.Arguments[1], Is.EqualTo(new object[] { 11, 7, 6, 4 }));
+                Assert.That(native.Arguments[5], Is.EqualTo(new object[] { 11, 7, 1, 2, 12.5 }));
+            }
         }
     }
 }

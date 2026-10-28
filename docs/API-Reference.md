@@ -31,7 +31,7 @@ All 30 main-source wrapper properties, both constructor forms, RefreshComObjects
 - `Output`: 96 managed result overloads reaching 47 native names; `Property`: 249 common overloads plus five optional catalog queries.
 - `Support`: 27 typed operations for discovery, foundation readback and explicit mutations.
 - `Design`: ten common brief/assignment/query methods; `Commands`: seventeen analysis-configuration methods.
-- `Table`: ten existing main-project methods for report/table creation, counts, cell/header editing and report saving; [contracts and example](Table-Report-Foundations.md).
+- `Table`: twenty existing main-project methods for reports, tables, lifecycle and cell typography; [foundations](Table-Report-Foundations.md) and [lifecycle/formatting contracts](Table-Lifecycle-and-Formatting.md).
 - `View`: binding-only placeholder; domain functions remain pending.
 - `IdeaStatiCa`: integration placeholder when Geometry/Load/Output exist; no transformation, verification or export functions are available.
 - `StaadVersion`: cached native STAAD version; each access returns a copy, null when unavailable. This is the source for native version selection.

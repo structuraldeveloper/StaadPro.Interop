@@ -2,7 +2,7 @@
 
 # StaadPro.Interop
 
-**Current source increment:** Ported [ten existing main-project Table functions](docs/Table-Report-Foundations.md), added comprehensive XML documentation and independence/trademark notices, and prepared preview **1.0.0-preview.20261028.1**. Passed 6,635 offline tests and 1,242 installed-package XML examples. The preceding Commands/Support/Design additions remain included.
+**Current source increment:** Ported ten further existing main-project Table methods for report/table deletion, renaming, resizing, scoped saves and basic cell typography. The adapter now exposes 20 of 29 reference overloads and covers 20/24 native names; nine source overloads remain. Reused existing result/status types and shared native service. See [exact contracts and examples](docs/Table-Lifecycle-and-Formatting.md). Prepared preview **1.0.0-preview.20261028.2**. Passed **6,780 offline tests** and **1,262 installed-package XML examples**.
 
 [![Build Status](https://github.com/structuraldeveloper/StaadPro.Interop/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/structuraldeveloper/StaadPro.Interop/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -16,9 +16,9 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Latest prepared preview - 1.0.0-preview.20261028.1
+## Latest prepared preview - 1.0.0-preview.20261028.2
 
-Ported ten existing main-project Table functions for report/table creation, counts, cell values, headers, unit labels and report saving. Added comprehensive XML documentation and independence/trademark notices in the repository and package. Passed **6,635 offline tests**, including **187 Table regression cases**; **1,242 installed-package XML examples** and the isolated report workflow also passed. See [Table contracts](docs/Table-Report-Foundations.md), [release notes](docs/Release-Notes.md), [installation](docs/Installation.md) and [publishing](docs/Publishing.md).
+Ported ten further existing main-project Table methods for report/table deletion, renaming, resizing, scoped saves and basic cell typography. The adapter now exposes 20 of 29 reference overloads and covers 20/24 native names; nine source overloads remain. Reused existing result/status types and shared native service. See [exact contracts and examples](docs/Table-Lifecycle-and-Formatting.md). Passed **6,780 offline tests** and **1,262 installed-package XML examples**.
 
 ## Earlier prepared preview - 1.0.0-preview.20261027.1
 
@@ -293,8 +293,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261028.1 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261028.1.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261028.2 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261028.2.nupkg
 ```
 
 ---
@@ -317,10 +317,14 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Table report foundations
 
-This preview ports ten existing main-project Table functions for report/table creation, counts, cell values, headers, unit labels and report saving. Passed **6,635 offline tests** and **1,242 installed-package XML examples**. See the [complete contracts and example](docs/Table-Report-Foundations.md).
+The earlier foundation increment ported ten main-project Table functions for creation, counts, values, headers, unit labels and report saving. The latest increment adds lifecycle and typography, for twenty current Table overloads. See the [complete contracts and example](docs/Table-Report-Foundations.md).
 
 
 The NuGet README uses a compact 400 × 133 PNG through supported Markdown image syntax. Both original logos remain unchanged.
+
+## Table lifecycle and typography
+
+Ported ten further existing main-project Table methods for report/table deletion, renaming, resizing, scoped saves and basic cell typography. The adapter now exposes 20 of 29 reference overloads and covers 20/24 native names; nine source overloads remain. Reused existing result/status types and shared native service. See [exact contracts and examples](docs/Table-Lifecycle-and-Formatting.md).
 
 ## Independence and trademarks
 

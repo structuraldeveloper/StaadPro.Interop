@@ -312,8 +312,9 @@ try {
     }
     if ($commandSnippets.Count -ne 34) { throw 'Expected 34 Commands XML examples.' }
     $tableGuide = Read-PackageEntry 'docs/Table-Report-Foundations.md'
+    $tableGuide += Read-PackageEntry 'docs/Table-Lifecycle-and-Formatting.md'
     $notice = Read-PackageEntry 'NOTICE.md'
-    if ($tableGuide -notmatch 'one-based' -or $tableGuide -notmatch 'ten methods') { throw 'Missing Table scope/index guidance.' }
+    if ($tableGuide -notmatch 'one-based' -or $tableGuide -notmatch 'twenty|20 of 29' -or $tableGuide -notmatch 'SaveAllReports') { throw 'Missing Table scope/index guidance.' }
     foreach ($document in @($readme, $notice)) {
         if ($document -notmatch 'affiliated with, sponsored by, endorsed by' -or $document -notmatch 'Bentley, STAAD, STAAD.Pro and OpenSTAAD' -or $document -notmatch 'trademarks or registered trademarks') {
             throw 'Missing independence/trademark notice in the package or its README.'
@@ -322,7 +323,7 @@ try {
     $tableSnippets = @()
     foreach ($owner in @('Adapters.Interfaces.IOSTable', 'Adapters.Models.OSTableAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        if ($entries.Count -ne 10) { throw "Expected ten Table contracts for $owner." }
+        if ($entries.Count -ne 20) { throw "Expected twenty Table contracts for $owner." }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary','returns','remarks','example/code')) {
                 if ([string]::IsNullOrWhiteSpace($entry.SelectSingleNode($tag).InnerText)) { throw "Incomplete Table $tag for $($entry.name)" }
@@ -331,7 +332,7 @@ try {
             $tableSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.TableFoundationFixture.Root { Table = new PackageVerification.TableFoundationFixture.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
         }
     }
-    if ($tableSnippets.Count -ne 20) { throw 'Expected twenty Table XML examples.' }
+    if ($tableSnippets.Count -ne 40) { throw 'Expected forty Table XML examples.' }
     $designGuide = Read-PackageEntry 'docs/Design-Porting.md'
     $designSnippets = @()
     foreach ($owner in @('Adapters.Interfaces.IOSDesign', 'Adapters.Models.OSDesignAdapter')) {
@@ -747,7 +748,21 @@ public static class Program
             Check(!edit.IsSuccessful && edit.NativeReturnCode == null, "Table void completion evidence");
             Check(wrapper.Table.GetCellValue(11, 7, 1, 2) == "42.50", "Table one-based write/read");
             Check(!wrapper.Table.SaveReport(11).IsSuccessful, "Table save is unacknowledged");
-            Check(tableNative.Calls.Count == 10, "Table exact native dispatch count");
+            Check(tableNative.Calls.Count == 10, "Table foundation dispatch count");
+            wrapper.Table.RenameTable(11, 7, "Design forces");
+            wrapper.Table.ResizeTable(11, 7, 6, 4);
+            wrapper.Table.SetCellTextBold(11, 7, 1, 2);
+            wrapper.Table.SetCellTextItalic(11, 7, 1, 2);
+            wrapper.Table.SetCellTextUnderline(11, 7, 1, 2);
+            wrapper.Table.SetCellTextSize(11, 7, 1, 2, 12.5);
+            var scopedSave = wrapper.Table.SaveTable(11, 7);
+            var allSave = wrapper.Table.SaveAllReports();
+            wrapper.Table.DeleteTable(11, 7);
+            wrapper.Table.DeleteReport(11);
+            Check(!scopedSave.IsSuccessful && scopedSave.ReportId == 11 && scopedSave.TableId == 7, "Scoped Table save evidence");
+            Check(!allSave.IsSuccessful && allSave.ReportId == null && allSave.TableId == null && allSave.NativeFunction == "SaveReportAll", "All-report save scope");
+            Check(tableNative.Calls.Skip(10).SequenceEqual(new[] { "RenameTable", "ResizeTable", "SetCellTextBold", "SetCellTextItalic", "SetCellTextUnderline", "SetCellTextSize", "SaveTable", "SaveReportAll", "DeleteTable", "DeleteReport" }), "Table lifecycle native targets/order");
+            Check(tableNative.Arguments[15][4] is double size && size == 12.5, "Native font Double payload");
         }
         Console.WriteLine("PASS: __EXAMPLE_COUNT__ packaged XML examples and Geometry/Load/Root/Output/Property/Support/Commands/Design/Table IntelliSense.");
     }

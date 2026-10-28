@@ -1,5 +1,7 @@
 # NuGet readiness assessment
 
+**Latest 28 October 2026 checkpoint:** prepared 1.0.0-preview.20261028.2 with twenty main-source Table overloads (ten added in this increment). Passed 6,780 offline tests, including 332 Table cases. Installed-package verification passed 1,262 XML examples, including forty Table examples, and a report lifecycle/formatting workflow. Live native UI, COM, licensing and persistence qualification remain separate. NuGet.org publication is not confirmed.
+
 **28 October 2026 checkpoint:** prepared 1.0.0-preview.20261028.1 with ten existing main-project Table ports and independence/trademark notices. Passed 6,635 offline tests (187 new Table cases). Verified 1,242 installed-package XML examples and a managed Table write/read/save workflow against the exact archive; live COM, licensing and native report persistence remain separate acceptance work. Public NuGet.org publication is not confirmed. See [Table contracts](Table-Report-Foundations.md).
 
 ## Latest prepared preview - 1.0.0-preview.20261027.2

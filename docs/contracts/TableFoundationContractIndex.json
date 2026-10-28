@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-10-28",
   "mainProjectReadOnly": true,
-  "scope": "Ten existing main-project Table methods, adapted to managed input/result contracts. No new native-only function expansion.",
+  "scope": "Twenty existing main-project Table methods adapted to managed input/result contracts. Main-source parity precedes native-only expansion.",
   "sourceFiles": [
     {
       "file": "Adapters/Interfaces/IOSTable.cs",
@@ -833,6 +833,826 @@
       },
       "differenceFromSimilarApis": "This is the main-source SaveReport workflow, scoped to one report and its contained tables. It does not save the STAAD model through Root, save all reports or promise file-system durability. Native void completion records InvokedWithoutAcknowledgement, with no read-back or success flag; native dialogs and storage behavior remain STAAD responsibilities.",
       "example": "table.SaveReport(11)"
+    },
+    {
+      "managedName": "DeleteReport",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId",
+      "nativeName": "DeleteReport",
+      "source": [
+        {
+          "managedName": "DeleteReport",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 60,
+          "name": "DeleteReport",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::DeleteReport(const VARIANT FAR&FromReportNo)",
+          "parameters": [
+            {
+              "name": "FromReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::DeleteReport(const VARIANT FAR&FromReportNo)",
+          "parameters": [
+            {
+              "name": "FromReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::DeleteReport(const VARIANT FAR&FromReportNo)",
+          "parameters": [
+            {
+              "name": "FromReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike DeleteTable, this targets the entire report and its contained tables. This is destructive: no backup, confirmation dialog, replacement report or rollback is provided by this library. The supplied ReportId remains request identity in the receipt and does not prove the report still exists. No implicit save or model-file deletion occurs.",
+      "example": "table.DeleteReport(11)"
+    },
+    {
+      "managedName": "DeleteTable",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId",
+      "nativeName": "DeleteTable",
+      "source": [
+        {
+          "managedName": "DeleteTable",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 65,
+          "name": "DeleteTable",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableId"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::DeleteTable(const VARIANT FAR&FromReportNo,const VARIANT FAR&TableNo)",
+          "parameters": [
+            {
+              "name": "FromReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::DeleteTable(const VARIANT FAR&FromReportNo,const VARIANT FAR&TableNo)",
+          "parameters": [
+            {
+              "name": "FromReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::DeleteTable(const VARIANT FAR&FromReportNo,const VARIANT FAR&TableNo)",
+          "parameters": [
+            {
+              "name": "FromReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike DeleteReport, this targets a single table and does not request deletion of the containing report. The library does not infer success from disappearance, recycle IDs, create a replacement table or save automatically. A void-completion receipt retains the requested IDs, not a confirmed surviving object.",
+      "example": "table.DeleteTable(11, 7)"
+    },
+    {
+      "managedName": "RenameTable",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId, string newName",
+      "nativeName": "RenameTable",
+      "source": [
+        {
+          "managedName": "RenameTable",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 89,
+          "name": "RenameTable",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableId",
+            "newName"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::RenameTable(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&szTableName)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "szTableName",
+              "direction": "[in]",
+              "description": "Report Table Name(Type: String)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::RenameTable(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&szTableName)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "szTableName",
+              "direction": "[in]",
+              "description": "Report Table Name(Type: String)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::RenameTable(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&szTableName)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "szTableName",
+              "direction": "[in]",
+              "description": "Report Table Name(Type: String)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike AddTable, this requests renaming rather than creating a table or changing its dimensions. Exact nonblank text is forwarded without trimming; duplicate-name and length rules remain native. IDs are not recomputed or inferred. Unlike SetColumnHeader and SetRowHeader, this changes the table name, not header text.",
+      "example": "table.RenameTable(11, 7, \"Design forces\")"
+    },
+    {
+      "managedName": "ResizeTable",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId, int rowCount, int columnCount",
+      "nativeName": "ResizeTable",
+      "source": [
+        {
+          "managedName": "ResizeTable",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 94,
+          "name": "ResizeTable",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableId",
+            "numRows",
+            "numCols"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::ResizeTable(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&RowNos,const VARIANT FAR&ColNos)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "RowNos",
+              "direction": "[in]",
+              "description": "row count for specified table(Type: long)."
+            },
+            {
+              "name": "ColNos",
+              "direction": "[in]",
+              "description": "column count for specified table(Type: long)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::ResizeTable(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&RowNos,const VARIANT FAR&ColNos)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "RowNos",
+              "direction": "[in]",
+              "description": "row count for specified table(Type: long)."
+            },
+            {
+              "name": "ColNos",
+              "direction": "[in]",
+              "description": "column count for specified table(Type: long)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::ResizeTable(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&RowNos,const VARIANT FAR&ColNos)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "RowNos",
+              "direction": "[in]",
+              "description": "row count for specified table(Type: long)."
+            },
+            {
+              "name": "ColNos",
+              "direction": "[in]",
+              "description": "column count for specified table(Type: long)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike AddTable, this targets an existing table. Counts are requested total dimensions, not increments or cell coordinates. Bentley documents increasing dimensions; shrinking, cell preservation and native capacity limits are not guaranteed. No dimension getter exists in this managed increment, so positivity is validated but growth against current dimensions is not independently checked. No clamping, automatic table recreation or save occurs.",
+      "example": "table.ResizeTable(11, 7, 6, 4)"
+    },
+    {
+      "managedName": "SaveAllReports",
+      "returnType": "TableOperationResult",
+      "parameters": "",
+      "nativeName": "SaveReportAll",
+      "source": [
+        {
+          "managedName": "SaveAllReports",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 104,
+          "name": "SaveReportAll",
+          "receiver": "ComObject",
+          "arguments": []
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::SaveReportAll()",
+          "parameters": []
+        },
+        "2025": {
+          "signature": "void OSTableUI::SaveReportAll()",
+          "parameters": []
+        },
+        "2026": {
+          "signature": "void OSTableUI::SaveReportAll()",
+          "parameters": []
+        }
+      },
+      "differenceFromSimilarApis": "Unlike SaveReport, this is not scoped to one report; unlike SaveTable, it is not scoped to one table. Calls the main-source native target SaveReportAll exactly once. ReportId and TableId are null because no single identity was supplied. This does not enumerate or save reports in other STAAD application instances, save the model through Root, or establish file-system durability.",
+      "example": "table.SaveAllReports()"
+    },
+    {
+      "managedName": "SaveTable",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId",
+      "nativeName": "SaveTable",
+      "source": [
+        {
+          "managedName": "SaveTable",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 109,
+          "name": "SaveTable",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableId"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::SaveTable(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::SaveTable(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::SaveTable(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike SaveReport, this requests one table rather than the whole report and all of its tables; unlike SaveAllReports, it does not request saving every report. The actual native storage scope and dialogs remain STAAD responsibilities. No Root model save, report enumeration or persistence read-back is added.",
+      "example": "table.SaveTable(11, 7)"
+    },
+    {
+      "managedName": "SetCellTextBold",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId, int rowNumber, int columnNumber",
+      "nativeName": "SetCellTextBold",
+      "source": [
+        {
+          "managedName": "SetCellTextBold",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 114,
+          "name": "SetCellTextBold",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableId",
+            "iRow",
+            "iCol"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::SetCellTextBold(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::SetCellTextBold(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::SetCellTextBold(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike SetCellValue, this changes formatting rather than writing text. Unlike SetCellTextItalic or SetCellTextUnderline, it requests bold. The native operation exposes no Boolean toggle or documented inverse: this method requests bold, not a toggle or clearing of the style. It does not resize the table, set a numeric value or save automatically.",
+      "example": "table.SetCellTextBold(11, 7, 1, 2)"
+    },
+    {
+      "managedName": "SetCellTextItalic",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId, int rowNumber, int columnNumber",
+      "nativeName": "SetCellTextItalic",
+      "source": [
+        {
+          "managedName": "SetCellTextItalic",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 129,
+          "name": "SetCellTextItalic",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableId",
+            "iRow",
+            "iCol"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::SetCellTextItalic(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::SetCellTextItalic(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::SetCellTextItalic(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike SetCellTextBold and SetCellTextUnderline, this requests italic. It changes cell formatting rather than body text, headers, unit labels or model geometry. No Boolean disable/toggle option is exposed by the native call. No cell-selection side effect is requested by this wrapper, and no automatic save or formatting read-back occurs.",
+      "example": "table.SetCellTextItalic(11, 7, 1, 2)"
+    },
+    {
+      "managedName": "SetCellTextUnderline",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId, int rowNumber, int columnNumber",
+      "nativeName": "SetCellTextUnderline",
+      "source": [
+        {
+          "managedName": "SetCellTextUnderline",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 144,
+          "name": "SetCellTextUnderline",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableId",
+            "iRow",
+            "iCol"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::SetCellTextUnderline(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::SetCellTextUnderline(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::SetCellTextUnderline(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike SetCellTextBold and SetCellTextItalic, this requests underlining rather than a different emphasis. The native operation supplies no Boolean toggle or documented inverse; it does not offer style removal. Body text is not rewritten and no automatic save, resize, unit conversion or formatting read-back occurs.",
+      "example": "table.SetCellTextUnderline(11, 7, 1, 2)"
+    },
+    {
+      "managedName": "SetCellTextSize",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId, int rowNumber, int columnNumber, double fontSize",
+      "nativeName": "SetCellTextSize",
+      "source": [
+        {
+          "managedName": "SetCellTextSize",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 134,
+          "name": "SetCellTextSize",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableId",
+            "iRow",
+            "iCol",
+            "fontSize"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::SetCellTextSize(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol,const VARIANT FAR&dSize)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "dSize",
+              "direction": "[in]",
+              "description": "Containing the size of the font to set the text to(Type: Double)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::SetCellTextSize(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol,const VARIANT FAR&dSize)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "dSize",
+              "direction": "[in]",
+              "description": "Containing the size of the font to set the text to(Type: Double)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::SetCellTextSize(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol,const VARIANT FAR&dSize)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "dSize",
+              "direction": "[in]",
+              "description": "Containing the size of the font to set the text to(Type: Double)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike ResizeTable, this changes font sizing rather than row/column counts. Unlike the main-source SetCellTextSizeForTable workflow, which remains a separate port, this targets one cell only. A finite positive Double is forwarded unchanged using the native Microsoft Word-equivalent size convention, not model input length units. No string formatting, rounding, clamping or automatic save occurs; native size/capacity restrictions remain authoritative.",
+      "example": "table.SetCellTextSize(11, 7, 1, 2, 12.5)"
     }
   ],
   "validationLimits": [

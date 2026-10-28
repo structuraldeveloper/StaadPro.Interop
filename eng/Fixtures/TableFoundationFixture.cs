@@ -48,6 +48,16 @@ namespace PackageVerification
             public void SetColumnUnitString(object report, object table, object column, object unit) => Record("SetColumnUnitString", null, report, table, column, unit);
             public void SetRowHeader(object report, object table, object row, object header) => Record("SetRowHeader", null, report, table, row, header);
             public void SaveReport(object report) => Record("SaveReport", null, report);
+            public void DeleteReport(object report) => Record("DeleteReport", null, report);
+            public void DeleteTable(object report, object table) => Record("DeleteTable", null, report, table);
+            public void RenameTable(object report, object table, object name) => Record("RenameTable", null, report, table, name);
+            public void ResizeTable(object report, object table, object rows, object columns) => Record("ResizeTable", null, report, table, rows, columns);
+            public void SaveReportAll() => Record("SaveReportAll", null);
+            public void SaveTable(object report, object table) => Record("SaveTable", null, report, table);
+            public void SetCellTextBold(object report, object table, object row, object column) => Record("SetCellTextBold", null, report, table, row, column);
+            public void SetCellTextItalic(object report, object table, object row, object column) => Record("SetCellTextItalic", null, report, table, row, column);
+            public void SetCellTextUnderline(object report, object table, object row, object column) => Record("SetCellTextUnderline", null, report, table, row, column);
+            public void SetCellTextSize(object report, object table, object row, object column, object size) => Record("SetCellTextSize", null, report, table, row, column, size);
         }
     }
 }

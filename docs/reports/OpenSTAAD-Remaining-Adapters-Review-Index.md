@@ -1,5 +1,7 @@
 # Remaining OpenSTAAD adapter reviews and implementation sequence
 
+**Latest implementation checkpoint, 28 October 2026:** Twenty existing main-source Table overloads are implemented, reaching 20/24 native names. The latest ten cover report/table deletion, renaming/resizing, scoped saves and cell typography. Nine source overloads remain. Passed 6,780 offline tests, including 332 Table cases. See [lifecycle and formatting contracts](../Table-Lifecycle-and-Formatting.md). Main-source parity precedes native-only expansion.
+
 **Reviewed:** 23 October 2026<br>
 **Baseline:** main at 1d8285ce66c95c60da55530d4c721fb7274893da<br>
 **Scope:** Completed the remaining domain comparisons and implementation plans; no domain functions were implemented or packaged by this review.
@@ -30,13 +32,13 @@
 | Support | 35 / 35 / 35 | 33 | 27 common native routes implemented; eight pending. [Support plan](OpenSTAAD-Support-Multi-Version-Architecture-and-Plan.md) |
 | Design | 31 / 45 / 45 | 7 | Ten common methods over five native names; extended GROUP and forty union native names pending. [Design plan](OpenSTAAD-Design-Multi-Version-Architecture-and-Plan.md) |
 | Commands | 18 / 18 / 18, including one deprecated summary | 21 | 17 managed methods cover sixteen active analysis-command targets; steel catalog group pending. [Commands plan](OpenSTAAD-Commands-Multi-Version-Architecture-and-Plan.md) |
-| Table | 24 / 24 / 24 | 29 | Ten existing main methods ported; 19 reference overloads and 14 native routes remain. [Table plan](OpenSTAAD-Table-Multi-Version-Architecture-and-Plan.md) |
+| Table | 24 / 24 / 24 | 29 | Twenty existing main methods ported; nine reference overloads and four native routes remain. [Table plan](OpenSTAAD-Table-Multi-Version-Architecture-and-Plan.md) |
 | View | 67 / 67 / 67 | 70 | Binding-only placeholder. [View plan](OpenSTAAD-View-Multi-Version-Architecture-and-Plan.md) |
 | IDEA StatiCa | Not a native OpenSTAAD group | 24 | Managed integration placeholder. [Integration plan](OpenSTAAD-IDEA-StatiCa-Architecture-and-Porting-Plan.md) |
 
 These are domain report scopes, not interchangeable measures. Managed overloads, native names, class helpers, reserved entries and metadata-only functions must not be summed as a single “implemented API” total. In particular, Output-owned functions filed under the Design steel help page are counted in Output.
 
-All reviewed domains have comparison/source inventories and architecture plans. Current implementation covers 47 Output, 27 Support and sixteen Commands native routes, plus the Property scope recorded above; Design has ten methods over five native names; Table now has ten main-source ports; View and IDEA integration remain placeholders. That completes the **review series**, not implementation of those domains or native qualification of existing ports.
+All reviewed domains have comparison/source inventories and architecture plans. Current implementation covers 47 Output, 27 Support and sixteen Commands native routes, plus the Property scope recorded above; Design has ten methods over five native names; Table now has twenty main-source ports; View and IDEA integration remain placeholders. That completes the **review series**, not implementation of those domains or native qualification of existing ports.
 
 ## 2. Findings from the remaining review
 

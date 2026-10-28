@@ -16,7 +16,7 @@ namespace StaadPro.Interop.Models.Table
         public bool IsSuccessful => Status == TableOperationStatus.Succeeded;
         /// <summary>Gets the actual positive creation ID or zero failure; null for native void functions.</summary>
         public int? NativeReturnCode { get; }
-        /// <summary>Gets the created report ID or the supplied target report ID; null when report creation failed.</summary>
+        /// <summary>Gets the created or targeted report ID; null after failed report creation or for SaveAllReports, which targets no single report.</summary>
         public int? ReportId { get; }
         /// <summary>Gets the created or targeted table ID; null for report-only operations or failed table creation.</summary>
         public int? TableId { get; }

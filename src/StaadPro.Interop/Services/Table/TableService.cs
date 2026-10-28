@@ -41,7 +41,7 @@ namespace StaadPro.Interop.Services.Table
             if (value < 0) throw new InvalidOperationException(function + " returned an undocumented negative count or creation ID.");
             return value;
         }
-        private static TableOperationResult Completed(string function, int reportId, int? tableId = null) =>
+        private static TableOperationResult Completed(string function, int? reportId, int? tableId = null) =>
             new TableOperationResult(function, TableOperationStatus.InvokedWithoutAcknowledgement, null, reportId, tableId);
 
         internal TableOperationResult CreateReport(string title)
@@ -105,6 +105,56 @@ namespace StaadPro.Interop.Services.Table
         {
             Positive(reportId, nameof(reportId));
             return Run(p => { p.SaveReport(reportId); return Completed("SaveReport", reportId); });
+        }
+
+        internal TableOperationResult DeleteReport(int reportId)
+        {
+            Positive(reportId, nameof(reportId));
+            return Run(p => { p.DeleteReport(reportId); return Completed("DeleteReport", reportId); });
+        }
+        internal TableOperationResult DeleteTable(int reportId, int tableId)
+        {
+            Positive(reportId, nameof(reportId)); Positive(tableId, nameof(tableId));
+            return Run(p => { p.DeleteTable(reportId, tableId); return Completed("DeleteTable", reportId, tableId); });
+        }
+        internal TableOperationResult RenameTable(int reportId, int tableId, string newName)
+        {
+            Positive(reportId, nameof(reportId)); Positive(tableId, nameof(tableId)); Text(newName, nameof(newName), false);
+            return Run(p => { p.RenameTable(reportId, tableId, newName); return Completed("RenameTable", reportId, tableId); });
+        }
+        internal TableOperationResult ResizeTable(int reportId, int tableId, int rowCount, int columnCount)
+        {
+            Positive(reportId, nameof(reportId)); Positive(tableId, nameof(tableId));
+            Positive(rowCount, nameof(rowCount)); Positive(columnCount, nameof(columnCount));
+            return Run(p => { p.ResizeTable(reportId, tableId, rowCount, columnCount); return Completed("ResizeTable", reportId, tableId); });
+        }
+        internal TableOperationResult SaveAllReports() => Run(p => { p.SaveReportAll(); return Completed("SaveReportAll", null); });
+        internal TableOperationResult SaveTable(int reportId, int tableId)
+        {
+            Positive(reportId, nameof(reportId)); Positive(tableId, nameof(tableId));
+            return Run(p => { p.SaveTable(reportId, tableId); return Completed("SaveTable", reportId, tableId); });
+        }
+        internal TableOperationResult SetCellTextBold(int reportId, int tableId, int rowNumber, int columnNumber)
+        {
+            Cell(reportId, tableId, rowNumber, columnNumber);
+            return Run(p => { p.SetCellTextBold(reportId, tableId, rowNumber, columnNumber); return Completed("SetCellTextBold", reportId, tableId); });
+        }
+        internal TableOperationResult SetCellTextItalic(int reportId, int tableId, int rowNumber, int columnNumber)
+        {
+            Cell(reportId, tableId, rowNumber, columnNumber);
+            return Run(p => { p.SetCellTextItalic(reportId, tableId, rowNumber, columnNumber); return Completed("SetCellTextItalic", reportId, tableId); });
+        }
+        internal TableOperationResult SetCellTextUnderline(int reportId, int tableId, int rowNumber, int columnNumber)
+        {
+            Cell(reportId, tableId, rowNumber, columnNumber);
+            return Run(p => { p.SetCellTextUnderline(reportId, tableId, rowNumber, columnNumber); return Completed("SetCellTextUnderline", reportId, tableId); });
+        }
+        internal TableOperationResult SetCellTextSize(int reportId, int tableId, int rowNumber, int columnNumber, double fontSize)
+        {
+            Cell(reportId, tableId, rowNumber, columnNumber);
+            if (double.IsNaN(fontSize) || double.IsInfinity(fontSize) || fontSize <= 0)
+                throw new ArgumentOutOfRangeException(nameof(fontSize), "Supply a finite, positive native Word-equivalent font size.");
+            return Run(p => { p.SetCellTextSize(reportId, tableId, rowNumber, columnNumber, fontSize); return Completed("SetCellTextSize", reportId, tableId); });
         }
     }
 }

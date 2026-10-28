@@ -186,5 +186,183 @@ namespace StaadPro.Interop.Adapters.Models
         ///     System.Console.WriteLine(result.Status);
         /// }</code></example>
         public TableOperationResult SaveReport(int reportId) => service.SaveReport(reportId);
+
+        /// <summary>Deletes a native report and its contained tables.</summary>
+        /// <param name="reportId">Positive native report ID returned by CreateReport or observed from the acquired native instance; not a report count or collection position.</param>
+        /// <returns>An immutable receipt with NativeFunction DeleteReport and Status InvokedWithoutAcknowledgement after normal native void completion. NativeReturnCode is null and IsSuccessful is false; this is not native effect or persistence verification.</returns>
+        /// <remarks><para>Unlike DeleteTable, this targets the entire report and its contained tables. This is destructive: no backup, confirmation dialog, replacement report or rollback is provided by this library. The supplied ReportId remains request identity in the receipt and does not prove the report still exists. No implicit save or model-file deletion occurs.</para><para>Adapted from an existing implementation in the read-only main Table adapter. The reviewed 2024/2025/2026 help contracts match, so one internal service is shared; this does not certify every STAAD build, license or UI context. Uses the captured Table object on the caller's established COM apartment and the same per-adapter gate as report creation and cell queries. Binding is checked before and after dispatch; external UI/raw-object edits and other adapter instances are not locked out. Reacquire wrapper.Table after refresh. No retry, alternate STAAD acquisition, implicit save, rollback or invented success flag is added. Native exceptions propagate unchanged, and an exception after dispatch may follow native changes.</para></remarks>
+        /// <exception cref="ArgumentException">A positive identity/dimension/one-based coordinate, finite font size or required name is invalid; no native call occurs.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding was disposed or replaced; a post-call exception can follow a native mutation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport, UI context or storage rejected the request; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object does not expose the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.DeleteReport(11);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public TableOperationResult DeleteReport(int reportId) => service.DeleteReport(reportId);
+
+        /// <summary>Deletes one native table from the specified report.</summary>
+        /// <param name="reportId">Positive native report ID returned by CreateReport or observed from the acquired native instance; not a report count or collection position.</param>
+        /// <param name="tableId">Positive native table ID within the supplied report, not a cell ID or collection position.</param>
+        /// <returns>An immutable receipt with NativeFunction DeleteTable and Status InvokedWithoutAcknowledgement after normal native void completion. NativeReturnCode is null and IsSuccessful is false; this is not native effect or persistence verification.</returns>
+        /// <remarks><para>Unlike DeleteReport, this targets a single table and does not request deletion of the containing report. The library does not infer success from disappearance, recycle IDs, create a replacement table or save automatically. A void-completion receipt retains the requested IDs, not a confirmed surviving object.</para><para>Adapted from an existing implementation in the read-only main Table adapter. The reviewed 2024/2025/2026 help contracts match, so one internal service is shared; this does not certify every STAAD build, license or UI context. Uses the captured Table object on the caller's established COM apartment and the same per-adapter gate as report creation and cell queries. Binding is checked before and after dispatch; external UI/raw-object edits and other adapter instances are not locked out. Reacquire wrapper.Table after refresh. No retry, alternate STAAD acquisition, implicit save, rollback or invented success flag is added. Native exceptions propagate unchanged, and an exception after dispatch may follow native changes.</para></remarks>
+        /// <exception cref="ArgumentException">A positive identity/dimension/one-based coordinate, finite font size or required name is invalid; no native call occurs.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding was disposed or replaced; a post-call exception can follow a native mutation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport, UI context or storage rejected the request; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object does not expose the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.DeleteTable(11, 7);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public TableOperationResult DeleteTable(int reportId, int tableId) => service.DeleteTable(reportId, tableId);
+
+        /// <summary>Changes the name of an existing report table.</summary>
+        /// <param name="reportId">Positive native report ID returned by CreateReport or observed from the acquired native instance; not a report count or collection position.</param>
+        /// <param name="tableId">Positive native table ID within the supplied report, not a cell ID or collection position.</param>
+        /// <param name="newName">Non-null, nonblank new table name without embedded NUL characters. Exact whitespace is preserved; native duplicate-name and length rules apply.</param>
+        /// <returns>An immutable receipt with NativeFunction RenameTable and Status InvokedWithoutAcknowledgement after normal native void completion. NativeReturnCode is null and IsSuccessful is false; this is not native effect or persistence verification.</returns>
+        /// <remarks><para>Unlike AddTable, this requests renaming rather than creating a table or changing its dimensions. Exact nonblank text is forwarded without trimming; duplicate-name and length rules remain native. IDs are not recomputed or inferred. Unlike SetColumnHeader and SetRowHeader, this changes the table name, not header text.</para><para>Adapted from an existing implementation in the read-only main Table adapter. The reviewed 2024/2025/2026 help contracts match, so one internal service is shared; this does not certify every STAAD build, license or UI context. Uses the captured Table object on the caller's established COM apartment and the same per-adapter gate as report creation and cell queries. Binding is checked before and after dispatch; external UI/raw-object edits and other adapter instances are not locked out. Reacquire wrapper.Table after refresh. No retry, alternate STAAD acquisition, implicit save, rollback or invented success flag is added. Native exceptions propagate unchanged, and an exception after dispatch may follow native changes.</para></remarks>
+        /// <exception cref="ArgumentException">A positive identity/dimension/one-based coordinate, finite font size or required name is invalid; no native call occurs.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding was disposed or replaced; a post-call exception can follow a native mutation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport, UI context or storage rejected the request; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object does not expose the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.RenameTable(11, 7, "Design forces");
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public TableOperationResult RenameTable(int reportId, int tableId, string newName) => service.RenameTable(reportId, tableId, newName);
+
+        /// <summary>Requests new row and column counts for an existing report table.</summary>
+        /// <param name="reportId">Positive native report ID returned by CreateReport or observed from the acquired native instance; not a report count or collection position.</param>
+        /// <param name="tableId">Positive native table ID within the supplied report, not a cell ID or collection position.</param>
+        /// <param name="rowCount">Positive requested total row count, not an increment. The native help describes growing the table; current dimensions and shrink behavior are not inferred.</param>
+        /// <param name="columnCount">Positive requested total column count, not an increment. Native capacity and current dimensions are not independently validated.</param>
+        /// <returns>An immutable receipt with NativeFunction ResizeTable and Status InvokedWithoutAcknowledgement after normal native void completion. NativeReturnCode is null and IsSuccessful is false; this is not native effect or persistence verification.</returns>
+        /// <remarks><para>Unlike AddTable, this targets an existing table. Counts are requested total dimensions, not increments or cell coordinates. Bentley documents increasing dimensions; shrinking, cell preservation and native capacity limits are not guaranteed. No dimension getter exists in this managed increment, so positivity is validated but growth against current dimensions is not independently checked. No clamping, automatic table recreation or save occurs.</para><para>Adapted from an existing implementation in the read-only main Table adapter. The reviewed 2024/2025/2026 help contracts match, so one internal service is shared; this does not certify every STAAD build, license or UI context. Uses the captured Table object on the caller's established COM apartment and the same per-adapter gate as report creation and cell queries. Binding is checked before and after dispatch; external UI/raw-object edits and other adapter instances are not locked out. Reacquire wrapper.Table after refresh. No retry, alternate STAAD acquisition, implicit save, rollback or invented success flag is added. Native exceptions propagate unchanged, and an exception after dispatch may follow native changes.</para></remarks>
+        /// <exception cref="ArgumentException">A positive identity/dimension/one-based coordinate, finite font size or required name is invalid; no native call occurs.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding was disposed or replaced; a post-call exception can follow a native mutation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport, UI context or storage rejected the request; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object does not expose the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.ResizeTable(11, 7, 6, 4);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public TableOperationResult ResizeTable(int reportId, int tableId, int rowCount, int columnCount) => service.ResizeTable(reportId, tableId, rowCount, columnCount);
+
+        /// <summary>Requests saving all reports maintained by the acquired native Table instance.</summary>
+        /// <returns>An immutable receipt with NativeFunction SaveReportAll and Status InvokedWithoutAcknowledgement after normal native void completion. NativeReturnCode is null and IsSuccessful is false; this is not native effect or persistence verification.</returns>
+        /// <remarks><para>Unlike SaveReport, this is not scoped to one report; unlike SaveTable, it is not scoped to one table. Calls the main-source native target SaveReportAll exactly once. ReportId and TableId are null because no single identity was supplied. This does not enumerate or save reports in other STAAD application instances, save the model through Root, or establish file-system durability.</para><para>Adapted from an existing implementation in the read-only main Table adapter. The reviewed 2024/2025/2026 help contracts match, so one internal service is shared; this does not certify every STAAD build, license or UI context. Uses the captured Table object on the caller's established COM apartment and the same per-adapter gate as report creation and cell queries. Binding is checked before and after dispatch; external UI/raw-object edits and other adapter instances are not locked out. Reacquire wrapper.Table after refresh. No retry, alternate STAAD acquisition, implicit save, rollback or invented success flag is added. Native exceptions propagate unchanged, and an exception after dispatch may follow native changes.</para></remarks>
+        /// <exception cref="InvalidOperationException">The captured Table binding was disposed or replaced; a post-call exception can follow a native mutation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport, UI context or storage rejected the request; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object does not expose the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SaveAllReports();
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public TableOperationResult SaveAllReports() => service.SaveAllReports();
+
+        /// <summary>Requests saving one table within its native report.</summary>
+        /// <param name="reportId">Positive native report ID returned by CreateReport or observed from the acquired native instance; not a report count or collection position.</param>
+        /// <param name="tableId">Positive native table ID within the supplied report, not a cell ID or collection position.</param>
+        /// <returns>An immutable receipt with NativeFunction SaveTable and Status InvokedWithoutAcknowledgement after normal native void completion. NativeReturnCode is null and IsSuccessful is false; this is not native effect or persistence verification.</returns>
+        /// <remarks><para>Unlike SaveReport, this requests one table rather than the whole report and all of its tables; unlike SaveAllReports, it does not request saving every report. The actual native storage scope and dialogs remain STAAD responsibilities. No Root model save, report enumeration or persistence read-back is added.</para><para>Adapted from an existing implementation in the read-only main Table adapter. The reviewed 2024/2025/2026 help contracts match, so one internal service is shared; this does not certify every STAAD build, license or UI context. Uses the captured Table object on the caller's established COM apartment and the same per-adapter gate as report creation and cell queries. Binding is checked before and after dispatch; external UI/raw-object edits and other adapter instances are not locked out. Reacquire wrapper.Table after refresh. No retry, alternate STAAD acquisition, implicit save, rollback or invented success flag is added. Native exceptions propagate unchanged, and an exception after dispatch may follow native changes.</para></remarks>
+        /// <exception cref="ArgumentException">A positive identity/dimension/one-based coordinate, finite font size or required name is invalid; no native call occurs.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding was disposed or replaced; a post-call exception can follow a native mutation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport, UI context or storage rejected the request; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object does not expose the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SaveTable(11, 7);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public TableOperationResult SaveTable(int reportId, int tableId) => service.SaveTable(reportId, tableId);
+
+        /// <summary>Requests bold formatting for one one-based table cell.</summary>
+        /// <param name="reportId">Positive native report ID returned by CreateReport or observed from the acquired native instance; not a report count or collection position.</param>
+        /// <param name="tableId">Positive native table ID within the supplied report, not a cell ID or collection position.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Zero and negative values are rejected; upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Zero and negative values are rejected; upper bounds remain native responsibilities.</param>
+        /// <returns>An immutable receipt with NativeFunction SetCellTextBold and Status InvokedWithoutAcknowledgement after normal native void completion. NativeReturnCode is null and IsSuccessful is false; this is not native effect or persistence verification.</returns>
+        /// <remarks><para>Unlike SetCellValue, this changes formatting rather than writing text. Unlike SetCellTextItalic or SetCellTextUnderline, it requests bold. The native operation exposes no Boolean toggle or documented inverse: this method requests bold, not a toggle or clearing of the style. It does not resize the table, set a numeric value or save automatically.</para><para>Adapted from an existing implementation in the read-only main Table adapter. The reviewed 2024/2025/2026 help contracts match, so one internal service is shared; this does not certify every STAAD build, license or UI context. Uses the captured Table object on the caller's established COM apartment and the same per-adapter gate as report creation and cell queries. Binding is checked before and after dispatch; external UI/raw-object edits and other adapter instances are not locked out. Reacquire wrapper.Table after refresh. No retry, alternate STAAD acquisition, implicit save, rollback or invented success flag is added. Native exceptions propagate unchanged, and an exception after dispatch may follow native changes.</para></remarks>
+        /// <exception cref="ArgumentException">A positive identity/dimension/one-based coordinate, finite font size or required name is invalid; no native call occurs.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding was disposed or replaced; a post-call exception can follow a native mutation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport, UI context or storage rejected the request; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object does not expose the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextBold(11, 7, 1, 2);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public TableOperationResult SetCellTextBold(int reportId, int tableId, int rowNumber, int columnNumber) => service.SetCellTextBold(reportId, tableId, rowNumber, columnNumber);
+
+        /// <summary>Requests italic formatting for one one-based table cell.</summary>
+        /// <param name="reportId">Positive native report ID returned by CreateReport or observed from the acquired native instance; not a report count or collection position.</param>
+        /// <param name="tableId">Positive native table ID within the supplied report, not a cell ID or collection position.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Zero and negative values are rejected; upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Zero and negative values are rejected; upper bounds remain native responsibilities.</param>
+        /// <returns>An immutable receipt with NativeFunction SetCellTextItalic and Status InvokedWithoutAcknowledgement after normal native void completion. NativeReturnCode is null and IsSuccessful is false; this is not native effect or persistence verification.</returns>
+        /// <remarks><para>Unlike SetCellTextBold and SetCellTextUnderline, this requests italic. It changes cell formatting rather than body text, headers, unit labels or model geometry. No Boolean disable/toggle option is exposed by the native call. No cell-selection side effect is requested by this wrapper, and no automatic save or formatting read-back occurs.</para><para>Adapted from an existing implementation in the read-only main Table adapter. The reviewed 2024/2025/2026 help contracts match, so one internal service is shared; this does not certify every STAAD build, license or UI context. Uses the captured Table object on the caller's established COM apartment and the same per-adapter gate as report creation and cell queries. Binding is checked before and after dispatch; external UI/raw-object edits and other adapter instances are not locked out. Reacquire wrapper.Table after refresh. No retry, alternate STAAD acquisition, implicit save, rollback or invented success flag is added. Native exceptions propagate unchanged, and an exception after dispatch may follow native changes.</para></remarks>
+        /// <exception cref="ArgumentException">A positive identity/dimension/one-based coordinate, finite font size or required name is invalid; no native call occurs.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding was disposed or replaced; a post-call exception can follow a native mutation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport, UI context or storage rejected the request; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object does not expose the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextItalic(11, 7, 1, 2);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public TableOperationResult SetCellTextItalic(int reportId, int tableId, int rowNumber, int columnNumber) => service.SetCellTextItalic(reportId, tableId, rowNumber, columnNumber);
+
+        /// <summary>Requests underline formatting for one one-based table cell.</summary>
+        /// <param name="reportId">Positive native report ID returned by CreateReport or observed from the acquired native instance; not a report count or collection position.</param>
+        /// <param name="tableId">Positive native table ID within the supplied report, not a cell ID or collection position.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Zero and negative values are rejected; upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Zero and negative values are rejected; upper bounds remain native responsibilities.</param>
+        /// <returns>An immutable receipt with NativeFunction SetCellTextUnderline and Status InvokedWithoutAcknowledgement after normal native void completion. NativeReturnCode is null and IsSuccessful is false; this is not native effect or persistence verification.</returns>
+        /// <remarks><para>Unlike SetCellTextBold and SetCellTextItalic, this requests underlining rather than a different emphasis. The native operation supplies no Boolean toggle or documented inverse; it does not offer style removal. Body text is not rewritten and no automatic save, resize, unit conversion or formatting read-back occurs.</para><para>Adapted from an existing implementation in the read-only main Table adapter. The reviewed 2024/2025/2026 help contracts match, so one internal service is shared; this does not certify every STAAD build, license or UI context. Uses the captured Table object on the caller's established COM apartment and the same per-adapter gate as report creation and cell queries. Binding is checked before and after dispatch; external UI/raw-object edits and other adapter instances are not locked out. Reacquire wrapper.Table after refresh. No retry, alternate STAAD acquisition, implicit save, rollback or invented success flag is added. Native exceptions propagate unchanged, and an exception after dispatch may follow native changes.</para></remarks>
+        /// <exception cref="ArgumentException">A positive identity/dimension/one-based coordinate, finite font size or required name is invalid; no native call occurs.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding was disposed or replaced; a post-call exception can follow a native mutation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport, UI context or storage rejected the request; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object does not expose the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextUnderline(11, 7, 1, 2);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public TableOperationResult SetCellTextUnderline(int reportId, int tableId, int rowNumber, int columnNumber) => service.SetCellTextUnderline(reportId, tableId, rowNumber, columnNumber);
+
+        /// <summary>Requests a Word-equivalent native font size for one one-based table cell.</summary>
+        /// <param name="reportId">Positive native report ID returned by CreateReport or observed from the acquired native instance; not a report count or collection position.</param>
+        /// <param name="tableId">Positive native table ID within the supplied report, not a cell ID or collection position.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Zero and negative values are rejected; upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Zero and negative values are rejected; upper bounds remain native responsibilities.</param>
+        /// <param name="fontSize">Finite, strictly positive Double using the native Microsoft Word-equivalent font-size convention. Not model input length units; forwarded without conversion or an invented maximum.</param>
+        /// <returns>An immutable receipt with NativeFunction SetCellTextSize and Status InvokedWithoutAcknowledgement after normal native void completion. NativeReturnCode is null and IsSuccessful is false; this is not native effect or persistence verification.</returns>
+        /// <remarks><para>Unlike ResizeTable, this changes font sizing rather than row/column counts. Unlike the main-source SetCellTextSizeForTable workflow, which remains a separate port, this targets one cell only. A finite positive Double is forwarded unchanged using the native Microsoft Word-equivalent size convention, not model input length units. No string formatting, rounding, clamping or automatic save occurs; native size/capacity restrictions remain authoritative.</para><para>Adapted from an existing implementation in the read-only main Table adapter. The reviewed 2024/2025/2026 help contracts match, so one internal service is shared; this does not certify every STAAD build, license or UI context. Uses the captured Table object on the caller's established COM apartment and the same per-adapter gate as report creation and cell queries. Binding is checked before and after dispatch; external UI/raw-object edits and other adapter instances are not locked out. Reacquire wrapper.Table after refresh. No retry, alternate STAAD acquisition, implicit save, rollback or invented success flag is added. Native exceptions propagate unchanged, and an exception after dispatch may follow native changes.</para></remarks>
+        /// <exception cref="ArgumentException">A positive identity/dimension/one-based coordinate, finite font size or required name is invalid; no native call occurs.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding was disposed or replaced; a post-call exception can follow a native mutation.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">Native transport, UI context or storage rejected the request; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object does not expose the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextSize(11, 7, 1, 2, 12.5);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        public TableOperationResult SetCellTextSize(int reportId, int tableId, int rowNumber, int columnNumber, double fontSize) => service.SetCellTextSize(reportId, tableId, rowNumber, columnNumber, fontSize);
     }
 }

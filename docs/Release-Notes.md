@@ -1,5 +1,17 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261028.2 - 28 October 2026 (prepared preview)
+
+Ported ten further existing main-project Table functions: DeleteReport, DeleteTable, RenameTable, ResizeTable, SaveAllReports, SaveTable, SetCellTextBold, SetCellTextItalic, SetCellTextUnderline and SetCellTextSize. Table now exposes 20 of 29 main-source overloads and reaches 20 of 24 documented native names. Nine main-source overloads remain; native-only expansion follows completion of reference porting.
+
+Reused the existing Table result/status types and common internal service. Added matching comparative XML documentation, positive identity/dimension checks, one-based cell coordinates, finite positive native font sizes, exact rename text, scoped save receipts and explicit unacknowledged void completion. Kept native exception and captured-binding behavior, with no implicit save, rollback or success claim. The documented resize contract supports growth; shrink behavior and storage persistence are not inferred.
+
+Retained the verified 400-pixel Markdown banner, original logos, independence/trademark notices, Srinivasa Rao Masanam author and TensorStruct publisher/copyright. The package targets .NET Framework 4.8.1 on Windows. Live COM, native report UI/storage and engineering qualification remain separate acceptance work.
+
+Passed **6,780 offline tests**, including **332 Table cases** (145 additional cases in this increment). Compiled and executed **1,262 installed-package XML examples**, including **forty Table examples**, and exercised the lifecycle/formatting workflow against a managed native-signature fixture.
+
+Prepared for manual upload; public NuGet.org availability is not confirmed.
+
 ## 1.0.0-preview.20261028.1 - 28 October 2026 (prepared preview)
 
 Corrected the NuGet README banner to use supported Markdown image syntax and a 400 × 133 PNG rendition. Preserved both original logo assets and the symbol-only package icon. Rebuilt this prepared preview under the same version at the package owner's request; API behavior is unchanged.
