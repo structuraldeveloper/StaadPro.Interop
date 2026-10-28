@@ -20,6 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\eng\Fixtures\TableFoundationFixture.cs" Link="Fixtures\TableFoundationFixture.cs" />
+    <None Include="..\..\docs\contracts\TableFoundationContractIndex.json" Link="ContractReview\TableFoundationContractIndex.json" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="..\..\eng\Fixtures\CommandsSupportFixture.cs" Link="Fixtures\CommandsSupportFixture.cs" />
     <None Include="..\..\docs\contracts\CommandsAndSupportPortContractIndex.json" Link="ContractReview\CommandsAndSupportPortContractIndex.json" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="..\..\eng\Fixtures\DesignFoundationFixture.cs" Link="Fixtures\DesignFoundationFixture.cs" />

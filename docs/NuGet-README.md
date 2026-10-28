@@ -4,21 +4,27 @@
 
 A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD
 
-## Version 1.0.0-preview.20261027.2
+## Version 1.0.0-preview.20261028.1
 
-This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface. The Release build passed with zero warnings/errors and 6,448 offline tests, including 412 new Commands/Support/Design cases. Exact-archive verification compiled and executed 1,222 selected XML examples through an isolated PackageReference consumer, including all 34 Commands, 54 Support and twenty Design examples. These checks validate managed behavior and packaging; live native COM and engineering qualification remain pending.
+This preview ports ten existing main-project Table functions for report/table creation, counts, cell values, headers, unit labels and report saving. Added comparative XML documentation, typed creation/mutation receipts and an independence/trademark notice included in the repository and archive. The existing domain APIs and compact logo banner are retained.
 
-The logo-with-text banner uses a compact 400-pixel display width with automatic height; the original artwork and embedded symbol icon are preserved. This release retains the preceding preview's API surface and runtime behavior.
+Passed **6,635 offline tests**, including **187 Table cases**, and **1,242 installed-package XML examples**, including all twenty Table examples and an isolated report write/read/save workflow. Managed verification does not certify live COM, native UI/licensing or report persistence.
+
+The package remains a preview targeting .NET Framework 4.8.1 on Windows. Managed regression and installed-package checks do not certify live COM behavior or native report persistence. Public NuGet.org availability has not been confirmed.
 
 By **Srinivasa Rao Masanam**.
 
 StaadPro.Interop provides typed adapters and managed models for working with an existing Bentley STAAD.Pro application through OpenSTAAD. It includes geometry and load operations, model information and lifecycle functions, application-window controls, and native analysis requests.
 
-This preview includes 249 common Property overloads and five optional catalog queries, all 171 current Load overloads, the completed reference Geometry ports, 96 managed Output overloads reaching 47 native names, 27 Support operations, seventeen Commands methods and ten Design methods, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
+This preview includes 249 common Property overloads and five optional catalog queries, all 171 current Load overloads, the completed reference Geometry ports, 96 managed Output overloads reaching 47 native names, 27 Support operations, seventeen Commands methods, ten Design methods and ten Table methods, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
+
+## Table report foundations
+
+This preview adapts ten existing functions from the read-only main Table adapter. Rows and columns are one-based; counts and cell strings return validated values directly. Creation/mutation receipts retain native creation IDs or explicit unacknowledged void completion. See the [Table guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Table-Report-Foundations.md). Nineteen main-source Table overloads remain pending.
 
 ## Commands, Support and Design foundations
 
-This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface.
+The package also includes the preceding foundation increment of 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface.
 
 The Release build passed with zero warnings/errors and 6,448 offline tests, including 412 new Commands/Support/Design cases. Exact-archive verification compiled and executed 1,222 selected XML examples through an isolated PackageReference consumer, including all 34 Commands, 54 Support and twenty Design examples. These checks validate managed behavior and packaging; live native COM and engineering qualification remain pending.
 
@@ -259,3 +265,11 @@ Silent and hidden options do not guarantee unattended operation. Synchronous nat
 MIT. Package copyright (c) 2026 TensorStruct. Bentley STAAD.Pro is a separate product.
 
 For package submission and availability checks, see the [publishing guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Publishing.md).
+
+## Independence and trademarks
+
+StaadPro.Interop is an independent open-source project published by TensorStruct. Neither this project, its repository, nor its NuGet packages are affiliated with, sponsored by, endorsed by, or officially supported by Bentley Systems, Incorporated or its subsidiaries or affiliates.
+
+Bentley, STAAD, STAAD.Pro and OpenSTAAD are trademarks or registered trademarks of Bentley Systems, Incorporated and/or its subsidiaries or affiliates. All other product names and trademarks belong to their respective owners. These names are used solely to identify the products with which this library interoperates; no trademark rights or endorsement are claimed.
+
+The MIT license applies to this project's code. It does not grant a license to Bentley software or trademarks. A separately licensed STAAD.Pro installation is required for live use; no Bentley proprietary binaries are included.

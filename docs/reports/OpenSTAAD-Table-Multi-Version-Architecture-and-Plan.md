@@ -1,5 +1,7 @@
 # OpenSTAAD Table multi-version comparison, architecture and implementation plan
 
+**Implementation checkpoint, 28 October 2026:** Ported ten existing main-project Table methods, reaching 10/24 documented native names. Nineteen of 29 main-source overloads remain pending. Main-source parity has priority over native-only expansion. See [report/table contracts and usage](../Table-Report-Foundations.md). The review baseline below is historical.
+
 **Reviewed:** 23 October 2026<br>
 **Baseline:** main at 1d8285ce66c95c60da55530d4c721fb7274893da<br>
 **Status:** Documentation and architecture only. Table domain functions remain pending.

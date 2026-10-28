@@ -2,7 +2,7 @@
 
 # StaadPro.Interop
 
-**Current source increments:** Completed the [25 Commands/Support methods](docs/Commands-and-Support-Porting.md), audited the interrupted work, and added [ten Design brief/assignment/query methods](docs/Design-Porting.md) on `main`. Passed 6,448 offline tests and compiled/executed all 70 new guarded XML examples. These additions and the adopted logos are included in preview **1.0.0-preview.20261027.2**.
+**Current source increment:** Ported [ten existing main-project Table functions](docs/Table-Report-Foundations.md), added comprehensive XML documentation and independence/trademark notices, and prepared preview **1.0.0-preview.20261028.1**. Passed 6,635 offline tests and 1,242 installed-package XML examples. The preceding Commands/Support/Design additions remain included.
 
 [![Build Status](https://github.com/structuraldeveloper/StaadPro.Interop/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/structuraldeveloper/StaadPro.Interop/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -16,9 +16,9 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Latest prepared preview - 1.0.0-preview.20261027.2
+## Latest prepared preview - 1.0.0-preview.20261028.1
 
-Prepared the preview with a **400-pixel-wide README banner**, preserving the original logo artwork and aspect ratio. Retained the preceding preview's API surface. Release validation passed all **6,448 offline tests** and **1,222 selected installed-package XML examples**. See [release notes](docs/Release-Notes.md), [installation](docs/Installation.md) and [publishing](docs/Publishing.md).
+Ported ten existing main-project Table functions for report/table creation, counts, cell values, headers, unit labels and report saving. Added comprehensive XML documentation and independence/trademark notices in the repository and package. Passed **6,635 offline tests**, including **187 Table regression cases**; **1,242 installed-package XML examples** and the isolated report workflow also passed. See [Table contracts](docs/Table-Report-Foundations.md), [release notes](docs/Release-Notes.md), [installation](docs/Installation.md) and [publishing](docs/Publishing.md).
 
 ## Earlier prepared preview - 1.0.0-preview.20261027.1
 
@@ -293,8 +293,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261027.2 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.2.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261028.1 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261028.1.nupkg
 ```
 
 ---
@@ -314,3 +314,15 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) and [C
 See [release notes](docs/Release-Notes.md) for the preview's changes, verification and remaining validation.
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Table report foundations
+
+This preview ports ten existing main-project Table functions for report/table creation, counts, cell values, headers, unit labels and report saving. Passed **6,635 offline tests** and **1,242 installed-package XML examples**. See the [complete contracts and example](docs/Table-Report-Foundations.md).
+
+## Independence and trademarks
+
+StaadPro.Interop is an independent open-source project published by TensorStruct. Neither this project, its repository, nor its NuGet packages are affiliated with, sponsored by, endorsed by, or officially supported by Bentley Systems, Incorporated or its subsidiaries or affiliates.
+
+Bentley, STAAD, STAAD.Pro and OpenSTAAD are trademarks or registered trademarks of Bentley Systems, Incorporated and/or its subsidiaries or affiliates. All other product names and trademarks belong to their respective owners. These names are used solely to identify the products with which this library interoperates; no trademark rights or endorsement are claimed.
+
+The MIT license applies to this project's code. It does not grant a license to Bentley software or trademarks. A separately licensed STAAD.Pro installation is required for live use; no Bentley proprietary binaries are included.

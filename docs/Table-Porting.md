@@ -1,5 +1,7 @@
 # Table implementation status and porting guide
 
+**Implementation checkpoint, 28 October 2026:** Ported ten existing main-project Table methods, reaching 10/24 documented native names. Nineteen of 29 main-source overloads remain pending. Main-source parity has priority over native-only expansion. See [report/table contracts and usage](Table-Report-Foundations.md). The review baseline below is historical.
+
 **Reviewed:** 23 October 2026. IOSTable / OSTableAdapter remain binding-only placeholders. No typed Table functions were implemented by this review.
 
 The installed 2024/2025/2026 manuals contain 24 / 24 / 24 native names respectively. The main source contains 29 interface overloads backed by 24 distinct native names; this does not establish live compatibility.

@@ -16,6 +16,8 @@
 
 **Earlier implementation checkpoint, 26 October 2026:** completed four documented P10 Property operations and 25 further Output routes. Supplemental Property candidates remain excluded and require a later reminder/review. See the [current roadmap](../../ROADMAP.md).
 
+**Table checkpoint, 28 October 2026:** ported ten existing main-project functions (10/24 native names; 19 of 29 reference overloads pending). Finish main-source ports before native-only expansion. See [Table foundations](../Table-Report-Foundations.md).
+
 ## 1. Review coverage
 
 | Domain | Installed help names, 2024 / 2025 / 2026 | Main managed interface overloads | Current status / report |
@@ -28,13 +30,13 @@
 | Support | 35 / 35 / 35 | 33 | 27 common native routes implemented; eight pending. [Support plan](OpenSTAAD-Support-Multi-Version-Architecture-and-Plan.md) |
 | Design | 31 / 45 / 45 | 7 | Ten common methods over five native names; extended GROUP and forty union native names pending. [Design plan](OpenSTAAD-Design-Multi-Version-Architecture-and-Plan.md) |
 | Commands | 18 / 18 / 18, including one deprecated summary | 21 | 17 managed methods cover sixteen active analysis-command targets; steel catalog group pending. [Commands plan](OpenSTAAD-Commands-Multi-Version-Architecture-and-Plan.md) |
-| Table | 24 / 24 / 24 | 29 | Binding-only placeholder. [Table plan](OpenSTAAD-Table-Multi-Version-Architecture-and-Plan.md) |
+| Table | 24 / 24 / 24 | 29 | Ten existing main methods ported; 19 reference overloads and 14 native routes remain. [Table plan](OpenSTAAD-Table-Multi-Version-Architecture-and-Plan.md) |
 | View | 67 / 67 / 67 | 70 | Binding-only placeholder. [View plan](OpenSTAAD-View-Multi-Version-Architecture-and-Plan.md) |
 | IDEA StatiCa | Not a native OpenSTAAD group | 24 | Managed integration placeholder. [Integration plan](OpenSTAAD-IDEA-StatiCa-Architecture-and-Porting-Plan.md) |
 
 These are domain report scopes, not interchangeable measures. Managed overloads, native names, class helpers, reserved entries and metadata-only functions must not be summed as a single “implemented API” total. In particular, Output-owned functions filed under the Design steel help page are counted in Output.
 
-All reviewed domains have comparison/source inventories and architecture plans. Current implementation covers 47 Output, 27 Support and sixteen Commands native routes, plus the Property scope recorded above; Design has ten methods over five native names; Table, View and IDEA integration remain placeholders. That completes the **review series**, not implementation of those domains or native qualification of existing ports.
+All reviewed domains have comparison/source inventories and architecture plans. Current implementation covers 47 Output, 27 Support and sixteen Commands native routes, plus the Property scope recorded above; Design has ten methods over five native names; Table now has ten main-source ports; View and IDEA integration remain placeholders. That completes the **review series**, not implementation of those domains or native qualification of existing ports.
 
 ## 2. Findings from the remaining review
 
@@ -56,6 +58,8 @@ All reviewed domains have comparison/source inventories and architecture plans. 
 The four native domains reviewed here contain 140 names in 2024 and 154 in 2025/2026, with one deprecated Commands entry included. This was the review baseline; the current Commands/Support implementation checkpoint above supersedes its pending-method statement. Output is tracked separately by its current coverage. IDEA's 24 managed overloads are a separate integration surface.
 
 ## 3. Recommended implementation sequence
+
+**Priority clarified 28 October 2026:** port currently implemented main-project functions first, including remaining overloads and managed workflows. Work on missing native-only APIs afterwards. The domain dependency order below remains guidance within that priority; unresolved native contracts are not implemented speculatively.
 
 1. **Approve the managed contracts and shared conventions.** Reuse compatible result/validation/value readers, use descriptive parameters, named status/data classes and owned collections. Keep native references internal and document lifecycle/units. Avoid public ref/out and tuples.
 2. **Implement Output foundations and Property orientation/offset prerequisites.** These enable reliable result extraction and coordinate transforms, including the later integration. Keep documented version differences isolated.

@@ -1,5 +1,15 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261028.1 - 28 October 2026 (prepared preview)
+
+Ported ten existing main-project Table functions: CreateReport, AddTable, GetReportCount, GetTableCount, GetCellValue, SetCellValue, SetColumnHeader, SetColumnUnitString, SetRowHeader and SaveReport. Added matching interface/adapter XML documentation, named creation/mutation receipts and managed regression tests. Corrected the reference XML coordinate convention to the documented native one-based rows and columns. Kept counts and cell strings directly usable and distinguished explicit empty native cell text from untouched output.
+
+Added independence and trademark notices to the repository, NuGet README and packaged NOTICE.md. Preserved the TensorStruct publisher identity, Srinivasa Rao Masanam author, original branding assets and compact README banner. The common Table service reuses strict native readers and retains caller-thread, captured-binding and original-exception behavior. Live native COM and report-storage qualification remain pending.
+
+Passed **6,635 offline tests**, including **187 Table cases**. Compiled and executed **1,242 installed-package XML examples**, including all twenty Table examples, plus an isolated Table write/read/save workflow against the exact archive. These checks do not certify live STAAD.Pro behavior or report storage.
+
+Prepared the package for manual upload; NuGet.org publication is not confirmed. Earlier archives are preserved.
+
 ## 1.0.0-preview.20261027.2 - 27 October 2026 (prepared preview)
 
 Reduced the logo-with-text banner in the repository and NuGet READMEs to **400 pixels wide**, retaining its original aspect ratio and automatic height (approximately 133 pixels). Preserved both supplied PNG assets and the embedded symbol-only package icon. Updated branding guidance and package verification to retain the compact banner sizing.

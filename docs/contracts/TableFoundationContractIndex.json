@@ -1,0 +1,842 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-28",
+  "mainProjectReadOnly": true,
+  "scope": "Ten existing main-project Table methods, adapted to managed input/result contracts. No new native-only function expansion.",
+  "sourceFiles": [
+    {
+      "file": "Adapters/Interfaces/IOSTable.cs",
+      "sha256": "51260f658904d33f79fa48be16cb68d884b1df8922a5e240c1bbd1a05ce380b9"
+    },
+    {
+      "file": "Adapters/Models/OSTableAdapter.cs",
+      "sha256": "9f6e306969847d74543a767c3c8c40bfc0e19a413d2b86a80c12372ccd3ae7ff"
+    }
+  ],
+  "functions": [
+    {
+      "managedName": "CreateReport",
+      "returnType": "TableOperationResult",
+      "parameters": "string title",
+      "nativeName": "CreateReport",
+      "source": [
+        {
+          "managedName": "CreateReport",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 55,
+          "name": "CreateReport",
+          "receiver": "ComObject",
+          "arguments": [
+            "title"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "VARIANT OSTableUI::CreateReport(const VARIANT FAR&szReportTitle)",
+          "parameters": [
+            {
+              "name": "szReportTitle",
+              "direction": "[in]",
+              "description": "A null terminated string containing the title of the report."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "VARIANT OSTableUI::CreateReport(const VARIANT FAR&szReportTitle)",
+          "parameters": [
+            {
+              "name": "szReportTitle",
+              "direction": "[in]",
+              "description": "A null terminated string containing the title of the report."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "VARIANT OSTableUI::CreateReport(const VARIANT FAR&szReportTitle)",
+          "parameters": [
+            {
+              "name": "szReportTitle",
+              "direction": "[in]",
+              "description": "A null terminated string containing the title of the report."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike AddTable, this creates a report, not a table. Native zero is failure and yields ReportId null; a positive ID is retained without deriving it from the report count. Does not add tables or save. Use the returned ReportId for subsequent operations.",
+      "example": "table.CreateReport(\"Design summary\")"
+    },
+    {
+      "managedName": "AddTable",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, string tableName, int rowCount, int columnCount",
+      "nativeName": "AddTable",
+      "source": [
+        {
+          "managedName": "AddTable",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 50,
+          "name": "AddTable",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableName",
+            "numRows",
+            "numCols"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "VARIANT OSTableUI::AddTable(const VARIANT FAR&ToReportNo,const VARIANT FAR&szTableName,const VARIANT FAR&RowNos,const VARIANT FAR&ColNos)",
+          "parameters": [
+            {
+              "name": "ToReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "szTableName",
+              "direction": "[in]",
+              "description": "Report Table Name(Type: String)."
+            },
+            {
+              "name": "RowNos",
+              "direction": "[in]",
+              "description": "row count of the specified table(Type: long)."
+            },
+            {
+              "name": "ColNos",
+              "direction": "[in]",
+              "description": "column count of the specified table(Type: long)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "VARIANT OSTableUI::AddTable(const VARIANT FAR&ToReportNo,const VARIANT FAR&szTableName,const VARIANT FAR&RowNos,const VARIANT FAR&ColNos)",
+          "parameters": [
+            {
+              "name": "ToReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "szTableName",
+              "direction": "[in]",
+              "description": "Report Table Name(Type: String)."
+            },
+            {
+              "name": "RowNos",
+              "direction": "[in]",
+              "description": "row count of the specified table(Type: long)."
+            },
+            {
+              "name": "ColNos",
+              "direction": "[in]",
+              "description": "column count of the specified table(Type: long)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "VARIANT OSTableUI::AddTable(const VARIANT FAR&ToReportNo,const VARIANT FAR&szTableName,const VARIANT FAR&RowNos,const VARIANT FAR&ColNos)",
+          "parameters": [
+            {
+              "name": "ToReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "szTableName",
+              "direction": "[in]",
+              "description": "Report Table Name(Type: String)."
+            },
+            {
+              "name": "RowNos",
+              "direction": "[in]",
+              "description": "row count of the specified table(Type: long)."
+            },
+            {
+              "name": "ColNos",
+              "direction": "[in]",
+              "description": "column count of the specified table(Type: long)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike CreateReport, this creates only a table within the supplied report. Native zero is failure and yields TableId null; a positive ID is retained, scoped to ReportId. Row/column counts are positive dimensions, not maximum indices. No headers, values or persistence are added automatically.",
+      "example": "table.AddTable(11, \"Members\", 3, 2)"
+    },
+    {
+      "managedName": "GetReportCount",
+      "returnType": "int",
+      "parameters": "",
+      "nativeName": "GetReportCount",
+      "source": [
+        {
+          "managedName": "GetReportCount",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 79,
+          "name": "GetReportCount",
+          "receiver": "ComObject",
+          "arguments": []
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "VARIANT OSTableUI::GetReportCount()",
+          "parameters": []
+        },
+        "2025": {
+          "signature": "VARIANT OSTableUI::GetReportCount()",
+          "parameters": []
+        },
+        "2026": {
+          "signature": "VARIANT OSTableUI::GetReportCount()",
+          "parameters": []
+        }
+      },
+      "differenceFromSimilarApis": "Unlike GetTableCount, this counts reports rather than tables within a report. Zero is a valid empty observation, not a failure flag. A count does not enumerate report IDs or establish that IDs are contiguous. No report is created, selected or saved.",
+      "example": "table.GetReportCount()"
+    },
+    {
+      "managedName": "GetTableCount",
+      "returnType": "int",
+      "parameters": "int reportId",
+      "nativeName": "GetTableCount",
+      "source": [
+        {
+          "managedName": "GetTableCount",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 84,
+          "name": "GetTableCount",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "VARIANT OSTableUI::GetTableCount(const VARIANT FAR&OfReportNo)",
+          "parameters": [
+            {
+              "name": "OfReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "VARIANT OSTableUI::GetTableCount(const VARIANT FAR&OfReportNo)",
+          "parameters": [
+            {
+              "name": "OfReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "VARIANT OSTableUI::GetTableCount(const VARIANT FAR&OfReportNo)",
+          "parameters": [
+            {
+              "name": "OfReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike GetReportCount, this is scoped to the supplied native report ID. Zero is accepted as the returned count; it does not independently prove that the report exists. No undocumented not-found status is inferred. Table IDs must come from creation or another native observation, not count arithmetic.",
+      "example": "table.GetTableCount(11)"
+    },
+    {
+      "managedName": "GetCellValue",
+      "returnType": "string",
+      "parameters": "int reportId, int tableId, int rowNumber, int columnNumber",
+      "nativeName": "GetCellValue",
+      "source": [
+        {
+          "managedName": "GetCellValue",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 72,
+          "name": "GetCellValue",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "cellId",
+            "iRow",
+            "iCol",
+            "ref value"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::GetCellValue(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol,VARIANT FAR&varValueStr)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, Start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column Number for specified table, Start from 1(Type: long)."
+            },
+            {
+              "name": "varValueStr",
+              "direction": "[out]",
+              "description": "Get cell value for specified cell in the table (Type: String)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::GetCellValue(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol,VARIANT FAR&varValueStr)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, Start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column Number for specified table, Start from 1(Type: long)."
+            },
+            {
+              "name": "varValueStr",
+              "direction": "[out]",
+              "description": "Get cell value for specified cell in the table (Type: String)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::GetCellValue(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol,VARIANT FAR&varValueStr)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, Start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column Number for specified table, Start from 1(Type: long)."
+            },
+            {
+              "name": "varValueStr",
+              "direction": "[out]",
+              "description": "Get cell value for specified cell in the table (Type: String)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike SetCellValue, this observes rather than writes. Native GetCellValue returns void and fills an internal reference output; the public API returns its validated string directly. An explicitly empty native string is valid and is distinct from a null, untouched or non-string output, which throws. Coordinates are one-based, correcting the reference interface's zero-based XML wording; no offset is added internally. No bounds, report existence or numeric/unit conversion is inferred.",
+      "example": "table.GetCellValue(11, 7, 1, 2)"
+    },
+    {
+      "managedName": "SetCellValue",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId, int rowNumber, int columnNumber, string value",
+      "nativeName": "SetCellValue",
+      "source": [
+        {
+          "managedName": "SetCellValue",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 154,
+          "name": "SetCellValue",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "cellId",
+            "iRow",
+            "iCol",
+            "value"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::SetCellValue(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol,const VARIANT FAR&varValue)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varValue",
+              "direction": "[in]",
+              "description": "set cell value for specified cell in the table(Type: String)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::SetCellValue(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol,const VARIANT FAR&varValue)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varValue",
+              "direction": "[in]",
+              "description": "set cell value for specified cell in the table(Type: String)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::SetCellValue(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&lCol,const VARIANT FAR&varValue)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varValue",
+              "direction": "[in]",
+              "description": "set cell value for specified cell in the table(Type: String)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike SetColumnHeader and SetRowHeader, this writes a body cell. Empty text is allowed for clearing. Exact text is forwarded with no numeric parsing, trimming or unit conversion. Coordinates are one-based; no offset or automatic resizing occurs. Native void completion produces InvokedWithoutAcknowledgement, not successful read-back or persistence evidence.",
+      "example": "table.SetCellValue(11, 7, 1, 2, \"42.5\")"
+    },
+    {
+      "managedName": "SetColumnHeader",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId, int columnNumber, string headerText",
+      "nativeName": "SetColumnHeader",
+      "source": [
+        {
+          "managedName": "SetColumnHeader",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 159,
+          "name": "SetColumnHeader",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableId",
+            "iCol",
+            "headerText"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::SetColumnHeader(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lCol,const VARIANT FAR&varHeader)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varHeader",
+              "direction": "[in]",
+              "description": "Column header for a specified column in table(Type: String)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::SetColumnHeader(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lCol,const VARIANT FAR&varHeader)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varHeader",
+              "direction": "[in]",
+              "description": "Column header for a specified column in table(Type: String)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::SetColumnHeader(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lCol,const VARIANT FAR&varHeader)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varHeader",
+              "direction": "[in]",
+              "description": "Column header for a specified column in table(Type: String)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike SetCellValue, this addresses header metadata for the column, not a body row. Unlike SetColumnUnitString, this supplies the column title rather than its unit label. Empty text clears the title. No automatic value formatting or save occurs; native void completion is unacknowledged.",
+      "example": "table.SetColumnHeader(11, 7, 2, \"Axial force\")"
+    },
+    {
+      "managedName": "SetColumnUnitString",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId, int columnNumber, string unitString",
+      "nativeName": "SetColumnUnitString",
+      "source": [
+        {
+          "managedName": "SetColumnUnitString",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 164,
+          "name": "SetColumnUnitString",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableId",
+            "iCol",
+            "unitString"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::SetColumnUnitString(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lCol,const VARIANT FAR&varUnitString)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varUnitString",
+              "direction": "[in]",
+              "description": "set unit for the specific column of a specified table(Type: String)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::SetColumnUnitString(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lCol,const VARIANT FAR&varUnitString)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varUnitString",
+              "direction": "[in]",
+              "description": "set unit for the specific column of a specified table(Type: String)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::SetColumnUnitString(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lCol,const VARIANT FAR&varUnitString)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lCol",
+              "direction": "[in]",
+              "description": "column number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varUnitString",
+              "direction": "[in]",
+              "description": "set unit for the specific column of a specified table(Type: String)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike SetColumnHeader, this supplies the unit label. It does not change model input units, convert stored values or validate dimensional consistency. Empty text clears the label. Use Root unit setters for native model input-unit changes. Native void completion does not prove persistence.",
+      "example": "table.SetColumnUnitString(11, 7, 2, \"kN\")"
+    },
+    {
+      "managedName": "SetRowHeader",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId, int tableId, int rowNumber, string headerText",
+      "nativeName": "SetRowHeader",
+      "source": [
+        {
+          "managedName": "SetRowHeader",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 169,
+          "name": "SetRowHeader",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId",
+            "tableId",
+            "iRow",
+            "headerText"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::SetRowHeader(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&varHeader)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varHeader",
+              "direction": "[in]",
+              "description": "set header for the specific row of a specified table(Type: String)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::SetRowHeader(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&varHeader)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varHeader",
+              "direction": "[in]",
+              "description": "set header for the specific row of a specified table(Type: String)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::SetRowHeader(const VARIANT FAR&ReportNo,const VARIANT FAR&TableNo,const VARIANT FAR&lRow,const VARIANT FAR&varHeader)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Report number(Type: int), It can be obtained be calling OSTableUI::CreateReport ."
+            },
+            {
+              "name": "TableNo",
+              "direction": "[in]",
+              "description": "Table number in specified report (Type: long), It can be obtained be calling OSTableUI::AddTable ."
+            },
+            {
+              "name": "lRow",
+              "direction": "[in]",
+              "description": "row number for specified table, start from 1(Type: long)."
+            },
+            {
+              "name": "varHeader",
+              "direction": "[in]",
+              "description": "set header for the specific row of a specified table(Type: String)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "Unlike SetColumnHeader, this labels a row rather than a column. Unlike SetCellValue, it does not address a body column or replace a body cell. Empty text clears the label. No automatic value formatting, resizing or save occurs; native void completion is unacknowledged.",
+      "example": "table.SetRowHeader(11, 7, 1, \"Member 17\")"
+    },
+    {
+      "managedName": "SaveReport",
+      "returnType": "TableOperationResult",
+      "parameters": "int reportId",
+      "nativeName": "SaveReport",
+      "source": [
+        {
+          "managedName": "SaveReport",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSTableAdapter.cs",
+          "line": 99,
+          "name": "SaveReport",
+          "receiver": "ComObject",
+          "arguments": [
+            "reportId"
+          ]
+        }
+      ],
+      "contractsByYear": {
+        "2024": {
+          "signature": "void OSTableUI::SaveReport(const VARIANT FAR&ReportNo)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Providing the report number identifying the STAAD report which is to be saved(Type: Int)."
+            }
+          ]
+        },
+        "2025": {
+          "signature": "void OSTableUI::SaveReport(const VARIANT FAR&ReportNo)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Providing the report number identifying the STAAD report which is to be saved(Type: Int)."
+            }
+          ]
+        },
+        "2026": {
+          "signature": "void OSTableUI::SaveReport(const VARIANT FAR&ReportNo)",
+          "parameters": [
+            {
+              "name": "ReportNo",
+              "direction": "[in]",
+              "description": "Providing the report number identifying the STAAD report which is to be saved(Type: Int)."
+            }
+          ]
+        }
+      },
+      "differenceFromSimilarApis": "This is the main-source SaveReport workflow, scoped to one report and its contained tables. It does not save the STAAD model through Root, save all reports or promise file-system durability. Native void completion records InvokedWithoutAcknowledgement, with no read-back or success flag; native dialogs and storage behavior remain STAAD responsibilities.",
+      "example": "table.SaveReport(11)"
+    }
+  ],
+  "validationLimits": [
+    "Offline native-signature fixtures do not certify live COM marshaling, storage persistence or native licensing.",
+    "2024 vendor ABI was not inspected; common contract is based on installed help and matching 2025/2026 metadata."
+  ]
+}

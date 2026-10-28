@@ -138,7 +138,7 @@ namespace StaadPro.Interop.Models
         public dynamic RawTable { get; private set; }
 
         /// <summary>Gets the managed Table adapter.</summary>
-        /// <remarks>Binding placeholder only: domain functions remain unported. Null when the native interface is unavailable.</remarks>
+        /// <remarks>Provides typed report/table creation, counts, cell/header editing and report saving. Formatting and other reference functions remain pending. Null when the native interface is unavailable.</remarks>
         public IOSTable Table { get; private set; }
 
         /// <summary>Gets the native View automation interface.</summary>

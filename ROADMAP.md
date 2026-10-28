@@ -8,7 +8,9 @@ Our mission is to provide the structural engineering and computational design co
 
 ## Current implementation and next steps — 27 October 2026
 
-**Prepared preview:** 1.0.0-preview.20261027.2 (compact README banner; same managed API scope as 1.0.0-preview.20261027.1) includes the completed 35 Commands/Support/Design methods and adopted logo assets. Release validation passed 6,448 offline tests and 1,222 installed-package XML examples. The source, documentation and package remain a preview; public NuGet.org availability is not confirmed.
+**Latest prepared preview:** 1.0.0-preview.20261028.1 adds ten existing main-project Table functions and independence/trademark notices. Table covers 10/24 native names, with 19/29 main-source overloads still pending. Complete main-source functions before adding missing native-only APIs. See [Table report foundations](docs/Table-Report-Foundations.md). Live native report qualification remains separate.
+
+**Previous prepared preview:** 1.0.0-preview.20261027.2 (compact README banner; same managed API scope as 1.0.0-preview.20261027.1) includes the completed 35 Commands/Support/Design methods and adopted logo assets. Release validation passed 6,448 offline tests and 1,222 installed-package XML examples. The source, documentation and package remain a preview; public NuGet.org availability is not confirmed.
 
 
 **Design foundation increment:** Added ten common Design methods reaching five native names, adapting all seven main-source common workflows plus a brief-code query and two query-batch overloads. Extended GROUP and forty union Design native names remain pending. Passed **6,448 offline tests**, including 128 Design cases, and compiled/executed all **70 new guarded XML examples** across the completed increments. See [Design contracts and usage](docs/Design-Porting.md) and [the interrupted-work audit](docs/reports/Porting-Continuation-Audit-2026-10-27.md).
@@ -28,7 +30,7 @@ The preceding **Output** increment added 25 documented routes, bringing coverage
 
 **Reminder checkpoint:** before further Property expansion or the next public NuGet release, remind the user about **fifteen supplemental Property discovery candidates** and the **nine documented Property gates**. Supplemental candidates were expressly excluded from this increment and need separate review/approval. This is a durable workflow checkpoint, not a scheduled notification.
 
-Next review the remaining thirteen Output contracts, eight Support gates and Commands steel-catalog contracts in dependency order, continue the Design extended-GROUP/Chinese-steel work, then Table/View and IDEA StatiCa following the [remaining-adapter sequence](docs/reports/OpenSTAAD-Remaining-Adapters-Review-Index.md#3-recommended-implementation-sequence). Preserve the recorded approval requirements for parked Load and Property work. Preserve one non-partial adapter per domain and internal common/version-policy services. Native qualification is separate from source implementation.
+Next complete existing main-source methods and managed workflows before expanding native-only API coverage: review remaining Commands catalog conveniences, Support and Output source workflows, then continue Table/View and IDEA StatiCa in the [remaining-adapter sequence](docs/reports/OpenSTAAD-Remaining-Adapters-Review-Index.md#3-recommended-implementation-sequence). Current Table coverage is ten of 29 main-source overloads. Native-only additions follow reference parity. Preserve the approval requirements for parked Load and Property work, one non-partial adapter per domain, and internal common/version-policy services. Native qualification is separate from source implementation.
 
 ### Parked Load work — explicit approval required
 

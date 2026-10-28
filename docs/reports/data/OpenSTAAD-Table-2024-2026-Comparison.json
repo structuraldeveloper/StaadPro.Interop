@@ -13,18 +13,21 @@
     "mainPublicAdapterOverloads": 29,
     "mainPrivateAdapterMethods": 0,
     "mainDistinctNativeTargets": 24,
-    "currentTypedDomainMethods": 0,
+    "currentTypedDomainMethods": 10,
     "missingMainNativeTargets": [],
     "added2025": [],
     "signatureChanges": [],
     "nonExampleTextChanges": [],
-    "exampleChanges2024To2025": 24
+    "exampleChanges2024To2025": 24,
+    "currentTypedNativeNames": 10,
+    "remainingNativeNames": 14,
+    "remainingMainInterfaceOverloads": 19
   },
   "functions": [
     {
       "name": "CreateReport",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableCreationResult with ReportId/TableId and native creation status; named title, tableName, rowCount and columnCount inputs.",
       "versions": {
@@ -130,12 +133,13 @@
             "title"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; adapted existing read-only main Table method."
     },
     {
       "name": "SaveReport",
       "phase": "T4",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SaveReport; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -241,7 +245,8 @@
             "reportId"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; adapted existing read-only main Table method."
     },
     {
       "name": "SaveReportAll",
@@ -304,7 +309,7 @@
     {
       "name": "GetReportCount",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableCountResult GetReportCount; Count and completion evidence, optional reportId as documented.",
       "versions": {
@@ -357,12 +362,13 @@
           "receiver": "ComObject",
           "arguments": []
         }
-      ]
+      ],
+      "implementation": "Common TableService; adapted existing read-only main Table method."
     },
     {
       "name": "AddTable",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableCreationResult with ReportId/TableId and native creation status; named title, tableName, rowCount and columnCount inputs.",
       "versions": {
@@ -606,7 +612,8 @@
             "numCols"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; adapted existing read-only main Table method."
     },
     {
       "name": "RenameTable",
@@ -1488,7 +1495,7 @@
     {
       "name": "GetTableCount",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableCountResult GetTableCount; Count and completion evidence, optional reportId as documented.",
       "versions": {
@@ -1594,12 +1601,13 @@
             "reportId"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; adapted existing read-only main Table method."
     },
     {
       "name": "GetCellValue",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableCellValueResult GetCellValue(int reportId, int tableId, int rowNumber, int columnNumber); one-based coordinates; output Value string plus completion evidence.",
       "versions": {
@@ -1889,12 +1897,13 @@
             "ref value"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; adapted existing read-only main Table method."
     },
     {
       "name": "SetCellValue",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellValue; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -2184,12 +2193,13 @@
             "value"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; adapted existing read-only main Table method."
     },
     {
       "name": "SetColumnHeader",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetColumnHeader; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -2433,12 +2443,13 @@
             "headerText"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; adapted existing read-only main Table method."
     },
     {
       "name": "SetColumnUnitString",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetColumnUnitString; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -2682,12 +2693,13 @@
             "unitString"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; adapted existing read-only main Table method."
     },
     {
       "name": "SetRowHeader",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetRowHeader; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -2931,7 +2943,8 @@
             "headerText"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; adapted existing read-only main Table method."
     },
     {
       "name": "SetCellTextColor",
@@ -10028,5 +10041,38 @@
       "bytes": 241,
       "sha256": "53eee7bece795ba9cc89873207622929264736a824b4746bbb25518467eb55d4"
     }
-  ]
+  ],
+  "implementationUpdate": {
+    "date": "2026-10-28",
+    "managedMethods": 10,
+    "nativeMappings": 10,
+    "referenceOverloadsPorted": 10,
+    "pendingReferenceOverloads": 19,
+    "pendingNativeNames": [
+      "SaveReportAll",
+      "RenameTable",
+      "DeleteReport",
+      "DeleteTable",
+      "ResizeTable",
+      "SaveTable",
+      "SetCellTextColor",
+      "SetCellTextBold",
+      "SetCellTextItalic",
+      "SetCellTextUnderline",
+      "SetCellTextHorzAlignment",
+      "SetCellTextVertAlignment",
+      "SetCellTextSize",
+      "SetCellTextSizeAll"
+    ],
+    "sourceMainReadOnly": true,
+    "guide": "docs/Table-Report-Foundations.md",
+    "validationLimits": "Managed fixtures and installed-package examples; live COM and native report storage remain unqualified.",
+    "validation": {
+      "offlineTestsPassed": 6635,
+      "newTableTests": 187,
+      "packagedXmlExamples": 1242,
+      "tableXmlExamples": 20,
+      "nativeRuntimeValidation": false
+    }
+  }
 }
