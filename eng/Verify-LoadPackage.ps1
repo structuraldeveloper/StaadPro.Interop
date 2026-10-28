@@ -75,8 +75,27 @@ try {
     }
     $bannerEntry = $archive.GetEntry('images/logo-with-text.png')
     if ($null -eq $bannerEntry -or $bannerEntry.Length -lt 1) { throw 'The package must include the adopted logo with text.' }
-    if (!$readme.Contains('<img src="https://raw.githubusercontent.com/structuraldeveloper/StaadPro.Interop/main/logo-with-text.png" alt="StaadPro.Interop" width="400" />')) {
-        throw 'The NuGet README must use the adopted banner through its supported absolute image URL with a 400-pixel display width.'
+    $markdownBanner = '![StaadPro.Interop](https://raw.githubusercontent.com/structuraldeveloper/StaadPro.Interop/main/docs/images/logo-with-text-400.png)'
+    if (!$readme.StartsWith($markdownBanner) -or $readme -match '(?i)<img\b|&lt;img\b') {
+        throw 'The NuGet README must use supported Markdown image syntax; inline HTML is disabled by NuGet.'
+    }
+    $compactEntry = $archive.GetEntry('images/logo-with-text-400.png')
+    if ($null -eq $compactEntry -or $compactEntry.Length -lt 1) { throw 'Missing compact README banner.' }
+    $compactStream = $compactEntry.Open()
+    $compactBuffer = [IO.MemoryStream]::new()
+    $compactImage = $null
+    try {
+        $compactStream.CopyTo($compactBuffer)
+        $compactBuffer.Position = 0
+        $compactImage = [Drawing.Image]::FromStream($compactBuffer)
+        if ($compactImage.RawFormat.Guid -ne [Drawing.Imaging.ImageFormat]::Png.Guid -or $compactImage.Width -ne 400 -or $compactImage.Height -ne 133) {
+            throw 'The README banner must be the compact 400 by 133 PNG rendition.'
+        }
+    }
+    finally {
+        if ($null -ne $compactImage) { $compactImage.Dispose() }
+        $compactBuffer.Dispose()
+        $compactStream.Dispose()
     }
     if ($metadata.repository.url -ne 'https://github.com/structuraldeveloper/StaadPro.Interop') { throw 'Missing repository metadata.' }
     if ([string]$metadata.authors -cne 'Srinivasa Rao Masanam') { throw 'Incorrect package author.' }

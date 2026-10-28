@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/structuraldeveloper/StaadPro.Interop/main/logo-with-text.png" alt="StaadPro.Interop" width="400" />
+![StaadPro.Interop](https://raw.githubusercontent.com/structuraldeveloper/StaadPro.Interop/main/docs/images/logo-with-text-400.png)
 
 # StaadPro.Interop
 
@@ -6,7 +6,7 @@ A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD
 
 ## Version 1.0.0-preview.20261028.1
 
-This preview ports ten existing main-project Table functions for report/table creation, counts, cell values, headers, unit labels and report saving. Added comparative XML documentation, typed creation/mutation receipts and an independence/trademark notice included in the repository and archive. The existing domain APIs and compact logo banner are retained.
+This preview ports ten existing main-project Table functions for report/table creation, counts, cell values, headers, unit labels and report saving. Added comparative XML documentation, typed creation/mutation receipts and an independence/trademark notice included in the repository and archive. The existing domain APIs are retained. The banner uses a compact 400-pixel PNG with supported Markdown image syntax.
 
 Passed **6,635 offline tests**, including **187 Table cases**, and **1,242 installed-package XML examples**, including all twenty Table examples and an isolated report write/read/save workflow. Managed verification does not certify live COM, native UI/licensing or report persistence.
 

@@ -319,6 +319,9 @@ This project is licensed under the [MIT License](LICENSE).
 
 This preview ports ten existing main-project Table functions for report/table creation, counts, cell values, headers, unit labels and report saving. Passed **6,635 offline tests** and **1,242 installed-package XML examples**. See the [complete contracts and example](docs/Table-Report-Foundations.md).
 
+
+The NuGet README uses a compact 400 × 133 PNG through supported Markdown image syntax. Both original logos remain unchanged.
+
 ## Independence and trademarks
 
 StaadPro.Interop is an independent open-source project published by TensorStruct. Neither this project, its repository, nor its NuGet packages are affiliated with, sponsored by, endorsed by, or officially supported by Bentley Systems, Incorporated or its subsidiaries or affiliates.

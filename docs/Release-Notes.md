@@ -2,6 +2,8 @@
 
 ## 1.0.0-preview.20261028.1 - 28 October 2026 (prepared preview)
 
+Corrected the NuGet README banner to use supported Markdown image syntax and a 400 × 133 PNG rendition. Preserved both original logo assets and the symbol-only package icon. Rebuilt this prepared preview under the same version at the package owner's request; API behavior is unchanged.
+
 Ported ten existing main-project Table functions: CreateReport, AddTable, GetReportCount, GetTableCount, GetCellValue, SetCellValue, SetColumnHeader, SetColumnUnitString, SetRowHeader and SaveReport. Added matching interface/adapter XML documentation, named creation/mutation receipts and managed regression tests. Corrected the reference XML coordinate convention to the documented native one-based rows and columns. Kept counts and cell strings directly usable and distinguished explicit empty native cell text from untouched output.
 
 Added independence and trademark notices to the repository, NuGet README and packaged NOTICE.md. Preserved the TensorStruct publisher identity, Srinivasa Rao Masanam author, original branding assets and compact README banner. The common Table service reuses strict native readers and retains caller-thread, captured-binding and original-exception behavior. Live native COM and report-storage qualification remain pending.
