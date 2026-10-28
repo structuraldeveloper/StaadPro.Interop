@@ -1,5 +1,7 @@
 # Report and table foundations
 
+**Completion update:** all 29/29 main-source Table overloads and all 24/24 reviewed native names are implemented. The checkpoint below records an earlier increment; [current contracts](Table-Completion-and-View-Foundations.md) include color, alignment and table-wide sizing.
+
 **Current coverage:** after the [lifecycle/typography increment](Table-Lifecycle-and-Formatting.md), twenty of 29 source overloads and twenty of 24 native names are implemented. Nine source overloads remain. The foundation checkpoint below records the original ten-method increment.
 
 Implemented 28 October 2026. These **ten methods** adapt existing functions in the read-only main `IOSTable` / `OSTableAdapter`; all ten have a matching main-source implementation. They reach **10/24 documented Table native names**. Nineteen of the main interface's 29 overloads remain pending. Missing native-only APIs follow completion of the main-source porting work.

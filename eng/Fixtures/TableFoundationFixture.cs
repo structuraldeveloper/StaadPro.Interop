@@ -58,6 +58,10 @@ namespace PackageVerification
             public void SetCellTextItalic(object report, object table, object row, object column) => Record("SetCellTextItalic", null, report, table, row, column);
             public void SetCellTextUnderline(object report, object table, object row, object column) => Record("SetCellTextUnderline", null, report, table, row, column);
             public void SetCellTextSize(object report, object table, object row, object column, object size) => Record("SetCellTextSize", null, report, table, row, column, size);
+            public void SetCellTextColor(object report, object table, object row, object column, object red, object green, object blue) => Record("SetCellTextColor", null, report, table, row, column, red, green, blue);
+            public void SetCellTextHorzAlignment(object report, object table, object row, object column, object alignment) => Record("SetCellTextHorzAlignment", null, report, table, row, column, alignment);
+            public void SetCellTextVertAlignment(object report, object table, object row, object column, object alignment) => Record("SetCellTextVertAlignment", null, report, table, row, column, alignment);
+            public void SetCellTextSizeAll(object report, object table, object size) => Record("SetCellTextSizeAll", null, report, table, size);
         }
     }
 }

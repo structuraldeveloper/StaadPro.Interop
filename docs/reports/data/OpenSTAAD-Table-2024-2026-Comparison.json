@@ -13,15 +13,15 @@
     "mainPublicAdapterOverloads": 29,
     "mainPrivateAdapterMethods": 0,
     "mainDistinctNativeTargets": 24,
-    "currentTypedDomainMethods": 20,
+    "currentTypedDomainMethods": 29,
     "missingMainNativeTargets": [],
     "added2025": [],
     "signatureChanges": [],
     "nonExampleTextChanges": [],
     "exampleChanges2024To2025": 24,
-    "currentTypedNativeNames": 20,
-    "remainingNativeNames": 4,
-    "remainingMainInterfaceOverloads": 9
+    "currentTypedNativeNames": 24,
+    "remainingNativeNames": 0,
+    "remainingMainInterfaceOverloads": 0
   },
   "functions": [
     {
@@ -134,7 +134,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SaveReport",
@@ -246,7 +246,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SaveReportAll",
@@ -305,7 +305,7 @@
           "arguments": []
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table lifecycle/typography method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "GetReportCount",
@@ -364,7 +364,7 @@
           "arguments": []
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "AddTable",
@@ -614,7 +614,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "RenameTable",
@@ -818,7 +818,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table lifecycle/typography method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "DeleteReport",
@@ -930,7 +930,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table lifecycle/typography method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "DeleteTable",
@@ -1088,7 +1088,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table lifecycle/typography method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "ResizeTable",
@@ -1338,7 +1338,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table lifecycle/typography method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SaveTable",
@@ -1496,7 +1496,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table lifecycle/typography method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "GetTableCount",
@@ -1608,7 +1608,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "GetCellValue",
@@ -1904,7 +1904,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellValue",
@@ -2200,7 +2200,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetColumnHeader",
@@ -2450,7 +2450,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetColumnUnitString",
@@ -2700,7 +2700,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetRowHeader",
@@ -2950,12 +2950,12 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextColor",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextColor; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -3337,7 +3337,8 @@
             "blue"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextBold",
@@ -3587,7 +3588,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table lifecycle/typography method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextItalic",
@@ -3837,7 +3838,7 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table lifecycle/typography method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextUnderline",
@@ -4087,12 +4088,12 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table lifecycle/typography method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextHorzAlignment",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextHorzAlignment; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -4382,12 +4383,13 @@
             "(int)alignment"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextVertAlignment",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextVertAlignment; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -4677,7 +4679,8 @@
             "(int)alignment"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextSize",
@@ -4973,12 +4976,12 @@
           ]
         }
       ],
-      "implementation": "Common TableService; adapted existing read-only main Table lifecycle/typography method."
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextSizeAll",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextSizeAll; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -5176,7 +5179,8 @@
             "fontSize"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     }
   ],
   "differences": [
@@ -10054,28 +10058,24 @@
   ],
   "implementationUpdate": {
     "date": "2026-10-28",
-    "managedMethods": 20,
-    "nativeMappings": 20,
-    "newManagedMethods": 10,
-    "referenceOverloadsPorted": 20,
-    "pendingReferenceOverloads": 9,
-    "pendingNativeNames": [
-      "SetCellTextColor",
-      "SetCellTextHorzAlignment",
-      "SetCellTextVertAlignment",
-      "SetCellTextSizeAll"
-    ],
+    "managedMethods": 29,
+    "nativeMappings": 24,
+    "newManagedMethods": 9,
+    "referenceOverloadsPorted": 29,
+    "pendingReferenceOverloads": 0,
+    "pendingNativeNames": [],
     "sourceMainReadOnly": true,
-    "guide": "docs/Table-Lifecycle-and-Formatting.md",
+    "guide": "docs/Table-Completion-and-View-Foundations.md",
     "validation": {
-      "offlineTestsPassed": 6780,
-      "tableTestsPassed": 332,
-      "additionalTableCases": 145,
+      "offlineTestsPassed": 6944,
+      "tableAndViewTestsPassed": 496,
+      "newCases": 164,
       "nativeRuntimeValidation": false,
-      "packagedXmlExamples": 1262,
-      "tableXmlExamples": 40
+      "packagedXmlExamples": 1282,
+      "tableXmlExamples": 58,
+      "viewXmlExamples": 2
     },
-    "validationLimits": "Managed fixtures and installed-package examples; live COM, UI context and native report storage remain unqualified."
+    "limits": "Source coverage is complete for the reviewed main interface/native names; live COM, UI/report readiness and storage acceptance remain separate."
   },
   "implementationHistory": [
     {
@@ -10110,6 +10110,31 @@
         "tableXmlExamples": 20,
         "nativeRuntimeValidation": false
       }
+    },
+    {
+      "date": "2026-10-28",
+      "managedMethods": 20,
+      "nativeMappings": 20,
+      "newManagedMethods": 10,
+      "referenceOverloadsPorted": 20,
+      "pendingReferenceOverloads": 9,
+      "pendingNativeNames": [
+        "SetCellTextColor",
+        "SetCellTextHorzAlignment",
+        "SetCellTextVertAlignment",
+        "SetCellTextSizeAll"
+      ],
+      "sourceMainReadOnly": true,
+      "guide": "docs/Table-Lifecycle-and-Formatting.md",
+      "validation": {
+        "offlineTestsPassed": 6780,
+        "tableTestsPassed": 332,
+        "additionalTableCases": 145,
+        "nativeRuntimeValidation": false,
+        "packagedXmlExamples": 1262,
+        "tableXmlExamples": 40
+      },
+      "validationLimits": "Managed fixtures and installed-package examples; live COM, UI context and native report storage remain unqualified."
     }
   ]
 }

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-28",
+  "mainProjectReadOnly": true,
+  "sourceFiles": [
+    {
+      "file": "Adapters/Interfaces/IOSView.cs",
+      "sha256": "f18ef805684c4f5e25b7385342e315a1fe90952db031756ebad44c197ba5c5f0"
+    },
+    {
+      "file": "Adapters/Models/OSViewAdapter.cs",
+      "sha256": "3c2e69209344385210d6494f94937259f3bc5557736fd69652d9ca973f6447b2"
+    }
+  ],
+  "functions": [
+    {
+      "managedName": "ShowFront",
+      "returnType": "ViewOperationResult",
+      "nativeName": "ShowFront",
+      "parameters": "",
+      "source": [
+        {
+          "managedName": "ShowFront",
+          "file": "D:\\04. ReInvented\\MainProjects\\SRi.XamlUIThickenerApp\\src\\ReInvented.StaadPro.Interop\\Adapters\\Models\\OSViewAdapter.cs",
+          "line": 109,
+          "name": "ShowFront",
+          "receiver": "ComObject",
+          "arguments": []
+        }
+      ],
+      "contractsByYear": {
+        "2024": "void OSViewUI::ShowFront()",
+        "2025": "void OSViewUI::ShowFront()",
+        "2026": "void OSViewUI::ShowFront()"
+      }
+    }
+  ],
+  "nativeRuntimeQualified": false
+}

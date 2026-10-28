@@ -24,7 +24,8 @@ namespace StaadPro.Interop.Tests.Adapter
     [TestFixture]
     public class OSTableFoundationTests
     {
-        private static MethodInfo[] Methods => typeof(IOSTable).GetMethods().Where(m => !m.IsSpecialName).OrderBy(m => m.Name).ToArray();
+        private static readonly string[] CompletionNames = { "SetCellTextColor", "SetCellTextColorHsl", "SetCellTextHorizontalAlignment", "SetCellTextVerticalAlignment", "SetCellTextSizeForTable" };
+        private static MethodInfo[] Methods => typeof(IOSTable).GetMethods().Where(m => !m.IsSpecialName && !CompletionNames.Contains(m.Name)).OrderBy(m => m.Name).ToArray();
         public static IEnumerable<TestCaseData> Ports => Methods.Select(m => new TestCaseData(m.Name));
         private static string NativeName(string name) => name == "SaveAllReports" ? "SaveReportAll" : name;
         private static object[] Arguments(MethodInfo m) => m.GetParameters().Select(p =>
@@ -39,7 +40,7 @@ namespace StaadPro.Interop.Tests.Adapter
         }
 
         [Test]
-        public void ExactlyTwentySourcePortsHaveNoPublicReferenceOrTupleArguments()
+        public void FoundationAndLifecycleSubsetHasTwentySourcePortsWithoutPublicReferenceOrTupleArguments()
         {
             Assert.That(Methods.Length, Is.EqualTo(20));
             Assert.That(typeof(OSTableAdapter).IsSealed, Is.True);
@@ -276,12 +277,12 @@ namespace StaadPro.Interop.Tests.Adapter
         }
 
         [Test]
-        public void NullBindingsAreRejectedAndContractIndexMatchesAllTwentyPorts()
+        public void NullBindingsAreRejectedAndContractIndexMatchesTheFoundationAndLifecycleSubset()
         {
             Assert.Throws<ArgumentNullException>(() => new OSTableAdapter(null));
             using (var w = new OpenStaadWrapper(new Root())) Assert.Throws<ArgumentNullException>(() => new OSTableAdapter(w));
             var index = JObject.Parse(File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, "ContractReview", "TableFoundationContractIndex.json")));
-            Assert.That(index["functions"].Select(f => (string)f["managedName"]).OrderBy(s => s), Is.EqualTo(Methods.Select(m => m.Name)));
+            Assert.That(index["functions"].Select(f => (string)f["managedName"]).Where(n => !CompletionNames.Contains(n)).OrderBy(s => s), Is.EqualTo(Methods.Select(m => m.Name)));
             Assert.That((bool)index["mainProjectReadOnly"], Is.True);
         }
 

@@ -1,5 +1,7 @@
 # Table lifecycle and cell typography
 
+**Completion update:** all 29/29 main-source Table overloads and all 24/24 reviewed native names are implemented. The checkpoint below records an earlier increment; [current contracts](Table-Completion-and-View-Foundations.md) include color, alignment and table-wide sizing.
+
 Implemented 28 October 2026. This increment ports **ten existing main-project methods** after the first ten [report/table foundations](Table-Report-Foundations.md). The read-only main source is unchanged. `IOSTable` and the single non-partial `OSTableAdapter` now expose **20 of 29 main-interface overloads**, reaching **20 of 24 documented native names**. Nine source overloads and four native names remain.
 
 ## Exact contracts and differences

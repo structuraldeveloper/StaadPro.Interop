@@ -2,7 +2,7 @@
 
 # StaadPro.Interop
 
-**Current source increment:** Ported ten further existing main-project Table methods for report/table deletion, renaming, resizing, scoped saves and basic cell typography. The adapter now exposes 20 of 29 reference overloads and covers 20/24 native names; nine source overloads remain. Reused existing result/status types and shared native service. See [exact contracts and examples](docs/Table-Lifecycle-and-Formatting.md). Prepared preview **1.0.0-preview.20261028.2**. Passed **6,780 offline tests** and **1,262 installed-package XML examples**.
+**Current source increment:** Completed all 29 main-project Table overloads with the final nine color/alignment/table-size ports, and added View ShowFront as the tenth function. Table covers all 24 reviewed native names; View has 69 main-source overloads pending. See [contracts and examples](docs/Table-Completion-and-View-Foundations.md). Prepared preview **1.0.0-preview.20261028.3**. Passed 6,944 offline tests and 1,282 installed-package XML examples.
 
 [![Build Status](https://github.com/structuraldeveloper/StaadPro.Interop/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/structuraldeveloper/StaadPro.Interop/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -16,9 +16,9 @@ Use the [installation guide](docs/Installation.md) for public/local NuGet feeds 
 
 ---
 
-## Latest prepared preview - 1.0.0-preview.20261028.2
+## Latest prepared preview - 1.0.0-preview.20261028.3
 
-Ported ten further existing main-project Table methods for report/table deletion, renaming, resizing, scoped saves and basic cell typography. The adapter now exposes 20 of 29 reference overloads and covers 20/24 native names; nine source overloads remain. Reused existing result/status types and shared native service. See [exact contracts and examples](docs/Table-Lifecycle-and-Formatting.md). Passed **6,780 offline tests** and **1,262 installed-package XML examples**.
+Completed all 29 main-project Table overloads with the final nine color/alignment/table-size ports, and added View ShowFront as the tenth function. Table covers all 24 reviewed native names; View has 69 main-source overloads pending. See [contracts and examples](docs/Table-Completion-and-View-Foundations.md).
 
 ## Earlier prepared preview - 1.0.0-preview.20261027.1
 
@@ -293,8 +293,8 @@ dotnet build StaadPro.Interop.sln -c Release
 dotnet test tests/StaadPro.Interop.Tests/StaadPro.Interop.Tests.csproj -c Release
 
 # Build and verify an installable preview, including packaged IntelliSense examples
-dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261028.2 -o artifacts/release
-./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261028.2.nupkg
+dotnet pack src/StaadPro.Interop/StaadPro.Interop.csproj -c Release -p:PackageVersion=1.0.0-preview.20261028.3 -o artifacts/release
+./eng/Verify-LoadPackage.ps1 -PackagePath artifacts/release/StaadPro.Interop.1.0.0-preview.20261028.3.nupkg
 ```
 
 ---
@@ -325,6 +325,10 @@ The NuGet README uses a compact 400 × 133 PNG through supported Markdown image 
 ## Table lifecycle and typography
 
 Ported ten further existing main-project Table methods for report/table deletion, renaming, resizing, scoped saves and basic cell typography. The adapter now exposes 20 of 29 reference overloads and covers 20/24 native names; nine source overloads remain. Reused existing result/status types and shared native service. See [exact contracts and examples](docs/Table-Lifecycle-and-Formatting.md).
+
+## Table completion and View foundation
+
+Completed all 29 main-project Table overloads with the final nine color/alignment/table-size ports, and added View ShowFront as the tenth function. Table covers all 24 reviewed native names; View has 69 main-source overloads pending. See [contracts and examples](docs/Table-Completion-and-View-Foundations.md).
 
 ## Independence and trademarks
 

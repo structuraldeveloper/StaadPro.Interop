@@ -1,5 +1,7 @@
 # Table implementation status and porting guide
 
+**Current implementation, 28 October 2026:** All 29 main-project Table overloads are adapted and all 24 reviewed native Table names are dispatched. View now ports ShowFront (1/70 source overloads; 1/67 native names). Native-only expansion follows remaining main-source work. See [completion contracts and usage](Table-Completion-and-View-Foundations.md). This coverage is not live COM or report/UI qualification.
+
 **Latest implementation checkpoint, 28 October 2026:** Twenty existing main-source Table overloads are implemented, reaching 20/24 native names. The latest ten cover report/table deletion, renaming/resizing, scoped saves and cell typography. Nine source overloads remain. Passed 6,780 offline tests, including 332 Table cases. See [lifecycle and formatting contracts](Table-Lifecycle-and-Formatting.md). Main-source parity precedes native-only expansion.
 
 **Implementation checkpoint, 28 October 2026:** Ported ten existing main-project Table methods, reaching 10/24 documented native names. Nineteen of 29 main-source overloads remain pending. Main-source parity has priority over native-only expansion. See [report/table contracts and usage](Table-Report-Foundations.md). The review baseline below is historical.

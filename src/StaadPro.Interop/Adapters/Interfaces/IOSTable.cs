@@ -1,10 +1,12 @@
+using System.Windows.Media;
+using StaadPro.Interop.Enums.Table;
 using System;
 using StaadPro.Interop.Models.Table;
 
 namespace StaadPro.Interop.Adapters.Interfaces
 {
     /// <summary>Provides typed report lifecycle, table editing, observation and basic cell typography operations.</summary>
-    /// <remarks>Rows and columns are one-based. Creation acknowledgements and native void completion have distinct results. Includes report lifecycle and basic cell typography; color, alignment and table-wide font sizing remain separate ports.</remarks>
+    /// <remarks>Rows and columns are one-based. Creation acknowledgements and native void completion have distinct results. All 29 reviewed main-project Table overloads are ported. Creation acknowledgements and native void completion remain distinct from live native qualification.</remarks>
     public interface IOSTable : IOSBase
     {
         /// <summary>Gets the exact captured native Table object; callers must obey session lifetime and COM-thread rules.</summary>
@@ -352,5 +354,190 @@ namespace StaadPro.Interop.Adapters.Interfaces
         ///     System.Console.WriteLine(result.Status);
         /// }</code></example>
         TableOperationResult SetCellTextSize(int reportId, int tableId, int rowNumber, int columnNumber, double fontSize);
+
+        /// <summary>Sets report-cell text color from explicit RGB channel integers.</summary>
+        /// <param name="reportId">Positive acquired native report ID, not a report count or collection index.</param>
+        /// <param name="tableId">Positive native table ID within the specified report; not a cell identifier.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Upper bounds remain native responsibilities.</param>
+        /// <param name="red">Red channel, 0 through 255 inclusive. Passed as a native Int32.</param>
+        /// <param name="green">Green channel, 0 through 255 inclusive. Passed as a native Int32.</param>
+        /// <param name="blue">Blue channel, 0 through 255 inclusive. Passed as a native Int32.</param>
+        /// <returns>A TableOperationResult with NativeFunction SetCellTextColor and InvokedWithoutAcknowledgement after normal native void completion. IsSuccessful is false and NativeReturnCode is null; no effect/read-back success flag is invented.</returns>
+        /// <remarks><para>Unlike the packed ARGB, Color and text overloads, this accepts three separate RGB channels, each 0–255. It performs no alpha handling or color parsing; invalid channels are rejected before native work. HSL inputs belong in SetCellTextColorHsl. Exactly one native SetCellTextColor call receives Int32 RGB values.</para><para>Adapted from an existing main-project function; original sources remain read-only. Uses shared Table validation/result types and the same captured-binding gate. Native 2024/2025/2026 help contracts match; 2025/2026 metadata corroborates the by-value call shape, not runtime compatibility. Runs on the caller's established COM apartment. Reacquire after wrapper refresh. External UI/raw-object edits are not locked out. No implicit save, native retry, model launch, alternate instance or rollback occurs. Native errors propagate unchanged and post-call binding errors may follow actual changes.</para></remarks>
+        /// <exception cref="ArgumentException">A required identity, coordinate, channel, enum, finite component, font size or text input is invalid; no native call occurs. Malformed color text has the documented black fallback.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding is disposed or replaced; after-dispatch errors may follow changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native request failed; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object lacks the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextColor(11, 7, 1, 2, 17, 34, 51);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        TableOperationResult SetCellTextColor(int reportId, int tableId, int rowNumber, int columnNumber, int red, int green, int blue);
+
+        /// <summary>Sets report-cell text color using an existing WPF Color value.</summary>
+        /// <param name="reportId">Positive acquired native report ID, not a report count or collection index.</param>
+        /// <param name="tableId">Positive native table ID within the specified report; not a cell identifier.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Upper bounds remain native responsibilities.</param>
+        /// <param name="color">Existing WPF Color; its R/G/B properties are used and alpha is ignored.</param>
+        /// <returns>A TableOperationResult with NativeFunction SetCellTextColor and InvokedWithoutAcknowledgement after normal native void completion. IsSuccessful is false and NativeReturnCode is null; no effect/read-back success flag is invented.</returns>
+        /// <remarks><para>Unlike the string overload, this performs no parsing or malformed-text fallback. Uses the existing System.Windows.Media.Color type; its R/G/B byte properties become native Int32 channels. Alpha is ignored, including for transparent colors: no background blending or premultiplication is performed. The original RGB channels are retained.</para><para>Adapted from an existing main-project function; original sources remain read-only. Uses shared Table validation/result types and the same captured-binding gate. Native 2024/2025/2026 help contracts match; 2025/2026 metadata corroborates the by-value call shape, not runtime compatibility. Runs on the caller's established COM apartment. Reacquire after wrapper refresh. External UI/raw-object edits are not locked out. No implicit save, native retry, model launch, alternate instance or rollback occurs. Native errors propagate unchanged and post-call binding errors may follow actual changes.</para></remarks>
+        /// <exception cref="ArgumentException">A required identity, coordinate, channel, enum, finite component, font size or text input is invalid; no native call occurs. Malformed color text has the documented black fallback.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding is disposed or replaced; after-dispatch errors may follow changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native request failed; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object lacks the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextColor(11, 7, 1, 2, System.Windows.Media.Color.FromArgb(12, 17, 34, 51));
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        TableOperationResult SetCellTextColor(int reportId, int tableId, int rowNumber, int columnNumber, Color color);
+
+        /// <summary>Sets report-cell text color from WPF-supported color text with the main-source black fallback.</summary>
+        /// <param name="reportId">Positive acquired native report ID, not a report count or collection index.</param>
+        /// <param name="tableId">Positive native table ID within the specified report; not a cell identifier.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Upper bounds remain native responsibilities.</param>
+        /// <param name="colorText">Non-null WPF-supported color text. Parsing FormatException selects black, including malformed/empty text; no native error is converted to fallback.</param>
+        /// <returns>A TableOperationResult with NativeFunction SetCellTextColor and InvokedWithoutAcknowledgement after normal native void completion. IsSuccessful is false and NativeReturnCode is null; no effect/read-back success flag is invented.</returns>
+        /// <remarks><para>Unlike the typed Color/RGB overloads, this parses WPF ColorConverter text, such as a named color, #RGB, #RRGGBB or #AARRGGBB. A FormatException from parsing alone selects black, matching the main source; empty/malformed text can therefore write black. Null is rejected. Other parser exceptions propagate. Alpha is ignored. Parsing is completed before native dispatch: native exceptions, including FormatException, propagate unchanged without retry or a second black write.</para><para>Adapted from an existing main-project function; original sources remain read-only. Uses shared Table validation/result types and the same captured-binding gate. Native 2024/2025/2026 help contracts match; 2025/2026 metadata corroborates the by-value call shape, not runtime compatibility. Runs on the caller's established COM apartment. Reacquire after wrapper refresh. External UI/raw-object edits are not locked out. No implicit save, native retry, model launch, alternate instance or rollback occurs. Native errors propagate unchanged and post-call binding errors may follow actual changes.</para></remarks>
+        /// <exception cref="ArgumentException">A required identity, coordinate, channel, enum, finite component, font size or text input is invalid; no native call occurs. Malformed color text has the documented black fallback.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding is disposed or replaced; after-dispatch errors may follow changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native request failed; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object lacks the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextColor(11, 7, 1, 2, "#0C112233");
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        TableOperationResult SetCellTextColor(int reportId, int tableId, int rowNumber, int columnNumber, string colorText);
+
+        /// <summary>Sets report-cell text color from a packed 0xAARRGGBB integer.</summary>
+        /// <param name="reportId">Positive acquired native report ID, not a report count or collection index.</param>
+        /// <param name="tableId">Positive native table ID within the specified report; not a cell identifier.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Upper bounds remain native responsibilities.</param>
+        /// <param name="argbValue">Packed signed Int32 in 0xAARRGGBB order. The high alpha byte is ignored.</param>
+        /// <returns>A TableOperationResult with NativeFunction SetCellTextColor and InvokedWithoutAcknowledgement after normal native void completion. IsSuccessful is false and NativeReturnCode is null; no effect/read-back success flag is invented.</returns>
+        /// <remarks><para>Unlike the three-integer overload, this accepts one packed signed Int32. Extracts R/G/B from bits 16–23, 8–15 and 0–7. Alpha in the high byte is ignored, so a negative Int32 or zero alpha does not imply invalid or invisible text. No parsing or compositing occurs.</para><para>Adapted from an existing main-project function; original sources remain read-only. Uses shared Table validation/result types and the same captured-binding gate. Native 2024/2025/2026 help contracts match; 2025/2026 metadata corroborates the by-value call shape, not runtime compatibility. Runs on the caller's established COM apartment. Reacquire after wrapper refresh. External UI/raw-object edits are not locked out. No implicit save, native retry, model launch, alternate instance or rollback occurs. Native errors propagate unchanged and post-call binding errors may follow actual changes.</para></remarks>
+        /// <exception cref="ArgumentException">A required identity, coordinate, channel, enum, finite component, font size or text input is invalid; no native call occurs. Malformed color text has the documented black fallback.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding is disposed or replaced; after-dispatch errors may follow changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native request failed; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object lacks the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextColor(11, 7, 1, 2, unchecked((int)0x80112233));
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        TableOperationResult SetCellTextColor(int reportId, int tableId, int rowNumber, int columnNumber, int argbValue);
+
+        /// <summary>Sets report-cell text color from explicit ARGB bytes while preserving the source alpha parameter.</summary>
+        /// <param name="reportId">Positive acquired native report ID, not a report count or collection index.</param>
+        /// <param name="tableId">Positive native table ID within the specified report; not a cell identifier.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Upper bounds remain native responsibilities.</param>
+        /// <param name="alpha">Source-compatible alpha byte; intentionally ignored by the RGB-only native operation.</param>
+        /// <param name="red">Red channel, 0 through 255 inclusive. Passed as a native Int32.</param>
+        /// <param name="green">Green channel, 0 through 255 inclusive. Passed as a native Int32.</param>
+        /// <param name="blue">Blue channel, 0 through 255 inclusive. Passed as a native Int32.</param>
+        /// <returns>A TableOperationResult with NativeFunction SetCellTextColor and InvokedWithoutAcknowledgement after normal native void completion. IsSuccessful is false and NativeReturnCode is null; no effect/read-back success flag is invented.</returns>
+        /// <remarks><para>Unlike the packed Int32 overload, channel bytes are supplied separately in alpha/red/green/blue order. The alpha argument is retained for source workflow parity but is ignored because native SetCellTextColor accepts RGB only. No premultiplication, transparency or background blending is applied. Native channel arguments are Int32 values.</para><para>Adapted from an existing main-project function; original sources remain read-only. Uses shared Table validation/result types and the same captured-binding gate. Native 2024/2025/2026 help contracts match; 2025/2026 metadata corroborates the by-value call shape, not runtime compatibility. Runs on the caller's established COM apartment. Reacquire after wrapper refresh. External UI/raw-object edits are not locked out. No implicit save, native retry, model launch, alternate instance or rollback occurs. Native errors propagate unchanged and post-call binding errors may follow actual changes.</para></remarks>
+        /// <exception cref="ArgumentException">A required identity, coordinate, channel, enum, finite component, font size or text input is invalid; no native call occurs. Malformed color text has the documented black fallback.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding is disposed or replaced; after-dispatch errors may follow changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native request failed; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object lacks the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextColor(11, 7, 1, 2, (byte)12, (byte)17, (byte)34, (byte)51);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        TableOperationResult SetCellTextColor(int reportId, int tableId, int rowNumber, int columnNumber, byte alpha, byte red, byte green, byte blue);
+
+        /// <summary>Sets report-cell text color by converting finite HSL inputs to native RGB.</summary>
+        /// <param name="reportId">Positive acquired native report ID, not a report count or collection index.</param>
+        /// <param name="tableId">Positive native table ID within the specified report; not a cell identifier.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Upper bounds remain native responsibilities.</param>
+        /// <param name="hue">Finite Single hue in degrees; clamped to 0–360, not wrapped. NaN/infinity are rejected.</param>
+        /// <param name="saturation">Finite Single saturation, clamped to 0–1. NaN/infinity are rejected.</param>
+        /// <param name="lightness">Finite Single lightness, clamped to 0–1. NaN/infinity are rejected.</param>
+        /// <returns>A TableOperationResult with NativeFunction SetCellTextColor and InvokedWithoutAcknowledgement after normal native void completion. IsSuccessful is false and NativeReturnCode is null; no effect/read-back success flag is invented.</returns>
+        /// <remarks><para>Unlike the RGB overloads, this accepts Single-precision HSL components. Finite hue is clamped to 0–360 degrees, and finite saturation/lightness to 0–1, matching the main source. Hue is clamped rather than wrapped; 360 maps to red. Nonfinite values are rejected. Source-compatible Single arithmetic and midpoint-to-even Math.Round produce RGB bytes; conversion makes one native RGB call. HSL has no alpha or model-unit conversion.</para><para>Adapted from an existing main-project function; original sources remain read-only. Uses shared Table validation/result types and the same captured-binding gate. Native 2024/2025/2026 help contracts match; 2025/2026 metadata corroborates the by-value call shape, not runtime compatibility. Runs on the caller's established COM apartment. Reacquire after wrapper refresh. External UI/raw-object edits are not locked out. No implicit save, native retry, model launch, alternate instance or rollback occurs. Native errors propagate unchanged and post-call binding errors may follow actual changes.</para></remarks>
+        /// <exception cref="ArgumentException">A required identity, coordinate, channel, enum, finite component, font size or text input is invalid; no native call occurs. Malformed color text has the documented black fallback.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding is disposed or replaced; after-dispatch errors may follow changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native request failed; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object lacks the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextColorHsl(11, 7, 1, 2, 210f, 0.5f, 0.25f);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        TableOperationResult SetCellTextColorHsl(int reportId, int tableId, int rowNumber, int columnNumber, float hue, float saturation, float lightness);
+
+        /// <summary>Sets the horizontal text alignment of one one-based report cell.</summary>
+        /// <param name="reportId">Positive acquired native report ID, not a report count or collection index.</param>
+        /// <param name="tableId">Positive native table ID within the specified report; not a cell identifier.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Upper bounds remain native responsibilities.</param>
+        /// <param name="alignment">Defined Table alignment enum value; horizontal uses 0/1/2 and vertical uses 0/4/8.</param>
+        /// <returns>A TableOperationResult with NativeFunction SetCellTextHorzAlignment and InvokedWithoutAcknowledgement after normal native void completion. IsSuccessful is false and NativeReturnCode is null; no effect/read-back success flag is invented.</returns>
+        /// <remarks><para>Unlike SetCellTextVerticalAlignment, this uses horizontal codes Left=0, Center=1 and Right=2. The enum adapts the main-project vocabulary with an explicit Table prefix; it is not WPF HorizontalAlignment and offers no Stretch option. Undefined values are rejected. It does not change text, units, column sizing or save the report.</para><para>Adapted from an existing main-project function; original sources remain read-only. Uses shared Table validation/result types and the same captured-binding gate. Native 2024/2025/2026 help contracts match; 2025/2026 metadata corroborates the by-value call shape, not runtime compatibility. Runs on the caller's established COM apartment. Reacquire after wrapper refresh. External UI/raw-object edits are not locked out. No implicit save, native retry, model launch, alternate instance or rollback occurs. Native errors propagate unchanged and post-call binding errors may follow actual changes.</para></remarks>
+        /// <exception cref="ArgumentException">A required identity, coordinate, channel, enum, finite component, font size or text input is invalid; no native call occurs. Malformed color text has the documented black fallback.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding is disposed or replaced; after-dispatch errors may follow changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native request failed; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object lacks the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextHorizontalAlignment(11, 7, 1, 2, TableHorizontalAlignment.Center);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        TableOperationResult SetCellTextHorizontalAlignment(int reportId, int tableId, int rowNumber, int columnNumber, TableHorizontalAlignment alignment);
+
+        /// <summary>Sets the vertical text alignment of one one-based report cell.</summary>
+        /// <param name="reportId">Positive acquired native report ID, not a report count or collection index.</param>
+        /// <param name="tableId">Positive native table ID within the specified report; not a cell identifier.</param>
+        /// <param name="rowNumber">One-based row number: 1 is the first row. Upper bounds remain native responsibilities.</param>
+        /// <param name="columnNumber">One-based column number: 1 is the first column. Upper bounds remain native responsibilities.</param>
+        /// <param name="alignment">Defined Table alignment enum value; horizontal uses 0/1/2 and vertical uses 0/4/8.</param>
+        /// <returns>A TableOperationResult with NativeFunction SetCellTextVertAlignment and InvokedWithoutAcknowledgement after normal native void completion. IsSuccessful is false and NativeReturnCode is null; no effect/read-back success flag is invented.</returns>
+        /// <remarks><para>Unlike horizontal alignment, native vertical codes are Top=0, Middle=4 and Bottom=8. The enum preserves the main-project code mapping and deliberately avoids WPF VerticalAlignment numeric values. Undefined values are rejected. No row-height change, text rewrite or implicit save occurs.</para><para>Adapted from an existing main-project function; original sources remain read-only. Uses shared Table validation/result types and the same captured-binding gate. Native 2024/2025/2026 help contracts match; 2025/2026 metadata corroborates the by-value call shape, not runtime compatibility. Runs on the caller's established COM apartment. Reacquire after wrapper refresh. External UI/raw-object edits are not locked out. No implicit save, native retry, model launch, alternate instance or rollback occurs. Native errors propagate unchanged and post-call binding errors may follow actual changes.</para></remarks>
+        /// <exception cref="ArgumentException">A required identity, coordinate, channel, enum, finite component, font size or text input is invalid; no native call occurs. Malformed color text has the documented black fallback.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding is disposed or replaced; after-dispatch errors may follow changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native request failed; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object lacks the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextVerticalAlignment(11, 7, 1, 2, TableVerticalAlignment.Middle);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        TableOperationResult SetCellTextVerticalAlignment(int reportId, int tableId, int rowNumber, int columnNumber, TableVerticalAlignment alignment);
+
+        /// <summary>Requests one native font size for every cell of a report table.</summary>
+        /// <param name="reportId">Positive acquired native report ID, not a report count or collection index.</param>
+        /// <param name="tableId">Positive native table ID within the specified report; not a cell identifier.</param>
+        /// <param name="fontSize">Finite, positive native Word-equivalent Double font size; no conversion from model units is applied.</param>
+        /// <returns>A TableOperationResult with NativeFunction SetCellTextSizeAll and InvokedWithoutAcknowledgement after normal native void completion. IsSuccessful is false and NativeReturnCode is null; no effect/read-back success flag is invented.</returns>
+        /// <remarks><para>Unlike SetCellTextSize, this targets the whole table and takes no row/column coordinates. Uses the same finite, positive native Microsoft Word-equivalent size convention, independent of model input length units. The Double is forwarded unchanged; no cell enumeration, string conversion, invented upper bound or implicit save occurs.</para><para>Adapted from an existing main-project function; original sources remain read-only. Uses shared Table validation/result types and the same captured-binding gate. Native 2024/2025/2026 help contracts match; 2025/2026 metadata corroborates the by-value call shape, not runtime compatibility. Runs on the caller's established COM apartment. Reacquire after wrapper refresh. External UI/raw-object edits are not locked out. No implicit save, native retry, model launch, alternate instance or rollback occurs. Native errors propagate unchanged and post-call binding errors may follow actual changes.</para></remarks>
+        /// <exception cref="ArgumentException">A required identity, coordinate, channel, enum, finite component, font size or text input is invalid; no native call occurs. Malformed color text has the documented black fallback.</exception>
+        /// <exception cref="InvalidOperationException">The captured Table binding is disposed or replaced; after-dispatch errors may follow changes.</exception>
+        /// <exception cref="System.Runtime.InteropServices.COMException">The native request failed; earlier effects may remain.</exception>
+        /// <exception cref="Microsoft.CSharp.RuntimeBinder.RuntimeBinderException">The captured Table object lacks the required native operation.</exception>
+        /// <example><code>bool modifyReport = false;
+        /// if (modifyReport)
+        /// {
+        ///     var result = table.SetCellTextSizeForTable(11, 7, 12.5);
+        ///     System.Console.WriteLine(result.Status);
+        /// }</code></example>
+        TableOperationResult SetCellTextSizeForTable(int reportId, int tableId, double fontSize);
     }
 }

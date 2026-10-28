@@ -1,5 +1,17 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261028.3 - 28 October 2026 (prepared preview)
+
+Ported nine remaining main-project Table overloads: five SetCellTextColor forms (RGB, WPF Color, text, packed ARGB and explicit ARGB bytes), SetCellTextColorHsl, horizontal/vertical alignment and table-wide font sizing. Table now covers all 29 main-interface overloads and all 24 reviewed native names. Added the first main-project View function, ShowFront, with an immutable void-completion receipt; 69 main-source View overloads remain.
+
+Reused existing color types, Table result/status types and validation. Ported source alignment code maps as Table-prefixed enums, isolated pure color conversion and View dispatch internally, and added matching comprehensive XML documentation. Preserved ignored-alpha and finite HSL clamping semantics; restricted malformed-color black fallback to parsing so native exceptions never cause another write. Documented void completion, one-based coordinates, native context and qualification limits.
+
+Retained the compact Markdown banner, both original logos, independence/trademark notices, Srinivasa Rao Masanam author and TensorStruct publisher/copyright. The package targets .NET Framework 4.8.1 on Windows. No live COM, UI effect, storage or engineering certification is implied by managed tests.
+
+Passed **6,944 offline tests**, including **496 Table/View cases** (164 additional cases in this increment), and **1,282 installed-package XML examples**, including all 58 Table examples and two View examples. Managed fixture workflows cover the current Table routes and ShowFront; live native COM/UI/storage qualification remains separate.
+
+Prepared for manual upload; public NuGet.org availability is not confirmed.
+
 ## 1.0.0-preview.20261028.2 - 28 October 2026 (prepared preview)
 
 Ported ten further existing main-project Table functions: DeleteReport, DeleteTable, RenameTable, ResizeTable, SaveAllReports, SaveTable, SetCellTextBold, SetCellTextItalic, SetCellTextUnderline and SetCellTextSize. Table now exposes 20 of 29 main-source overloads and reaches 20 of 24 documented native names. Nine main-source overloads remain; native-only expansion follows completion of reference porting.

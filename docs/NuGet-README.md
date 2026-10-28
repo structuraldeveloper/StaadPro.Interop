@@ -4,27 +4,31 @@
 
 A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD
 
-## Version 1.0.0-preview.20261028.2
+## Version 1.0.0-preview.20261028.3
 
-This preview ports ten further existing main-project Table functions for deletion, renaming, resizing, scoped saves and cell typography. Table now has 20 main-source overloads reaching 20/24 documented native names; nine main-source overloads remain. Complete comparative XML documentation explains native void completion, save scope, one-based coordinates, dimensions and font-size conventions.
+This preview completes all 29 main-project Table overloads, including color conversions, alignment and table-wide font sizing, reaching all 24 reviewed native names. Added the first main-project View function, ShowFront; 69 View overloads remain. All ten additions include comparative XML documentation and managed regression coverage.
 
-The package reuses the established Table result/status types and internal service. It retains the compact Markdown banner, both original logos and independence/trademark notices. Native report effects, persistence and live COM compatibility remain method/build-specific acceptance work. Public NuGet.org availability of this prepared version is not confirmed.
+The package retains its compact Markdown banner, original logos and independence/trademark notices. It remains a preview for Windows and .NET Framework 4.8.1. Native UI/report readiness, live COM behavior, persistence and engineering acceptance remain separate from managed source coverage. Public NuGet.org availability is not confirmed.
 
-Verified **6,780 offline tests** and **1,262 installed-package XML examples**, including forty Table examples and an isolated report lifecycle/typography workflow. The 332 Table cases include 145 additional cases in this increment; live COM, UI context and report persistence remain separate acceptance work.
+Passed **6,944 offline tests**, including **496 Table/View cases** (164 additional cases in this increment), and **1,282 installed-package XML examples**, including all 58 Table examples and two View examples. Managed fixture workflows cover the current Table routes and ShowFront; live native COM/UI/storage qualification remains separate.
 
 By **Srinivasa Rao Masanam**.
 
 StaadPro.Interop provides typed adapters and managed models for working with an existing Bentley STAAD.Pro application through OpenSTAAD. It includes geometry and load operations, model information and lifecycle functions, application-window controls, and native analysis requests.
 
-This preview includes 249 common Property overloads and five optional catalog queries, all 171 current Load overloads, the completed reference Geometry ports, 96 managed Output overloads reaching 47 native names, 27 Support operations, seventeen Commands methods, ten Design methods and twenty Table methods, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
+This preview includes 249 common Property overloads and five optional catalog queries, all 171 current Load overloads, the completed reference Geometry ports, 96 managed Output overloads reaching 47 native names, 27 Support operations, seventeen Commands methods, ten Design methods, twenty-nine Table methods and one View method, the reviewed Root APIs and approved wrapper surface, including separately acquired, version-aware export and analysis-message capabilities. See the [release notes](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md) for the changes included in each version.
 
-## Table lifecycle and formatting
+## Completed Table ports and View foundation
+
+Color APIs support explicit RGB, WPF Color, text, packed/byte ARGB and HSL with documented fallback/clamping/alpha behavior. Typed Table alignment preserves native 0/1/2 and 0/4/8 maps; table-wide sizing complements per-cell sizing. ShowFront requests graphical orientation and returns unacknowledged void completion. See [exact contracts and examples](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Table-Completion-and-View-Foundations.md).
+
+## Earlier Table lifecycle and formatting
 
 New operations cover report/table deletion, renaming, growing existing table dimensions, saving all reports or one table, and cell bold/italic/underline/font sizing. All reuse the existing named receipt; normal native void completion does not certify success or persistence. See [exact contracts and examples](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Table-Lifecycle-and-Formatting.md).
 
 ## Earlier Table report foundations
 
-The preceding foundation increment adapted ten existing functions from the read-only main Table adapter. Rows and columns are one-based; counts and cell strings return validated values directly. Creation/mutation receipts retain native creation IDs or explicit unacknowledged void completion. See the [Table guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Table-Report-Foundations.md). The latest increment brings the total to twenty implemented Table overloads; nine remain pending.
+The preceding foundation increment adapted ten existing functions from the read-only main Table adapter. Rows and columns are one-based; counts and cell strings return validated values directly. Creation/mutation receipts retain native creation IDs or explicit unacknowledged void completion. See the [Table guide](https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Table-Report-Foundations.md). The latest increment completes all twenty-nine main-source Table overloads.
 
 ## Commands, Support and Design foundations
 

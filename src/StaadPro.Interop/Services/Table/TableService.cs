@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Media;
 using StaadPro.Interop.Enums.Table;
 using StaadPro.Interop.Models;
 using StaadPro.Interop.Models.Table;
@@ -152,9 +153,59 @@ namespace StaadPro.Interop.Services.Table
         internal TableOperationResult SetCellTextSize(int reportId, int tableId, int rowNumber, int columnNumber, double fontSize)
         {
             Cell(reportId, tableId, rowNumber, columnNumber);
+            FontSize(fontSize);
+            return Run(p => { p.SetCellTextSize(reportId, tableId, rowNumber, columnNumber, fontSize); return Completed("SetCellTextSize", reportId, tableId); });
+        }
+
+        private static void FontSize(double fontSize)
+        {
             if (double.IsNaN(fontSize) || double.IsInfinity(fontSize) || fontSize <= 0)
                 throw new ArgumentOutOfRangeException(nameof(fontSize), "Supply a finite, positive native Word-equivalent font size.");
-            return Run(p => { p.SetCellTextSize(reportId, tableId, rowNumber, columnNumber, fontSize); return Completed("SetCellTextSize", reportId, tableId); });
+        }
+        private static void Channel(int value, string name)
+        {
+            if (value < 0 || value > 255) throw new ArgumentOutOfRangeException(name, "Supply a color channel from 0 through 255.");
+        }
+        internal TableOperationResult SetCellTextColor(int reportId, int tableId, int rowNumber, int columnNumber, int red, int green, int blue)
+        {
+            Cell(reportId, tableId, rowNumber, columnNumber);
+            Channel(red, nameof(red)); Channel(green, nameof(green)); Channel(blue, nameof(blue));
+            return Run(p => { p.SetCellTextColor(reportId, tableId, rowNumber, columnNumber, red, green, blue); return Completed("SetCellTextColor", reportId, tableId); });
+        }
+        internal TableOperationResult SetCellTextColor(int reportId, int tableId, int rowNumber, int columnNumber, Color color) =>
+            SetCellTextColor(reportId, tableId, rowNumber, columnNumber, (int)color.R, (int)color.G, (int)color.B);
+        internal TableOperationResult SetCellTextColor(int reportId, int tableId, int rowNumber, int columnNumber, string colorText)
+        {
+            Cell(reportId, tableId, rowNumber, columnNumber);
+            Color color = TableColorConversion.Parse(colorText);
+            return SetCellTextColor(reportId, tableId, rowNumber, columnNumber, color);
+        }
+        internal TableOperationResult SetCellTextColor(int reportId, int tableId, int rowNumber, int columnNumber, int argbValue) =>
+            SetCellTextColor(reportId, tableId, rowNumber, columnNumber, (argbValue >> 16) & 255, (argbValue >> 8) & 255, argbValue & 255);
+        internal TableOperationResult SetCellTextColor(int reportId, int tableId, int rowNumber, int columnNumber, byte alpha, byte red, byte green, byte blue) =>
+            SetCellTextColor(reportId, tableId, rowNumber, columnNumber, (int)red, (int)green, (int)blue);
+        internal TableOperationResult SetCellTextColorHsl(int reportId, int tableId, int rowNumber, int columnNumber, float hue, float saturation, float lightness)
+        {
+            Cell(reportId, tableId, rowNumber, columnNumber);
+            Color color = TableColorConversion.FromHsl(hue, saturation, lightness);
+            return SetCellTextColor(reportId, tableId, rowNumber, columnNumber, color);
+        }
+        internal TableOperationResult SetCellTextHorizontalAlignment(int reportId, int tableId, int rowNumber, int columnNumber, TableHorizontalAlignment alignment)
+        {
+            Cell(reportId, tableId, rowNumber, columnNumber);
+            if (!Enum.IsDefined(typeof(TableHorizontalAlignment), alignment)) throw new ArgumentOutOfRangeException(nameof(alignment));
+            return Run(p => { p.SetCellTextHorzAlignment(reportId, tableId, rowNumber, columnNumber, (int)alignment); return Completed("SetCellTextHorzAlignment", reportId, tableId); });
+        }
+        internal TableOperationResult SetCellTextVerticalAlignment(int reportId, int tableId, int rowNumber, int columnNumber, TableVerticalAlignment alignment)
+        {
+            Cell(reportId, tableId, rowNumber, columnNumber);
+            if (!Enum.IsDefined(typeof(TableVerticalAlignment), alignment)) throw new ArgumentOutOfRangeException(nameof(alignment));
+            return Run(p => { p.SetCellTextVertAlignment(reportId, tableId, rowNumber, columnNumber, (int)alignment); return Completed("SetCellTextVertAlignment", reportId, tableId); });
+        }
+        internal TableOperationResult SetCellTextSizeForTable(int reportId, int tableId, double fontSize)
+        {
+            Positive(reportId, nameof(reportId)); Positive(tableId, nameof(tableId)); FontSize(fontSize);
+            return Run(p => { p.SetCellTextSizeAll(reportId, tableId, fontSize); return Completed("SetCellTextSizeAll", reportId, tableId); });
         }
     }
 }

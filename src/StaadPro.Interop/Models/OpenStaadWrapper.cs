@@ -138,7 +138,7 @@ namespace StaadPro.Interop.Models
         public dynamic RawTable { get; private set; }
 
         /// <summary>Gets the managed Table adapter.</summary>
-        /// <remarks>Provides twenty typed report/table, lifecycle and cell typography operations. Color, alignment and table-wide font sizing remain pending. Null when the native interface is unavailable.</remarks>
+        /// <remarks>Provides all 29 reviewed main-source Table overloads, including color, alignment and table-wide font sizing. Native runtime qualification is separate from source coverage. Null when the native interface is unavailable.</remarks>
         public IOSTable Table { get; private set; }
 
         /// <summary>Gets the native View automation interface.</summary>
@@ -146,7 +146,7 @@ namespace StaadPro.Interop.Models
         public dynamic RawView { get; private set; }
 
         /// <summary>Gets the managed View adapter.</summary>
-        /// <remarks>Binding placeholder only: domain functions remain unported. Null when the native interface is unavailable.</remarks>
+        /// <remarks>Provides ShowFront on the captured native View object. Other source View functions remain pending. Null when the native interface is unavailable.</remarks>
         public IOSView View { get; private set; }
 
         /// <summary>Gets the reserved IDEA StatiCa integration binding.</summary>

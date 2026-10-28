@@ -21,6 +21,8 @@
 
   <ItemGroup>
     <Compile Include="..\..\eng\Fixtures\TableFoundationFixture.cs" Link="Fixtures\TableFoundationFixture.cs" />
+    <Compile Include="..\..\eng\Fixtures\ViewFoundationFixture.cs" Link="Fixtures\ViewFoundationFixture.cs" />
+    <None Include="..\..\docs\contracts\ViewFoundationContractIndex.json" Link="ContractReview\ViewFoundationContractIndex.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\contracts\TableFoundationContractIndex.json" Link="ContractReview\TableFoundationContractIndex.json" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="..\..\eng\Fixtures\CommandsSupportFixture.cs" Link="Fixtures\CommandsSupportFixture.cs" />
     <None Include="..\..\docs\contracts\CommandsAndSupportPortContractIndex.json" Link="ContractReview\CommandsAndSupportPortContractIndex.json" CopyToOutputDirectory="PreserveNewest" />
