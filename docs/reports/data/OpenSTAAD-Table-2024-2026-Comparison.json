@@ -13,18 +13,21 @@
     "mainPublicAdapterOverloads": 29,
     "mainPrivateAdapterMethods": 0,
     "mainDistinctNativeTargets": 24,
-    "currentTypedDomainMethods": 0,
+    "currentTypedDomainMethods": 29,
     "missingMainNativeTargets": [],
     "added2025": [],
     "signatureChanges": [],
     "nonExampleTextChanges": [],
-    "exampleChanges2024To2025": 24
+    "exampleChanges2024To2025": 24,
+    "currentTypedNativeNames": 24,
+    "remainingNativeNames": 0,
+    "remainingMainInterfaceOverloads": 0
   },
   "functions": [
     {
       "name": "CreateReport",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableCreationResult with ReportId/TableId and native creation status; named title, tableName, rowCount and columnCount inputs.",
       "versions": {
@@ -130,12 +133,13 @@
             "title"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SaveReport",
       "phase": "T4",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SaveReport; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -241,12 +245,13 @@
             "reportId"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SaveReportAll",
       "phase": "T4",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SaveReportAll; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -299,12 +304,13 @@
           "receiver": "ComObject",
           "arguments": []
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "GetReportCount",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableCountResult GetReportCount; Count and completion evidence, optional reportId as documented.",
       "versions": {
@@ -357,12 +363,13 @@
           "receiver": "ComObject",
           "arguments": []
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "AddTable",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableCreationResult with ReportId/TableId and native creation status; named title, tableName, rowCount and columnCount inputs.",
       "versions": {
@@ -606,12 +613,13 @@
             "numCols"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "RenameTable",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult RenameTable; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -809,12 +817,13 @@
             "newName"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "DeleteReport",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult DeleteReport; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -920,12 +929,13 @@
             "reportId"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "DeleteTable",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult DeleteTable; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -1077,12 +1087,13 @@
             "tableId"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "ResizeTable",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult ResizeTable; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -1326,12 +1337,13 @@
             "numCols"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SaveTable",
       "phase": "T4",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SaveTable; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -1483,12 +1495,13 @@
             "tableId"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "GetTableCount",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableCountResult GetTableCount; Count and completion evidence, optional reportId as documented.",
       "versions": {
@@ -1594,12 +1607,13 @@
             "reportId"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "GetCellValue",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableCellValueResult GetCellValue(int reportId, int tableId, int rowNumber, int columnNumber); one-based coordinates; output Value string plus completion evidence.",
       "versions": {
@@ -1889,12 +1903,13 @@
             "ref value"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellValue",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellValue; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -2184,12 +2199,13 @@
             "value"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetColumnHeader",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetColumnHeader; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -2433,12 +2449,13 @@
             "headerText"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetColumnUnitString",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetColumnUnitString; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -2682,12 +2699,13 @@
             "unitString"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetRowHeader",
       "phase": "T2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetRowHeader; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -2931,12 +2949,13 @@
             "headerText"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextColor",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextColor; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -3318,12 +3337,13 @@
             "blue"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextBold",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextBold; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -3567,12 +3587,13 @@
             "iCol"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextItalic",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextItalic; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -3816,12 +3837,13 @@
             "iCol"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextUnderline",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextUnderline; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -4065,12 +4087,13 @@
             "iCol"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextHorzAlignment",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextHorzAlignment; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -4360,12 +4383,13 @@
             "(int)alignment"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextVertAlignment",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextVertAlignment; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -4655,12 +4679,13 @@
             "(int)alignment"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextSize",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextSize; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -4950,12 +4975,13 @@
             "fontSize"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     },
     {
       "name": "SetCellTextSizeAll",
       "phase": "T3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "TableOperationResult SetCellTextSizeAll; descriptive reportId/tableId/rowNumber/columnNumber inputs as applicable; typed formatting or size arguments; no external ref/out.",
       "versions": {
@@ -5153,7 +5179,8 @@
             "fontSize"
           ]
         }
-      ]
+      ],
+      "implementation": "Common TableService; all reviewed main-source overloads adapted."
     }
   ],
   "differences": [
@@ -10027,6 +10054,87 @@
       "path": "Interfaces/IDesignParameter`.cs",
       "bytes": 241,
       "sha256": "53eee7bece795ba9cc89873207622929264736a824b4746bbb25518467eb55d4"
+    }
+  ],
+  "implementationUpdate": {
+    "date": "2026-10-28",
+    "managedMethods": 29,
+    "nativeMappings": 24,
+    "newManagedMethods": 9,
+    "referenceOverloadsPorted": 29,
+    "pendingReferenceOverloads": 0,
+    "pendingNativeNames": [],
+    "sourceMainReadOnly": true,
+    "guide": "docs/Table-Completion-and-View-Foundations.md",
+    "validation": {
+      "offlineTestsPassed": 6944,
+      "tableAndViewTestsPassed": 496,
+      "newCases": 164,
+      "nativeRuntimeValidation": false,
+      "packagedXmlExamples": 1282,
+      "tableXmlExamples": 58,
+      "viewXmlExamples": 2
+    },
+    "limits": "Source coverage is complete for the reviewed main interface/native names; live COM, UI/report readiness and storage acceptance remain separate."
+  },
+  "implementationHistory": [
+    {
+      "date": "2026-10-28",
+      "managedMethods": 10,
+      "nativeMappings": 10,
+      "referenceOverloadsPorted": 10,
+      "pendingReferenceOverloads": 19,
+      "pendingNativeNames": [
+        "SaveReportAll",
+        "RenameTable",
+        "DeleteReport",
+        "DeleteTable",
+        "ResizeTable",
+        "SaveTable",
+        "SetCellTextColor",
+        "SetCellTextBold",
+        "SetCellTextItalic",
+        "SetCellTextUnderline",
+        "SetCellTextHorzAlignment",
+        "SetCellTextVertAlignment",
+        "SetCellTextSize",
+        "SetCellTextSizeAll"
+      ],
+      "sourceMainReadOnly": true,
+      "guide": "docs/Table-Report-Foundations.md",
+      "validationLimits": "Managed fixtures and installed-package examples; live COM and native report storage remain unqualified.",
+      "validation": {
+        "offlineTestsPassed": 6635,
+        "newTableTests": 187,
+        "packagedXmlExamples": 1242,
+        "tableXmlExamples": 20,
+        "nativeRuntimeValidation": false
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "managedMethods": 20,
+      "nativeMappings": 20,
+      "newManagedMethods": 10,
+      "referenceOverloadsPorted": 20,
+      "pendingReferenceOverloads": 9,
+      "pendingNativeNames": [
+        "SetCellTextColor",
+        "SetCellTextHorzAlignment",
+        "SetCellTextVertAlignment",
+        "SetCellTextSizeAll"
+      ],
+      "sourceMainReadOnly": true,
+      "guide": "docs/Table-Lifecycle-and-Formatting.md",
+      "validation": {
+        "offlineTestsPassed": 6780,
+        "tableTestsPassed": 332,
+        "additionalTableCases": 145,
+        "nativeRuntimeValidation": false,
+        "packagedXmlExamples": 1262,
+        "tableXmlExamples": 40
+      },
+      "validationLimits": "Managed fixtures and installed-package examples; live COM, UI context and native report storage remain unqualified."
     }
   ]
 }

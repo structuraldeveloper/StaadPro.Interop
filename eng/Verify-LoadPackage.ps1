@@ -53,6 +53,50 @@ try {
     [xml] $nuspec = Read-PackageEntry $nuspecEntry[0].FullName
     $metadata = $nuspec.package.metadata
     if ($metadata.id -ne 'StaadPro.Interop' -or $metadata.license.InnerText -ne 'MIT' -or $metadata.readme -ne 'README.md') { throw 'Invalid package identity, license or README metadata.' }
+    if ([string]$metadata.icon -cne 'images/symbol-only-logo.png') { throw 'The package must use the adopted symbol-only logo as its embedded icon.' }
+    $iconEntry = $archive.GetEntry([string]$metadata.icon)
+    if ($null -eq $iconEntry -or $iconEntry.Length -lt 1 -or $iconEntry.Length -gt 1MB) { throw 'The embedded package icon is missing, empty or exceeds the NuGet 1 MB limit.' }
+    Add-Type -AssemblyName System.Drawing
+    $iconStream = $iconEntry.Open()
+    $iconBuffer = [IO.MemoryStream]::new()
+    $iconImage = $null
+    try {
+        $iconStream.CopyTo($iconBuffer)
+        $iconBuffer.Position = 0
+        $iconImage = [Drawing.Image]::FromStream($iconBuffer)
+        if ($iconImage.RawFormat.Guid -ne [Drawing.Imaging.ImageFormat]::Png.Guid -or $iconImage.Width -ne $iconImage.Height) {
+            throw 'The adopted NuGet icon must remain a square PNG.'
+        }
+    }
+    finally {
+        if ($null -ne $iconImage) { $iconImage.Dispose() }
+        $iconBuffer.Dispose()
+        $iconStream.Dispose()
+    }
+    $bannerEntry = $archive.GetEntry('images/logo-with-text.png')
+    if ($null -eq $bannerEntry -or $bannerEntry.Length -lt 1) { throw 'The package must include the adopted logo with text.' }
+    $markdownBanner = '![StaadPro.Interop](https://raw.githubusercontent.com/structuraldeveloper/StaadPro.Interop/main/docs/images/logo-with-text-400.png)'
+    if (!$readme.StartsWith($markdownBanner) -or $readme -match '(?i)<img\b|&lt;img\b') {
+        throw 'The NuGet README must use supported Markdown image syntax; inline HTML is disabled by NuGet.'
+    }
+    $compactEntry = $archive.GetEntry('images/logo-with-text-400.png')
+    if ($null -eq $compactEntry -or $compactEntry.Length -lt 1) { throw 'Missing compact README banner.' }
+    $compactStream = $compactEntry.Open()
+    $compactBuffer = [IO.MemoryStream]::new()
+    $compactImage = $null
+    try {
+        $compactStream.CopyTo($compactBuffer)
+        $compactBuffer.Position = 0
+        $compactImage = [Drawing.Image]::FromStream($compactBuffer)
+        if ($compactImage.RawFormat.Guid -ne [Drawing.Imaging.ImageFormat]::Png.Guid -or $compactImage.Width -ne 400 -or $compactImage.Height -ne 133) {
+            throw 'The README banner must be the compact 400 by 133 PNG rendition.'
+        }
+    }
+    finally {
+        if ($null -ne $compactImage) { $compactImage.Dispose() }
+        $compactBuffer.Dispose()
+        $compactStream.Dispose()
+    }
     if ($metadata.repository.url -ne 'https://github.com/structuraldeveloper/StaadPro.Interop') { throw 'Missing repository metadata.' }
     if ([string]$metadata.authors -cne 'Srinivasa Rao Masanam') { throw 'Incorrect package author.' }
     if ([string]$metadata.copyright -cne 'Copyright (c) 2026 TensorStruct') { throw 'Incorrect package copyright.' }
@@ -235,10 +279,10 @@ try {
     }
     if ($outputSnippets.Count -ne 192) { throw 'Expected 192 Output XML examples.' }
     $supportSnippets = @()
-    $supportGuide = Read-PackageEntry 'docs/Support-Foundations.md'
+    $supportGuide = (Read-PackageEntry 'docs/Support-Foundations.md') + (Read-PackageEntry 'docs/Commands-and-Support-Porting.md')
     foreach ($owner in @('Adapters.Interfaces.IOSSupport', 'Adapters.Models.OSSupportAdapter')) {
         $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
-        if ($entries.Count -ne 19) { throw "Expected 19 Support contracts for $owner." }
+        if ($entries.Count -ne 27) { throw "Expected 27 Support contracts for $owner." }
         foreach ($entry in $entries) {
             foreach ($tag in @('summary', 'returns', 'remarks', 'example/code')) {
                 $node = $entry.SelectSingleNode($tag)
@@ -249,10 +293,76 @@ try {
             if ($entry.SelectSingleNode('remarks').InnerText -notmatch 'When to use:') { throw "Missing comparative Support IntelliSense for $methodName" }
             $binding = if ($owner.EndsWith('IOSSupport')) { 'IOSSupport support = wrapper.Support;' } else { 'var support = new StaadPro.Interop.Adapters.Models.OSSupportAdapter(wrapper);' }
             $example = $entry.SelectSingleNode('example/code').InnerText
-            $supportSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.SupportFoundationFixture.Root { Support = new PackageVerification.SupportFoundationFixture.Native() })) {' + $newLine + $binding + $newLine + $example + $newLine + '}'
+            $supportFixture = if ($methodName -in @('CreateElasticMat', 'CreateElasticFooting', 'RemoveElasticMat', 'RemoveElasticMatFromNode', 'RemovePlateMat', 'RemoveElasticFooting', 'RemoveElasticFootingFromNode', 'AssignSupportToEntities')) { 'CommandsSupportFixture' } else { 'SupportFoundationFixture' }
+            $supportSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.' + $supportFixture + '.Root { Support = new PackageVerification.' + $supportFixture + '.Native() })) {' + $newLine + $binding + $newLine + $example + $newLine + '}'
         }
     }
-    if ($supportSnippets.Count -ne 38) { throw 'Expected 38 Support XML examples.' }
+    if ($supportSnippets.Count -ne 54) { throw 'Expected 54 Support XML examples.' }
+    $commandSnippets = @()
+    foreach ($owner in @('Adapters.Interfaces.IOSCommands', 'Adapters.Models.OSCommandsAdapter')) {
+        $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+        if ($entries.Count -ne 17) { throw "Expected 17 Commands contracts for $owner." }
+        foreach ($entry in $entries) {
+            foreach ($tag in @('summary','returns','remarks','example/code')) {
+                if ([string]::IsNullOrWhiteSpace($entry.SelectSingleNode($tag).InnerText)) { throw "Incomplete Commands $tag for $($entry.name)" }
+            }
+            $binding = if ($owner.EndsWith('IOSCommands')) { 'IOSCommands commands = wrapper.Commands;' } else { 'var commands = new StaadPro.Interop.Adapters.Models.OSCommandsAdapter(wrapper);' }
+            $commandSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.CommandsSupportFixture.Root { Command = new PackageVerification.CommandsSupportFixture.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
+        }
+    }
+    if ($commandSnippets.Count -ne 34) { throw 'Expected 34 Commands XML examples.' }
+    $tableGuide = Read-PackageEntry 'docs/Table-Report-Foundations.md'
+    $tableGuide += Read-PackageEntry 'docs/Table-Lifecycle-and-Formatting.md'
+    $tableGuide += Read-PackageEntry 'docs/Table-Completion-and-View-Foundations.md'
+    $notice = Read-PackageEntry 'NOTICE.md'
+    if ($tableGuide -notmatch 'one-based' -or $tableGuide -notmatch 'twenty|20 of 29' -or $tableGuide -notmatch 'SaveAllReports') { throw 'Missing Table scope/index guidance.' }
+    foreach ($document in @($readme, $notice)) {
+        if ($document -notmatch 'affiliated with, sponsored by, endorsed by' -or $document -notmatch 'Bentley, STAAD, STAAD.Pro and OpenSTAAD' -or $document -notmatch 'trademarks or registered trademarks') {
+            throw 'Missing independence/trademark notice in the package or its README.'
+        }
+    }
+    $tableSnippets = @()
+    foreach ($owner in @('Adapters.Interfaces.IOSTable', 'Adapters.Models.OSTableAdapter')) {
+        $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+        if ($entries.Count -ne 29) { throw "Expected twenty-nine Table contracts for $owner." }
+        foreach ($entry in $entries) {
+            foreach ($tag in @('summary','returns','remarks','example/code')) {
+                if ([string]::IsNullOrWhiteSpace($entry.SelectSingleNode($tag).InnerText)) { throw "Incomplete Table $tag for $($entry.name)" }
+            }
+            $binding = if ($owner.EndsWith('IOSTable')) { 'IOSTable table = wrapper.Table;' } else { 'var table = new StaadPro.Interop.Adapters.Models.OSTableAdapter(wrapper);' }
+            $tableSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.TableFoundationFixture.Root { Table = new PackageVerification.TableFoundationFixture.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
+        }
+    }
+    if ($tableSnippets.Count -ne 58) { throw 'Expected fifty-eight Table XML examples.' }
+    $viewSnippets = @()
+    $viewGuide = Read-PackageEntry 'docs/Table-Completion-and-View-Foundations.md'
+    foreach ($owner in @('Adapters.Interfaces.IOSView', 'Adapters.Models.OSViewAdapter')) {
+        $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+        if ($entries.Count -ne 1 -or $viewGuide -notmatch 'ShowFront') { throw 'Expected one documented View function.' }
+        foreach ($entry in $entries) {
+            foreach ($tag in @('summary','returns','remarks','example/code')) {
+                if ([string]::IsNullOrWhiteSpace($entry.SelectSingleNode($tag).InnerText)) { throw "Incomplete View $tag." }
+            }
+            $binding = if ($owner.EndsWith('IOSView')) { 'IOSView view = wrapper.View;' } else { 'var view = new StaadPro.Interop.Adapters.Models.OSViewAdapter(wrapper);' }
+            $viewSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.ViewFoundationFixture.Root { View = new PackageVerification.ViewFoundationFixture.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
+        }
+    }
+    if ($viewSnippets.Count -ne 2) { throw 'Expected two View XML examples.' }
+    $designGuide = Read-PackageEntry 'docs/Design-Porting.md'
+    $designSnippets = @()
+    foreach ($owner in @('Adapters.Interfaces.IOSDesign', 'Adapters.Models.OSDesignAdapter')) {
+        $entries = @($xml.doc.members.member | Where-Object { $_.name.StartsWith("M:StaadPro.Interop.$owner.") -and $_.name -notmatch '\.#ctor' })
+        if ($entries.Count -ne 10) { throw "Expected ten Design contracts for $owner." }
+        if ($designGuide -notmatch 'GetMemberDesignParameters' -or $designGuide -notmatch 'AssignDesignParameters') { throw 'Missing Design guidance.' }
+        foreach ($entry in $entries) {
+            foreach ($tag in @('summary','returns','remarks','example/code')) {
+                if ([string]::IsNullOrWhiteSpace($entry.SelectSingleNode($tag).InnerText)) { throw "Incomplete Design $tag for $($entry.name)" }
+            }
+            $binding = if ($owner.EndsWith('IOSDesign')) { 'IOSDesign design = wrapper.Design;' } else { 'var design = new StaadPro.Interop.Adapters.Models.OSDesignAdapter(wrapper);' }
+            $designSnippets += 'using (var wrapper = new OpenStaadWrapper(new PackageVerification.DesignFoundationFixture.Root { Design = new PackageVerification.DesignFoundationFixture.Native() })) {' + $newLine + $binding + $newLine + $entry.SelectSingleNode('example/code').InnerText + $newLine + '}'
+        }
+    }
+    if ($designSnippets.Count -ne 20) { throw 'Expected twenty Design XML examples.' }
     $inspectionSnippets = @()
     if ($hasLoadInspection) {
         $inspectionNames = @('GetActiveLoadCaseNumber', 'GetLoadListCount', 'GetLoadListCaseCount', 'GetLoadListCases', 'GetLoadCommandCount', 'GetAssignedEntityCount', 'GetLoadItemCount', 'GetLoadItemKind', 'ContainsDynamicLoad', 'GetRepeatContributionCount', 'GetRepeatContributions', 'GetNotionalItemCount', 'GetNotionalContributionCount', 'GetNotionalContributions', 'GetReferenceItemCount')
@@ -388,6 +498,11 @@ using StaadPro.Interop.Adapters.Interfaces;
 using StaadPro.Interop.Entities;
 using StaadPro.Interop.Enums;
 using StaadPro.Interop.Enums.Output;
+using StaadPro.Interop.Enums.AnalysisCommands;
+using StaadPro.Interop.Enums.Design;
+using StaadPro.Interop.Models.Design;
+using StaadPro.Interop.Enums.Table;
+using StaadPro.Interop.Enums.View;
 using StaadPro.Interop.Models.Support;
 using StaadPro.Interop.Models.Output;
 using StaadPro.Interop.Models;
@@ -634,7 +749,68 @@ public static class Program
         RunExpansionDocumentationExamples();
         RunPropertyDocumentationExamples();
         RunSupportDocumentationExamples();
-        Console.WriteLine("PASS: __EXAMPLE_COUNT__ packaged XML examples and Geometry/Load/Root/Output/Property/Support IntelliSense.");
+        RunTableDocumentationExamples();
+        RunViewDocumentationExamples();
+        var tableNative = new PackageVerification.TableFoundationFixture.Native();
+        using (var wrapper = new OpenStaadWrapper(new PackageVerification.TableFoundationFixture.Root { Table = tableNative }))
+        {
+            var report = wrapper.Table.CreateReport("Consumer report");
+            Check(report.IsSuccessful && report.ReportId == 11, "Table created report ID");
+            var created = wrapper.Table.AddTable(report.ReportId.Value, "Forces", 2, 2);
+            Check(created.IsSuccessful && created.TableId == 7, "Table created table ID");
+            Check(wrapper.Table.GetReportCount() == 2 && wrapper.Table.GetTableCount(11) == 3, "Table native counts");
+            wrapper.Table.SetColumnHeader(11, 7, 2, "Force");
+            wrapper.Table.SetColumnUnitString(11, 7, 2, "kN");
+            wrapper.Table.SetRowHeader(11, 7, 1, "Member 17");
+            var edit = wrapper.Table.SetCellValue(11, 7, 1, 2, "42.50");
+            Check(!edit.IsSuccessful && edit.NativeReturnCode == null, "Table void completion evidence");
+            Check(wrapper.Table.GetCellValue(11, 7, 1, 2) == "42.50", "Table one-based write/read");
+            Check(!wrapper.Table.SaveReport(11).IsSuccessful, "Table save is unacknowledged");
+            Check(tableNative.Calls.Count == 10, "Table foundation dispatch count");
+            wrapper.Table.RenameTable(11, 7, "Design forces");
+            wrapper.Table.ResizeTable(11, 7, 6, 4);
+            wrapper.Table.SetCellTextBold(11, 7, 1, 2);
+            wrapper.Table.SetCellTextItalic(11, 7, 1, 2);
+            wrapper.Table.SetCellTextUnderline(11, 7, 1, 2);
+            wrapper.Table.SetCellTextSize(11, 7, 1, 2, 12.5);
+            var scopedSave = wrapper.Table.SaveTable(11, 7);
+            var allSave = wrapper.Table.SaveAllReports();
+            Check(!scopedSave.IsSuccessful && scopedSave.ReportId == 11 && scopedSave.TableId == 7, "Scoped Table save evidence");
+            Check(!allSave.IsSuccessful && allSave.ReportId == null && allSave.TableId == null && allSave.NativeFunction == "SaveReportAll", "All-report save scope");
+            Check(tableNative.Calls.Skip(10).SequenceEqual(new[] { "RenameTable", "ResizeTable", "SetCellTextBold", "SetCellTextItalic", "SetCellTextUnderline", "SetCellTextSize", "SaveTable", "SaveReportAll" }), "Table lifecycle native targets/order");
+            Check(tableNative.Arguments[15][4] is double size && size == 12.5, "Native font Double payload");
+            wrapper.Table.SetCellTextColor(11, 7, 1, 2, 17, 34, 51);
+            wrapper.Table.SetCellTextColor(11, 7, 1, 2, System.Windows.Media.Color.FromArgb(0, 17, 34, 51));
+            wrapper.Table.SetCellTextColor(11, 7, 1, 2, "#80112233");
+            wrapper.Table.SetCellTextColor(11, 7, 1, 2, unchecked((int)0x80112233));
+            wrapper.Table.SetCellTextColor(11, 7, 1, 2, (byte)0, (byte)17, (byte)34, (byte)51);
+            wrapper.Table.SetCellTextColorHsl(11, 7, 1, 2, 0f, 1f, 0.5f);
+            wrapper.Table.SetCellTextHorizontalAlignment(11, 7, 1, 2, TableHorizontalAlignment.Center);
+            wrapper.Table.SetCellTextVerticalAlignment(11, 7, 1, 2, TableVerticalAlignment.Middle);
+            wrapper.Table.SetCellTextSizeForTable(11, 7, 12.5);
+            wrapper.Table.DeleteTable(11, 7);
+            wrapper.Table.DeleteReport(11);
+            Check(tableNative.Calls.Count == 29, "All Table source workflows dispatched");
+            Check(tableNative.Arguments.Skip(18).Take(5).All(a => a.Skip(4).SequenceEqual(new object[] { 17, 34, 51 })), "ARGB forms keep RGB and ignore alpha");
+            Check(tableNative.Arguments[23].Skip(4).SequenceEqual(new object[] { 255, 0, 0 }), "HSL native RGB");
+            Check((int)tableNative.Arguments[24][4] == 1 && (int)tableNative.Arguments[25][4] == 4, "Native alignment code maps");
+        }
+        var viewNative = new PackageVerification.ViewFoundationFixture.Native();
+        using (var wrapper = new OpenStaadWrapper(new PackageVerification.ViewFoundationFixture.Root { View = viewNative }))
+        {
+            var receipt = wrapper.View.ShowFront();
+            Check(receipt.Status == ViewOperationStatus.InvokedWithoutAcknowledgement && !receipt.IsSuccessful && receipt.NativeReturnCode == null, "View void completion");
+            Check(viewNative.Calls.SequenceEqual(new[] { "ShowFront" }), "Captured View front request");
+        }
+        Console.WriteLine("PASS: __EXAMPLE_COUNT__ packaged XML examples and Geometry/Load/Root/Output/Property/Support/Commands/Design/Table/View IntelliSense.");
+    }
+    private static void RunViewDocumentationExamples()
+    {
+__VIEW_EXAMPLES__
+    }
+    private static void RunTableDocumentationExamples()
+    {
+__TABLE_EXAMPLES__
     }
     private static void Check(bool success, string name) { if (!success) throw new Exception(name); }
     private static void RunDocumentationExamples(IOSLoad load, IOSGeometry geometry, IOSRoot root)
@@ -648,6 +824,8 @@ __OUTPUT_EXAMPLES__
     private static void RunSupportDocumentationExamples()
     {
 __SUPPORT_EXAMPLES__
+__COMMAND_EXAMPLES__
+__DESIGN_EXAMPLES__
     }
     private static void RunInspectionDocumentationExamples()
     {
@@ -883,11 +1061,15 @@ __PROPERTY_EXAMPLES__
 '@
 $program = $program.Replace('__EXAMPLES__', ($snippets -join "`n"))
 $program = $program.Replace('__SUPPORT_EXAMPLES__', ($supportSnippets -join [Environment]::NewLine))
+$program = $program.Replace('__COMMAND_EXAMPLES__', ($commandSnippets -join [Environment]::NewLine))
+$program = $program.Replace('__VIEW_EXAMPLES__', ($viewSnippets -join [Environment]::NewLine))
+$program = $program.Replace('__TABLE_EXAMPLES__', ($tableSnippets -join [Environment]::NewLine))
+$program = $program.Replace('__DESIGN_EXAMPLES__', ($designSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__OUTPUT_EXAMPLES__', ($outputSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__INSPECTION_EXAMPLES__', ($inspectionSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__EXPANSION_EXAMPLES__', ($expansionSnippets -join [Environment]::NewLine))
 $program = $program.Replace('__PROPERTY_EXAMPLES__', ($propertySnippets -join [Environment]::NewLine))
-$program = $program.Replace('__EXAMPLE_COUNT__', [string](310 + $supportSnippets.Count + $outputSnippets.Count + $inspectionSnippets.Count + $expansionSnippets.Count + $propertySnippets.Count))
+$program = $program.Replace('__EXAMPLE_COUNT__', [string](310 + $viewSnippets.Count + $tableSnippets.Count + $designSnippets.Count + $commandSnippets.Count + $supportSnippets.Count + $outputSnippets.Count + $inspectionSnippets.Count + $expansionSnippets.Count + $propertySnippets.Count))
 if ($hasLoadExpansion) { $program = 'using StaadPro.Interop.Models.Loads.Contracts;' + [Environment]::NewLine + 'using StaadPro.Interop.Models.Loads.Queries;' + [Environment]::NewLine + $program }
 if ($hasLoadInspection) { $program = 'using StaadPro.Interop.Enums.Loads;' + [Environment]::NewLine + $program }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyQueryFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyQueryFixture.cs') }
@@ -898,6 +1080,10 @@ if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'F
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyAttributeFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyAttributeFixture.cs') }
 if ($hasPropertyFoundation) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/PropertyUptFixture.cs') -Destination (Join-Path $consumerRoot 'PropertyUptFixture.cs') }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputSteelBlockFixture.cs') -Destination (Join-Path $consumerRoot 'OutputSteelBlockFixture.cs')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/ViewFoundationFixture.cs') -Destination (Join-Path $consumerRoot 'ViewFoundationFixture.cs')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/TableFoundationFixture.cs') -Destination (Join-Path $consumerRoot 'TableFoundationFixture.cs')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/DesignFoundationFixture.cs') -Destination (Join-Path $consumerRoot 'DesignFoundationFixture.cs')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/CommandsSupportFixture.cs') -Destination (Join-Path $consumerRoot 'CommandsSupportFixture.cs')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/SupportFoundationFixture.cs') -Destination (Join-Path $consumerRoot 'SupportFoundationFixture.cs')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputAdvancedFixture.cs') -Destination (Join-Path $consumerRoot 'OutputAdvancedFixture.cs')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Fixtures/OutputWorkflowFixture.cs') -Destination (Join-Path $consumerRoot 'OutputWorkflowFixture.cs')

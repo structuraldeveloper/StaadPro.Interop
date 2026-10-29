@@ -1,13 +1,35 @@
 # NuGet readiness assessment
 
-## Current implementation - plate-corner workflows
+**Latest 28 October 2026 checkpoint:** prepared 1.0.0-preview.20261028.3 with all 29 main-project Table overloads / 24 reviewed native names and View ShowFront (1/70 source overloads). Passed **6,944 offline tests**, including **496 Table/View cases** (164 additional cases in this increment), and **1,282 installed-package XML examples**, including all 58 Table examples and two View examples. Managed fixture workflows cover the current Table routes and ShowFront; live native COM/UI/storage qualification remains separate. Public NuGet.org availability is not confirmed.
+
+**Earlier 28 October 2026 checkpoint:** prepared 1.0.0-preview.20261028.2 with twenty main-source Table overloads (ten added in this increment). Passed 6,780 offline tests, including 332 Table cases. Installed-package verification passed 1,262 XML examples, including forty Table examples, and a report lifecycle/formatting workflow. Live native UI, COM, licensing and persistence qualification remain separate. NuGet.org publication is not confirmed.
+
+**28 October 2026 checkpoint:** prepared 1.0.0-preview.20261028.1 with ten existing main-project Table ports and independence/trademark notices. Passed 6,635 offline tests (187 new Table cases). Verified 1,242 installed-package XML examples and a managed Table write/read/save workflow against the exact archive; live COM, licensing and native report persistence remain separate acceptance work. Public NuGet.org publication is not confirmed. See [Table contracts](Table-Report-Foundations.md).
+
+## Earlier prepared preview - 1.0.0-preview.20261027.2
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.2.nupkg` with a compact 400-pixel README banner. The source logo files, embedded symbol icon, managed APIs and runtime contracts are unchanged from the preceding preview. Exact-archive verification passed all **1,222 selected XML examples** and checked metadata, installed IntelliSense and image assets. Reran and passed all **6,448 offline tests** for this build. Public NuGet.org availability has not been confirmed; the archive is prepared for manual upload. See [branding](Branding.md) and [release notes](Release-Notes.md).
+
+## Earlier prepared preview - 1.0.0-preview.20261027.1
+
+Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.1.nupkg` with the 35 Commands/Support/Design additions and adopted logo assets. This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface.
+
+The Release build passed with zero warnings/errors and 6,448 offline tests, including 412 new Commands/Support/Design cases. Exact-archive verification compiled and executed 1,222 selected XML examples through an isolated PackageReference consumer, including all 34 Commands, 54 Support and twenty Design examples. These checks validate managed behavior and packaging; live native COM and engineering qualification remain pending. Author: Srinivasa Rao Masanam. Company/publisher: TensorStruct. Copyright (c) 2026 TensorStruct.
+
+Commands steel-catalog work, eight Support routes, extended GROUP/Chinese steel and thirteen Output routes remain pending. Parked Load work, nine Property gates and fifteen supplemental Property candidates retain their review/approval requirements. The separate API-usability branch is not merged.
+
+The package uses the square symbol as its embedded icon and the full logo with text as its README banner. Both originals ship under images/. The build receipt, source commit, SHA256 and verification log are retained under artifacts/release. The user selected manual NuGet.org upload; this workspace has not submitted the package or confirmed public availability.
+
+Historical sections below retain the coverage and verification results recorded for their respective checkpoints. The latest prepared preview above defines the current distribution scope.
+
+## Earlier implementation - plate-corner workflows
 
 Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
 
 Passed a Release build with zero warnings/errors and **6,036 offline tests**, including **248 new corner cases**. Isolated package verification covers **1,152 selected XML examples**, including all 192 Output examples. Read-only native checks support the global force/moment contract on sampled STAAD.Pro 2026.0.0.340 observations; broader native/engineering qualification remains pending.
 
 
-## Latest prepared preview - 1.0.0-preview.20261026.4
+## Earlier prepared preview - 1.0.0-preview.20261026.4
 
 Prepared `artifacts/release/StaadPro.Interop.1.0.0-preview.20261026.4.nupkg` for the package owner's manual upload. This Windows/.NET Framework 4.8.1 preview includes **96 managed Output overloads reaching 47 native names**, **19 Support operations**, and the existing approved Root, Geometry, Load, Property and wrapper APIs. Thirteen documented Output routes and sixteen Support routes remain pending. The parked Load work, nine Property contract gates and fifteen supplemental Property candidates retain their separate review requirements.
 

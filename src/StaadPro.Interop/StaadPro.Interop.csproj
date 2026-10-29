@@ -12,11 +12,11 @@
     <RootNamespace>StaadPro.Interop</RootNamespace>
     <PackageId>StaadPro.Interop</PackageId>
     <Version>1.0.0</Version>
-    <ReleaseDocumentationVersion>1.0.0-preview.20261026.4</ReleaseDocumentationVersion>
+    <ReleaseDocumentationVersion>1.0.0-preview.20261028.3</ReleaseDocumentationVersion>
     <PackageVersion>$(ReleaseDocumentationVersion)</PackageVersion>
     <Authors>Srinivasa Rao Masanam</Authors>
     <Copyright>Copyright (c) 2026 TensorStruct</Copyright>
-    <PackageReleaseNotes>Added 25 plate-corner Output overloads for checked extraction, case-family resolution, indexed selections and member-local projections. Included full XML IntelliSense, owned status/data results, reproducible read-only coordinate diagnostics and regression tests. Output exposes 96 managed overloads reaching 47 of 60 documented native names; thirteen native routes remain pending. Publisher: TensorStruct. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>Completed all 29 main-project Table overloads with color conversions, typed alignment and table-wide font sizing. Added the first View function, ShowFront. Included comprehensive XML documentation, managed regression coverage and updated usage/coverage reports. Retained compact Markdown branding and independence/trademark notices. Publisher: TensorStruct. Full release notes: https://github.com/structuraldeveloper/StaadPro.Interop/blob/main/docs/Release-Notes.md</PackageReleaseNotes>
     <Description>A strongly-typed .NET Framework wrapper for Bentley STAAD.Pro OpenSTAAD</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>staad;openstaad;geometry;loads;structural-engineering;bim;bentley;interop</PackageTags>
@@ -24,6 +24,7 @@
     <RepositoryUrl>https://github.com/structuraldeveloper/StaadPro.Interop</RepositoryUrl>
     <PackageProjectUrl>https://github.com/structuraldeveloper/StaadPro.Interop</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>images/symbol-only-logo.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,6 +45,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\symbol-only-logo.png" Pack="true" PackagePath="images\" />
+    <None Include="..\..\logo-with-text.png" Pack="true" PackagePath="images\" />
+    <None Include="..\..\docs\images\logo-with-text-400.png" Pack="true" PackagePath="images\" />
+    <None Include="..\..\NOTICE.md" Pack="true" PackagePath="NOTICE.md" />
+    <None Include="..\..\docs\Table-Report-Foundations.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Table-Lifecycle-and-Formatting.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Table-Completion-and-View-Foundations.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\View-Porting.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\contracts\ViewFoundationContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
+    <None Include="..\..\docs\Table-Porting.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\contracts\TableFoundationContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
+    <None Include="..\..\docs\Branding.md" Pack="true" PackagePath="docs\" />
     <None Include="$(BaseIntermediateOutputPath)package-docs\README.md" Pack="true" PackagePath="README.md" />
     <None Include="..\..\docs\Load-Queries.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Load-Expansion.md" Pack="true" PackagePath="docs\" />
@@ -73,6 +86,10 @@
     <None Include="..\..\docs\Output-Managed-Workflows.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\contracts\OutputManagedWorkflowContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
     <None Include="..\..\docs\Output-Steel-Design-Blocks.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\Design-Porting.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\contracts\DesignFoundationContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
+    <None Include="..\..\docs\Commands-and-Support-Porting.md" Pack="true" PackagePath="docs\" />
+    <None Include="..\..\docs\contracts\CommandsAndSupportPortContractIndex.json" Pack="true" PackagePath="docs\contracts\" />
     <None Include="..\..\docs\Support-Porting.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\Support-Foundations.md" Pack="true" PackagePath="docs\" />
     <None Include="..\..\docs\contracts\OutputSteelBlockContractIndex.json" Pack="true" PackagePath="docs\contracts\" />

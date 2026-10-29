@@ -13,7 +13,7 @@
     "mainPublicAdapterOverloads": 7,
     "mainPrivateAdapterMethods": 0,
     "mainDistinctNativeTargets": 4,
-    "currentTypedDomainMethods": 0,
+    "currentTypedDomainMethods": 10,
     "missingMainNativeTargets": [
       "AssignDesignGroup",
       "GetDesignBriefCode",
@@ -88,13 +88,15 @@
       "ChineseSteelGetResults",
       "ChineseSteelGetCodeItemName"
     ],
-    "exampleChanges2024To2025": 30
+    "exampleChanges2024To2025": 30,
+    "currentTypedNativeNames": 5,
+    "remainingNativeNames": 40
   },
   "functions": [
     {
       "name": "GetMemberDesignParameters",
       "phase": "D2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "DesignQueryResult<MemberDesignParametersSnapshot> GetMemberDesignParameters(int designBriefId, int memberId); immutable name/value/unit/description/default rows copied from an internal owned holder.",
       "versions": {
@@ -280,12 +282,13 @@
             "parameterHolder"
           ]
         }
-      ]
+      ],
+      "implementation": "Common DesignService; see docs/Design-Porting.md"
     },
     {
       "name": "CreateDesignBrief",
       "phase": "D2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "DesignBriefResult CreateDesignBrief(StaadDesignCode designCode); status plus DesignBriefId; do not confuse successful ID with zero-success mutation codes.",
       "versions": {
@@ -1451,12 +1454,13 @@
             "(DesignCodes)designCode"
           ]
         }
-      ]
+      ],
+      "implementation": "Common DesignService; see docs/Design-Porting.md"
     },
     {
       "name": "AssignDesignParameter",
       "phase": "D2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "DesignMutationResult AssignDesignParameter; use typed request classes for grouped settings, material properties and curve samples, otherwise named scalar/enum and IReadOnlyList<int> memberIds inputs.",
       "versions": {
@@ -1700,12 +1704,13 @@
             "memberList"
           ]
         }
-      ]
+      ],
+      "implementation": "Common DesignService; see docs/Design-Porting.md"
     },
     {
       "name": "AssignDesignCommand",
       "phase": "D2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "DesignMutationResult AssignDesignCommand; use typed request classes for grouped settings, material properties and curve samples, otherwise named scalar/enum and IReadOnlyList<int> memberIds inputs.",
       "versions": {
@@ -2067,7 +2072,8 @@
             "memberList"
           ]
         }
-      ]
+      ],
+      "implementation": "Common DesignService; see docs/Design-Porting.md"
     },
     {
       "name": "AssignDesignGroup",
@@ -2352,7 +2358,7 @@
     {
       "name": "GetDesignBriefCode",
       "phase": "D2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "DesignQueryResult<StaadDesignCode> GetDesignBriefCode(int designBriefId); preserve unknown raw code as diagnostic data.",
       "versions": {
@@ -2447,7 +2453,8 @@
           "exampleCount": 2
         }
       },
-      "mainCalls": []
+      "mainCalls": [],
+      "implementation": "Common DesignService; see docs/Design-Porting.md"
     },
     {
       "name": "ChineseSteelInitial",
@@ -17982,5 +17989,105 @@
       "bytes": 241,
       "sha256": "53eee7bece795ba9cc89873207622929264736a824b4746bbb25518467eb55d4"
     }
-  ]
+  ],
+  "implementationUpdate": {
+    "date": "2026-10-27",
+    "managedMethods": 10,
+    "nativeMappings": 5,
+    "pendingNativeNames": [
+      "AssignDesignGroup",
+      "ChineseSteelInitial",
+      "ChineseSteelPerformDesign",
+      "ChineseSteelGetSolutionCount",
+      "ChineseSteelGetSolution",
+      "ChineseSteelAddSolution",
+      "ChineseSteelDeletedSolution",
+      "ChineseSteelGetDesignParametersCount",
+      "ChineseSteelAddDesignParameter",
+      "ChineseSteelDeletedDesignParameter",
+      "ChineseSteelGetDesignParameter",
+      "ChineseSteelSetDesignParameter",
+      "ChineseSteelAssignDesigParameter",
+      "ChineseSteelGetCheckItem",
+      "ChineseSteelSetCheckItem",
+      "ChineseSteelGetCheckOption",
+      "ChineseSteelSetCheckOption",
+      "ChineseSteelGetResults",
+      "ChineseSteelGetCodeItemName",
+      "ChineseSteelGetMaxResult",
+      "ChineseSteelGetResultParameters",
+      "ChineseSteelDisplayMemberReport",
+      "ChineseSteelDisplayResultTable",
+      "ChineseSteelGetStoreyCount",
+      "ChineseSteelAddStorey",
+      "ChineseSteelDeleteStorey",
+      "ChineseSteelAssignStorey",
+      "ChineseSteelAssignDissipated",
+      "ChineseSteelGetFireProofMaterialCount",
+      "ChineseSteelGetFireProofMaterialName",
+      "ChineseSteelAddConcreteData",
+      "ChineseSteelAddNonIntumescentCoating",
+      "ChineseSteelAddIntumescentCoating",
+      "ChineseSteelDeleteFireProofMaterial",
+      "ChineseSteelGetCurveCount",
+      "ChineseSteelGetCurveName",
+      "ChineseSteelDeleteCurve",
+      "ChineseSteelAddHotSmokeCurveData",
+      "ChineseSteelAddTemperatureRiseCurveData",
+      "ChineseSteelAddThermalSteelPropertyCurveData"
+    ],
+    "guide": "docs/Design-Porting.md",
+    "nativeRuntimeValidation": false,
+    "packageBuilt": false,
+    "validation": {
+      "offlineTestsPassed": 6448,
+      "newDesignCases": 128,
+      "designXmlExamples": 20,
+      "totalNewXmlExamples": 70,
+      "nativeRuntimeValidation": false,
+      "packageBuilt": false,
+      "indexedPropertyReaderVerified": true
+    },
+    "mainSourceEvidence": [
+      {
+        "file": "Adapters/Interfaces/IOSDesign.cs",
+        "sha256": "ed4785496c2f2c446bf02ef87feab914fa007be9fccfc63a8c54e852320c7dca"
+      },
+      {
+        "file": "Adapters/Models/OSDesignAdapter.cs",
+        "sha256": "9ea8c12b101252ca0d663833e0f1af25e689813448c5463de8be9249bc85fd82"
+      },
+      {
+        "file": "Enums/StaadDesignCode.cs",
+        "sha256": "8d8887580de384b3962dc00a2359db4f2353ece80243d5a5e5f43c6eb39e5496"
+      },
+      {
+        "file": "Models/Design/MemberDesignParameterInfo.cs",
+        "sha256": "824dd6120de5151eac14900508a3344a5dd747e74bb59a5a99b81426a945b46e"
+      },
+      {
+        "file": "Models/Design/MemberDesignParametersResult.cs",
+        "sha256": "9eff527833eb692aac13fb552537c4ffa8dcc34d778658f7296fcbe44effdd52"
+      },
+      {
+        "file": "Design/DesignCommand.cs",
+        "sha256": "69eb56ce4126a73c5aac4618bfd1d1891f951573032e233153e8182ea065ba1b"
+      },
+      {
+        "file": "Design/DesignParameter`.cs",
+        "sha256": "bf318f4603eacdb13cd90948e2dd1dc0a85e603bb07311f7cd4863ff42129bda"
+      }
+    ]
+  },
+  "packageRelease": {
+    "version": "1.0.0-preview.20261027.1",
+    "date": "2026-10-27",
+    "artifact": "artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.1.nupkg",
+    "offlineTestsPassed": 6448,
+    "installedXmlExamples": 1222,
+    "icon": "images/symbol-only-logo.png",
+    "readmeBanner": "logo-with-text.png",
+    "publicAvailabilityConfirmed": false,
+    "nativeRuntimeValidation": false
+  }
 }

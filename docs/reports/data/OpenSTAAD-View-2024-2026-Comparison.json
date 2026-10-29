@@ -13,7 +13,7 @@
     "mainPublicAdapterOverloads": 70,
     "mainPrivateAdapterMethods": 0,
     "mainDistinctNativeTargets": 66,
-    "currentTypedDomainMethods": 0,
+    "currentTypedDomainMethods": 1,
     "missingMainNativeTargets": [
       "SetModeSectionPage"
     ],
@@ -26,13 +26,16 @@
       "SetScaleValueByType",
       "GetScaleCount"
     ],
-    "exampleChanges2024To2025": 24
+    "exampleChanges2024To2025": 24,
+    "currentTypedNativeNames": 1,
+    "remainingMainInterfaceOverloads": 69,
+    "remainingNativeNames": 66
   },
   "functions": [
     {
       "name": "ShowFront",
       "phase": "V2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "ViewOperationResult ShowFront; named scalar/enum inputs or an immutable options class for multi-field operations; ID and entity overloads where justified.",
       "versions": {
@@ -85,7 +88,8 @@
           "receiver": "ComObject",
           "arguments": []
         }
-      ]
+      ],
+      "implementation": "Common ViewService with captured-binding checks and explicit void completion."
     },
     {
       "name": "ShowBack",
@@ -17440,5 +17444,92 @@
       "mainArgumentCount": 4,
       "resolution": "Unresolved; inspect acquired dispatch metadata and qualify invocation/overwrite behavior. Do not mutate to probe or retry with another arity after ambiguous completion."
     }
-  ]
+  ],
+  "implementationUpdate": {
+    "date": "2026-10-28",
+    "managedMethods": 1,
+    "nativeMappings": 1,
+    "referenceOverloadsPorted": 1,
+    "pendingReferenceOverloads": 69,
+    "pendingNativeNames": [
+      "ShowBack",
+      "ShowRight",
+      "ShowLeft",
+      "ShowPlan",
+      "ShowBottom",
+      "ShowIsometric",
+      "RotateUp",
+      "RotateDown",
+      "RotateLeft",
+      "RotateRight",
+      "SpinLeft",
+      "SpinRight",
+      "ZoomAll",
+      "CreateNewViewForSelections",
+      "SetLabel",
+      "SetSectionView",
+      "SetDiagramMode",
+      "RefreshView",
+      "SetNodeAnnotationMode",
+      "SetReactionAnnotationMode",
+      "GetInterfaceMode",
+      "SetInterfaceMode",
+      "SetModeSectionPage",
+      "SetBeamAnnotationMode",
+      "ShowAllMembers",
+      "HideAllMembers",
+      "SetUnits",
+      "ShowMembers",
+      "HideMembers",
+      "ShowMember",
+      "HideMember",
+      "HidePlate",
+      "HideSolid",
+      "HideSurface",
+      "HideEntity",
+      "ZoomExtentsMainView",
+      "SelectMembersParallelTo",
+      "SelectGroup",
+      "SelectInverse",
+      "SelectByItemList",
+      "SelectByMissingAttribute",
+      "SelectEntitiesConnectedToNode",
+      "SelectEntitiesConnectedToMember",
+      "SelectEntitiesConnectedToPlate",
+      "SelectEntitiesConnectedToSolid",
+      "GetNoOfBeamsInView",
+      "GetBeamsInView",
+      "CreateNewViewForSelectionsEx",
+      "ExportView",
+      "CopyPicture",
+      "SetWindowPosition",
+      "GetApplicationDesktopSize",
+      "GetScaleValues",
+      "SetScaleValues",
+      "GetScaleValueByType",
+      "SetScaleValueByType",
+      "GetScaleCount",
+      "DetachView",
+      "RenameView",
+      "OpenView",
+      "SaveView",
+      "GetWindowTitle",
+      "GetWindowCount",
+      "CloseActiveWindow",
+      "SetActiveWindow",
+      "SetDesignResults"
+    ],
+    "sourceMainReadOnly": true,
+    "guide": "docs/Table-Completion-and-View-Foundations.md",
+    "nativeRuntimeValidation": false,
+    "validation": {
+      "offlineTestsPassed": 6944,
+      "tableAndViewTestsPassed": 496,
+      "newCases": 164,
+      "packagedXmlExamples": 1282,
+      "tableXmlExamples": 58,
+      "viewXmlExamples": 2,
+      "nativeRuntimeValidation": false
+    }
+  }
 }

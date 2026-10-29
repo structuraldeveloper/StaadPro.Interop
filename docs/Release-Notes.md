@@ -1,5 +1,63 @@
 # StaadPro.Interop release notes
 
+## 1.0.0-preview.20261028.3 - 28 October 2026 (prepared preview)
+
+Ported nine remaining main-project Table overloads: five SetCellTextColor forms (RGB, WPF Color, text, packed ARGB and explicit ARGB bytes), SetCellTextColorHsl, horizontal/vertical alignment and table-wide font sizing. Table now covers all 29 main-interface overloads and all 24 reviewed native names. Added the first main-project View function, ShowFront, with an immutable void-completion receipt; 69 main-source View overloads remain.
+
+Reused existing color types, Table result/status types and validation. Ported source alignment code maps as Table-prefixed enums, isolated pure color conversion and View dispatch internally, and added matching comprehensive XML documentation. Preserved ignored-alpha and finite HSL clamping semantics; restricted malformed-color black fallback to parsing so native exceptions never cause another write. Documented void completion, one-based coordinates, native context and qualification limits.
+
+Retained the compact Markdown banner, both original logos, independence/trademark notices, Srinivasa Rao Masanam author and TensorStruct publisher/copyright. The package targets .NET Framework 4.8.1 on Windows. No live COM, UI effect, storage or engineering certification is implied by managed tests.
+
+Passed **6,944 offline tests**, including **496 Table/View cases** (164 additional cases in this increment), and **1,282 installed-package XML examples**, including all 58 Table examples and two View examples. Managed fixture workflows cover the current Table routes and ShowFront; live native COM/UI/storage qualification remains separate.
+
+Prepared for manual upload; public NuGet.org availability is not confirmed.
+
+## 1.0.0-preview.20261028.2 - 28 October 2026 (prepared preview)
+
+Ported ten further existing main-project Table functions: DeleteReport, DeleteTable, RenameTable, ResizeTable, SaveAllReports, SaveTable, SetCellTextBold, SetCellTextItalic, SetCellTextUnderline and SetCellTextSize. Table now exposes 20 of 29 main-source overloads and reaches 20 of 24 documented native names. Nine main-source overloads remain; native-only expansion follows completion of reference porting.
+
+Reused the existing Table result/status types and common internal service. Added matching comparative XML documentation, positive identity/dimension checks, one-based cell coordinates, finite positive native font sizes, exact rename text, scoped save receipts and explicit unacknowledged void completion. Kept native exception and captured-binding behavior, with no implicit save, rollback or success claim. The documented resize contract supports growth; shrink behavior and storage persistence are not inferred.
+
+Retained the verified 400-pixel Markdown banner, original logos, independence/trademark notices, Srinivasa Rao Masanam author and TensorStruct publisher/copyright. The package targets .NET Framework 4.8.1 on Windows. Live COM, native report UI/storage and engineering qualification remain separate acceptance work.
+
+Passed **6,780 offline tests**, including **332 Table cases** (145 additional cases in this increment). Compiled and executed **1,262 installed-package XML examples**, including **forty Table examples**, and exercised the lifecycle/formatting workflow against a managed native-signature fixture.
+
+Prepared for manual upload; public NuGet.org availability is not confirmed.
+
+## 1.0.0-preview.20261028.1 - 28 October 2026 (prepared preview)
+
+Corrected the NuGet README banner to use supported Markdown image syntax and a 400 × 133 PNG rendition. Preserved both original logo assets and the symbol-only package icon. Rebuilt this prepared preview under the same version at the package owner's request; API behavior is unchanged.
+
+Ported ten existing main-project Table functions: CreateReport, AddTable, GetReportCount, GetTableCount, GetCellValue, SetCellValue, SetColumnHeader, SetColumnUnitString, SetRowHeader and SaveReport. Added matching interface/adapter XML documentation, named creation/mutation receipts and managed regression tests. Corrected the reference XML coordinate convention to the documented native one-based rows and columns. Kept counts and cell strings directly usable and distinguished explicit empty native cell text from untouched output.
+
+Added independence and trademark notices to the repository, NuGet README and packaged NOTICE.md. Preserved the TensorStruct publisher identity, Srinivasa Rao Masanam author, original branding assets and compact README banner. The common Table service reuses strict native readers and retains caller-thread, captured-binding and original-exception behavior. Live native COM and report-storage qualification remain pending.
+
+Passed **6,635 offline tests**, including **187 Table cases**. Compiled and executed **1,242 installed-package XML examples**, including all twenty Table examples, plus an isolated Table write/read/save workflow against the exact archive. These checks do not certify live STAAD.Pro behavior or report storage.
+
+Prepared the package for manual upload; NuGet.org publication is not confirmed. Earlier archives are preserved.
+
+## 1.0.0-preview.20261027.2 - 27 October 2026 (prepared preview)
+
+Reduced the logo-with-text banner in the repository and NuGet READMEs to **400 pixels wide**, retaining its original aspect ratio and automatic height (approximately 133 pixels). Preserved both supplied PNG assets and the embedded symbol-only package icon. Updated branding guidance and package verification to retain the compact banner sizing.
+
+Retained the managed APIs and runtime contracts from 1.0.0-preview.20261027.1. Verified the new archive metadata, assets and **1,222 selected XML examples** through an isolated installed-package consumer. Reran and passed all **6,448 offline tests** for this build; live COM and engineering qualification remain pending. Author: Srinivasa Rao Masanam. Company/publisher: TensorStruct. Copyright (c) 2026 TensorStruct.
+
+Prepared the archive for manual NuGet.org upload; public availability has not been confirmed. Earlier archives are preserved.
+
+## 1.0.0-preview.20261027.1 - 27 October 2026 (prepared preview)
+
+This preview adds 35 managed methods: seventeen analysis-command methods, eight Support foundation/assignment operations and ten common Design brief/assignment/query methods. Commands reaches sixteen active native analysis routes, Support covers 27/35 documented native routes, and Design reaches five native names. The package retains 96 managed Output overloads covering 47/60 documented native names, the existing Root/Geometry/Load/Property APIs and the approved wrapper surface.
+
+Added complete comparative XML documentation, source-compatible analysis options/design-code vocabulary, immutable Design requests and explicit native acknowledgements. Preserved stable assignment ordering, identified partial completion, caller-thread dispatch, binding checks and original native exceptions. Copied Design parameter rows from privately owned native holders using explicit indexed-property reads.
+
+Adopted the supplied symbol-only PNG as the embedded NuGet icon and the logo with text as the repository/NuGet README banner. Included both original assets and branding guidance. Author: Srinivasa Rao Masanam. Publisher/company: TensorStruct. Copyright (c) 2026 TensorStruct.
+
+The Release build passed with zero warnings/errors and 6,448 offline tests, including 412 new Commands/Support/Design cases. Exact-archive verification compiled and executed 1,222 selected XML examples through an isolated PackageReference consumer, including all 34 Commands, 54 Support and twenty Design examples. These checks validate managed behavior and packaging; live native COM and engineering qualification remain pending.
+
+See [analysis commands and Support](Commands-and-Support-Porting.md), [Design contracts](Design-Porting.md) and [branding](Branding.md) for the new APIs, native acknowledgement rules, owned data and logo usage. Extended GROUP/Chinese steel, steel-command catalog work, eight Support gates and thirteen Output native routes remain pending. Parked Load work, nine Property gates and fifteen supplemental Property candidates retain their approval requirements. The API-usability experiment remains isolated on its separate branch.
+
+Prepared this archive for manual NuGet.org upload; public availability has not been confirmed. Earlier distribution archives are preserved.
+
 ## 1.0.0-preview.20261026.4 - 26 October 2026 (prepared preview)
 
 Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.

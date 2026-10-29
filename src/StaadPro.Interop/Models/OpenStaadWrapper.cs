@@ -98,7 +98,7 @@ namespace StaadPro.Interop.Models
         public dynamic RawOutput { get; private set; }
 
         /// <summary>Gets the managed Output adapter.</summary>
-        /// <remarks>Binding placeholder only: domain functions remain unported. Null when the native interface is unavailable.</remarks>
+        /// <remarks>Exposes the implemented typed Output operations; consult its interface for current coverage and contract limits. Null when the native interface is unavailable.</remarks>
         public IOSOutput Output { get; private set; }
 
         /// <summary>Gets the native Property automation interface.</summary>
@@ -106,7 +106,7 @@ namespace StaadPro.Interop.Models
         public dynamic RawProperty { get; private set; }
 
         /// <summary>Gets the managed Property adapter.</summary>
-        /// <remarks>Binding placeholder only: domain functions remain unported. Null when the native interface is unavailable.</remarks>
+        /// <remarks>Exposes the implemented typed Property operations; consult its interface for current coverage and contract limits. Null when the native interface is unavailable.</remarks>
         public IOSProperty Property { get; private set; }
 
         /// <summary>Gets the native Support automation interface.</summary>
@@ -114,7 +114,7 @@ namespace StaadPro.Interop.Models
         public dynamic RawSupport { get; private set; }
 
         /// <summary>Gets the managed Support adapter.</summary>
-        /// <remarks>Binding placeholder only: domain functions remain unported. Null when the native interface is unavailable.</remarks>
+        /// <remarks>Exposes the implemented typed Support operations; consult its interface for current coverage and contract limits. Null when the native interface is unavailable.</remarks>
         public IOSSupport Support { get; private set; }
 
         /// <summary>Gets the native Design automation interface.</summary>
@@ -122,7 +122,7 @@ namespace StaadPro.Interop.Models
         public dynamic RawDesign { get; private set; }
 
         /// <summary>Gets the managed Design adapter.</summary>
-        /// <remarks>Binding placeholder only: domain functions remain unported. Null when the native interface is unavailable.</remarks>
+        /// <remarks>Exposes the implemented typed Design operations; consult its interface for current coverage and contract limits. Null when the native interface is unavailable.</remarks>
         public IOSDesign Design { get; private set; }
 
         /// <summary>Gets the native Commands automation interface.</summary>
@@ -130,7 +130,7 @@ namespace StaadPro.Interop.Models
         public dynamic RawCommands { get; private set; }
 
         /// <summary>Gets the managed Commands adapter.</summary>
-        /// <remarks>Binding placeholder only: domain functions remain unported. Null when the native interface is unavailable.</remarks>
+        /// <remarks>Exposes the implemented typed Commands operations; consult its interface for current coverage and contract limits. Null when the native interface is unavailable.</remarks>
         public IOSCommands Commands { get; private set; }
 
         /// <summary>Gets the native Table automation interface.</summary>
@@ -138,7 +138,7 @@ namespace StaadPro.Interop.Models
         public dynamic RawTable { get; private set; }
 
         /// <summary>Gets the managed Table adapter.</summary>
-        /// <remarks>Binding placeholder only: domain functions remain unported. Null when the native interface is unavailable.</remarks>
+        /// <remarks>Provides all 29 reviewed main-source Table overloads, including color, alignment and table-wide font sizing. Native runtime qualification is separate from source coverage. Null when the native interface is unavailable.</remarks>
         public IOSTable Table { get; private set; }
 
         /// <summary>Gets the native View automation interface.</summary>
@@ -146,7 +146,7 @@ namespace StaadPro.Interop.Models
         public dynamic RawView { get; private set; }
 
         /// <summary>Gets the managed View adapter.</summary>
-        /// <remarks>Binding placeholder only: domain functions remain unported. Null when the native interface is unavailable.</remarks>
+        /// <remarks>Provides ShowFront on the captured native View object. Other source View functions remain pending. Null when the native interface is unavailable.</remarks>
         public IOSView View { get; private set; }
 
         /// <summary>Gets the reserved IDEA StatiCa integration binding.</summary>

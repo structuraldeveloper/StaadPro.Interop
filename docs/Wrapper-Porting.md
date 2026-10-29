@@ -5,7 +5,9 @@
 
 The [main project wrapper](<D:/04.%20ReInvented/MainProjects/SRi.XamlUIThickenerApp/src/ReInvented.StaadPro.Interop/Models/OpenStaadWrapper.cs>) was treated as **strictly read-only**. All implementation changes are in this open-source repository. The wrapper now includes all **30 source properties**, both constructor forms and all three public methods. The existing IsConnected property is retained as an additional convenience.
 
-The public wrapper surface is complete for this approved scope. Output now exposes 15 typed result queries and Property exposes 25 typed observation queries. The types behind Support, Design, Commands, Table, View and IdeaStatiCa remain explicitly documented placeholders. Their native bindings are real; no missing domain operation is disguised as implemented or replaced by a throwing stub.
+The public wrapper surface is complete for this approved scope. Current domain coverage includes 96 Output methods, 249 common/five optional Property methods, 27 Support routes, seventeen Commands methods and ten Design methods. Table now exposes all twenty-nine main-source Table operations; View implements ShowFront; IdeaStatiCa remains an integration placeholder. Their native bindings are real; no missing domain operation is disguised as implemented or replaced by a throwing stub.
+
+**Table update, 28 October 2026:** Table exposes twenty existing main-source report/lifecycle/typography operations; [contracts and remaining ports](Table-Report-Foundations.md). The original wrapper-surface parity record remains below.
 
 ## 1. Source/member parity
 
@@ -28,15 +30,15 @@ The source's Bentley COM types are represented by object/dynamic, matching this 
 | `RawProperty` | Captures native Property interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `Property` | `IOSProperty` / `OSPropertyAdapter` exposes 25 typed observation queries with internal native calls and no public reference outputs. See the [Property guide](Property-Porting.md). |
 | `RawSupport` | Captures native Support interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
-| `Support` | Binding-only `IOSSupport` / `OSSupportAdapter` placeholder; no domain functions ported. See the [Support comparison and plan](Support-Porting.md). |
+| `Support` | 27 typed methods over 27/35 native routes. See [Support foundation operations](Commands-and-Support-Porting.md). |
 | `RawDesign` | Captures native Design interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
-| `Design` | Binding-only `IOSDesign` / `OSDesignAdapter` placeholder; no domain functions ported. See the [Design comparison and plan](Design-Porting.md). |
+| `Design` | Ten common methods reaching five native names; extended GROUP and Chinese steel remain pending. See [Design porting](Design-Porting.md). |
 | `RawCommands` | Captures native Command (singular) interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
-| `Commands` | Binding-only `IOSCommands` / `OSCommandsAdapter` placeholder; no domain functions ported. See the [Commands comparison and plan](Commands-Porting.md). |
+| `Commands` | Seventeen typed methods reaching sixteen analysis-command native names; steel catalog work remains pending. See [analysis command operations](Commands-and-Support-Porting.md). |
 | `RawTable` | Captures native Table interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
 | `RawView` | Captures native View interface; null when absent, except retained legacy Geometry/Load direct-root fallback. |
-| `Table` | Binding-only `IOSTable` / `OSTableAdapter` placeholder; no domain functions ported. See the [Table comparison and plan](Table-Porting.md). |
-| `View` | Binding-only `IOSView` / `OSViewAdapter` placeholder; no domain functions ported. See the [View comparison and plan](View-Porting.md). |
+| `Table` | All twenty-nine main-source Table operations through `IOSTable` / `OSTableAdapter`; [contracts and examples](Table-Report-Foundations.md). Reference Table parity is complete. |
+| `View` | `IOSView` / `OSViewAdapter` implement ShowFront; 69 source overloads remain. See the [View comparison and plan](View-Porting.md). |
 | `IdeaStatiCa` | Placeholder created only when Geometry, Load and Output bindings exist. See the [integration source review and plan](IDEA-StatiCa-Porting.md) for the additional operation prerequisites. |
 | `StaadVersion` | Native STAAD version; independent copy on access; null if version member absent. |
 | `ApplicationVersion` | Entry/calling host assembly version; never native STAAD version selection. |

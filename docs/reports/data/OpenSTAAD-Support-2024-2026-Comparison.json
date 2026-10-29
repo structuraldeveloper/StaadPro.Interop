@@ -20,8 +20,8 @@
     "changedNonExampleContracts": 0,
     "changedCommonExamples2024To2025": 35,
     "changes2025To2026": 0,
-    "currentTypedMethods": 19,
-    "currentNativeDispatches": 19,
+    "currentTypedMethods": 27,
+    "currentNativeDispatches": 27,
     "mainInterfaceOverloads": 33,
     "mainPublicAdapterMethods": 33,
     "mainPrivateAdapterMethods": 0,
@@ -34,7 +34,9 @@
     "classListedNames": 42,
     "excludedClassHelpers": 7,
     "yearSpecificPolicyImplementationsRequiredByEvidence": 0,
-    "remainingNativeRoutes": 16
+    "remainingNativeRoutes": 8,
+    "currentNativeMappings": 27,
+    "pendingNativeMappings": 8
   },
   "manualEvidence": {
     "2024": {
@@ -2491,18 +2493,18 @@
   "currentSourceEvidence": [
     {
       "file": "src/StaadPro.Interop/Adapters/Interfaces/IOSSupport.cs",
-      "bytes": 52106,
-      "sha256": "e28143de567a64115dfb895c88b24ba026fe39001ee87285c94d1e6d28e8799f"
+      "bytes": 75230,
+      "sha256": "b577d8c27696d4c7b940eaa16ff6582161d98ab90f0c17626c710062f1eaa98f"
     },
     {
       "file": "src/StaadPro.Interop/Adapters/Models/OSSupportAdapter.cs",
-      "bytes": 54058,
-      "sha256": "40427da4fcc2720824bfcc6b968addd2c94ad920971b462a48e593a9e72e1fac"
+      "bytes": 77698,
+      "sha256": "98467c84b7cc472aaf49b51061af545448e92123187711818ce24ee67171843d"
     },
     {
       "file": "src/StaadPro.Interop/Services/Support/SupportService.cs",
-      "bytes": 16188,
-      "sha256": "5958601aae7c36f05df66900254aa2d94985706cfa4445a843845d240a77bb84"
+      "bytes": 20388,
+      "sha256": "ccef9ad2dd83a1b536cafd6e1fdae3198653c08c1d86421b87cc766a1ff1a8ec"
     }
   ],
   "readOnlyReferenceEvidence": [
@@ -4279,7 +4281,7 @@
       "name": "CreateElasticMat",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "CreateSupport",
@@ -4649,13 +4651,18 @@
           "examplesSha256": "1472bfa3fe1e65703de86be3f064a5669a385c4a320d2a89cf42f40933264197",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "date": "2026-10-26",
+        "managed": "CreateElasticMat",
+        "service": "SupportService"
       }
     },
     {
       "name": "RemoveElasticMat",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S8",
@@ -4778,13 +4785,18 @@
           "examplesSha256": "77e7ec7408b6eb37cbf700b0176e71b9d30e2ecafc73e091f04ec2dcbf38ed96",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "date": "2026-10-26",
+        "managed": "RemoveElasticMat",
+        "service": "SupportService"
       }
     },
     {
       "name": "RemoveElasticMatFromNode",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S8",
@@ -4907,13 +4919,18 @@
           "examplesSha256": "7fd117f6b63335ee198ff15050292b0658f41bf45fcc8e434da734b2e558df1a",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "date": "2026-10-26",
+        "managed": "RemoveElasticMatFromNode",
+        "service": "SupportService"
       }
     },
     {
       "name": "AssignSupportToEntityList",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S6",
@@ -5069,6 +5086,11 @@
           "examplesSha256": "e62d69be56c16fa73b3f476c8b7333ba66ec6e679a14b4b43c9caa9c40991205",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "date": "2026-10-26",
+        "managed": "AssignSupportToEntities",
+        "service": "SupportService"
       }
     },
     {
@@ -5463,7 +5485,7 @@
       "name": "RemovePlateMat",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S8",
@@ -5586,6 +5608,11 @@
           "examplesSha256": "4bd4334fb58f64705718b07336c84cdf4e96e45329d1470b45e4007015fdfb92",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "date": "2026-10-26",
+        "managed": "RemovePlateMat",
+        "service": "SupportService"
       }
     },
     {
@@ -5721,7 +5748,7 @@
       "name": "CreateElasticFooting",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [
         {
           "managedName": "CreateSupport",
@@ -6031,13 +6058,18 @@
           "examplesSha256": "dc26ba82f4537f9e7ceff3bc1bac77215f7ad120bdc2ed7fb48a30a9ff5d51fb",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "date": "2026-10-26",
+        "managed": "CreateElasticFooting",
+        "service": "SupportService"
       }
     },
     {
       "name": "RemoveElasticFooting",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S8",
@@ -6160,13 +6192,18 @@
           "examplesSha256": "2cd5553ecbe25e3d26d57da361e67dd5a466e6bb0e1a05b400e13ef27c23e800",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "date": "2026-10-26",
+        "managed": "RemoveElasticFooting",
+        "service": "SupportService"
       }
     },
     {
       "name": "RemoveElasticFootingFromNode",
       "category": "Support: Create Support and Assign Support to Node(s) Support",
       "classification": "Common declaration and non-example contract",
-      "currentTypedImplementation": false,
+      "currentTypedImplementation": true,
       "mainCallSites": [],
       "plan": {
         "phase": "S8",
@@ -6289,6 +6326,11 @@
           "examplesSha256": "5194f267b8b88d37fcc93c0b60963f2dbe5cbacd707faf22c8dc197090ef40c4",
           "exampleCount": 1
         }
+      },
+      "implementation": {
+        "date": "2026-10-26",
+        "managed": "RemoveElasticFootingFromNode",
+        "service": "SupportService"
       }
     },
     {
@@ -10705,9 +10747,9 @@
   "implementationUpdate": {
     "date": "2026-10-26",
     "parentCommit": "a193948",
-    "managedMethods": 19,
-    "nativeMappings": 19,
-    "pendingDocumentedNativeMappings": 16,
+    "managedMethods": 27,
+    "nativeMappings": 27,
+    "pendingDocumentedNativeMappings": 8,
     "contracts": [
       {
         "native": "GetSupportCount",
@@ -10789,31 +10831,73 @@
     "pendingNativeNames": [
       "GetSupportName",
       "CreateInclinedSupport",
-      "CreateElasticMat",
-      "RemoveElasticMat",
-      "RemoveElasticMatFromNode",
-      "AssignSupportToEntityList",
       "CreatePlateMat",
-      "RemovePlateMat",
       "RemovePlateMatFromPlate",
-      "CreateElasticFooting",
-      "RemoveElasticFooting",
-      "RemoveElasticFootingFromNode",
       "GetSupportInformationEx",
       "GetPlateMatSupportId",
       "GetPlateMatDetail",
       "GetPlateMatAssignmentList"
     ],
     "validation": {
+      "offlineTestsPassed": 6320,
+      "newCases": 284,
+      "newXmlExamplesCompiledExecuted": 50,
+      "nativeRuntimeValidation": false,
+      "packageBuilt": false
+    },
+    "guide": "docs/Commands-and-Support-Porting.md",
+    "contractIndex": "docs/contracts/CommandsAndSupportPortContractIndex.json",
+    "addedFunctions": [
+      {
+        "managed": "CreateElasticMat",
+        "native": "CreateElasticMat",
+        "signature": "SupportMutationResult CreateElasticMat(FoundationSupportDirection direction, double subgradeModulus, bool printInfluenceAreas = false, FoundationSpringType springType = FoundationSpringType.None)"
+      },
+      {
+        "managed": "CreateElasticFooting",
+        "native": "CreateElasticFooting",
+        "signature": "SupportMutationResult CreateElasticFooting(double length, double width, FoundationSupportDirection direction, double subgradeModulus)"
+      },
+      {
+        "managed": "RemoveElasticMat",
+        "native": "RemoveElasticMat",
+        "signature": "SupportMutationResult RemoveElasticMat(int supportId)"
+      },
+      {
+        "managed": "RemoveElasticMatFromNode",
+        "native": "RemoveElasticMatFromNode",
+        "signature": "SupportMutationResult RemoveElasticMatFromNode(int nodeId)"
+      },
+      {
+        "managed": "RemovePlateMat",
+        "native": "RemovePlateMat",
+        "signature": "SupportMutationResult RemovePlateMat(int supportId)"
+      },
+      {
+        "managed": "RemoveElasticFooting",
+        "native": "RemoveElasticFooting",
+        "signature": "SupportMutationResult RemoveElasticFooting(int supportId)"
+      },
+      {
+        "managed": "RemoveElasticFootingFromNode",
+        "native": "RemoveElasticFootingFromNode",
+        "signature": "SupportMutationResult RemoveElasticFootingFromNode(int nodeId)"
+      },
+      {
+        "managed": "AssignSupportToEntities",
+        "native": "AssignSupportToEntityList",
+        "signature": "SupportMutationResult AssignSupportToEntities(int supportId, SupportEntityKind entityKind, IEnumerable<int> entityIds, int maximumResults = 100000)"
+      }
+    ],
+    "nativeRuntimeValidation": false,
+    "previousValidation": {
       "offlineTestsPassed": 5523,
       "newSupportCases": 130,
       "supportXmlExamples": 38,
       "nativeRuntimeValidation": false,
       "compiledExecutedXmlExamples": 1052,
       "packageVersion": "1.0.0-preview.ci.2026102602"
-    },
-    "guide": "docs/Support-Foundations.md",
-    "contractIndex": "docs/contracts/SupportFoundationContractIndex.json"
+    }
   },
   "comparisonBaselineSourceEvidence": [
     {
@@ -10841,5 +10925,16 @@
       "bytes": 5056,
       "sha256": "035570ef3e35b52a2772e2ec96b9bf886ce3d08d6e555c3d51ffd870de9f1a59"
     }
-  ]
+  ],
+  "packageRelease": {
+    "version": "1.0.0-preview.20261027.1",
+    "date": "2026-10-27",
+    "artifact": "artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.1.nupkg",
+    "offlineTestsPassed": 6448,
+    "installedXmlExamples": 1222,
+    "icon": "images/symbol-only-logo.png",
+    "readmeBanner": "logo-with-text.png",
+    "publicAvailabilityConfirmed": false,
+    "nativeRuntimeValidation": false
+  }
 }

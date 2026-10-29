@@ -13,18 +13,20 @@
     "mainPublicAdapterOverloads": 21,
     "mainPrivateAdapterMethods": 4,
     "mainDistinctNativeTargets": 18,
-    "currentTypedDomainMethods": 0,
+    "currentTypedDomainMethods": 17,
     "missingMainNativeTargets": [],
     "added2025": [],
     "signatureChanges": [],
     "nonExampleTextChanges": [],
-    "exampleChanges2024To2025": 1
+    "exampleChanges2024To2025": 1,
+    "currentTypedNativeNames": 16,
+    "remainingActiveNativeNames": 1
   },
   "functions": [
     {
       "name": "PerformAnalysis",
       "phase": "C2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult PerformAnalysis; expose named scalar options from the parameter table, using verified enums and bool flags.",
       "versions": {
@@ -229,12 +231,19 @@
             "printOption"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "PerformAnalysis"
+        ]
+      }
     },
     {
       "name": "PerformPDeltaAnalysisNoConverge",
       "phase": "C2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult PerformPDeltaAnalysisNoConverge; expose named scalar options from the parameter table, using verified enums and bool flags.",
       "versions": {
@@ -497,12 +506,19 @@
             "printOption"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "PerformPDeltaAnalysisNoConverge"
+        ]
+      }
     },
     {
       "name": "PerformPDeltaAnalysisEx",
       "phase": "C2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult PerformPDeltaAnalysisEx(PDeltaAnalysisOptions options); reuse audited source option classes.",
       "versions": {
@@ -857,7 +873,15 @@
             "Convert.ToInt16(includeGeometricStiffness)"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "PerformPDeltaAnalysisEx",
+          "PerformPDeltaAnalysis"
+        ]
+      }
     },
     {
       "name": "PerformPDeltaAnalysisConverge",
@@ -962,7 +986,7 @@
     {
       "name": "PerformCableAnalysis",
       "phase": "C2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult PerformCableAnalysis; expose named scalar options from the parameter table, using verified enums and bool flags.",
       "versions": {
@@ -1213,12 +1237,19 @@
             "printOption"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "PerformCableAnalysis"
+        ]
+      }
     },
     {
       "name": "PerformCableAnalysisEx",
       "phase": "C2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult PerformCableAnalysisEx(CableAnalysisOptions options); reuse audited source option classes.",
       "versions": {
@@ -1855,12 +1886,19 @@
             "options.PrintOption"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "PerformCableAnalysisEx"
+        ]
+      }
     },
     {
       "name": "PerformBucklingAnalysis",
       "phase": "C2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult PerformBucklingAnalysis; expose named scalar options from the parameter table, using verified enums and bool flags.",
       "versions": {
@@ -2099,12 +2137,19 @@
             "printOption"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "PerformBucklingAnalysis"
+        ]
+      }
     },
     {
       "name": "PerformBucklingAnalysisEx",
       "phase": "C2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult PerformBucklingAnalysisEx(BucklingAnalysisOptions options); reuse audited source option classes.",
       "versions": {
@@ -2425,12 +2470,19 @@
             "printOption"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "PerformBucklingAnalysisEx"
+        ]
+      }
     },
     {
       "name": "PerformDirectAnalysis",
       "phase": "C2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult PerformDirectAnalysis(DirectAnalysisOptions options); reuse audited source option classes.",
       "versions": {
@@ -2977,12 +3029,19 @@
             "options.PrintOption"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "PerformDirectAnalysis"
+        ]
+      }
     },
     {
       "name": "PerformNonlinearAnalysisEx",
       "phase": "C2",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult PerformNonlinearAnalysisEx(NonlinearAnalysisOptions options); reuse audited source option classes.",
       "versions": {
@@ -3605,12 +3664,19 @@
             "options.CreateDisplacementTargetArray()"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "PerformNonlinearAnalysisEx"
+        ]
+      }
     },
     {
       "name": "SetFloorDiaphragmBaseCommand",
       "phase": "C3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult SetFloorDiaphragmBaseCommand; expose named scalar options from the parameter table, using verified enums and bool flags.",
       "versions": {
@@ -3716,12 +3782,19 @@
             "baseElevation"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "SetFloorDiaphragmBaseCommand"
+        ]
+      }
     },
     {
       "name": "DeleteFloorDiaphragmBaseCommand",
       "phase": "C3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult DeleteFloorDiaphragmBaseCommand; expose named scalar options from the parameter table, using verified enums and bool flags.",
       "versions": {
@@ -3774,12 +3847,19 @@
           "receiver": "ComObject",
           "arguments": []
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "DeleteFloorDiaphragmBaseCommand"
+        ]
+      }
     },
     {
       "name": "SetCheckSoftStoryCommand",
       "phase": "C3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult SetCheckSoftStoryCommand; expose named scalar options from the parameter table, using verified enums and bool flags.",
       "versions": {
@@ -3948,12 +4028,19 @@
             "(int)designCode"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "SetCheckSoftStoryCommand"
+        ]
+      }
     },
     {
       "name": "DeleteCheckSoftStoryCommand",
       "phase": "C3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult DeleteCheckSoftStoryCommand; expose named scalar options from the parameter table, using verified enums and bool flags.",
       "versions": {
@@ -4006,12 +4093,19 @@
           "receiver": "ComObject",
           "arguments": []
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "DeleteCheckSoftStoryCommand"
+        ]
+      }
     },
     {
       "name": "SetCheckIrregularitiesCommand",
       "phase": "C3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult SetCheckIrregularitiesCommand; expose named scalar options from the parameter table, using verified enums and bool flags.",
       "versions": {
@@ -4168,12 +4262,19 @@
             "(int)designCode"
           ]
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "SetCheckIrregularitiesCommand"
+        ]
+      }
     },
     {
       "name": "DeleteCheckIrregularitiesCommand",
       "phase": "C3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult DeleteCheckIrregularitiesCommand; expose named scalar options from the parameter table, using verified enums and bool flags.",
       "versions": {
@@ -4226,12 +4327,19 @@
           "receiver": "ComObject",
           "arguments": []
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "DeleteCheckIrregularitiesCommand"
+        ]
+      }
     },
     {
       "name": "DeleteAllAnalysisCommands",
       "phase": "C3",
-      "currentTyped": "pending",
+      "currentTyped": true,
       "excludedFromNewApi": false,
       "managedProposal": "CommandSubmissionResult DeleteAllAnalysisCommands; expose named scalar options from the parameter table, using verified enums and bool flags.",
       "versions": {
@@ -4284,7 +4392,14 @@
           "receiver": "ComObject",
           "arguments": []
         }
-      ]
+      ],
+      "implementation": {
+        "date": "2026-10-26",
+        "service": "CommandsService",
+        "managedMethods": [
+          "DeleteAllAnalysisCommands"
+        ]
+      }
     },
     {
       "name": "CreateSteelDesignCommand",
@@ -24313,5 +24428,37 @@
       "bytes": 241,
       "sha256": "53eee7bece795ba9cc89873207622929264736a824b4746bbb25518467eb55d4"
     }
-  ]
+  ],
+  "implementationUpdate": {
+    "date": "2026-10-26",
+    "managedMethods": 17,
+    "nativeMappings": 16,
+    "pendingActiveNativeNames": [
+      "CreateSteelDesignCommand"
+    ],
+    "pendingMainConveniences": [
+      "GetSteelDesignCommands",
+      "ValidateSteelDesignCommand"
+    ],
+    "guide": "docs/Commands-and-Support-Porting.md",
+    "nativeRuntimeValidation": false,
+    "validation": {
+      "offlineTestsPassed": 6320,
+      "newCases": 284,
+      "newXmlExamplesCompiledExecuted": 50,
+      "nativeRuntimeValidation": false,
+      "packageBuilt": false
+    }
+  },
+  "packageRelease": {
+    "version": "1.0.0-preview.20261027.1",
+    "date": "2026-10-27",
+    "artifact": "artifacts/release/StaadPro.Interop.1.0.0-preview.20261027.1.nupkg",
+    "offlineTestsPassed": 6448,
+    "installedXmlExamples": 1222,
+    "icon": "images/symbol-only-logo.png",
+    "readmeBanner": "logo-with-text.png",
+    "publicAvailabilityConfirmed": false,
+    "nativeRuntimeValidation": false
+  }
 }

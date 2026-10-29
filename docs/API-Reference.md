@@ -1,5 +1,9 @@
 # StaadPro.Interop API Reference
 
+**Design checkpoint, 27 October 2026:** ten common methods reach five native names. See [the complete Design contract guide](Design-Porting.md). Current source validation passed 6,448 offline tests and all 70 new Commands/Support/Design XML examples. These additions are included in preview 1.0.0-preview.20261027.1.
+
+**Commands/Support checkpoint:** IOSCommands now exposes 17 analysis-command methods and IOSSupport covers 27/35 native routes. See [the 25 new contracts](Commands-and-Support-Porting.md). These configure model commands or explicit support mutations; Commands calls do not execute the solver.
+
 ## Current implementation - plate-corner workflows
 
 Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
@@ -25,8 +29,10 @@ All 30 main-source wrapper properties, both constructor forms, RefreshComObjects
 - `Root`, `Geometry`, `Load`: existing implemented adapters.
 - `RawOpenStaad`, `RawGeometry`, `RawLoad`, `RawOutput`, `RawProperty`, `RawSupport`, `RawDesign`, `RawCommands`, `RawTable`, `RawView`: native bindings; RawCommands reads the native singular Command property.
 - `Output`: 96 managed result overloads reaching 47 native names; `Property`: 249 common overloads plus five optional catalog queries.
-- `Support`: 19 typed operations for discovery, foundation readback and explicit mutations.
-- `Design`, `Commands`, `Table`, `View`: binding-only placeholders; their domain functions are not ported.
+- `Support`: 27 typed operations for discovery, foundation readback and explicit mutations.
+- `Design`: ten common brief/assignment/query methods; `Commands`: seventeen analysis-configuration methods.
+- `Table`: all 29 main-project overloads and all 24 reviewed native names; [completion contracts](Table-Completion-and-View-Foundations.md).
+- `View`: ShowFront requests active graphical front orientation; 69 main-source overloads remain. See [View foundation](Table-Completion-and-View-Foundations.md#view-showfront).
 - `IdeaStatiCa`: integration placeholder when Geometry/Load/Output exist; no transformation, verification or export functions are available.
 - `StaadVersion`: cached native STAAD version; each access returns a copy, null when unavailable. This is the source for native version selection.
 - `ApplicationVersion`: entry/calling host assembly version; it is not the STAAD version.

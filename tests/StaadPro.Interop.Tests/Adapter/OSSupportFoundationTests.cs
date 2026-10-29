@@ -110,7 +110,7 @@ namespace StaadPro.Interop.Tests.Adapter
                 foreach(var p in type.GetProperties(BindingFlags.Public|BindingFlags.Instance|BindingFlags.DeclaredOnly))Assert.That(xml["P:"+type.FullName+"."+p.Name].Element("summary")?.Value,Is.Not.Null.And.Not.Empty);
                 if(type.IsEnum)foreach(string n in Enum.GetNames(type))Assert.That(xml["F:"+type.FullName+"."+n].Element("summary")?.Value,Is.Not.Null.And.Not.Empty);
             }
-            Assert.That(typeof(IOSSupport).GetMethods().Count(m=>!m.IsSpecialName),Is.EqualTo(19));
+            Assert.That(typeof(IOSSupport).GetMethods().Count(m=>!m.IsSpecialName),Is.EqualTo(27));
         }
         [Test]
         public void CountsRejectFlagsAndMalformedNumericCoercionWhileZeroIsData()

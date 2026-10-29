@@ -1,5 +1,8 @@
 # Commands implementation status and porting guide
 
+**Implementation checkpoint, 27 October 2026:** IOSCommands / OSCommandsAdapter now expose seventeen analysis-command methods reaching sixteen active native names. Steel-command creation/catalog remains pending. See [current contracts and verification](Commands-and-Support-Porting.md). The original review below is historical evidence.
+
+
 **Reviewed:** 23 October 2026. IOSCommands / OSCommandsAdapter remain binding-only placeholders. No typed Commands functions were implemented by this review.
 
 The installed 2024/2025/2026 manuals contain 18 / 18 / 18 native names respectively. The main source contains 21 interface overloads backed by 18 distinct native names; this does not establish live compatibility.

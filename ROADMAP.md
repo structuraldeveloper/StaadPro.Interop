@@ -6,8 +6,20 @@ Our mission is to provide the structural engineering and computational design co
 
 ---
 
-## Current implementation and next steps — 26 October 2026
+## Current implementation and next steps — 27 October 2026
 
+**Latest prepared preview:** 1.0.0-preview.20261028.3 completes all 29 Table main-source overloads / 24 reviewed native names and adds View ShowFront. Main-source priority remains; View has 69 source overloads pending. Reused existing color/Table contracts and ported native alignment maps, with full XML documentation and 6,944 passed offline tests. See [completion and View foundation](docs/Table-Completion-and-View-Foundations.md). Live COM/report/UI acceptance remains separate.
+
+**Previous prepared preview:** 1.0.0-preview.20261028.2 adds ten further existing main-project Table lifecycle/typography methods. Table now has twenty of 29 reference overloads, reaching 20/24 native names; nine reference overloads remain. Reused the established result/status types and common service, with full XML documentation and 6,780 passed offline tests. See [current contracts](docs/Table-Lifecycle-and-Formatting.md). Retained the compact Markdown banner and independence/trademark notices.
+
+**Previous prepared preview:** 1.0.0-preview.20261028.1 adds ten existing main-project Table functions and independence/trademark notices. Table covers 10/24 native names, with 19/29 main-source overloads still pending. Complete main-source functions before adding missing native-only APIs. See [Table report foundations](docs/Table-Report-Foundations.md). Live native report qualification remains separate.
+
+**Previous prepared preview:** 1.0.0-preview.20261027.2 (compact README banner; same managed API scope as 1.0.0-preview.20261027.1) includes the completed 35 Commands/Support/Design methods and adopted logo assets. Release validation passed 6,448 offline tests and 1,222 installed-package XML examples. The source, documentation and package remain a preview; public NuGet.org availability is not confirmed.
+
+
+**Design foundation increment:** Added ten common Design methods reaching five native names, adapting all seven main-source common workflows plus a brief-code query and two query-batch overloads. Extended GROUP and forty union Design native names remain pending. Passed **6,448 offline tests**, including 128 Design cases, and compiled/executed all **70 new guarded XML examples** across the completed increments. See [Design contracts and usage](docs/Design-Porting.md) and [the interrupted-work audit](docs/reports/Porting-Continuation-Audit-2026-10-27.md).
+
+**Commands and Support increment:** Added 25 methods: 17 Commands methods over all sixteen active analysis-command routes, plus eight foundation/assignment operations. Support now covers 27/35 documented native routes. Steel-command creation/catalog work and eight Support contract gates remain pending. The API-usability redesign is isolated on `main-api-usability`; this increment uses the parent `main` contracts. See [the exact signatures and usage](docs/Commands-and-Support-Porting.md).
 
 **Latest Output increment:** Added **25 Output overloads** for plate-corner extraction, indexed sparse/Cartesian selections, explicit metadata families and member-local projections: 18 synchronous main-source adaptations plus seven typed enabling overloads. Output now exposes **96 managed overloads reaching 47/60 documented native names**, with **13 documented native routes pending**. All additions use the newly enabled GetPlateCornerForces route. See [the plate-corner guide](docs/Output-Plate-Corners.md) for exact signatures, comparisons, axes evidence and limitations.
 
@@ -22,7 +34,7 @@ The preceding **Output** increment added 25 documented routes, bringing coverage
 
 **Reminder checkpoint:** before further Property expansion or the next public NuGet release, remind the user about **fifteen supplemental Property discovery candidates** and the **nine documented Property gates**. Supplemental candidates were expressly excluded from this increment and need separate review/approval. This is a durable workflow checkpoint, not a scheduled notification.
 
-Next review the remaining thirteen Output contracts and sixteen Support functions in dependency order, then continue Commands, Design, Table/View and IDEA StatiCa following the [remaining-adapter sequence](docs/reports/OpenSTAAD-Remaining-Adapters-Review-Index.md#3-recommended-implementation-sequence). The user authorized the first nineteen Support functions; this increment does not resume the other domain implementations. Preserve one non-partial adapter per domain and internal common/version-policy services. Native qualification is separate from source implementation.
+Next complete existing main-source methods and managed workflows before expanding native-only API coverage: review remaining Commands catalog conveniences, Support and Output source workflows, then continue Table/View and IDEA StatiCa in the [remaining-adapter sequence](docs/reports/OpenSTAAD-Remaining-Adapters-Review-Index.md#3-recommended-implementation-sequence). Table reference parity is complete; continue remaining main-source View/integration workflows. Native-only additions follow reference parity. Preserve the approval requirements for parked Load and Property work, one non-partial adapter per domain, and internal common/version-policy services. Native qualification is separate from source implementation.
 
 ### Parked Load work — explicit approval required
 
